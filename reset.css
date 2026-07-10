@@ -1,0 +1,88 @@
+@charset "utf-8";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+li,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  border: 0;
+  outline: none;
+}
+
+img,
+picture,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+address,
+em {
+  font-style: normal;
+}
+
+fieldset {
+  border: 0;
+}
+
+caption,
+legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

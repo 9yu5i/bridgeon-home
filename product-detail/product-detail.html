@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Detail | BridgeOn</title>
+    <link rel="stylesheet" href="../reset.css" />
+    <link rel="stylesheet" href="../font.css" />
+    <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="../realtrend/realtrend.css" />
+    <link rel="stylesheet" href="./product-detail.css" />
+  </head>
+  <body class="product-detail-page">
+    <header class="site-header">
+      <div class="promo-bar">
+        <div class="promo-inner">
+          <span><img src="../img/main-img/top_banner_lefticon.png" alt="lefticon">Free Shipping Over US$nn</span>
+          <span><img src="../img/main-img/top_banner_righticon.png" alt="righticon">Ships From Korea</span>
+          <span class="desktop-only">English / USD &#8744; </span>
+        </div>
+      </div>
+
+      <div class="header-main">
+        <button type="button" class="icon-button mobile-menu mobile-only" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false" aria-label="Open menu">
+          <img src="../img/mobile-icon/menu/hamburger_mobile.png" alt="" aria-hidden="true">
+        </button>
+        <a class="logo" href="../index.html" aria-label="BridgeOn home">Bridge<span>On</span></a>
+        <form class="search" role="search">
+          <label class="sr-only" for="site-search">Search</label>
+          <input id="site-search" type="search" placeholder="Best Sunscreen For 2026 Summer?" />
+          <button aria-label="Search">
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </button>
+        </form>
+        <div class="header-actions">
+          <button class="icon-button" aria-label="Account">
+           <img src="../img/main-img/top_banner_my.png" alt="mypage">
+          </button>
+          <button class="icon-button desktop-icon" aria-label="Wishlist">
+            <img src="../img/main-img/top_banner_wish.png" alt="wishlist">
+          </button>
+          <button class="icon-button cart-icon-button" aria-label="Cart, 3 items">
+            <img src="../img/main-img/top_banner_cart.png" alt="cart">
+            <span class="cart-badge" aria-hidden="true">3</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="search-panel" aria-hidden="true">
+        <div class="search-mobile-bar">
+          <button type="button" class="search-mobile-back search-close" aria-label="Close search"></button>
+          <div class="search-mobile-input">
+            <input id="mobile-site-search" type="search" placeholder="Search Korean Trends" aria-label="Search Korean Trends" />
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="search-mobile-content">
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading">
+              <h3><img src="../img/search/history.png" alt="" aria-hidden="true">Recent Searches</h3>
+              <button type="button" class="search-clear">Clear All</button>
+            </div>
+            <div class="recent-searches search-mobile-recent">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
+            </div>
+          </section>
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading trending">
+              <h3><span aria-hidden="true"></span>Trending Searches</h3>
+            </div>
+            <ol class="trending-searches search-mobile-trending">
+              <li><b>1</b><span>sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>collagen cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>lip tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>toning pads</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </section>
+        </div>
+        <div class="search-panel-tabs" role="tablist" aria-label="Search suggestions">
+          <button type="button" class="is-active" data-search-tab="recent" role="tab" aria-selected="true">Recent Searches</button>
+          <button type="button" data-search-tab="trending" role="tab" aria-selected="false"><span aria-hidden="true"></span> Trending Searches</button>
+        </div>
+        <div class="search-panel-body">
+          <div class="search-panel-section is-active" data-search-panel="recent" role="tabpanel">
+            <div class="recent-searches">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>collagen mask<span aria-hidden="true">&times;</span></button>
+            </div>
+          </div>
+          <div class="search-panel-section" data-search-panel="trending" role="tabpanel" hidden>
+            <ol class="trending-searches">
+              <li><b>1</b><span>Sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>Collagen Cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>Lip Tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>Toning Pads</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </div>
+        </div>
+        <div class="search-panel-footer">
+          <button type="button" class="search-clear">Remove All Researches</button>
+          <button type="button" class="search-close">Close</button>
+        </div>
+      </div>
+
+      <div class="category-menu">
+        <nav class="category-nav" aria-label="Primary">
+          <a href="#">BEST</a>
+          <a href="#">Brand</a>
+          <a class="is-active" href="../listing/beauty.html" data-mega-target="beauty" aria-current="page">Beauty</a>
+          <a href="#" data-mega-target="k-food">K-Food</a>
+          <a href="#" data-mega-target="lifestyle">Lifestyle</a>
+          <a href="#" data-mega-target="k-pop">K-POP</a>
+          <a href="#" data-mega-target="k-traditional">K-Traditional</a>
+          <a class="accent-warm" href="../timedeal/timedeal.html">Time Deal</a>
+          <a class="accent" href="../realtrend/realtrend.html" data-mega-target="tp-pick">T.P Pick</a>
+        </nav>
+      </div>
+
+      <aside class="mobile-menu-panel" id="mobile-menu-panel" aria-hidden="true" aria-label="Mobile menu">
+        <div class="mobile-menu-header">
+          <strong class="mobile-menu-title">MENU</strong>
+          <button type="button" class="mobile-menu-close" aria-label="Close menu"></button>
+        </div>
+        <nav class="mobile-menu-list" aria-label="Mobile categories">
+          <a href="#" data-mobile-submenu-open="categories">Categories<span aria-hidden="true">&gt;</span></a>
+          <a href="#">Brand</a>
+          <a href="#">Best Seller</a>
+          <a href="../timedeal/timedeal.html">Time Deal</a>
+          <a href="../realtrend/realtrend.html" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
+        </nav>
+        <section class="mobile-submenu-panel" aria-hidden="true" aria-label="Secondary categories">
+          <div class="mobile-submenu-header">
+            <button type="button" class="mobile-submenu-back" aria-label="Back to menu">
+              <span class="product-mobile-back-icon" aria-hidden="true"></span>
+              Categories
+            </button>
+          </div>
+          <nav class="mobile-submenu-list" aria-label="Second level categories">
+            <a href="../listing/beauty.html" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
+            <a href="../timedeal/timedeal.html">Time Deal</a>
+            <a href="../realtrend/realtrend.html" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
+          </nav>
+          <section class="mobile-tertiary-panel" aria-hidden="true" aria-label="Third level categories">
+            <div class="mobile-submenu-header">
+              <button type="button" class="mobile-tertiary-back" aria-label="Back to second categories">
+                <span class="product-mobile-back-icon" aria-hidden="true"></span>
+                <span class="mobile-tertiary-title">Categories</span>
+              </button>
+            </div>
+            <div class="mobile-category-browser">
+              <nav class="mobile-tertiary-list" aria-label="Second level categories"></nav>
+              <div class="mobile-category-content" aria-label="Third level categories"></div>
+            </div>
+            <section class="mobile-quaternary-panel" aria-hidden="true" aria-label="Fourth level categories">
+              <div class="mobile-submenu-header">
+                <button type="button" class="mobile-quaternary-back" aria-label="Back to third categories">
+                  <span class="product-mobile-back-icon" aria-hidden="true"></span>
+                  <span class="mobile-quaternary-title">Categories</span>
+                </button>
+              </div>
+              <nav class="mobile-quaternary-list" aria-label="Fourth level list"></nav>
+            </section>
+          </section>
+        </section>
+        <div class="mobile-menu-actions" aria-label="Quick links">
+          <a href="#"><span><img src="../img/Menu/preferences.png" alt="" aria-hidden="true"></span>Preferences</a>
+          <a href="#"><span><img src="../img/Menu/chat.png" alt="" aria-hidden="true"></span>Support</a>
+          <a href="#"><span><img src="../img/Menu/menu.png" alt="" aria-hidden="true"></span>My</a>
+          <a href="#"><span><img src="../img/Menu/signin.png" alt="" aria-hidden="true"></span>Sign In</a>
+        </div>
+        <div class="mobile-menu-social" aria-label="Social links">
+          <a href="#" aria-label="Instagram"><img src="../img/mobile-icon/menu/insta.png" alt="" aria-hidden="true"></a>
+          <a href="#" aria-label="Facebook"><img src="../img/mobile-icon/menu/facebook.png" alt="" aria-hidden="true"></a>
+          <a href="#" aria-label="YouTube"><img src="../img/mobile-icon/menu/youtube.png" alt="" aria-hidden="true"></a>
+          <a href="#" aria-label="Twitter"><img src="../img/mobile-icon/menu/twitter.png" alt="" aria-hidden="true"></a>
+        </div>
+      </aside>
+    </header>
+
+    <main class="product-detail-main">
+      <div class="product-detail-shell">
+        <nav class="product-breadcrumbs desktop-only" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span aria-hidden="true">&gt;</span>
+          <a href="../listing/beauty.html">Beauty</a>
+          <span aria-hidden="true">&gt;</span>
+          <span>Skincare</span>
+          <span aria-hidden="true">&gt;</span>
+          <strong>Serum / Ampoule</strong>
+        </nav>
+
+        <section class="product-overview" aria-label="Product overview">
+          <div class="product-gallery">
+            <div class="product-thumbnails" aria-label="Product gallery thumbnails">
+              <button type="button" class="is-active" data-detail-thumb="0" aria-label="View product front"></button>
+              <button type="button" data-detail-thumb="1" aria-label="View product texture"></button>
+              <button type="button" data-detail-thumb="2" aria-label="View product detail"></button>
+              <button type="button" data-detail-thumb="3" aria-label="View product routine"></button>
+              <button type="button" data-detail-thumb="4" aria-label="View product set"></button>
+            </div>
+            <figure class="product-stage">
+              <div class="product-stage-art" data-detail-stage aria-hidden="true">
+                <span class="product-dropper"></span>
+                <span class="product-bottle"><b>10+</b><small>Serum</small></span>
+              </div>
+            </figure>
+          </div>
+
+          <section class="product-summary" aria-label="Product information">
+            <div class="product-summary-head">
+              <span class="product-label">Best Seller</span>
+              <button type="button" class="product-share" aria-label="Share product">
+                <img src="./common_img/share.png" alt="" aria-hidden="true">
+              </button>
+            </div>
+            <p class="product-brand">numbuzin</p>
+            <h1>No.1 Pantothenic B5 Active Soothing Serum 80ml</h1>
+            <p class="product-rating">
+              <img class="product-rating-star" src="../img/listing/star.png" alt="" aria-hidden="true" width="16" height="16">
+              <span class="product-rating-score">4.8</span>
+              <span class="product-rating-reviews">(1,256 reviews)</span>
+              <span class="product-rating-sep" aria-hidden="true">|</span>
+              <span class="product-rating-sold">12.4K sold</span>
+            </p>
+            <div class="product-price">
+              <del>US$31.00</del>
+              <div class="product-price-current">
+                <strong>US$22.00</strong>
+                <mark>30% OFF</mark>
+              </div>
+            </div>
+            <button type="button" class="product-deal-strip">
+              <span class="product-deal-icon-wrap" aria-hidden="true">
+                <img class="product-deal-icon-default" src="./common_img/more.png" alt="" width="20" height="20">
+                <img class="product-deal-icon-hover" src="./common_img/more_hover.png" alt="" width="20" height="20">
+              </span>
+              Buy More, Save More
+              <b aria-hidden="true">&gt;</b>
+            </button>
+
+            <div class="product-quantity">
+              <span>Quantity</span>
+              <div class="product-qty-control">
+                <button type="button" data-product-qty="-1" aria-label="Decrease quantity">-</button>
+                <output data-product-qty-value>1</output>
+                <button type="button" data-product-qty="1" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+
+            <div class="product-actions">
+              <button type="button" class="product-add-cart">
+                <img src="./common_img/addtocart.png" alt="" aria-hidden="true">
+                <span class="product-add-cart-label">Add to Cart</span>
+              </button>
+              <button type="button" class="product-wish" aria-label="Add to wishlist" aria-pressed="false">
+                <img class="product-wish-icon-default" src="./common_img/heart.png" alt="" aria-hidden="true">
+                <img class="product-wish-icon-hover" src="./common_img/heart_hover.png" alt="" aria-hidden="true">
+              </button>
+            </div>
+          </section>
+        </section>
+
+        <section class="product-detail-lower" aria-label="Product details and recommendations">
+          <article class="product-info-panel">
+            <div class="product-tabs" role="tablist" aria-label="Product detail tabs">
+              <button type="button" class="is-active" role="tab" aria-selected="true" aria-controls="panel-use" id="tab-use" data-detail-tab="use">How to use</button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="panel-ingredients" id="tab-ingredients" data-detail-tab="ingredients">Ingredients</button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="panel-reviews" id="tab-reviews" data-detail-tab="reviews">Reviews <span class="product-reviews-count">(1,256)</span></button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="panel-qa" id="tab-qa" data-detail-tab="qa">Q&amp;A</button>
+            </div>
+            <div class="product-tab-panels">
+              <div id="panel-use" role="tabpanel" aria-labelledby="tab-use" data-detail-panel="use">
+                <p>1. After completing your basic skincare, lightly press the product to pick up an appropriate amount.</p>
+                <p>2. Gently pat onto the face to blend and adhere evenly.</p>
+              </div>
+              <div id="panel-ingredients" role="tabpanel" aria-labelledby="tab-ingredients" data-detail-panel="ingredients" hidden>
+                <p>Water, Panthenol, Glycerin, Niacinamide, Betaine, Allantoin, Sodium Hyaluronate.</p>
+              </div>
+              <div id="panel-reviews" role="tabpanel" aria-labelledby="tab-reviews" data-detail-panel="reviews" hidden>
+                <div class="product-reviews">
+                  <div class="product-reviews-summary">
+                    <div class="product-reviews-score">
+                      <strong>4.8</strong>
+                      <p class="product-reviews-stars" aria-label="4.8 out of 5 stars">
+                        <img src="../img/listing/star.png" alt="" width="16" height="16">
+                        <img src="../img/listing/star.png" alt="" width="16" height="16">
+                        <img src="../img/listing/star.png" alt="" width="16" height="16">
+                        <img src="../img/listing/star.png" alt="" width="16" height="16">
+                        <img src="../img/listing/star.png" alt="" width="16" height="16">
+                      </p>
+                      <span class="product-reviews-count">750 Reviews</span>
+                    </div>
+                    <div class="product-reviews-bars" aria-hidden="true">
+                      <div class="product-reviews-bar"><span>5</span><i style="--bar: 88%"></i></div>
+                      <div class="product-reviews-bar"><span>4</span><i style="--bar: 62%"></i></div>
+                      <div class="product-reviews-bar"><span>3</span><i style="--bar: 24%"></i></div>
+                      <div class="product-reviews-bar"><span>2</span><i style="--bar: 8%"></i></div>
+                      <div class="product-reviews-bar"><span>1</span><i style="--bar: 4%"></i></div>
+                    </div>
+                  </div>
+
+                  <section class="product-reviews-gallery" aria-label="Review photos and videos">
+                    <h3>Photo &amp; Video</h3>
+                    <div class="product-reviews-gallery-list">
+                      <span class="product-reviews-gallery-item"></span>
+                      <span class="product-reviews-gallery-item"></span>
+                      <span class="product-reviews-gallery-item"></span>
+                      <span class="product-reviews-gallery-item"></span>
+                      <span class="product-reviews-gallery-item"></span>
+                      <button type="button" class="product-reviews-gallery-item product-reviews-gallery-more">View More</button>
+                    </div>
+                  </section>
+
+                  <section class="product-reviews-list-wrap" aria-label="Customer reviews">
+                    <div class="product-reviews-list-head">
+                      <h3>Reviews <span class="product-reviews-count">(1,256)</span></h3>
+                      <label class="product-reviews-sort listing-sort">
+                        <span class="sr-only">Sort reviews</span>
+                        <span class="realtrend-select-wrap">
+                          <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Sort reviews">
+                            <span class="realtrend-select-value">Highest Rating</span>
+                          </button>
+                          <ul class="realtrend-select-menu" role="listbox"></ul>
+                          <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
+                            <option selected>Highest Rating</option>
+                            <option>Most Recent</option>
+                            <option>Lowest Rating</option>
+                          </select>
+                        </span>
+                      </label>
+                    </div>
+
+                    <ul class="product-reviews-list">
+                      <li class="product-review-item">
+                        <div class="product-review-top">
+                          <div class="product-review-user">
+                            <span class="product-review-avatar" aria-hidden="true"></span>
+                            <div>
+                              <strong>beauty.luv</strong>
+                              <p class="product-review-stars" aria-label="5 stars">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                              </p>
+                            </div>
+                          </div>
+                          <time datetime="2026-06-13">06/13/2026</time>
+                        </div>
+                        <p class="product-review-variant">01 Bare Apricot</p>
+                        <p class="product-review-text">This product is awsome</p>
+                        <button type="button" class="product-review-photo" aria-expanded="false" aria-label="Expand review photo">
+                          <span class="product-review-photo-inner" aria-hidden="true"></span>
+                        </button>
+                      </li>
+
+                      <li class="product-review-item">
+                        <div class="product-review-top">
+                          <div class="product-review-user">
+                            <span class="product-review-avatar" aria-hidden="true"></span>
+                            <div>
+                              <strong>beauty.luv</strong>
+                              <p class="product-review-stars" aria-label="5 stars">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                              </p>
+                            </div>
+                          </div>
+                          <time datetime="2026-06-13">06/13/2026</time>
+                        </div>
+                        <p class="product-review-text">This product is awsome</p>
+                        <button type="button" class="product-review-photo" aria-expanded="false" aria-label="Expand review photo">
+                          <span class="product-review-photo-inner" aria-hidden="true"></span>
+                        </button>
+                      </li>
+
+                      <li class="product-review-item">
+                        <div class="product-review-top">
+                          <div class="product-review-user">
+                            <span class="product-review-avatar" aria-hidden="true"></span>
+                            <div>
+                              <strong>beauty.luv</strong>
+                              <p class="product-review-stars" aria-label="5 stars">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                                <img src="../img/listing/star.png" alt="" width="14" height="14">
+                              </p>
+                            </div>
+                          </div>
+                          <time datetime="2026-06-13">06/13/2026</time>
+                        </div>
+                        <p class="product-review-text">This product is awsome</p>
+                        <button type="button" class="product-review-photo" aria-expanded="false" aria-label="Expand review photo">
+                          <span class="product-review-photo-inner" aria-hidden="true"></span>
+                        </button>
+                      </li>
+                    </ul>
+
+                    <nav class="product-reviews-pagination" aria-label="Reviews pagination">
+                      <button type="button" data-review-page="prev" aria-label="Previous page">&lt;</button>
+                      <button type="button" data-review-page="1" class="is-active" aria-current="page">1</button>
+                      <button type="button" data-review-page="2">2</button>
+                      <button type="button" data-review-page="next" aria-label="Next page">&gt;</button>
+                    </nav>
+                  </section>
+                </div>
+              </div>
+              <div id="panel-qa" role="tabpanel" aria-labelledby="tab-qa" data-detail-panel="qa" hidden>
+                <section class="product-qa" aria-label="Product Q&A">
+                  <h3>Q&amp;A</h3>
+                  <div class="product-qa-actions">
+                    <button type="button" class="product-qa-action product-inquiry-open">Product Inquiry</button>
+                    <button type="button" class="product-qa-action">Shipping, Returns &amp; Exchanges</button>
+                  </div>
+
+                  <div class="product-qa-list">
+                    <article class="product-qa-item">
+                      <button
+                        type="button"
+                        class="product-qa-question"
+                        aria-expanded="false"
+                        aria-controls="product-qa-answer-1"
+                      >
+                        <span class="product-qa-status">Answered</span>
+                        <span class="product-qa-title">Is this suitable for sensitive skin?</span>
+                        <span class="product-qa-meta">beaut*** <b aria-hidden="true">|</b> 06.10.2026</span>
+                      </button>
+                      <div class="product-qa-answer" id="product-qa-answer-1" hidden>
+                        <p>Hello,<br>Thank you for your inquiry.</p>
+                        <p>This product is designed for sensitive skin. However, skin conditions and reactions may vary from person to person. We recommend performing a patch test before full use to ensure it is suitable for your skin.</p>
+                        <p>Thank you.</p>
+                        <time datetime="2026-06-11">06.11.2026</time>
+                      </div>
+                    </article>
+
+                    <article class="product-qa-item">
+                      <div class="product-qa-question product-qa-question-static">
+                        <span class="product-qa-status">Pending</span>
+                        <span class="product-qa-title">Is this suitable for sensitive skin?</span>
+                        <span class="product-qa-meta">beaut*** <b aria-hidden="true">|</b> 06.10.2026</span>
+                      </div>
+                    </article>
+                  </div>
+
+                  <nav class="product-qa-pagination" aria-label="Q&A pagination">
+                    <button type="button" aria-label="Previous Q&A page">&lt;</button>
+                    <button type="button" class="is-active" aria-current="page">1</button>
+                    <button type="button">2</button>
+                    <button type="button">3</button>
+                    <span aria-hidden="true">...</span>
+                    <button type="button">5</button>
+                    <button type="button" aria-label="Next Q&A page">&gt;</button>
+                  </nav>
+                </section>
+              </div>
+            </div>
+          </article>
+
+          <div class="product-recommendations-wrap">
+          <aside class="product-recommendations" aria-label="Recommended products">
+            <h2>You May Also Love</h2>
+            <div class="product-recommendation-list" tabindex="0" aria-label="Recommended products, scroll horizontally for more">
+              <article class="product-rec-card">
+                <button type="button" aria-label="Add recommended product">+</button>
+                <span class="product-rec-image" aria-hidden="true"></span>
+                <p>Celimax</p>
+                <h3>Retinal Shot Tightening Booster 15ml</h3>
+                <strong>US$18.48</strong>
+              </article>
+              <article class="product-rec-card">
+                <button type="button" aria-label="Add recommended product">+</button>
+                <span class="product-rec-image" aria-hidden="true"></span>
+                <p>Celimax</p>
+                <h3>Dual Barrier Creamy Toner 150ml</h3>
+                <strong>US$18.48</strong>
+              </article>
+              <article class="product-rec-card">
+                <button type="button" aria-label="Add recommended product">+</button>
+                <span class="product-rec-image" aria-hidden="true"></span>
+                <p>Celimax</p>
+                <h3>Green Tea Calming Gel Cream 50ml</h3>
+                <strong>US$18.48</strong>
+              </article>
+              <article class="product-rec-card">
+                <button type="button" aria-label="Add recommended product">+</button>
+                <span class="product-rec-image" aria-hidden="true"></span>
+                <p>Celimax</p>
+                <h3>Water-Fit Sun Serum SPF50+</h3>
+                <strong>US$18.48</strong>
+              </article>
+              <article class="product-rec-card">
+                <button type="button" aria-label="Add recommended product">+</button>
+                <span class="product-rec-image" aria-hidden="true"></span>
+                <p>Celimax</p>
+                <h3>Noni Ampoule Radiance Serum 30ml</h3>
+                <strong>US$21.20</strong>
+              </article>
+              <article class="product-rec-card">
+                <button type="button" aria-label="Add recommended product">+</button>
+                <span class="product-rec-image" aria-hidden="true"></span>
+                <p>Celimax</p>
+                <h3>Derma Nature Relief Madecica B5 Cream 80ml</h3>
+                <strong>US$19.90</strong>
+              </article>
+              <article class="product-rec-card">
+                <button type="button" aria-label="Add recommended product">+</button>
+                <span class="product-rec-image" aria-hidden="true"></span>
+                <p>Celimax</p>
+                <h3>Heartleaf BHA Peeling Pad 60ea</h3>
+                <strong>US$16.80</strong>
+              </article>
+              <article class="product-rec-card">
+                <button type="button" aria-label="Add recommended product">+</button>
+                <span class="product-rec-image" aria-hidden="true"></span>
+                <p>Celimax</p>
+                <h3>Juicy Plumping Lip Butter 3g</h3>
+                <strong>US$12.40</strong>
+              </article>
+            </div>
+          </aside>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-main">
+        <a class="logo footer-logo" href="../index.html">Bridge<span>On</span></a>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">MY ACCOUNT</button>
+          <div class="footer-links"><a href="#">My Account</a><a href="#">Customer Service</a><a href="#">Order Tracking</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">ABOUT US</button>
+          <div class="footer-links"><a href="#">About Us</a><a href="#">Contact Us</a><a href="#">Join Us</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">POLICIES</button>
+          <div class="footer-links"><a href="#">Terms of Use</a><a href="#">Privacy &amp; Cookie Policy</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">CONTACT US</button>
+          <div class="footer-links"><a href="mailto:help@bridge.com">help@bridge.com</a></div>
+        </div>
+      </div>
+      <div class="footer-methods">
+        <div><strong>Payment Method</strong><span>PayPal</span><span>VISA</span><span>Master</span><span>AMEX</span><span>Alipay</span></div>
+        <div><strong>Delivery Method</strong><span>FedEx</span><span>DHL</span><span>aramex</span><span>EMS</span><span>parcel</span></div>
+      </div>
+      <p class="copyright">&copy; 2025 Bridge on, Inc. All rights reserved.</p>
+    </footer>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
+      <a href="#" data-bottom-search-open><img src="../img/Menu/search_menu.png" alt="" aria-hidden="true"><span>Search</span></a>
+      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
+      <a href="#" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
+      <a href="#"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
+    </nav>
+
+    <aside class="realtrend-panel trend-product-sheet" id="trend-product-sheet" hidden aria-hidden="true" aria-label="Product details">
+      <article class="realtrend-product-card">
+        <button type="button" class="realtrend-product-sheet-close" aria-label="Close product details">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7 17 17M17 7 7 17" /></svg>
+        </button>
+        <span class="realtrend-kbeauty-tag">K-BEAUTY</span>
+
+        <div class="realtrend-product-head">
+          <div class="realtrend-product-thumb" aria-hidden="true">img</div>
+          <div class="realtrend-product-meta">
+            <div class="realtrend-brand-row">
+              <a class="realtrend-brand" href="../brand/celimax.html">Celimax</a>
+              <span class="realtrend-best">BEST</span>
+            </div>
+            <h2 class="realtrend-product-name">Retinal Shot Tightening Booster 15ml</h2>
+            <p class="realtrend-rating">
+              <img src="../img/main-img/star.png" alt="" />
+              <span>4.8 | 1,275 reviews</span>
+            </p>
+            <p class="realtrend-price">
+              <strong>US$18.48</strong>
+              <del>US$26.40</del>
+              <mark>30% OFF</mark>
+            </p>
+          </div>
+        </div>
+
+        <div class="realtrend-options-row">
+          <div class="realtrend-field">
+            <span>Select options</span>
+            <span class="realtrend-select-wrap">
+              <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                <span class="realtrend-select-value">Retinal Shot Tightening Booster 15ml</span>
+              </button>
+              <ul class="realtrend-select-menu" role="listbox"></ul>
+              <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
+                <option>Retinal Shot Tightening Booster 15ml</option>
+                <option>Retinal Shot Tightening Booster 30ml</option>
+              </select>
+            </span>
+          </div>
+
+          <div class="realtrend-qty-block">
+            <span>Quantity</span>
+            <div class="realtrend-qty">
+              <button type="button" data-qty="-1" aria-label="Decrease quantity">-</button>
+              <output id="trend-product-qty">1</output>
+              <button type="button" data-qty="1" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="realtrend-cta-row">
+          <button type="button" class="realtrend-add-cart">Add to Cart</button>
+          <button type="button" class="realtrend-wish" aria-label="Add to wishlist" aria-pressed="false">
+            <img class="realtrend-wish-icon-default" src="../img/realtrend/like_web.png" alt="" aria-hidden="true" />
+            <img class="realtrend-wish-icon-hover" src="../img/realtrend/liked_web.png" alt="" aria-hidden="true" />
+          </button>
+        </div>
+
+        <section class="realtrend-love">
+          <h3>Why you'll love it</h3>
+          <ul>
+            <li>Soothes sensitive skin comfortably</li>
+            <li>Barrier Strengthening</li>
+            <li>Long-Lasting Hydration</li>
+            <li>Perfect for Sensitive Skin</li>
+          </ul>
+        </section>
+
+        <section class="realtrend-reviews">
+          <div class="realtrend-reviews-head">
+            <h3>Reviews(128)</h3>
+            <a href="#">VIEW ALL -&gt;</a>
+          </div>
+          <ul class="realtrend-review-list">
+            <li>
+              <span class="realtrend-avatar" aria-hidden="true"></span>
+              <div class="realtrend-review-copy">
+                <strong>glow.with.j</strong>
+                <p>Numbuzin serum has changed my life.</p>
+              </div>
+              <span class="realtrend-stars" aria-label="5 stars">
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+              </span>
+            </li>
+            <li>
+              <span class="realtrend-avatar" aria-hidden="true"></span>
+              <div class="realtrend-review-copy">
+                <strong>glow.with.j</strong>
+                <p>Numbuzin serum has changed my life.</p>
+              </div>
+              <span class="realtrend-stars" aria-label="5 stars">
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+              </span>
+            </li>
+            <li>
+              <span class="realtrend-avatar" aria-hidden="true"></span>
+              <div class="realtrend-review-copy">
+                <strong>glow.with.j</strong>
+                <p>Numbuzin serum has changed my life.</p>
+              </div>
+              <span class="realtrend-stars" aria-label="5 stars">
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+              </span>
+            </li>
+          </ul>
+        </section>
+      </article>
+    </aside>
+
+    <div
+      class="realtrend-cart-toast"
+      id="product-detail-cart-toast"
+      role="status"
+      aria-live="polite"
+      aria-hidden="true"
+      hidden
+    >
+      <button type="button" class="realtrend-cart-toast-close" aria-label="Close notification">&times;</button>
+      <div class="realtrend-cart-toast-icon" aria-hidden="true">
+        <svg class="realtrend-cart-toast-ring" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="19" />
+        </svg>
+        <img src="../img/realtrend/check.png" alt="" />
+      </div>
+      <div class="realtrend-cart-toast-copy">
+        <strong>Add to cart!</strong>
+        <p id="product-detail-cart-toast-message"></p>
+      </div>
+      <div class="realtrend-cart-toast-thumb" aria-hidden="true"></div>
+    </div>
+
+    <div
+      class="product-inquiry-dialog"
+      id="product-inquiry-dialog"
+      aria-hidden="true"
+      hidden
+      >
+      <button type="button" class="product-inquiry-backdrop" aria-label="Close inquiry form"></button>
+      <form class="product-inquiry-modal" role="dialog" aria-modal="true" aria-labelledby="product-inquiry-title">
+        <button type="button" class="product-inquiry-close" aria-label="Close inquiry form">&times;</button>
+        <div class="product-inquiry-product">
+          <span class="product-inquiry-thumb" aria-hidden="true">
+            <span class="product-inquiry-dropper"></span>
+            <span class="product-inquiry-bottle"><b>10</b></span>
+          </span>
+          <h2 id="product-inquiry-title">No.1 Pantothenic B5 Active Soothing Serum 80ml</h2>
+        </div>
+        <label class="sr-only" for="product-inquiry-message">Product inquiry</label>
+        <textarea id="product-inquiry-message" placeholder="Please enter your inquiry"></textarea>
+        <p>You can also find our response under My Page &gt;<br>Product Q&amp;A.</p>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+    <script src="../script.js"></script>
+    <script src="./product-detail.js"></script>
+  </body>
+</html>
