@@ -32,7 +32,7 @@
             <a class="product-mobile-gnb-button" href="../index.html" aria-label="Home">
               <img src="./common_img/home.png" alt="" aria-hidden="true">
             </a>
-            <a class="product-mobile-gnb-button product-mobile-gnb-cart" href="#" aria-label="Cart, 3 items">
+            <a class="product-mobile-gnb-button product-mobile-gnb-cart" href="../cart/cart.html" aria-label="Cart, 3 items">
               <img src="./common_img/cart.png" alt="" aria-hidden="true">
               <span class="cart-badge" aria-hidden="true">3</span>
             </a>
@@ -56,10 +56,10 @@
           <button class="icon-button desktop-icon" aria-label="Wishlist">
             <img src="../img/main-img/top_banner_wish.png" alt="wishlist">
           </button>
-          <button class="icon-button cart-icon-button" aria-label="Cart, 3 items">
+          <a class="icon-button cart-icon-button" aria-label="Cart, 3 items" href="../cart/cart.html">
             <img src="../img/main-img/top_banner_cart.png" alt="cart">
             <span class="cart-badge" aria-hidden="true">3</span>
-          </button>
+          </a>
         </div>
       </div>
 
@@ -124,7 +124,7 @@
 
       <div class="category-menu">
         <nav class="category-nav" aria-label="Primary">
-          <a href="#">BEST</a>
+          <a href="../listing/best.html">BEST</a>
           <a href="#">Brand</a>
           <a class="is-active" href="../listing/beauty.html" data-mega-target="beauty" aria-current="page">Beauty</a>
           <a href="#" data-mega-target="k-food">K-Food</a>
@@ -132,7 +132,7 @@
           <a href="#" data-mega-target="k-pop">K-POP</a>
           <a href="#" data-mega-target="k-traditional">K-Traditional</a>
           <a class="accent-warm" href="../timedeal/timedeal.html">Time Deal</a>
-          <a class="accent" href="../realtrend/realtrend.html" data-mega-target="tp-pick">T.P Pick</a>
+          <a class="accent" href="../editors-pick/editors-pick.html" data-mega-target="tp-pick">T.P Pick</a>
         </nav>
       </div>
 
@@ -146,7 +146,7 @@
           <a href="#">Brand</a>
           <a href="#">Best Seller</a>
           <a href="../timedeal/timedeal.html">Time Deal</a>
-          <a href="../realtrend/realtrend.html" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
+          <a href="../editors-pick/editors-pick.html" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
         </nav>
         <section class="mobile-submenu-panel" aria-hidden="true" aria-label="Secondary categories">
           <div class="mobile-submenu-header">
@@ -162,7 +162,7 @@
             <a href="#" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
             <a href="#" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
             <a href="../timedeal/timedeal.html">Time Deal</a>
-            <a href="../realtrend/realtrend.html" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
+            <a href="../editors-pick/editors-pick.html" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
           </nav>
           <section class="mobile-tertiary-panel" aria-hidden="true" aria-label="Third level categories">
             <div class="mobile-submenu-header">
@@ -608,7 +608,7 @@
       <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
       <a href="#" data-bottom-search-open><img src="../img/Menu/search_menu.png" alt="" aria-hidden="true"><span>Search</span></a>
       <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
-      <a href="#" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
+      <a href="../cart/cart.html" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
       <a href="#"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
     </nav>
 
@@ -779,6 +779,13 @@
         <button type="submit">Submit</button>
       </form>
     </div>
+
+    <button class="float-button to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+    </button>
+    <button class="float-button chat" aria-label="Chat">
+      <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
+    </button>
 
     <script src="../script.js"></script>
     <script src="./product-detail.js"></script>

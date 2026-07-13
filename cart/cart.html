@@ -1,22 +1,34 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Real Trend | BridgeOn</title>
+    <title>Your Cart | BridgeOn</title>
     <link rel="stylesheet" href="../reset.css" />
     <link rel="stylesheet" href="../font.css" />
     <link rel="stylesheet" href="../common.css" />
     <link rel="stylesheet" href="../styles.css" />
-    <link rel="stylesheet" href="./realtrend.css" />
+    <link rel="stylesheet" href="./cart.css" />
   </head>
-  <body class="realtrend-page">
-    <header class="site-header realtrend-site-header">
+  <body class="cart-page is-cart-empty">
+    <header class="site-header cart-site-header">
+      <div class="cart-mobile-header mobile-only" aria-label="Cart mobile header">
+        <button type="button" class="cart-mobile-back" data-cart-back aria-label="Go back">&larr;</button>
+        <strong>Cart</strong>
+        <div class="cart-mobile-actions">
+          <button type="button" aria-label="Account">
+            <img src="../img/main-img/top_banner_my.png" alt="" aria-hidden="true">
+          </button>
+          <a href="./cart.html" aria-label="Cart">
+            <img src="../product-detail/common_img/cart.png" alt="" aria-hidden="true">
+          </a>
+        </div>
+      </div>
       <div class="promo-bar">
         <div class="promo-inner">
           <span><img src="../img/main-img/top_banner_lefticon.png" alt="lefticon">Free Shipping Over US$nn</span>
           <span><img src="../img/main-img/top_banner_righticon.png" alt="righticon">Ships From Korea</span>
-          <span class="desktop-only">English / USD &#8744 </span>
+          <span class="desktop-only">English / USD &#8744; </span>
         </div>
       </div>
 
@@ -39,7 +51,7 @@
           <button class="icon-button desktop-icon" aria-label="Wishlist">
             <img src="../img/main-img/top_banner_wish.png" alt="wishlist">
           </button>
-          <a class="icon-button cart-icon-button" aria-label="Cart, 3 items" href="../cart/cart.html">
+          <a class="icon-button cart-icon-button" aria-label="Cart, 3 items" href="./cart.html">
             <img src="../img/main-img/top_banner_cart.png" alt="cart">
             <span class="cart-badge" aria-hidden="true">3</span>
           </a>
@@ -115,12 +127,12 @@
           <a href="../listing/best.html">BEST</a>
           <a href="#">Brand</a>
           <a href="../listing/beauty.html" data-mega-target="beauty">Beauty</a>
-          <a href="#" data-mega-target="k-food">K-Food</a>
-          <a href="#" data-mega-target="lifestyle">Lifestyle</a>
-          <a href="#" data-mega-target="k-pop">K-POP</a>
-          <a href="#" data-mega-target="k-traditional">K-Traditional</a>
+          <a href="../listing/k-food.html" data-mega-target="k-food">K-Food</a>
+          <a href="../listing/lifestyle.html" data-mega-target="lifestyle">Lifestyle</a>
+          <a href="../listing/k-pop.html" data-mega-target="k-pop">K-POP</a>
+          <a href="../listing/k-traditional.html" data-mega-target="k-traditional">K-Traditional</a>
           <a class="accent-warm" href="../timedeal/timedeal.html">Time Deal &#128293;</a>
-          <a class="accent is-active" href="../editors-pick/editors-pick.html" data-mega-target="tp-pick">T.P Pick</a>
+          <a class="accent" href="../editors-pick/editors-pick.html" data-mega-target="tp-pick">T.P Pick</a>
         </nav>
 
         <div class="category-mega" data-menu-panel="beauty" aria-label="Beauty category submenu">
@@ -212,10 +224,10 @@
         </div>
 
         <div class="category-mega" data-menu-panel="k-food" aria-label="K-Food category submenu">
-          <div class="mega-feature">
+          <a class="mega-feature" href="../listing/k-food.html">
             <b>K-Food</b>
             <strong>Food Trendy Pick</strong>
-          </div>
+          </a>
           <div class="mega-column">
             <h3>Ramen &amp; Noodles</h3>
             <ul>
@@ -285,10 +297,10 @@
         </div>
 
         <div class="category-mega" data-menu-panel="lifestyle" aria-label="Lifestyle category submenu">
-          <div class="mega-feature">
+          <a class="mega-feature" href="../listing/lifestyle.html">
             <b>Lifestyle</b>
             <strong>Trendy Pick</strong>
-          </div>
+          </a>
           <div class="mega-column">
             <h3>Toys &amp; Crafts</h3>
             <ul>
@@ -321,10 +333,10 @@
         </div>
 
         <div class="category-mega" data-menu-panel="k-pop" aria-label="K-POP category submenu">
-          <div class="mega-feature">
+          <a class="mega-feature" href="../listing/k-pop.html">
             <b>K-POP</b>
             <strong>Trendy Pick</strong>
-          </div>
+          </a>
           <div class="mega-column">
             <h3>Bestseller</h3>
           </div>
@@ -343,10 +355,10 @@
         </div>
 
         <div class="category-mega" data-menu-panel="k-traditional" aria-label="K-Traditional category submenu">
-          <div class="mega-feature">
+          <a class="mega-feature" href="../listing/k-traditional.html">
             <b>K-Traditional</b>
             <strong>Trendy Pick</strong>
-          </div>
+          </a>
           <div class="mega-column">
             <h3>Art&amp;Decor</h3>
           </div>
@@ -385,7 +397,7 @@
             <h3>T.P Magazine</h3>
           </div>
           <div class="mega-column">
-            <h3><a class="mega-column-heading" href="./realtrend.html">Real Trend</a></h3>
+            <h3><a class="mega-column-heading" href="../realtrend/realtrend.html">Real Trend</a></h3>
           </div>
         </div>
       </div>
@@ -410,11 +422,11 @@
             </button>
           </div>
           <nav class="mobile-submenu-list" aria-label="Second level categories">
-            <a href="#" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
-            <a href="#" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
-            <a href="#" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
-            <a href="#" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
-            <a href="#" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/beauty.html" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/k-food.html" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/lifestyle.html" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/k-pop.html" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/k-traditional.html" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
             <a href="#" data-mobile-third-open="time-deal">Time Deal</a>
             <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
           </nav>
@@ -467,286 +479,114 @@
       </aside>
     </header>
 
-    <main class="realtrend-main">
-      <nav class="realtrend-breadcrumb desktop-only" aria-label="Breadcrumb">
-        <a href="../index.html">Home</a>
-        <span aria-hidden="true">&gt;</span>
-        <a href="#">T.P Pick</a>
-        <span aria-hidden="true">&gt;</span>
-        <span aria-current="page">Real Trend</span>
-      </nav>
+    <main class="cart-main">
+      <div class="cart-shell">
+        <section class="cart-heading">
+          <div>
+            <h1>YOUR CART <span data-cart-heading-count>(0)</span></h1>
+            <p>Review your item and proceed to checkout.</p>
+          </div>
+          <a class="cart-continue desktop-only" href="../listing/best.html">Continue Shopping -&gt;</a>
+        </section>
 
-      <div class="realtrend-layout">
-        <div class="realtrend-player-wrap">
-          <div class="realtrend-shortform">
-            <section class="realtrend-stage" aria-label="Trend reel player">
-              <div class="realtrend-feed" id="realtrend-feed">
-                <div class="realtrend-track" id="realtrend-track">
-                  <article class="realtrend-slide is-active" data-index="0">
-                    <div class="realtrend-media" data-reel-media aria-label="Skincare application reel">
-                      <span class="realtrend-media-placeholder">Reel Video</span>
-                      <button type="button" class="realtrend-play-toggle" aria-label="Pause reel" aria-pressed="true">
-                        <svg class="realtrend-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12" /></svg>
-                        <svg class="realtrend-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10l8-5-8-5Z" /></svg>
-                      </button>
-                    </div>
-                    <aside class="realtrend-social" aria-label="Reel engagement">
-                      <button type="button" class="realtrend-social-btn" data-social-toggle="like" aria-pressed="false" aria-label="Like reel">
-                        <img src="../img/realtrend/like.png" data-icon-default="../img/realtrend/like.png" data-icon-active="../img/realtrend/liked.png" alt="" aria-hidden="true" />
-                        <span>12.4K</span>
-                      </button>
-                      <button type="button" class="realtrend-social-btn" data-social-toggle="save" aria-pressed="false" aria-label="Save reel">
-                        <img src="../img/realtrend/save.png" data-icon-default="../img/realtrend/save.png" data-icon-active="../img/realtrend/saved.png" alt="" aria-hidden="true" />
-                        <span>3,254</span>
-                      </button>
-                      <button type="button" class="realtrend-social-btn" aria-label="Share reel">
-                        <img src="../img/realtrend/share.png" alt="" aria-hidden="true" />
-                        <span>1,239</span>
-                      </button>
-                    </aside>
-                    <section class="realtrend-mobile-product realtrend-mobile-only" aria-label="Products in this reel">
-                      <div class="realtrend-mobile-product-head">
-                        <img src="../img/realtrend/product.png" alt="" aria-hidden="true" />
-                        <h2>Products in this reel</h2>
-                      </div>
-                      <article class="realtrend-mobile-product-card">
-                        <div class="realtrend-mobile-product-thumb" aria-hidden="true">img</div>
-                        <div class="realtrend-mobile-product-copy">
-                          <a class="realtrend-brand" href="../brand/numbuzin.html">numbuzin</a>
-                          <h3>No.3 PHA Skin Prep Bubble Mask 90ml</h3>
-                          <p class="realtrend-mobile-price"><strong>US$22.00</strong><del>US$31.00</del></p>
-                        </div>
-                        <button type="button" class="realtrend-mobile-add">Add to Cart</button>
-                      </article>
-                    </section>
-                  </article>
-                  <article class="realtrend-slide" data-index="1">
-                    <div class="realtrend-media reel-tone-2" data-reel-media aria-label="Glass skin routine reel">
-                      <span class="realtrend-media-placeholder">Reel Video</span>
-                      <button type="button" class="realtrend-play-toggle" aria-label="Pause reel" aria-pressed="true">
-                        <svg class="realtrend-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12" /></svg>
-                        <svg class="realtrend-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10l8-5-8-5Z" /></svg>
-                      </button>
-                    </div>
-                    <aside class="realtrend-social" aria-label="Reel engagement">
-                      <button type="button" class="realtrend-social-btn" data-social-toggle="like" aria-pressed="false" aria-label="Like reel">
-                        <img src="../img/realtrend/like.png" data-icon-default="../img/realtrend/like.png" data-icon-active="../img/realtrend/liked.png" alt="" aria-hidden="true" />
-                        <span>8.7K</span>
-                      </button>
-                      <button type="button" class="realtrend-social-btn" data-social-toggle="save" aria-pressed="false" aria-label="Save reel">
-                        <img src="../img/realtrend/save.png" data-icon-default="../img/realtrend/save.png" data-icon-active="../img/realtrend/saved.png" alt="" aria-hidden="true" />
-                        <span>2,108</span>
-                      </button>
-                      <button type="button" class="realtrend-social-btn" aria-label="Share reel">
-                        <img src="../img/realtrend/share.png" alt="" aria-hidden="true" />
-                        <span>892</span>
-                      </button>
-                    </aside>
-                    <section class="realtrend-mobile-product realtrend-mobile-only" aria-label="Products in this reel">
-                      <div class="realtrend-mobile-product-head">
-                        <img src="../img/realtrend/product.png" alt="" aria-hidden="true" />
-                        <h2>Products in this reel</h2>
-                      </div>
-                      <article class="realtrend-mobile-product-card">
-                        <div class="realtrend-mobile-product-thumb" aria-hidden="true">img</div>
-                        <div class="realtrend-mobile-product-copy">
-                          <a class="realtrend-brand" href="../brand/anua.html">Anua</a>
-                          <h3>Heartleaf 77% Soothing Toner 250ml</h3>
-                          <p class="realtrend-mobile-price"><strong>US$18.50</strong><del>US$26.00</del></p>
-                        </div>
-                        <button type="button" class="realtrend-mobile-add">Add to Cart</button>
-                      </article>
-                    </section>
-                  </article>
-                  <article class="realtrend-slide" data-index="2">
-                    <div class="realtrend-media reel-tone-3" data-reel-media aria-label="Summer sunscreen reel">
-                      <span class="realtrend-media-placeholder">Reel Video</span>
-                      <button type="button" class="realtrend-play-toggle" aria-label="Pause reel" aria-pressed="true">
-                        <svg class="realtrend-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12" /></svg>
-                        <svg class="realtrend-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10l8-5-8-5Z" /></svg>
-                      </button>
-                    </div>
-                    <aside class="realtrend-social" aria-label="Reel engagement">
-                      <button type="button" class="realtrend-social-btn" data-social-toggle="like" aria-pressed="false" aria-label="Like reel">
-                        <img src="../img/realtrend/like.png" data-icon-default="../img/realtrend/like.png" data-icon-active="../img/realtrend/liked.png" alt="" aria-hidden="true" />
-                        <span>15.2K</span>
-                      </button>
-                      <button type="button" class="realtrend-social-btn" data-social-toggle="save" aria-pressed="false" aria-label="Save reel">
-                        <img src="../img/realtrend/save.png" data-icon-default="../img/realtrend/save.png" data-icon-active="../img/realtrend/saved.png" alt="" aria-hidden="true" />
-                        <span>4,891</span>
-                      </button>
-                      <button type="button" class="realtrend-social-btn" aria-label="Share reel">
-                        <img src="../img/realtrend/share.png" alt="" aria-hidden="true" />
-                        <span>2,045</span>
-                      </button>
-                    </aside>
-                    <section class="realtrend-mobile-product realtrend-mobile-only" aria-label="Products in this reel">
-                      <div class="realtrend-mobile-product-head">
-                        <img src="../img/realtrend/product.png" alt="" aria-hidden="true" />
-                        <h2>Products in this reel</h2>
-                      </div>
-                      <article class="realtrend-mobile-product-card">
-                        <div class="realtrend-mobile-product-thumb" aria-hidden="true">img</div>
-                        <div class="realtrend-mobile-product-copy">
-                          <a class="realtrend-brand" href="../brand/beauty-of-joseon.html">Beauty of Joseon</a>
-                          <h3>Relief Sun Rice + Probiotics SPF50+ 50ml</h3>
-                          <p class="realtrend-mobile-price"><strong>US$16.00</strong><del>US$22.00</del></p>
-                        </div>
-                        <button type="button" class="realtrend-mobile-add">Add to Cart</button>
-                      </article>
-                    </section>
-                  </article>
-                </div>
-              </div>
+        <section class="cart-shipping" aria-label="Shipping destination and free shipping progress">
+          <div class="cart-ship-destination">
+            <span aria-hidden="true">◇</span>
+            <p>Shipping to United State</p>
+            <button type="button">Change</button>
+          </div>
+          <div class="cart-free-shipping">
+            <div>
+              <strong data-cart-shipping-message>You're US$0.00 away from <b>FREE</b> shipping!</strong>
+              <span>FREE shipping <i aria-hidden="true">▱</i></span>
+            </div>
+            <div class="cart-shipping-meter" aria-hidden="true">
+              <span data-cart-shipping-meter></span>
+            </div>
+            <progress value="0" max="100" aria-label="Free shipping progress" data-cart-shipping-progress></progress>
+          </div>
+        </section>
 
-              <div
-                class="realtrend-progress desktop-only"
-                role="slider"
-                aria-label="Reel progress"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                aria-valuenow="0"
-                tabindex="0"
-              >
-                <span class="realtrend-progress-fill"></span>
+        <div class="cart-content">
+          <section class="cart-items-card" aria-label="Cart items">
+            <div class="cart-items-head">
+              <label><input type="checkbox" data-cart-select-all> Select All</label>
+              <span>Price</span>
+              <span>Quantity</span>
+              <span>Total</span>
+            </div>
+            <div class="cart-item-list" data-cart-items></div>
+            <p class="cart-empty-message" data-cart-empty>Your cart is empty.</p>
+          </section>
+
+          <button type="button" class="cart-delete-selected" data-cart-delete-selected hidden><img src="img/delete.png" alt="" aria-hidden="true">Delete Selected</button>
+
+          <aside class="cart-side" hidden>
+            <section class="cart-promo-card">
+              <h2>PROMO CODE</h2>
+              <form data-cart-promo-form>
+                <label class="sr-only" for="cart-promo-code">Promo code</label>
+                <input id="cart-promo-code" type="text" placeholder="Enter promo code">
+                <button type="submit">Apply</button>
+              </form>
+              <p class="cart-promo-message cart-promo-message--error" data-cart-promo-error aria-live="polite" hidden>Invalid promo code. Please check and try again.</p>
+              <div class="cart-promo-applied" hidden>
+                <p><img class="cart-promo-check-icon" src="img/check.png" alt="" aria-hidden="true"> <span data-cart-promo-applied-message>Promo code applied!</span> <button type="button" data-cart-promo-remove aria-label="Remove promo code">×</button></p>
+                <p><span data-cart-promo-applied-code>Promo code</span> <strong data-cart-promo-applied-discount>- US$0.00</strong></p>
               </div>
             </section>
-          </div>
 
-          <nav class="realtrend-nav-arrows desktop-only" aria-label="Reel navigation">
-            <button type="button" class="realtrend-arrow" data-reel-direction="-1" aria-label="Previous reel">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
-            </button>
-            <button type="button" class="realtrend-arrow" data-reel-direction="1" aria-label="Next reel">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-            </button>
-          </nav>
+            <section class="cart-summary-card">
+              <h2>ORDER SUMMARY</h2>
+              <dl>
+                <div><dt>Subtotal <span data-cart-summary-count>(0 items)</span></dt><dd data-cart-subtotal>US$0.00</dd></div>
+                <div><dt>Discount</dt><dd class="cart-discount" data-cart-discount>- US$0.00</dd></div>
+                <div class="cart-summary-promo" data-cart-summary-promo hidden><dt data-cart-summary-promo-label>Promo code</dt><dd data-cart-summary-promo-discount>- US$0.00</dd></div>
+                <div><dt>Shipping ⓘ</dt><dd class="cart-free">FREE</dd></div>
+                <div class="cart-taxes-row">
+                  <dt>
+                    Estimated Taxes
+                    <span class="cart-info-wrap">
+                      <button type="button" class="cart-info-button" aria-label="About estimated taxes">i</button>
+                      <span class="cart-summary-tooltip" role="note">The final amount will be charged in USD. Your payment amount may vary slightly due to exchange rates and payment provider policies.</span>
+                    </span>
+                  </dt>
+                  <dd class="cart-customs">Charged at customs</dd>
+                </div>
+                <div class="cart-summary-total"><dt>Total</dt><dd data-cart-total>US$0.00</dd></div>
+              </dl>
+              <p class="cart-save"><img src="img/promo.png" alt="" aria-hidden="true"> You save <strong data-cart-save>US$0.00</strong></p>
+              <button type="button" class="cart-checkout">PROCEED TO CHECKOUT -&gt;</button>
+              <span class="cart-or">- OR -</span>
+              <button type="button" class="cart-paypal">PayPal</button>
+              <small>Secure Checkout</small>
+            </section>
+          </aside>
         </div>
 
-        <aside class="realtrend-panel desktop-only" aria-label="Product details">
-          <article class="realtrend-product-card">
-            <button type="button" class="realtrend-product-sheet-close realtrend-mobile-only" aria-label="Close product details">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7 17 17M17 7 7 17" /></svg>
-            </button>
-            <span class="realtrend-kbeauty-tag">K-BEAUTY</span>
+        <section class="cart-recommendations" aria-label="Recommended products">
+          <h2>You May Also Love</h2>
+          <div class="cart-rec-list">
+            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Celimax</p><h3>Retinal Shot Tightening Booster 15ml</h3><strong>US$18.48</strong></article>
+            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Celimax</p><h3>Retinal Shot Tightening Booster 15ml</h3><strong>US$18.48</strong></article>
+            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Celimax</p><h3>Retinal Shot Tightening Booster 15ml</h3><strong>US$18.48</strong></article>
+            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Celimax</p><h3>Retinal Shot Tightening Booster 15ml</h3><strong>US$18.48</strong></article>
+            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Celimax</p><h3>Retinal Shot Tightening Booster 15ml</h3><strong>US$18.48</strong></article>
+          </div>
+        </section>
 
-            <div class="realtrend-product-head">
-              <div class="realtrend-product-thumb" aria-hidden="true">img</div>
-              <div class="realtrend-product-meta">
-                <div class="realtrend-brand-row">
-                  <a class="realtrend-brand" href="../brand/numbuzin.html">numbuzin</a>
-                  <span class="realtrend-best">BEST</span>
-                </div>
-                <h2 class="realtrend-product-name">No 1. Pantothenic B5 Active Soothing Serum</h2>
-                <p class="realtrend-rating">
-                  <img src="../img/main-img/star.png" alt="" />
-                  <span>4.8 | 1,275 reviews</span>
-                </p>
-                <p class="realtrend-price">
-                  <strong>US$22.00</strong>
-                  <del>US$31.00</del>
-                  <mark>30% OFF</mark>
-                </p>
-              </div>
-            </div>
-
-            <div class="realtrend-options-row">
-              <div class="realtrend-field">
-                <span>Select options</span>
-                <span class="realtrend-select-wrap">
-                  <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
-                    <span class="realtrend-select-value">No 1. Pantothenic B5 Active Soothing Serum 50ml</span>
-                  </button>
-                  <ul class="realtrend-select-menu" role="listbox"></ul>
-                  <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
-                    <option>No 1. Pantothenic B5 Active Soothing Serum 50ml</option>
-                    <option>No 1. Pantothenic B5 Active Soothing Serum 100ml</option>
-                  </select>
-                </span>
-              </div>
-
-              <div class="realtrend-qty-block">
-                <span>Quantity</span>
-                <div class="realtrend-qty">
-                  <button type="button" data-qty="-1" aria-label="Decrease quantity">-</button>
-                  <output id="realtrend-qty">1</output>
-                  <button type="button" data-qty="1" aria-label="Increase quantity">+</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="realtrend-cta-row">
-              <button type="button" class="realtrend-add-cart">Add to Cart</button>
-              <button type="button" class="realtrend-wish" aria-label="Add to wishlist" aria-pressed="false">
-                <img class="realtrend-wish-icon-default" src="../img/realtrend/like_web.png" alt="" aria-hidden="true" />
-                <img class="realtrend-wish-icon-hover" src="../img/realtrend/liked_web.png" alt="" aria-hidden="true" />
-              </button>
-            </div>
-
-            <section class="realtrend-love">
-              <h3>Why you'll love it</h3>
-              <ul>
-                <li>Soothes sensitive skin comfortably</li>
-                <li>Barrier Strengthening</li>
-                <li>Long-Lasting Hydration</li>
-                <li>Perfect for Sensitive Skin</li>
-              </ul>
-            </section>
-
-            <section class="realtrend-reviews">
-              <div class="realtrend-reviews-head">
-                <h3>Reviews(128)</h3>
-                <a href="#">VIEW ALL -&gt;</a>
-              </div>
-              <ul class="realtrend-review-list">
-                <li>
-                  <span class="realtrend-avatar" aria-hidden="true"></span>
-                  <div class="realtrend-review-copy">
-                    <strong>glow.with.j</strong>
-                    <p>Numbuzin serum has changed my life.</p>
-                  </div>
-                  <span class="realtrend-stars" aria-label="5 stars">
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                  </span>
-                </li>
-                <li>
-                  <span class="realtrend-avatar" aria-hidden="true"></span>
-                  <div class="realtrend-review-copy">
-                    <strong>glow.with.j</strong>
-                    <p>Numbuzin serum has changed my life.</p>
-                  </div>
-                  <span class="realtrend-stars" aria-label="5 stars">
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                  </span>
-                </li>
-                <li>
-                  <span class="realtrend-avatar" aria-hidden="true"></span>
-                  <div class="realtrend-review-copy">
-                    <strong>glow.with.j</strong>
-                    <p>Numbuzin serum has changed my life.</p>
-                  </div>
-                  <span class="realtrend-stars" aria-label="5 stars">
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                    <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
-                  </span>
-                </li>
-              </ul>
-            </section>
-          </article>
-        </aside>
+        <section class="newsletter cart-newsletter">
+          <div>
+            <h2>Be the first to know</h2>
+            <p>Get trend updates, exclusive offers, and more!</p>
+          </div>
+          <form>
+            <label class="sr-only" for="newsletter-email">Email</label>
+            <input id="newsletter-email" type="email" placeholder="Enter Your Email" />
+            <button type="submit">SUBSCRIBE</button>
+          </form>
+        </section>
       </div>
-
     </main>
 
     <footer class="site-footer">
@@ -754,26 +594,26 @@
         <a class="logo footer-logo" href="../index.html">Bridge<span>On</span></a>
         <div class="footer-group">
           <button class="footer-toggle" type="button">MY ACCOUNT</button>
-          <div class="footer-links"><a href="#">My Account</a><a href="#">Customer Service</a><a href="#">Order Tracking</a></div>
+          <div class="footer-links"><a href="#">My Dashboard</a><a href="#">Orders</a><a href="#">Wishlist</a><a href="#">My Reviews</a></div>
         </div>
         <div class="footer-group">
-          <button class="footer-toggle" type="button">ABOUT US</button>
-          <div class="footer-links"><a href="#">About Us</a><a href="#">Contact Us</a><a href="#">Join Us</a></div>
+          <button class="footer-toggle" type="button">CUSTOMER CARE</button>
+          <div class="footer-links"><a href="#">Help Center</a><a href="#">Shipping &amp; Delivery</a><a href="#">Returns &amp; Refunds</a><a href="#">Contact Us</a></div>
         </div>
         <div class="footer-group">
           <button class="footer-toggle" type="button">POLICIES</button>
-          <div class="footer-links"><a href="#">Terms of Use</a><a href="#">Privacy &amp; Cookie Policy</a></div>
+          <div class="footer-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a><a href="#">Payment Security</a></div>
         </div>
         <div class="footer-group">
-          <button class="footer-toggle" type="button">CONTACT US</button>
-          <div class="footer-links"><a href="mailto:help@bridge.com">help@bridge.com</a></div>
+          <button class="footer-toggle" type="button">COMPANY</button>
+          <div class="footer-links"><a href="#">About Us</a><a href="#">Become a Partner</a><a href="#">Careers</a></div>
         </div>
       </div>
       <div class="footer-methods">
         <div><strong>Payment Method</strong><span>PayPal</span><span>VISA</span><span>Master</span><span>AMEX</span><span>Alipay</span></div>
         <div><strong>Delivery Method</strong><span>FedEx</span><span>DHL</span><span>aramex</span><span>EMS</span><span>parcel</span></div>
       </div>
-      <p class="copyright">© 2025 Bridge on, Inc. All rights reserved.</p>
+      <p class="copyright">&copy; 2025 Bridge on, Inc. All rights reserved.</p>
     </footer>
 
     <button class="float-button to-top" aria-label="Back to top">
@@ -783,49 +623,15 @@
       <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
     </button>
 
-    <div
-      class="realtrend-cart-toast"
-      id="realtrend-cart-toast"
-      role="status"
-      aria-live="polite"
-      aria-hidden="true"
-      hidden
-    >
-      <button type="button" class="realtrend-cart-toast-close" aria-label="Close notification">&times;</button>
-      <div class="realtrend-cart-toast-icon" aria-hidden="true">
-        <svg class="realtrend-cart-toast-ring" viewBox="0 0 44 44">
-          <circle cx="22" cy="22" r="19" />
-        </svg>
-        <img src="../img/realtrend/check.png" alt="" />
-      </div>
-      <div class="realtrend-cart-toast-copy">
-        <strong>Add to cart!</strong>
-        <p id="realtrend-cart-toast-message"></p>
-      </div>
-      <div class="realtrend-cart-toast-thumb" aria-hidden="true"></div>
-    </div>
-
-    <div
-      class="realtrend-progress realtrend-progress--dock realtrend-mobile-only"
-      role="slider"
-      aria-label="Reel progress"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-valuenow="0"
-      tabindex="0"
-    >
-      <span class="realtrend-progress-fill" id="realtrend-progress"></span>
-    </div>
-
     <nav class="bottom-nav" aria-label="Mobile navigation">
-      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/realtrend/bottom-nav/menu.png" alt="" aria-hidden="true"><span>Menu</span></a>
-      <a href="#" data-bottom-search-open><img src="../img/realtrend/bottom-nav/search.png" alt="" aria-hidden="true"><span>Search</span></a>
-      <a href="../index.html"><img src="../img/realtrend/bottom-nav/home.png" alt="" aria-hidden="true"><span>Home</span></a>
-      <a href="../cart/cart.html" class="cart-link"><b>3</b><img src="../img/realtrend/bottom-nav/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
-      <a href="#"><img src="../img/realtrend/bottom-nav/my.png" alt="" aria-hidden="true"><span>My</span></a>
+      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
+      <a href="#" data-bottom-search-open><img src="../img/Menu/search_menu.png" alt="" aria-hidden="true"><span>Search</span></a>
+      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
+      <a href="./cart.html" class="cart-link is-active"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
+      <a href="#"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
     </nav>
 
     <script src="../script.js"></script>
-    <script src="./realtrend.js"></script>
+    <script src="./cart.js"></script>
   </body>
 </html>

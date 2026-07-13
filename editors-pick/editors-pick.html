@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editor's Pick | BridgeOn</title>
+    <link rel="stylesheet" href="../reset.css" />
+    <link rel="stylesheet" href="../font.css" />
+    <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="./editors-pick.css" />
+  </head>
+  <body class="editors-page">
+    <header class="site-header editors-site-header">
+      <div class="promo-bar editors-desktop-header">
+        <div class="promo-inner">
+          <span><img src="../img/main-img/top_banner_lefticon.png" alt="lefticon">Free Shipping Over US$nn</span>
+          <span><img src="../img/main-img/top_banner_righticon.png" alt="righticon">Ships From Korea</span>
+          <span class="desktop-only">English / USD &#8744; </span>
+        </div>
+      </div>
+
+      <div class="header-main editors-desktop-header">
+        <button type="button" class="icon-button mobile-menu mobile-only" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false" aria-label="Open menu">
+          <img src="../img/mobile-icon/menu/hamburger_mobile.png" alt="" aria-hidden="true">
+        </button>
+        <a class="logo" href="../index.html" aria-label="BridgeOn home">Bridge<span>On</span></a>
+        <form class="search" role="search">
+          <label class="sr-only" for="site-search">Search</label>
+          <input id="site-search" type="search" placeholder="Best Sunscreen For 2026 Summer?" />
+          <button aria-label="Search">
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </button>
+        </form>
+        <div class="header-actions">
+          <button class="icon-button" aria-label="Account">
+            <img src="../img/main-img/top_banner_my.png" alt="mypage">
+          </button>
+          <button class="icon-button desktop-icon" aria-label="Wishlist">
+            <img src="../img/main-img/top_banner_wish.png" alt="wishlist">
+          </button>
+          <a class="icon-button cart-icon-button" aria-label="Cart, 3 items" href="../cart/cart.html">
+            <img src="../img/main-img/top_banner_cart.png" alt="cart">
+            <span class="cart-badge" aria-hidden="true">3</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="search-panel" aria-hidden="true">
+        <div class="search-mobile-bar">
+          <button type="button" class="search-mobile-back search-close" aria-label="Close search"></button>
+          <div class="search-mobile-input">
+            <input id="mobile-site-search" type="search" placeholder="Search Korean Trends" aria-label="Search Korean Trends" />
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="search-mobile-content">
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading">
+              <h3><img src="../img/search/history.png" alt="" aria-hidden="true">Recent Searches</h3>
+              <button type="button" class="search-clear">Clear All</button>
+            </div>
+            <div class="recent-searches search-mobile-recent">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+            </div>
+          </section>
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading trending">
+              <h3><span aria-hidden="true"></span>Trending Searches &#128293;</h3>
+            </div>
+            <ol class="trending-searches search-mobile-trending">
+              <li><b>1</b><span>sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>collagen cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>lip tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>toning pads</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>5</b><span>vitamin c serum</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </section>
+        </div>
+        <div class="search-panel-tabs" role="tablist" aria-label="Search suggestions">
+          <button type="button" class="is-active" data-search-tab="recent" role="tab" aria-selected="true">Recent Searches</button>
+          <button type="button" data-search-tab="trending" role="tab" aria-selected="false"><span aria-hidden="true"></span> Trending Searches &#128293;</button>
+        </div>
+        <div class="search-panel-body">
+          <div class="search-panel-section is-active" data-search-panel="recent" role="tabpanel">
+            <div class="recent-searches">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>collagen mask<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+            </div>
+          </div>
+          <div class="search-panel-section" data-search-panel="trending" role="tabpanel" hidden>
+            <ol class="trending-searches">
+              <li><b>1</b><span>Sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>Collagen Cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>Lip Tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>Toning Pads</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>5</b><span>Vitamin C Serum</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </div>
+        </div>
+        <div class="search-panel-footer">
+          <button type="button" class="search-clear">Remove All Researches</button>
+          <button type="button" class="search-close">Close</button>
+        </div>
+      </div>
+
+      <div class="editors-mobile-header">
+        <a class="editors-mobile-back" href="../index.html" aria-label="Go back">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18 9 12l6-6" /></svg>
+        </a>
+        <strong>Time Deal</strong>
+        <div class="editors-mobile-actions">
+          <a href="#" aria-label="My account">
+            <img src="../img/main-img/top_banner_my.png" alt="" aria-hidden="true">
+          </a>
+          <a href="../cart/cart.html" aria-label="Cart, 3 items">
+            <img src="../product-detail/common_img/cart.png" alt="" aria-hidden="true">
+            <span aria-hidden="true">3</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="category-menu">
+        <nav class="category-nav" aria-label="Primary">
+          <a href="../listing/best.html">BEST</a>
+          <a href="#">Brand</a>
+          <a href="../listing/beauty.html" data-mega-target="beauty">Beauty</a>
+          <a href="../listing/k-food.html" data-mega-target="k-food">K-Food</a>
+          <a href="../listing/lifestyle.html" data-mega-target="lifestyle">Lifestyle</a>
+          <a href="../listing/k-pop.html" data-mega-target="k-pop">K-POP</a>
+          <a href="../listing/k-traditional.html" data-mega-target="k-traditional">K-Traditional</a>
+          <a class="accent-warm" href="../timedeal/timedeal.html">Time Deal &#128293;</a>
+          <a class="accent is-active" href="./editors-pick.html" data-mega-target="tp-pick" aria-current="page">T.P Pick</a>
+        </nav>
+
+        <div class="category-mega" data-menu-panel="tp-pick" aria-label="T.P Pick category submenu">
+          <a class="mega-feature" href="./editors-pick.html">
+            <b>T.P Pick</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3><a class="mega-column-heading" href="./editors-pick.html">Editor's Pick</a></h3>
+          </div>
+          <div class="mega-column">
+            <h3>T.P Magazine</h3>
+          </div>
+          <div class="mega-column">
+            <h3><a class="mega-column-heading" href="../realtrend/realtrend.html">Real Trend</a></h3>
+          </div>
+        </div>
+      </div>
+
+      <aside class="mobile-menu-panel" id="mobile-menu-panel" aria-hidden="true" aria-label="Mobile menu">
+        <div class="mobile-menu-header">
+          <strong class="mobile-menu-title">MENU</strong>
+          <button type="button" class="mobile-menu-close" aria-label="Close menu"></button>
+        </div>
+        <nav class="mobile-menu-list" aria-label="Mobile categories">
+          <a href="#" data-mobile-submenu-open="categories">Categories<span aria-hidden="true">&gt;</span></a>
+          <a href="#">Brand</a>
+          <a href="../listing/best.html">Best Seller</a>
+          <a href="../timedeal/timedeal.html">Time Deal</a>
+          <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
+        </nav>
+        <section class="mobile-submenu-panel" aria-hidden="true" aria-label="Secondary categories">
+          <div class="mobile-submenu-header">
+            <button type="button" class="mobile-submenu-back" aria-label="Back to menu">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+              Categories
+            </button>
+          </div>
+          <nav class="mobile-submenu-list" aria-label="Second level categories">
+            <a href="../listing/beauty.html" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/k-food.html" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/lifestyle.html" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/k-pop.html" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/k-traditional.html" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
+            <a href="../timedeal/timedeal.html" data-mobile-third-open="time-deal">Time Deal</a>
+            <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
+          </nav>
+          <section class="mobile-tertiary-panel" aria-hidden="true" aria-label="Third level categories">
+            <div class="mobile-submenu-header">
+              <button type="button" class="mobile-tertiary-back" aria-label="Back to second categories">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                <span class="mobile-tertiary-title">Categories</span>
+              </button>
+            </div>
+            <div class="mobile-category-browser">
+              <nav class="mobile-tertiary-list" aria-label="Second level categories"></nav>
+              <div class="mobile-category-content" aria-label="Third level categories"></div>
+            </div>
+            <section class="mobile-quaternary-panel" aria-hidden="true" aria-label="Fourth level categories">
+              <div class="mobile-submenu-header">
+                <button type="button" class="mobile-quaternary-back" aria-label="Back to third categories">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                  <span class="mobile-quaternary-title">Categories</span>
+                </button>
+              </div>
+              <nav class="mobile-quaternary-list" aria-label="Fourth level list"></nav>
+            </section>
+          </section>
+        </section>
+      </aside>
+    </header>
+
+    <main class="editors-main">
+      <section class="editors-hero" aria-label="Editor's Page introduction">
+        <nav class="editors-breadcrumb desktop-only" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span aria-hidden="true">&gt;</span>
+          <a href="./editors-pick.html">T.P Pick</a>
+          <span aria-hidden="true">&gt;</span>
+          <span>Editor's Pick</span>
+        </nav>
+        <div class="editors-product editors-product--blue" aria-hidden="true"></div>
+        <div class="editors-product editors-product--yellow" aria-hidden="true"></div>
+        <div class="editors-product editors-product--white" aria-hidden="true"></div>
+        <div class="editors-hero-copy">
+          <p>EDITOR'S</p>
+          <h1>PAGE<span>+</span></h1>
+          <span>Meet our editors, explore their curated picks,<br>and discover their magazine stories.</span>
+        </div>
+        <div class="editors-hero-cards desktop-only" aria-hidden="true">
+          <article><b>1</b><strong>OUR EDITORS</strong><span>Get to know<br>the minds behind<br>the picks.</span></article>
+          <article><b>2</b><strong>EDITOR'S PICKS</strong><span>Handpicked skincare<br>essentials our<br>editors love.</span></article>
+          <article><b>3</b><strong>EDITORIAL MAGAZINE</strong><span>Read stories, tips<br>and trends from<br>our editors.</span></article>
+        </div>
+      </section>
+
+      <div class="editors-shell">
+        <section class="editors-intro" aria-labelledby="editors-title">
+          <h2 id="editors-title">Meet Our Editors</h2>
+          <p>Select an editor to see their picks</p>
+          <div class="editor-tabs" role="tablist" aria-label="Editors">
+            <button type="button" class="is-active" role="tab" aria-selected="true" data-editor-tab="0">
+              <span class="editor-avatar editor-avatar--seal"><i></i></span>
+              <b class="flag flag--kr" aria-hidden="true"></b>
+              <strong>Name</strong>
+            </button>
+            <button type="button" role="tab" aria-selected="false" data-editor-tab="1">
+              <span class="editor-avatar editor-avatar--duck"><i></i></span>
+              <b class="flag flag--ua" aria-hidden="true"></b>
+              <strong>Name</strong>
+            </button>
+            <button type="button" role="tab" aria-selected="false" data-editor-tab="2">
+              <span class="editor-avatar editor-avatar--cat"><i></i></span>
+              <b class="flag flag--us" aria-hidden="true"></b>
+              <strong>Name</strong>
+            </button>
+            <button type="button" role="tab" aria-selected="false" data-editor-tab="3">
+              <span class="editor-avatar editor-avatar--dog"><i></i></span>
+              <b class="flag flag--th" aria-hidden="true"></b>
+              <strong>Name</strong>
+            </button>
+            <button type="button" role="tab" aria-selected="false" data-editor-tab="4">
+              <span class="editor-avatar editor-avatar--hedgehog"><i></i></span>
+              <b class="flag flag--au" aria-hidden="true"></b>
+              <strong>Name</strong>
+            </button>
+            <button type="button" class="editor-tabs-next" aria-label="Next editor">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+            </button>
+          </div>
+
+          <article class="editor-profile">
+            <div class="editor-profile-avatar">
+              <span class="editor-avatar editor-avatar--seal"><i></i></span>
+              <b class="flag flag--kr" aria-hidden="true"></b>
+              <h3>Name</h3>
+            </div>
+            <div class="editor-profile-copy">
+              <h3>Name</h3>
+              <ul class="editor-facts">
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.1 7-11a7 7 0 1 0-14 0c0 5.9 7 11 7 11Z" /><circle cx="12" cy="10" r="2.4" /></svg>
+                  Busan, Korea
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v4M17 3v4M4 9h16M5 5h14v15H5z" /></svg>
+                  25 years old
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a4 4 0 0 0-4 4v2H6a3 3 0 0 0 0 6h2v2a4 4 0 0 0 8 0v-2h2a3 3 0 0 0 0-6h-2V7a4 4 0 0 0-4-4Z" /></svg>
+                  Combo Skin
+                </li>
+              </ul>
+              <p>Passionate about clean beauty and ingredient-focused skincare. Sharing my favorite finds for healthier skin and everyday wellness.</p>
+              <div class="editor-tags">
+                <span># Skincare Expert</span>
+                <span># Sensitive Skin</span>
+                <span># Clean Beauty</span>
+                <span># Food Lover</span>
+              </div>
+            </div>
+            <aside class="editor-note">
+              <h3>Editor's Note</h3>
+              <p>Passionate about clean beauty and ingredient-focused skincare. Sharing my favorite finds for healthier skin and everyday wellness.</p>
+              <strong>Name <span aria-hidden="true">&#9829;</span></strong>
+            </aside>
+          </article>
+        </section>
+
+        <section class="editor-picks" aria-labelledby="editor-picks-title">
+          <div class="editor-section-heading">
+            <h2 id="editor-picks-title">Name&rsquo;s Picks <span>(nn items)</span></h2>
+          </div>
+          <div class="editor-category-tabs" role="tablist" aria-label="Pick categories">
+            <button type="button" class="is-active" data-pick-filter="all" aria-selected="true">All</button>
+            <button type="button" data-pick-filter="beauty" aria-selected="false">Beauty</button>
+            <button type="button" data-pick-filter="k-food" aria-selected="false">K-Food</button>
+            <button type="button" data-pick-filter="lifestyle" aria-selected="false">Lifestyle</button>
+            <button type="button" data-pick-filter="k-pop" aria-selected="false">K-pop</button>
+            <button type="button" data-pick-filter="k-traditional" aria-selected="false">K-Traditional</button>
+          </div>
+
+          <div class="editor-pick-rail">
+            <button type="button" class="editor-pick-arrow editor-pick-prev desktop-only" aria-label="Previous picks">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+            </button>
+            <div class="editor-pick-list" data-editor-pick-list>
+              <article class="editor-pick-card" data-pick-category="beauty">
+                <div class="editor-pick-image editor-pick-image--rose" aria-hidden="true"><span></span></div>
+                <div class="editor-pick-product">
+                  <p>Anua</p>
+                  <h3>PDRN Hyaluronic Acid Hydrating Capsule Mist 100ml</h3>
+                  <div class="editor-rating"><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</div>
+                  <div class="editor-price"><strong>US$18.40</strong><del>US$23.00</del></div>
+                  <div class="editor-pick-actions">
+                    <button type="button" class="editor-cart" aria-label="Add to cart"><img src="../img/listing/cart_hover.png" alt="" aria-hidden="true"></button>
+                    <button type="button" class="editor-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
+                  </div>
+                </div>
+                <aside class="editor-pick-note">
+                  <h4><span aria-hidden="true">+</span> Why I Picked It!</h4>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                  <div><span>#Smooth</span><span>#PDRN</span></div>
+                </aside>
+              </article>
+
+              <article class="editor-pick-card" data-pick-category="beauty">
+                <div class="editor-pick-image editor-pick-image--blue" aria-hidden="true"><span></span></div>
+                <div class="editor-pick-product">
+                  <p>Anua</p>
+                  <h3>PDRN Hyaluronic Acid Hydrating Capsule Mist 100ml</h3>
+                  <div class="editor-rating"><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</div>
+                  <div class="editor-price"><strong>US$18.40</strong><del>US$23.00</del></div>
+                  <div class="editor-pick-actions">
+                    <button type="button" class="editor-cart" aria-label="Add to cart"><img src="../img/listing/cart_hover.png" alt="" aria-hidden="true"></button>
+                    <button type="button" class="editor-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
+                  </div>
+                </div>
+                <aside class="editor-pick-note">
+                  <h4><span aria-hidden="true">+</span> Why I Picked It!</h4>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                  <div><span>#Smooth</span><span>#PDRN</span><span>#Texture</span></div>
+                </aside>
+              </article>
+
+              <article class="editor-pick-card" data-pick-category="k-food">
+                <div class="editor-pick-image editor-pick-image--green" aria-hidden="true"><span></span></div>
+                <div class="editor-pick-product">
+                  <p>Anua</p>
+                  <h3>PDRN Hyaluronic Acid Hydrating Capsule Mist 100ml</h3>
+                  <div class="editor-rating"><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</div>
+                  <div class="editor-price"><strong>US$18.40</strong><del>US$23.00</del></div>
+                  <div class="editor-pick-actions">
+                    <button type="button" class="editor-cart" aria-label="Add to cart"><img src="../img/listing/cart_hover.png" alt="" aria-hidden="true"></button>
+                    <button type="button" class="editor-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
+                  </div>
+                </div>
+                <aside class="editor-pick-note">
+                  <h4><span aria-hidden="true">+</span> Why I Picked It!</h4>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                  <div><span>#Smooth</span><span>#PDRN</span><span>#Texture</span></div>
+                </aside>
+              </article>
+            </div>
+            <button type="button" class="editor-pick-arrow editor-pick-next desktop-only" aria-label="Next picks">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+            </button>
+          </div>
+        </section>
+
+        <section class="editor-magazine" aria-labelledby="editor-mag-title">
+          <div class="editor-magazine-heading">
+            <h2 id="editor-mag-title">From Name&rsquo;s Magazine</h2>
+            <a href="#">VIEW ALL -&gt;</a>
+          </div>
+          <div class="editor-magazine-grid" data-editor-magazine>
+            <article class="editor-magazine-card editor-magazine-card--yellow">
+              <div class="editor-magazine-image editor-magazine-image--fruit" aria-hidden="true"></div>
+              <h3>5 Korean Sunscreens You Should Try</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
+              <small>Jul 21, 2026 · Beauty</small>
+            </article>
+            <article class="editor-magazine-card editor-magazine-card--green">
+              <div class="editor-magazine-image editor-magazine-image--paper" aria-hidden="true"></div>
+              <h3>5 Korean Sunscreens You Should Try</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
+              <small>Jul 21, 2026 · Beauty</small>
+            </article>
+            <article class="editor-magazine-card editor-magazine-card--lavender">
+              <div class="editor-magazine-image editor-magazine-image--stage" aria-hidden="true"></div>
+              <h3>5 Korean Sunscreens You Should Try</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
+              <small>Jul 21, 2026 · Beauty</small>
+            </article>
+          </div>
+          <div class="editor-magazine-dots" aria-hidden="true">
+            <span class="is-active"></span><span></span><span></span>
+          </div>
+        </section>
+
+        <section class="newsletter editors-newsletter">
+          <div>
+            <h2>Be the first to know</h2>
+            <p>Get trend updates, exclusive offers, and more!</p>
+          </div>
+          <form>
+            <label class="sr-only" for="newsletter-email">Email</label>
+            <input id="newsletter-email" type="email" placeholder="Enter Your Email" />
+            <button type="submit">SUBSCRIBE</button>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-main">
+        <a class="logo footer-logo" href="../index.html">Bridge<span>On</span></a>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">MY ACCOUNT</button>
+          <div class="footer-links"><a href="#">My Dashboard</a><a href="#">Orders</a><a href="#">Wishlist</a><a href="#">My Reviews</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">CUSTOMER CARE</button>
+          <div class="footer-links"><a href="#">Help Center</a><a href="#">Shipping &amp; Delivery</a><a href="#">Returns &amp; Refunds</a><a href="#">Contact Us</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">POLICIES</button>
+          <div class="footer-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a><a href="#">Payment Security</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">COMPANY</button>
+          <div class="footer-links"><a href="#">About Us</a><a href="#">Become a Partner</a><a href="#">Careers</a></div>
+        </div>
+      </div>
+      <div class="footer-methods">
+        <div><strong>Payment Method</strong><span>PayPal</span><span>VISA</span><span>Master</span><span>AMEX</span><span>Alipay</span></div>
+        <div><strong>Delivery Method</strong><span>FedEx</span><span>DHL</span><span>aramex</span><span>EMS</span><span>parcel</span></div>
+      </div>
+      <p class="copyright">&copy; 2025 Bridge on, Inc. All rights reserved.</p>
+    </footer>
+
+    <button class="float-button to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+    </button>
+    <button class="float-button chat" aria-label="Chat">
+      <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
+    </button>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
+      <a href="#" data-bottom-search-open><img src="../img/Menu/search_menu.png" alt="" aria-hidden="true"><span>Search</span></a>
+      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
+      <a href="../cart/cart.html" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
+      <a href="#"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
+    </nav>
+
+    <aside class="realtrend-panel trend-product-sheet" id="trend-product-sheet" hidden aria-hidden="true" aria-label="Product details">
+      <article class="realtrend-product-card">
+        <button type="button" class="realtrend-product-sheet-close" aria-label="Close product details">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7 17 17M17 7 7 17" /></svg>
+        </button>
+        <span class="realtrend-kbeauty-tag">K-BEAUTY</span>
+
+        <div class="realtrend-product-head">
+          <div class="realtrend-product-thumb" aria-hidden="true">img</div>
+          <div class="realtrend-product-meta">
+            <div class="realtrend-brand-row">
+              <a class="realtrend-brand" href="../brand/anua.html">Anua</a>
+              <span class="realtrend-best">BEST</span>
+            </div>
+            <h2 class="realtrend-product-name">Heartleaf Pore Control Cleansing Oil</h2>
+            <p class="realtrend-rating">
+              <img src="../img/main-img/star.png" alt="" />
+              <span>4.8 | 1,275 reviews</span>
+            </p>
+            <p class="realtrend-price">
+              <strong>US$22.00</strong>
+              <del>US$31.00</del>
+              <mark>30% OFF</mark>
+            </p>
+          </div>
+        </div>
+
+        <div class="realtrend-options-row">
+          <div class="realtrend-field">
+            <span>Select options</span>
+            <span class="realtrend-select-wrap">
+              <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                <span class="realtrend-select-value">Heartleaf Pore Control Cleansing Oil 50ml</span>
+              </button>
+              <ul class="realtrend-select-menu" role="listbox"></ul>
+              <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
+                <option>Heartleaf Pore Control Cleansing Oil 50ml</option>
+                <option>Heartleaf Pore Control Cleansing Oil 100ml</option>
+              </select>
+            </span>
+          </div>
+
+          <div class="realtrend-qty-block">
+            <span>Quantity</span>
+            <div class="realtrend-qty">
+              <button type="button" data-qty="-1" aria-label="Decrease quantity">-</button>
+              <output id="trend-product-qty">1</output>
+              <button type="button" data-qty="1" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="realtrend-cta-row">
+          <button type="button" class="realtrend-add-cart">Add to Cart</button>
+          <button type="button" class="realtrend-wish" aria-label="Add to wishlist" aria-pressed="false">
+            <img class="realtrend-wish-icon-default" src="../img/realtrend/like_web.png" alt="" aria-hidden="true" />
+            <img class="realtrend-wish-icon-hover" src="../img/realtrend/liked_web.png" alt="" aria-hidden="true" />
+          </button>
+        </div>
+
+        <section class="realtrend-love">
+          <h3>Why you'll love it</h3>
+          <ul>
+            <li>Soothes sensitive skin comfortably</li>
+            <li>Barrier Strengthening</li>
+            <li>Long-Lasting Hydration</li>
+            <li>Perfect for Sensitive Skin</li>
+          </ul>
+        </section>
+
+        <section class="realtrend-reviews">
+          <div class="realtrend-reviews-head">
+            <h3>Reviews(128)</h3>
+            <a href="#">VIEW ALL -&gt;</a>
+          </div>
+          <ul class="realtrend-review-list">
+            <li>
+              <span class="realtrend-avatar" aria-hidden="true"></span>
+              <div class="realtrend-review-copy">
+                <strong>glow.with.j</strong>
+                <p>Numbuzin serum has changed my life.</p>
+              </div>
+              <span class="realtrend-stars" aria-label="5 stars">
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+              </span>
+            </li>
+            <li>
+              <span class="realtrend-avatar" aria-hidden="true"></span>
+              <div class="realtrend-review-copy">
+                <strong>glow.with.j</strong>
+                <p>Numbuzin serum has changed my life.</p>
+              </div>
+              <span class="realtrend-stars" aria-label="5 stars">
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+              </span>
+            </li>
+            <li>
+              <span class="realtrend-avatar" aria-hidden="true"></span>
+              <div class="realtrend-review-copy">
+                <strong>glow.with.j</strong>
+                <p>Numbuzin serum has changed my life.</p>
+              </div>
+              <span class="realtrend-stars" aria-label="5 stars">
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+              </span>
+            </li>
+          </ul>
+        </section>
+      </article>
+    </aside>
+
+    <div
+      class="realtrend-cart-toast"
+      id="trend-cart-toast"
+      role="status"
+      aria-live="polite"
+      aria-hidden="true"
+      hidden
+    >
+      <button type="button" class="realtrend-cart-toast-close" aria-label="Close notification">&times;</button>
+      <div class="realtrend-cart-toast-icon" aria-hidden="true">
+        <svg class="realtrend-cart-toast-ring" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="19" />
+        </svg>
+        <img src="../img/realtrend/check.png" alt="" />
+      </div>
+      <div class="realtrend-cart-toast-copy">
+        <strong>Add to cart!</strong>
+        <p id="trend-cart-toast-message"></p>
+      </div>
+      <div class="realtrend-cart-toast-thumb" aria-hidden="true"></div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script src="./editors-pick.js"></script>
+  </body>
+</html>

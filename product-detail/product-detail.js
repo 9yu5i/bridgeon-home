@@ -34,6 +34,21 @@
   const getCartToastProductName = () =>
     productNameEl?.textContent?.trim() || "This product";
 
+  const getProductCartPayload = () => {
+    const selectedColor = document.querySelector("[data-color-option].is-active")?.dataset.colorOption || "";
+    const quantity = Number(qtyValue?.textContent || 1) || 1;
+
+    return {
+      brand: document.querySelector(".product-brand")?.textContent?.trim() || "BridgeOn",
+      name: productNameEl?.textContent?.trim() || "Product",
+      option: selectedColor,
+      price: document.querySelector(".product-price-current strong")?.textContent?.trim() || "US$22.00",
+      originalPrice: document.querySelector(".product-price del")?.textContent?.trim() || "",
+      tone: selectedColor ? "pink" : "green",
+      quantity,
+    };
+  };
+
   const hideCartToast = () => {
     if (!cartToast?.classList.contains("is-visible")) return;
 
@@ -180,6 +195,7 @@
   addCartButton?.addEventListener("click", () => {
     const label = addCartButton.querySelector(".product-add-cart-label");
     const originalText = "Add to Cart";
+    window.BridgeOn?.cart?.add(getProductCartPayload());
     addCartButton.classList.add("is-added");
     if (label) label.textContent = "Added";
     showCartToast();

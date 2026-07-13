@@ -520,8 +520,8 @@
 .category-mega {
   position: absolute;
   top: 100%;
-  right: clamp(32px, 4vw, 72px);
-  left: clamp(32px, 4vw, 72px);
+  right: clamp(48px, 5vw, 96px);
+  left: clamp(48px, 5vw, 96px);
   z-index: 30;
   display: grid;
   grid-template-columns: minmax(110px, 0.9fr) repeat(auto-fit, minmax(96px, 1fr));

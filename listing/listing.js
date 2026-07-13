@@ -187,15 +187,17 @@
     });
   };
 
-  document.querySelectorAll(".listing-card").forEach((card) => {
-    card.querySelectorAll(".listing-card-wish, .listing-card-wish-inline").forEach((button) => {
-      button.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        const isActive = !button.classList.contains("is-active");
-        syncCardWish(card, isActive);
-      });
-    });
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest(".listing-card-wish, .listing-card-wish-inline");
+    if (!button) return;
+
+    const card = button.closest(".listing-card");
+    if (!card) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    const isActive = !button.classList.contains("is-active");
+    syncCardWish(card, isActive);
   });
 
   const initListingSortSelect = (wrap) => {

@@ -39,6 +39,8 @@ let mobileActiveCategoryIndex = -1;
 const getListingPagePrefix = () => {
   if (document.body.classList.contains("timedeal-page")) return "../listing/";
   if (document.body.classList.contains("product-detail-page")) return "../listing/";
+  if (document.body.classList.contains("cart-page")) return "../listing/";
+  if (document.body.classList.contains("editors-page")) return "../listing/";
   if (document.body.classList.contains("listing-page")) return "./";
   return "listing/";
 };
@@ -48,11 +50,27 @@ const getRealtrendUrl = () => {
   if (
     document.body.classList.contains("listing-page") ||
     document.body.classList.contains("timedeal-page") ||
-    document.body.classList.contains("product-detail-page")
+    document.body.classList.contains("product-detail-page") ||
+    document.body.classList.contains("cart-page") ||
+    document.body.classList.contains("editors-page")
   ) {
     return "../realtrend/realtrend.html";
   }
   return "realtrend/realtrend.html";
+};
+
+const getEditorsPickUrl = () => {
+  if (document.body.classList.contains("editors-page")) return "./editors-pick.html";
+  if (
+    document.body.classList.contains("listing-page") ||
+    document.body.classList.contains("timedeal-page") ||
+    document.body.classList.contains("product-detail-page") ||
+    document.body.classList.contains("cart-page") ||
+    document.body.classList.contains("realtrend-page")
+  ) {
+    return "../editors-pick/editors-pick.html";
+  }
+  return "editors-pick/editors-pick.html";
 };
 
 const listingCategoryPages = {
@@ -119,6 +137,30 @@ const wireListingCategoryLinks = () => {
 
 wireListingCategoryLinks();
 
+document.querySelectorAll(".category-nav a[data-mega-target='tp-pick']").forEach((link) => {
+  link.setAttribute("href", getEditorsPickUrl());
+});
+
+document.querySelectorAll(".category-mega[data-menu-panel='tp-pick'] .mega-column h3").forEach((heading) => {
+  const headingLink = heading.querySelector("a");
+  if (headingLink && headingLink.textContent.trim() === "Editor's Pick") {
+    headingLink.setAttribute("href", getEditorsPickUrl());
+    return;
+  }
+
+  if (heading.textContent.trim() !== "Editor's Pick") return;
+  heading.setAttribute("role", "link");
+  heading.setAttribute("tabindex", "0");
+  heading.addEventListener("click", () => {
+    navigateWithPageTransition(getEditorsPickUrl());
+  });
+  heading.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    navigateWithPageTransition(getEditorsPickUrl());
+  });
+});
+
 const mobileThirdCategoryData = {
   beauty: [
     { label: "Beauty Trendy Pick", href: getBeautyListingUrl() },
@@ -170,7 +212,7 @@ const mobileThirdCategoryData = {
 
   ],
   "tp-pick": [
-    { label: "Editor’s Pick"},
+    { label: "Editor's Pick", href: getEditorsPickUrl() },
     { label: "T.P Magazine"},
     { label: "Real Trend", href: getRealtrendUrl() },
   ],

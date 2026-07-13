@@ -89,6 +89,15 @@ const initTrendProductSheet = () => {
       };
     }
 
+    if (source.classList.contains("editor-pick-card")) {
+      return {
+        brand: source.querySelector(".editor-pick-product p")?.textContent?.trim() || "",
+        name: source.querySelector(".editor-pick-product h3")?.textContent?.trim() || "",
+        rawPrice: source.querySelector(".editor-price strong")?.textContent?.trim() || "",
+        originalPrice: source.querySelector(".editor-price del")?.textContent?.trim() || "",
+      };
+    }
+
     return { brand: "", name: "", rawPrice: "", originalPrice: "" };
   };
 
@@ -104,6 +113,16 @@ const initTrendProductSheet = () => {
     if (selectedOption) return selectedOption;
     return productNameEl?.textContent?.trim() || "This product";
   };
+
+  const getSheetCartPayload = () => ({
+    brand: productCard?.querySelector(".realtrend-brand")?.textContent?.trim() || "BridgeOn",
+    name: productNameEl?.textContent?.trim() || "Product",
+    option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
+    price: productCard?.querySelector(".realtrend-price strong")?.textContent?.trim() || "US$22.00",
+    originalPrice: productCard?.querySelector(".realtrend-price del")?.textContent?.trim() || "",
+    tone: "green",
+    quantity: Number(qtyEl?.textContent || 1) || 1,
+  });
 
   const hideCartToast = () => {
     if (!cartToast?.classList.contains("is-visible")) return;
@@ -159,7 +178,8 @@ const initTrendProductSheet = () => {
     const brandPathPrefix =
       document.body.classList.contains("listing-page") ||
       document.body.classList.contains("timedeal-page") ||
-      document.body.classList.contains("product-detail-page")
+      document.body.classList.contains("product-detail-page") ||
+      document.body.classList.contains("editors-page")
         ? "../"
         : "";
 
@@ -332,6 +352,7 @@ const initTrendProductSheet = () => {
       event.preventDefault();
       return;
     }
+    window.BridgeOn?.cart?.add(getSheetCartPayload());
     showCartToast();
     closeTrendProductSheet({ keepCartToast: true });
   });
@@ -403,6 +424,17 @@ const initTrendProductSheet = () => {
     event.preventDefault();
     event.stopPropagation();
     openTrendProductSheet(cartButton.closest(".product-rec-card"));
+  });
+
+  const editorPickList = document.querySelector("[data-editor-pick-list]");
+
+  editorPickList?.addEventListener("click", (event) => {
+    const cartButton = event.target.closest(".editor-cart");
+    if (!cartButton || !editorPickList.contains(cartButton)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    openTrendProductSheet(cartButton.closest(".editor-pick-card"));
   });
 
   closeButton?.addEventListener("click", closeTrendProductSheet);

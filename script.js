@@ -46,6 +46,93 @@ window.BridgeOn = window.BridgeOn || {};
 window.BridgeOn.navigateWithPageTransition = navigateWithPageTransition;
 window.BridgeOn.productDetailUrl = PRODUCT_DETAIL_URL;
 
+const CART_STORAGE_KEY = "bridgeon-cart-items";
+
+const parseCartNumber = (value, fallback = 0) => {
+  const parsed = Number.parseFloat(String(value || "").replace(/[^\d.]/g, ""));
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const formatCartPrice = (value) => `US$${parseCartNumber(value).toFixed(2)}`;
+
+const normalizeCartItem = (item = {}) => {
+  const brand = String(item.brand || "BridgeOn").trim();
+  const name = String(item.name || "Product").trim();
+  const option = String(item.option || "").trim();
+  const price = formatCartPrice(item.price || "US$22.00");
+  const originalPrice = item.originalPrice ? formatCartPrice(item.originalPrice) : "";
+  const tone = String(item.tone || "green").trim();
+  const quantity = Math.max(1, Number.parseInt(item.quantity, 10) || 1);
+  const id = item.id || [brand, name, option, price].join("|").toLowerCase().replace(/\s+/g, "-");
+
+  return { id, brand, name, option, price, originalPrice, tone, quantity };
+};
+
+const readCartItems = () => {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.map(normalizeCartItem) : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeCartItems = (items) => {
+  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items.map(normalizeCartItem)));
+  window.dispatchEvent(new CustomEvent("bridgeon:cartchange", { detail: { items: readCartItems() } }));
+};
+
+const getCartCount = () =>
+  readCartItems().reduce((sum, item) => sum + item.quantity, 0);
+
+const updateCartBadges = () => {
+  const count = getCartCount();
+  document.querySelectorAll(".cart-badge, .cart-link b").forEach((badge) => {
+    badge.textContent = String(count);
+    badge.hidden = count === 0;
+  });
+
+  document.querySelectorAll(".cart-icon-button, .product-mobile-gnb-cart").forEach((link) => {
+    link.setAttribute("aria-label", `Cart, ${count} item${count === 1 ? "" : "s"}`);
+  });
+};
+
+window.BridgeOn.cart = {
+  getItems: readCartItems,
+  getCount: getCartCount,
+  formatPrice: formatCartPrice,
+  parsePrice: parseCartNumber,
+  setItems: writeCartItems,
+  add(item) {
+    const nextItem = normalizeCartItem(item);
+    const items = readCartItems();
+    const existing = items.find((cartItem) => cartItem.id === nextItem.id);
+
+    if (existing) existing.quantity += nextItem.quantity;
+    else items.push(nextItem);
+
+    writeCartItems(items);
+    updateCartBadges();
+    return nextItem;
+  },
+  updateQuantity(id, quantity) {
+    const items = readCartItems()
+      .map((item) => item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item);
+    writeCartItems(items);
+    updateCartBadges();
+  },
+  remove(id) {
+    writeCartItems(readCartItems().filter((item) => item.id !== id));
+    updateCartBadges();
+  },
+  clearSelected(ids) {
+    const removeIds = new Set(ids);
+    writeCartItems(readCartItems().filter((item) => !removeIds.has(item.id)));
+    updateCartBadges();
+  },
+  updateBadges: updateCartBadges,
+};
+
 const loadBridgeOnComponent = (path) => {
   const componentScript = document.createElement("script");
   componentScript.async = false;
@@ -92,6 +179,10 @@ const initPageTransitions = () => {
 
 initPageTransitions();
 loadBridgeOnComponent("scripts/components/header-navigation.js");
+updateCartBadges();
+window.addEventListener("storage", (event) => {
+  if (event.key === CART_STORAGE_KEY) updateCartBadges();
+});
 
 const initScrollReveals = () => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {

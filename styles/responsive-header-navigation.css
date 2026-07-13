@@ -978,3 +978,11 @@
     height: 20px;
   }
 }
+
+@media (min-width: 970px) and (max-width: 1120px) {
+  .category-nav {
+    justify-content: center;
+    gap: clamp(28px, 3.8vw, 42px);
+    padding-inline: clamp(20px, 3vw, 36px);
+  }
+}

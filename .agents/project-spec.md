@@ -7,6 +7,9 @@ BridgeOn is a static responsive ecommerce frontend prototype.
 The current implementation focuses on visual fidelity and interaction behavior across:
 
 - Home page
+- Best products page
+- Cart page
+- Editor's Pick page
 - Listing pages
 - Product detail pages
 - Product detail page with color options
@@ -40,8 +43,11 @@ When the user asks for a visual change, assume it must work responsively unless 
 - Best Sellers cards
 - Special Deals: Today's Pick and Time Deal
 - T.P Pick and T.P Magazine
+- Editor's Pick page with editor profile, curated picks, and editor magazine cards
 - Customer Real Picks
 - Shared product option sheet and cart toast
+- Best products ranked grid with scroll-loaded cards up to 100 items
+- Cart page with desktop two-column checkout layout and mobile single-column checkout flow
 - Product detail tabs, recommendations, inquiry modal, and mobile purchase actions
 - Footer, newsletter, share pick, and floating actions
 
@@ -51,6 +57,7 @@ When the user asks for a visual change, assume it must work responsively unless 
 - Do not remove that zoom without a dedicated visual calibration pass.
 - `script.js` remains a legacy entry point and still loads extracted component scripts.
 - Some repeated card HTML remains duplicated and should eventually move to data/templates.
+- `listing/best.html` renders ranked products through `listing/best.js`; it starts with an initial batch and loads more on scroll until 100 products are visible.
 - Existing static HTML page paths use relative asset URLs; verify all paths when moving shared code.
 
 ## Validation
@@ -61,4 +68,3 @@ Use:
 npm run check
 git diff --check
 ```
-

@@ -12,6 +12,12 @@ flowchart TD
   PD["product-detail/*.html"] --> S
   PD --> PDC["product-detail/product-detail.css"]
   PD --> PDJ["product-detail/product-detail.js"]
+  C["cart/cart.html"] --> S
+  C --> CC["cart/cart.css"]
+  C --> CJ["cart/cart.js"]
+  E["editors-pick/editors-pick.html"] --> S
+  E --> EC["editors-pick/editors-pick.css"]
+  E --> EJ["editors-pick/editors-pick.js"]
   TD["timedeal/timedeal.html"] --> S
   TD --> JS
   RT["realtrend/realtrend.html"] --> S
@@ -34,6 +40,9 @@ flowchart TD
 
 - `script.js` is still the legacy root script.
 - Extracted behavior lives in `scripts/components/`.
+- `listing/best.js` owns the Best products page ranked 100-item scroll loader.
+- `cart/cart.js` owns cart item selection, quantity, delete, and promo form behavior.
+- `editors-pick/editors-pick.js` owns Editor's Pick page editor selection, pick filters, wishlist state, and magazine dots.
 - `product-detail/product-detail.js` handles product detail specific interactions.
 
 Important extracted components:
@@ -71,4 +80,3 @@ Future extraction targets:
 - Customer Real Picks
 - Listing cards
 - Category menu data
-

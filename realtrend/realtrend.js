@@ -1273,6 +1273,26 @@
 
 
 
+  const getRealtrendCartPayload = () => ({
+
+    brand: productCard?.querySelector(".realtrend-brand")?.textContent?.trim() || "BridgeOn",
+
+    name: productNameEl?.textContent?.trim() || "Product",
+
+    option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
+
+    price: productCard?.querySelector(".realtrend-price strong")?.textContent?.trim() || "US$22.00",
+
+    originalPrice: productCard?.querySelector(".realtrend-price del")?.textContent?.trim() || "",
+
+    tone: "green",
+
+    quantity: Number(productCard?.querySelector(".realtrend-qty output")?.textContent || 1) || 1,
+
+  });
+
+
+
   const hideCartToast = () => {
 
     if (!cartToast?.classList.contains("is-visible")) return;
@@ -1440,6 +1460,8 @@
         return;
 
       }
+
+      window.BridgeOn?.cart?.add(getRealtrendCartPayload());
 
       showCartToast(button);
 

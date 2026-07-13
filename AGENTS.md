@@ -57,6 +57,7 @@ High-level ownership:
 - `styles/responsive-*.css` files own responsive overrides for the matching component area.
 - `styles/trend-product-sheet.css` owns the shared Real Trend product sheet popup, option controls, add-to-cart CTA, wishlist state, reviews, and cart toast.
 - `realtrend/realtrend.css` is only for the Real Trend video page.
+- `editors-pick/editors-pick.css` is only for the Editor's Pick page.
 
 ## JavaScript Ownership
 
@@ -71,6 +72,7 @@ Current component scripts:
 - `scripts/components/magazine-slider.js`: mobile T.P Magazine drag slider and progress bar.
 - `scripts/components/deal-sliders.js`: Today's Pick and Time Deal card sliders.
 - `scripts/components/hero-slider.js`: main hero carousel.
+- `editors-pick/editors-pick.js`: Editor's Pick page editor selection, pick filters, wishlist state, and magazine dots.
 
 Keep new behavior in focused files under `scripts/components/` or `scripts/pages/` when possible.
 

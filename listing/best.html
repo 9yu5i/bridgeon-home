@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>K-Traditional | BridgeOn</title>
+    <title>Best Products | BridgeOn</title>
     <link rel="stylesheet" href="../reset.css" />
     <link rel="stylesheet" href="../font.css" />
     <link rel="stylesheet" href="../common.css" />
     <link rel="stylesheet" href="../styles.css" />
     <link rel="stylesheet" href="./listing.css" />
   </head>
-  <body class="listing-page listing-page--k-traditional">
+  <body class="listing-page listing-page--best">
     <header class="site-header">
       <div class="promo-bar">
         <div class="promo-inner">
@@ -112,13 +112,13 @@
 
       <div class="category-menu">
         <nav class="category-nav" aria-label="Primary">
-          <a href="./best.html">BEST</a>
+          <a class="is-active" href="./best.html" aria-current="page">BEST</a>
           <a href="#">Brand</a>
           <a href="./beauty.html" data-mega-target="beauty">Beauty</a>
           <a href="./k-food.html" data-mega-target="k-food">K-Food</a>
           <a href="./lifestyle.html" data-mega-target="lifestyle">Lifestyle</a>
           <a href="./k-pop.html" data-mega-target="k-pop">K-POP</a>
-          <a class="is-active" href="./k-traditional.html" data-mega-target="k-traditional" aria-current="page">K-Traditional</a>
+          <a href="./k-traditional.html" data-mega-target="k-traditional">K-Traditional</a>
           <a class="accent-warm" href="../timedeal/timedeal.html">Time Deal &#128293;</a>
           <a class="accent" href="../editors-pick/editors-pick.html" data-mega-target="tp-pick">T.P Pick</a>
         </nav>
@@ -468,10 +468,10 @@
     </header>
 
     <main class="listing-main">
-      <section class="listing-hero" aria-label="K-Traditional promotion">
+      <section class="listing-hero listing-hero--best" aria-label="Best products promotion">
         <div class="listing-hero-inner">
-          <p class="listing-hero-kicker">K-Heritage</p>
-          <h2 class="listing-hero-title">K-Traditional</h2>
+          <p class="listing-hero-kicker">Discover the Top 100 products</p>
+          <h2 class="listing-hero-title">BEST</h2>
         </div>
       </section>
 
@@ -479,440 +479,22 @@
         <nav class="listing-breadcrumbs desktop-only" aria-label="Breadcrumb">
           <a href="../index.html">Home</a>
           <span aria-hidden="true">&gt;</span>
-          <span>K-Traditional</span>
+          <span>BEST</span>
         </nav>
 
-        <div class="listing-layout">
-          <aside class="listing-filters" id="listing-filters" aria-label="Product filters">
-            <button type="button" class="listing-filter-close mobile-only" data-listing-filter-close hidden aria-label="Close filters">&times;</button>
-            <div class="listing-filters-head">
-              <h2>FILTER</h2>
-              <button type="button" class="listing-clear-all" data-listing-clear-filters>Clear all</button>
+        <div class="listing-layout listing-layout--best">
+          <section class="listing-results listing-results--best" aria-label="Best product results">
+            <div class="listing-category-tabs" data-best-tabs role="tablist" aria-label="Best product categories">
+              <button type="button" class="is-active" data-best-category="all" role="tab" aria-selected="true">All</button>
+              <button type="button" data-best-category="beauty" role="tab" aria-selected="false">Beauty</button>
+              <button type="button" data-best-category="k-food" role="tab" aria-selected="false">K-Food</button>
+              <button type="button" data-best-category="lifestyle" role="tab" aria-selected="false">Lifestyle</button>
+              <button type="button" data-best-category="k-pop" role="tab" aria-selected="false">K-pop</button>
+              <button type="button" data-best-category="k-traditional" role="tab" aria-selected="false">K-Traditional</button>
             </div>
 
-            <div class="listing-filters-body">
-            <details class="listing-filter-group" open>
-              <summary>Category</summary>
-              <ul class="listing-filter-list">
-                <li><label><input type="checkbox" /> Art&amp;Decor</label></li>
-                <li><label><input type="checkbox" /> DIY</label></li>
-                <li><label><input type="checkbox" /> Fashion&amp;Accessories</label></li>
-                <li><label><input type="checkbox" /> Stationery</label></li>
-                <li><label><input type="checkbox" /> Home</label></li>
-                <li><label><input type="checkbox" /> Kitchen</label></li>
-                <li><label><input type="checkbox" /> Food</label></li>
-                <li><label><input type="checkbox" /> Games</label></li>
-              </ul>
-              <button type="button" class="listing-filter-more">Show more</button>
-            </details>
-
-            <details class="listing-filter-group" open>
-              <summary>Skin Concern</summary>
-              <ul class="listing-filter-list">
-                <li><label><input type="checkbox" /> Moisturizing</label></li>
-                <li><label><input type="checkbox" /> Soothing</label></li>
-                <li><label><input type="checkbox" /> Sensitive Skin</label></li>
-                <li><label><input type="checkbox" /> Redness</label></li>
-                <li><label><input type="checkbox" /> Oil Control</label></li>
-                <li><label><input type="checkbox" /> Acne Care</label></li>
-                <li><label><input type="checkbox" /> Pore Care</label></li>
-                <li><label><input type="checkbox" /> Brightening</label></li>
-                <li><label><input type="checkbox" /> Dark Spots</label></li>
-                <li><label><input type="checkbox" /> Dullness</label></li>
-                <li><label><input type="checkbox" /> Anti-aging</label></li>
-
-              </ul>
-              <button type="button" class="listing-filter-more">Show more</button>
-            </details>
-
-            <details class="listing-filter-group" open>
-              <summary>Brand</summary>
-              <label class="listing-filter-search">
-                <span class="sr-only">Search brand</span>
-                <input type="search" placeholder="Search Brand" />
-              </label>
-              <ul class="listing-filter-list">
-                <li><label><input type="checkbox" /> Anua</label></li>
-                <li><label><input type="checkbox" /> numbuzin</label></li>
-                <li><label><input type="checkbox" /> medicube</label></li>
-                <li><label><input type="checkbox" /> COSRX</label></li>
-              </ul>
-              <button type="button" class="listing-filter-more">Show more</button>
-            </details>
-
-            <details class="listing-filter-group" open>
-              <summary>Price Range</summary>
-              <div class="listing-price-range" data-price-max="200">
-                <div class="listing-price-range-slider">
-                  <span class="listing-price-range-value listing-price-range-value--min">US$0</span>
-                  <span class="listing-price-range-value listing-price-range-value--max">US$200+</span>
-                  <div class="listing-price-range-rail">
-                    <div class="listing-price-range-fill"></div>
-                  </div>
-                  <input type="range" class="listing-price-range-input listing-price-range-input--min" min="0" max="200" step="1" value="0" aria-label="Minimum price" />
-                  <input type="range" class="listing-price-range-input listing-price-range-input--max" min="0" max="200" step="1" value="200" aria-label="Maximum price" />
-                </div>
-                <div class="listing-price-range-labels">
-                  <span>US$0</span>
-                  <span>US$200+</span>
-                </div>
-              </div>
-            </details>
-
-            <details class="listing-filter-group" open>
-              <summary>Ratings</summary>
-              <ul class="listing-filter-list listing-filter-ratings">
-                <li><label><input type="checkbox" data-chip-label="4+" /> &#9733;&#9733;&#9733;&#9733;&#9733; 4+</label></li>
-                <li><label><input type="checkbox" data-chip-label="3~4" /> &#9733;&#9733;&#9733;&#9733;&#9734; 3~4</label></li>
-                <li><label><input type="checkbox" data-chip-label="1~3" /> &#9733;&#9733;&#9733;&#9734;&#9734; 1~3</label></li>
-              </ul>
-            </details>
-            </div>
-
-            <button type="button" class="listing-filter-done mobile-only" data-listing-filter-close hidden>Done</button>
-          </aside>
-
-          <section class="listing-results" aria-label="Product results">
-            <div class="listing-toolbar">
-              <p class="listing-count">
-                <span class="desktop-only">All Products </span>
-                <strong>(2,784)</strong>
-                <span class="mobile-only">2,784 Items</span>
-              </p>
-              <div class="listing-toolbar-actions">
-                <label class="listing-sort">
-                  <span class="sr-only">Sort products</span>
-                  <span class="realtrend-select-wrap">
-                    <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Sort products">
-                      <span class="realtrend-select-value">Best Selling</span>
-                    </button>
-                    <ul class="realtrend-select-menu" role="listbox"></ul>
-                    <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
-                      <option selected>Best Selling</option>
-                      <option>Newest</option>
-                      <option>Price: Low to High</option>
-                      <option>Price: High to Low</option>
-                      <option>Top Rated</option>
-                    </select>
-                  </span>
-                </label>
-                <button
-                  type="button"
-                  class="listing-filter-open mobile-only"
-                  data-listing-filter-open
-                  aria-controls="listing-filters"
-                  aria-expanded="false"
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M7 12h10M10 17h4" /></svg>
-                  <span class="sr-only">Open filters</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="listing-active-filters">
-              <div class="listing-chips" role="list"></div>
-              <button type="button" class="listing-clear-all desktop-only" data-listing-clear-filters>Clear all</button>
-            </div>
-
-            <div class="listing-grid">
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">Anua</p>
-                  <h3 class="listing-card-title">PDRN Hyaluronic Acid Hydrating Capsule Mist 100ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.8 <span>(1,256)</span></p>
-                  <p class="listing-card-price"><strong>US$18.40</strong> <del>US$24.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">numbuzin</p>
-                  <h3 class="listing-card-title">No.3 PHA Skin Prep Bubble Mask 90ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.9 <span>(842)</span></p>
-                  <p class="listing-card-price"><strong>US$22.00</strong> <del>US$31.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">Anua</p>
-                  <h3 class="listing-card-title">Heartleaf Pore Control Cleansing Oil</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.8 <span>(1,256)</span></p>
-                  <p class="listing-card-price"><strong>US$18.40</strong> <del>US$24.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">medicube</p>
-                  <h3 class="listing-card-title">Zero Pore Pad 2.0 70 sheets</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.7 <span>(532)</span></p>
-                  <p class="listing-card-price"><strong>US$19.90</strong> <del>US$28.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">COSRX</p>
-                  <h3 class="listing-card-title">Advanced Snail 96 Mucin Power Essence 100ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.9 <span>(2,104)</span></p>
-                  <p class="listing-card-price"><strong>US$21.00</strong> <del>US$29.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">Anua</p>
-                  <h3 class="listing-card-title">Heartleaf 77% Soothing Toner 250ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.8 <span>(986)</span></p>
-                  <p class="listing-card-price"><strong>US$18.50</strong> <del>US$26.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">numbuzin</p>
-                  <h3 class="listing-card-title">No.1 Clear Filter Sun Essence SPF50+ 50ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.7 <span>(421)</span></p>
-                  <p class="listing-card-price"><strong>US$17.20</strong> <del>US$24.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">Anua</p>
-                  <h3 class="listing-card-title">Niacinamide 10% + TXA 4% Serum 30ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.8 <span>(673)</span></p>
-                  <p class="listing-card-price"><strong>US$20.40</strong> <del>US$27.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">Anua</p>
-                  <h3 class="listing-card-title">PDRN Hyaluronic Acid Hydrating Capsule Mist 100ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.8 <span>(1,256)</span></p>
-                  <p class="listing-card-price"><strong>US$18.40</strong> <del>US$24.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">numbuzin</p>
-                  <h3 class="listing-card-title">No.3 PHA Skin Prep Bubble Mask 90ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.9 <span>(842)</span></p>
-                  <p class="listing-card-price"><strong>US$22.00</strong> <del>US$31.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">Anua</p>
-                  <h3 class="listing-card-title">Heartleaf Pore Control Cleansing Oil</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.8 <span>(1,256)</span></p>
-                  <p class="listing-card-price"><strong>US$18.40</strong> <del>US$24.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">medicube</p>
-                  <h3 class="listing-card-title">Zero Pore Pad 2.0 70 sheets</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.7 <span>(532)</span></p>
-                  <p class="listing-card-price"><strong>US$19.90</strong> <del>US$28.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">COSRX</p>
-                  <h3 class="listing-card-title">Advanced Snail 96 Mucin Power Essence 100ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.9 <span>(2,104)</span></p>
-                  <p class="listing-card-price"><strong>US$21.00</strong> <del>US$29.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">Anua</p>
-                  <h3 class="listing-card-title">Heartleaf 77% Soothing Toner 250ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.8 <span>(986)</span></p>
-                  <p class="listing-card-price"><strong>US$18.50</strong> <del>US$26.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">numbuzin</p>
-                  <h3 class="listing-card-title">No.1 Clear Filter Sun Essence SPF50+ 50ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.7 <span>(421)</span></p>
-                  <p class="listing-card-price"><strong>US$17.20</strong> <del>US$24.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-
-              <article class="listing-card">
-                <div class="listing-card-media">
-                  <div class="listing-card-image" aria-hidden="true"></div>
-                  <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <div class="listing-card-body">
-                  <p class="listing-card-brand">Anua</p>
-                  <h3 class="listing-card-title">Niacinamide 10% + TXA 4% Serum 30ml</h3>
-                  <p class="listing-card-rating"><img src="../img/listing/star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12"> 4.8 <span>(673)</span></p>
-                  <p class="listing-card-price"><strong>US$20.40</strong> <del>US$27.00</del></p>
-                </div>
-                <div class="listing-card-actions listing-card-actions--desktop">
-                  <button type="button" aria-label="Add to cart"></button>
-                  <button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="false"></button>
-                </div>
-                <button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart"></button>
-              </article>
-            </div>
-
-            <nav class="listing-pagination" aria-label="Pagination">
-              <button type="button" class="listing-page-arrow" aria-label="Previous page">&lsaquo;</button>
-              <button type="button" class="listing-page-num is-active" aria-current="page">1</button>
-              <button type="button" class="listing-page-num">2</button>
-              <button type="button" class="listing-page-num">3</button>
-              <span class="listing-page-ellipsis" aria-hidden="true">...</span>
-              <button type="button" class="listing-page-num">12</button>
-              <button type="button" class="listing-page-arrow" aria-label="Next page">&rsaquo;</button>
-            </nav>
+            <div class="listing-grid listing-grid--best" data-best-grid aria-live="polite"></div>
+            <div class="listing-load-sentinel" data-best-sentinel aria-hidden="true"></div>
           </section>
         </div>
       </div>
@@ -944,8 +526,6 @@
       </div>
       <p class="copyright">吏?2025 Bridge on, Inc. All rights reserved.</p>
     </footer>
-
-    <div class="listing-filter-backdrop mobile-only" data-listing-filter-close hidden></div>
 
     <aside class="realtrend-panel trend-product-sheet" id="trend-product-sheet" hidden aria-hidden="true" aria-label="Product details">
       <article class="realtrend-product-card">
@@ -1109,5 +689,6 @@
 
     <script src="../script.js"></script>
     <script src="./listing.js"></script>
+    <script src="./best.js"></script>
   </body>
 </html>
