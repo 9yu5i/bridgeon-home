@@ -89,6 +89,15 @@ const initTrendProductSheet = () => {
       };
     }
 
+    if (source.classList.contains("cart-rec-card")) {
+      return {
+        brand: source.querySelector(":scope > p")?.textContent?.trim() || "",
+        name: source.querySelector("h3")?.textContent?.trim() || "",
+        rawPrice: source.querySelector(":scope > strong")?.textContent?.trim() || "",
+        originalPrice: "",
+      };
+    }
+
     if (source.classList.contains("editor-pick-card")) {
       return {
         brand: source.querySelector(".editor-pick-product p")?.textContent?.trim() || "",
@@ -179,7 +188,8 @@ const initTrendProductSheet = () => {
       document.body.classList.contains("listing-page") ||
       document.body.classList.contains("timedeal-page") ||
       document.body.classList.contains("product-detail-page") ||
-      document.body.classList.contains("editors-page")
+      document.body.classList.contains("editors-page") ||
+      document.body.classList.contains("cart-page")
         ? "../"
         : "";
 
@@ -435,6 +445,17 @@ const initTrendProductSheet = () => {
     event.preventDefault();
     event.stopPropagation();
     openTrendProductSheet(cartButton.closest(".editor-pick-card"));
+  });
+
+  const cartRecommendationList = document.querySelector(".cart-rec-list");
+
+  cartRecommendationList?.addEventListener("click", (event) => {
+    const cartButton = event.target.closest(".cart-rec-card button");
+    if (!cartButton || !cartRecommendationList.contains(cartButton)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    openTrendProductSheet(cartButton.closest(".cart-rec-card"));
   });
 
   closeButton?.addEventListener("click", closeTrendProductSheet);

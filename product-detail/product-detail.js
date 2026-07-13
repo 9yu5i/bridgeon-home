@@ -326,12 +326,83 @@
 
   selectColorOption(document.querySelector(".product-color-option.is-active"));
 
+  const thumbnailList = document.querySelector(".product-thumbnails");
+  const thumbnailBackgroundProps = [
+    "backgroundImage",
+    "backgroundColor",
+    "backgroundPosition",
+    "backgroundSize",
+    "backgroundRepeat",
+  ];
+  let activeThumbnail = document.querySelector("[data-detail-thumb].is-active") || thumbnailButtons[0];
+
+  const setStageVariant = (button) => {
+    if (!stage || !button) return;
+
+    const variant = button.dataset.detailThumb || "0";
+    if (variant === "0") {
+      stage.removeAttribute("data-variant");
+    } else {
+      stage.dataset.variant = variant;
+    }
+  };
+
+  const setStageImageFromThumbnail = (button) => {
+    if (!stage || !button) return;
+
+    const thumbnailImage = button.querySelector("img");
+    const thumbnailImageSrc = thumbnailImage?.currentSrc || thumbnailImage?.src || "";
+
+    setStageVariant(button);
+
+    if (thumbnailImageSrc) {
+      stage.style.backgroundImage = `url("${thumbnailImageSrc}")`;
+      stage.style.backgroundColor = "transparent";
+      stage.style.backgroundPosition = "center";
+      stage.style.backgroundSize = "cover";
+      stage.style.backgroundRepeat = "no-repeat";
+      return;
+    }
+
+    const thumbnailStyle = window.getComputedStyle(button);
+    thumbnailBackgroundProps.forEach((property) => {
+      stage.style[property] = thumbnailStyle[property];
+    });
+  };
+
+  const restoreActiveThumbnail = () => {
+    if (!activeThumbnail) return;
+    setStageImageFromThumbnail(activeThumbnail);
+  };
+
   thumbnailButtons.forEach((button) => {
+    button.addEventListener("pointerenter", () => setStageImageFromThumbnail(button));
+    button.addEventListener("focus", () => setStageImageFromThumbnail(button));
+
     button.addEventListener("click", () => {
+      activeThumbnail = button;
       thumbnailButtons.forEach((item) => item.classList.toggle("is-active", item === button));
-      if (stage) stage.dataset.variant = button.dataset.detailThumb || "0";
+      setStageImageFromThumbnail(button);
     });
   });
+
+  thumbnailList?.addEventListener("pointerleave", restoreActiveThumbnail);
+  thumbnailList?.addEventListener("focusout", () => {
+    window.requestAnimationFrame(() => {
+      if (!thumbnailList.contains(document.activeElement)) restoreActiveThumbnail();
+    });
+  });
+
+  const reviewsBars = document.querySelector(".product-reviews-bars");
+  const animateReviewsBars = () => {
+    if (!reviewsBars) return;
+
+    reviewsBars.classList.remove("is-animating");
+    void reviewsBars.offsetWidth;
+    window.requestAnimationFrame(() => {
+      reviewsBars.classList.add("is-animating");
+    });
+  };
 
   tabButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -346,6 +417,9 @@
       panels.forEach((panel) => {
         panel.hidden = panel.dataset.detailPanel !== key;
       });
+
+      if (key === "reviews") animateReviewsBars();
+
       queueRecommendationsStickyTop();
     });
   });
