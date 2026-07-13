@@ -1,0 +1,58 @@
+@view-transition {
+  navigation: auto;
+}
+
+@keyframes page-transition-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-transition-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 0.32s ease both page-transition-out;
+}
+
+::view-transition-new(root) {
+  animation: 0.32s ease both page-transition-in;
+}
+
+html.is-page-leaving body {
+  opacity: 0;
+  transition: opacity 0.32s ease;
+}
+
+html.is-page-entering body {
+  opacity: 0;
+  animation: page-transition-in 0.32s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  html.is-page-leaving body {
+    opacity: 1;
+    transition: none;
+  }
+
+  html.is-page-entering body {
+    opacity: 1;
+    animation: none;
+  }
+}

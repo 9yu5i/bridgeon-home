@@ -1,0 +1,211 @@
+﻿/* Scroll reveal ??main page sections */
+html.scroll-reveal-pending .content-section .section-heading,
+html.scroll-reveal-pending .mobile-cats,
+html.scroll-reveal-pending .share-pick,
+html.scroll-reveal-pending .newsletter,
+html.scroll-reveal-pending .magazine-block {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .content-section .section-heading h2,
+html.scroll-reveal-pending .content-section .inline-heading h2,
+html.scroll-reveal-pending .content-section .mobile-section-title {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .trend-section .inline-heading p,
+html.scroll-reveal-pending .trend-section .tab-row,
+html.scroll-reveal-pending .trend-section .section-heading > a,
+html.scroll-reveal-pending .seller-section .tag-tabs,
+html.scroll-reveal-pending .seller-section .section-heading > a {
+  opacity: 0;
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .trend-rail .reel-card,
+html.scroll-reveal-pending .seller-rail .product-card,
+html.scroll-reveal-pending .review-rail .review-card,
+html.scroll-reveal-pending .magazine-grid .magazine-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .deal-grid .deal-card {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .editor-card > span {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .editor-card > div h2,
+html.scroll-reveal-pending .editor-card > div h3,
+html.scroll-reveal-pending .editor-card > div p,
+html.scroll-reveal-pending .editor-card > button,
+html.scroll-reveal-pending .editor-card > a {
+  opacity: 0;
+  transform: translateX(28px);
+  transition: none !important;
+}
+
+:root {
+  --scroll-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --scroll-reveal-distance: 32px;
+  --scroll-reveal-duration: 0.82s;
+  --scroll-reveal-stagger: 0.08s;
+}
+
+.scroll-reveal-soft {
+  opacity: 0;
+  transform: translateY(var(--scroll-reveal-distance));
+  transition:
+    opacity var(--scroll-reveal-duration) var(--scroll-reveal-ease),
+    transform var(--scroll-reveal-duration) var(--scroll-reveal-ease);
+}
+
+.scroll-reveal-soft.scroll-reveal-slow {
+  --scroll-reveal-duration: 1s;
+  --scroll-reveal-distance: 28px;
+}
+
+.scroll-reveal-soft.is-inview,
+.is-inview > .scroll-reveal-soft {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.72s var(--scroll-reveal-ease),
+    transform 0.72s var(--scroll-reveal-ease);
+}
+
+.scroll-reveal-line.is-inview,
+.is-inview .scroll-reveal-line {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-rail:not(.is-inview) .inline-heading p,
+.scroll-reveal-rail:not(.is-inview) .tab-row,
+.scroll-reveal-rail:not(.is-inview) .tag-tabs,
+.scroll-reveal-rail:not(.is-inview) .section-heading > a {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-reveal-rail.is-inview .inline-heading p,
+.scroll-reveal-rail.is-inview .tab-row,
+.scroll-reveal-rail.is-inview .tag-tabs,
+.scroll-reveal-rail.is-inview .section-heading > a {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.scroll-reveal-stagger .scroll-reveal-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.72s var(--scroll-reveal-ease),
+    transform 0.72s var(--scroll-reveal-ease);
+  transition-delay: calc(var(--reveal-index, 0) * var(--reveal-stagger, var(--scroll-reveal-stagger)));
+}
+
+.scroll-reveal-stagger.is-inview .scroll-reveal-item,
+.is-inview .scroll-reveal-stagger .scroll-reveal-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-stagger .scroll-reveal-slow-item {
+  transition-duration: 0.95s;
+}
+
+.scroll-reveal-stagger .scroll-reveal-pop-item {
+  opacity: 0;
+  transform: scale(0.92);
+  box-shadow: 0 8px 18px rgba(55, 34, 99, 0.06);
+  transition:
+    opacity 0.68s var(--scroll-reveal-ease),
+    transform 0.68s var(--scroll-reveal-ease),
+    box-shadow 0.68s var(--scroll-reveal-ease);
+  transition-delay: calc(var(--reveal-index, 0) * var(--reveal-stagger, 0.1s));
+}
+
+.scroll-reveal-stagger.is-inview .scroll-reveal-pop-item,
+.is-inview .scroll-reveal-stagger .scroll-reveal-pop-item {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: var(--card-shadow);
+}
+
+.scroll-reveal-split-left {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition:
+    opacity 0.85s var(--scroll-reveal-ease),
+    transform 0.85s var(--scroll-reveal-ease);
+}
+
+.scroll-reveal-split-right {
+  opacity: 0;
+  transform: translateX(28px);
+  transition:
+    opacity 0.85s var(--scroll-reveal-ease),
+    transform 0.85s var(--scroll-reveal-ease);
+  transition-delay: 0.08s;
+}
+
+.scroll-reveal-split-left.is-inview,
+.is-inview .scroll-reveal-split-left {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-reveal-split-right.is-inview,
+.is-inview .scroll-reveal-split-right {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-reveal-hero .hero-frame,
+.scroll-reveal-hero .today-pick {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.9s var(--scroll-reveal-ease),
+    transform 0.9s var(--scroll-reveal-ease);
+}
+
+.scroll-reveal-hero .today-pick {
+  transition-delay: 0.12s;
+}
+
+.scroll-reveal-hero.is-inview .hero-frame,
+.scroll-reveal-hero.is-inview .today-pick {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.realtrend-cart-toast {
+  --rt-purple: #7b3fe4;
+  --rt-cart-toast-ring: 119.38;
+  --rt-cart-toast-duration: 5s;
+}
+
+.realtrend-cart-toast.is-visible {
+  z-index: 210;
+}
+

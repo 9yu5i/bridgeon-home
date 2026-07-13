@@ -1,0 +1,55 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+@media (min-width: 1121px) {
+  html {
+    zoom: 0.9;
+  }
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  background: #292626;
+  color: var(--ink);
+  font-family: "Pretendard", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+@media (max-width: 1120px) {
+  body {
+    background: var(--page);
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+#wrap {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.inner {
+  position: relative;
+  width: min(100% - 32px, var(--max-width));
+  margin: 0 auto;
+}

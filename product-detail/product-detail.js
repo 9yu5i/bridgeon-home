@@ -24,6 +24,7 @@
   const productInfoPanel = document.querySelector(".product-info-panel");
   const recommendationsWrap = document.querySelector(".product-recommendations-wrap");
   const recommendationsCard = document.querySelector(".product-recommendations");
+  const mobileBackButton = document.querySelector("[data-product-mobile-back]");
   const recommendationsStickyQuery = window.matchMedia("(min-width: 1121px)");
   const CART_TOAST_RING_MS = 5000;
   let cartToastTimer = null;
@@ -104,6 +105,15 @@
   window.addEventListener("load", queueRecommendationsStickyTop);
   window.addEventListener("resize", queueRecommendationsStickyTop);
   recommendationsStickyQuery.addEventListener?.("change", queueRecommendationsStickyTop);
+
+  mobileBackButton?.addEventListener("click", () => {
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+
+    window.location.href = new URL("../index.html", window.location.href).href;
+  });
 
   if (typeof ResizeObserver === "function" && productInfoPanel) {
     const recommendationsResizeObserver = new ResizeObserver(queueRecommendationsStickyTop);

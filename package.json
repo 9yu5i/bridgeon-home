@@ -1,0 +1,10 @@
+{
+  "name": "bridgeon-home",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node tools/check-js.mjs && node tools/check-css.mjs",
+    "check:js": "node tools/check-js.mjs",
+    "check:css": "node tools/check-css.mjs"
+  }
+}

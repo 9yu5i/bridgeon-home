@@ -1,0 +1,33 @@
+/* Responsive rails rules extracted from responsive-home.css. */
+
+@media (max-width: 1120px) {
+  .rail-wrap {
+      padding-inline: 0;
+    }
+}
+
+@media (max-width: 1120px) {
+  .rail-arrow {
+      display: none;
+    }
+}
+
+@media (max-width: 1120px) {
+  .card-rail {
+      gap: 18px;
+    }
+}
+
+@media (max-width: 760px) {
+  .rail-arrow {
+      display: none;
+    }
+}
+
+@media (max-width: 760px) {
+  .card-rail {
+      gap: 12px;
+      margin-inline: -1px;
+      padding: 1px 1px 2px;
+    }
+}

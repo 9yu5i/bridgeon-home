@@ -1,0 +1,18 @@
+:root {
+  --black: #151515;
+  --header: #202020;
+  --ink: #171320;
+  --muted: #77717f;
+  --page: #f8f5ff;
+  --line: #e6ddf4;
+  --purple: #7b3fe4;
+  --purple-dark: #5422ba;
+  --purple-light: #f2efff;
+  --warm: #ffb000;
+  --placeholder: #888884;
+  --placeholder-dark: #30302f;
+  --max-width: 1770px;
+  --side-padding: 72px;
+  --card-radius: 18px;
+  --card-shadow: 0 10px 24px rgba(55, 34, 99, 0.14);
+}

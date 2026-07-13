@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="../font.css" />
     <link rel="stylesheet" href="../common.css" />
     <link rel="stylesheet" href="../styles.css" />
-    <link rel="stylesheet" href="../realtrend/realtrend.css" />
     <link rel="stylesheet" href="./product-detail.css" />
   </head>
   <body class="product-detail-page">
@@ -22,6 +21,23 @@
       </div>
 
       <div class="header-main">
+        <nav class="product-mobile-gnb mobile-only" aria-label="Product page navigation">
+          <button type="button" class="product-mobile-gnb-button product-mobile-gnb-back" data-product-mobile-back aria-label="Go back">
+            <span class="product-mobile-back-icon" aria-hidden="true"></span>
+          </button>
+          <div class="product-mobile-gnb-actions">
+            <button type="button" class="product-mobile-gnb-button" data-bottom-search-open aria-label="Open search">
+              <img src="./common_img/search.png" alt="" aria-hidden="true">
+            </button>
+            <a class="product-mobile-gnb-button" href="../index.html" aria-label="Home">
+              <img src="./common_img/home.png" alt="" aria-hidden="true">
+            </a>
+            <a class="product-mobile-gnb-button product-mobile-gnb-cart" href="#" aria-label="Cart, 3 items">
+              <img src="./common_img/cart.png" alt="" aria-hidden="true">
+              <span class="cart-badge" aria-hidden="true">3</span>
+            </a>
+          </div>
+        </nav>
         <button type="button" class="icon-button mobile-menu mobile-only" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false" aria-label="Open menu">
           <img src="../img/mobile-icon/menu/hamburger_mobile.png" alt="" aria-hidden="true">
         </button>

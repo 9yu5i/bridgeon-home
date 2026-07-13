@@ -1,0 +1,636 @@
+/* Responsive editorial rules extracted from responsive-home.css. */
+
+@media (max-width: 1120px) {
+  .editorial-grid {
+      grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card {
+      max-width: none;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-block {
+      min-height: 0;
+    }
+}
+
+@media (max-width: 760px) {
+  .editorial-section {
+      margin-top: clamp(48px, 5.6vw, 72px) !important;
+    }
+}
+
+@media (max-width: 760px) {
+  .editorial-grid {
+      gap: 48px;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card {
+      grid-template-columns: 1fr 60px;
+      min-height: 142px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card h2 {
+      margin-bottom: 7px;
+      font-size: 12px;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card h3 {
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card p {
+      margin-bottom: 8px;
+      font-size: 10px;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card button,
+    .editor-card a {
+      height: 18px;
+      padding: 0 9px;
+      font-size: 7px;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card button {
+      width: clamp(78px, 25vw, 108px);
+      white-space: nowrap;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card a {
+      right: 12px;
+      bottom: 12px;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card > span {
+      font-size: 0;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-block {
+      padding: 16px;
+      border-radius: 12px;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-grid {
+      display: flex;
+      gap: 17px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scroll-snap-type: x proximity;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-card {
+      flex: 0 0 142px;
+      scroll-snap-align: start;
+      border-radius: 7px;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-card div {
+      height: 90px;
+      font-size: 0;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-card h3 {
+      min-height: 35px;
+      padding: 9px 8px 2px;
+      font-size: 8px;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-card p {
+      padding: 0 8px 9px;
+      font-size: 7px;
+    }
+}
+
+@media (max-width: 380px) {
+  .magazine-card {
+      flex-basis: 132px;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      overflow: hidden;
+    }
+}
+
+@media (max-width: 1120px) {
+  .editorial-section {
+      margin-top: clamp(48px, 5.6vw, 72px) !important;
+    }
+}
+
+@media (max-width: 1120px) {
+  .editorial-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(48px, 5.6vw, 72px);
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card-title {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      margin: 0;
+      color: #111;
+      font-size: clamp(22px, 4.2vw, 30px);
+      line-height: 1;
+      font-weight: 700;
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card {
+      position: relative;
+      display: block;
+      container-type: inline-size;
+      max-width: none;
+      min-height: 0;
+      aspect-ratio: 356 / 142;
+      margin: clamp(60px, 6.5vw, 76px) 0 0;
+      padding: clamp(16px, 5cqi, 40px) clamp(20px, 5.6cqi, 34px);
+      overflow: hidden;
+      border-radius: 12px;
+      background:
+        linear-gradient(90deg, rgba(226, 244, 252, 0.92), rgba(224, 243, 248, 0.44)),
+        #dceff6;
+      box-shadow: none;
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card > div {
+      position: static;
+      z-index: 2;
+      width: 62%;
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card h2 {
+      display: none;
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card h3 {
+      display: block;
+      max-width: 62%;
+      margin: 0 0 clamp(8px, 2.2cqi, 13px);
+      overflow: visible;
+      white-space: nowrap;
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+      -webkit-box-orient: initial;
+      color: #111;
+      font-size: clamp(14px, 5.2cqi, 25px);
+      line-height: 1.22;
+      font-weight: 800;
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card p {
+      position: relative;
+      z-index: 2;
+      margin: 0;
+      color: #111;
+      font-size: clamp(12px, 3.6cqi, 18px);
+      line-height: 1.22;
+      font-weight: 400;
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card button,
+    .editor-card a {
+      height: clamp(31px, 8.7cqi, 40px);
+      padding: 0 clamp(14px, 3.9cqi, 20px);
+      border-radius: 999px;
+      font-size: clamp(12px, 3.6cqi, 16px);
+      line-height: 1;
+      font-weight: 500;
+  
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card button {
+      position: absolute;
+      top: auto;
+      left: clamp(20px, 5.6cqi, 34px);
+      bottom: clamp(18px, 5.05cqi, 28px);
+      width: auto;
+      min-width: clamp(104px, 29.2cqi, 140px);
+      color: #111;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 2px 7px rgba(44, 72, 94, 0.18);
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card a {
+      position: absolute;
+      right: clamp(20px, 5.6cqi, 34px);
+      bottom: clamp(18px, 5.05cqi, 28px);
+      color: #fff;
+      background: #8eb4cf;
+      box-shadow: 0 2px 7px rgba(44, 72, 94, 0.18);
+    }
+}
+
+@media (max-width: 1120px) {
+  .editor-card > span {
+      position: absolute;
+      inset: 0 0 0 auto;
+      display: block;
+      width: 48%;
+      color: transparent;
+      font-size: 0;
+      pointer-events: none;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-block {
+      position: relative;
+      --magazine-thumb-left: 12%;
+      --magazine-thumb-size: 25.333%;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      min-height: 0;
+      padding: 0 0 clamp(30px, 6vw, 42px);
+      border-radius: 0;
+      background: transparent;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-block .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 0 0 clamp(30px, 4vw, 30px);
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-block .section-heading h2 {
+      color: #111;
+      font-size: clamp(22px, 4.2vw, 30px);
+      line-height: 1;
+      font-weight: 700;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-block .section-heading a {
+      color: var(--purple);
+      font-size: clamp(13px, 1.9vw, 15px);
+      line-height: 1;
+      font-weight: 400;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-grid {
+      display: flex;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      gap: clamp(16px, 3.2vw, 24px);
+      overflow-x: auto;
+      margin-inline: 0;
+      padding: 0 0 18px;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      overscroll-behavior-x: contain;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-grid::-webkit-scrollbar {
+      display: none;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-card {
+      flex: 0 0 clamp(188px, 43vw, 260px);
+      overflow: hidden;
+      border-radius: 12px;
+      scroll-snap-align: start;
+      box-shadow: none;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-card div {
+      height: clamp(180px, 38vw, 248px);
+      color: transparent;
+      font-size: 0;
+      background: #777;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-card h3 {
+      min-height: clamp(64px, 12vw, 78px);
+      margin: 0;
+      padding: clamp(14px, 2.5vw, 18px) 12px 4px;
+      color: #111;
+      font-size: clamp(16px, 2.8vw, 20px);
+      line-height: 1.35;
+      font-weight: 700;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-card p {
+      margin: 0;
+      padding: 0 12px clamp(14px, 2.5vw, 18px);
+      color: #111;
+      font-size: clamp(13px, 2vw, 15px);
+      line-height: 1.2;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-block::before,
+    .magazine-block::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      height: 4px;
+      border-radius: 999px;
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-block::before {
+      left: 12%;
+      right: 12%;
+      background:
+        rgba(255, 255, 255, 0.8);
+    }
+}
+
+@media (max-width: 1120px) {
+  .magazine-block::after {
+      left: var(--magazine-thumb-left);
+      width: var(--magazine-thumb-size);
+      background: var(--purple);
+      transition: left 0.18s ease;
+    }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .magazine-block {
+      padding-bottom: 0;
+    }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .magazine-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(12px, 1.6vw, 18px);
+      overflow: visible;
+      padding: 0;
+      scroll-snap-type: none;
+    }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .magazine-card {
+      flex: initial;
+      min-width: 0;
+    }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .magazine-block::before,
+    .magazine-block::after {
+      display: none;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-grid {
+      display: flex !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      overflow-x: auto !important;
+      scroll-snap-type: x mandatory !important;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+      cursor: grab;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-grid.is-dragging {
+      cursor: grabbing;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-card {
+      flex: 0 0 clamp(188px, 43vw, 260px);
+      scroll-snap-align: start;
+    }
+}
+
+@media (max-width: 760px) {
+  .magazine-block::before,
+    .magazine-block::after {
+      display: block;
+    }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .editor-card {
+      aspect-ratio: auto;
+      height: calc((761px - 72px) * 142 / 356);
+      min-height: calc((761px - 72px) * 142 / 356);
+      max-height: calc((761px - 72px) * 142 / 356);
+    }
+}
+
+@media (max-width: 760px) {
+  .editorial-section {
+      margin-top: clamp(48px, 5.6vw, 72px) !important;
+    }
+}
+
+@media (max-width: 760px) {
+  .editor-card {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      overflow: hidden;
+    }
+}
+
+@media (min-width: 1121px) {
+  .editorial-grid {
+      grid-template-columns: minmax(0, min(611px, calc(611 / 1920 * 100vw))) minmax(0, 1fr);
+      align-items: stretch;
+    }
+}
+
+@media (min-width: 1121px) {
+  .editor-card {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      height: auto;
+      min-height: 0;
+      aspect-ratio: 611 / 337;
+      container-type: inline-size;
+    }
+}
+
+@media (min-width: 1121px) {
+  .editor-card > div {
+      margin-top: -1.96cqi;
+      width: 100%;
+      max-width: none;
+    }
+}
+
+@media (min-width: 1121px) {
+  .editor-card > span {
+      top: 5.24cqi;
+      right: 5.24cqi;
+      bottom: 5.24cqi;
+      width: 24.55cqi;
+      z-index: 1;
+    }
+}
+
+@media (min-width: 1121px) {
+  .editor-card h2 {
+      margin-bottom: 3.93cqi;
+      font-size: 30px;
+    }
+}
+
+@media (min-width: 1121px) {
+  .editor-card h3 {
+      margin-bottom: 1.64cqi;
+      font-size: 21px;
+      white-space: nowrap;
+    }
+}
+
+@media (min-width: 1121px) {
+  .editor-card p {
+      margin-bottom: 3.93cqi;
+      font-size: 18px;
+     }
+}
+
+@media (min-width: 1121px) {
+  .editor-card button {
+      position: absolute;
+      left: 5.24cqi;
+      bottom: 5.73cqi;
+      z-index: 3;
+      margin-top: 0;
+    }
+}
+
+@media (min-width: 1121px) {
+  .editor-card a {
+      position: absolute;
+      right: 4.91cqi;
+      bottom: 5.73cqi;
+      z-index: 3;
+    }
+}
+
+@media (min-width: 1121px) and (max-width: 1570px) {
+  .magazine-block {
+      min-height: 0;
+      align-self: stretch;
+    }
+}
+
+@media (min-width: 1121px) and (max-width: 1570px) {
+  .magazine-grid {
+      flex: 1;
+      min-height: 0;
+      align-items: stretch;
+      overflow: visible;
+      padding: 0;
+      scroll-snap-type: none;
+    }
+}
+
+@media (min-width: 1121px) and (max-width: 1280px) {
+  .magazine-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1121px) and (max-width: 1280px) {
+  .magazine-card:nth-child(n + 3) {
+      display: none;
+    }
+}
+
+@media (min-width: 1281px) and (max-width: 1570px) {
+  .magazine-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
