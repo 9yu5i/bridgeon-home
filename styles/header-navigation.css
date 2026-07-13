@@ -96,13 +96,24 @@
 }
 
 .search input {
+  -webkit-appearance: none;
+  appearance: none;
   min-width: 0;
   border: 0;
+  border-radius: 0;
   outline: none;
   padding: 0 24px;
   color: #333;
+  background: #fff;
   font-size: 14px;
   font-weight: 400;
+}
+
+.search input::-webkit-search-decoration,
+.search input::-webkit-search-cancel-button,
+.search input::-webkit-search-results-button,
+.search input::-webkit-search-results-decoration {
+  display: none;
 }
 
 .search button {
