@@ -492,8 +492,8 @@
         <section class="cart-shipping" aria-label="Shipping destination and free shipping progress">
           <div class="cart-ship-destination">
             <span aria-hidden="true"><img src="img/box.png" alt=""></span>
-            <p>Shipping to United State</p>
-            <button type="button">Change</button>
+            <p data-cart-ship-country>Shipping to United States</p>
+            <button type="button" data-cart-ship-change aria-haspopup="dialog" aria-controls="cart-country-dialog">Change</button>
           </div>
           <div class="cart-free-shipping">
             <div>
@@ -774,6 +774,33 @@
         <p id="trend-cart-toast-message"></p>
       </div>
       <div class="realtrend-cart-toast-thumb" aria-hidden="true"></div>
+    </div>
+
+    <div
+      class="cart-country-dialog"
+      id="cart-country-dialog"
+      hidden
+      aria-hidden="true"
+    >
+      <button type="button" class="cart-country-backdrop" data-cart-country-close aria-label="Close country list"></button>
+      <div
+        class="cart-country-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-country-title"
+      >
+        <button type="button" class="cart-country-close" data-cart-country-close aria-label="Close country list">&times;</button>
+        <h2 id="cart-country-title">Select shipping country</h2>
+        <label class="sr-only" for="cart-country-search">Search country</label>
+        <input
+          id="cart-country-search"
+          class="cart-country-search"
+          type="search"
+          placeholder="Search country"
+          data-cart-country-search
+        />
+        <ul class="cart-country-list" data-cart-country-list role="listbox" aria-label="Shipping countries"></ul>
+      </div>
     </div>
 
     <button class="float-button to-top" aria-label="Back to top">

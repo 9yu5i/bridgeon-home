@@ -356,5 +356,226 @@
     if (event.key === "bridgeon-cart-items") renderCart();
   });
 
+  const SHIPPING_COUNTRIES = [
+    "United States",
+    "Canada",
+    "United Kingdom",
+    "Australia",
+    "New Zealand",
+    "Japan",
+    "South Korea",
+    "Singapore",
+    "Hong Kong",
+    "Taiwan",
+    "Germany",
+    "France",
+    "Italy",
+    "Spain",
+    "Netherlands",
+    "Belgium",
+    "Sweden",
+    "Norway",
+    "Denmark",
+    "Finland",
+    "Ireland",
+    "Switzerland",
+    "Austria",
+    "Portugal",
+    "Poland",
+    "Czech Republic",
+    "Hungary",
+    "Romania",
+    "Greece",
+    "Luxembourg",
+    "Iceland",
+    "Mexico",
+    "Brazil",
+    "Chile",
+    "Colombia",
+    "Argentina",
+    "Peru",
+    "United Arab Emirates",
+    "Saudi Arabia",
+    "Israel",
+    "Turkey",
+    "India",
+    "Indonesia",
+    "Malaysia",
+    "Thailand",
+    "Vietnam",
+    "Philippines",
+    "China",
+    "South Africa",
+    "Egypt",
+    "Nigeria",
+    "Kenya",
+    "Morocco",
+    "Russia",
+    "Ukraine",
+    "Croatia",
+    "Slovakia",
+    "Slovenia",
+    "Bulgaria",
+    "Estonia",
+    "Latvia",
+    "Lithuania",
+    "Malta",
+    "Cyprus",
+    "Qatar",
+    "Kuwait",
+    "Bahrain",
+    "Oman",
+    "Jordan",
+    "Lebanon",
+    "Costa Rica",
+    "Panama",
+    "Dominican Republic",
+    "Puerto Rico",
+    "Guatemala",
+    "Uruguay",
+    "Ecuador",
+    "Pakistan",
+    "Bangladesh",
+    "Sri Lanka",
+    "Cambodia",
+    "Laos",
+    "Myanmar",
+    "Macao",
+    "Mongolia",
+    "Kazakhstan",
+    "Georgia",
+    "Armenia",
+    "Azerbaijan",
+    "Serbia",
+    "Bosnia and Herzegovina",
+    "North Macedonia",
+    "Albania",
+    "Moldova",
+    "Belarus",
+    "Ghana",
+    "Tanzania",
+    "Uganda",
+    "Tunisia",
+    "Algeria",
+    "Mauritius",
+    "Réunion",
+    "Guadeloupe",
+    "Martinique",
+    "French Guiana",
+    "New Caledonia",
+    "Fiji",
+    "Papua New Guinea",
+    "Samoa",
+    "Tonga",
+    "Brunei",
+    "Maldives",
+    "Nepal",
+    "Bhutan",
+    "Trinidad and Tobago",
+    "Jamaica",
+    "Bahamas",
+    "Barbados",
+    "Belize",
+    "El Salvador",
+    "Honduras",
+    "Nicaragua",
+    "Paraguay",
+    "Bolivia",
+    "Venezuela",
+  ];
+
+  const countryDialog = document.getElementById("cart-country-dialog");
+  const countryListEl = document.querySelector("[data-cart-country-list]");
+  const countrySearch = document.querySelector("[data-cart-country-search]");
+  const shipCountryLabel = document.querySelector("[data-cart-ship-country]");
+  const shipChangeButton = document.querySelector("[data-cart-ship-change]");
+  const STORAGE_KEY = "bridgeon-cart-ship-country";
+
+  let selectedCountry = localStorage.getItem(STORAGE_KEY) || "United States";
+
+  const syncShipCountryLabel = () => {
+    if (shipCountryLabel) shipCountryLabel.textContent = `Shipping to ${selectedCountry}`;
+  };
+
+  const renderCountryList = (query = "") => {
+    if (!countryListEl) return;
+
+    const normalized = query.trim().toLowerCase();
+    const countries = SHIPPING_COUNTRIES.filter((country) =>
+      country.toLowerCase().includes(normalized)
+    ).sort((a, b) => a.localeCompare(b));
+
+    if (!countries.length) {
+      countryListEl.innerHTML = `<li class="cart-country-empty">No countries found.</li>`;
+      return;
+    }
+
+    countryListEl.innerHTML = countries
+      .map(
+        (country) => `
+          <li>
+            <button
+              type="button"
+              role="option"
+              data-cart-country="${escapeHtml(country)}"
+              aria-selected="${country === selectedCountry ? "true" : "false"}"
+              class="${country === selectedCountry ? "is-selected" : ""}"
+            >${escapeHtml(country)}</button>
+          </li>
+        `
+      )
+      .join("");
+  };
+
+  const openCountryDialog = () => {
+    if (!countryDialog) return;
+    countryDialog.hidden = false;
+    countryDialog.setAttribute("aria-hidden", "false");
+    document.body.classList.add("is-cart-country-open");
+    renderCountryList(countrySearch?.value || "");
+    countrySearch?.focus();
+  };
+
+  const closeCountryDialog = () => {
+    if (!countryDialog) return;
+    countryDialog.hidden = true;
+    countryDialog.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-cart-country-open");
+    shipChangeButton?.focus();
+  };
+
+  const selectCountry = (country) => {
+    if (!country || !SHIPPING_COUNTRIES.includes(country)) return;
+    selectedCountry = country;
+    localStorage.setItem(STORAGE_KEY, selectedCountry);
+    syncShipCountryLabel();
+    closeCountryDialog();
+  };
+
+  shipChangeButton?.addEventListener("click", openCountryDialog);
+
+  countryDialog?.querySelectorAll("[data-cart-country-close]").forEach((button) => {
+    button.addEventListener("click", closeCountryDialog);
+  });
+
+  countrySearch?.addEventListener("input", () => {
+    renderCountryList(countrySearch.value);
+  });
+
+  countryListEl?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-cart-country]");
+    if (!button) return;
+    selectCountry(button.dataset.cartCountry);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && countryDialog && !countryDialog.hidden) {
+      closeCountryDialog();
+    }
+  });
+
+  syncShipCountryLabel();
+  renderCountryList();
+
   renderCart();
 })();
