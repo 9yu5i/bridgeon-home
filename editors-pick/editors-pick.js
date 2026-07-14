@@ -3,7 +3,6 @@
   if (!page.classList.contains("editors-page")) return;
 
   const editorButtons = Array.from(document.querySelectorAll("[data-editor-tab]"));
-  const editorNext = document.querySelector(".editor-tabs-next");
   const pickTabs = Array.from(document.querySelectorAll("[data-pick-filter]"));
   const pickList = document.querySelector("[data-editor-pick-list]");
   const magazineGrid = document.querySelector("[data-editor-magazine]");
@@ -378,9 +377,9 @@
   })[category] || category;
 
   const factIcons = [
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.1 7-11a7 7 0 1 0-14 0c0 5.9 7 11 7 11Z" /><circle cx="12" cy="10" r="2.4" /></svg>',
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v4M17 3v4M4 9h16M5 5h14v15H5z" /></svg>',
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a4 4 0 0 0-4 4v2H6a3 3 0 0 0 0 6h2v2a4 4 0 0 0 8 0v-2h2a3 3 0 0 0 0-6h-2V7a4 4 0 0 0-4-4Z" /></svg>',
+    '<img src="img/location.png" alt="" aria-hidden="true">',
+    '<img src="img/birth.png" alt="" aria-hidden="true">',
+    '<img src="img/skin.png" alt="" aria-hidden="true">',
   ];
 
   const renderProfile = (editor) => {
@@ -426,7 +425,7 @@
         </div>
       </div>
       <aside class="editor-pick-note">
-        <h4><span aria-hidden="true">+</span> Why I Picked It!</h4>
+        <h4><span aria-hidden="true"></span> Why I Picked It!</h4>
         <p>${escapeHtml(pick.reason)}</p>
         <div>${pick.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
       </aside>
@@ -530,12 +529,6 @@
     }
 
     button.addEventListener("click", () => setActiveEditor(index));
-  });
-
-  editorNext?.addEventListener("click", () => {
-    const nextIndex = (activeEditorIndex + 1) % editorButtons.length;
-    setActiveEditor(nextIndex);
-    editorButtons[nextIndex]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   });
 
   pickTabs.forEach((button) => {

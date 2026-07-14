@@ -1170,7 +1170,7 @@ body.is-product-inquiry-open {
   position: absolute;
   inset: 0;
   border: 0;
-  background: rgba(19, 12, 36, 0.06);
+  background: rgba(19, 12, 36, 0.36);
   cursor: default;
 }
 
@@ -1361,13 +1361,15 @@ body.is-product-inquiry-open {
 
 
   .product-inquiry-dialog {
-    align-items: start;
-    padding: 72px 18px 24px;
+    place-items: center;
+    padding: 18px;
     overflow-y: auto;
   }
 
   .product-inquiry-modal {
     width: 100%;
+    max-height: calc(100dvh - 36px);
+    overflow-y: auto;
     padding: 26px 24px 28px;
   }
 
@@ -1383,8 +1385,7 @@ body.is-product-inquiry-open {
 
   .product-inquiry-modal textarea {
     min-height: 220px;
-    font-size: 15pxfonw
-    fonrt
+    font-size: 15px;
   }
 }
 

@@ -82,9 +82,11 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 22px;
-  width: min(100%, var(--listing-grid-width, 1220px));
-  margin: 46px auto 72px;
+  justify-content: flex-start;
+  gap: 20px;
+  width: max-content;
+  max-width: min(100%, calc(100vw - 32px));
+  margin: 46px auto 40px;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
@@ -103,26 +105,30 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  min-width: 96px;
-  height: 42px;
-  padding: 0 24px;
-  border: 1px solid var(--purple);
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid #e7e0f3;
   border-radius: 999px;
-  color: #111;
+  color: #4f4760;
   background: #fff;
-  font-size: 18px;
-  line-height: 1;
-  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 600;
   white-space: nowrap;
-  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .listing-category-tabs button:hover,
-.listing-category-tabs button:focus-visible,
+.listing-category-tabs button:focus-visible {
+  border-color: #e7e0f3;
+  color: #111;
+  background: #d0b5ff9d;
+}
+
 .listing-category-tabs button.is-active {
-  border-color: #eadfff;
-  color: var(--purple);
-  background: #eadfff;
+  border-color: var(--purple);
+  color: #fff;
+  background: var(--purple);
 }
 
 /* Shell */
@@ -915,10 +921,13 @@
   .listing-category-tabs {
     gap: 10px;
     margin: 22px auto 34px;
+    width: 100%;
+    max-width: 100%;
     overflow-x: auto;
     flex-wrap: nowrap;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    scroll-padding-inline: 0 16px;
   }
 
   .listing-category-tabs::-webkit-scrollbar {
@@ -930,9 +939,9 @@
   .listing-category-tabs button {
     flex: 0 0 auto;
     min-width: auto;
-    height: 34px;
-    padding: 0 16px;
-    font-size: 14px;
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: 12px;
   }
 
   .listing-card-rank {

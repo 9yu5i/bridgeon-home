@@ -31,6 +31,13 @@ const mobileQuaternaryList = document.querySelector(".mobile-quaternary-list");
 const categoryMenu = document.querySelector(".category-menu");
 const categoryLinks = document.querySelectorAll(".category-nav a");
 const categoryMegaPanels = document.querySelectorAll("[data-menu-panel]");
+const compactHeaderSearchQuery = window.matchMedia("(max-width: 1120px)");
+const compactHeaderSearchPage = document.body.matches(
+  ".listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page"
+);
+const headerAccountButtons = Array.from(
+  document.querySelectorAll('.header-main .header-actions .icon-button[aria-label="Account"]')
+);
 let categoryMenuTimer = null;
 let mobileCurrentThirdKey = "";
 let mobileCategoryScrollFrame = null;
@@ -247,6 +254,79 @@ const closeSearchPanel = () => {
   searchPanel.classList.remove("is-open");
   searchPanel.setAttribute("aria-hidden", "true");
 };
+
+const getCompactHeaderSearchSrc = (src) => {
+  if (!src) return "../img/search/search.png";
+  return src.replace("main-img/top_banner_my.png", "search/search.png");
+};
+
+const syncCompactHeaderSearchButtons = () => {
+  if (!compactHeaderSearchPage) return;
+  const isCompact = compactHeaderSearchQuery.matches;
+
+  headerAccountButtons.forEach((button) => {
+    const img = button.querySelector("img");
+
+    if (!button.dataset.originalLabel) {
+      button.dataset.originalLabel = button.getAttribute("aria-label") || "";
+      button.dataset.originalType = button.getAttribute("type") || "";
+    }
+
+    if (img && !img.dataset.originalSrc) {
+      img.dataset.originalSrc = img.getAttribute("src") || "";
+      img.dataset.originalAlt = img.getAttribute("alt") || "";
+      img.dataset.originalAriaHidden = img.getAttribute("aria-hidden") || "";
+    }
+
+    button.classList.toggle("is-header-search-trigger", isCompact);
+
+    if (isCompact) {
+      button.setAttribute("type", "button");
+      button.setAttribute("aria-label", "Open search");
+      if (img) {
+        img.setAttribute("src", getCompactHeaderSearchSrc(img.dataset.originalSrc));
+        img.setAttribute("alt", "");
+        img.setAttribute("aria-hidden", "true");
+      }
+      return;
+    }
+
+    if (button.dataset.originalType) {
+      button.setAttribute("type", button.dataset.originalType);
+    } else {
+      button.removeAttribute("type");
+    }
+    button.setAttribute("aria-label", button.dataset.originalLabel || "Account");
+
+    if (img) {
+      img.setAttribute("src", img.dataset.originalSrc || img.getAttribute("src") || "");
+      img.setAttribute("alt", img.dataset.originalAlt || "");
+      if (img.dataset.originalAriaHidden) {
+        img.setAttribute("aria-hidden", img.dataset.originalAriaHidden);
+      } else {
+        img.removeAttribute("aria-hidden");
+      }
+    }
+  });
+};
+
+if (compactHeaderSearchPage) {
+  headerAccountButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      if (!compactHeaderSearchQuery.matches) return;
+      event.preventDefault();
+      closeMobileMenu();
+      openSearchPanel({ focusMobile: true });
+    });
+  });
+
+  syncCompactHeaderSearchButtons();
+  if (compactHeaderSearchQuery.addEventListener) {
+    compactHeaderSearchQuery.addEventListener("change", syncCompactHeaderSearchButtons);
+  } else {
+    compactHeaderSearchQuery.addListener(syncCompactHeaderSearchButtons);
+  }
+}
 
 const openMobileMenu = () => {
   if (!mobileMenuPanel) return;
