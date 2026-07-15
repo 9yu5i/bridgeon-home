@@ -464,170 +464,218 @@
               <button type="button" aria-label="Search reviews"></button>
             </label>
             <div class="reviews-select-row">
-              <label>
+              <label class="listing-sort">
                 <span class="sr-only">Product category</span>
-                <select>
-                  <option>All Products</option>
-                  <option>Beauty</option>
-                  <option>K-Food</option>
-                  <option>Lifestyle</option>
-                  <option>K-POP</option>
-                  <option>K-Traditional</option>
-                </select>
+                <span class="realtrend-select-wrap">
+                  <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Product category">
+                    <span class="realtrend-select-value">All Products</span>
+                  </button>
+                  <ul class="realtrend-select-menu" role="listbox"></ul>
+                  <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
+                    <option selected>All Products</option>
+                    <option>Beauty</option>
+                    <option>K-Food</option>
+                    <option>Lifestyle</option>
+                    <option>K-POP</option>
+                    <option>K-Traditional</option>
+                  </select>
+                </span>
               </label>
-              <label>
+              <label class="listing-sort">
                 <span class="sr-only">Review period</span>
-                <select>
-                  <option>Last 6 Months</option>
-                  <option>Last 3 Months</option>
-                  <option>Last 12 Months</option>
-                </select>
+                <span class="realtrend-select-wrap">
+                  <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Review period">
+                    <span class="realtrend-select-value">Last 6 Months</span>
+                  </button>
+                  <ul class="realtrend-select-menu" role="listbox"></ul>
+                  <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
+                    <option selected>Last 6 Months</option>
+                    <option>Last 3 Months</option>
+                    <option>Last 12 Months</option>
+                  </select>
+                </span>
               </label>
             </div>
           </div>
 
           <section class="reviews-list" aria-label="My review list">
             <article class="review-history-card">
-              <a class="review-product-art review-product-art--blue" href="../product-detail/product-detail.html" aria-label="View product"></a>
-              <div class="review-product-copy">
-                <p>numbuzin</p>
-                <h2>No.3 Skin Softening Serum 50ml</h2>
-                <strong>US$23.00</strong>
-                <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+              <div class="review-product">
+                <a class="review-product-art review-product-art--blue" href="../product-detail/product-detail.html" aria-label="View product"></a>
+                <div class="review-product-copy">
+                  <p>numbuzin</p>
+                  <h2>No.3 Skin Softening Serum 50ml</h2>
+                  <strong>US$23.00</strong>
+                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+                </div>
               </div>
-              <div class="review-copy">
-                <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                <h3>Great for sensitive skin!</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ...</p>
-              </div>
-              <div class="review-gallery desktop-only" aria-hidden="true">
-                <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--aqua"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--yellow"></span>
-              </div>
-              <div class="review-actions">
-                <time datetime="2025-05-06">May 6, 2025</time>
-                <button type="button">Edit Review</button>
-              </div>
-            </article>
-
-            <article class="review-history-card">
-              <a class="review-product-art review-product-art--green" href="../product-detail/product-detail.html" aria-label="View product"></a>
-              <div class="review-product-copy">
-                <p>numbuzin</p>
-                <h2>No.3 Skin Softening Serum 50ml</h2>
-                <strong>US$23.00</strong>
-                <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
-              </div>
-              <div class="review-copy">
-                <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                <h3>Great for sensitive skin!</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-              </div>
-              <div class="review-gallery desktop-only" aria-hidden="true">
-                <span class="review-gallery-thumb review-gallery-thumb--aqua"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--blue"></span>
-              </div>
-              <div class="review-actions">
-                <time datetime="2025-05-06">May 6, 2025</time>
-                <button type="button">Edit Review</button>
+              <div class="review-main">
+                <div class="review-main-top">
+                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
+                  <div class="review-gallery desktop-only" aria-hidden="true">
+                    <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--aqua"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--yellow"></span>
+                  </div>
+                </div>
+                <div class="review-copy">
+                  <h3>Great for sensitive skin!</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ...</p>
+                </div>
+                <div class="review-actions">
+                  <time datetime="2025-05-06">May 6, 2025</time>
+                  <button type="button">Edit Review</button>
+                </div>
               </div>
             </article>
 
             <article class="review-history-card">
-              <a class="review-product-art review-product-art--teal" href="../product-detail/product-detail.html" aria-label="View product"></a>
-              <div class="review-product-copy">
-                <p>numbuzin</p>
-                <h2>No.3 Skin Softening Serum 50ml</h2>
-                <strong>US$23.00</strong>
-                <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+              <div class="review-product">
+                <a class="review-product-art review-product-art--green" href="../product-detail/product-detail.html" aria-label="View product"></a>
+                <div class="review-product-copy">
+                  <p>numbuzin</p>
+                  <h2>No.3 Skin Softening Serum 50ml</h2>
+                  <strong>US$23.00</strong>
+                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+                </div>
               </div>
-              <div class="review-copy">
-                <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                <h3>Great for sensitive skin!</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-              </div>
-              <div class="review-gallery desktop-only" aria-hidden="true">
-                <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--yellow"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--aqua"></span>
-              </div>
-              <div class="review-actions">
-                <time datetime="2025-05-06">May 6, 2025</time>
-                <button type="button">Edit Review</button>
+              <div class="review-main">
+                <div class="review-main-top">
+                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
+                  <div class="review-gallery desktop-only" aria-hidden="true">
+                    <span class="review-gallery-thumb review-gallery-thumb--aqua"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--blue"></span>
+                  </div>
+                </div>
+                <div class="review-copy">
+                  <h3>Great for sensitive skin!</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
+                </div>
+                <div class="review-actions">
+                  <time datetime="2025-05-06">May 6, 2025</time>
+                  <button type="button">Edit Review</button>
+                </div>
               </div>
             </article>
 
             <article class="review-history-card">
-              <a class="review-product-art review-product-art--aqua" href="../product-detail/product-detail.html" aria-label="View product"></a>
-              <div class="review-product-copy">
-                <p>numbuzin</p>
-                <h2>No.3 Skin Softening Serum 50ml</h2>
-                <strong>US$23.00</strong>
-                <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+              <div class="review-product">
+                <a class="review-product-art review-product-art--teal" href="../product-detail/product-detail.html" aria-label="View product"></a>
+                <div class="review-product-copy">
+                  <p>numbuzin</p>
+                  <h2>No.3 Skin Softening Serum 50ml</h2>
+                  <strong>US$23.00</strong>
+                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+                </div>
               </div>
-              <div class="review-copy">
-                <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                <h3>Great for sensitive skin!</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
+              <div class="review-main">
+                <div class="review-main-top">
+                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
+                  <div class="review-gallery desktop-only" aria-hidden="true">
+                    <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--yellow"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--aqua"></span>
+                  </div>
+                </div>
+                <div class="review-copy">
+                  <h3>Great for sensitive skin!</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
+                </div>
+                <div class="review-actions">
+                  <time datetime="2025-05-06">May 6, 2025</time>
+                  <button type="button">Edit Review</button>
+                </div>
               </div>
-              <div class="review-gallery desktop-only" aria-hidden="true">
-                <span class="review-gallery-thumb review-gallery-thumb--rose"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--teal"></span>
+            </article>
+
+            <article class="review-history-card">
+              <div class="review-product">
+                <a class="review-product-art review-product-art--aqua" href="../product-detail/product-detail.html" aria-label="View product"></a>
+                <div class="review-product-copy">
+                  <p>numbuzin</p>
+                  <h2>No.3 Skin Softening Serum 50ml</h2>
+                  <strong>US$23.00</strong>
+                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+                </div>
               </div>
-              <div class="review-actions">
-                <time datetime="2025-05-06">May 6, 2025</time>
-                <button type="button">Edit Review</button>
+              <div class="review-main">
+                <div class="review-main-top">
+                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
+                  <div class="review-gallery desktop-only" aria-hidden="true">
+                    <span class="review-gallery-thumb review-gallery-thumb--rose"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--teal"></span>
+                  </div>
+                </div>
+                <div class="review-copy">
+                  <h3>Great for sensitive skin!</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
+                </div>
+                <div class="review-actions">
+                  <time datetime="2025-05-06">May 6, 2025</time>
+                  <button type="button">Edit Review</button>
+                </div>
               </div>
             </article>
 
             <article class="review-history-card desktop-only">
-              <a class="review-product-art review-product-art--pink" href="../product-detail/product-detail.html" aria-label="View product"></a>
-              <div class="review-product-copy">
-                <p>numbuzin</p>
-                <h2>No.3 Skin Softening Serum 50ml</h2>
-                <strong>US$23.00</strong>
-                <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+              <div class="review-product">
+                <a class="review-product-art review-product-art--pink" href="../product-detail/product-detail.html" aria-label="View product"></a>
+                <div class="review-product-copy">
+                  <p>numbuzin</p>
+                  <h2>No.3 Skin Softening Serum 50ml</h2>
+                  <strong>US$23.00</strong>
+                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+                </div>
               </div>
-              <div class="review-copy">
-                <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                <h3>Great for sensitive skin!</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-              </div>
-              <div class="review-gallery desktop-only" aria-hidden="true">
-                <span class="review-gallery-thumb review-gallery-thumb--pink"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--brown"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--black"></span>
-              </div>
-              <div class="review-actions">
-                <time datetime="2025-05-06">May 6, 2025</time>
-                <button type="button">Edit Review</button>
+              <div class="review-main">
+                <div class="review-main-top">
+                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
+                  <div class="review-gallery desktop-only" aria-hidden="true">
+                    <span class="review-gallery-thumb review-gallery-thumb--pink"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--brown"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--black"></span>
+                  </div>
+                </div>
+                <div class="review-copy">
+                  <h3>Great for sensitive skin!</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
+                </div>
+                <div class="review-actions">
+                  <time datetime="2025-05-06">May 6, 2025</time>
+                  <button type="button">Edit Review</button>
+                </div>
               </div>
             </article>
 
             <article class="review-history-card desktop-only">
-              <a class="review-product-art review-product-art--sky" href="../product-detail/product-detail.html" aria-label="View product"></a>
-              <div class="review-product-copy">
-                <p>numbuzin</p>
-                <h2>No.3 Skin Softening Serum 50ml</h2>
-                <strong>US$23.00</strong>
-                <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+              <div class="review-product">
+                <a class="review-product-art review-product-art--sky" href="../product-detail/product-detail.html" aria-label="View product"></a>
+                <div class="review-product-copy">
+                  <p>numbuzin</p>
+                  <h2>No.3 Skin Softening Serum 50ml</h2>
+                  <strong>US$23.00</strong>
+                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
+                </div>
               </div>
-              <div class="review-copy">
-                <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                <h3>Great for sensitive skin!</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-              </div>
-              <div class="review-gallery desktop-only" aria-hidden="true">
-                <span class="review-gallery-thumb review-gallery-thumb--brown"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--blue"></span>
-                <span class="review-gallery-thumb review-gallery-thumb--gray"></span>
-              </div>
-              <div class="review-actions">
-                <time datetime="2025-05-06">May 6, 2025</time>
-                <button type="button">Edit Review</button>
+              <div class="review-main">
+                <div class="review-main-top">
+                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
+                  <div class="review-gallery desktop-only" aria-hidden="true">
+                    <span class="review-gallery-thumb review-gallery-thumb--brown"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--blue"></span>
+                    <span class="review-gallery-thumb review-gallery-thumb--gray"></span>
+                  </div>
+                </div>
+                <div class="review-copy">
+                  <h3>Great for sensitive skin!</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
+                </div>
+                <div class="review-actions">
+                  <time datetime="2025-05-06">May 6, 2025</time>
+                  <button type="button">Edit Review</button>
+                </div>
               </div>
             </article>
           </section>

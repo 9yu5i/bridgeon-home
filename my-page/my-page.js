@@ -157,4 +157,125 @@
       applyOrderFilter(button.getAttribute("data-orders-filter") || "all");
     });
   }
+
+  const pageSortSelectRoot = ".orders-select-row .realtrend-select-wrap, .reviews-select-row .realtrend-select-wrap";
+
+  const initOrdersSortSelect = (wrap) => {
+    const select = wrap.querySelector(".realtrend-select-native");
+    const trigger = wrap.querySelector(".realtrend-select-trigger");
+    const valueEl = wrap.querySelector(".realtrend-select-value");
+    const menu = wrap.querySelector(".realtrend-select-menu");
+    if (!select || !trigger || !valueEl || !menu) return null;
+
+    const syncTriggerWidth = () => {
+      const styles = getComputedStyle(trigger);
+      const probe = document.createElement("span");
+      probe.style.cssText =
+        "position:absolute;visibility:hidden;white-space:nowrap;pointer-events:none;height:0;overflow:hidden;";
+      probe.style.font = styles.font;
+      document.body.appendChild(probe);
+
+      let maxTextWidth = 0;
+      menu.querySelectorAll('[role="option"]').forEach((item) => {
+        probe.textContent = item.textContent.trim();
+        maxTextWidth = Math.max(maxTextWidth, probe.offsetWidth);
+      });
+      probe.remove();
+
+      const horizontalBox =
+        parseFloat(styles.paddingLeft) +
+        parseFloat(styles.paddingRight) +
+        parseFloat(styles.borderLeftWidth) +
+        parseFloat(styles.borderRightWidth);
+
+      wrap.style.width = `${Math.max(132, Math.ceil(maxTextWidth + horizontalBox))}px`;
+    };
+
+    const buildMenu = () => {
+      menu.innerHTML = "";
+      Array.from(select.options).forEach((option, index) => {
+        const item = document.createElement("li");
+        const isSelected = index === select.selectedIndex;
+        item.setAttribute("role", "option");
+        item.dataset.index = String(index);
+        item.textContent = option.textContent;
+        item.classList.toggle("is-selected", isSelected);
+        item.setAttribute("aria-selected", isSelected ? "true" : "false");
+        menu.appendChild(item);
+      });
+      valueEl.textContent = select.selectedOptions[0]?.textContent?.trim() || "";
+      if (
+        wrap.closest(".orders-select-row, .reviews-select-row") &&
+        window.matchMedia("(max-width: 1120px)").matches
+      ) {
+        wrap.style.width = "100%";
+      } else {
+        syncTriggerWidth();
+      }
+    };
+
+    const closeMenu = () => {
+      wrap.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+      menu.classList.remove("is-open");
+    };
+
+    const openMenu = () => {
+      document.querySelectorAll(pageSortSelectRoot).forEach((otherWrap) => {
+        if (otherWrap === wrap || !otherWrap.classList.contains("is-open")) return;
+        otherWrap.classList.remove("is-open");
+        otherWrap.querySelector(".realtrend-select-trigger")?.setAttribute("aria-expanded", "false");
+        otherWrap.querySelector(".realtrend-select-menu")?.classList.remove("is-open");
+      });
+      wrap.classList.add("is-open");
+      trigger.setAttribute("aria-expanded", "true");
+      menu.classList.add("is-open");
+    };
+
+    const selectIndex = (index) => {
+      if (index < 0 || index >= select.options.length) return;
+      select.selectedIndex = index;
+      buildMenu();
+      closeMenu();
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+
+    buildMenu();
+
+    trigger.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (wrap.classList.contains("is-open")) closeMenu();
+      else openMenu();
+    });
+
+    menu.addEventListener("pointerdown", (event) => {
+      event.stopPropagation();
+    });
+
+    menu.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const item = event.target.closest('[role="option"]');
+      if (!item) return;
+      selectIndex(Number(item.dataset.index));
+    });
+
+    return { closeMenu, buildMenu };
+  };
+
+  const ordersSortSelectApis = new Map();
+  document.querySelectorAll(pageSortSelectRoot).forEach((wrap) => {
+    const api = initOrdersSortSelect(wrap);
+    if (api) ordersSortSelectApis.set(wrap, api);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.target.closest(pageSortSelectRoot)) return;
+    ordersSortSelectApis.forEach((api) => api.closeMenu());
+  });
+
+  window.addEventListener("resize", () => {
+    ordersSortSelectApis.forEach((api) => api.buildMenu());
+  });
 })();
