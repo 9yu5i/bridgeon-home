@@ -360,6 +360,16 @@
 
   let activeEditorIndex = 0;
   let activePickFilter = "all";
+  let activePickIndex = 0;
+
+  const pickPrev = document.querySelector("[data-pick-prev]");
+  const pickNext = document.querySelector("[data-pick-next]");
+  const pickMeter = document.querySelector("[data-pick-meter]");
+  const pickMeterFill = document.querySelector("[data-pick-meter-fill]");
+  const pickMeterLabel = document.querySelector("[data-pick-meter-label]");
+
+  const TAB_ORDER = ["all", "beauty", "k-food", "lifestyle", "k-pop", "k-traditional"];
+  const PICK_PAGE_SIZE = 3;
 
   const escapeHtml = (value) =>
     String(value || "")
@@ -369,6 +379,7 @@
       .replace(/"/g, "&quot;");
 
   const titleCaseCategory = (category) => ({
+    all: "All",
     beauty: "Beauty",
     "k-food": "K-Food",
     lifestyle: "Lifestyle",
@@ -432,13 +443,80 @@
     </article>
   `;
 
-  const getVisiblePicks = (editor) =>
-    activePickFilter === "all"
+  const getPicksForTab = (editor, tab) =>
+    tab === "all"
       ? editor.picks
-      : editor.picks.filter((pick) => pick.category === activePickFilter);
+      : editor.picks.filter((pick) => pick.category === tab);
 
-  const renderPicks = (editor) => {
+  const getVisiblePicks = (editor) => getPicksForTab(editor, activePickFilter);
+
+  const getNextTab = (fromTab) => {
+    const start = TAB_ORDER.indexOf(fromTab);
+    if (start < 0) return null;
+    return TAB_ORDER[(start + 1) % TAB_ORDER.length];
+  };
+
+  const getPrevTab = (fromTab) => {
+    const start = TAB_ORDER.indexOf(fromTab);
+    if (start < 0) return null;
+    return TAB_ORDER[(start - 1 + TAB_ORDER.length) % TAB_ORDER.length];
+  };
+
+  const getPickPageSize = () => PICK_PAGE_SIZE;
+
+  const getMaxPickIndex = (total) => {
+    const pageSize = getPickPageSize();
+    if (total <= pageSize) return 0;
+    return Math.floor((total - 1) / pageSize) * pageSize;
+  };
+
+  const updatePickControls = (editor) => {
     const visiblePicks = getVisiblePicks(editor);
+    const total = visiblePicks.length;
+    const pageSize = getPickPageSize();
+    const maxIndex = getMaxPickIndex(total);
+    const endIndex = total ? Math.min(total, activePickIndex + pageSize) : 0;
+    const canGoNextTab = Boolean(getNextTab(activePickFilter));
+    const canGoPrevTab = Boolean(getPrevTab(activePickFilter));
+
+    if (pickPrev) {
+      pickPrev.disabled = total > 0
+        ? activePickIndex <= 0 && !canGoPrevTab
+        : !canGoPrevTab;
+    }
+
+    if (pickNext) {
+      pickNext.disabled = total > 0
+        ? activePickIndex >= maxIndex && !canGoNextTab
+        : !canGoNextTab;
+    }
+
+    if (pickMeterFill) {
+      const progress = total > 0 ? endIndex / total : 0;
+      pickMeterFill.style.transform = `scaleX(${progress})`;
+    }
+
+    if (pickMeterLabel) {
+      if (!total) {
+        pickMeterLabel.textContent = "No picks";
+      } else {
+        const startLabel = activePickIndex + 1;
+        const categoryLabel = titleCaseCategory(activePickFilter);
+        pickMeterLabel.textContent =
+          startLabel === endIndex
+            ? `${startLabel} / ${total} · ${categoryLabel}`
+            : `${startLabel}-${endIndex} / ${total} · ${categoryLabel}`;
+      }
+    }
+
+    if (pickMeter) pickMeter.hidden = total <= pageSize;
+  };
+
+  const renderPicks = (editor, { resetIndex = true } = {}) => {
+    const visiblePicks = getVisiblePicks(editor);
+    if (resetIndex) activePickIndex = 0;
+    activePickIndex = Math.min(activePickIndex, getMaxPickIndex(visiblePicks.length));
+
     if (picksTitle) {
       const suffix = visiblePicks.length === 1 ? "item" : "items";
       picksTitle.innerHTML = `${escapeHtml(editor.name)}&rsquo;s Picks <span>(${visiblePicks.length} ${suffix})</span>`;
@@ -446,9 +524,68 @@
 
     if (!pickList) return;
 
-    pickList.innerHTML = visiblePicks.length
-      ? visiblePicks.map(renderPickCard).join("")
+    const pagePicks = visiblePicks.slice(activePickIndex, activePickIndex + getPickPageSize());
+
+    pickList.innerHTML = pagePicks.length
+      ? pagePicks.map(renderPickCard).join("")
       : `<p class="editor-empty-message">No ${escapeHtml(titleCaseCategory(activePickFilter))} picks yet.</p>`;
+
+    updatePickControls(editor);
+  };
+
+  const goToPick = (nextIndex) => {
+    const editor = editors[activeEditorIndex];
+    const visiblePicks = getVisiblePicks(editor);
+    if (!visiblePicks.length) return;
+
+    activePickIndex = Math.max(0, Math.min(getMaxPickIndex(visiblePicks.length), nextIndex));
+    renderPicks(editor, { resetIndex: false });
+  };
+
+  const goNextPick = () => {
+    const editor = editors[activeEditorIndex];
+    const visiblePicks = getVisiblePicks(editor);
+    const pageSize = getPickPageSize();
+    const maxIndex = getMaxPickIndex(visiblePicks.length);
+    const nextIndex = activePickIndex + pageSize;
+
+    if (visiblePicks.length && nextIndex <= maxIndex) {
+      goToPick(nextIndex);
+      return;
+    }
+
+    const nextTab = getNextTab(activePickFilter);
+    if (nextTab) setActivePickFilter(nextTab);
+  };
+
+  const goPrevPick = () => {
+    const editor = editors[activeEditorIndex];
+    const visiblePicks = getVisiblePicks(editor);
+    const pageSize = getPickPageSize();
+
+    if (visiblePicks.length && activePickIndex > 0) {
+      goToPick(Math.max(0, activePickIndex - pageSize));
+      return;
+    }
+
+    const prevTab = getPrevTab(activePickFilter);
+    if (!prevTab) return;
+
+    const prevPicks = getPicksForTab(editor, prevTab);
+    setActivePickFilter(prevTab, { startIndex: getMaxPickIndex(prevPicks.length) });
+  };
+
+  const setActivePickFilter = (filter, options = {}) => {
+    activePickFilter = filter || "all";
+    activePickIndex = Number.isInteger(options.startIndex) ? options.startIndex : 0;
+
+    pickTabs.forEach((tab) => {
+      const isActive = tab.dataset.pickFilter === activePickFilter;
+      tab.classList.toggle("is-active", isActive);
+      tab.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+
+    renderPicks(editors[activeEditorIndex], { resetIndex: !Number.isInteger(options.startIndex) });
   };
 
   const renderMagazineCard = (magazine) => `
@@ -475,18 +612,6 @@
         .map((_, index) => `<span${index === 0 ? ' class="is-active"' : ""}></span>`)
         .join("");
     }
-  };
-
-  const setActivePickFilter = (filter) => {
-    activePickFilter = filter || "all";
-
-    pickTabs.forEach((tab) => {
-      const isActive = tab.dataset.pickFilter === activePickFilter;
-      tab.classList.toggle("is-active", isActive);
-      tab.setAttribute("aria-selected", isActive ? "true" : "false");
-    });
-
-    renderPicks(editors[activeEditorIndex]);
   };
 
   const setActiveEditor = (index, options = {}) => {
@@ -536,6 +661,9 @@
       setActivePickFilter(button.dataset.pickFilter || "all");
     });
   });
+
+  pickPrev?.addEventListener("click", goPrevPick);
+  pickNext?.addEventListener("click", goNextPick);
 
   pickList?.addEventListener("click", (event) => {
     const button = event.target.closest(".editor-wish");

@@ -1,5 +1,57 @@
 # BridgeOn Decisions
 
+## 2026-07-15: Add My Page Coupons Page
+
+Decision:
+
+- Add `my-page/coupons.html` and `my-page/coupons.css`.
+- Reuse the My Page header, sidebar icon system, footer, floating buttons, bottom navigation, and product sheet.
+- Keep coupon registration and ticket layout rules page-specific.
+
+Why:
+
+- Coupons has distinct register form, expiring coupon tickets, owned coupon tickets, and mobile single-column layout.
+- Page-specific ownership avoids leaking coupon ticket styling into dashboard, orders, or reviews pages.
+
+## 2026-07-15: Add My Page Reviews Page
+
+Decision:
+
+- Add `my-page/reviews.html` and `my-page/reviews.css`.
+- Reuse the My Page header, sidebar icon system, footer, floating buttons, bottom navigation, and product sheet.
+- Keep review-list layout rules page-specific because desktop review rows and mobile review cards have different structures.
+
+Why:
+
+- My Reviews has distinct search/filter controls, product review cards, gallery thumbnails, and pagination.
+- Page-specific ownership avoids leaking review-card spacing and responsive rules into the dashboard or orders page.
+
+## 2026-07-15: Add My Page Orders Page
+
+Decision:
+
+- Add `my-page/orders.html` and `my-page/orders.css`.
+- Reuse the My Page header, sidebar icon system, footer, floating buttons, and bottom navigation.
+- Keep order-list layout rules page-specific because desktop and mobile order cards have different structures.
+
+Why:
+
+- Orders has a distinct status summary, search/filter controls, and order card layout.
+- Page-specific ownership avoids leaking order-card spacing and responsive rules into the dashboard page.
+
+## 2026-07-15: Add My Page Dashboard
+
+Decision:
+
+- Add `my-page/my-page.html` and `my-page/my-page.css`.
+- Keep the dashboard layout page-specific while reusing the shared header, category navigation, footer, floating buttons, and bottom navigation.
+- Link bottom navigation My entries and desktop account buttons to the new page.
+
+Why:
+
+- My Page has a distinct account dashboard layout and mobile/tablet flow.
+- Page-specific CSS prevents account card layout rules from leaking into listing, cart, or product detail pages.
+
 ## 2026-07-13: Add Editor's Pick Page
 
 - Added `editors-pick/editors-pick.html` as a dedicated T.P Pick / Editor's Pick page.

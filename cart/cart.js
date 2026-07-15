@@ -105,13 +105,15 @@
         ${createOptionMarkup(item)}
         <div class="cart-item-links"><button type="button">Move to Wishlist ♡</button><span>|</span><button type="button" data-cart-delete>Delete</button></div>
       </div>
-      <p class="cart-item-price">${item.originalPrice ? `<del>${escapeHtml(item.originalPrice)}</del>` : ""}<strong>${escapeHtml(item.price)}</strong></p>
+      <div class="cart-item-amounts">
+        <p class="cart-item-price">${item.originalPrice ? `<del>${escapeHtml(item.originalPrice)}</del>` : ""}<strong>${escapeHtml(item.price)}</strong></p>
+        <strong class="cart-item-total">${formatPrice(parsePrice(item.price) * item.quantity)}</strong>
+      </div>
       <div class="cart-qty" data-cart-qty>
         <button type="button" data-cart-qty-change="-1" aria-label="Decrease quantity">-</button>
         <output>${item.quantity}</output>
         <button type="button" data-cart-qty-change="1" aria-label="Increase quantity">+</button>
       </div>
-      <strong class="cart-item-total">${formatPrice(parsePrice(item.price) * item.quantity)}</strong>
     </article>
   `;
 

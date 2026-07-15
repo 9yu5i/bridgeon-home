@@ -58,6 +58,7 @@ High-level ownership:
 - `styles/trend-product-sheet.css` owns the shared Real Trend product sheet popup, option controls, add-to-cart CTA, wishlist state, reviews, and cart toast.
 - `realtrend/realtrend.css` is only for the Real Trend video page.
 - `editors-pick/editors-pick.css` is only for the Editor's Pick page.
+- `my-page/my-page.css` is only for the My Page dashboard; `my-page/orders.css` is only for the My Page orders page; `my-page/reviews.css` is only for the My Reviews page; `my-page/coupons.css` is only for the Coupons page.
 
 ## JavaScript Ownership
 

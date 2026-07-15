@@ -35,6 +35,10 @@ This project remains a static frontend for now. The first goal is to preserve th
 - `styles/scroll-reveal.css` owns scroll reveal state and animation classes.
 - `styles/trend-product-sheet.css` owns the shared Real Trend product sheet popup, option controls, add-to-cart CTA, wishlist state, reviews, and cart toast.
 - `realtrend/realtrend.css` should stay scoped to the Real Trend video page.
+- `my-page/my-page.css` should stay scoped to the My Page dashboard.
+- `my-page/orders.css` should stay scoped to the My Page orders page while reusing `my-page/my-page.css` sidebar, header, and footer styling.
+- `my-page/reviews.css` should stay scoped to the My Reviews page while reusing `my-page/my-page.css` sidebar, header, and footer styling.
+- `my-page/coupons.css` should stay scoped to the Coupons page while reusing `my-page/my-page.css` sidebar, header, and footer styling.
 - New home CSS should be added as focused files under `styles/`, then imported from `styles.css` in ownership order.
 - Do not add new page-end patch blocks; place changes in the owning CSS file instead.
 - Known layout debt: `styles/base.css` still applies desktop `html { zoom: 0.9; }`. Remove it only in a visual calibration pass that adjusts desktop max width, section padding, card widths, gaps, and type sizes together.

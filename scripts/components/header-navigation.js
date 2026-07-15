@@ -48,6 +48,7 @@ const getListingPagePrefix = () => {
   if (document.body.classList.contains("product-detail-page")) return "../listing/";
   if (document.body.classList.contains("cart-page")) return "../listing/";
   if (document.body.classList.contains("editors-page")) return "../listing/";
+  if (document.body.classList.contains("my-page")) return "../listing/";
   if (document.body.classList.contains("listing-page")) return "./";
   return "listing/";
 };
@@ -59,7 +60,8 @@ const getRealtrendUrl = () => {
     document.body.classList.contains("timedeal-page") ||
     document.body.classList.contains("product-detail-page") ||
     document.body.classList.contains("cart-page") ||
-    document.body.classList.contains("editors-page")
+    document.body.classList.contains("editors-page") ||
+    document.body.classList.contains("my-page")
   ) {
     return "../realtrend/realtrend.html";
   }
@@ -73,11 +75,27 @@ const getEditorsPickUrl = () => {
     document.body.classList.contains("timedeal-page") ||
     document.body.classList.contains("product-detail-page") ||
     document.body.classList.contains("cart-page") ||
-    document.body.classList.contains("realtrend-page")
+    document.body.classList.contains("realtrend-page") ||
+    document.body.classList.contains("my-page")
   ) {
     return "../editors-pick/editors-pick.html";
   }
   return "editors-pick/editors-pick.html";
+};
+
+const getMyPageUrl = () => {
+  if (document.body.classList.contains("my-page")) return "./my-page.html";
+  if (
+    document.body.classList.contains("listing-page") ||
+    document.body.classList.contains("timedeal-page") ||
+    document.body.classList.contains("product-detail-page") ||
+    document.body.classList.contains("cart-page") ||
+    document.body.classList.contains("editors-page") ||
+    document.body.classList.contains("realtrend-page")
+  ) {
+    return "../my-page/my-page.html";
+  }
+  return "my-page/my-page.html";
 };
 
 const listingCategoryPages = {
@@ -327,6 +345,15 @@ if (compactHeaderSearchPage) {
     compactHeaderSearchQuery.addListener(syncCompactHeaderSearchButtons);
   }
 }
+
+headerAccountButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    if (button.matches("a")) return;
+    if (button.classList.contains("is-header-search-trigger") && compactHeaderSearchQuery.matches) return;
+    event.preventDefault();
+    navigateWithPageTransition(getMyPageUrl());
+  });
+});
 
 const openMobileMenu = () => {
   if (!mobileMenuPanel) return;

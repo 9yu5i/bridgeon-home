@@ -15,6 +15,17 @@ flowchart TD
   C["cart/cart.html"] --> S
   C --> CC["cart/cart.css"]
   C --> CJ["cart/cart.js"]
+  M["my-page/my-page.html"] --> S
+  M --> MC["my-page/my-page.css"]
+  MO["my-page/orders.html"] --> S
+  MO --> MC
+  MO --> MOC["my-page/orders.css"]
+  MR["my-page/reviews.html"] --> S
+  MR --> MC
+  MR --> MRC["my-page/reviews.css"]
+  MCP["my-page/coupons.html"] --> S
+  MCP --> MC
+  MCP --> MCPC["my-page/coupons.css"]
   E["editors-pick/editors-pick.html"] --> S
   E --> EC["editors-pick/editors-pick.css"]
   E --> EJ["editors-pick/editors-pick.js"]

@@ -107,6 +107,23 @@ const initTrendProductSheet = () => {
       };
     }
 
+    if (source.classList.contains("mypage-product-card")) {
+      const strong = source.querySelector(".mypage-product-body strong") || source.querySelector("strong");
+      const priceText =
+        Array.from(strong?.childNodes || [])
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .map((node) => node.textContent.trim())
+          .join("") ||
+        strong?.textContent?.trim() ||
+        "";
+      return {
+        brand: source.querySelector(".mypage-product-body p")?.textContent?.trim() || "",
+        name: source.querySelector(".mypage-product-body h3")?.textContent?.trim() || "",
+        rawPrice: priceText,
+        originalPrice: strong?.querySelector("del")?.textContent?.trim() || "",
+      };
+    }
+
     return { brand: "", name: "", rawPrice: "", originalPrice: "" };
   };
 
@@ -189,7 +206,8 @@ const initTrendProductSheet = () => {
       document.body.classList.contains("timedeal-page") ||
       document.body.classList.contains("product-detail-page") ||
       document.body.classList.contains("editors-page") ||
-      document.body.classList.contains("cart-page")
+      document.body.classList.contains("cart-page") ||
+      document.body.classList.contains("my-page")
         ? "../"
         : "";
 
@@ -458,6 +476,27 @@ const initTrendProductSheet = () => {
     openTrendProductSheet(cartButton.closest(".cart-rec-card"));
   });
 
+  const mypageProductGrid = document.querySelector(".mypage-product-grid");
+
+  mypageProductGrid?.addEventListener("click", (event) => {
+    const wishButton = event.target.closest(".mypage-wish");
+    if (wishButton && mypageProductGrid.contains(wishButton)) {
+      event.preventDefault();
+      event.stopPropagation();
+      const isActive = wishButton.classList.toggle("is-active");
+      wishButton.setAttribute("aria-pressed", isActive ? "true" : "false");
+      wishButton.setAttribute("aria-label", isActive ? "Remove from wishlist" : "Add to wishlist");
+      return;
+    }
+
+    const cartButton = event.target.closest(".mypage-cart");
+    if (!cartButton || !mypageProductGrid.contains(cartButton)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    openTrendProductSheet(cartButton.closest(".mypage-product-card"));
+  });
+
   closeButton?.addEventListener("click", closeTrendProductSheet);
 
   productPanel.addEventListener("click", (event) => {
@@ -475,12 +514,12 @@ const initTrendProductSheet = () => {
 initTrendProductSheet();
 
 const initProductDetailCardLinks = () => {
-  document.querySelectorAll(".listing-grid, .seller-rail").forEach((container) => {
+  document.querySelectorAll(".listing-grid, .seller-rail, .mypage-product-grid").forEach((container) => {
     container.addEventListener("click", (event) => {
       if (event.defaultPrevented) return;
       if (event.target.closest("a, button, input, select, textarea, label")) return;
 
-      const card = event.target.closest(".listing-card, .product-card");
+      const card = event.target.closest(".listing-card, .product-card, .mypage-product-card");
       if (!card || !container.contains(card)) return;
 
       navigateWithPageTransition(PRODUCT_DETAIL_URL);

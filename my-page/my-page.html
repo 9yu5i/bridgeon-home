@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Page | BridgeOn</title>
+    <link rel="stylesheet" href="../reset.css" />
+    <link rel="stylesheet" href="../font.css" />
+    <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="./my-page.css" />
+  </head>
+  <body class="my-page">
+    <header class="site-header mypage-site-header">
+      <div class="mypage-mobile-header mobile-only" aria-label="My Page mobile header">
+        <button type="button" class="mypage-mobile-back" aria-label="Go back">&larr;</button>
+        <strong>My Page</strong>
+        <div class="mypage-mobile-actions">
+          <a href="./my-page.html" aria-label="My Page">
+            <img src="../img/main-img/top_banner_my.png" alt="" aria-hidden="true">
+          </a>
+          <a href="../cart/cart.html" class="cart-icon-button" aria-label="Cart, 3 items">
+            <img src="../product-detail/common_img/cart.png" alt="" aria-hidden="true">
+            <span class="cart-badge" aria-hidden="true">3</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="promo-bar">
+        <div class="promo-inner">
+          <span><img src="../img/main-img/top_banner_lefticon.png" alt="lefticon">Free Shipping Over US$nn</span>
+          <span><img src="../img/main-img/top_banner_righticon.png" alt="righticon">Ships From Korea</span>
+          <span class="desktop-only">English / USD &#8744; </span>
+        </div>
+      </div>
+
+      <div class="header-main">
+        <button type="button" class="icon-button mobile-menu mobile-only" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false" aria-label="Open menu">
+          <img src="../img/mobile-icon/menu/hamburger_mobile.png" alt="" aria-hidden="true">
+        </button>
+        <a class="logo" href="../index.html" aria-label="BridgeOn home">Bridge<span>On</span></a>
+        <form class="search" role="search">
+          <label class="sr-only" for="site-search">Search</label>
+          <input id="site-search" type="search" placeholder="Best Sunscreen For 2026 Summer?" />
+          <button aria-label="Search">
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </button>
+        </form>
+        <div class="header-actions">
+          <a class="icon-button" aria-label="Account" href="./my-page.html">
+            <img src="../img/main-img/top_banner_my.png" alt="mypage">
+          </a>
+          <button class="icon-button desktop-icon" aria-label="Wishlist">
+            <img src="../img/main-img/top_banner_wish.png" alt="wishlist">
+          </button>
+          <a class="icon-button cart-icon-button" aria-label="Cart, 3 items" href="../cart/cart.html">
+            <img src="../img/main-img/top_banner_cart.png" alt="cart">
+            <span class="cart-badge" aria-hidden="true">3</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="search-panel" aria-hidden="true">
+        <div class="search-mobile-bar">
+          <button type="button" class="search-mobile-back search-close" aria-label="Close search"></button>
+          <div class="search-mobile-input">
+            <input id="mobile-site-search" type="search" placeholder="Search Korean Trends" aria-label="Search Korean Trends" />
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="search-mobile-content">
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading">
+              <h3><img src="../img/search/history.png" alt="" aria-hidden="true">Recent Searches</h3>
+              <button type="button" class="search-clear">Clear All</button>
+            </div>
+            <div class="recent-searches search-mobile-recent">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+            </div>
+          </section>
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading trending">
+              <h3><span aria-hidden="true"></span>Trending Searches &#128293;</h3>
+            </div>
+            <ol class="trending-searches search-mobile-trending">
+              <li><b>1</b><span>sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>collagen cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>lip tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>toning pads</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>5</b><span>vitamin c serum</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </section>
+        </div>
+        <div class="search-panel-tabs" role="tablist" aria-label="Search suggestions">
+          <button type="button" class="is-active" data-search-tab="recent" role="tab" aria-selected="true">Recent Searches</button>
+          <button type="button" data-search-tab="trending" role="tab" aria-selected="false"><span aria-hidden="true"></span> Trending Searches &#128293;</button>
+        </div>
+        <div class="search-panel-body">
+          <div class="search-panel-section is-active" data-search-panel="recent" role="tabpanel">
+            <div class="recent-searches">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>collagen mask<span aria-hidden="true">&times;</span></button>
+            </div>
+          </div>
+          <div class="search-panel-section" data-search-panel="trending" role="tabpanel" hidden>
+            <ol class="trending-searches">
+              <li><b>1</b><span>Sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>Collagen Cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>Lip Tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>Toning Pads</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>5</b><span>Vitamin C Serum</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </div>
+        </div>
+        <div class="search-panel-footer">
+          <button type="button" class="search-clear">Remove All Researches</button>
+          <button type="button" class="search-close">Close</button>
+        </div>
+      </div>
+
+      <div class="category-menu">
+        <nav class="category-nav" aria-label="Primary">
+          <a href="../listing/best.html">BEST</a>
+          <a href="#">Brand</a>
+          <a href="../listing/beauty.html" data-mega-target="beauty">Beauty</a>
+          <a href="../listing/k-food.html" data-mega-target="k-food">K-Food</a>
+          <a href="../listing/lifestyle.html" data-mega-target="lifestyle">Lifestyle</a>
+          <a href="../listing/k-pop.html" data-mega-target="k-pop">K-POP</a>
+          <a href="../listing/k-traditional.html" data-mega-target="k-traditional">K-Traditional</a>
+          <a class="accent-warm" href="../timedeal/timedeal.html">Time Deal &#128293;</a>
+          <a class="accent" href="../editors-pick/editors-pick.html" data-mega-target="tp-pick">T.P Pick</a>
+        </nav>
+
+        <div class="category-mega" data-menu-panel="beauty" aria-label="Beauty category submenu">
+          <a class="mega-feature" href="../listing/beauty.html">
+            <b>Beauty</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3>Skincare</h3>
+            <ul>
+              <li><a href="#">Cleansers</a></li>
+              <li><a href="#">Serum/Ampoule</a></li>
+              <li><a href="#">Moisturizers</a></li>
+              <li><a href="#">Toners</a></li>
+              <li><a href="#">Masks</a></li>
+              <li><a href="#">Suncare</a></li>
+              <li><a href="#">Trouble Care</a></li>
+              <li><a href="#">Sets</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Makeup</h3>
+            <ul>
+              <li><a href="#">Face</a></li>
+              <li><a href="#">Eye</a></li>
+              <li><a href="#">Lip</a></li>
+              <li><a href="#">Cheeks</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Hair Care</h3>
+            <ul>
+              <li><a href="#">Daily Care</a></li>
+              <li><a href="#">Special Care</a></li>
+              <li><a href="#">Hair Color &amp; Perm</a></li>
+              <li><a href="#">Hair Styling</a></li>
+              <li><a href="#">Hair Perfume</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Body Care</h3>
+            <ul>
+              <li><a href="#">Bath &amp; Shower</a></li>
+              <li><a href="#">Body Moisturizers</a></li>
+              <li><a href="#">Fragrance</a></li>
+              <li><a href="#">Hand &amp; Foot Care</a></li>
+              <li><a href="#">Hair Removal</a></li>
+              <li><a href="#">Personal Care</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Beauty Tools</h3>
+            <ul>
+              <li><a href="#">Skincare</a></li>
+              <li><a href="#">Makeup</a></li>
+              <li><a href="#">Body Care</a></li>
+              <li><a href="#">Hair</a></li>
+              <li><a href="#">Hair Removal</a></li>
+              <li><a href="#">Beauty Devices</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Nail</h3>
+            <ul>
+              <li><a href="#">Nail Care</a></li>
+              <li><a href="#">Nail Polish</a></li>
+              <li><a href="#">Nail Art</a></li>
+              <li><a href="#">Nail Tips</a></li>
+              <li><a href="#">Nail Tools</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Mens's</h3>
+            <ul>
+              <li><a href="#">Face Care</a></li>
+              <li><a href="#">Hair Care</a></li>
+              <li><a href="#">Body Care</a></li>
+              <li><a href="#">Men's Makeup</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Supplements</h3>
+            <ul>
+              <li><a href="#">Beauty</a></li>
+              <li><a href="#">Slimming</a></li>
+              <li><a href="#">Health</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="k-food" aria-label="K-Food category submenu">
+          <a class="mega-feature" href="../listing/k-food.html">
+            <b>K-Food</b>
+            <strong>Food Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3>Ramen &amp; Noodles</h3>
+            <ul>
+              <li><a href="#">Ramen/Cup Noodles</a></li>
+              <li><a href="#">Other Noodles</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Snacks &amp; Nuts</h3>
+            <ul>
+              <li><a href="#">Snacks</a></li>
+              <li><a href="#">Cookies &amp; Pies</a></li>
+              <li><a href="#">Natural Snacks</a></li>
+              <li><a href="#">Nuts</a></li>
+              <li><a href="#">Candy &amp; Chocolate</a></li>
+              <li><a href="#">Gim(Seaweed) Snacks</a></li>
+              <li><a href="#">Dried Fish</a></li>
+              <li><a href="#">Snack Sets</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Instant &amp; Quick Meals</h3>
+            <ul>
+              <li><a href="#">Meal Kits</a></li>
+              <li><a href="#">Instant Rice</a></li>
+              <li><a href="#">Instant Soups</a></li>
+              <li><a href="#">Street Food</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Beverages</h3>
+            <ul>
+              <li><a href="#">Coffee</a></li>
+              <li><a href="#">Tea</a></li>
+              <li><a href="#">Soft Drinks</a></li>
+              <li><a href="#">Health Drinks</a></li>
+              <li><a href="#">Others</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Kitchen Staples</h3>
+            <ul>
+              <li><a href="#">Pastes</a></li>
+              <li><a href="#">Sauces</a></li>
+              <li><a href="#">Marinades</a></li>
+              <li><a href="#">Oil</a></li>
+              <li><a href="#">Canned Food</a></li>
+              <li><a href="#">Powders</a></li>
+              <li><a href="#">Seasonings</a></li>
+              <li><a href="#">Dressing</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Kimchi &amp; Side Dishes</h3>
+            <ul>
+              <li><a href="#">Kimchi</a></li>
+              <li><a href="#">Side Dishes</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Health</h3>
+            <ul>
+              <li><a href="#">Ginseng</a></li>
+              <li><a href="#">Supplements</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="lifestyle" aria-label="Lifestyle category submenu">
+          <a class="mega-feature" href="../listing/lifestyle.html">
+            <b>Lifestyle</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3>Toys &amp; Crafts</h3>
+            <ul>
+              <li><a href="#">Character</a></li>
+              <li><a href="#">Toys</a></li>
+              <li><a href="#">Games</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Stationery</h3>
+            <ul>
+              <li><a href="#">Character</a></li>
+              <li><a href="#">Paper Goods</a></li>
+              <li><a href="#">Writing Tools</a></li>
+              <li><a href="#">Study Gadgets</a></li>
+              <li><a href="#">Decor</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Kitchen</h3>
+            <ul>
+              <li><a href="#">Kitchen Appliances</a></li>
+              <li><a href="#">Storage</a></li>
+              <li><a href="#">Kitchenware</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Living</h3>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="k-pop" aria-label="K-POP category submenu">
+          <a class="mega-feature" href="../listing/k-pop.html">
+            <b>K-POP</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3>Bestseller</h3>
+          </div>
+          <div class="mega-column">
+            <h3>New Release</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Album</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Photo Book</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Goods</h3>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="k-traditional" aria-label="K-Traditional category submenu">
+          <a class="mega-feature" href="../listing/k-traditional.html">
+            <b>K-Traditional</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3>Art&amp;Decor</h3>
+          </div>
+          <div class="mega-column">
+            <h3>DIY</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Fashion&amp;Accessories</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Stationery</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Home</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Kitchen</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Food</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Games</h3>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="tp-pick" aria-label="T.P Pick category submenu">
+          <div class="mega-feature">
+            <b>T.P Pick</b>
+            <strong>Trendy Pick</strong>
+          </div>
+          <div class="mega-column">
+            <h3>Editor's Pick</h3>
+          </div>
+          <div class="mega-column">
+            <h3>T.P Magazine</h3>
+          </div>
+          <div class="mega-column">
+            <h3><a class="mega-column-heading" href="../realtrend/realtrend.html">Real Trend</a></h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="mobile-menu-panel" id="mobile-menu-panel" aria-hidden="true">
+        <div class="mobile-menu-head">
+          <strong>MENU</strong>
+          <button type="button" class="mobile-menu-close" aria-label="Close menu">&times;</button>
+        </div>
+        <nav class="mobile-menu-list" aria-label="Mobile menu">
+          <a href="../listing/beauty.html" data-mobile-submenu-open="categories">Categories</a>
+          <a href="#">Brand</a>
+          <a href="../listing/best.html">Best Seller</a>
+          <a href="../timedeal/timedeal.html">Time Deal</a>
+          <a href="../editors-pick/editors-pick.html">T.P Pick</a>
+        </nav>
+        <div class="mobile-menu-quick">
+          <a href="#"><span><img src="../img/Menu/preferences.png" alt="" aria-hidden="true"></span>Preferences</a>
+          <a href="#"><span><img src="../img/Menu/search_menu.png" alt="" aria-hidden="true"></span>Support</a>
+          <a href="./my-page.html"><span><img src="../img/Menu/menu.png" alt="" aria-hidden="true"></span>My</a>
+          <a href="#"><span><img src="../img/Menu/signin.png" alt="" aria-hidden="true"></span>Sign In</a>
+        </div>
+        <div class="mobile-menu-social" aria-label="Social links">
+          <a href="#"><img src="../img/mobile-icon/menu/insta.png" alt="Instagram"></a>
+          <a href="#"><img src="../img/mobile-icon/menu/facebook.png" alt="Facebook"></a>
+          <a href="#"><img src="../img/mobile-icon/menu/youtube.png" alt="YouTube"></a>
+          <a href="#"><img src="../img/mobile-icon/menu/twitter.png" alt="X"></a>
+        </div>
+      </div>
+    </header>
+
+    <main class="mypage-main">
+      <section class="mypage-hero" aria-labelledby="mypage-title">
+        <div class="mypage-layout">
+          <aside class="mypage-sidebar" aria-label="My account menu">
+            <nav class="mypage-side-card">
+              <a class="is-active" href="#"><span class="mypage-side-icon mypage-side-icon--dashboard" aria-hidden="true"></span>My Dashboard</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--profile" aria-hidden="true"></span>Profile</a>
+              <a href="./orders.html"><span class="mypage-side-icon mypage-side-icon--orders" aria-hidden="true"></span>Orders</a>
+              <a href="./reviews.html"><span class="mypage-side-icon mypage-side-icon--review" aria-hidden="true"></span>My Reviews</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--wishlist" aria-hidden="true"></span>Wishlist</a>
+              <a href="./coupons.html"><span class="mypage-side-icon mypage-side-icon--coupons" aria-hidden="true"></span>Coupons</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--saved" aria-hidden="true"></span>Saved Reels</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--membership" aria-hidden="true"></span>Membership</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--points" aria-hidden="true"></span>Points</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--help" aria-hidden="true"></span>Help Center</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--logout" aria-hidden="true"></span>Log Out</a>
+            </nav>
+            <article class="mypage-invite mypage-invite--desktop">
+              <h2>Invite Friends<br>&amp; Get Rewards!</h2>
+              <p>Share the love.<br>Earn exclusive rewards together.</p>
+              <button type="button">INVITE NOW</button>
+            </article>
+          </aside>
+
+          <section class="mypage-dashboard">
+            <section class="mypage-profile-panel" aria-labelledby="mypage-title">
+              <div class="mypage-profile-main">
+                <div class="mypage-avatar-wrap">
+                  <span class="mypage-avatar" aria-hidden="true">
+                    <img class="mypage-avatar-photo" alt="" hidden>
+                    <i></i>
+                  </span>
+                  <button class="mypage-edit-fab" type="button" aria-label="Edit profile photo" aria-haspopup="dialog" aria-controls="mypage-avatar-dialog">
+                    <img src="./img/edit_black.png" alt="" aria-hidden="true">
+                  </button>
+                  <button class="mypage-edit-desktop" type="button" aria-haspopup="dialog" aria-controls="mypage-avatar-dialog">Edit Profile <img class="mypage-edit-desktop-icon--default" src="./img/edit.png" alt="" aria-hidden="true"><img class="mypage-edit-desktop-icon--hover" src="./img/edit_purple.png" alt="" aria-hidden="true"></button>
+                </div>
+
+                <div class="mypage-welcome">
+                  <p>Welcome Back,</p>
+                  <h1 id="mypage-title">Name</h1>
+                </div>
+
+                <div class="mypage-mobile-points mobile-only">
+                  <a href="./coupons.html"><span aria-hidden="true"><img src="./img/coupons_white.png" alt=""></span><b>4</b>Coupons <em aria-hidden="true">&gt;</em></a>
+                  <a href="#"><span aria-hidden="true"><img src="./img/points_white.png" alt=""></span><b>1,240</b>Points <em aria-hidden="true">&gt;</em></a>
+                </div>
+
+                <div class="mypage-membership">
+                  <div class="mypage-membership-card">
+                    <div class="mypage-tier-labels"><span>Silver</span><span>Gold</span></div>
+                    <div class="mypage-progress-row">
+                      <b class="mypage-medal mypage-medal--silver" aria-hidden="true"><img src="./img/silver.png" alt=""></b>
+                      <div>
+                        <strong class="mypage-progress-lead">You&rsquo;re almost there!</strong>
+                        <p>Spend US$150 more to reach Gold.</p>
+                        <span><i></i></span>
+                        <small>US$100 / US$150</small>
+                      </div>
+                      <b class="mypage-medal mypage-medal--gold" aria-hidden="true"><img src="./img/gold.png" alt=""></b>
+                    </div>
+                  </div>
+                  <a class="mypage-membership-link" href="#">View all membership benefits &gt;</a>
+                </div>
+              </div>
+
+              <div class="mypage-stats desktop-only">
+                <a href="#"><span aria-hidden="true"><img src="./img/points_white.png" alt=""></span><strong>1,240</strong><b>Points</b><em aria-hidden="true">&gt;</em></a>
+                <a href="./coupons.html"><span aria-hidden="true"><img src="./img/coupons_white.png" alt=""></span><strong>4</strong><b>Coupons</b><em aria-hidden="true">&gt;</em></a>
+                <a href="#"><span aria-hidden="true"><img src="./img/wishllist_white.png" alt=""></span><strong>12</strong><b>Wishlist</b><em aria-hidden="true">&gt;</em></a>
+              </div>
+            </section>
+
+            <section class="mypage-card mypage-orders" aria-labelledby="mypage-orders-title">
+              <div class="mypage-card-head">
+                <h2 id="mypage-orders-title">My Orders</h2>
+                <a href="./orders.html">View all Orders <span aria-hidden="true">-&gt;</span></a>
+              </div>
+              <div class="mypage-order-status">
+                <a href="#"><span aria-hidden="true"><img src="./img/pending.png" alt=""></span><strong data-mobile-count="0">2</strong><b>Pending</b></a>
+                <a href="#"><span aria-hidden="true"><img src="./img/preparing.png" alt=""></span><strong data-mobile-count="0">2</strong><b>Preparing</b></a>
+                <a href="#"><span aria-hidden="true"><img src="./img/shipped.png" alt=""></span><strong data-mobile-count="1">2</strong><b>Shipped</b></a>
+                <a href="#"><span aria-hidden="true"><img src="./img/delivered.png" alt=""></span><strong data-mobile-count="2">2</strong><b>Delivered</b></a>
+              </div>
+            </section>
+
+            <section class="mypage-mobile-menu mobile-only" aria-label="Account shortcuts">
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--profile" aria-hidden="true"></span>Profile</a>
+              <a href="./reviews.html"><span class="mypage-side-icon mypage-side-icon--review" aria-hidden="true"></span>My Reviews</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--wishlist" aria-hidden="true"></span>Wishlist</a>
+              <a href="./coupons.html"><span class="mypage-side-icon mypage-side-icon--coupons" aria-hidden="true"></span>Coupons</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--saved" aria-hidden="true"></span>Saved Reels</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--membership" aria-hidden="true"></span>Membership</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--points" aria-hidden="true"></span>Points</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--help" aria-hidden="true"></span>Help Center</a>
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--logout" aria-hidden="true"></span>Log Out</a>
+            </section>
+
+            <article class="mypage-invite mypage-invite--mobile mobile-only">
+              <h2>Invite Friends &amp; Get Rewards!</h2>
+              <button type="button">INVITE NOW</button>
+            </article>
+
+            <section class="mypage-card mypage-wishlist desktop-only" aria-labelledby="mypage-wishlist-title">
+              <div class="mypage-card-head">
+                <h2 id="mypage-wishlist-title">Wishlist</h2>
+                <a href="#">View all <span aria-hidden="true">-&gt;</span></a>
+              </div>
+              <div class="mypage-product-grid">
+                <article class="mypage-product-card mypage-product-card--green">
+                  <div class="mypage-product-image" aria-hidden="true"></div>
+                  <div class="mypage-product-body">
+                    <p>Anua</p>
+                    <h3>PDRN Hyaluronic Acid Hydrating Capsule ...</h3>
+                    <small><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</small>
+                    <strong>US$18.40 <del>US$23.00</del></strong>
+                    <div class="mypage-product-actions">
+                      <button type="button" class="mypage-cart" aria-label="Add to cart"><img src="./img/cart.png" alt="" aria-hidden="true"></button>
+                      <button type="button" class="mypage-wish" aria-label="Add to wishlist" aria-pressed="false"><img src="./img/wishllist.png" alt="" aria-hidden="true"></button>
+                    </div>
+                  </div>
+                </article>
+                <article class="mypage-product-card mypage-product-card--peach">
+                  <div class="mypage-product-image" aria-hidden="true"></div>
+                  <div class="mypage-product-body">
+                    <p>Anua</p>
+                    <h3>PDRN Hyaluronic Acid Hydrating Capsule ...</h3>
+                    <small><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</small>
+                    <strong>US$18.40 <del>US$23.00</del></strong>
+                    <div class="mypage-product-actions">
+                      <button type="button" class="mypage-cart" aria-label="Add to cart"><img src="./img/cart.png" alt="" aria-hidden="true"></button>
+                      <button type="button" class="mypage-wish" aria-label="Add to wishlist" aria-pressed="false"><img src="./img/wishllist.png" alt="" aria-hidden="true"></button>
+                    </div>
+                  </div>
+                </article>
+                <article class="mypage-product-card mypage-product-card--tan">
+                  <div class="mypage-product-image" aria-hidden="true"></div>
+                  <div class="mypage-product-body">
+                    <p>Anua</p>
+                    <h3>PDRN Hyaluronic Acid Hydrating Capsule ...</h3>
+                    <small><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</small>
+                    <strong>US$18.40 <del>US$23.00</del></strong>
+                    <div class="mypage-product-actions">
+                      <button type="button" class="mypage-cart" aria-label="Add to cart"><img src="./img/cart.png" alt="" aria-hidden="true"></button>
+                      <button type="button" class="mypage-wish" aria-label="Add to wishlist" aria-pressed="false"><img src="./img/wishllist.png" alt="" aria-hidden="true"></button>
+                    </div>
+                  </div>
+                </article>
+                <article class="mypage-product-card mypage-product-card--mint">
+                  <div class="mypage-product-image" aria-hidden="true"></div>
+                  <div class="mypage-product-body">
+                    <p>Anua</p>
+                    <h3>PDRN Hyaluronic Acid Hydrating Capsule ...</h3>
+                    <small><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</small>
+                    <strong>US$18.40 <del>US$23.00</del></strong>
+                    <div class="mypage-product-actions">
+                      <button type="button" class="mypage-cart" aria-label="Add to cart"><img src="./img/cart.png" alt="" aria-hidden="true"></button>
+                      <button type="button" class="mypage-wish" aria-label="Add to wishlist" aria-pressed="false"><img src="./img/wishllist.png" alt="" aria-hidden="true"></button>
+                    </div>
+                  </div>
+                </article>
+                <article class="mypage-product-card mypage-product-card--blue">
+                  <div class="mypage-product-image" aria-hidden="true"></div>
+                  <div class="mypage-product-body">
+                    <p>Anua</p>
+                    <h3>PDRN Hyaluronic Acid Hydrating Capsule ...</h3>
+                    <small><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</small>
+                    <strong>US$18.40 <del>US$23.00</del></strong>
+                    <div class="mypage-product-actions">
+                      <button type="button" class="mypage-cart" aria-label="Add to cart"><img src="./img/cart.png" alt="" aria-hidden="true"></button>
+                      <button type="button" class="mypage-wish" aria-label="Add to wishlist" aria-pressed="false"><img src="./img/wishllist.png" alt="" aria-hidden="true"></button>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <div class="mypage-lower desktop-only">
+              <section class="mypage-card mypage-recent" aria-labelledby="mypage-recent-title">
+                <div class="mypage-card-head">
+                  <h2 id="mypage-recent-title">Recently Viewed</h2>
+                  <a href="#">View all <span aria-hidden="true">-&gt;</span></a>
+                </div>
+                <div class="mypage-recent-list">
+                  <span class="mypage-recent-thumb mypage-recent-thumb--blue"></span>
+                  <span class="mypage-recent-thumb mypage-recent-thumb--pink"></span>
+                  <span class="mypage-recent-thumb mypage-recent-thumb--green"></span>
+                  <span class="mypage-recent-thumb mypage-recent-thumb--yellow"></span>
+                </div>
+              </section>
+              <section class="mypage-card mypage-realtrend" aria-labelledby="mypage-realtrend-title">
+                <div class="mypage-card-head">
+                  <h2 id="mypage-realtrend-title">Real Trend</h2>
+                  <a href="#">View all <span aria-hidden="true">-&gt;</span></a>
+                </div>
+                <div class="mypage-reel-stats">
+                  <a href="#"><img src="../my-page/img/saved_hover.png" alt="" aria-hidden="true" /><strong>42</strong><b>Saved Reels</b></a>
+                </div>
+              </section>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="newsletter mypage-newsletter desktop-only">
+        <div>
+          <h2>Be the first to know</h2>
+          <p>Get trend updates, exclusive offers, and more!</p>
+        </div>
+        <form>
+          <label class="sr-only" for="newsletter-email">Email</label>
+          <input id="newsletter-email" type="email" placeholder="Enter Your Email" />
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-main">
+        <a class="logo footer-logo" href="../index.html">Bridge<span>On</span></a>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">MY ACCOUNT</button>
+          <div class="footer-links"><a href="./my-page.html">My Dashboard</a><a href="./orders.html">Orders</a><a href="#">Wishlist</a><a href="./reviews.html">My Reviews</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">CUSTOMER CARE</button>
+          <div class="footer-links"><a href="#">Help Center</a><a href="#">Shipping &amp; Delivery</a><a href="#">Returns &amp; Refunds</a><a href="#">Contact Us</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">POLICIES</button>
+          <div class="footer-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a><a href="#">Payment Security</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">COMPANY</button>
+          <div class="footer-links"><a href="#">About Us</a><a href="#">Become a Partner</a><a href="#">Careers</a></div>
+        </div>
+      </div>
+      <div class="footer-methods">
+        <div><strong>Payment Method</strong><span>PayPal</span><span>VISA</span><span>Master</span><span>AMEX</span><span>Alipay</span></div>
+        <div><strong>Delivery Method</strong><span>FedEx</span><span>DHL</span><span>aramex</span><span>EMS</span><span>parcel</span></div>
+      </div>
+      <p class="copyright">&copy; 2025 Bridge on, Inc. All rights reserved.<br>COMPANY : WoodlockTR &nbsp; LICENSE : 543-87-01657 &nbsp; CEO : SOOKYOUNG KIM</p>
+    </footer>
+
+    <button class="float-button to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+    </button>
+    <button class="float-button chat" aria-label="Chat">
+      <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
+    </button>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
+      <a href="../realtrend/realtrend.html"><img src="../img/mobile-icon/menu/tppick.png" alt="" aria-hidden="true"><span>T.P Pick</span></a>
+      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
+      <a href="../cart/cart.html" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
+      <a href="./my-page.html" class="is-active"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
+    </nav>
+
+    <aside class="realtrend-panel trend-product-sheet" id="trend-product-sheet" hidden aria-hidden="true" aria-label="Product details">
+      <article class="realtrend-product-card">
+        <button type="button" class="realtrend-product-sheet-close" aria-label="Close product details">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7 17 17M17 7 7 17" /></svg>
+        </button>
+        <span class="realtrend-kbeauty-tag">K-BEAUTY</span>
+
+        <div class="realtrend-product-head">
+          <div class="realtrend-product-thumb" aria-hidden="true">img</div>
+          <div class="realtrend-product-meta">
+            <div class="realtrend-brand-row">
+              <a class="realtrend-brand" href="../brand/anua.html">Anua</a>
+              <span class="realtrend-best">BEST</span>
+            </div>
+            <h2 class="realtrend-product-name">Heartleaf Pore Control Cleansing Oil</h2>
+            <p class="realtrend-rating">
+              <img src="../img/main-img/star.png" alt="" />
+              <span>4.8 | 1,275 reviews</span>
+            </p>
+            <p class="realtrend-price">
+              <strong>US$22.00</strong>
+              <del>US$31.00</del>
+              <mark>30% OFF</mark>
+            </p>
+          </div>
+        </div>
+
+        <div class="realtrend-options-row">
+          <div class="realtrend-field">
+            <span>Select options</span>
+            <span class="realtrend-select-wrap">
+              <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                <span class="realtrend-select-value">Heartleaf Pore Control Cleansing Oil 50ml</span>
+              </button>
+              <ul class="realtrend-select-menu" role="listbox"></ul>
+              <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
+                <option>Heartleaf Pore Control Cleansing Oil 50ml</option>
+                <option>Heartleaf Pore Control Cleansing Oil 100ml</option>
+              </select>
+            </span>
+          </div>
+
+          <div class="realtrend-qty-block">
+            <span>Quantity</span>
+            <div class="realtrend-qty">
+              <button type="button" data-qty="-1" aria-label="Decrease quantity">-</button>
+              <output id="trend-product-qty">1</output>
+              <button type="button" data-qty="1" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="realtrend-cta-row">
+          <button type="button" class="realtrend-add-cart">Add to Cart</button>
+          <button type="button" class="realtrend-wish" aria-label="Add to wishlist" aria-pressed="false">
+            <img class="realtrend-wish-icon-default" src="../img/realtrend/like_web.png" alt="" aria-hidden="true" />
+            <img class="realtrend-wish-icon-hover" src="../img/realtrend/liked_web.png" alt="" aria-hidden="true" />
+          </button>
+        </div>
+
+        <section class="realtrend-love">
+          <h3>Why you'll love it</h3>
+          <ul>
+            <li>Soothes sensitive skin comfortably</li>
+            <li>Barrier Strengthening</li>
+            <li>Long-Lasting Hydration</li>
+            <li>Perfect for Sensitive Skin</li>
+          </ul>
+        </section>
+
+        <section class="realtrend-reviews">
+          <div class="realtrend-reviews-head">
+            <h3>Reviews(128)</h3>
+            <a href="#">VIEW ALL -&gt;</a>
+          </div>
+          <ul class="realtrend-review-list">
+            <li>
+              <span class="realtrend-avatar" aria-hidden="true"></span>
+              <div class="realtrend-review-copy">
+                <strong>glow.with.j</strong>
+                <p>Numbuzin serum has changed my life.</p>
+              </div>
+              <span class="realtrend-stars" aria-label="5 stars">
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+              </span>
+            </li>
+            <li>
+              <span class="realtrend-avatar" aria-hidden="true"></span>
+              <div class="realtrend-review-copy">
+                <strong>glow.with.j</strong>
+                <p>Numbuzin serum has changed my life.</p>
+              </div>
+              <span class="realtrend-stars" aria-label="5 stars">
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+              </span>
+            </li>
+            <li>
+              <span class="realtrend-avatar" aria-hidden="true"></span>
+              <div class="realtrend-review-copy">
+                <strong>glow.with.j</strong>
+                <p>Numbuzin serum has changed my life.</p>
+              </div>
+              <span class="realtrend-stars" aria-label="5 stars">
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+                <img src="../img/realtrend/star.png" alt="" aria-hidden="true" />
+              </span>
+            </li>
+          </ul>
+        </section>
+      </article>
+    </aside>
+
+    <div
+      class="realtrend-cart-toast"
+      id="trend-cart-toast"
+      role="status"
+      aria-live="polite"
+      aria-hidden="true"
+      hidden
+    >
+      <button type="button" class="realtrend-cart-toast-close" aria-label="Close notification">&times;</button>
+      <div class="realtrend-cart-toast-icon" aria-hidden="true">
+        <svg class="realtrend-cart-toast-ring" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="19" />
+        </svg>
+        <img src="../img/realtrend/check.png" alt="" />
+      </div>
+      <div class="realtrend-cart-toast-copy">
+        <strong>Add to cart!</strong>
+        <p id="trend-cart-toast-message"></p>
+      </div>
+      <div class="realtrend-cart-toast-thumb" aria-hidden="true"></div>
+    </div>
+
+    <div
+      class="mypage-avatar-dialog"
+      id="mypage-avatar-dialog"
+      hidden
+      aria-hidden="true"
+    >
+      <button type="button" class="mypage-avatar-backdrop" data-mypage-avatar-close aria-label="Close profile photo dialog"></button>
+      <div
+        class="mypage-avatar-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mypage-avatar-title"
+      >
+        <button type="button" class="mypage-avatar-close" data-mypage-avatar-close aria-label="Close profile photo dialog">&times;</button>
+        <h2 id="mypage-avatar-title">Change profile photo</h2>
+        <div class="mypage-avatar-preview" aria-hidden="true">
+          <img class="mypage-avatar-preview-photo" alt="" hidden>
+          <i></i>
+        </div>
+        <label class="mypage-avatar-upload">
+          <input type="file" accept="image/*" data-mypage-avatar-input>
+          <span>Choose photo</span>
+        </label>
+        <button type="button" class="mypage-avatar-remove" data-mypage-avatar-remove hidden>Remove photo</button>
+        <div class="mypage-avatar-actions">
+          <button type="button" class="mypage-avatar-cancel" data-mypage-avatar-close>Cancel</button>
+          <button type="button" class="mypage-avatar-save" data-mypage-avatar-save>Save</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script src="./my-page.js"></script>
+  </body>
+</html>
