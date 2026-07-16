@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Reviews | BridgeOn</title>
+    <title>Profile | BridgeOn</title>
     <link rel="stylesheet" href="../reset.css" />
     <link rel="stylesheet" href="../font.css" />
     <link rel="stylesheet" href="../common.css" />
     <link rel="stylesheet" href="../styles.css" />
     <link rel="stylesheet" href="./my-page.css" />
-    <link rel="stylesheet" href="./reviews.css" />
+    <link rel="stylesheet" href="./profile.css" />
   </head>
-  <body class="my-page my-reviews-page">
+  <body class="my-page my-profile-page">
     <header class="site-header mypage-site-header">
       <div class="mypage-mobile-header mobile-only" aria-label="My Page mobile header">
         <button type="button" class="mypage-mobile-back" aria-label="Go back">&larr;</button>
@@ -478,14 +478,14 @@
       </div>
     </header>
 
-    <main class="reviews-page-main" aria-labelledby="reviews-page-title">
-      <div class="reviews-page-shell">
-        <aside class="reviews-sidebar desktop-only" aria-label="My account menu">
+    <main class="profile-page-main" aria-labelledby="profile-page-title">
+      <div class="profile-page-shell">
+        <aside class="profile-sidebar desktop-only" aria-label="My account menu">
           <nav class="mypage-side-card">
             <a href="./my-page.html"><span class="mypage-side-icon mypage-side-icon--dashboard" aria-hidden="true"></span>My Dashboard</a>
-            <a href="./profile.html"><span class="mypage-side-icon mypage-side-icon--profile" aria-hidden="true"></span>Profile</a>
+            <a class="is-active" href="./profile.html" aria-current="page"><span class="mypage-side-icon mypage-side-icon--profile" aria-hidden="true"></span>Profile</a>
             <a href="./orders.html"><span class="mypage-side-icon mypage-side-icon--orders" aria-hidden="true"></span>Orders</a>
-            <a class="is-active" href="./reviews.html" aria-current="page"><span class="mypage-side-icon mypage-side-icon--review" aria-hidden="true"></span>My Reviews</a>
+            <a href="./reviews.html"><span class="mypage-side-icon mypage-side-icon--review" aria-hidden="true"></span>My Reviews</a>
             <a href="./wishlist.html"><span class="mypage-side-icon mypage-side-icon--wishlist" aria-hidden="true"></span>Wishlist</a>
             <a href="./coupons.html"><span class="mypage-side-icon mypage-side-icon--coupons" aria-hidden="true"></span>Coupons</a>
             <a href="./saved-posts.html"><span class="mypage-side-icon mypage-side-icon--saved" aria-hidden="true"></span>Saved posts</a>
@@ -501,250 +501,403 @@
           </article>
         </aside>
 
-        <section class="reviews-content">
-          <h1 id="reviews-page-title">My Reviews</h1>
-
-          <div class="reviews-controls">
-            <label class="reviews-search">
-              <span class="sr-only">Search by product name</span>
-              <input type="search" placeholder="Search by product name">
-              <button type="button" aria-label="Search reviews"></button>
-            </label>
-            <div class="reviews-select-row">
-              <label class="listing-sort">
-                <span class="sr-only">Product category</span>
-                <span class="realtrend-select-wrap">
-                  <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Product category">
-                    <span class="realtrend-select-value">All Products</span>
-                  </button>
-                  <ul class="realtrend-select-menu" role="listbox"></ul>
-                  <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
-                    <option selected>All Products</option>
-                    <option>Beauty</option>
-                    <option>K-Food</option>
-                    <option>Lifestyle</option>
-                    <option>K-POP</option>
-                    <option>K-Traditional</option>
-                  </select>
-                </span>
-              </label>
-              <label class="listing-sort">
-                <span class="sr-only">Review period</span>
-                <span class="realtrend-select-wrap">
-                  <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Review period">
-                    <span class="realtrend-select-value">Last 6 Months</span>
-                  </button>
-                  <ul class="realtrend-select-menu" role="listbox"></ul>
-                  <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
-                    <option selected>Last 6 Months</option>
-                    <option>Last 3 Months</option>
-                    <option>Last 12 Months</option>
-                  </select>
-                </span>
-              </label>
+        <section class="profile-content">
+          <div class="profile-head">
+            <div>
+              <h1 id="profile-page-title">Profile</h1>
+              <p>Manage your account details, security, shipping address, and preferences.</p>
             </div>
+            <button class="profile-save profile-save-desktop" type="button" data-profile-save>Save Changes</button>
           </div>
 
-          <section class="reviews-list" aria-label="My review list">
-            <article class="review-history-card">
-              <div class="review-product">
-                <a class="review-product-art review-product-art--blue" href="../product-detail/product-detail.html" aria-label="View product"></a>
-                <div class="review-product-copy">
-                  <p>numbuzin</p>
-                  <h2>No.3 Skin Softening Serum 50ml</h2>
-                  <strong>US$23.00</strong>
-                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
-                </div>
+          <section class="profile-card profile-card--identity" aria-labelledby="profile-personal-title">
+            <div class="profile-card-head">
+              <div>
+                <h2 id="profile-personal-title">Personal Information</h2>
+                <p>Keep your profile information up to date.</p>
               </div>
-              <div class="review-main">
-                <div class="review-main-top">
-                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                  <div class="review-gallery desktop-only" aria-hidden="true">
-                    <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--aqua"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--yellow"></span>
+              <span class="profile-status">Verified account</span>
+            </div>
+            <div class="profile-identity">
+              <div class="profile-avatar-panel">
+                <div class="profile-avatar-wrap">
+                  <span class="profile-avatar" aria-hidden="true">
+                    <img class="mypage-avatar-photo" alt="" hidden>
+                    <i></i>
+                  </span>
+                  <button type="button" class="mypage-edit-fab profile-avatar-edit" aria-label="Edit profile photo">
+                    <img src="./img/edit_black.png" alt="" aria-hidden="true">
+                  </button>
+                </div>
+                <strong>Name</strong>
+                <small>BridgeOn member</small>
+              </div>
+              <div class="profile-form-grid">
+                <label class="profile-field">
+                  <span>Full Name</span>
+                  <input type="text" value="Name" autocomplete="name" data-profile-clear-sample>
+                </label>
+                <label class="profile-field">
+                  <span>Email</span>
+                  <input type="email" value="name@email.com" autocomplete="email" data-profile-clear-sample>
+                </label>
+                <div class="profile-field profile-phone-field">
+                  <span>Phone Number</span>
+                  <div class="profile-phone-control">
+                    <span class="profile-phone-code realtrend-select-wrap">
+                      <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                        <span class="realtrend-select-value">+1 US</span>
+                      </button>
+                      <ul class="realtrend-select-menu" role="listbox"></ul>
+                      <select class="realtrend-select-native" tabindex="-1" aria-hidden="true" aria-label="Country calling code">
+                        <option selected>+1 US</option>
+                        <option>+82 KR</option>
+                        <option>+81 JP</option>
+                        <option>+86 CN</option>
+                        <option>+44 UK</option>
+                        <option>+61 AU</option>
+                        <option>+33 FR</option>
+                        <option>+49 DE</option>
+                        <option>+65 SG</option>
+                      </select>
+                    </span>
+                    <input type="tel" value="000 000 0000" autocomplete="tel-national" aria-label="Phone number" data-profile-clear-sample>
                   </div>
                 </div>
-                <div class="review-copy">
-                  <h3>Great for sensitive skin!</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore ...</p>
+                <label class="profile-field">
+                  <span>Birthday</span>
+                  <input type="text" value="2001-05-06" autocomplete="bday" inputmode="none" readonly data-profile-birthday aria-haspopup="dialog" aria-expanded="false">
+                </label>
+                <div class="profile-field">
+                  <span>Country / Region</span>
+                  <span class="profile-select-control realtrend-select-wrap">
+                    <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                      <span class="realtrend-select-value">United States</span>
+                    </button>
+                    <ul class="realtrend-select-menu" role="listbox"></ul>
+                    <select class="realtrend-select-native" tabindex="-1" aria-hidden="true" aria-label="Country or region">
+                      <option selected>United States</option>
+                      <option>Canada</option>
+                      <option>United Kingdom</option>
+                      <option>Australia</option>
+                      <option>New Zealand</option>
+                      <option>Japan</option>
+                      <option>South Korea</option>
+                      <option>Singapore</option>
+                      <option>Hong Kong</option>
+                      <option>Taiwan</option>
+                      <option>Germany</option>
+                      <option>France</option>
+                      <option>Italy</option>
+                      <option>Spain</option>
+                      <option>Netherlands</option>
+                      <option>Belgium</option>
+                      <option>Sweden</option>
+                      <option>Norway</option>
+                      <option>Denmark</option>
+                      <option>Finland</option>
+                      <option>Ireland</option>
+                      <option>Switzerland</option>
+                      <option>Austria</option>
+                      <option>Portugal</option>
+                      <option>Poland</option>
+                      <option>Czech Republic</option>
+                      <option>Hungary</option>
+                      <option>Romania</option>
+                      <option>Greece</option>
+                      <option>Luxembourg</option>
+                      <option>Iceland</option>
+                      <option>Mexico</option>
+                      <option>Brazil</option>
+                      <option>Chile</option>
+                      <option>Colombia</option>
+                      <option>Argentina</option>
+                      <option>Peru</option>
+                      <option>United Arab Emirates</option>
+                      <option>Saudi Arabia</option>
+                      <option>Israel</option>
+                      <option>Turkey</option>
+                      <option>India</option>
+                      <option>Indonesia</option>
+                      <option>Malaysia</option>
+                      <option>Thailand</option>
+                      <option>Vietnam</option>
+                      <option>Philippines</option>
+                      <option>China</option>
+                      <option>South Africa</option>
+                      <option>Egypt</option>
+                      <option>Nigeria</option>
+                      <option>Kenya</option>
+                      <option>Morocco</option>
+                      <option>Russia</option>
+                      <option>Ukraine</option>
+                      <option>Croatia</option>
+                      <option>Slovakia</option>
+                      <option>Slovenia</option>
+                      <option>Bulgaria</option>
+                      <option>Estonia</option>
+                      <option>Latvia</option>
+                      <option>Lithuania</option>
+                      <option>Malta</option>
+                      <option>Cyprus</option>
+                      <option>Qatar</option>
+                      <option>Kuwait</option>
+                      <option>Bahrain</option>
+                      <option>Oman</option>
+                      <option>Jordan</option>
+                      <option>Lebanon</option>
+                      <option>Costa Rica</option>
+                      <option>Panama</option>
+                      <option>Dominican Republic</option>
+                      <option>Puerto Rico</option>
+                      <option>Guatemala</option>
+                      <option>Uruguay</option>
+                      <option>Ecuador</option>
+                      <option>Pakistan</option>
+                      <option>Bangladesh</option>
+                      <option>Sri Lanka</option>
+                      <option>Cambodia</option>
+                      <option>Laos</option>
+                      <option>Myanmar</option>
+                      <option>Macao</option>
+                      <option>Mongolia</option>
+                      <option>Kazakhstan</option>
+                      <option>Georgia</option>
+                      <option>Armenia</option>
+                      <option>Azerbaijan</option>
+                      <option>Serbia</option>
+                      <option>Bosnia and Herzegovina</option>
+                      <option>North Macedonia</option>
+                      <option>Albania</option>
+                      <option>Moldova</option>
+                      <option>Belarus</option>
+                      <option>Ghana</option>
+                      <option>Tanzania</option>
+                      <option>Uganda</option>
+                      <option>Tunisia</option>
+                      <option>Algeria</option>
+                      <option>Mauritius</option>
+                      <option>R챕union</option>
+                      <option>Guadeloupe</option>
+                      <option>Martinique</option>
+                      <option>French Guiana</option>
+                      <option>New Caledonia</option>
+                      <option>Fiji</option>
+                      <option>Papua New Guinea</option>
+                      <option>Samoa</option>
+                      <option>Tonga</option>
+                      <option>Brunei</option>
+                      <option>Maldives</option>
+                      <option>Nepal</option>
+                      <option>Bhutan</option>
+                      <option>Trinidad and Tobago</option>
+                      <option>Jamaica</option>
+                      <option>Bahamas</option>
+                      <option>Barbados</option>
+                      <option>Belize</option>
+                      <option>El Salvador</option>
+                      <option>Honduras</option>
+                      <option>Nicaragua</option>
+                      <option>Paraguay</option>
+                      <option>Bolivia</option>
+                      <option>Venezuela</option>
+                    </select>
+                  </span>
                 </div>
-                <div class="review-actions">
-                  <time datetime="2025-05-06">May 6, 2025</time>
-                  <button type="button">Edit Review</button>
+                <div class="profile-field">
+                  <span>Skin Type</span>
+                  <span class="profile-select-control realtrend-select-wrap">
+                    <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                      <span class="realtrend-select-value">Combo Skin</span>
+                    </button>
+                    <ul class="realtrend-select-menu" role="listbox"></ul>
+                    <select class="realtrend-select-native" tabindex="-1" aria-hidden="true" aria-label="Skin type">
+                      <option selected>Combo Skin</option>
+                      <option>Dry Skin</option>
+                      <option>Oily Skin</option>
+                      <option>Sensitive Skin</option>
+                    </select>
+                  </span>
                 </div>
               </div>
-            </article>
+            </div>
+          </section>
 
-            <article class="review-history-card">
-              <div class="review-product">
-                <a class="review-product-art review-product-art--green" href="../product-detail/product-detail.html" aria-label="View product"></a>
-                <div class="review-product-copy">
-                  <p>numbuzin</p>
-                  <h2>No.3 Skin Softening Serum 50ml</h2>
-                  <strong>US$23.00</strong>
-                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
-                </div>
+          <section class="profile-card" aria-labelledby="profile-security-title">
+            <div class="profile-card-head">
+              <div>
+                <h2 id="profile-security-title">Login &amp; Security</h2>
+                <p>Update your password and account protection settings.</p>
               </div>
-              <div class="review-main">
-                <div class="review-main-top">
-                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                  <div class="review-gallery desktop-only" aria-hidden="true">
-                    <span class="review-gallery-thumb review-gallery-thumb--aqua"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--blue"></span>
-                  </div>
-                </div>
-                <div class="review-copy">
-                  <h3>Great for sensitive skin!</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-                </div>
-                <div class="review-actions">
-                  <time datetime="2025-05-06">May 6, 2025</time>
-                  <button type="button">Edit Review</button>
-                </div>
-              </div>
-            </article>
+            </div>
+            <div class="profile-security-grid">
+              <label class="profile-field">
+                <span>Current Password</span>
+                <input type="password" placeholder="Enter current password" autocomplete="current-password">
+              </label>
+              <label class="profile-field">
+                <span>New Password</span>
+                <input type="password" placeholder="Enter new password" autocomplete="new-password">
+              </label>
+              <label class="profile-field">
+                <span>Confirm Password</span>
+                <input type="password" placeholder="Confirm new password" autocomplete="new-password">
+              </label>
+            </div>
+            <div class="profile-security-note">
+              <span aria-hidden="true"></span>
+              <p>Use at least 8 characters with letters and numbers for stronger protection.</p>
+              <button type="button">Change Password</button>
+            </div>
+          </section>
 
-            <article class="review-history-card">
-              <div class="review-product">
-                <a class="review-product-art review-product-art--teal" href="../product-detail/product-detail.html" aria-label="View product"></a>
-                <div class="review-product-copy">
-                  <p>numbuzin</p>
-                  <h2>No.3 Skin Softening Serum 50ml</h2>
-                  <strong>US$23.00</strong>
-                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
-                </div>
+          <section class="profile-card" aria-labelledby="profile-address-title">
+            <div class="profile-card-head">
+              <div>
+                <h2 id="profile-address-title">Default Shipping Address</h2>
+                <p>This address is used first during checkout.</p>
               </div>
-              <div class="review-main">
-                <div class="review-main-top">
-                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                  <div class="review-gallery desktop-only" aria-hidden="true">
-                    <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--yellow"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--aqua"></span>
-                  </div>
-                </div>
-                <div class="review-copy">
-                  <h3>Great for sensitive skin!</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-                </div>
-                <div class="review-actions">
-                  <time datetime="2025-05-06">May 6, 2025</time>
-                  <button type="button">Edit Review</button>
-                </div>
+              <button type="button" class="profile-text-button" data-profile-add-address>Add Address</button>
+            </div>
+            <article class="profile-address-card" data-profile-address-card data-country="Global" data-address-line="350 5th Ave" data-apt="" data-city="New York" data-state="NY" data-zip="10118" data-phone="+1 000 000 0000" data-email="name@email.com">
+              <div>
+                <strong>Name</strong>
+                <p>350 5th Ave<br>New York, NY 10118</p>
+                <small>+1 000 000 0000</small>
               </div>
-            </article>
-
-            <article class="review-history-card">
-              <div class="review-product">
-                <a class="review-product-art review-product-art--aqua" href="../product-detail/product-detail.html" aria-label="View product"></a>
-                <div class="review-product-copy">
-                  <p>numbuzin</p>
-                  <h2>No.3 Skin Softening Serum 50ml</h2>
-                  <strong>US$23.00</strong>
-                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
-                </div>
-              </div>
-              <div class="review-main">
-                <div class="review-main-top">
-                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                  <div class="review-gallery desktop-only" aria-hidden="true">
-                    <span class="review-gallery-thumb review-gallery-thumb--rose"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--mint"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--teal"></span>
-                  </div>
-                </div>
-                <div class="review-copy">
-                  <h3>Great for sensitive skin!</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-                </div>
-                <div class="review-actions">
-                  <time datetime="2025-05-06">May 6, 2025</time>
-                  <button type="button">Edit Review</button>
-                </div>
-              </div>
-            </article>
-
-            <article class="review-history-card desktop-only">
-              <div class="review-product">
-                <a class="review-product-art review-product-art--pink" href="../product-detail/product-detail.html" aria-label="View product"></a>
-                <div class="review-product-copy">
-                  <p>numbuzin</p>
-                  <h2>No.3 Skin Softening Serum 50ml</h2>
-                  <strong>US$23.00</strong>
-                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
-                </div>
-              </div>
-              <div class="review-main">
-                <div class="review-main-top">
-                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                  <div class="review-gallery desktop-only" aria-hidden="true">
-                    <span class="review-gallery-thumb review-gallery-thumb--pink"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--brown"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--black"></span>
-                  </div>
-                </div>
-                <div class="review-copy">
-                  <h3>Great for sensitive skin!</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-                </div>
-                <div class="review-actions">
-                  <time datetime="2025-05-06">May 6, 2025</time>
-                  <button type="button">Edit Review</button>
-                </div>
-              </div>
-            </article>
-
-            <article class="review-history-card desktop-only">
-              <div class="review-product">
-                <a class="review-product-art review-product-art--sky" href="../product-detail/product-detail.html" aria-label="View product"></a>
-                <div class="review-product-copy">
-                  <p>numbuzin</p>
-                  <h2>No.3 Skin Softening Serum 50ml</h2>
-                  <strong>US$23.00</strong>
-                  <a class="review-view-link desktop-only" href="../product-detail/product-detail.html">View Product &gt;</a>
-                </div>
-              </div>
-              <div class="review-main">
-                <div class="review-main-top">
-                  <div class="review-score"><span aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span><b>5.0</b></div>
-                  <div class="review-gallery desktop-only" aria-hidden="true">
-                    <span class="review-gallery-thumb review-gallery-thumb--brown"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--blue"></span>
-                    <span class="review-gallery-thumb review-gallery-thumb--gray"></span>
-                  </div>
-                </div>
-                <div class="review-copy">
-                  <h3>Great for sensitive skin!</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-                </div>
-                <div class="review-actions">
-                  <time datetime="2025-05-06">May 6, 2025</time>
-                  <button type="button">Edit Review</button>
-                </div>
+              <mark>Default</mark>
+              <div class="profile-address-actions">
+                <button type="button" data-profile-edit-address>Edit</button>
+                <button type="button" data-profile-set-default-address disabled>Default</button>
+                <button type="button" class="profile-address-delete" data-profile-delete-address>Delete</button>
               </div>
             </article>
           </section>
 
-          <nav class="reviews-pagination" aria-label="Review pages">
-            <a href="#" aria-label="Previous page">&lt;</a>
-            <a class="is-active" href="#" aria-current="page">1</a>
-            <a href="#">2</a>
-            <a href="#" aria-label="Next page">&gt;</a>
-          </nav>
+          <section class="profile-card" aria-labelledby="profile-preferences-title">
+            <div class="profile-card-head">
+              <div>
+                <h2 id="profile-preferences-title">Preferences</h2>
+                <p>Choose how BridgeOn sends updates to you.</p>
+              </div>
+            </div>
+            <div class="profile-preference-list">
+              <label class="profile-toggle">
+                <span><b>Email Offers</b><small>Coupons, product news, and editor picks</small></span>
+                <input type="checkbox" checked>
+                <i aria-hidden="true"></i>
+              </label>
+              <label class="profile-toggle">
+                <span><b>Order Updates</b><small>Shipping, delivery, and refund notifications</small></span>
+                <input type="checkbox" checked>
+                <i aria-hidden="true"></i>
+              </label>
+              <label class="profile-toggle">
+                <span><b>SMS Alerts</b><small>Important account and checkout alerts</small></span>
+                <input type="checkbox">
+                <i aria-hidden="true"></i>
+              </label>
+            </div>
+            <div class="profile-form-grid profile-form-grid--compact">
+              <div class="profile-field">
+                <span>Language</span>
+                <span class="profile-select-control realtrend-select-wrap">
+                  <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="realtrend-select-value">English</span>
+                  </button>
+                  <ul class="realtrend-select-menu" role="listbox"></ul>
+                  <select class="realtrend-select-native" tabindex="-1" aria-hidden="true" aria-label="Language">
+                    <option selected>English</option>
+                    <option>Korean</option>
+                    <option>Japanese</option>
+                  </select>
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <div class="profile-mobile-actions mobile-only">
+            <button class="profile-save" type="button" data-profile-save>Save Changes</button>
+          </div>
         </section>
       </div>
-
-      <section class="reviews-help-banner desktop-only">
-        <span aria-hidden="true"></span>
-        <div>
-          <h2>Need help with your order?</h2>
-          <p>Visit our <a href="#">Help Center</a> for FAQs or contact our customer support.</p>
-        </div>
-        <a href="#">Go to Help Center <b aria-hidden="true">-&gt;</b></a>
-      </section>
     </main>
+    <div class="profile-address-dialog" id="profile-address-dialog" hidden aria-hidden="true">
+      <button type="button" class="profile-address-backdrop" data-profile-address-close aria-label="Close address form"></button>
+      <section class="profile-address-modal" role="dialog" aria-modal="true" aria-labelledby="profile-address-dialog-title">
+        <button type="button" class="profile-address-close" data-profile-address-close aria-label="Close address form">&times;</button>
+        <div class="profile-address-dialog-head">
+          <h2 id="profile-address-dialog-title">Shipping Address</h2>
+          <p>Add or edit the address used during checkout.</p>
+        </div>
+        <form class="profile-address-form" data-profile-address-form novalidate>
+          <input type="hidden" name="mode" value="add">
+          <div class="profile-address-form-grid">
+            <div class="profile-field">
+              <span>Country / Region</span>
+              <span class="profile-select-control profile-address-country realtrend-select-wrap">
+                <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="realtrend-select-value">Global</span>
+                </button>
+                <ul class="realtrend-select-menu" role="listbox"></ul>
+                <select class="realtrend-select-native" name="country" tabindex="-1" aria-hidden="true" aria-label="Address country or region">
+                  <option selected>Global</option>
+                </select>
+              </span>
+            </div>
+            <label class="profile-field profile-address-search-field">
+              <span>Address</span>
+              <input type="text" name="address" placeholder="Start typing your street address" autocomplete="street-address" data-profile-address-search>
+              <ul class="profile-address-suggestions" data-profile-address-suggestions hidden></ul>
+            </label>
+            <label class="profile-field">
+              <span>Apt / Suite / Other <em>(optional)</em></span>
+              <input type="text" name="apt" placeholder="Apt, suite, floor, etc." autocomplete="address-line2">
+            </label>
+            <label class="profile-field">
+              <span>City</span>
+              <input type="text" name="city" placeholder="City" autocomplete="address-level2">
+            </label>
+            <label class="profile-field">
+              <span>State / Province</span>
+              <input type="text" name="state" placeholder="State or province" autocomplete="address-level1">
+            </label>
+            <label class="profile-field">
+              <span>ZIP / Postal Code</span>
+              <input type="text" name="zip" placeholder="ZIP or postal code" autocomplete="postal-code">
+            </label>
+          </div>
+          <div class="profile-address-contact">
+            <h3>Contact Information</h3>
+            <div class="profile-address-form-grid">
+              <label class="profile-field profile-phone-field">
+                <span>Mobile Number</span>
+                <div class="profile-phone-control">
+                  <span class="profile-phone-code profile-address-phone-code realtrend-select-wrap">
+                    <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                      <span class="realtrend-select-value">+1 US</span>
+                    </button>
+                    <ul class="realtrend-select-menu" role="listbox"></ul>
+                    <select class="realtrend-select-native" name="phoneCode" tabindex="-1" aria-hidden="true" aria-label="Address country calling code">
+                      <option selected>+1 US</option>
+                    </select>
+                  </span>
+                  <input type="tel" name="phone" placeholder="000 000 0000" autocomplete="tel-national" aria-label="Mobile number" data-profile-clear-sample>
+                </div>
+              </label>
+              <label class="profile-field">
+                <span>Email</span>
+                <input type="email" name="email" placeholder="name@email.com" autocomplete="email" data-profile-clear-sample>
+              </label>
+            </div>
+          </div>
+          <div class="profile-address-dialog-actions">
+            <button type="button" class="profile-address-cancel" data-profile-address-close>Cancel</button>
+            <button type="submit" class="profile-address-submit" data-profile-address-submit>Save</button>
+          </div>
+        </form>
+      </section>
+    </div>
     <footer class="site-footer">
       <div class="footer-main">
         <a class="logo footer-logo" href="../index.html">Bridge<span>On</span></a>
@@ -932,47 +1085,6 @@
       <div class="realtrend-cart-toast-thumb" aria-hidden="true"></div>
     </div>
 
-    <div class="review-edit-layer" data-review-edit-layer hidden aria-hidden="true">
-      <button type="button" class="review-edit-backdrop" data-review-edit-close aria-label="Close review editor"></button>
-      <section class="review-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="review-edit-title">
-        <p class="review-edit-eyebrow">Edit Review</p>
-        <h2 id="review-edit-title">Update your review</h2>
-        <div class="review-edit-product">
-          <span class="review-edit-thumb" data-review-edit-thumb aria-hidden="true"></span>
-          <div>
-            <p data-review-edit-brand>numbuzin</p>
-            <strong data-review-edit-name>No.3 Skin Softening Serum 50ml</strong>
-            <small data-review-edit-price>US$23.00</small>
-          </div>
-        </div>
-        <div class="review-edit-rating" aria-label="Review rating">
-          <button type="button" data-review-edit-rating="1" aria-label="1 star">&#9733;</button>
-          <button type="button" data-review-edit-rating="2" aria-label="2 stars">&#9733;</button>
-          <button type="button" data-review-edit-rating="3" aria-label="3 stars">&#9733;</button>
-          <button type="button" data-review-edit-rating="4" aria-label="4 stars">&#9733;</button>
-          <button type="button" data-review-edit-rating="5" aria-label="5 stars">&#9733;</button>
-        </div>
-        <label class="review-edit-field">
-          <span>Review Title</span>
-          <input type="text" data-review-edit-heading>
-        </label>
-        <label class="review-edit-field">
-          <span>Your Review</span>
-          <textarea rows="5" data-review-edit-copy></textarea>
-        </label>
-        <div class="review-edit-upload">
-          <button type="button" data-review-edit-upload>Change Photos</button>
-          <span data-review-edit-upload-status>Up to 5 photos</span>
-          <input class="review-edit-file-input" type="file" accept="image/*" multiple data-review-edit-files>
-        </div>
-        <div class="review-edit-preview" data-review-edit-preview aria-live="polite"></div>
-        <div class="review-edit-actions">
-          <button type="button" class="review-edit-secondary" data-review-edit-close>Cancel</button>
-          <button type="button" class="review-edit-primary" data-review-edit-save>Save Review</button>
-        </div>
-      </section>
-    </div>
-
     <div
       class="mypage-avatar-dialog"
       id="mypage-avatar-dialog"
@@ -1008,3 +1120,6 @@
     <script src="./my-page.js"></script>
   </body>
 </html>
+
+
+

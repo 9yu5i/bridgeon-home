@@ -356,7 +356,7 @@
         removeButton.className = "orders-review-photo-remove";
         removeButton.dataset.ordersReviewPhotoRemove = "true";
         removeButton.setAttribute("aria-label", `Remove ${file.name}`);
-        removeButton.textContent = "×";
+        removeButton.textContent = "횞";
         item.append(image, removeButton);
         reviewPreview?.appendChild(item);
       });
@@ -581,7 +581,238 @@
     });
   }
 
-  const pageSortSelectRoot = ".orders-select-row .realtrend-select-wrap, .reviews-select-row .realtrend-select-wrap";
+  const profileCallingCodeByCountry = new Map(
+    [
+      ["United States", "+1 US"],
+      ["Canada", "+1 CA"],
+      ["United Kingdom", "+44 UK"],
+      ["Australia", "+61 AU"],
+      ["New Zealand", "+64 NZ"],
+      ["Japan", "+81 JP"],
+      ["South Korea", "+82 KR"],
+      ["Singapore", "+65 SG"],
+      ["Hong Kong", "+852 HK"],
+      ["Taiwan", "+886 TW"],
+      ["Germany", "+49 DE"],
+      ["France", "+33 FR"],
+      ["Italy", "+39 IT"],
+      ["Spain", "+34 ES"],
+      ["Netherlands", "+31 NL"],
+      ["Belgium", "+32 BE"],
+      ["Sweden", "+46 SE"],
+      ["Norway", "+47 NO"],
+      ["Denmark", "+45 DK"],
+      ["Finland", "+358 FI"],
+      ["Ireland", "+353 IE"],
+      ["Switzerland", "+41 CH"],
+      ["Austria", "+43 AT"],
+      ["Portugal", "+351 PT"],
+      ["Poland", "+48 PL"],
+      ["Czech Republic", "+420 CZ"],
+      ["Hungary", "+36 HU"],
+      ["Romania", "+40 RO"],
+      ["Greece", "+30 GR"],
+      ["Luxembourg", "+352 LU"],
+      ["Iceland", "+354 IS"],
+      ["Mexico", "+52 MX"],
+      ["Brazil", "+55 BR"],
+      ["Chile", "+56 CL"],
+      ["Colombia", "+57 CO"],
+      ["Argentina", "+54 AR"],
+      ["Peru", "+51 PE"],
+      ["United Arab Emirates", "+971 AE"],
+      ["Saudi Arabia", "+966 SA"],
+      ["Israel", "+972 IL"],
+      ["Turkey", "+90 TR"],
+      ["India", "+91 IN"],
+      ["Indonesia", "+62 ID"],
+      ["Malaysia", "+60 MY"],
+      ["Thailand", "+66 TH"],
+      ["Vietnam", "+84 VN"],
+      ["Philippines", "+63 PH"],
+      ["China", "+86 CN"],
+      ["South Africa", "+27 ZA"],
+      ["Egypt", "+20 EG"],
+      ["Nigeria", "+234 NG"],
+      ["Kenya", "+254 KE"],
+      ["Morocco", "+212 MA"],
+      ["Russia", "+7 RU"],
+      ["Ukraine", "+380 UA"],
+      ["Croatia", "+385 HR"],
+      ["Slovakia", "+421 SK"],
+      ["Slovenia", "+386 SI"],
+      ["Bulgaria", "+359 BG"],
+      ["Estonia", "+372 EE"],
+      ["Latvia", "+371 LV"],
+      ["Lithuania", "+370 LT"],
+      ["Malta", "+356 MT"],
+      ["Cyprus", "+357 CY"],
+      ["Qatar", "+974 QA"],
+      ["Kuwait", "+965 KW"],
+      ["Bahrain", "+973 BH"],
+      ["Oman", "+968 OM"],
+      ["Jordan", "+962 JO"],
+      ["Lebanon", "+961 LB"],
+      ["Costa Rica", "+506 CR"],
+      ["Panama", "+507 PA"],
+      ["Dominican Republic", "+1 DO"],
+      ["Puerto Rico", "+1 PR"],
+      ["Guatemala", "+502 GT"],
+      ["Uruguay", "+598 UY"],
+      ["Ecuador", "+593 EC"],
+      ["Pakistan", "+92 PK"],
+      ["Bangladesh", "+880 BD"],
+      ["Sri Lanka", "+94 LK"],
+      ["Cambodia", "+855 KH"],
+      ["Laos", "+856 LA"],
+      ["Myanmar", "+95 MM"],
+      ["Macao", "+853 MO"],
+      ["Mongolia", "+976 MN"],
+      ["Kazakhstan", "+7 KZ"],
+      ["Georgia", "+995 GE"],
+      ["Armenia", "+374 AM"],
+      ["Azerbaijan", "+994 AZ"],
+      ["Serbia", "+381 RS"],
+      ["Bosnia and Herzegovina", "+387 BA"],
+      ["North Macedonia", "+389 MK"],
+      ["Albania", "+355 AL"],
+      ["Moldova", "+373 MD"],
+      ["Belarus", "+375 BY"],
+      ["Ghana", "+233 GH"],
+      ["Tanzania", "+255 TZ"],
+      ["Uganda", "+256 UG"],
+      ["Tunisia", "+216 TN"],
+      ["Algeria", "+213 DZ"],
+      ["Mauritius", "+230 MU"],
+      ["Reunion", "+262 RE"],
+      ["Guadeloupe", "+590 GP"],
+      ["Martinique", "+596 MQ"],
+      ["French Guiana", "+594 GF"],
+      ["New Caledonia", "+687 NC"],
+      ["Fiji", "+679 FJ"],
+      ["Papua New Guinea", "+675 PG"],
+      ["Samoa", "+685 WS"],
+      ["Tonga", "+676 TO"],
+      ["Brunei", "+673 BN"],
+      ["Maldives", "+960 MV"],
+      ["Nepal", "+977 NP"],
+      ["Bhutan", "+975 BT"],
+      ["Trinidad and Tobago", "+1 TT"],
+      ["Jamaica", "+1 JM"],
+      ["Bahamas", "+1 BS"],
+      ["Barbados", "+1 BB"],
+      ["Belize", "+501 BZ"],
+      ["El Salvador", "+503 SV"],
+      ["Honduras", "+504 HN"],
+      ["Nicaragua", "+505 NI"],
+      ["Paraguay", "+595 PY"],
+      ["Bolivia", "+591 BO"],
+      ["Venezuela", "+58 VE"],
+    ].map(([country, code]) => [country.toLowerCase(), code])
+  );
+
+  const getProfileCallingCode = (country) => {
+    const countryName = String(country || "").trim();
+    const asciiName = countryName.replace(/[^\x00-\x7F]/g, "");
+    if (/^r.*nion$/i.test(asciiName)) return "+262 RE";
+    return profileCallingCodeByCountry.get(countryName.toLowerCase()) || "+1 US";
+  };
+
+  const syncProfilePhoneCodes = () => {
+    const countrySelect = document.querySelector(
+      '.profile-select-control .realtrend-select-native[aria-label="Country or region"]'
+    );
+    const phoneSelect = document.querySelector(
+      '.profile-phone-code .realtrend-select-native[aria-label="Country calling code"]'
+    );
+    if (!countrySelect || !phoneSelect) return;
+
+    const previousValue = phoneSelect.value || phoneSelect.selectedOptions[0]?.textContent?.trim();
+    const options = Array.from(countrySelect.options).map((countryOption) => {
+      const option = document.createElement("option");
+      const label = getProfileCallingCode(countryOption.textContent);
+      option.value = label;
+      option.textContent = label;
+      option.selected = label === previousValue;
+      return option;
+    });
+
+    phoneSelect.replaceChildren(...options);
+    if (!Array.from(phoneSelect.options).some((option) => option.value === previousValue)) {
+      phoneSelect.value = "+1 US";
+    }
+  };
+
+  syncProfilePhoneCodes();
+
+  const getProfileCountryNames = () => {
+    const countrySelect = document.querySelector(
+      '.profile-select-control .realtrend-select-native[aria-label="Country or region"]'
+    );
+    return Array.from(countrySelect?.options || [])
+      .map((option) => option.textContent.trim())
+      .filter(Boolean);
+  };
+
+  const populateProfileAddressModalSelects = () => {
+    const countryNames = getProfileCountryNames();
+    const addressCountrySelect = document.querySelector(
+      '.profile-address-country .realtrend-select-native[aria-label="Address country or region"]'
+    );
+    const addressPhoneSelect = document.querySelector(
+      '.profile-address-phone-code .realtrend-select-native[aria-label="Address country calling code"]'
+    );
+
+    if (addressCountrySelect) {
+      const globalOption = document.createElement("option");
+      globalOption.value = "Global";
+      globalOption.textContent = "Global";
+      globalOption.selected = true;
+
+      const countryOptions = countryNames.map((country) => {
+        const option = document.createElement("option");
+        option.value = country;
+        option.textContent = country;
+        return option;
+      });
+
+      addressCountrySelect.replaceChildren(globalOption, ...countryOptions);
+      addressCountrySelect.value = "Global";
+    }
+
+    if (addressPhoneSelect) {
+      const codes = Array.from(
+        new Set(countryNames.map((country) => getProfileCallingCode(country)))
+      );
+      const options = codes.map((code) => {
+        const option = document.createElement("option");
+        option.value = code;
+        option.textContent = code;
+        option.selected = code === "+1 US";
+        return option;
+      });
+
+      addressPhoneSelect.replaceChildren(...options);
+      addressPhoneSelect.value = codes.includes("+1 US") ? "+1 US" : codes[0] || "";
+    }
+  };
+
+  populateProfileAddressModalSelects();
+
+  const clearProfileSampleInputValue = (field) => {
+    if (!field) return;
+    const value = field.value.trim();
+    const samples = new Set(["Name", "000 000 0000", "name@email.com", field.placeholder?.trim()].filter(Boolean));
+    if (samples.has(value)) field.value = "";
+  };
+
+  document.querySelectorAll("[data-profile-clear-sample]").forEach((field) => {
+    field.addEventListener("focus", () => clearProfileSampleInputValue(field));
+    field.addEventListener("pointerdown", () => clearProfileSampleInputValue(field));
+  });
+
+  const pageSortSelectRoot =
+    ".orders-select-row .realtrend-select-wrap, .reviews-select-row .realtrend-select-wrap, .profile-field .realtrend-select-wrap";
 
   const initOrdersSortSelect = (wrap) => {
     const select = wrap.querySelector(".realtrend-select-native");
@@ -628,8 +859,9 @@
       });
       valueEl.textContent = select.selectedOptions[0]?.textContent?.trim() || "";
       if (
-        wrap.closest(".orders-select-row, .reviews-select-row") &&
-        window.matchMedia("(max-width: 1120px)").matches
+        wrap.closest(".profile-field") ||
+        (wrap.closest(".orders-select-row, .reviews-select-row") &&
+          window.matchMedia("(max-width: 1120px)").matches)
       ) {
         wrap.style.width = "100%";
       } else {
@@ -701,4 +933,790 @@
   window.addEventListener("resize", () => {
     ordersSortSelectApis.forEach((api) => api.buildMenu());
   });
+
+  const normalizeAccountFilter = (value) =>
+    String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+  document.querySelectorAll(".account-collection-tabs").forEach((tabs) => {
+    const content = tabs.closest(".account-collection-content");
+    if (!content) return;
+
+    const buttons = Array.from(tabs.querySelectorAll("button"));
+    const items = Array.from(content.querySelectorAll("[data-account-category]"));
+    if (!buttons.length || !items.length) return;
+
+    const applyFilter = (filter) => {
+      const activeFilter = filter || "all";
+
+      buttons.forEach((button) => {
+        const buttonFilter = normalizeAccountFilter(button.dataset.accountFilter || button.textContent);
+        const isActive = buttonFilter === activeFilter;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+
+      items.forEach((item) => {
+        const itemFilter = normalizeAccountFilter(item.dataset.accountCategory);
+        item.hidden = activeFilter !== "all" && itemFilter !== activeFilter;
+      });
+    };
+
+    buttons.forEach((button) => {
+      button.dataset.accountFilter = normalizeAccountFilter(button.dataset.accountFilter || button.textContent);
+      button.addEventListener("click", () => applyFilter(button.dataset.accountFilter));
+    });
+
+    const initialButton = buttons.find((button) => button.classList.contains("is-active")) || buttons[0];
+    applyFilter(normalizeAccountFilter(initialButton?.dataset.accountFilter || initialButton?.textContent || "all"));
+  });
+
+  document.querySelectorAll(".points-history-tabs").forEach((tabs) => {
+    const history = tabs.closest(".points-history");
+    const buttons = Array.from(tabs.querySelectorAll("[data-point-filter]"));
+    const rows = Array.from(history?.querySelectorAll("[data-point-type]") || []);
+    if (!buttons.length || !rows.length) return;
+
+    const applyPointFilter = (filter) => {
+      buttons.forEach((button) => {
+        const isActive = button.dataset.pointFilter === filter;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+
+      rows.forEach((row) => {
+        row.hidden = filter !== "all" && row.dataset.pointType !== filter;
+      });
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => applyPointFilter(button.dataset.pointFilter || "all"));
+    });
+
+    const initialButton = buttons.find((button) => button.classList.contains("is-active")) || buttons[0];
+    applyPointFilter(initialButton.dataset.pointFilter || "all");
+  });
+
+  document.querySelectorAll("[data-coupon-register-form]").forEach((form) => {
+    const input = form.querySelector("#coupon-code");
+    const message = form.querySelector("[data-coupon-register-message]");
+    const grid = document.querySelector("[data-coupon-grid]");
+    const count = document.querySelector("[data-coupon-count]");
+    const validCode = "COUPONTEST";
+
+    if (!input || !message || !grid) return;
+
+    const setCouponMessage = (text, type = "error") => {
+      message.textContent = text;
+      message.classList.toggle("is-success", type === "success");
+      input.setAttribute("aria-invalid", type === "error" ? "true" : "false");
+    };
+
+    const updateCouponCount = () => {
+      if (!count) return;
+      count.textContent = `(${grid.querySelectorAll(".coupon-ticket").length})`;
+    };
+
+    const createTestCoupon = () => {
+      const coupon = document.createElement("article");
+      coupon.className = "coupon-ticket";
+      coupon.dataset.couponCode = validCode;
+      coupon.innerHTML = `
+        <div class="coupon-ticket-top">
+          <span>NEW</span>
+          <p><b>Expires on</b>2026-07-16 23:59 (KST)</p>
+        </div>
+        <h3><strong>5%</strong> OFF</h3>
+        <p class="coupon-name">Surprise Coupon</p>
+        <p class="coupon-terms">Min. Purchase US$30&nbsp; | &nbsp;Max. Discount US$10</p>
+      `;
+      return coupon;
+    };
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const code = input.value.trim().toUpperCase();
+
+      if (code !== validCode) {
+        setCouponMessage("Invalid coupon code. Please check the code and try again.");
+        return;
+      }
+
+      if (!grid.querySelector(`[data-coupon-code="${validCode}"]`)) {
+        grid.prepend(createTestCoupon());
+        updateCouponCount();
+      }
+
+      input.value = "";
+      setCouponMessage("COUPONTEST has been added to My Coupons.", "success");
+    });
+
+    input.addEventListener("input", () => {
+      if (!message.textContent) return;
+      message.textContent = "";
+      message.classList.remove("is-success");
+      input.removeAttribute("aria-invalid");
+    });
+  });
+
+  const addressDialog = document.getElementById("profile-address-dialog");
+  const addressForm = addressDialog?.querySelector("[data-profile-address-form]");
+  const addressSearchInput = addressForm?.querySelector("[data-profile-address-search]");
+  const addressSuggestionList = addressForm?.querySelector("[data-profile-address-suggestions]");
+  const addressSubmitButton = addressForm?.querySelector("[data-profile-address-submit]");
+  let activeAddressCard = null;
+
+  if (addressDialog && addressForm) {
+    const addressSuggestions = [
+      { address: "350 5th Ave", city: "New York", state: "NY", zip: "10118", country: "United States" },
+      { address: "1600 Amphitheatre Pkwy", city: "Mountain View", state: "CA", zip: "94043", country: "United States" },
+      { address: "290 Bremner Blvd", city: "Toronto", state: "ON", zip: "M5V 3L9", country: "Canada" },
+      { address: "100 Queen St W", city: "Toronto", state: "ON", zip: "M5H 2N2", country: "Canada" },
+      { address: "300 Olympic-ro", city: "Seoul", state: "Songpa-gu", zip: "05551", country: "South Korea" },
+      { address: "12 Haneul-gil", city: "Seoul", state: "Gangseo-gu", zip: "07505", country: "South Korea" },
+      { address: "4-2-8 Shibakoen", city: "Minato City", state: "Tokyo", zip: "105-0011", country: "Japan" },
+      { address: "1-1 Maihama", city: "Urayasu", state: "Chiba", zip: "279-0031", country: "Japan" },
+      { address: "Westminster Bridge Road", city: "London", state: "England", zip: "SE1 7PB", country: "United Kingdom" },
+      { address: "1 New Change", city: "London", state: "England", zip: "EC4M 9AF", country: "United Kingdom" },
+      { address: "Bennelong Point", city: "Sydney", state: "NSW", zip: "2000", country: "Australia" },
+      { address: "Federation Square", city: "Melbourne", state: "VIC", zip: "3000", country: "Australia" },
+      { address: "10 Bayfront Avenue", city: "Singapore", state: "Singapore", zip: "018956", country: "Singapore" },
+      { address: "93 Stamford Road", city: "Singapore", state: "Singapore", zip: "178897", country: "Singapore" },
+      { address: "Pariser Platz", city: "Berlin", state: "BE", zip: "10117", country: "Germany" },
+      { address: "Potsdamer Platz 1", city: "Berlin", state: "BE", zip: "10785", country: "Germany" },
+      { address: "Champ de Mars", city: "Paris", state: "Ile-de-France", zip: "75007", country: "France" },
+      { address: "6 Parvis Notre-Dame", city: "Paris", state: "Ile-de-France", zip: "75004", country: "France" },
+    ];
+
+    const addressFields = {
+      mode: addressForm.elements.mode,
+      country: addressForm.elements.country,
+      address: addressForm.elements.address,
+      apt: addressForm.elements.apt,
+      city: addressForm.elements.city,
+      state: addressForm.elements.state,
+      zip: addressForm.elements.zip,
+      phoneCode: addressForm.elements.phoneCode,
+      phone: addressForm.elements.phone,
+      email: addressForm.elements.email,
+    };
+
+    const setFieldValue = (field, value) => {
+      if (field) field.value = value || "";
+    };
+
+    const clearAddressSampleValue = (field) => {
+      if (!field) return;
+      const value = field.value.trim();
+      const samples = new Set(["000 000 0000", "name@email.com", field.placeholder?.trim()].filter(Boolean));
+      if (samples.has(value)) field.value = "";
+    };
+
+    const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const getDialingCode = (value) => String(value || "").trim().match(/^\+\d+/)?.[0] || "";
+
+    const stripAddressPhoneCountryCode = (phoneNumber) => {
+      let value = String(phoneNumber || "").trim();
+      const selectedCode = addressFields.phoneCode?.value || "";
+      const codeCandidates = [
+        selectedCode,
+        getDialingCode(selectedCode),
+        ...Array.from(addressFields.phoneCode?.options || []).flatMap((option) => [
+          option.value,
+          option.textContent.trim(),
+          getDialingCode(option.value),
+          getDialingCode(option.textContent),
+        ]),
+      ]
+        .filter(Boolean)
+        .sort((a, b) => b.length - a.length);
+
+      const matchedCode = codeCandidates.find((code) =>
+        new RegExp(`^${escapeRegExp(code)}(?:\\s|-|(?=\\d)|$)`).test(value)
+      );
+      if (matchedCode) value = value.replace(new RegExp(`^${escapeRegExp(matchedCode)}(?:\\s|-)*`), "").trim();
+      return value;
+    };
+
+    const rebuildAddressSelect = (select) => {
+      const wrap = select?.closest(".realtrend-select-wrap");
+      const api = wrap ? ordersSortSelectApis.get(wrap) : null;
+      if (api) api.buildMenu();
+    };
+
+    const setAddressSelectValue = (select, value) => {
+      if (!select) return;
+      const option = Array.from(select.options).find(
+        (selectOption) => selectOption.value === value || selectOption.textContent.trim() === value
+      );
+      if (option) {
+        select.value = option.value;
+      } else {
+        select.value = select.options[0]?.value || "";
+      }
+      rebuildAddressSelect(select);
+    };
+
+    const splitAddressPhone = (phone) => {
+      const value = String(phone || "").trim();
+      const codes = Array.from(addressFields.phoneCode?.options || [])
+        .map((option) => option.value || option.textContent.trim())
+        .sort((a, b) => b.length - a.length);
+      const matchedCode = codes.find((code) => value === code || value.startsWith(`${code} `));
+
+      return {
+        code: matchedCode || "+1 US",
+        number: matchedCode ? value.slice(matchedCode.length).trim() : value,
+      };
+    };
+
+    const getAddressData = () => {
+      const phoneNumber = stripAddressPhoneCountryCode(addressFields.phone?.value);
+      setFieldValue(addressFields.phone, phoneNumber);
+      return {
+        country: addressFields.country?.value || "Global",
+        addressLine: addressFields.address?.value.trim() || "",
+        apt: addressFields.apt?.value.trim() || "",
+        city: addressFields.city?.value.trim() || "",
+        state: addressFields.state?.value.trim() || "",
+        zip: addressFields.zip?.value.trim() || "",
+        phone: phoneNumber ? `${addressFields.phoneCode?.value || "+1 US"} ${phoneNumber}` : "",
+        email: addressFields.email?.value.trim() || "",
+      };
+    };
+
+    const applySuggestion = (suggestion) => {
+      setAddressSelectValue(addressFields.country, suggestion.country);
+      setAddressSelectValue(addressFields.phoneCode, getProfileCallingCode(suggestion.country));
+      setFieldValue(addressFields.address, suggestion.address);
+      setFieldValue(addressFields.city, suggestion.city);
+      setFieldValue(addressFields.state, suggestion.state);
+      setFieldValue(addressFields.zip, suggestion.zip);
+      if (addressSuggestionList) addressSuggestionList.hidden = true;
+    };
+
+    const getCountryAddressSuggestions = () => {
+      const country = addressFields.country?.value || "Global";
+      if (country === "Global") return addressSuggestions;
+      const countryMatches = addressSuggestions.filter((suggestion) => suggestion.country === country);
+      return countryMatches.length ? countryMatches : addressSuggestions;
+    };
+
+    const updateAddressPlaceholder = () => {
+      if (!addressSearchInput) return;
+      const firstSuggestion = getCountryAddressSuggestions()[0];
+      addressSearchInput.placeholder = firstSuggestion
+        ? addressFields.country?.value === "Global"
+          ? "Search addresses worldwide"
+          : `Try ${firstSuggestion.address}`
+        : "Start typing your street address";
+    };
+
+    const renderAddressSuggestions = () => {
+      if (!addressSuggestionList || !addressSearchInput) return;
+      const query = addressSearchInput.value.trim().toLowerCase();
+      addressSuggestionList.replaceChildren();
+      const countrySuggestions = getCountryAddressSuggestions();
+
+      if (!query) {
+        addressSuggestionList.hidden = true;
+        return;
+      }
+
+      const matches = countrySuggestions.filter((suggestion) =>
+        `${suggestion.address} ${suggestion.city} ${suggestion.state} ${suggestion.zip} ${suggestion.country}`
+          .toLowerCase()
+          .includes(query)
+      );
+
+      (matches.length ? matches : countrySuggestions).slice(0, 4).forEach((suggestion) => {
+        const item = document.createElement("li");
+        const button = document.createElement("button");
+        button.type = "button";
+        button.innerHTML = `<strong></strong><small></small>`;
+        button.querySelector("strong").textContent = suggestion.address;
+        button.querySelector("small").textContent =
+          `${suggestion.city}, ${suggestion.state} ${suggestion.zip} - ${suggestion.country}`;
+        button.addEventListener("click", () => applySuggestion(suggestion));
+        item.appendChild(button);
+        addressSuggestionList.appendChild(item);
+      });
+
+      addressSuggestionList.hidden = false;
+    };
+
+    const setAddressCardContent = (card, data) => {
+      card.dataset.country = data.country;
+      card.dataset.addressLine = data.addressLine;
+      card.dataset.apt = data.apt;
+      card.dataset.city = data.city;
+      card.dataset.state = data.state;
+      card.dataset.zip = data.zip;
+      card.dataset.phone = data.phone;
+      card.dataset.email = data.email;
+
+      const info = card.querySelector("div");
+      const title = info?.querySelector("strong");
+      const address = info?.querySelector("p");
+      const contact = info?.querySelector("small");
+      const editButton = card.querySelector("[data-profile-edit-address]");
+      const addressLine = [data.addressLine, data.apt].filter(Boolean).join(", ");
+      const regionLine = [data.city, data.state].filter(Boolean).join(", ");
+
+      if (title) title.textContent = "Name";
+      if (address) {
+        address.replaceChildren(
+          document.createTextNode(addressLine || "Enter your shipping address."),
+          document.createElement("br"),
+          document.createTextNode(`${regionLine}${regionLine && data.zip ? " " : ""}${data.zip}`)
+        );
+      }
+      if (contact) {
+        contact.replaceChildren(
+          document.createTextNode(data.phone || "Add phone number"),
+          ...(data.email ? [document.createElement("br"), document.createTextNode(data.email)] : [])
+        );
+      }
+      if (editButton) editButton.textContent = "Edit";
+    };
+
+    const updateDefaultAddress = (selectedCard) => {
+      document.querySelectorAll("[data-profile-address-card]").forEach((card) => {
+        const isDefault = card === selectedCard;
+        const mark = card.querySelector("mark");
+        const button = card.querySelector("[data-profile-set-default-address]");
+        if (mark) {
+          mark.textContent = "Default";
+          mark.hidden = !isDefault;
+        }
+        if (button) {
+          button.textContent = isDefault ? "Default" : "Set Default";
+          button.disabled = isDefault;
+        }
+      });
+    };
+
+    const createAddressCard = (data) => {
+      const card = document.createElement("article");
+      card.className = "profile-address-card";
+      card.dataset.profileAddressCard = "";
+
+      const info = document.createElement("div");
+      info.appendChild(document.createElement("strong"));
+      info.appendChild(document.createElement("p"));
+      info.appendChild(document.createElement("small"));
+
+      const mark = document.createElement("mark");
+      mark.textContent = "Default";
+      mark.hidden = true;
+
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.dataset.profileEditAddress = "";
+      editButton.textContent = "Edit";
+
+      const defaultButton = document.createElement("button");
+      defaultButton.type = "button";
+      defaultButton.dataset.profileSetDefaultAddress = "";
+      defaultButton.textContent = "Set Default";
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "profile-address-delete";
+      deleteButton.dataset.profileDeleteAddress = "";
+      deleteButton.textContent = "Delete";
+
+      const actions = document.createElement("div");
+      actions.className = "profile-address-actions";
+      actions.append(editButton, defaultButton, deleteButton);
+
+      card.append(info, mark, actions);
+      setAddressCardContent(card, data);
+      return card;
+    };
+
+    const fillAddressForm = (card) => {
+      const defaults = {
+        country: "Global",
+        addressLine: "",
+        apt: "",
+        city: "",
+        state: "",
+        zip: "",
+        phoneCode: "+1 US",
+        phone: "",
+        email: "",
+      };
+      const data = card ? { ...defaults, ...card.dataset } : defaults;
+      const phoneParts = splitAddressPhone(data.phone);
+
+      setFieldValue(addressFields.mode, card ? "edit" : "add");
+      setAddressSelectValue(addressFields.country, data.country || "Global");
+      setFieldValue(addressFields.address, data.addressLine);
+      setFieldValue(addressFields.apt, data.apt);
+      setFieldValue(addressFields.city, data.city);
+      setFieldValue(addressFields.state, data.state);
+      setFieldValue(addressFields.zip, data.zip);
+      setAddressSelectValue(addressFields.phoneCode, phoneParts.code || data.phoneCode || "+1 US");
+      setFieldValue(addressFields.phone, phoneParts.number);
+      setFieldValue(addressFields.email, data.email);
+      updateAddressPlaceholder();
+      if (addressSuggestionList) addressSuggestionList.hidden = true;
+    };
+
+    const closeAddressDialog = () => {
+      addressDialog.hidden = true;
+      addressDialog.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("is-profile-address-open");
+      activeAddressCard = null;
+      if (addressSubmitButton) {
+        addressSubmitButton.textContent = "Save";
+        addressSubmitButton.disabled = false;
+      }
+    };
+
+    const openAddressDialog = (card = null) => {
+      activeAddressCard = card;
+      fillAddressForm(card);
+      addressDialog.hidden = false;
+      addressDialog.setAttribute("aria-hidden", "false");
+      document.body.classList.add("is-profile-address-open");
+      window.setTimeout(() => {
+        addressFields.country
+          ?.closest(".realtrend-select-wrap")
+          ?.querySelector(".realtrend-select-trigger")
+          ?.focus();
+      }, 0);
+    };
+
+    document.querySelectorAll("[data-profile-add-address]").forEach((button) => {
+      button.addEventListener("click", () => openAddressDialog());
+    });
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-profile-edit-address]");
+      if (!button) return;
+      const card = button.closest("[data-profile-address-card]");
+      if (card) openAddressDialog(card);
+    });
+
+    document.addEventListener("click", (event) => {
+      const defaultButton = event.target.closest("[data-profile-set-default-address]");
+      if (defaultButton) {
+        const card = defaultButton.closest("[data-profile-address-card]");
+        if (card) updateDefaultAddress(card);
+        return;
+      }
+
+      const deleteButton = event.target.closest("[data-profile-delete-address]");
+      if (!deleteButton) return;
+      const card = deleteButton.closest("[data-profile-address-card]");
+      if (!card) return;
+      const wasDefault = card.querySelector("[data-profile-set-default-address]")?.disabled;
+      card.remove();
+      if (wasDefault) {
+        const nextCard = document.querySelector("[data-profile-address-card]");
+        if (nextCard) updateDefaultAddress(nextCard);
+      }
+    });
+
+    addressDialog.querySelectorAll("[data-profile-address-close]").forEach((button) => {
+      button.addEventListener("click", closeAddressDialog);
+    });
+
+    addressFields.country?.addEventListener("change", () => {
+      const selectedCountry = addressFields.country?.value || "Global";
+      if (selectedCountry !== "Global") {
+        setAddressSelectValue(addressFields.phoneCode, getProfileCallingCode(selectedCountry));
+      }
+      setFieldValue(addressFields.address, "");
+      setFieldValue(addressFields.city, "");
+      setFieldValue(addressFields.state, "");
+      setFieldValue(addressFields.zip, "");
+      updateAddressPlaceholder();
+      if (addressSuggestionList) addressSuggestionList.hidden = true;
+    });
+
+    addressForm.querySelectorAll("[data-profile-clear-sample]").forEach((field) => {
+      field.addEventListener("focus", () => clearAddressSampleValue(field));
+    });
+
+    addressFields.phone?.addEventListener("blur", () => {
+      setFieldValue(addressFields.phone, stripAddressPhoneCountryCode(addressFields.phone.value));
+    });
+
+    updateAddressPlaceholder();
+    addressSearchInput?.addEventListener("input", renderAddressSuggestions);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !addressDialog.hidden) closeAddressDialog();
+    });
+
+    addressForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = getAddressData();
+      if (!data.addressLine || !data.city || !data.state || !data.zip) {
+        renderAddressSuggestions();
+        addressFields.address?.focus();
+        return;
+      }
+
+      if (activeAddressCard) {
+        setAddressCardContent(activeAddressCard, data);
+      } else {
+        const addressCardSection = document.querySelector("[data-profile-add-address]")?.closest(".profile-card");
+        const hadAddressCard = Boolean(document.querySelector("[data-profile-address-card]"));
+        const newCard = createAddressCard(data);
+        addressCardSection?.appendChild(newCard);
+        if (!hadAddressCard) updateDefaultAddress(newCard);
+      }
+
+      if (addressSubmitButton) {
+        addressSubmitButton.textContent = "Saved";
+        addressSubmitButton.disabled = true;
+      }
+
+      window.setTimeout(closeAddressDialog, 650);
+    });
+  }
+
+  document.querySelectorAll("[data-profile-save]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const originalText = button.textContent;
+      button.textContent = "Saved";
+      button.disabled = true;
+      window.setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+      }, 1400);
+    });
+  });
+
+  const profileBirthdayInput = document.querySelector("[data-profile-birthday]");
+
+  if (profileBirthdayInput) {
+    const parseDateValue = (value) => {
+      const match = String(value || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!match) return null;
+      const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+      return Number.isNaN(date.getTime()) ? null : date;
+    };
+
+    const formatDateValue = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    const sameDate = (a, b) =>
+      a &&
+      b &&
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate();
+
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const calendar = document.createElement("div");
+    calendar.className = "profile-birthday-dialog";
+    calendar.hidden = true;
+    calendar.setAttribute("aria-hidden", "true");
+    calendar.innerHTML = `
+      <button type="button" class="profile-birthday-backdrop" data-profile-birthday-close aria-label="Close birthday calendar"></button>
+      <section class="profile-birthday-panel" role="dialog" aria-modal="true" aria-label="Choose birthday">
+        <div class="profile-birthday-head">
+          <button type="button" data-profile-birthday-prev aria-label="Previous month">&#8249;</button>
+          <div class="profile-birthday-selects">
+            <select data-profile-birthday-month aria-label="Select month"></select>
+            <select data-profile-birthday-year aria-label="Select year"></select>
+          </div>
+          <button type="button" data-profile-birthday-next aria-label="Next month">&#8250;</button>
+        </div>
+        <div class="profile-birthday-weekdays" aria-hidden="true">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="profile-birthday-days" role="grid" aria-label="Choose birthday"></div>
+        <div class="profile-birthday-actions">
+          <button type="button" data-profile-birthday-today>Today</button>
+          <button type="button" data-profile-birthday-close>Done</button>
+        </div>
+      </section>
+    `;
+    document.body.appendChild(calendar);
+
+    const monthSelect = calendar.querySelector("[data-profile-birthday-month]");
+    const yearSelect = calendar.querySelector("[data-profile-birthday-year]");
+    const days = calendar.querySelector(".profile-birthday-days");
+    let selectedDate = parseDateValue(profileBirthdayInput.value) || new Date(2001, 4, 6);
+    let viewYear = selectedDate.getFullYear();
+    let viewMonth = selectedDate.getMonth();
+
+    monthSelect?.replaceChildren(
+      ...monthNames.map((month, index) => {
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = month;
+        return option;
+      })
+    );
+
+    const currentYear = new Date().getFullYear();
+    const yearOptions = [];
+    for (let year = currentYear; year >= 1900; year -= 1) {
+      const option = document.createElement("option");
+      option.value = String(year);
+      option.textContent = String(year);
+      yearOptions.push(option);
+    }
+    yearSelect?.replaceChildren(...yearOptions);
+
+    const positionCalendar = () => {};
+
+    const renderBirthdayCalendar = () => {
+      if (monthSelect) monthSelect.value = String(viewMonth);
+      if (yearSelect) yearSelect.value = String(viewYear);
+      days.innerHTML = "";
+
+      const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+      const totalDays = new Date(viewYear, viewMonth + 1, 0).getDate();
+      const today = new Date();
+
+      for (let index = 0; index < firstDay; index += 1) {
+        days.appendChild(document.createElement("span"));
+      }
+
+      for (let day = 1; day <= totalDays; day += 1) {
+        const date = new Date(viewYear, viewMonth, day);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = String(day);
+        button.dataset.profileBirthdayDay = formatDateValue(date);
+        button.setAttribute("role", "gridcell");
+        button.classList.toggle("is-today", sameDate(date, today));
+        button.classList.toggle("is-selected", sameDate(date, selectedDate));
+        days.appendChild(button);
+      }
+
+      positionCalendar();
+    };
+
+    const closeBirthdayCalendar = ({ restoreFocus = false } = {}) => {
+      calendar.hidden = true;
+      calendar.setAttribute("aria-hidden", "true");
+      profileBirthdayInput.setAttribute("aria-expanded", "false");
+      document.body.classList.remove("is-profile-birthday-open");
+      if (restoreFocus) profileBirthdayInput.focus();
+    };
+
+    const openBirthdayCalendar = () => {
+      selectedDate = parseDateValue(profileBirthdayInput.value) || selectedDate;
+      viewYear = selectedDate.getFullYear();
+      viewMonth = selectedDate.getMonth();
+      calendar.hidden = false;
+      calendar.setAttribute("aria-hidden", "false");
+      profileBirthdayInput.setAttribute("aria-expanded", "true");
+      document.body.classList.add("is-profile-birthday-open");
+      renderBirthdayCalendar();
+      window.setTimeout(() => {
+        calendar.querySelector(".profile-birthday-days .is-selected")?.focus();
+      }, 0);
+    };
+
+    profileBirthdayInput.addEventListener("click", openBirthdayCalendar);
+    profileBirthdayInput.addEventListener("keydown", (event) => {
+      if (["Enter", " ", "ArrowDown"].includes(event.key)) {
+        event.preventDefault();
+        openBirthdayCalendar();
+      }
+    });
+
+    monthSelect?.addEventListener("change", () => {
+      viewMonth = Number(monthSelect.value);
+      renderBirthdayCalendar();
+    });
+
+    yearSelect?.addEventListener("change", () => {
+      viewYear = Number(yearSelect.value);
+      renderBirthdayCalendar();
+    });
+
+    calendar.addEventListener("click", (event) => {
+      if (event.target.closest("[data-profile-birthday-close]")) {
+        closeBirthdayCalendar({ restoreFocus: true });
+        return;
+      }
+
+      if (event.target.closest("[data-profile-birthday-prev]")) {
+        viewMonth -= 1;
+        if (viewMonth < 0) {
+          viewMonth = 11;
+          viewYear -= 1;
+        }
+        renderBirthdayCalendar();
+        return;
+      }
+
+      if (event.target.closest("[data-profile-birthday-next]")) {
+        viewMonth += 1;
+        if (viewMonth > 11) {
+          viewMonth = 0;
+          viewYear += 1;
+        }
+        renderBirthdayCalendar();
+        return;
+      }
+
+      if (event.target.closest("[data-profile-birthday-today]")) {
+        selectedDate = new Date();
+        profileBirthdayInput.value = formatDateValue(selectedDate);
+        closeBirthdayCalendar({ restoreFocus: true });
+        return;
+      }
+
+      const dayButton = event.target.closest("[data-profile-birthday-day]");
+      if (!dayButton) return;
+      selectedDate = parseDateValue(dayButton.dataset.profileBirthdayDay) || selectedDate;
+      profileBirthdayInput.value = formatDateValue(selectedDate);
+      closeBirthdayCalendar({ restoreFocus: true });
+    });
+
+    document.addEventListener("pointerdown", (event) => {
+      if (
+        calendar.hidden ||
+        event.target.closest(".profile-birthday-panel") ||
+        event.target === profileBirthdayInput
+      ) {
+        return;
+      }
+      closeBirthdayCalendar();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !calendar.hidden) {
+        closeBirthdayCalendar({ restoreFocus: true });
+      }
+    });
+
+    window.addEventListener("resize", positionCalendar);
+    window.addEventListener("scroll", positionCalendar, true);
+  }
 })();

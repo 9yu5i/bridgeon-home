@@ -1,0 +1,174 @@
+.saved-reel-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.saved-reel-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 360px;
+  border-radius: 18px;
+  background: #242424;
+  box-shadow: 0 8px 22px rgba(49, 19, 108, 0.16);
+}
+
+.saved-reel-card a,
+.saved-reel-media,
+.saved-reel-copy {
+  display: block;
+}
+
+.saved-reel-card a {
+  position: absolute;
+  inset: 0;
+  color: #fff;
+}
+
+.saved-reel-media {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.78)),
+    radial-gradient(circle at 30% 24%, rgba(255, 211, 230, 0.72), transparent 32%),
+    linear-gradient(135deg, #28272c, #5c5a62);
+}
+
+.saved-reel-card--food .saved-reel-media {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.78)),
+    radial-gradient(circle at 72% 24%, rgba(255, 202, 120, 0.75), transparent 32%),
+    linear-gradient(135deg, #2f3030, #536963);
+}
+
+.saved-reel-card--life .saved-reel-media {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.78)),
+    radial-gradient(circle at 34% 18%, rgba(186, 220, 255, 0.74), transparent 30%),
+    linear-gradient(135deg, #252831, #665d80);
+}
+
+.saved-reel-card--kpop .saved-reel-media {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.78)),
+    radial-gradient(circle at 66% 22%, rgba(190, 122, 255, 0.8), transparent 32%),
+    linear-gradient(135deg, #24242d, #49315f);
+}
+
+.saved-reel-card--trad .saved-reel-media {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.78)),
+    radial-gradient(circle at 66% 28%, rgba(198, 236, 205, 0.74), transparent 32%),
+    linear-gradient(135deg, #292929, #5b6657);
+}
+
+.saved-reel-media::before {
+  content: "img";
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 32px;
+  font-weight: 800;
+  transform: translate(-50%, -50%);
+}
+
+.saved-reel-media em {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  color: #fff;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.saved-reel-media em::before {
+  content: "";
+  display: inline-block;
+  width: 15px;
+  height: 10px;
+  margin-right: 5px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  vertical-align: -1px;
+}
+
+.saved-reel-copy {
+  position: absolute;
+  left: 20px;
+  right: 58px;
+  bottom: 22px;
+}
+
+.saved-reel-copy b {
+  display: block;
+  font-size: 21px;
+  line-height: 1.15;
+}
+
+.saved-reel-copy small {
+  display: block;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.saved-reel-card button {
+  position: absolute;
+  right: 18px;
+  bottom: 20px;
+  z-index: 2;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.saved-reel-card button:hover,
+.saved-reel-card button:focus-visible {
+  background: #eadcff;
+  transform: translateY(-2px);
+}
+
+.saved-reel-card button img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+@media (max-width: 1120px) {
+  .saved-reel-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .saved-reel-card {
+    min-height: clamp(270px, 72vw, 390px);
+    border-radius: 15px;
+  }
+
+  .saved-reel-copy {
+    left: 16px;
+    right: 52px;
+    bottom: 18px;
+  }
+
+  .saved-reel-copy b {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .saved-reel-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+}

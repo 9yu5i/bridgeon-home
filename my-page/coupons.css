@@ -11,7 +11,7 @@
   --coupons-soft: #faf7ff;
   --coupons-ticket: #f7f3ff;
   --coupons-line: #ded8e8;
-  padding: 58px 0 88px;
+  padding: clamp(72px, 4.8vw, 96px) 0 88px;
   background: #fff;
 }
 
@@ -58,7 +58,7 @@
 .coupons-head p {
   margin-top: 7px;
   color: #85808d;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.25;
   font-weight: 600;
 }
@@ -100,7 +100,7 @@
 
 .coupon-register p {
   margin-top: 6px;
-  color: #211b2c;
+  color: #e11867;
   font-size: 14px;
   line-height: 1.15;
   font-weight: 500;
@@ -109,11 +109,14 @@
 .coupon-register-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 190px;
+  align-items: center;
   gap: 18px;
+  position: relative;
 }
 
 .coupon-register-form input,
 .coupon-register-form button {
+  align-self: center;
   height: 39px;
   border: 0;
   border-radius: 4px;
@@ -129,8 +132,28 @@
 }
 
 .coupon-register-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: #fff;
   background: var(--coupons-purple);
+}
+
+.coupon-register-message {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  grid-column: 1 / -1;
+  min-height: 16px;
+  color: #e11867;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.coupon-register-message.is-success {
+  color: var(--coupons-purple);
 }
 
 .coupon-section {
@@ -167,6 +190,18 @@
   padding: 22px 30px 20px;
   border-radius: 9px;
   background: url("./coupons_img/coupon_big.png") center / 100% 100% no-repeat;
+}
+
+.coupon-ticket::after {
+  content: "";
+  position: absolute;
+  right: 42px;
+  bottom: 18px;
+  z-index: 0;
+  width: 54px;
+  height: 54px;
+  background: url("./coupons_img/tag.png") center / contain no-repeat;
+  pointer-events: none;
 }
 
 .coupon-ticket:has(.coupon-ticket-top > p) {
@@ -235,7 +270,7 @@
   color: #191420;
   font-size: 16px;
   line-height: 1.1;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .coupon-terms {
@@ -356,9 +391,9 @@
   }
 
   .coupon-register-icon {
-    width: 32px;
-    height: 32px;
-    background-size: 20px 20px;
+    width: 40px;
+    height: 40px;
+    background-size: 40px 40px;
   }
 
   .coupon-register h2 {
@@ -373,6 +408,7 @@
   .coupon-register-form {
     grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr) 112px;
+    align-items: center;
     gap: 9px;
     margin-top: 8px;
   }
@@ -386,6 +422,10 @@
 
   .coupon-register-form input {
     padding: 0 12px;
+  }
+
+  .coupon-register-message {
+    font-size: 11px;
   }
 
   .coupons-time-note {
@@ -412,6 +452,13 @@
     min-height: 143px;
     padding: 17px 22px 19px;
     border-radius: 8px;
+  }
+
+  .coupon-ticket::after {
+    right: 28px;
+    bottom: 14px;
+    width: 46px;
+    height: 46px;
   }
 
   .coupon-ticket-top {
@@ -459,7 +506,7 @@
   .coupon-register-icon {
     width: 42px;
     height: 42px;
-    background-size: 26px 26px;
+    background-size: 40px 40px;
   }
 
   .coupon-grid {

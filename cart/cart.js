@@ -12,6 +12,15 @@
   const promoAppliedMessage = document.querySelector("[data-cart-promo-applied-message]");
   const promoAppliedCode = document.querySelector("[data-cart-promo-applied-code]");
   const promoAppliedDiscount = document.querySelector("[data-cart-promo-applied-discount]");
+  const couponDialog = document.getElementById("cart-coupon-dialog");
+  const couponOpenButton = document.querySelector("[data-cart-coupon-open]");
+  const couponList = document.querySelector("[data-cart-coupon-list]");
+  const selectedCouponLabel = document.querySelector("[data-cart-selected-coupon]");
+  const couponSelected = document.querySelector("[data-cart-coupon-selected]");
+  const couponSelectedMessage = document.querySelector("[data-cart-coupon-selected-message]");
+  const couponSelectedCode = document.querySelector("[data-cart-coupon-selected-code]");
+  const couponSelectedDiscount = document.querySelector("[data-cart-coupon-selected-discount]");
+  const couponSelectedNote = document.querySelector("[data-cart-coupon-selected-note]");
   const cartSide = document.querySelector(".cart-side");
   const deleteSelected = document.querySelector("[data-cart-delete-selected]");
   const headingCount = document.querySelector("[data-cart-heading-count]");
@@ -21,6 +30,9 @@
   const summaryPromo = document.querySelector("[data-cart-summary-promo]");
   const summaryPromoLabel = document.querySelector("[data-cart-summary-promo-label]");
   const summaryPromoDiscount = document.querySelector("[data-cart-summary-promo-discount]");
+  const summaryCoupon = document.querySelector("[data-cart-summary-coupon]");
+  const summaryCouponLabel = document.querySelector("[data-cart-summary-coupon-label]");
+  const summaryCouponDiscount = document.querySelector("[data-cart-summary-coupon-discount]");
   const totalEl = document.querySelector("[data-cart-total]");
   const saveEl = document.querySelector("[data-cart-save]");
   const shippingProgress = document.querySelector("[data-cart-shipping-progress]");
@@ -31,7 +43,40 @@
     WELCOME10: 0.1,
     TEST20: 0.2,
   };
+  const OWNED_COUPONS = [
+    {
+      code: "WELCOME10",
+      badge: "WELCOME",
+      title: "10% OFF",
+      name: "Welcome coupon",
+      rate: 0.1,
+      min: 20,
+      max: 6,
+      expires: "2026-08-31",
+    },
+    {
+      code: "TEST20",
+      badge: "SPECIAL",
+      title: "20% OFF",
+      name: "Test coupon",
+      rate: 0.2,
+      min: 80,
+      max: 20,
+      expires: "2026-08-31",
+    },
+    {
+      code: "COUPONTEST",
+      badge: "SURPRISE",
+      title: "5% OFF",
+      name: "Surprise coupon",
+      rate: 0.05,
+      min: 30,
+      max: 10,
+      expires: "2026-07-16",
+    },
+  ];
   let activePromoCode = null;
+  let activeCouponCode = null;
   const selectedIds = new Set();
   let knownItemIds = new Set();
 
@@ -53,6 +98,97 @@
   };
 
   const getCartItems = () => cartApi.getItems();
+
+  const getSelectedSaleSubtotal = (items) =>
+    getSelectedItems(items).reduce((sum, item) => sum + parsePrice(item.price) * item.quantity, 0);
+
+  const getSelectedQuantity = (items) =>
+    getSelectedItems(items).reduce((sum, item) => sum + item.quantity, 0);
+
+  const getOwnedCoupon = (code) =>
+    OWNED_COUPONS.find((coupon) => coupon.code === String(code || "").toUpperCase());
+
+  const getCouponAvailability = (coupon, saleSubtotal, selectedCount) => {
+    if (!selectedCount) return { available: false, reason: "Select at least one item to use this coupon." };
+    if (saleSubtotal < coupon.min) {
+      return {
+        available: false,
+        reason: `Available with selected items over ${formatPrice(coupon.min)}.`,
+      };
+    }
+    return { available: true, reason: `Available now. Max discount ${formatPrice(coupon.max)}.` };
+  };
+
+  const getPromoDiscount = (code, saleSubtotal, selectedCount) => {
+    const rate = PROMO_CODES[String(code || "").toUpperCase()] || 0;
+    if (!rate || selectedCount <= 0) return 0;
+    return saleSubtotal * rate;
+  };
+
+  const getCouponDiscount = (code, saleSubtotal, selectedCount) => {
+    const coupon = getOwnedCoupon(code);
+    if (!coupon || selectedCount <= 0) return 0;
+    if (coupon && !getCouponAvailability(coupon, saleSubtotal, selectedCount).available) return 0;
+    const rawDiscount = saleSubtotal * (coupon.rate || 0);
+    return coupon?.max ? Math.min(rawDiscount, coupon.max) : rawDiscount;
+  };
+
+  const syncAvailableCouponButtons = () => {
+    const items = getCartItems();
+    const saleSubtotal = getSelectedSaleSubtotal(items);
+    const selectedCount = getSelectedQuantity(items);
+
+    document.querySelectorAll("[data-cart-apply-coupon]").forEach((button) => {
+      const code = String(button.dataset.cartApplyCoupon || "").toUpperCase();
+      const coupon = getOwnedCoupon(code);
+      const availability = coupon
+        ? getCouponAvailability(coupon, saleSubtotal, selectedCount)
+        : { available: false, reason: "" };
+      const isApplied = activeCouponCode === code;
+      const card = button.closest(".cart-owned-coupon");
+
+      button.classList.toggle("is-applied", isApplied);
+      button.textContent = isApplied ? "Applied" : "Use";
+      button.disabled = !availability.available;
+      card?.classList.toggle("is-unavailable", !availability.available);
+      card?.classList.toggle("is-applied", isApplied);
+    });
+
+    if (selectedCouponLabel) {
+      const selectedCoupon = getOwnedCoupon(activeCouponCode);
+      selectedCouponLabel.textContent = selectedCoupon
+        ? `${selectedCoupon.title} ${selectedCoupon.name}`
+        : "No coupon selected.";
+    }
+
+    if (couponOpenButton) {
+      couponOpenButton.textContent = activeCouponCode ? "Change Coupon" : "Select Coupon";
+    }
+
+    if (couponSelected) {
+      const selectedCoupon = getOwnedCoupon(activeCouponCode);
+      const couponDiscount = selectedCoupon ? getCouponDiscount(activeCouponCode, saleSubtotal, selectedCount) : 0;
+      const availability = selectedCoupon
+        ? getCouponAvailability(selectedCoupon, saleSubtotal, selectedCount)
+        : { available: false, reason: "" };
+
+      couponSelected.hidden = !selectedCoupon;
+      if (couponSelectedMessage) {
+        couponSelectedMessage.textContent = selectedCoupon
+          ? availability.available
+            ? "Coupon selected!"
+            : "Coupon selected, condition not met."
+          : "Coupon selected!";
+      }
+      if (couponSelectedCode) {
+        couponSelectedCode.textContent = selectedCoupon
+          ? `${selectedCoupon.title} ${selectedCoupon.name}`
+          : "Coupon";
+      }
+      if (couponSelectedDiscount) couponSelectedDiscount.textContent = `- ${formatPrice(couponDiscount)}`;
+      if (couponSelectedNote) couponSelectedNote.textContent = selectedCoupon ? availability.reason : "";
+    }
+  };
 
   const getItemCount = (items) =>
     items.reduce((sum, item) => sum + item.quantity, 0);
@@ -177,12 +313,14 @@
       return sum + Math.max(originalPrice, salePrice) * item.quantity;
     }, 0);
     const productDiscount = Math.max(0, regularSubtotal - saleSubtotal);
-    const promoRate = activePromoCode ? PROMO_CODES[activePromoCode] || 0 : 0;
-    const promoDiscount = selectedCount > 0 ? saleSubtotal * promoRate : 0;
-    const total = Math.max(0, saleSubtotal - promoDiscount);
+    const promoDiscount = activePromoCode ? getPromoDiscount(activePromoCode, saleSubtotal, selectedCount) : 0;
+    const couponDiscount = activeCouponCode ? getCouponDiscount(activeCouponCode, saleSubtotal, selectedCount) : 0;
+    const total = Math.max(0, saleSubtotal - promoDiscount - couponDiscount);
     const productDiscountText = `- ${formatPrice(productDiscount)}`;
     const promoDiscountText = `- ${formatPrice(promoDiscount)}`;
+    const couponDiscountText = `- ${formatPrice(couponDiscount)}`;
     const hasPromo = Boolean(activePromoCode && promoDiscount > 0);
+    const hasCoupon = Boolean(activeCouponCode && couponDiscount > 0);
 
     if (headingCount) headingCount.textContent = `(${cartCount})`;
     if (summaryCount) summaryCount.textContent = `(${selectedCount} item${selectedCount === 1 ? "" : "s"})`;
@@ -193,8 +331,14 @@
     if (summaryPromoDiscount) summaryPromoDiscount.textContent = promoDiscountText;
     if (promoAppliedCode) promoAppliedCode.textContent = activePromoCode ? `Promo code (${activePromoCode})` : "Promo code";
     if (promoAppliedDiscount) promoAppliedDiscount.textContent = promoDiscountText;
+    if (summaryCoupon) summaryCoupon.hidden = !hasCoupon;
+    if (summaryCouponLabel) {
+      const selectedCoupon = getOwnedCoupon(activeCouponCode);
+      summaryCouponLabel.textContent = selectedCoupon ? `Coupon (${selectedCoupon.title})` : "Coupon";
+    }
+    if (summaryCouponDiscount) summaryCouponDiscount.textContent = couponDiscountText;
     if (totalEl) totalEl.textContent = formatPrice(total);
-    if (saveEl) saveEl.textContent = formatPrice(productDiscount + promoDiscount);
+    if (saveEl) saveEl.textContent = formatPrice(productDiscount + promoDiscount + couponDiscount);
 
     if (shippingProgress) {
       const progressValue = Math.min(saleSubtotal, FREE_SHIPPING_THRESHOLD);
@@ -215,6 +359,8 @@
         ? `You've unlocked <b>FREE</b> shipping!`
         : `You're ${formatPrice(remaining)} away from <b>FREE</b> shipping!`;
     }
+
+    syncAvailableCouponButtons();
   };
 
   const renderCart = () => {
@@ -229,6 +375,7 @@
     if (cartSide) cartSide.hidden = isEmpty;
     if (deleteSelected) deleteSelected.hidden = isEmpty;
     updateTotals(items);
+    if (couponDialog && !couponDialog.hidden) renderCouponList();
     cartApi.updateBadges();
     syncSelectAll();
   };
@@ -351,6 +498,79 @@
     if (promoApplied) promoApplied.hidden = true;
     if (promoError) promoError.hidden = true;
     renderCart();
+  });
+
+  const renderCouponList = () => {
+    if (!couponList) return;
+    const items = getCartItems();
+    const saleSubtotal = getSelectedSaleSubtotal(items);
+    const selectedCount = getSelectedQuantity(items);
+
+    couponList.innerHTML = OWNED_COUPONS.map((coupon) => {
+      const availability = getCouponAvailability(coupon, saleSubtotal, selectedCount);
+      const isApplied = activeCouponCode === coupon.code;
+      return `
+        <article class="cart-owned-coupon${availability.available ? "" : " is-unavailable"}${isApplied ? " is-applied" : ""}">
+          <div>
+            <span>${escapeHtml(coupon.badge)}</span>
+            <h3>${escapeHtml(coupon.title)}</h3>
+            <p>${escapeHtml(coupon.name)}</p>
+            <small>Min. purchase ${formatPrice(coupon.min)} | Max discount ${formatPrice(coupon.max)}<br>Expires ${escapeHtml(coupon.expires)}</small>
+            <small>${escapeHtml(availability.reason)}</small>
+          </div>
+          <button type="button" data-cart-apply-coupon="${escapeHtml(coupon.code)}"${availability.available ? "" : " disabled"}>${isApplied ? "Applied" : "Use"}</button>
+        </article>
+      `;
+    }).join("");
+
+    syncAvailableCouponButtons();
+  };
+
+  const openCouponDialog = () => {
+    if (!couponDialog) return;
+    renderCouponList();
+    couponDialog.hidden = false;
+    couponDialog.setAttribute("aria-hidden", "false");
+    document.body.classList.add("is-cart-coupon-open");
+    couponDialog.querySelector(".cart-coupon-close")?.focus();
+  };
+
+  const closeCouponDialog = () => {
+    if (!couponDialog) return;
+    couponDialog.hidden = true;
+    couponDialog.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-cart-coupon-open");
+    couponOpenButton?.focus();
+  };
+
+  couponOpenButton?.addEventListener("click", openCouponDialog);
+
+  couponDialog?.querySelectorAll("[data-cart-coupon-close]").forEach((button) => {
+    button.addEventListener("click", closeCouponDialog);
+  });
+
+  couponList?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-cart-apply-coupon]");
+    if (!button || button.disabled) return;
+
+    const value = String(button.dataset.cartApplyCoupon || "").toUpperCase();
+    if (!getOwnedCoupon(value)) return;
+
+    activeCouponCode = value;
+    renderCart();
+    renderCouponList();
+    closeCouponDialog();
+  });
+
+  document.querySelector("[data-cart-coupon-remove]")?.addEventListener("click", () => {
+    activeCouponCode = null;
+    renderCart();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && couponDialog && !couponDialog.hidden) {
+      closeCouponDialog();
+    }
   });
 
   window.addEventListener("bridgeon:cartchange", renderCart);

@@ -368,7 +368,7 @@
   grid-column: 2;
   grid-row: 2;
   width: 100%;
-  max-width: 520px;
+  max-width: 570px;
   min-height: 98px;
   margin-top: 20px;
   padding: 16px 28px 14px;
@@ -381,7 +381,7 @@
   grid-column: 2;
   grid-row: 3;
   width: 100%;
-  max-width: 520px;
+  max-width: 570px;
   color: #fff;
   text-align: center;
   font-size: 14px;
@@ -534,10 +534,10 @@
 .mypage-tier-labels,
 .mypage-progress-row {
   display: grid;
-  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  grid-template-columns: 32px minmax(240px, 1fr) 32px;
   align-items: center;
   justify-items: center;
-  column-gap: 14px;
+  column-gap: 4px;
 }
 
 .mypage-tier-labels {
@@ -549,13 +549,26 @@
 .mypage-tier-labels span {
   display: grid;
   place-items: center;
-  min-width: 32px;
+  width: 32px;
   text-align: center;
   line-height: 1;
 }
 
+.mypage-tier-labels span:first-child {
+  transform: translateX(8px);
+}
+
 .mypage-tier-labels span:last-child {
   grid-column: 3;
+  transform: translateX(-8px);
+}
+
+.mypage-medal--silver {
+  transform: translateX(8px);
+}
+
+.mypage-medal--gold {
+  transform: translateX(-8px);
 }
 
 .mypage-medal {
@@ -803,7 +816,9 @@
   line-clamp: 2;
   overflow: hidden;
   margin: 6px 0 0;
+  min-height: 2.24em;
   color: #171320;
+  background: #fff;
   font-size: 14px;
   line-height: 1.12;
   font-weight: 600;
@@ -1469,12 +1484,22 @@ body.is-mypage-avatar-open {
 
   .mypage-tier-labels,
   .mypage-progress-row {
-    grid-template-columns: max-content minmax(0, 1fr) max-content;
-    column-gap: 13px;
+    grid-template-columns: 34px minmax(0, 1fr) 34px;
+    column-gap: 5px;
   }
 
   .mypage-tier-labels span {
-    min-width: 30px;
+    width: 34px;
+  }
+
+  .mypage-tier-labels span:first-child,
+  .mypage-medal--silver {
+    transform: translateX(6px);
+  }
+
+  .mypage-tier-labels span:last-child,
+  .mypage-medal--gold {
+    transform: translateX(-6px);
   }
 
   .mypage-medal {

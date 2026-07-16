@@ -28,13 +28,29 @@
     z-index: 2;
     width: 34px;
     height: 34px;
+    color: #fff;
   }
 
   .mobile-menu img {
-    display: block;
+    display: none;
     width: 24px;
     height: 24px;
     object-fit: contain;
+  }
+
+  .mobile-menu::before {
+    content: "";
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-left: 3px solid currentColor;
+    border-bottom: 3px solid currentColor;
+    transform: translateX(4px) rotate(45deg);
+  }
+
+  .home-page .header-main > .mobile-menu {
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .header-main {
@@ -573,7 +589,7 @@
     z-index: 20;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    height: 50px;
+    height: 60px;
     border-top: 1px solid #d6d0df;
     background: #fff;
     box-shadow: 0 -8px 22px rgba(23, 16, 38, 0.08);
@@ -600,7 +616,7 @@
 
   .bottom-nav .cart-link b {
     position: absolute;
-    top: 8px;
+    top: 5px;
     right: calc(50% - 16px);
     display: grid;
     place-items: center;

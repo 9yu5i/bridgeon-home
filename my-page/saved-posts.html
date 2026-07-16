@@ -3,27 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Cart | BridgeOn</title>
+    <title>Saved Posts | BridgeOn</title>
     <link rel="stylesheet" href="../reset.css" />
     <link rel="stylesheet" href="../font.css" />
     <link rel="stylesheet" href="../common.css" />
     <link rel="stylesheet" href="../styles.css" />
-    <link rel="stylesheet" href="./cart.css" />
+    <link rel="stylesheet" href="./my-page.css" />
+    <link rel="stylesheet" href="./account-collections.css" />
+    <link rel="stylesheet" href="./saved-posts.css" />
   </head>
-  <body class="cart-page is-cart-empty">
-    <header class="site-header cart-site-header">
-      <div class="cart-mobile-header mobile-only" aria-label="Cart mobile header">
-        <button type="button" class="cart-mobile-back" data-cart-back aria-label="Go back">&larr;</button>
-        <strong>Cart</strong>
-        <div class="cart-mobile-actions">
-          <button type="button" aria-label="Account">
-            <img src="../img/main-img/top_banner_my.png" alt="" aria-hidden="true">
+  <body class="my-page my-saved-posts-page">
+    <header class="site-header mypage-site-header">
+      <div class="mypage-mobile-header mobile-only" aria-label="My Page mobile header">
+        <button type="button" class="mypage-mobile-back" aria-label="Go back">&larr;</button>
+        <a class="logo mypage-mobile-logo" href="../index.html" aria-label="BridgeOn home">Bridge<span>On</span></a>
+        <div class="mypage-mobile-actions">
+          <button type="button" data-mobile-search-open aria-label="Open search">
+            <img src="../product-detail/common_img/search.png" alt="" aria-hidden="true">
           </button>
-          <a href="./cart.html" aria-label="Cart">
+          <a href="../cart/cart.html" class="cart-icon-button" aria-label="Cart, 3 items">
             <img src="../product-detail/common_img/cart.png" alt="" aria-hidden="true">
+            <span class="cart-badge" aria-hidden="true">3</span>
           </a>
         </div>
       </div>
+
+      <div class="promo-bar">
+        <div class="promo-inner">
+          <span><img src="../img/main-img/top_banner_lefticon.png" alt="lefticon">Free Shipping Over US$nn</span>
+          <span><img src="../img/main-img/top_banner_righticon.png" alt="righticon">Ships From Korea</span>
+          <span class="desktop-only">English / USD &#8744; </span>
+        </div>
+      </div>
+
       <div class="header-main">
         <button type="button" class="icon-button mobile-menu mobile-only" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false" aria-label="Open menu">
           <img src="../img/mobile-icon/menu/hamburger_mobile.png" alt="" aria-hidden="true">
@@ -37,13 +49,13 @@
           </button>
         </form>
         <div class="header-actions">
-          <button class="icon-button" aria-label="Account">
-           <img src="../img/main-img/top_banner_my.png" alt="mypage">
-          </button>
-          <a class="icon-button desktop-icon" aria-label="Wishlist" href="../my-page/wishlist.html">
+          <a class="icon-button" aria-label="Account" href="./my-page.html">
+            <img src="../img/main-img/top_banner_my.png" alt="mypage">
+          </a>
+          <a class="icon-button desktop-icon" aria-label="Wishlist" href="./wishlist.html">
             <img src="../img/main-img/top_banner_wish.png" alt="wishlist">
           </a>
-          <a class="icon-button cart-icon-button" aria-label="Cart, 3 items" href="./cart.html">
+          <a class="icon-button cart-icon-button" aria-label="Cart, 3 items" href="../cart/cart.html">
             <img src="../img/main-img/top_banner_cart.png" alt="cart">
             <span class="cart-badge" aria-hidden="true">3</span>
           </a>
@@ -95,7 +107,6 @@
               <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
               <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
               <button type="button"><span class="recent-icon" aria-hidden="true"></span>collagen mask<span aria-hidden="true">&times;</span></button>
-              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
             </div>
           </div>
           <div class="search-panel-section" data-search-panel="trending" role="tabpanel" hidden>
@@ -394,16 +405,16 @@
         </div>
       </div>
 
-      <aside class="mobile-menu-panel" id="mobile-menu-panel" aria-hidden="true" aria-label="Mobile menu">
+      <div class="mobile-menu-panel" id="mobile-menu-panel" aria-hidden="true">
         <div class="mobile-menu-header">
           <strong class="mobile-menu-title">MENU</strong>
           <button type="button" class="mobile-menu-close" aria-label="Close menu"></button>
         </div>
-        <nav class="mobile-menu-list" aria-label="Mobile categories">
+        <nav class="mobile-menu-list" aria-label="Mobile menu">
           <a href="#" data-mobile-submenu-open="categories">Categories<span aria-hidden="true">&gt;</span></a>
           <a href="#">Brand</a>
-          <a href="#">Best Seller</a>
-          <a href="#">Time Deal</a>
+          <a href="../listing/best.html">Best Seller</a>
+          <a href="../timedeal/timedeal.html">Time Deal</a>
           <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
         </nav>
         <section class="mobile-submenu-panel" aria-hidden="true" aria-label="Secondary categories">
@@ -414,11 +425,11 @@
             </button>
           </div>
           <nav class="mobile-submenu-list" aria-label="Second level categories">
-            <a href="../listing/beauty.html" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
-            <a href="../listing/k-food.html" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
-            <a href="../listing/lifestyle.html" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
-            <a href="../listing/k-pop.html" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
-            <a href="../listing/k-traditional.html" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
             <a href="#" data-mobile-third-open="time-deal">Time Deal</a>
             <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
           </nav>
@@ -453,185 +464,115 @@
             <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1M6 18h-1a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h1v6Zm12 0h1a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-1v6Zm0 0c0 2-1.6 3-4 3h-2" /></svg></span>
             Support
           </a>
-          <a href="#">
+          <a href="./my-page.html">
             <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm8 8a8 8 0 0 0-16 0" /></svg></span>
             My
           </a>
-          <a href="#">
-            <span><img src="../img/Menu/signin.png" alt="signin"></span>
-            Sign In
-          </a>
+          <a href="#"><span><img src="../img/Menu/signin.png" alt="" aria-hidden="true"></span>Sign In</a>
         </div>
         <div class="mobile-menu-social" aria-label="Social links">
-          <a href="#" aria-label="Instagram"><img src="../img/mobile-icon/menu/insta.png" alt="" aria-hidden="true"></a>
-          <a href="#" aria-label="Facebook"><img src="../img/mobile-icon/menu/facebook.png" alt="" aria-hidden="true"></a>
-          <a href="#" aria-label="YouTube"><img src="../img/mobile-icon/menu/youtube.png" alt="" aria-hidden="true"></a>
-          <a href="#" aria-label="Twitter"><img src="../img/mobile-icon/menu/twitter.png" alt="" aria-hidden="true"></a>
+          <a href="#"><img src="../img/mobile-icon/menu/insta.png" alt="Instagram"></a>
+          <a href="#"><img src="../img/mobile-icon/menu/facebook.png" alt="Facebook"></a>
+          <a href="#"><img src="../img/mobile-icon/menu/youtube.png" alt="YouTube"></a>
+          <a href="#"><img src="../img/mobile-icon/menu/twitter.png" alt="X"></a>
         </div>
-      </aside>
+      </div>
     </header>
 
-    <main class="cart-main">
-      <div class="cart-shell">
-        <section class="cart-heading">
-          <div>
-            <h1>YOUR CART <span data-cart-heading-count>(0)</span></h1>
-            <p>Review your item and proceed to checkout.</p>
-          </div>
-          <a class="cart-continue desktop-only" href="../listing/best.html">Continue Shopping -&gt;</a>
-        </section>
+    <main class="saved-page-main account-collection-main" aria-labelledby="saved-page-title">
+      <div class="account-collection-shell">
+        <aside class="account-collection-sidebar desktop-only" aria-label="My account menu">
+          <nav class="mypage-side-card">
+            <a href="./my-page.html"><span class="mypage-side-icon mypage-side-icon--dashboard" aria-hidden="true"></span>My Dashboard</a>
+            <a href="./profile.html"><span class="mypage-side-icon mypage-side-icon--profile" aria-hidden="true"></span>Profile</a>
+            <a href="./orders.html"><span class="mypage-side-icon mypage-side-icon--orders" aria-hidden="true"></span>Orders</a>
+            <a href="./reviews.html"><span class="mypage-side-icon mypage-side-icon--review" aria-hidden="true"></span>My Reviews</a>
+            <a href="./wishlist.html"><span class="mypage-side-icon mypage-side-icon--wishlist" aria-hidden="true"></span>Wishlist</a>
+            <a href="./coupons.html"><span class="mypage-side-icon mypage-side-icon--coupons" aria-hidden="true"></span>Coupons</a>
+            <a class="is-active" href="./saved-posts.html" aria-current="page"><span class="mypage-side-icon mypage-side-icon--saved" aria-hidden="true"></span>Saved posts</a>
+            <a href="./membership.html"><span class="mypage-side-icon mypage-side-icon--membership" aria-hidden="true"></span>Membership</a>
+            <a href="./points.html"><span class="mypage-side-icon mypage-side-icon--points" aria-hidden="true"></span>Points</a>
+            <a href="#"><span class="mypage-side-icon mypage-side-icon--help" aria-hidden="true"></span>Help Center</a>
+            <a href="#"><span class="mypage-side-icon mypage-side-icon--logout" aria-hidden="true"></span>Log Out</a>
+          </nav>
+          <article class="mypage-invite mypage-invite--desktop">
+            <h2>Invite Friends<br>&amp; Get Rewards!</h2>
+            <p>Share the love.<br>Earn exclusive rewards together.</p>
+            <button type="button">INVITE NOW</button>
+          </article>
+        </aside>
 
-        <section class="cart-shipping" aria-label="Shipping destination and free shipping progress">
-          <div class="cart-ship-destination">
-            <span aria-hidden="true"><img src="img/box.png" alt=""></span>
-            <p data-cart-ship-country>Shipping to United States</p>
-            <button type="button" data-cart-ship-change aria-haspopup="dialog" aria-controls="cart-country-dialog">Change</button>
-          </div>
-          <div class="cart-free-shipping">
+        <section class="account-collection-content saved-content">
+          <header class="account-collection-head">
             <div>
-              <p data-cart-shipping-message>You're US$0.00 away from <b>FREE</b> shipping!</p>
-              <span>FREE shipping <img src="img/shipping.png" alt="" aria-hidden="true"></span>
+              <h1 id="saved-page-title">Saved Posts</h1>
+              <p>Real Trend videos you saved are collected here.</p>
             </div>
-            <div class="cart-shipping-meter" aria-hidden="true">
-              <span data-cart-shipping-meter></span>
-            </div>
-            <progress value="0" max="100" aria-label="Free shipping progress" data-cart-shipping-progress></progress>
-          </div>
-        </section>
+            <strong>42 reels</strong>
+          </header>
 
-        <div class="cart-content">
-          <section class="cart-items-card" aria-label="Cart items">
-            <div class="cart-items-head">
-              <label><input type="checkbox" data-cart-select-all> Select All</label>
-              <span>Price</span>
-              <span>Quantity</span>
-              <span>Total</span>
-            </div>
-            <div class="cart-item-list" data-cart-items></div>
-            <p class="cart-empty-message" data-cart-empty>Your cart is empty.</p>
+          <div class="account-collection-tabs" role="list" aria-label="Saved post categories">
+            <button class="is-active" type="button" data-account-filter="all" aria-pressed="true">All</button>
+            <button type="button" data-account-filter="beauty" aria-pressed="false">Beauty</button>
+            <button type="button" data-account-filter="k-food" aria-pressed="false">K-Food</button>
+            <button type="button" data-account-filter="lifestyle" aria-pressed="false">Lifestyle</button>
+            <button type="button" data-account-filter="k-pop" aria-pressed="false">K-pop</button>
+            <button type="button" data-account-filter="k-traditional" aria-pressed="false">K-Traditional</button>
+          </div>
+
+          <section class="saved-reel-grid" aria-label="Saved Real Trend videos">
+            <article class="saved-reel-card saved-reel-card--beauty" data-account-category="beauty">
+              <a href="../realtrend/realtrend.html" aria-label="Open saved reel Glass Skin Secret">
+                <span class="saved-reel-media"><em>33.3K</em></span>
+                <span class="saved-reel-copy"><b>Glass Skin Secret</b><small>Beauty - Anua Heartleaf Pore Control</small></span>
+              </a>
+              <button type="button" aria-label="Remove saved reel"><img src="./img/saved_hover.png" alt="" aria-hidden="true"></button>
+            </article>
+            <article class="saved-reel-card saved-reel-card--food" data-account-category="k-food">
+              <a href="../realtrend/realtrend.html" aria-label="Open saved reel K Snack Picks">
+                <span class="saved-reel-media"><em>12.8K</em></span>
+                <span class="saved-reel-copy"><b>K Snack Picks</b><small>K-Food - Sweet and salty trends</small></span>
+              </a>
+              <button type="button" aria-label="Remove saved reel"><img src="./img/saved_hover.png" alt="" aria-hidden="true"></button>
+            </article>
+            <article class="saved-reel-card saved-reel-card--life" data-account-category="lifestyle">
+              <a href="../realtrend/realtrend.html" aria-label="Open saved reel Desk Setup Finds">
+                <span class="saved-reel-media"><em>8.4K</em></span>
+                <span class="saved-reel-copy"><b>Desk Setup Finds</b><small>Lifestyle - Stationery and decor</small></span>
+              </a>
+              <button type="button" aria-label="Remove saved reel"><img src="./img/saved_hover.png" alt="" aria-hidden="true"></button>
+            </article>
+            <article class="saved-reel-card saved-reel-card--kpop" data-account-category="k-pop">
+              <a href="../realtrend/realtrend.html" aria-label="Open saved reel K-pop Goods Haul">
+                <span class="saved-reel-media"><em>22.1K</em></span>
+                <span class="saved-reel-copy"><b>K-pop Goods Haul</b><small>K-pop - Albums and photobooks</small></span>
+              </a>
+              <button type="button" aria-label="Remove saved reel"><img src="./img/saved_hover.png" alt="" aria-hidden="true"></button>
+            </article>
+            <article class="saved-reel-card saved-reel-card--trad" data-account-category="k-traditional">
+              <a href="../realtrend/realtrend.html" aria-label="Open saved reel Hanok Gift Ideas">
+                <span class="saved-reel-media"><em>7.2K</em></span>
+                <span class="saved-reel-copy"><b>Hanok Gift Ideas</b><small>K-Traditional - Home and decor</small></span>
+              </a>
+              <button type="button" aria-label="Remove saved reel"><img src="./img/saved_hover.png" alt="" aria-hidden="true"></button>
+            </article>
+            <article class="saved-reel-card saved-reel-card--beauty" data-account-category="beauty">
+              <a href="../realtrend/realtrend.html" aria-label="Open saved reel Capsule Cream Review">
+                <span class="saved-reel-media"><em>5.2K</em></span>
+                <span class="saved-reel-copy"><b>Capsule Cream Review</b><small>Beauty - Hydration routine</small></span>
+              </a>
+              <button type="button" aria-label="Remove saved reel"><img src="./img/saved_hover.png" alt="" aria-hidden="true"></button>
+            </article>
           </section>
-
-          <button type="button" class="cart-delete-selected" data-cart-delete-selected hidden><img src="img/delete.png" alt="" aria-hidden="true">Delete Selected</button>
-
-          <aside class="cart-side" hidden>
-            <section class="cart-promo-card">
-              <h2>PROMO CODE</h2>
-              <form data-cart-promo-form>
-                <label class="sr-only" for="cart-promo-code">Promo code</label>
-                <input id="cart-promo-code" type="text" placeholder="Enter promo code">
-                <button type="submit">Apply</button>
-              </form>
-              <p class="cart-promo-message cart-promo-message--error" data-cart-promo-error aria-live="polite" hidden>Invalid promo code. Please check and try again.</p>
-              <div class="cart-promo-applied" hidden>
-                <p><img class="cart-promo-check-icon" src="img/check.png" alt="" aria-hidden="true"> <span data-cart-promo-applied-message>Promo code applied!</span> <button type="button" data-cart-promo-remove aria-label="Remove promo code">&times;</button></p>
-                <p><span data-cart-promo-applied-code>Promo code</span> <strong data-cart-promo-applied-discount>- US$0.00</strong></p>
-              </div>
-            </section>
-
-            <section class="cart-coupon-card" aria-labelledby="cart-coupon-title">
-              <div class="cart-coupon-head">
-                <div>
-                  <h2 id="cart-coupon-title">COUPON</h2>
-                  <p data-cart-selected-coupon>No coupon selected.</p>
-                </div>
-              </div>
-              <div class="cart-coupon-selected" data-cart-coupon-selected hidden>
-                <p><img class="cart-promo-check-icon" src="img/check.png" alt="" aria-hidden="true"> <span data-cart-coupon-selected-message>Coupon selected!</span> <button type="button" data-cart-coupon-remove aria-label="Remove selected coupon">&times;</button></p>
-                <p><span data-cart-coupon-selected-code>Coupon</span> <strong data-cart-coupon-selected-discount>- US$0.00</strong></p>
-                <small data-cart-coupon-selected-note></small>
-              </div>
-              <button type="button" class="cart-coupon-select-button" data-cart-coupon-open>Select Coupon</button>
-            </section>
-
-            <section class="cart-summary-card">
-              <h2>ORDER SUMMARY</h2>
-              <dl>
-                <div><dt>Subtotal <span data-cart-summary-count>(0 items)</span></dt><dd data-cart-subtotal>US$0.00</dd></div>
-                <div><dt>Discount</dt><dd class="cart-discount" data-cart-discount>- US$0.00</dd></div>
-                <div class="cart-summary-promo" data-cart-summary-promo hidden><dt data-cart-summary-promo-label>Promo code</dt><dd data-cart-summary-promo-discount>- US$0.00</dd></div>
-                <div class="cart-summary-coupon" data-cart-summary-coupon hidden><dt data-cart-summary-coupon-label>Coupon</dt><dd data-cart-summary-coupon-discount>- US$0.00</dd></div>
-                <div><dt>Shipping </dt><dd class="cart-free">FREE</dd></div>
-                <div class="cart-taxes-row">
-                  <dt>
-                    Estimated Taxes
-                    <span class="cart-info-wrap">
-                      <button type="button" class="cart-info-button" aria-label="About estimated taxes">i</button>
-                      <span class="cart-summary-tooltip" role="note">The final amount will be charged in USD. Your payment amount may vary slightly due to exchange rates and payment provider policies.</span>
-                    </span>
-                  </dt>
-                  <dd class="cart-customs">Charged at customs</dd>
-                </div>
-                <div class="cart-summary-total"><dt>Total</dt><dd data-cart-total>US$0.00</dd></div>
-              </dl>
-              <p class="cart-save"><img src="img/promo.png" alt="" aria-hidden="true"> You save <strong data-cart-save>US$0.00</strong></p>
-              <button type="button" class="cart-checkout">PROCEED TO CHECKOUT -&gt;</button>
-              <span class="cart-or">- OR -</span>
-              <button type="button" class="cart-paypal" aria-label="PayPal">
-                <img src="img/paypal.png" alt="">
-              </button>
-              <small><img src="img/secure.png" alt="" aria-hidden="true">Secure Checkout</small>
-            </section>
-          </aside>
-
-        <section class="cart-recommendations" aria-label="Recommended products">
-          <h2>You May Also Love</h2>
-          <div class="cart-rec-list">
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Celimax</p><h3>Retinal Shot Tightening Booster 15ml</h3><strong>US$18.48</strong></article>
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Celimax</p><h3>Noni Ampoule Calming Gel Cream 50ml</h3><strong>US$21.20</strong></article>
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Anua</p><h3>Heartleaf Pore Control Cleansing Oil</h3><strong>US$18.40</strong></article>
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>numbuzin</p><h3>No.3 Skin Softening Serum 50ml</h3><strong>US$22.00</strong></article>
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>medicube</p><h3>PDRN Pink Peptide Serum 50ml</h3><strong>US$22.00</strong></article>
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>rom&amp;nd</p><h3>The Juicy Lasting Tint</h3><strong>US$12.80</strong></article>
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Beauty of Joseon</p><h3>Relief Sun Rice + Probiotics SPF50+</h3><strong>US$15.90</strong></article>
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Torriden</p><h3>Dive-In Low Molecular Hyaluronic Serum</h3><strong>US$17.50</strong></article>
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Round Lab</p><h3>Birch Juice Moisturizing Sunscreen</h3><strong>US$19.30</strong></article>
-            <article class="cart-rec-card"><button type="button" aria-label="Add product">+</button><span class="cart-rec-img"></span><p>Mixsoon</p><h3>Bean Essence 50ml</h3><strong>US$24.00</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>Celimax</p><h3>Retinal Shot Tightening Booster 15ml</h3><strong>US$18.48</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>Celimax</p><h3>Noni Ampoule Calming Gel Cream 50ml</h3><strong>US$21.20</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>Anua</p><h3>Heartleaf Pore Control Cleansing Oil</h3><strong>US$18.40</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>numbuzin</p><h3>No.3 Skin Softening Serum 50ml</h3><strong>US$22.00</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>medicube</p><h3>PDRN Pink Peptide Serum 50ml</h3><strong>US$22.00</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>rom&amp;nd</p><h3>The Juicy Lasting Tint</h3><strong>US$12.80</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>Beauty of Joseon</p><h3>Relief Sun Rice + Probiotics SPF50+</h3><strong>US$15.90</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>Torriden</p><h3>Dive-In Low Molecular Hyaluronic Serum</h3><strong>US$17.50</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>Round Lab</p><h3>Birch Juice Moisturizing Sunscreen</h3><strong>US$19.30</strong></article>
-            <article class="cart-rec-card cart-rec-card--clone" aria-hidden="true"><button type="button" aria-label="Add product" tabindex="-1">+</button><span class="cart-rec-img"></span><p>Mixsoon</p><h3>Bean Essence 50ml</h3><strong>US$24.00</strong></article>
-          </div>
-        </section>
-
-        </div>
-
-        <section class="newsletter cart-newsletter">
-          <div>
-            <h2>Be the first to know</h2>
-            <p>Get trend updates, exclusive offers, and more!</p>
-          </div>
-          <form>
-            <label class="sr-only" for="newsletter-email">Email</label>
-            <input id="newsletter-email" type="email" placeholder="Enter Your Email" />
-            <button type="submit">SUBSCRIBE</button>
-          </form>
         </section>
       </div>
     </main>
-
-    <div class="cart-coupon-dialog" id="cart-coupon-dialog" hidden aria-hidden="true">
-      <button type="button" class="cart-coupon-backdrop" data-cart-coupon-close aria-label="Close coupon list"></button>
-      <section class="cart-coupon-modal" role="dialog" aria-modal="true" aria-labelledby="cart-coupon-dialog-title">
-        <button type="button" class="cart-coupon-close" data-cart-coupon-close aria-label="Close coupon list">&times;</button>
-        <div class="cart-coupon-modal-head">
-          <h2 id="cart-coupon-dialog-title">Select Coupon</h2>
-          <p>Only coupons that match the selected cart items can be used.</p>
-        </div>
-        <div class="cart-coupon-list" data-cart-coupon-list></div>
-      </section>
-    </div>
-  <footer class="site-footer">
+    <footer class="site-footer">
       <div class="footer-main">
         <a class="logo footer-logo" href="../index.html">Bridge<span>On</span></a>
         <div class="footer-group">
           <button class="footer-toggle" type="button">MY ACCOUNT</button>
-          <div class="footer-links"><a href="#">My Dashboard</a><a href="#">Orders</a><a href="#">Wishlist</a><a href="#">My Reviews</a></div>
+          <div class="footer-links"><a href="./my-page.html">My Dashboard</a><a href="./orders.html">Orders</a><a href="./wishlist.html">Wishlist</a><a href="./reviews.html">My Reviews</a></div>
         </div>
         <div class="footer-group">
           <button class="footer-toggle" type="button">CUSTOMER CARE</button>
@@ -650,8 +591,23 @@
         <div><strong>Payment Method</strong><span>PayPal</span><span>VISA</span><span>Master</span><span>AMEX</span><span>Alipay</span></div>
         <div><strong>Delivery Method</strong><span>FedEx</span><span>DHL</span><span>aramex</span><span>EMS</span><span>parcel</span></div>
       </div>
-      <p class="copyright">&copy; 2025 Bridge on, Inc. All rights reserved.</p>
+      <p class="copyright">&copy; 2025 Bridge on, Inc. All rights reserved.<br>COMPANY : WoodlockTR &nbsp; LICENSE : 543-87-01657 &nbsp; CEO : SOOKYOUNG KIM</p>
     </footer>
+
+    <button class="float-button to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+    </button>
+    <button class="float-button chat" aria-label="Chat">
+      <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
+    </button>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
+      <a href="../realtrend/realtrend.html"><img src="../img/mobile-icon/menu/tppick.png" alt="" aria-hidden="true"><span>T.P Pick</span></a>
+      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
+      <a href="../cart/cart.html" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
+      <a href="./my-page.html" class="is-active"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
+    </nav>
 
     <aside class="realtrend-panel trend-product-sheet" id="trend-product-sheet" hidden aria-hidden="true" aria-label="Product details">
       <article class="realtrend-product-card">
@@ -799,48 +755,41 @@
     </div>
 
     <div
-      class="cart-country-dialog"
-      id="cart-country-dialog"
+      class="mypage-avatar-dialog"
+      id="mypage-avatar-dialog"
       hidden
       aria-hidden="true"
     >
-      <button type="button" class="cart-country-backdrop" data-cart-country-close aria-label="Close country list"></button>
+      <button type="button" class="mypage-avatar-backdrop" data-mypage-avatar-close aria-label="Close profile photo dialog"></button>
       <div
-        class="cart-country-modal"
+        class="mypage-avatar-modal"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="cart-country-title"
+        aria-labelledby="mypage-avatar-title"
       >
-        <button type="button" class="cart-country-close" data-cart-country-close aria-label="Close country list">&times;</button>
-        <h2 id="cart-country-title">Select shipping country</h2>
-        <label class="sr-only" for="cart-country-search">Search country</label>
-        <input
-          id="cart-country-search"
-          class="cart-country-search"
-          type="search"
-          placeholder="Search country"
-          data-cart-country-search
-        />
-        <ul class="cart-country-list" data-cart-country-list role="listbox" aria-label="Shipping countries"></ul>
+        <button type="button" class="mypage-avatar-close" data-mypage-avatar-close aria-label="Close profile photo dialog">&times;</button>
+        <h2 id="mypage-avatar-title">Change profile photo</h2>
+        <div class="mypage-avatar-preview" aria-hidden="true">
+          <img class="mypage-avatar-preview-photo" alt="" hidden>
+          <i></i>
+        </div>
+        <label class="mypage-avatar-upload">
+          <input type="file" accept="image/*" data-mypage-avatar-input>
+          <span>Choose photo</span>
+        </label>
+        <button type="button" class="mypage-avatar-remove" data-mypage-avatar-remove hidden>Remove photo</button>
+        <div class="mypage-avatar-actions">
+          <button type="button" class="mypage-avatar-cancel" data-mypage-avatar-close>Cancel</button>
+          <button type="button" class="mypage-avatar-save" data-mypage-avatar-save>Save</button>
+        </div>
       </div>
     </div>
 
-    <button class="float-button to-top" aria-label="Back to top">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
-    </button>
-    <button class="float-button chat" aria-label="Chat">
-      <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
-    </button>
-
-    <nav class="bottom-nav" aria-label="Mobile navigation">
-      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
-      <a href="../realtrend/realtrend.html"><img src="../img/mobile-icon/menu/tppick.png" alt="" aria-hidden="true"><span>T.P Pick</span></a>
-      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
-      <a href="./cart.html" class="cart-link is-active"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
-      <a href="../my-page/my-page.html"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
-    </nav>
-
     <script src="../script.js"></script>
-    <script src="./cart.js"></script>
+    <script src="./my-page.js"></script>
   </body>
 </html>
+
+
+
+

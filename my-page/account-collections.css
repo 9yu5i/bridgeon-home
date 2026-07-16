@@ -1,0 +1,138 @@
+.account-collection-main {
+  --account-purple: var(--purple, #7b3fe4);
+  --account-ink: #15131c;
+  --account-muted: #6f6879;
+  --account-soft: #f8f4ff;
+  --account-line: #e4dced;
+  padding: clamp(72px, 4.8vw, 96px) 0 104px;
+  background: #fff;
+}
+
+.account-collection-shell {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 40px;
+  width: min(100% - 96px, 1280px);
+  margin: 0 auto;
+  align-items: start;
+}
+
+.account-collection-sidebar {
+  display: grid;
+  gap: 24px;
+}
+
+.account-collection-content {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+
+.account-collection-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.account-collection-head h1 {
+  margin: 0 0 8px;
+  color: var(--account-ink);
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.account-collection-head p {
+  margin: 0;
+  color: var(--account-muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.account-collection-head strong {
+  flex: 0 0 auto;
+  padding: 9px 15px;
+  border-radius: 999px;
+  color: var(--account-purple);
+  background: #eadcff;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.account-collection-tabs {
+  display: flex;
+  gap: 12px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 2px 0 5px;
+  scrollbar-width: none;
+}
+
+.account-collection-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.account-collection-tabs button {
+  flex: 0 0 auto;
+  min-width: 70px;
+  height: 34px;
+  padding: 0 18px;
+  border: 1px solid var(--account-purple);
+  border-radius: 999px;
+  color: var(--account-ink);
+  background: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.account-collection-tabs button:hover,
+.account-collection-tabs button:focus-visible,
+.account-collection-tabs button.is-active {
+  color: var(--account-purple);
+  background: #eadcff;
+}
+
+@media (max-width: 1120px) {
+  .account-collection-main {
+    padding: 19px 22px 86px;
+  }
+
+  .account-collection-shell {
+    display: block;
+    width: 100%;
+  }
+
+  .account-collection-content {
+    gap: 18px;
+  }
+
+  .account-collection-head {
+    display: grid;
+    gap: 12px;
+  }
+
+  .account-collection-head h1 {
+    font-size: 26px;
+  }
+
+  .account-collection-head p {
+    font-size: 14px;
+  }
+
+  .account-collection-head strong {
+    width: max-content;
+  }
+
+  .account-collection-tabs {
+    margin-inline: -2px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .account-collection-main {
+    padding-inline: clamp(34px, 8vw, 86px);
+  }
+}

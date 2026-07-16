@@ -99,6 +99,21 @@ const getMyPageUrl = () => {
   return "my-page/my-page.html";
 };
 
+const getHomeUrl = () => {
+  if (
+    document.body.classList.contains("listing-page") ||
+    document.body.classList.contains("timedeal-page") ||
+    document.body.classList.contains("product-detail-page") ||
+    document.body.classList.contains("cart-page") ||
+    document.body.classList.contains("editors-page") ||
+    document.body.classList.contains("realtrend-page") ||
+    document.body.classList.contains("my-page")
+  ) {
+    return "../index.html";
+  }
+  return "index.html";
+};
+
 const listingCategoryPages = {
   beauty: "beauty.html",
   "k-food": "k-food.html",
@@ -368,7 +383,9 @@ const openMobileMenu = () => {
   mobileQuaternaryPanel?.setAttribute("aria-hidden", "true");
   document.body.classList.add("is-mobile-menu-open");
   mobileMenuPanel.setAttribute("aria-hidden", "false");
-  mobileMenuButtons.forEach((button) => button.setAttribute("aria-expanded", "true"));
+  mobileMenuButtons.forEach((button) => {
+    if (!button.classList.contains("mobile-menu")) button.setAttribute("aria-expanded", "true");
+  });
 };
 
 const closeMobileMenu = () => {
@@ -381,7 +398,9 @@ const closeMobileMenu = () => {
   mobileTertiaryPanel?.setAttribute("aria-hidden", "true");
   mobileQuaternaryPanel?.setAttribute("aria-hidden", "true");
   mobileMenuPanel.setAttribute("aria-hidden", "true");
-  mobileMenuButtons.forEach((button) => button.setAttribute("aria-expanded", "false"));
+  mobileMenuButtons.forEach((button) => {
+    if (!button.classList.contains("mobile-menu")) button.setAttribute("aria-expanded", "false");
+  });
 };
 
 mobileSearchOpenButtons.forEach((button) => {
@@ -738,8 +757,23 @@ searchClearButtons.forEach((button) => {
 });
 
 mobileMenuButtons.forEach((button) => {
+  if (button.classList.contains("mobile-menu")) {
+    button.setAttribute("aria-label", "Go back");
+    button.removeAttribute("aria-controls");
+    button.removeAttribute("aria-expanded");
+  }
+
   button.addEventListener("click", (event) => {
     event.preventDefault();
+    if (button.classList.contains("mobile-menu")) {
+      if (window.history.length > 1) {
+        window.history.back();
+        return;
+      }
+      navigateWithPageTransition(getHomeUrl());
+      return;
+    }
+
     openMobileMenu();
   });
 });

@@ -10,7 +10,7 @@
   --orders-purple: var(--purple, #7b3fe4);
   --orders-soft: #faf7ff;
   --orders-line: #ded8e8;
-  padding: 58px 0 88px;
+  padding: clamp(72px, 4.8vw, 96px) 0 88px;
   background: #fff;
 }
 
@@ -580,7 +580,7 @@ body.is-orders-modal-open {
   color: #17121f;
   font-size: 15px;
   line-height: 1.2;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .orders-dialog-product small,
@@ -589,7 +589,7 @@ body.is-orders-modal-open {
   margin-top: 7px;
   color: #111;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .orders-review-rating {
@@ -632,8 +632,8 @@ body.is-orders-modal-open {
 
 .orders-review-field span {
   color: #17121f;
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .orders-review-field input,
@@ -681,7 +681,7 @@ body.is-orders-modal-open {
   color: var(--orders-purple);
   background: #fbf9ff;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
 }
 

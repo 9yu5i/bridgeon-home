@@ -6,7 +6,7 @@
   --reviews-purple: var(--purple, #7b3fe4);
   --reviews-soft: #faf7ff;
   --reviews-line: #ded8e8;
-  padding: 58px 0 88px;
+  padding: clamp(72px, 4.8vw, 96px) 0 88px;
   background: #fff;
 }
 
@@ -57,8 +57,8 @@
   outline: 0;
   color: #332e3d;
   background: transparent;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .reviews-search button {
@@ -295,6 +295,7 @@
   grid-row: 2 / 4;
   min-width: 0;
   max-width: 360px;
+  transform: translateY(-6px);
 }
 
 .review-copy h3 {
@@ -403,7 +404,7 @@
   color: #15121b;
   background: #fff;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition:
     color 0.2s ease,
@@ -909,6 +910,7 @@ body.is-review-edit-open {
   .review-copy {
     max-width: none;
     padding-top: 0;
+    transform: translateY(-4px);
   }
 
   .review-score span {
