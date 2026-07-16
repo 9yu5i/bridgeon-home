@@ -60,7 +60,7 @@
   color: #85808d;
   font-size: 13px;
   line-height: 1.25;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .coupons-time-note {
@@ -84,27 +84,26 @@
 }
 
 .coupon-register-icon {
-  display: grid;
-  place-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #eadfff url("./coupons_img/register.png") center / 30px 30px no-repeat;
+  display: block;
+  width: 50px;
+  height: 50px;
+  justify-self: center;
+  background: url("./coupons_img/register.png") center / contain no-repeat;
 }
 
 .coupon-register h2 {
   color: #211b2c;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.1;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .coupon-register p {
   margin-top: 6px;
   color: #211b2c;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.15;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .coupon-register-form {
@@ -119,7 +118,7 @@
   border: 0;
   border-radius: 4px;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .coupon-register-form input {
@@ -191,29 +190,29 @@
   display: inline-flex;
   align-items: center;
   height: 24px;
-  padding: 0 10px;
+  padding: 4px 10px;
   border-radius: 4px;
   color: #fff;
   background: var(--coupons-purple);
   font-size: 11px;
   line-height: 1;
-  font-weight: 900;
+  font-weight: 600;
   white-space: nowrap;
 }
 
 .coupon-ticket-top p {
   margin-left: auto;
   color: #211b2c;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.25;
-  font-weight: 700;
+  font-weight: 500;
   text-align: left;
 }
 
 .coupon-ticket-top p b {
   display: block;
-  color: #a274ff;
-  font-weight: 800;
+  color: #E11867;
+  font-weight: 700;
 }
 
 .coupon-ticket h3 {
@@ -242,17 +241,17 @@
 .coupon-terms {
   margin-top: 17px !important;
   color: #211b2c;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .coupon-expire-inline {
   margin-top: 14px !important;
   color: #211b2c;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .coupon-expire-inline b {
@@ -264,7 +263,7 @@
   grid-template-columns: 74px minmax(0, 1fr) auto;
   align-items: center;
   gap: 24px;
-  width: min(100% - 48px, 1028px);
+  width: min(100% - 96px, 1280px);
   min-height: 116px;
   margin: 150px auto 64px;
   padding: 0 68px;
@@ -274,31 +273,9 @@
 }
 
 .coupons-help-banner > span {
-  position: relative;
   width: 48px;
   height: 48px;
-  border: 5px solid #fff;
-  border-bottom: 0;
-  border-radius: 28px 28px 0 0;
-}
-
-.coupons-help-banner > span::before,
-.coupons-help-banner > span::after {
-  content: "";
-  position: absolute;
-  bottom: -16px;
-  width: 10px;
-  height: 20px;
-  border-radius: 4px;
-  background: #fff;
-}
-
-.coupons-help-banner > span::before {
-  left: -7px;
-}
-
-.coupons-help-banner > span::after {
-  right: -7px;
+  background: url("./img/headphone.png") center / contain no-repeat;
 }
 
 .coupons-help-banner h2,
@@ -333,6 +310,15 @@
   background: #fff;
   font-size: 16px;
   font-weight: 800;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.coupons-help-banner > a:hover,
+.coupons-help-banner > a:focus-visible {
+  color: #fff;
+  background: var(--coupons-purple);
 }
 
 @media (max-width: 1120px) {

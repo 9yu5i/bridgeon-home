@@ -15,11 +15,11 @@
     <header class="site-header mypage-site-header">
       <div class="mypage-mobile-header mobile-only" aria-label="My Page mobile header">
         <button type="button" class="mypage-mobile-back" aria-label="Go back">&larr;</button>
-        <strong>My Page</strong>
+        <a class="logo mypage-mobile-logo" href="../index.html" aria-label="BridgeOn home">Bridge<span>On</span></a>
         <div class="mypage-mobile-actions">
-          <a href="./my-page.html" aria-label="My Page">
-            <img src="../img/main-img/top_banner_my.png" alt="" aria-hidden="true">
-          </a>
+          <button type="button" data-mobile-search-open aria-label="Open search">
+            <img src="../product-detail/common_img/search.png" alt="" aria-hidden="true">
+          </button>
           <a href="../cart/cart.html" class="cart-icon-button" aria-label="Cart, 3 items">
             <img src="../product-detail/common_img/cart.png" alt="" aria-hidden="true">
             <span class="cart-badge" aria-hidden="true">3</span>
@@ -405,21 +405,68 @@
       </div>
 
       <div class="mobile-menu-panel" id="mobile-menu-panel" aria-hidden="true">
-        <div class="mobile-menu-head">
-          <strong>MENU</strong>
-          <button type="button" class="mobile-menu-close" aria-label="Close menu">&times;</button>
+        <div class="mobile-menu-header">
+          <strong class="mobile-menu-title">MENU</strong>
+          <button type="button" class="mobile-menu-close" aria-label="Close menu"></button>
         </div>
         <nav class="mobile-menu-list" aria-label="Mobile menu">
-          <a href="../listing/beauty.html" data-mobile-submenu-open="categories">Categories</a>
+          <a href="#" data-mobile-submenu-open="categories">Categories<span aria-hidden="true">&gt;</span></a>
           <a href="#">Brand</a>
           <a href="../listing/best.html">Best Seller</a>
           <a href="../timedeal/timedeal.html">Time Deal</a>
-          <a href="../editors-pick/editors-pick.html">T.P Pick</a>
+          <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
         </nav>
-        <div class="mobile-menu-quick">
-          <a href="#"><span><img src="../img/Menu/preferences.png" alt="" aria-hidden="true"></span>Preferences</a>
-          <a href="#"><span><img src="../img/Menu/search_menu.png" alt="" aria-hidden="true"></span>Support</a>
-          <a href="./my-page.html"><span><img src="../img/Menu/menu.png" alt="" aria-hidden="true"></span>My</a>
+        <section class="mobile-submenu-panel" aria-hidden="true" aria-label="Secondary categories">
+          <div class="mobile-submenu-header">
+            <button type="button" class="mobile-submenu-back" aria-label="Back to menu">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+              Categories
+            </button>
+          </div>
+          <nav class="mobile-submenu-list" aria-label="Second level categories">
+            <a href="#" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="time-deal">Time Deal</a>
+            <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
+          </nav>
+          <section class="mobile-tertiary-panel" aria-hidden="true" aria-label="Third level categories">
+            <div class="mobile-submenu-header">
+              <button type="button" class="mobile-tertiary-back" aria-label="Back to second categories">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                <span class="mobile-tertiary-title">Categories</span>
+              </button>
+            </div>
+            <div class="mobile-category-browser">
+              <nav class="mobile-tertiary-list" aria-label="Second level categories"></nav>
+              <div class="mobile-category-content" aria-label="Third level categories"></div>
+            </div>
+            <section class="mobile-quaternary-panel" aria-hidden="true" aria-label="Fourth level categories">
+              <div class="mobile-submenu-header">
+                <button type="button" class="mobile-quaternary-back" aria-label="Back to third categories">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                  <span class="mobile-quaternary-title">Categories</span>
+                </button>
+              </div>
+              <nav class="mobile-quaternary-list" aria-label="Fourth level list"></nav>
+            </section>
+          </section>
+        </section>
+        <div class="mobile-menu-actions" aria-label="Quick links">
+          <a href="#">
+            <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM3.6 9h16.8M3.6 15h16.8M12 3c2.4 2.2 3.6 5.2 3.6 9s-1.2 6.8-3.6 9M12 3C9.6 5.2 8.4 8.2 8.4 12s1.2 6.8 3.6 9" /></svg></span>
+            Preferences
+          </a>
+          <a href="#">
+            <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1M6 18h-1a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h1v6Zm12 0h1a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-1v6Zm0 0c0 2-1.6 3-4 3h-2" /></svg></span>
+            Support
+          </a>
+          <a href="./my-page.html">
+            <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm8 8a8 8 0 0 0-16 0" /></svg></span>
+            My
+          </a>
           <a href="#"><span><img src="../img/Menu/signin.png" alt="" aria-hidden="true"></span>Sign In</a>
         </div>
         <div class="mobile-menu-social" aria-label="Social links">
@@ -457,14 +504,6 @@
         <section class="orders-content">
           <h1 id="orders-page-title">Orders</h1>
 
-          <section class="orders-summary desktop-only" aria-label="Order status summary">
-            <a href="#"><span><img src="./img/pending.png" alt="" aria-hidden="true"></span><strong>2</strong><b>Pending</b></a>
-            <a href="#"><span><img src="./img/preparing.png" alt="" aria-hidden="true"></span><strong>2</strong><b>Processing</b></a>
-            <a href="#"><span><img src="./img/shipped.png" alt="" aria-hidden="true"></span><strong>2</strong><b>Shipped</b></a>
-            <a href="#"><span><img src="./img/delivered.png" alt="" aria-hidden="true"></span><strong>2</strong><b>Delivered</b></a>
-            <a href="#"><span><img src="./img/cancel.png" alt="" aria-hidden="true"></span><strong>2</strong><b>Cancel/Refund</b></a>
-          </section>
-
           <div class="orders-controls">
             <label class="orders-search">
               <span class="sr-only">Search by order number or item</span>
@@ -485,6 +524,7 @@
                     <option>Processing</option>
                     <option>Shipped</option>
                     <option>Delivered</option>
+                    <option>Cancel/Refund</option>
                   </select>
                 </span>
               </label>
@@ -901,6 +941,83 @@
         <p id="trend-cart-toast-message"></p>
       </div>
       <div class="realtrend-cart-toast-thumb" aria-hidden="true"></div>
+    </div>
+
+    <div class="orders-modal-layer" data-orders-modal-layer hidden aria-hidden="true">
+      <button type="button" class="orders-modal-backdrop" data-orders-modal-close aria-label="Close order popup"></button>
+
+      <section class="orders-dialog orders-review-dialog" data-orders-dialog="review" role="dialog" aria-modal="true" aria-labelledby="orders-review-title" hidden>
+        <p class="orders-dialog-eyebrow">Write A Review</p>
+        <h2 id="orders-review-title">How was this item?</h2>
+        <div class="orders-dialog-product">
+          <span class="orders-dialog-thumb" data-orders-modal-thumb aria-hidden="true"></span>
+          <div>
+            <p data-orders-modal-brand>BridgeOn</p>
+            <strong data-orders-modal-name>Product name</strong>
+            <small data-orders-modal-price>US$0.00</small>
+          </div>
+        </div>
+        <div class="orders-review-rating" aria-label="Rating">
+          <button type="button" data-review-rating="1" aria-label="1 star">&#9733;</button>
+          <button type="button" data-review-rating="2" aria-label="2 stars">&#9733;</button>
+          <button type="button" data-review-rating="3" aria-label="3 stars">&#9733;</button>
+          <button type="button" data-review-rating="4" aria-label="4 stars">&#9733;</button>
+          <button type="button" data-review-rating="5" aria-label="5 stars">&#9733;</button>
+        </div>
+        <label class="orders-review-field">
+          <span>Review Title</span>
+          <input type="text" placeholder="Share the highlight in one sentence">
+        </label>
+        <label class="orders-review-field">
+          <span>Your Review</span>
+          <textarea rows="5" placeholder="Tell us about texture, color, delivery, or anything useful."></textarea>
+        </label>
+        <div class="orders-review-upload">
+          <button type="button" data-orders-review-upload>+ Add Photos</button>
+          <span data-orders-review-upload-status>Up to 5 photos</span>
+          <input class="orders-review-file-input" type="file" accept="image/*" multiple data-orders-review-files>
+        </div>
+        <div class="orders-review-preview" data-orders-review-preview aria-live="polite"></div>
+        <div class="orders-dialog-actions">
+          <button type="button" class="orders-dialog-secondary" data-orders-modal-close>Cancel</button>
+          <button type="button" class="orders-dialog-primary">Submit Review</button>
+        </div>
+      </section>
+
+      <section class="orders-dialog orders-track-dialog" data-orders-dialog="track" role="dialog" aria-modal="true" aria-labelledby="orders-track-title" hidden>
+        <p class="orders-dialog-eyebrow">Track Order</p>
+        <div class="orders-track-head">
+          <div>
+            <h2 id="orders-track-title" data-orders-track-order>Order #nnnnnnnnn</h2>
+            <p data-orders-track-date>May 6, 2025</p>
+          </div>
+          <mark data-orders-track-status>Shipped</mark>
+        </div>
+        <div class="orders-track-product">
+          <span class="orders-dialog-thumb" data-orders-track-thumb aria-hidden="true"></span>
+          <div>
+            <strong data-orders-track-name>Product name</strong>
+            <small data-orders-track-price>US$0.00</small>
+          </div>
+        </div>
+        <ol class="orders-track-steps" aria-label="Tracking progress">
+          <li class="is-complete"><b></b><span>Order Placed</span><em>May 6</em></li>
+          <li class="is-complete"><b></b><span>Packed</span><em>May 7</em></li>
+          <li class="is-active"><b></b><span>Shipped</span><em>In transit</em></li>
+          <li><b></b><span>Out for Delivery</span><em>Pending</em></li>
+          <li><b></b><span>Delivered</span><em>Pending</em></li>
+        </ol>
+        <div class="orders-track-info">
+          <p><span>Carrier</span><b>BridgeOn Express</b></p>
+          <p><span>Tracking No.</span><b>BO-2025-0008</b></p>
+          <p><span>Estimated Arrival</span><b>May 12, 2025</b></p>
+          <p><span>Shipping Address</span><b>Name, 123 nnnn St., United State 90007</b></p>
+        </div>
+        <div class="orders-dialog-actions">
+          <button type="button" class="orders-dialog-secondary" data-orders-modal-close>Close</button>
+          <button type="button" class="orders-dialog-primary">View Tracking Detail</button>
+        </div>
+      </section>
     </div>
 
     <div

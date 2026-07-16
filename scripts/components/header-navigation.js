@@ -12,6 +12,7 @@ const searchSections = document.querySelectorAll("[data-search-panel]");
 const searchCloseButtons = document.querySelectorAll(".search-close");
 const searchClearButtons = document.querySelectorAll(".search-clear");
 const mobileMenuButtons = document.querySelectorAll("[data-mobile-menu-open]");
+const mobileSearchOpenButtons = document.querySelectorAll("[data-mobile-search-open]");
 const mobileMenuPanel = document.querySelector(".mobile-menu-panel");
 const mobileMenuCloseButton = document.querySelector(".mobile-menu-close");
 const mobileSubmenuOpenButton = document.querySelector("[data-mobile-submenu-open='categories']");
@@ -382,6 +383,14 @@ const closeMobileMenu = () => {
   mobileMenuPanel.setAttribute("aria-hidden", "true");
   mobileMenuButtons.forEach((button) => button.setAttribute("aria-expanded", "false"));
 };
+
+mobileSearchOpenButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    closeMobileMenu();
+    openSearchPanel({ focusMobile: true });
+  });
+});
 
 const openMobileSubmenu = () => {
   if (!mobileMenuPanel || !mobileSubmenuPanel) return;

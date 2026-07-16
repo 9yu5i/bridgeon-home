@@ -536,6 +536,13 @@
     stroke-linejoin: round;
   }
 
+  .mobile-menu-actions img {
+    display: block;
+    width: 23px;
+    height: 23px;
+    object-fit: contain;
+  }
+
   .mobile-menu-social {
     display: flex;
     justify-content: center;
@@ -795,15 +802,15 @@
 }
 
 @media (max-width: 1120px) {
-  body:is(.listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page) .header-main {
+  body:is(.listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page, .my-page) .header-main {
     grid-template-rows: auto;
   }
 
-  body:is(.listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page) .header-main > .search {
+  body:is(.listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page, .my-page) .header-main > .search {
     display: none;
   }
 
-  body:is(.listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page) .header-actions .icon-button.is-header-search-trigger img {
+  body:is(.listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page, .my-page) .header-actions .icon-button.is-header-search-trigger img {
     width: 21px;
     height: 21px;
   }

@@ -11,6 +11,10 @@
   display: none;
 }
 
+.my-page .promo-bar {
+  display: none;
+}
+
 .mypage-main {
   background: #fff;
 }
@@ -380,7 +384,7 @@
   max-width: 520px;
   color: #fff;
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -479,6 +483,7 @@
 }
 
 .mypage-edit-desktop {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -503,8 +508,15 @@
   object-fit: contain;
 }
 
-.mypage-edit-desktop-icon--hover {
-  display: none;
+.mypage-edit-desktop .mypage-edit-desktop-icon--hover {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: opacity 0.15s ease;
 }
 
 .mypage-edit-desktop:hover,
@@ -514,14 +526,9 @@
   border-color: #fff;
 }
 
-.mypage-edit-desktop:hover .mypage-edit-desktop-icon--default,
-.mypage-edit-desktop:focus-visible .mypage-edit-desktop-icon--default {
-  display: none;
-}
-
 .mypage-edit-desktop:hover .mypage-edit-desktop-icon--hover,
 .mypage-edit-desktop:focus-visible .mypage-edit-desktop-icon--hover {
-  display: block;
+  opacity: 1;
 }
 
 .mypage-tier-labels,
@@ -610,7 +617,7 @@
 .mypage-progress-row small {
   display: block;
   margin-top: 8px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -1183,27 +1190,20 @@ body.is-mypage-avatar-open {
     display: grid;
   }
 
-  .my-page .promo-bar,
-  .my-page .header-main {
+  .my-page .mypage-mobile-header {
     display: none !important;
   }
 
-  .my-page .mypage-mobile-header {
-    display: grid;
-    grid-template-columns: 48px minmax(0, 1fr) auto;
-    align-items: center;
-    height: 50px;
-    padding: 0 18px;
-    border-bottom: 1px solid #3f344d;
+  .mypage-mobile-logo {
+    justify-self: center;
     color: #fff;
-    background: #242424;
+    font-size: 24px;
+    line-height: 1;
+    font-weight: 700;
   }
 
-  .mypage-mobile-header strong {
-    justify-self: center;
-    font-size: 18px;
-    line-height: 1;
-    font-weight: 800;
+  .mypage-mobile-logo span {
+    color: var(--purple);
   }
 
   .mypage-mobile-back {
@@ -1221,12 +1221,17 @@ body.is-mypage-avatar-open {
     gap: 16px;
   }
 
-  .mypage-mobile-actions a {
+  .mypage-mobile-actions a,
+  .mypage-mobile-actions button {
     position: relative;
     display: grid;
     place-items: center;
     width: 25px;
     height: 25px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
   }
 
   .mypage-mobile-actions img {
@@ -1494,7 +1499,7 @@ body.is-mypage-avatar-open {
 
   .mypage-progress-row small,
   .mypage-membership-link {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 300;
   }
 

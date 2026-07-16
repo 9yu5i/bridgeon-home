@@ -81,8 +81,8 @@
 
 .cart-ship-destination p {
   margin: 0;
-  font-weight: 600;
-  font-size: 16px;
+  font-weight: 400;
+  font-size: 15px;
 }
 
 .cart-ship-destination > span {
@@ -104,7 +104,7 @@
   border: 0;
   color: var(--purple);
   background: transparent;
-  font-size: 16px;
+  font-size: 15px;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -189,7 +189,7 @@ body.is-cart-country-open {
   border-radius: 8px;
   color: #111;
   background: #fff;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .cart-country-search:focus {
@@ -1179,7 +1179,7 @@ body.is-cart-country-open {
     order: 1;
     margin: 0 -14px;
     border-radius: 0;
-    min-height: 34px;
+    min-height: 38px;
     padding: 0 14px;
     font-size: 12px;
   }
