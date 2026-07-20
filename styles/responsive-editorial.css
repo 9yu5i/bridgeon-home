@@ -331,9 +331,9 @@
 @media (max-width: 1120px) {
   .magazine-block .section-heading a {
       color: var(--purple);
-      font-size: clamp(13px, 1.9vw, 15px);
+      font-size: 12px;
       line-height: 1;
-      font-weight: 400;
+      font-weight: 600;
     }
 }
 

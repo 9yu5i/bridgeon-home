@@ -357,7 +357,7 @@
       const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - saleSubtotal);
       shippingMessage.innerHTML = remaining === 0
         ? `You've unlocked <b>FREE</b> shipping!`
-        : `You're ${formatPrice(remaining)} away from <b>FREE</b> shipping!`;
+        : `You're <b>${formatPrice(remaining)}</b> away from <b>FREE</b> shipping!`;
     }
 
     syncAvailableCouponButtons();

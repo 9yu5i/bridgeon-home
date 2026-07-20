@@ -280,9 +280,9 @@
   border-radius: 999px;
   color: var(--purple);
   background: #fff;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.04em;
   white-space: nowrap;
   transition: color 0.22s ease, background-color 0.22s ease;
@@ -778,8 +778,10 @@
   top: 10px;
   left: 10px;
   z-index: 2;
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   min-width: 44px;
   height: 28px;
   padding: 0 10px;
@@ -790,6 +792,7 @@
   font-size: 12px;
   line-height: 1;
   font-weight: 800;
+  text-align: center;
 }
 
 .listing-card[data-rank="1"] .listing-card-rank,
@@ -885,8 +888,9 @@
 }
 
 .listing-card-rating {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 4px;
   margin: 0 0 10px;
   color: #171320;
@@ -896,12 +900,11 @@
 
 .listing-card-rating-star {
   display: block;
-  flex: 0 0 12px;
-  width: 13px;
-  height: 13px;
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
   max-width: none;
   object-fit: contain;
-  align-self: center;
 }
 
 .listing-card-rating span:last-child {

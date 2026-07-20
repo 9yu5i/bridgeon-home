@@ -170,7 +170,7 @@
 
 @media (min-width: 1121px) {
   .search-panel {
-    position: fixed;
+    position: absolute;
     left: 50%;
     top: 127px;
     width: min(calc(100vw - 144px), 1160px);
@@ -296,6 +296,7 @@
 .recent-searches button span:last-child {
   font-size: 18px;
   line-height: 1;
+  cursor: pointer;
 }
 
 .recent-icon {

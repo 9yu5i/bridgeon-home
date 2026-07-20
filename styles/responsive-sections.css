@@ -71,7 +71,7 @@
 @media (max-width: 760px) {
   .section-heading a {
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
     }
 }
 
@@ -95,7 +95,7 @@
   .tab-row button {
       font-size: 14px;
       padding-bottom: 6px;
-      font-weight: 500;
+      font-weight: 600;
     }
 }
 

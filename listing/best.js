@@ -196,10 +196,15 @@
     };
   };
 
+  const PRODUCT_DETAIL_OPTIONS_HREF = "../product-detail/product-detail-options.html";
+
   const createCard = (product) => {
     const article = document.createElement("article");
     article.className = "listing-card listing-card--ranked";
     article.dataset.rank = String(product.rank);
+    if (product.rank === 2) {
+      article.dataset.productDetailLink = PRODUCT_DETAIL_OPTIONS_HREF;
+    }
     article.innerHTML = `
       <div class="listing-card-media">
         <span class="listing-card-rank" aria-label="Rank ${product.rank}">${product.rank}</span>

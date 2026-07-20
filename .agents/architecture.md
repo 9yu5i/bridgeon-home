@@ -53,7 +53,7 @@ flowchart TD
 - Extracted behavior lives in `scripts/components/`.
 - `listing/best.js` owns the Best products page ranked 100-item scroll loader.
 - `cart/cart.js` owns cart item selection, quantity, delete, and promo form behavior.
-- `editors-pick/editors-pick.js` owns Editor's Pick page editor selection, pick filters, wishlist state, and magazine dots.
+- `editors-pick/editors-pick.js` owns Editor's Pick page editor selection, pick filters, wishlist state, magazine dots, and tablet/mobile horizontal snap paging between pick categories.
 - `product-detail/product-detail.js` handles product detail specific interactions.
 
 Important extracted components:

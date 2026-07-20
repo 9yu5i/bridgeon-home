@@ -708,7 +708,7 @@
     grid-column: 3;
     grid-row: 1;
     z-index: 2;
-    gap: 10px;
+    gap: 15px;
   }
 
   .search {
@@ -757,10 +757,6 @@
     white-space: nowrap;
     text-align: center;
     font-size: 14px;
-  }
-
-  .category-nav .accent-warm {
-    margin-left: 20px;
   }
 
   .bottom-nav {
@@ -916,12 +912,20 @@
     opacity: 1;
   }
 
+  /* Hide the raster <img>; color via mask so iOS Safari matches Chrome (no CSS filter). */
   .search-mobile-input img {
+    display: none;
+  }
+
+  .search-mobile-input::after {
+    content: "";
+    grid-column: 2;
     width: 22px;
     height: 22px;
-    object-fit: contain;
+    background-color: var(--purple);
+    -webkit-mask: url("../img/search/search.png") center / contain no-repeat;
+    mask: url("../img/search/search.png") center / contain no-repeat;
     pointer-events: none;
-    filter: brightness(0) saturate(100%) invert(31%) sepia(94%) saturate(1878%) hue-rotate(249deg) brightness(92%) contrast(96%);
   }
 
   .search-mobile-content {
@@ -1032,5 +1036,34 @@
     width: auto;
     min-width: 0;
     padding-inline: 0;
+  }
+}
+
+@media (max-width: 1120px) {
+  .category-nav.is-compact-category-nav {
+    justify-content: flex-start;
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-padding-inline: clamp(16px, 4.5vw, 54px);
+  }
+
+  .category-nav.is-compact-category-nav a {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: max-content;
+    padding-inline: clamp(14px, 3.4vw, 28px);
+    white-space: nowrap;
+  }
+
+  .category-nav.is-compact-category-nav a:first-child {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .category-nav.is-compact-category-nav {
+    justify-content: center;
+    padding-inline: clamp(20px, 3.5vw, 44px);
   }
 }

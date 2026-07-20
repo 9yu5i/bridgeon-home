@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>T.P Magazine | BridgeOn</title>
+    <link rel="stylesheet" href="../reset.css" />
+    <link rel="stylesheet" href="../font.css" />
+    <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="./editors-pick.css" />
+    <link rel="stylesheet" href="./magazine.css" />
+  </head>
+  <body class="editors-page magazine-page">
+    <header class="site-header">
+      <div class="promo-bar">
+        <div class="promo-inner">
+          <span><img src="../img/main-img/top_banner_lefticon.png" alt="lefticon">Free Shipping Over US$nn</span>
+          <span><img src="../img/main-img/top_banner_righticon.png" alt="righticon">Ships From Korea</span>
+          <span class="desktop-only">Language &#8744 </span>
+        </div>
+      </div>
+
+      <div class="header-main">
+        <button type="button" class="icon-button mobile-menu mobile-only" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false" aria-label="Open menu">
+          <img src="../img/mobile-icon/menu/hamburger_mobile.png" alt="" aria-hidden="true">
+        </button>
+        <a class="logo" href="../index.html" aria-label="BridgeOn home">Bridge<span>On</span></a>
+        <form class="search" role="search">
+          <label class="sr-only" for="site-search">Search</label>
+          <input id="site-search" type="search" placeholder="Best Sunscreen For 2026 Summer?" />
+          <button aria-label="Search">
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </button>
+        </form>
+        <div class="header-actions">
+          <button class="icon-button" aria-label="Account">
+            <img src="../img/main-img/top_banner_my.png" alt="mypage">
+          </button>
+          <a class="icon-button desktop-icon" aria-label="Wishlist" href="../my-page/wishlist.html">
+            <img src="../img/main-img/top_banner_wish.png" alt="wishlist">
+          </a>
+          <a class="icon-button cart-icon-button" aria-label="Cart, 3 items" href="../cart/cart.html">
+            <img src="../img/main-img/top_banner_cart.png" alt="cart">
+            <span class="cart-badge" aria-hidden="true">3</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="search-panel" aria-hidden="true">
+        <div class="search-mobile-bar">
+          <button type="button" class="search-mobile-back search-close" aria-label="Close search"></button>
+          <div class="search-mobile-input">
+            <input id="mobile-site-search" type="search" placeholder="Search Korean Trends" aria-label="Search Korean Trends" />
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="search-mobile-content">
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading">
+              <h3><img src="../img/search/history.png" alt="" aria-hidden="true">Recent Searches</h3>
+              <button type="button" class="search-clear">Clear All</button>
+            </div>
+            <div class="recent-searches search-mobile-recent">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+            </div>
+          </section>
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading trending">
+              <h3><span aria-hidden="true"></span>Trending Searches &#128293;</h3>
+            </div>
+            <ol class="trending-searches search-mobile-trending">
+              <li><b>1</b><span>sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>collagen cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>lip tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>toning pads</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>5</b><span>vitamin c serum</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </section>
+        </div>
+        <div class="search-panel-tabs" role="tablist" aria-label="Search suggestions">
+          <button type="button" class="is-active" data-search-tab="recent" role="tab" aria-selected="true">Recent Searches</button>
+          <button type="button" data-search-tab="trending" role="tab" aria-selected="false"><span aria-hidden="true"></span> Trending Searches &#128293;</button>
+        </div>
+        <div class="search-panel-body">
+          <div class="search-panel-section is-active" data-search-panel="recent" role="tabpanel">
+            <div class="recent-searches">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>collagen mask<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+            </div>
+          </div>
+          <div class="search-panel-section" data-search-panel="trending" role="tabpanel" hidden>
+            <ol class="trending-searches">
+              <li><b>1</b><span>Sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>Collagen Cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>Lip Tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>Toning Pads</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>5</b><span>Vitamin C Serum</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </div>
+        </div>
+        <div class="search-panel-footer">
+          <button type="button" class="search-clear">Remove All Researches</button>
+          <button type="button" class="search-close">Close</button>
+        </div>
+      </div>
+
+      <div class="category-menu">
+        <nav class="category-nav" aria-label="Primary">
+          <a href="../listing/best.html">BEST</a>
+          <a href="../listing/new.html">NEW</a>
+          <a href="#">Brand</a>
+          <a href="../listing/beauty.html" data-mega-target="beauty">Beauty</a>
+          <a href="../listing/k-food.html" data-mega-target="k-food">K-Food</a>
+          <a href="../listing/lifestyle.html" data-mega-target="lifestyle">Lifestyle</a>
+          <a href="../listing/k-pop.html" data-mega-target="k-pop">K-POP</a>
+          <a href="../listing/k-traditional.html" data-mega-target="k-traditional">K-Traditional</a>
+          <a class="accent-warm" href="../timedeal/timedeal.html">Time Deal &#128293;</a>
+          <a class="accent is-active" href="./editors-pick.html" data-mega-target="tp-pick" aria-current="page">T.P Pick</a>
+        </nav>
+
+        <div class="category-mega" data-menu-panel="tp-pick" aria-label="T.P Pick category submenu">
+          <a class="mega-feature" href="./editors-pick.html">
+            <b>T.P Pick</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3><a class="mega-column-heading" href="./editors-pick.html">Editor's Pick</a></h3>
+          </div>
+          <div class="mega-column">
+            <h3><a class="mega-column-heading" href="./magazine.html">T.P Magazine</a></h3>
+          </div>
+          <div class="mega-column">
+            <h3><a class="mega-column-heading" href="../realtrend/realtrend.html">Real Trend</a></h3>
+          </div>
+        </div>
+      </div>
+
+      <aside class="mobile-menu-panel" id="mobile-menu-panel" aria-hidden="true" aria-label="Mobile menu">
+        <div class="mobile-menu-header">
+          <strong class="mobile-menu-title">MENU</strong>
+          <button type="button" class="mobile-menu-close" aria-label="Close menu"></button>
+        </div>
+        <nav class="mobile-menu-list" aria-label="Mobile categories">
+          <a href="#" data-mobile-submenu-open="categories">Categories<span aria-hidden="true">&gt;</span></a>
+          <a href="#">Brand</a>
+          <a href="../listing/best.html">Best Seller</a>
+          <a href="../listing/new.html">New Arrival</a>
+          <a href="../timedeal/timedeal.html">Time Deal</a>
+          <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
+        </nav>
+        <section class="mobile-submenu-panel" aria-hidden="true" aria-label="Secondary categories">
+          <div class="mobile-submenu-header">
+            <button type="button" class="mobile-submenu-back" aria-label="Back to menu">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+              Categories
+            </button>
+          </div>
+          <nav class="mobile-submenu-list" aria-label="Second level categories">
+            <a href="../listing/beauty.html" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/k-food.html" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/lifestyle.html" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/k-pop.html" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
+            <a href="../listing/k-traditional.html" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
+            <a href="../timedeal/timedeal.html" data-mobile-third-open="time-deal">Time Deal</a>
+            <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
+          </nav>
+          <section class="mobile-tertiary-panel" aria-hidden="true" aria-label="Third level categories">
+            <div class="mobile-submenu-header">
+              <button type="button" class="mobile-tertiary-back" aria-label="Back to second categories">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                <span class="mobile-tertiary-title">Categories</span>
+              </button>
+            </div>
+            <div class="mobile-category-browser">
+              <nav class="mobile-tertiary-list" aria-label="Second level categories"></nav>
+              <div class="mobile-category-content" aria-label="Third level categories"></div>
+            </div>
+            <section class="mobile-quaternary-panel" aria-hidden="true" aria-label="Fourth level categories">
+              <div class="mobile-submenu-header">
+                <button type="button" class="mobile-quaternary-back" aria-label="Back to third categories">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                  <span class="mobile-quaternary-title">Categories</span>
+                </button>
+              </div>
+              <nav class="mobile-quaternary-list" aria-label="Fourth level list"></nav>
+            </section>
+          </section>
+        </section>
+      </aside>
+    </header>
+
+    <main class="magazine-main">
+      <section class="magazine-hero" aria-labelledby="magazine-title">
+        <nav class="magazine-breadcrumb desktop-only" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span aria-hidden="true">&gt;</span>
+          <a href="./editors-pick.html">T.P Pick</a>
+          <span aria-hidden="true">&gt;</span>
+          <span>Magazine</span>
+        </nav>
+        <div class="magazine-hero-copy">
+          <p>BridgeOn Editorial</p>
+          <h1 id="magazine-title">T.P Magazine</h1>
+          <span>Trend stories, shopping guides, and editor notes from Korea.</span>
+        </div>
+      </section>
+
+      <section class="magazine-shell" aria-label="Magazine posts">
+        <nav class="magazine-topic-tabs" aria-label="Magazine categories">
+          <a class="is-active" href="#" data-magazine-filter="all">Home</a>
+          <a href="#" data-magazine-filter="beauty">Beauty</a>
+          <a href="#" data-magazine-filter="food">Food</a>
+          <a href="#" data-magazine-filter="toys-crafts">Toys &amp; Crafts</a>
+          <a href="#" data-magazine-filter="stationery-office">Stationery &amp; Office</a>
+          <a href="#" data-magazine-filter="kitchen">Kitchen</a>
+          <a href="#" data-magazine-filter="travel">Travel</a>
+          <a href="#" data-magazine-filter="k-pop">K-POP</a>
+          <a href="#" data-magazine-filter="k-drama">K-Drama</a>
+        </nav>
+
+        <section class="magazine-category-results" data-magazine-category-results hidden aria-label="Magazine category posts">
+          <div class="magazine-category-grid" data-magazine-category-grid></div>
+          <div class="magazine-category-pagination" data-magazine-category-pagination aria-label="Magazine category pagination"></div>
+        </section>
+
+        <section class="magazine-lead-grid" aria-labelledby="featured-title">
+          <article class="magazine-feature-card">
+            <a href="#" class="magazine-feature-image magazine-image magazine-image--forest" aria-label="Read The Ultimate Guide to Korea's Best Rainy Season Getaways">
+              <span>img</span>
+            </a>
+            <div class="magazine-copy">
+              <p>TRAVEL</p>
+              <h2 id="featured-title">The Ultimate Guide to Korea's Best Rainy Season Getaways</h2>
+              <p class="magazine-excerpt">A curated rainy-day route through forest stays, quiet cafes, and slow travel spots worth saving for your next Korea itinerary.</p>
+              <span>Jul 10, 2026</span>
+            </div>
+          </article>
+
+          <aside class="magazine-latest" aria-labelledby="latest-title">
+            <div class="magazine-section-head">
+              <h2 id="latest-title">Latest Posts</h2>
+              <a href="#">VIEW MORE -&gt;</a>
+            </div>
+
+            <article class="magazine-side-card">
+              <a href="#" class="magazine-side-thumb magazine-image magazine-image--paper" aria-label="Read What's Worth Buying This Month?"></a>
+              <div>
+                <p>BEAUTY</p>
+                <h3><a href="#">What Is Worth Buying This Month? Editor's Beauty Cart</a></h3>
+                <span>Jul 8, 2026</span>
+              </div>
+            </article>
+            <article class="magazine-side-card">
+              <a href="#" class="magazine-side-thumb magazine-image magazine-image--pink" aria-label="Read Street Trends We Loved This Week"></a>
+              <div>
+                <p>FASHION</p>
+                <h3><a href="#">Street Trends We Loved This Week From Seoul</a></h3>
+                <span>Jul 7, 2026</span>
+              </div>
+            </article>
+            <article class="magazine-side-card">
+              <a href="#" class="magazine-side-thumb magazine-image magazine-image--food" aria-label="Read Bright Korean Snacks For Summer"></a>
+              <div>
+                <p>K-FOOD</p>
+                <h3><a href="#">Bright Korean Snacks For Your Summer Look</a></h3>
+                <span>Jul 4, 2026</span>
+              </div>
+            </article>
+            <article class="magazine-side-card">
+              <a href="#" class="magazine-side-thumb magazine-image magazine-image--blue" aria-label="Read Why Cushion Is Taking Over TikTok"></a>
+              <div>
+                <p>K-BEAUTY</p>
+                <h3><a href="#">Why Cushion Is Taking Over TikTok This Season</a></h3>
+                <span>Jul 1, 2026</span>
+              </div>
+            </article>
+            <article class="magazine-side-card">
+              <a href="#" class="magazine-side-thumb magazine-image magazine-image--forest" aria-label="Read Calm Weekend Places Editors Saved"></a>
+              <div>
+                <p>LIFESTYLE</p>
+                <h3><a href="#">Calm Weekend Places Our Editors Saved</a></h3>
+                <span>Jun 29, 2026</span>
+              </div>
+            </article>
+          </aside>
+        </section>
+
+        <section class="magazine-popular" aria-labelledby="popular-title">
+          <div class="magazine-section-head magazine-popular-head">
+            <div>
+              <h2 id="popular-title">Popular Posts</h2>
+              <p>Browse the most saved magazine stories by category.</p>
+            </div>
+            <a href="#">VIEW MORE -&gt;</a>
+          </div>
+          <div class="magazine-post-viewport" data-magazine-popular-viewport>
+            <div class="magazine-post-grid" data-magazine-grid>
+              <article class="magazine-post-card" data-magazine-category="travel">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--forest" aria-label="Read The Ultimate Guide to Korea's Best Rainy Season Getaways"><span>img</span></a>
+              <p>TRAVEL</p>
+              <h3><a href="#">The Ultimate Guide to Korea's Best Rainy Season Getaways</a></h3>
+              <p class="magazine-post-excerpt">Recently, editors have been saving quiet travel routes, soft rainy-day styling notes, and places worth bookmarking for the season.</p>
+              <span>Jul 10, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="beauty">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--paper" aria-label="Read What Is Worth Buying This Month?"><span>img</span></a>
+              <p>BEAUTY</p>
+              <h3><a href="#">What Is Worth Buying This Month? Editor's Cart</a></h3>
+              <p class="magazine-post-excerpt">A quick editor shortlist of textures, formulas, and small beauty updates that feel useful right now.</p>
+              <span>Jul 8, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="beauty">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--pink" aria-label="Read Better Layering for Summer"><span>img</span></a>
+              <p>BEAUTY</p>
+              <h3><a href="#">Better Layering For Summer: Sunscreen Routine</a></h3>
+              <p class="magazine-post-excerpt">How to keep a summer routine light, comfortable, and still protective when humidity climbs.</p>
+              <span>Jul 6, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="food">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--food" aria-label="Read Korean Summer Snacks"><span>img</span></a>
+              <p>K-FOOD</p>
+              <h3><a href="#">Korean Summer Snacks You Need To Try</a></h3>
+              <p class="magazine-post-excerpt">Crisp, sweet, and cooling snack picks that make hot afternoons feel a little easier.</p>
+              <span>Jul 5, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="beauty">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--blue" aria-label="Read Daily Sunscreen Notes"><span>img</span></a>
+              <p>BEAUTY</p>
+              <h3><a href="#">Daily Sunscreen Notes From The BridgeOn Editors</a></h3>
+              <p class="magazine-post-excerpt">Our editors compare finish, comfort, and wear time across sunscreen picks for everyday use.</p>
+              <span>Jul 3, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="food">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--paper" aria-label="Read Market Snacks To Pack"><span>img</span></a>
+              <p>K-FOOD</p>
+              <h3><a href="#">Market Snacks To Pack For A Weekend Picnic</a></h3>
+              <p class="magazine-post-excerpt">A simple snack edit for picnic bags, office drawers, and late-night browsing lists.</p>
+              <span>Jul 2, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="food">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--pink" aria-label="Read Sweet Drinks For Humid Days"><span>img</span></a>
+              <p>K-FOOD</p>
+              <h3><a href="#">Sweet Drinks For Humid Days In Seoul</a></h3>
+              <p class="magazine-post-excerpt">Bright drinks and cafe-style flavors that show up everywhere once summer starts.</p>
+              <span>Jun 30, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="toys-crafts">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--blue" aria-label="Read Desk Objects Editors Keep Nearby"><span>img</span></a>
+              <p>TOYS &amp; CRAFTS</p>
+              <h3><a href="#">Desk Objects Our Editors Keep Nearby</a></h3>
+              <p class="magazine-post-excerpt">Small tools, cute accents, and practical bits that make a desk feel more personal.</p>
+              <span>Jun 28, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="toys-crafts">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--food" aria-label="Read Small Gifts With Big Charm"><span>img</span></a>
+              <p>TOYS &amp; CRAFTS</p>
+              <h3><a href="#">Small Gifts With Big Charm Under US$30</a></h3>
+              <p class="magazine-post-excerpt">Low-pressure gifts with enough personality to feel thoughtfully chosen.</p>
+              <span>Jun 25, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="k-pop">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--pink" aria-label="Read K-POP Tour Beauty Bags"><span>img</span></a>
+              <p>K-POP</p>
+              <h3><a href="#">K-POP Tour Beauty Bags Fans Are Saving</a></h3>
+              <p class="magazine-post-excerpt">Portable beauty and fan essentials spotted across concert-day prep lists.</p>
+              <span>Jun 22, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="k-pop">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--forest" aria-label="Read Album Display Ideas"><span>img</span></a>
+              <p>K-POP</p>
+              <h3><a href="#">Album Display Ideas For A Cleaner Shelf</a></h3>
+              <p class="magazine-post-excerpt">Simple ways to keep albums, photocards, and favorite goods organized without hiding them away.</p>
+              <span>Jun 20, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="k-pop">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--blue" aria-label="Read Lightstick Styling Notes"><span>img</span></a>
+              <p>K-POP</p>
+              <h3><a href="#">Lightstick Styling Notes From Recent Concerts</a></h3>
+              <p class="magazine-post-excerpt">Concert styling ideas that make fandom pieces feel polished and personal.</p>
+              <span>Jun 18, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="k-drama">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--paper" aria-label="Read Modern Hanji Finds"><span>img</span></a>
+              <p>K-DRAMA</p>
+              <h3><a href="#">K-Drama Room Details We Keep Noticing</a></h3>
+              <p class="magazine-post-excerpt">Soft interiors, desk accents, and tiny set details that make drama rooms feel memorable.</p>
+              <span>Jun 15, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="kitchen">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--food" aria-label="Read Tea Ware For Everyday Rituals"><span>img</span></a>
+              <p>KITCHEN</p>
+              <h3><a href="#">Tea Ware For Everyday Rituals</a></h3>
+              <p class="magazine-post-excerpt">Pieces that make small daily tea moments feel more grounded and intentional.</p>
+              <span>Jun 12, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="stationery-office">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--pink" aria-label="Read Traditional Patterns Reimagined"><span>img</span></a>
+              <p>STATIONERY &amp; OFFICE</p>
+              <h3><a href="#">Patterned Notes And Desk Gifts Editors Like</a></h3>
+              <p class="magazine-post-excerpt">Pattern-forward office ideas that balance playful details with a current feel.</p>
+              <span>Jun 10, 2026</span>
+              </article>
+            <article class="magazine-post-card" data-magazine-category="toys-crafts">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--paper" aria-label="Read Craft Kits For Slow Weekends"><span>img</span></a>
+              <p>TOYS &amp; CRAFTS</p>
+              <h3><a href="#">Craft Kits For Slow Weekends Indoors</a></h3>
+              <p class="magazine-post-excerpt">Editor-picked kits and small creative sets for calm weekend plans.</p>
+              <span>Jun 8, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="stationery-office">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--blue" aria-label="Read Cute Office Goods"><span>img</span></a>
+              <p>STATIONERY &amp; OFFICE</p>
+              <h3><a href="#">Cute Office Goods That Still Feel Practical</a></h3>
+              <p class="magazine-post-excerpt">Pens, memo pads, and small desk goods that make repeated work easier to enjoy.</p>
+              <span>Jun 6, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="stationery-office">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--forest" aria-label="Read Planner Setup Ideas"><span>img</span></a>
+              <p>STATIONERY &amp; OFFICE</p>
+              <h3><a href="#">Planner Setup Ideas For A Cleaner Week</a></h3>
+              <p class="magazine-post-excerpt">A tidy planning edit with stickers, tabs, and writing tools worth keeping nearby.</p>
+              <span>Jun 4, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="kitchen">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--paper" aria-label="Read Small Kitchen Tools"><span>img</span></a>
+              <p>KITCHEN</p>
+              <h3><a href="#">Small Kitchen Tools For Quick Weeknight Meals</a></h3>
+              <p class="magazine-post-excerpt">Compact tools and storage ideas that make a small kitchen feel more organized.</p>
+              <span>Jun 2, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="kitchen">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--blue" aria-label="Read Cafe-Inspired Kitchen Picks"><span>img</span></a>
+              <p>KITCHEN</p>
+              <h3><a href="#">Cafe-Inspired Kitchen Picks For Home Drinks</a></h3>
+              <p class="magazine-post-excerpt">Cups, trays, and easy tools for making simple drinks feel more finished.</p>
+              <span>May 31, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="travel">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--pink" aria-label="Read Seoul Day Trip Beauty Bag"><span>img</span></a>
+              <p>TRAVEL</p>
+              <h3><a href="#">A Seoul Day Trip Beauty Bag Checklist</a></h3>
+              <p class="magazine-post-excerpt">Light travel picks for humid subway rides, cafe stops, and long walking routes.</p>
+              <span>May 29, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="travel">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--food" aria-label="Read Jeju Snack And Stop Guide"><span>img</span></a>
+              <p>TRAVEL</p>
+              <h3><a href="#">Jeju Snack Stops Editors Would Revisit</a></h3>
+              <p class="magazine-post-excerpt">A relaxed island route of quick bites, tiny shops, and easy souvenirs.</p>
+              <span>May 27, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="k-drama">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--blue" aria-label="Read K-Drama Date Makeup"><span>img</span></a>
+              <p>K-DRAMA</p>
+              <h3><a href="#">K-Drama Date Makeup Details To Try</a></h3>
+              <p class="magazine-post-excerpt">Soft lip colors, gentle glow, and camera-friendly details inspired by recent dramas.</p>
+              <span>May 25, 2026</span>
+            </article>
+            <article class="magazine-post-card" data-magazine-category="k-drama">
+              <a href="#" class="magazine-post-image magazine-image magazine-image--forest" aria-label="Read Weekend Drama Watch Kit"><span>img</span></a>
+              <p>K-DRAMA</p>
+              <h3><a href="#">Weekend Drama Watch Kit For Cozy Nights</a></h3>
+              <p class="magazine-post-excerpt">Snacks, sheet masks, and small comfort picks for a full episode marathon.</p>
+              <span>May 23, 2026</span>
+            </article>
+            </div>
+          </div>
+          <div class="magazine-popular-controls" data-magazine-popular-controls>
+            <button type="button" class="magazine-popular-arrow" data-magazine-popular-prev aria-label="Previous popular posts">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+            </button>
+            <button type="button" class="magazine-popular-arrow" data-magazine-popular-next aria-label="Next popular posts">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
+            </button>
+          </div>
+        </section>
+      </section>
+
+      <section class="newsletter editors-newsletter magazine-newsletter">
+        <div>
+          <h2>Be the first to know</h2>
+          <p>Get trend updates, exclusive offers, and more!</p>
+        </div>
+        <form>
+          <label class="sr-only" for="magazine-newsletter-email">Email</label>
+          <input id="magazine-newsletter-email" type="email" placeholder="Enter Your Email" />
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-main">
+        <a class="logo footer-logo" href="../index.html">Bridge<span>On</span></a>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">MY ACCOUNT</button>
+          <div class="footer-links"><a href="../my-page/my-page.html">My Dashboard</a><a href="../my-page/orders.html">Orders</a><a href="../my-page/wishlist.html">Wishlist</a><a href="../my-page/reviews.html">My Reviews</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">CUSTOMER CARE</button>
+          <div class="footer-links"><a href="#">Help Center</a><a href="#">Shipping &amp; Delivery</a><a href="#">Returns &amp; Refunds</a><a href="#">Contact Us</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">POLICIES</button>
+          <div class="footer-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a><a href="#">Payment Security</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">COMPANY</button>
+          <div class="footer-links"><a href="#">About Us</a><a href="#">Become a Partner</a><a href="#">Careers</a></div>
+        </div>
+      </div>
+      <div class="footer-methods">
+        <div><strong>Payment Method</strong><span>PayPal</span><span>VISA</span><span>Master</span><span>AMEX</span><span>Alipay</span></div>
+        <div><strong>Delivery Method</strong><span>FedEx</span><span>DHL</span><span>aramex</span><span>EMS</span><span>parcel</span></div>
+      </div>
+      <p class="copyright">&copy; 2025 Bridge on, Inc. All rights reserved.</p>
+    </footer>
+
+    <button class="float-button to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+    </button>
+    <button class="float-button chat" aria-label="Chat">
+      <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
+    </button>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
+      <a href="../realtrend/realtrend.html"><img src="../img/mobile-icon/menu/tppick.png" alt="" aria-hidden="true"><span>T.P Pick</span></a>
+      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
+      <a href="../cart/cart.html" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
+      <a href="../my-page/my-page.html"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
+    </nav>
+
+    <script src="../script.js"></script>
+    <script src="./magazine.js"></script>
+  </body>
+</html>

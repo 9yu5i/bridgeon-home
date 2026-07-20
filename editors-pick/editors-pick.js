@@ -361,15 +361,27 @@
   let activeEditorIndex = 0;
   let activePickFilter = "beauty";
   let activePickIndex = 0;
+  let isPickScrollSyncing = false;
+  let pickScrollReleaseTimer = 0;
+  let pickScrollSettleTimer = 0;
 
   const pickPrev = document.querySelector("[data-pick-prev]");
   const pickNext = document.querySelector("[data-pick-next]");
   const pickMeter = document.querySelector("[data-pick-meter]");
   const pickMeterFill = document.querySelector("[data-pick-meter-fill]");
   const pickMeterLabel = document.querySelector("[data-pick-meter-label]");
+  const pickCategoryTabs = document.querySelector(".editor-category-tabs");
 
   const TAB_ORDER = ["beauty", "k-food", "lifestyle", "k-pop", "k-traditional"];
   const PICK_PAGE_SIZE = 3;
+  const compactPicksQuery = window.matchMedia("(max-width: 1120px)");
+  const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* Tablet/mobile: .editor-pick-list is a horizontal snap pager (one panel per
+     category). Scroll/snap end calls setActivePickFilter({ fromScroll: true });
+     tab clicks scroll to that panel with isPickScrollSyncing to avoid loops.
+     Edge swipes wrap last→first / first→last (instant jump). Desktop keeps a
+     single filtered vertical list. */
 
   const escapeHtml = (value) =>
     String(value || "")
@@ -449,16 +461,20 @@
 
   const getVisiblePicks = (editor) => getPicksForTab(editor, activePickFilter);
 
-  const getNextTab = (fromTab) => {
+  const isCompactPicks = () => compactPicksQuery.matches;
+
+  const getNextTab = (fromTab, { wrap = true } = {}) => {
     const start = TAB_ORDER.indexOf(fromTab);
     if (start < 0) return null;
-    return TAB_ORDER[(start + 1) % TAB_ORDER.length];
+    if (wrap) return TAB_ORDER[(start + 1) % TAB_ORDER.length];
+    return start < TAB_ORDER.length - 1 ? TAB_ORDER[start + 1] : null;
   };
 
-  const getPrevTab = (fromTab) => {
+  const getPrevTab = (fromTab, { wrap = true } = {}) => {
     const start = TAB_ORDER.indexOf(fromTab);
     if (start < 0) return null;
-    return TAB_ORDER[(start - 1 + TAB_ORDER.length) % TAB_ORDER.length];
+    if (wrap) return TAB_ORDER[(start - 1 + TAB_ORDER.length) % TAB_ORDER.length];
+    return start > 0 ? TAB_ORDER[start - 1] : null;
   };
 
   const getPickPageSize = () => PICK_PAGE_SIZE;
@@ -469,35 +485,73 @@
     return Math.floor((total - 1) / pageSize) * pageSize;
   };
 
+  const updatePicksHeading = (editor) => {
+    if (!picksTitle) return;
+    const visiblePicks = getVisiblePicks(editor);
+    const suffix = visiblePicks.length === 1 ? "item" : "items";
+    picksTitle.innerHTML = `${escapeHtml(editor.name)}&rsquo;s Picks <span>(${visiblePicks.length} ${suffix})</span>`;
+  };
+
+  const updatePickTabState = () => {
+    pickTabs.forEach((tab) => {
+      const isActive = tab.dataset.pickFilter === activePickFilter;
+      tab.classList.toggle("is-active", isActive);
+      tab.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+  };
+
+  const scrollCategoryTabIntoView = () => {
+    if (!pickCategoryTabs || !isCompactPicks()) return;
+    const activeTab = pickTabs.find((tab) => tab.dataset.pickFilter === activePickFilter);
+    activeTab?.scrollIntoView({
+      inline: "center",
+      block: "nearest",
+      behavior: reduceMotionQuery.matches ? "auto" : "smooth",
+    });
+  };
+
   const updatePickControls = (editor) => {
     const visiblePicks = getVisiblePicks(editor);
     const total = visiblePicks.length;
     const pageSize = getPickPageSize();
     const maxIndex = getMaxPickIndex(total);
     const endIndex = total ? Math.min(total, activePickIndex + pageSize) : 0;
-    const canGoNextTab = Boolean(getNextTab(activePickFilter));
-    const canGoPrevTab = Boolean(getPrevTab(activePickFilter));
+    const canGoNextTab = Boolean(getNextTab(activePickFilter, { wrap: true }));
+    const canGoPrevTab = Boolean(getPrevTab(activePickFilter, { wrap: true }));
 
     if (pickPrev) {
-      pickPrev.disabled = total > 0
-        ? activePickIndex <= 0 && !canGoPrevTab
-        : !canGoPrevTab;
+      pickPrev.disabled = isCompactPicks()
+        ? !canGoPrevTab
+        : total > 0
+          ? activePickIndex <= 0 && !canGoPrevTab
+          : !canGoPrevTab;
     }
 
     if (pickNext) {
-      pickNext.disabled = total > 0
-        ? activePickIndex >= maxIndex && !canGoNextTab
-        : !canGoNextTab;
+      pickNext.disabled = isCompactPicks()
+        ? !canGoNextTab
+        : total > 0
+          ? activePickIndex >= maxIndex && !canGoNextTab
+          : !canGoNextTab;
     }
 
     if (pickMeterFill) {
-      const progress = total > 0 ? endIndex / total : 0;
-      pickMeterFill.style.transform = `scaleX(${progress})`;
+      if (isCompactPicks()) {
+        const tabIndex = Math.max(0, TAB_ORDER.indexOf(activePickFilter));
+        const progress = TAB_ORDER.length > 1 ? (tabIndex + 1) / TAB_ORDER.length : 1;
+        pickMeterFill.style.transform = `scaleX(${progress})`;
+      } else {
+        const progress = total > 0 ? endIndex / total : 0;
+        pickMeterFill.style.transform = `scaleX(${progress})`;
+      }
     }
 
     if (pickMeterLabel) {
       if (!total) {
         pickMeterLabel.textContent = "No picks";
+      } else if (isCompactPicks()) {
+        const tabIndex = Math.max(0, TAB_ORDER.indexOf(activePickFilter));
+        pickMeterLabel.textContent = `${titleCaseCategory(activePickFilter)} · ${tabIndex + 1} / ${TAB_ORDER.length}`;
       } else {
         const startLabel = activePickIndex + 1;
         const categoryLabel = titleCaseCategory(activePickFilter);
@@ -508,26 +562,101 @@
       }
     }
 
-    if (pickMeter) pickMeter.hidden = total <= pageSize;
+    if (pickMeter) {
+      pickMeter.hidden = isCompactPicks() ? false : total <= pageSize;
+    }
   };
 
-  const renderPicks = (editor, { resetIndex = true } = {}) => {
+  const renderPickPanel = (editor, tab) => {
+    const picks = getPicksForTab(editor, tab);
+    const body = picks.length
+      ? picks.map(renderPickCard).join("")
+      : `<p class="editor-empty-message">No ${escapeHtml(titleCaseCategory(tab))} picks yet.</p>`;
+    return `<div class="editor-pick-panel" data-pick-panel="${escapeHtml(tab)}">${body}</div>`;
+  };
+
+  const scrollPickPanelIntoView = (filter, { instant = false } = {}) => {
+    if (!pickList || !isCompactPicks()) return;
+    const panel = pickList.querySelector(`[data-pick-panel="${filter}"]`);
+    if (!panel) return;
+
+    const targetLeft = panel.offsetLeft;
+    if (Math.abs(pickList.scrollLeft - targetLeft) < 2) return;
+
+    isPickScrollSyncing = true;
+    const useInstant = instant || reduceMotionQuery.matches;
+    pickList.scrollTo({
+      left: targetLeft,
+      behavior: useInstant ? "auto" : "smooth",
+    });
+
+    const release = () => {
+      isPickScrollSyncing = false;
+    };
+
+    if (useInstant) {
+      window.requestAnimationFrame(release);
+      return;
+    }
+
+    const onEnd = () => {
+      pickList.removeEventListener("scrollend", onEnd);
+      window.clearTimeout(pickScrollReleaseTimer);
+      release();
+    };
+
+    pickList.addEventListener("scrollend", onEnd, { once: true });
+    window.clearTimeout(pickScrollReleaseTimer);
+    pickScrollReleaseTimer = window.setTimeout(() => {
+      pickList.removeEventListener("scrollend", onEnd);
+      release();
+    }, 450);
+  };
+
+  const syncPickFilterFromScroll = () => {
+    if (!pickList || !isCompactPicks() || isPickScrollSyncing) return;
+
+    const panels = Array.from(pickList.querySelectorAll("[data-pick-panel]"));
+    if (!panels.length) return;
+
+    const midpoint = pickList.scrollLeft + pickList.clientWidth / 2;
+    let closest = panels[0];
+    let closestDist = Infinity;
+
+    panels.forEach((panel) => {
+      const panelMid = panel.offsetLeft + panel.offsetWidth / 2;
+      const dist = Math.abs(panelMid - midpoint);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closest = panel;
+      }
+    });
+
+    const filter = closest.dataset.pickPanel;
+    if (!filter || filter === activePickFilter) return;
+
+    setActivePickFilter(filter, { fromScroll: true });
+  };
+
+  const renderPicks = (editor, { resetIndex = true, syncScroll = true } = {}) => {
     const visiblePicks = getVisiblePicks(editor);
     if (resetIndex) activePickIndex = 0;
     activePickIndex = Math.min(activePickIndex, getMaxPickIndex(visiblePicks.length));
 
-    if (picksTitle) {
-      const suffix = visiblePicks.length === 1 ? "item" : "items";
-      picksTitle.innerHTML = `${escapeHtml(editor.name)}&rsquo;s Picks <span>(${visiblePicks.length} ${suffix})</span>`;
-    }
+    updatePicksHeading(editor);
 
     if (!pickList) return;
 
-    const pagePicks = visiblePicks.slice(activePickIndex, activePickIndex + getPickPageSize());
-
-    pickList.innerHTML = pagePicks.length
-      ? pagePicks.map(renderPickCard).join("")
-      : `<p class="editor-empty-message">No ${escapeHtml(titleCaseCategory(activePickFilter))} picks yet.</p>`;
+    if (isCompactPicks()) {
+      pickList.innerHTML = TAB_ORDER.map((tab) => renderPickPanel(editor, tab)).join("");
+      if (syncScroll) scrollPickPanelIntoView(activePickFilter, { instant: true });
+    } else {
+      const pagePicks = visiblePicks.slice(activePickIndex, activePickIndex + getPickPageSize());
+      pickList.innerHTML = pagePicks.length
+        ? pagePicks.map(renderPickCard).join("")
+        : `<p class="editor-empty-message">No ${escapeHtml(titleCaseCategory(activePickFilter))} picks yet.</p>`;
+      pickList.scrollLeft = 0;
+    }
 
     updatePickControls(editor);
   };
@@ -542,6 +671,15 @@
   };
 
   const goNextPick = () => {
+    if (isCompactPicks()) {
+      const nextTab = getNextTab(activePickFilter, { wrap: true });
+      if (nextTab) {
+        const wraps = activePickFilter === TAB_ORDER[TAB_ORDER.length - 1];
+        setActivePickFilter(nextTab, { instantScroll: wraps });
+      }
+      return;
+    }
+
     const editor = editors[activeEditorIndex];
     const visiblePicks = getVisiblePicks(editor);
     const pageSize = getPickPageSize();
@@ -558,6 +696,15 @@
   };
 
   const goPrevPick = () => {
+    if (isCompactPicks()) {
+      const prevTab = getPrevTab(activePickFilter, { wrap: true });
+      if (prevTab) {
+        const wraps = activePickFilter === TAB_ORDER[0];
+        setActivePickFilter(prevTab, { instantScroll: wraps });
+      }
+      return;
+    }
+
     const editor = editors[activeEditorIndex];
     const visiblePicks = getVisiblePicks(editor);
     const pageSize = getPickPageSize();
@@ -578,13 +725,30 @@
     activePickFilter = filter || "beauty";
     activePickIndex = Number.isInteger(options.startIndex) ? options.startIndex : 0;
 
-    pickTabs.forEach((tab) => {
-      const isActive = tab.dataset.pickFilter === activePickFilter;
-      tab.classList.toggle("is-active", isActive);
-      tab.setAttribute("aria-selected", isActive ? "true" : "false");
-    });
+    updatePickTabState();
 
-    renderPicks(editors[activeEditorIndex], { resetIndex: !Number.isInteger(options.startIndex) });
+    const editor = editors[activeEditorIndex];
+
+    if (options.fromScroll) {
+      updatePicksHeading(editor);
+      updatePickControls(editor);
+      scrollCategoryTabIntoView();
+      return;
+    }
+
+    if (isCompactPicks() && pickList?.querySelector("[data-pick-panel]") && !options.forceRender) {
+      updatePicksHeading(editor);
+      updatePickControls(editor);
+      scrollPickPanelIntoView(activePickFilter, { instant: Boolean(options.instantScroll) });
+      scrollCategoryTabIntoView();
+      return;
+    }
+
+    renderPicks(editor, {
+      resetIndex: !Number.isInteger(options.startIndex),
+      syncScroll: true,
+    });
+    scrollCategoryTabIntoView();
   };
 
   const renderMagazineCard = (magazine) => `
@@ -627,7 +791,7 @@
 
     renderProfile(editor);
     renderMagazines(editor);
-    setActivePickFilter(activePickFilter);
+    setActivePickFilter(activePickFilter, { forceRender: true, instantScroll: true });
     updateMagazineDots();
   };
 
@@ -672,6 +836,157 @@
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", isActive ? "true" : "false");
   });
+
+  let pickScrollFrame = 0;
+  const schedulePickScrollSync = () => {
+    if (!isCompactPicks() || isPickScrollSyncing) return;
+    window.cancelAnimationFrame(pickScrollFrame);
+    pickScrollFrame = window.requestAnimationFrame(() => {
+      window.clearTimeout(pickScrollSettleTimer);
+      pickScrollSettleTimer = window.setTimeout(syncPickFilterFromScroll, 80);
+    });
+  };
+
+  pickList?.addEventListener("scroll", schedulePickScrollSync, { passive: true });
+  pickList?.addEventListener("scrollend", () => {
+    if (!isCompactPicks() || isPickScrollSyncing) return;
+    window.clearTimeout(pickScrollSettleTimer);
+    syncPickFilterFromScroll();
+  });
+
+  /*
+    Wrap last↔first on compact.
+    Pointer events fail here: native touch panning cancels the pointer before
+    pointerup, so edge swipes never reached tryWrap. Use touch + scroll edges.
+  */
+  const PICK_WRAP_SWIPE_PX = 48;
+  const PICK_EDGE_PX = 4;
+  let pickTouchId = null;
+  let pickTouchStartX = 0;
+  let pickTouchStartY = 0;
+  let pickTouchLastX = 0;
+  let pickTouchLastY = 0;
+  let pickTouchStartScroll = 0;
+  let pickMouseDrag = null;
+
+  const getPickScrollMax = () => {
+    if (!pickList) return 0;
+    return Math.max(0, pickList.scrollWidth - pickList.clientWidth);
+  };
+
+  const isPickScrollAtStart = (scrollLeft = pickList?.scrollLeft ?? 0) =>
+    scrollLeft <= PICK_EDGE_PX;
+
+  const isPickScrollAtEnd = (scrollLeft = pickList?.scrollLeft ?? 0) =>
+    scrollLeft >= getPickScrollMax() - PICK_EDGE_PX;
+
+  const wrapPickToFilter = (filter) => {
+    setActivePickFilter(filter, { instantScroll: true });
+  };
+
+  const tryWrapPickFromDelta = (dx, dy, startScroll) => {
+    if (!isCompactPicks() || !pickList || isPickScrollSyncing) return false;
+    if (Math.abs(dx) < PICK_WRAP_SWIPE_PX || Math.abs(dx) <= Math.abs(dy)) return false;
+
+    const startedAtEnd = isPickScrollAtEnd(startScroll);
+    const startedAtStart = isPickScrollAtStart(startScroll);
+    const firstTab = TAB_ORDER[0];
+    const lastTab = TAB_ORDER[TAB_ORDER.length - 1];
+
+    // Stay-on-edge check (allows iOS rubber-band overscroll past max/min).
+    // Swipe left from last → Beauty; swipe right from first → K-Traditional.
+    if (dx < 0 && startedAtEnd && pickList.scrollLeft >= startScroll - PICK_EDGE_PX) {
+      wrapPickToFilter(firstTab);
+      return true;
+    }
+
+    if (dx > 0 && startedAtStart && pickList.scrollLeft <= startScroll + PICK_EDGE_PX) {
+      wrapPickToFilter(lastTab);
+      return true;
+    }
+
+    return false;
+  };
+
+  const endPickTouchGesture = (clientX, clientY) => {
+    if (pickTouchId == null) return;
+    const startScroll = pickTouchStartScroll;
+    const dx = clientX - pickTouchStartX;
+    const dy = clientY - pickTouchStartY;
+    pickTouchId = null;
+    tryWrapPickFromDelta(dx, dy, startScroll);
+  };
+
+  pickList?.addEventListener("touchstart", (event) => {
+    if (!isCompactPicks() || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    pickTouchId = touch.identifier;
+    pickTouchStartX = touch.clientX;
+    pickTouchStartY = touch.clientY;
+    pickTouchLastX = touch.clientX;
+    pickTouchLastY = touch.clientY;
+    pickTouchStartScroll = pickList.scrollLeft;
+  }, { passive: true });
+
+  pickList?.addEventListener("touchmove", (event) => {
+    if (pickTouchId == null) return;
+    const touch = Array.from(event.touches).find((item) => item.identifier === pickTouchId);
+    if (!touch) return;
+    pickTouchLastX = touch.clientX;
+    pickTouchLastY = touch.clientY;
+  }, { passive: true });
+
+  pickList?.addEventListener("touchend", (event) => {
+    if (!isCompactPicks() || pickTouchId == null) return;
+    const touch = Array.from(event.changedTouches).find((item) => item.identifier === pickTouchId);
+    if (!touch) {
+      pickTouchId = null;
+      return;
+    }
+    endPickTouchGesture(touch.clientX, touch.clientY);
+  }, { passive: true });
+
+  pickList?.addEventListener("touchcancel", () => {
+    if (pickTouchId == null) return;
+    endPickTouchGesture(pickTouchLastX, pickTouchLastY);
+  }, { passive: true });
+
+  // Mouse / pen drag on tablet still uses pointer (touch is covered above).
+  pickList?.addEventListener("pointerdown", (event) => {
+    if (!isCompactPicks() || event.pointerType === "touch" || event.button > 0) return;
+    pickMouseDrag = {
+      id: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      scroll: pickList.scrollLeft,
+    };
+  });
+
+  pickList?.addEventListener("pointerup", (event) => {
+    if (!pickMouseDrag || pickMouseDrag.id !== event.pointerId) return;
+    const start = pickMouseDrag;
+    pickMouseDrag = null;
+    tryWrapPickFromDelta(
+      event.clientX - start.x,
+      event.clientY - start.y,
+      start.scroll
+    );
+  });
+
+  pickList?.addEventListener("pointercancel", (event) => {
+    if (!pickMouseDrag || pickMouseDrag.id !== event.pointerId) return;
+    pickMouseDrag = null;
+  });
+
+  const handleCompactPicksChange = () => {
+    setActivePickFilter(activePickFilter, { forceRender: true, instantScroll: true });
+  };
+
+  if (typeof compactPicksQuery.addEventListener === "function") {
+    compactPicksQuery.addEventListener("change", handleCompactPicksChange);
+  } else if (typeof compactPicksQuery.addListener === "function") {
+    compactPicksQuery.addListener(handleCompactPicksChange);
+  }
 
   magazineGrid?.addEventListener("scroll", () => {
     window.requestAnimationFrame(updateMagazineDots);

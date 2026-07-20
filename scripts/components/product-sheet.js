@@ -522,7 +522,10 @@ const initProductDetailCardLinks = () => {
       const card = event.target.closest(".listing-card, .product-card, .mypage-product-card");
       if (!card || !container.contains(card)) return;
 
-      navigateWithPageTransition(PRODUCT_DETAIL_URL);
+      const detailHref = card.dataset.productDetailLink
+        ? new URL(card.dataset.productDetailLink, window.location.href).href
+        : PRODUCT_DETAIL_URL;
+      navigateWithPageTransition(detailHref);
     });
   });
 };

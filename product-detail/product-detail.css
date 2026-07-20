@@ -52,7 +52,7 @@
   --product-action-cart-font: 21px;
   --product-action-cart-icon-w: 18px;
   --product-action-cart-icon-h: 21px;
-  --product-wish-icon-size: 30px;
+  --product-wish-icon-size: 26px;
   overflow-x: clip;
   overflow-y: visible;
   background: #fff;
@@ -2026,7 +2026,7 @@ body.is-product-inquiry-open {
     --product-action-cart-font: 16px;
     --product-action-cart-icon-w: 16px;
     --product-action-cart-icon-h: 18px;
-    --product-wish-icon-size: 24px;
+    --product-wish-icon-size: 20px;
   }
 
   .product-detail-main {
@@ -2352,7 +2352,7 @@ body.is-product-inquiry-open {
     --product-action-cart-font: 15px;
     --product-action-cart-icon-w: 15px;
     --product-action-cart-icon-h: 17px;
-    --product-wish-icon-size: 22px;
+    --product-wish-icon-size: 18px;
   }
 
   .product-detail-shell {

@@ -30,7 +30,7 @@ const mobileQuaternaryBackButton = document.querySelector(".mobile-quaternary-ba
 const mobileQuaternaryTitle = document.querySelector(".mobile-quaternary-title");
 const mobileQuaternaryList = document.querySelector(".mobile-quaternary-list");
 const categoryMenu = document.querySelector(".category-menu");
-const categoryLinks = document.querySelectorAll(".category-nav a");
+let categoryLinks = Array.from(document.querySelectorAll(".category-nav a"));
 const categoryMegaPanels = document.querySelectorAll("[data-menu-panel]");
 const compactHeaderSearchQuery = window.matchMedia("(max-width: 1120px)");
 const compactHeaderSearchPage = document.body.matches(
@@ -138,6 +138,40 @@ const getListingCategoryUrl = (key) => {
 
 const getBeautyListingUrl = () => getListingCategoryUrl("beauty");
 
+const getBestListingUrl = () => `${getListingPagePrefix()}best.html`;
+
+const getNewListingUrl = () => `${getListingPagePrefix()}new.html`;
+
+const getTimeDealUrl = () => {
+  if (document.body.classList.contains("timedeal-page")) return "./timedeal.html";
+  if (
+    document.body.classList.contains("listing-page") ||
+    document.body.classList.contains("product-detail-page") ||
+    document.body.classList.contains("cart-page") ||
+    document.body.classList.contains("editors-page") ||
+    document.body.classList.contains("realtrend-page") ||
+    document.body.classList.contains("my-page")
+  ) {
+    return "../timedeal/timedeal.html";
+  }
+  return "timedeal/timedeal.html";
+};
+
+const getTpMagazineUrl = () => {
+  if (document.body.classList.contains("editors-page")) return "./magazine.html";
+  if (
+    document.body.classList.contains("listing-page") ||
+    document.body.classList.contains("timedeal-page") ||
+    document.body.classList.contains("product-detail-page") ||
+    document.body.classList.contains("cart-page") ||
+    document.body.classList.contains("realtrend-page") ||
+    document.body.classList.contains("my-page")
+  ) {
+    return "../editors-pick/magazine.html";
+  }
+  return "editors-pick/magazine.html";
+};
+
 const wireListingCategoryLinks = () => {
   Object.entries(listingCategoryPages).forEach(([key]) => {
     const url = getListingCategoryUrl(key);
@@ -184,21 +218,24 @@ document.querySelectorAll(".category-nav a[data-mega-target='tp-pick']").forEach
 
 document.querySelectorAll(".category-mega[data-menu-panel='tp-pick'] .mega-column h3").forEach((heading) => {
   const headingLink = heading.querySelector("a");
-  if (headingLink && headingLink.textContent.trim() === "Editor's Pick") {
-    headingLink.setAttribute("href", getEditorsPickUrl());
+  const headingText = heading.textContent.trim();
+  const headingUrl = headingText === "T.P Magazine" ? getTpMagazineUrl() : getEditorsPickUrl();
+
+  if (headingLink && (headingText === "Editor's Pick" || headingText === "T.P Magazine")) {
+    headingLink.setAttribute("href", headingUrl);
     return;
   }
 
-  if (heading.textContent.trim() !== "Editor's Pick") return;
+  if (headingText !== "Editor's Pick" && headingText !== "T.P Magazine") return;
   heading.setAttribute("role", "link");
   heading.setAttribute("tabindex", "0");
   heading.addEventListener("click", () => {
-    navigateWithPageTransition(getEditorsPickUrl());
+    navigateWithPageTransition(headingUrl);
   });
   heading.addEventListener("keydown", (event) => {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
-    navigateWithPageTransition(getEditorsPickUrl());
+    navigateWithPageTransition(headingUrl);
   });
 });
 
@@ -254,7 +291,7 @@ const mobileThirdCategoryData = {
   ],
   "tp-pick": [
     { label: "Editor's Pick", href: getEditorsPickUrl() },
-    { label: "T.P Magazine"},
+    { label: "T.P Magazine", href: getTpMagazineUrl() },
     { label: "Real Trend", href: getRealtrendUrl() },
   ],
 };
@@ -632,6 +669,78 @@ const closeMobileQuaternary = () => {
 
 const categoryNav = document.querySelector(".category-nav");
 const categoryNavScrollQuery = window.matchMedia("(max-width: 1120px)");
+const desktopCategoryNavHtml = categoryNav?.innerHTML || "";
+
+const compactCategoryNavItems = [
+  { key: "best", label: "BEST", href: getBestListingUrl() },
+  { key: "new", label: "NEW", href: getNewListingUrl() },
+  { key: "brand", label: "Brand", href: "#" },
+  { key: "timedeal", label: "Timedeal", href: getTimeDealUrl(), className: "accent-warm" },
+  { key: "editors", label: "Editor's Pick", href: getEditorsPickUrl() },
+  { key: "magazine", label: "T.P Magazine", href: getTpMagazineUrl() },
+  { key: "realtrend", label: "Real Trend", href: getRealtrendUrl() },
+];
+
+const getCompactCategoryNavActiveKey = () => {
+  if (document.body.classList.contains("listing-page--best")) return "best";
+  if (document.body.classList.contains("listing-page--new")) return "new";
+  if (document.body.classList.contains("timedeal-page")) return "timedeal";
+  if (document.body.classList.contains("realtrend-page")) return "realtrend";
+  if (document.body.classList.contains("magazine-page")) return "magazine";
+  if (document.body.classList.contains("editors-page")) {
+    return window.location.hash === "#editor-mag-title" ? "magazine" : "editors";
+  }
+  return "";
+};
+
+const syncCategoryLinks = () => {
+  categoryLinks = Array.from(document.querySelectorAll(".category-nav a"));
+};
+
+const renderCompactCategoryNav = () => {
+  if (!categoryNav) return;
+  const activeKey = getCompactCategoryNavActiveKey();
+  categoryNav.classList.add("is-compact-category-nav");
+  categoryNav.replaceChildren(
+    ...compactCategoryNavItems.map((item) => {
+      const link = document.createElement("a");
+      link.href = item.href;
+      link.textContent = item.label;
+      link.dataset.compactNav = item.key;
+      if (item.className) {
+        link.classList.add(...item.className.split(/\s+/).filter(Boolean));
+      }
+      if (item.key === activeKey) {
+        link.classList.add("is-active");
+        link.setAttribute("aria-current", "page");
+      }
+      return link;
+    })
+  );
+  syncCategoryLinks();
+};
+
+const restoreDesktopCategoryNav = () => {
+  if (!categoryNav) return;
+  categoryNav.classList.remove("is-compact-category-nav");
+  if (categoryNav.dataset.compactRendered === "true") {
+    categoryNav.innerHTML = desktopCategoryNavHtml;
+  }
+  delete categoryNav.dataset.compactRendered;
+  syncCategoryLinks();
+};
+
+const syncCategoryNavMode = () => {
+  if (!categoryNav) return;
+  if (categoryNavScrollQuery.matches) {
+    if (categoryNav.dataset.compactRendered !== "true") {
+      categoryNav.dataset.compactRendered = "true";
+      renderCompactCategoryNav();
+    }
+    return;
+  }
+  restoreDesktopCategoryNav();
+};
 
 const getCurrentCategoryLink = () => (
   categoryNav?.querySelector('a[aria-current="page"]') ||
@@ -756,6 +865,21 @@ searchClearButtons.forEach((button) => {
   });
 });
 
+document.querySelectorAll(".recent-searches").forEach((list) => {
+  list.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const closeIcon = target.closest("span");
+    const button = target.closest("button");
+    if (!button || !closeIcon || button.lastElementChild !== closeIcon) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    button.remove();
+  });
+});
+
 mobileMenuButtons.forEach((button) => {
   button.addEventListener("click", (event) => {
     event.preventDefault();
@@ -807,21 +931,45 @@ mobileMenuPanel?.querySelectorAll("a").forEach((link) => {
   link.addEventListener("click", closeMobileMenu);
 });
 
-categoryLinks.forEach((link) => {
-  link.addEventListener("mouseenter", () => openCategoryMega(link.dataset.megaTarget));
-  link.addEventListener("focus", () => openCategoryMega(link.dataset.megaTarget));
-  link.addEventListener("click", (event) => {
-    if (link.getAttribute("aria-current") === "page" && categoryNavScrollQuery.matches) {
-      event.preventDefault();
-      restoreCurrentCategoryLink();
-      scrollCurrentCategoryIntoView("smooth");
-      return;
-    }
+const wireCategoryNavLinks = () => {
+  categoryLinks.forEach((link) => {
+    link.addEventListener("mouseenter", () => openCategoryMega(link.dataset.megaTarget));
+    link.addEventListener("focus", () => openCategoryMega(link.dataset.megaTarget));
+    link.addEventListener("click", (event) => {
+      if (link.getAttribute("aria-current") === "page" && categoryNavScrollQuery.matches) {
+        event.preventDefault();
+        restoreCurrentCategoryLink();
+        scrollCurrentCategoryIntoView("smooth");
+        return;
+      }
 
-    const href = link.getAttribute("href");
-    if (href && href !== "#") return;
-    event.preventDefault();
+      const href = link.getAttribute("href");
+      if (href && href !== "#") return;
+      event.preventDefault();
+    });
   });
+};
+
+syncCategoryNavMode();
+wireCategoryNavLinks();
+
+const resyncCategoryNav = () => {
+  syncCategoryNavMode();
+  wireCategoryNavLinks();
+  queueScrollCurrentCategoryIntoView();
+};
+
+if (categoryNavScrollQuery.addEventListener) {
+  categoryNavScrollQuery.addEventListener("change", resyncCategoryNav);
+} else {
+  categoryNavScrollQuery.addListener(resyncCategoryNav);
+}
+
+window.addEventListener("hashchange", () => {
+  if (!categoryNavScrollQuery.matches || categoryNav?.dataset.compactRendered !== "true") return;
+  renderCompactCategoryNav();
+  wireCategoryNavLinks();
+  queueScrollCurrentCategoryIntoView("smooth");
 });
 
 categoryMegaPanels.forEach((panel) => {

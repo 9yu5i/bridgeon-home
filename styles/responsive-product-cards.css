@@ -308,15 +308,13 @@
   .seller-section .tag-tabs button {
       font-size: 14px;
       padding-bottom: 5px;
-      font-weight: 500;
+      font-weight: 600;
     }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1120px) {
   .seller-section .section-heading a {
-      flex: 0 0 auto;
-      align-self: center;
-      margin-left: auto;
+      display: none;
     }
 }
 
@@ -745,7 +743,7 @@
       grid-template-columns: repeat(3, var(--seller-tablet-card-width));
       grid-template-rows: auto auto;
       column-gap: clamp(8px, 1.6vw, 14px);
-      row-gap: clamp(4px, 0.8vw, 10px);
+      row-gap: clamp(24px, 3.8vw, 42px);
       justify-content: center;
       align-items: end;
       width: fit-content;

@@ -642,7 +642,7 @@ body.is-cart-country-open {
   border-radius: 6px;
   color: #111;
   background: #fff;
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .cart-promo-card form button,
@@ -1005,7 +1005,7 @@ body.is-cart-coupon-open {
 .cart-summary-total dd {
   color: #111;
   font-size: 18px;
-  font-weight: 900;
+  font-weight: 800;
 }
 
 .cart-save {
@@ -1405,7 +1405,7 @@ body.is-cart-coupon-open {
   }
 
   .cart-heading p {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .cart-heading .cart-continue.desktop-only {
@@ -1556,7 +1556,7 @@ body.is-cart-coupon-open {
   .cart-promo-applied p,
   .cart-coupon-selected p {
     min-height: 34px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .cart-summary-card dl {
@@ -1694,14 +1694,14 @@ body.is-cart-coupon-open {
   }
 
   .cart-item-info p {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .cart-item-info h2 {
     display: -webkit-box;
     margin-bottom: 7px;
     overflow: hidden;
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.2;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -1730,7 +1730,7 @@ body.is-cart-coupon-open {
     right: 0;
     bottom: 0;
     justify-content: flex-end;
-    margin-top: 4px;
+    margin-top: 8px;
     font-size: 13px;
   }
 
