@@ -746,8 +746,14 @@ body.is-review-edit-open {
   display: none;
 }
 
-.review-edit-preview img,
-.review-edit-preview span {
+.review-edit-preview-item {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.review-edit-preview-item img,
+.review-edit-preview-item span {
   display: block;
   width: 100%;
   aspect-ratio: 1;
@@ -756,6 +762,39 @@ body.is-review-edit-open {
   background-position: center;
   background-size: cover;
   object-fit: cover;
+}
+
+.review-edit-photo-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid rgba(17, 12, 28, 0.14);
+  border-radius: 50%;
+  color: #1a1228;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 2px 10px rgba(17, 12, 28, 0.28);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.review-edit-photo-remove:hover,
+.review-edit-photo-remove:focus-visible {
+  color: #fff;
+  background: var(--reviews-purple, #7b3fe4);
+  border-color: transparent;
+  transform: scale(1.04);
 }
 
 .review-edit-actions {

@@ -37,7 +37,6 @@
   max-width: 228px;
   height: auto;
   min-height: 0;
-  aspect-ratio: 228 / 342;
   border-color: rgba(64, 47, 88, 0.18);
   color: #261f31;
   background:
@@ -51,8 +50,18 @@
   max-width: 219px;
   height: auto;
   min-height: 0;
-  aspect-ratio: 219 / 328;
   align-self: end;
+}
+
+/* Desktop-only card ratios — do not inherit into the mobile 3-col grid (iOS Safari collapses nested aspect-ratio). */
+@media (min-width: 1121px) {
+  .seller-rail .product-card.top-card {
+    aspect-ratio: 228 / 342;
+  }
+
+  .seller-rail .product-card:not(.top-card) {
+    aspect-ratio: 219 / 328;
+  }
 }
 
 

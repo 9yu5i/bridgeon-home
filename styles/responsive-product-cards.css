@@ -42,8 +42,10 @@
   .seller-rail .product-card.top-card,
     .seller-rail .product-card:not(.top-card) {
       width: auto;
+      max-width: none;
       height: auto;
       min-height: 0;
+      aspect-ratio: auto;
       align-self: auto;
     }
 }
@@ -650,15 +652,18 @@
     .seller-section .product-card.top-card {
       container-type: inline-size;
       width: 100%;
+      height: auto;
       min-height: 0;
+      aspect-ratio: auto;
     }
 }
 
 @media (max-width: 1120px) {
   .seller-section .product-img {
+      flex: 0 0 auto;
       width: 100%;
       height: auto;
-      min-height: 0;
+      min-height: unset;
       aspect-ratio: 1 / 1;
     }
 }
@@ -672,8 +677,8 @@
 }
 
 @media (max-width: 1120px) {
-  .seller-section .product-card > {
-      font-size: clamp(21px, 5cqi, 28spx);
+  .seller-section .product-card > b {
+      font-size: clamp(21px, 5cqi, 28px);
     }
 }
 
@@ -768,7 +773,7 @@
       flex: 0 0 auto;
       width: 100%;
       height: auto;
-      min-height: 0;
+      min-height: unset;
       max-height: none;
       aspect-ratio: 1 / 1;
     }

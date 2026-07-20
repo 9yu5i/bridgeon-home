@@ -862,6 +862,14 @@
     padding: 55px 14px 0 7px;
   }
 
+  .deal-card.special .deal-copy h3,
+  .deal-card.special .deal-copy p,
+  .deal-card.special .deal-copy strong,
+  .deal-card.special .deal-actions {
+    left: 38%;
+    right: 12px;
+  }
+
   .deal-card.time .deal-copy {
     padding: 63px 8px 0 7px;
   }

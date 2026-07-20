@@ -404,6 +404,7 @@
     let activeReviewTrigger = null;
     let activeReviewRating = 5;
     let reviewDraftPhotoUrls = [];
+    let reviewPhotosDirty = false;
     const reviewSavedPhotoUrls = new WeakMap();
 
     const setReviewEditRating = (rating) => {
@@ -416,6 +417,32 @@
       });
     };
 
+    const updateReviewEditUploadStatus = (fallbackText) => {
+      if (!photoUploadStatus) return;
+      const count = photoPreview?.querySelectorAll(".review-edit-preview-item").length || 0;
+      if (count) {
+        photoUploadStatus.textContent = `${count} photo${count > 1 ? "s" : ""} selected`;
+        return;
+      }
+      photoUploadStatus.textContent = fallbackText || "Up to 5 photos";
+    };
+
+    const createReviewEditPreviewItem = (media, { photoUrl, label } = {}) => {
+      const item = document.createElement("div");
+      item.className = "review-edit-preview-item";
+      if (photoUrl) item.dataset.photoUrl = photoUrl;
+
+      const removeButton = document.createElement("button");
+      removeButton.type = "button";
+      removeButton.className = "review-edit-photo-remove";
+      removeButton.dataset.reviewEditPhotoRemove = "true";
+      removeButton.setAttribute("aria-label", label || "Remove photo");
+      removeButton.textContent = "\u00D7";
+
+      item.append(media, removeButton);
+      return item;
+    };
+
     const clearReviewDraftPhotos = (revoke = true) => {
       if (revoke) reviewDraftPhotoUrls.forEach((url) => URL.revokeObjectURL(url));
       reviewDraftPhotoUrls = [];
@@ -425,25 +452,35 @@
     const renderReviewPhotoPreview = (card) => {
       if (!photoPreview) return;
       photoPreview.replaceChildren();
+      reviewPhotosDirty = false;
       const savedUrls = reviewSavedPhotoUrls.get(card);
 
       if (savedUrls?.length) {
-        savedUrls.forEach((url) => {
+        savedUrls.forEach((url, index) => {
           const image = document.createElement("img");
           image.src = url;
           image.alt = "Selected review photo";
-          photoPreview.appendChild(image);
+          photoPreview.appendChild(
+            createReviewEditPreviewItem(image, {
+              photoUrl: url,
+              label: `Remove photo ${index + 1}`,
+            })
+          );
         });
-        if (photoUploadStatus) photoUploadStatus.textContent = `${savedUrls.length} photos selected`;
+        updateReviewEditUploadStatus();
         return;
       }
 
       const currentThumbs = Array.from(card.querySelectorAll(".review-gallery-thumb")).slice(0, 5);
-      currentThumbs.forEach((thumb) => {
+      currentThumbs.forEach((thumb, index) => {
         const swatch = document.createElement("span");
         swatch.className = thumb.className;
         swatch.style.cssText = thumb.getAttribute("style") || "";
-        photoPreview.appendChild(swatch);
+        photoPreview.appendChild(
+          createReviewEditPreviewItem(swatch, {
+            label: `Remove photo ${index + 1}`,
+          })
+        );
       });
       if (photoUploadStatus) {
         photoUploadStatus.textContent = currentThumbs.length ? "Current photos" : "Up to 5 photos";
@@ -454,6 +491,7 @@
       if (!photoPreview) return;
       photoPreview.replaceChildren();
       clearReviewDraftPhotos();
+      reviewPhotosDirty = true;
 
       files.slice(0, 5).forEach((file) => {
         const url = URL.createObjectURL(file);
@@ -461,14 +499,15 @@
         const image = document.createElement("img");
         image.src = url;
         image.alt = file.name;
-        photoPreview.appendChild(image);
+        photoPreview.appendChild(
+          createReviewEditPreviewItem(image, {
+            photoUrl: url,
+            label: `Remove ${file.name}`,
+          })
+        );
       });
 
-      if (photoUploadStatus) {
-        photoUploadStatus.textContent = reviewDraftPhotoUrls.length
-          ? `${reviewDraftPhotoUrls.length} photo${reviewDraftPhotoUrls.length > 1 ? "s" : ""} selected`
-          : "Up to 5 photos";
-      }
+      updateReviewEditUploadStatus();
     };
 
     const closeReviewEdit = () => {
@@ -476,6 +515,7 @@
       reviewEditLayer.setAttribute("aria-hidden", "true");
       document.body.classList.remove("is-review-edit-open");
       clearReviewDraftPhotos();
+      reviewPhotosDirty = false;
       if (activeReviewTrigger && typeof activeReviewTrigger.focus === "function") {
         activeReviewTrigger.focus();
       }
@@ -535,6 +575,31 @@
       renderSelectedReviewPhotos(files);
     });
 
+    photoPreview?.addEventListener("click", (event) => {
+      const removeButton = event.target.closest("[data-review-edit-photo-remove]");
+      if (!removeButton || !photoPreview.contains(removeButton)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const item = removeButton.closest(".review-edit-preview-item");
+      if (!item) return;
+
+      const url = item.dataset.photoUrl;
+      if (url) {
+        const draftIndex = reviewDraftPhotoUrls.indexOf(url);
+        if (draftIndex !== -1) {
+          URL.revokeObjectURL(url);
+          reviewDraftPhotoUrls.splice(draftIndex, 1);
+        }
+      }
+
+      item.remove();
+      reviewPhotosDirty = true;
+      if (photoFileInput) photoFileInput.value = "";
+      updateReviewEditUploadStatus();
+    });
+
     reviewEditLayer.querySelector("[data-review-edit-save]")?.addEventListener("click", () => {
       if (!activeReviewCard) return;
       const reviewTitle = headingInput?.value.trim();
@@ -549,21 +614,44 @@
       }
       if (scoreValue) scoreValue.textContent = `${activeReviewRating}.0`;
 
-      if (reviewDraftPhotoUrls.length) {
+      if (reviewDraftPhotoUrls.length || reviewPhotosDirty) {
         const previousSavedUrls = reviewSavedPhotoUrls.get(activeReviewCard) || [];
-        previousSavedUrls.forEach((url) => URL.revokeObjectURL(url));
-
         const gallery = activeReviewCard.querySelector(".review-gallery");
+        const previewItems = Array.from(photoPreview?.querySelectorAll(".review-edit-preview-item") || []);
+        const nextSavedUrls = [];
+
         gallery?.replaceChildren(
-          ...reviewDraftPhotoUrls.map((url) => {
+          ...previewItems.map((item) => {
+            const image = item.querySelector("img");
+            const swatch = item.querySelector("span");
             const thumb = document.createElement("span");
-            thumb.className = "review-gallery-thumb review-gallery-thumb--uploaded";
-            thumb.style.backgroundImage = `url("${url}")`;
+
+            if (image?.src) {
+              const url = item.dataset.photoUrl || image.src;
+              thumb.className = "review-gallery-thumb review-gallery-thumb--uploaded";
+              thumb.style.backgroundImage = `url("${url}")`;
+              if (url.startsWith("blob:")) nextSavedUrls.push(url);
+              return thumb;
+            }
+
+            thumb.className = swatch?.className || "review-gallery-thumb";
+            thumb.style.cssText = swatch?.getAttribute("style") || "";
             return thumb;
           })
         );
-        reviewSavedPhotoUrls.set(activeReviewCard, reviewDraftPhotoUrls);
+
+        previousSavedUrls.forEach((url) => {
+          if (!nextSavedUrls.includes(url)) URL.revokeObjectURL(url);
+        });
+
+        if (nextSavedUrls.length) {
+          reviewSavedPhotoUrls.set(activeReviewCard, nextSavedUrls);
+        } else {
+          reviewSavedPhotoUrls.delete(activeReviewCard);
+        }
+
         reviewDraftPhotoUrls = [];
+        reviewPhotosDirty = false;
         if (photoFileInput) photoFileInput.value = "";
       }
 
