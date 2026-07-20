@@ -359,7 +359,7 @@
   ];
 
   let activeEditorIndex = 0;
-  let activePickFilter = "all";
+  let activePickFilter = "beauty";
   let activePickIndex = 0;
 
   const pickPrev = document.querySelector("[data-pick-prev]");
@@ -368,7 +368,7 @@
   const pickMeterFill = document.querySelector("[data-pick-meter-fill]");
   const pickMeterLabel = document.querySelector("[data-pick-meter-label]");
 
-  const TAB_ORDER = ["all", "beauty", "k-food", "lifestyle", "k-pop", "k-traditional"];
+  const TAB_ORDER = ["beauty", "k-food", "lifestyle", "k-pop", "k-traditional"];
   const PICK_PAGE_SIZE = 3;
 
   const escapeHtml = (value) =>
@@ -379,7 +379,6 @@
       .replace(/"/g, "&quot;");
 
   const titleCaseCategory = (category) => ({
-    all: "All",
     beauty: "Beauty",
     "k-food": "K-Food",
     lifestyle: "Lifestyle",
@@ -576,7 +575,7 @@
   };
 
   const setActivePickFilter = (filter, options = {}) => {
-    activePickFilter = filter || "all";
+    activePickFilter = filter || "beauty";
     activePickIndex = Number.isInteger(options.startIndex) ? options.startIndex : 0;
 
     pickTabs.forEach((tab) => {
@@ -618,7 +617,7 @@
     const nextIndex = Number.isInteger(index) ? index : 0;
     const editor = editors[nextIndex] || editors[0];
     activeEditorIndex = editors.indexOf(editor);
-    if (options.resetFilter !== false) activePickFilter = "all";
+    if (options.resetFilter !== false) activePickFilter = "beauty";
 
     editorButtons.forEach((button, buttonIndex) => {
       const isActive = buttonIndex === activeEditorIndex;
@@ -658,7 +657,7 @@
 
   pickTabs.forEach((button) => {
     button.addEventListener("click", () => {
-      setActivePickFilter(button.dataset.pickFilter || "all");
+      setActivePickFilter(button.dataset.pickFilter || "beauty");
     });
   });
 

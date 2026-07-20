@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
 const scrollButtons = document.querySelectorAll("[data-scroll]");
 
 scrollButtons.forEach((button) => {
@@ -7,8 +7,7 @@ scrollButtons.forEach((button) => {
     if (!rail) return;
     if (
       rail.classList.contains("trend-rail") ||
-      rail.classList.contains("seller-rail") ||
-      rail.classList.contains("review-rail")
+      rail.classList.contains("seller-rail")
     ) return;
 
     const direction = Number(button.dataset.direction || 1);
@@ -29,9 +28,7 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
       ? "(max-width: 1120px)"
       : railId === "trend-rail"
         ? null
-        : railId === "review-rail"
-          ? "(max-width: 1120px)"
-          : "(max-width: 760px)";
+        : "(max-width: 760px)";
   const disableLoopMedia = disableLoopQuery ? window.matchMedia(disableLoopQuery) : null;
   const isLoopDisabled = () =>
     disableLoopMedia ? disableLoopMedia.matches : false;
@@ -303,5 +300,61 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
 
 initLoopRail({ railId: "trend-rail", autoLoop: false, autoStartOnLoad: false });
 initLoopRail({ railId: "seller-rail", autoLoop: true });
-initLoopRail({ railId: "review-rail", autoLoop: true });
+
+const initReviewMarquee = () => {
+  const rail = document.getElementById("review-rail");
+  if (!rail) return;
+
+  const mobileMedia = window.matchMedia("(max-width: 760px)");
+  const reduceMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const originalCards = Array.from(rail.children).filter(
+    (child) => !child.classList.contains("is-loop-clone"),
+  );
+
+  const clearClones = () => {
+    rail.querySelectorAll(".is-loop-clone").forEach((clone) => clone.remove());
+    originalCards.forEach((card) => rail.appendChild(card));
+    rail.classList.remove("is-marquee");
+    rail.style.removeProperty("--review-marquee-distance");
+  };
+
+  const syncDistance = () => {
+    const firstOriginal = originalCards[0];
+    const firstClone = rail.querySelector(".is-loop-clone");
+    if (!firstOriginal || !firstClone) return;
+    const distance = firstClone.offsetLeft - firstOriginal.offsetLeft;
+    if (distance > 0) {
+      rail.style.setProperty("--review-marquee-distance", `${Math.round(distance)}px`);
+    }
+  };
+
+  const enableMarquee = () => {
+    clearClones();
+    if (mobileMedia.matches || reduceMotionMedia.matches) return;
+
+    originalCards.forEach((card) => {
+      const clone = card.cloneNode(true);
+      clone.classList.add("is-loop-clone");
+      clone.setAttribute("aria-hidden", "true");
+      rail.appendChild(clone);
+    });
+
+    rail.classList.add("is-marquee");
+    // Measure after layout so the loop starts exactly at the first clone.
+    window.requestAnimationFrame(() => {
+      syncDistance();
+      window.requestAnimationFrame(syncDistance);
+    });
+  };
+
+  enableMarquee();
+  mobileMedia.addEventListener("change", enableMarquee);
+  reduceMotionMedia.addEventListener("change", enableMarquee);
+  window.addEventListener("resize", () => {
+    if (!rail.classList.contains("is-marquee")) return;
+    syncDistance();
+  });
+};
+
+initReviewMarquee();
 })();

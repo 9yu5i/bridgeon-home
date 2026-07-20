@@ -1285,9 +1285,11 @@
   .deals-section .deal-grid {
     display: grid;
     grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 15px;
-    width: 100%;
+    justify-items: stretch;
+    gap: clamp(15px, 2vw, 24px);
+    width: min(100%, 800px);
+    max-width: 100%;
+    min-width: 0;
     height: auto;
     align-items: start;
     margin-inline: auto;
@@ -1295,16 +1297,18 @@
 
   .deals-section .deal-card {
     box-sizing: border-box;
-    width: 800px;
+    width: 100%;
     max-width: 100%;
+    min-width: 0;
     height: auto;
     min-height: 0;
     aspect-ratio: auto;
   }
 
   .deals-section .deal-grid .deal-card.special, .deals-section .deal-grid .deal-card.time, .deal-grid .deal-card.special {
-    width: 800px;
+    width: 100%;
     max-width: 100%;
+    min-width: 0;
   }
 
   .deals-section .deal-grid .deal-card.special, .deal-grid .deal-card.special {
@@ -2138,4 +2142,9 @@
     aspect-ratio: auto;
     container-type: inline-size;
   }
+}
+
+.deal-card.time .deal-copy h3,
+.deal-card.special .deal-copy p {
+  color: #111;
 }

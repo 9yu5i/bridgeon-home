@@ -13,16 +13,27 @@
 }
 
 @media (max-width: 760px) {
+  .reviews-section .rail-arrow {
+    display: none;
+  }
+
   .review-rail {
-      top: 30px;
-      display: grid;
-      gap: 26px;
-      overflow: visible;
-      box-sizing: border-box;
-      width: min(100%, 600px);
-      margin-inline: auto;
-    }
+    top: 30px;
+    display: grid;
+    gap: 26px;
+    overflow: visible;
+    box-sizing: border-box;
+    width: min(100%, 600px);
+    margin-inline: auto;
+    animation: none;
+  }
+
+  .review-rail.is-marquee {
+    animation: none;
+    width: min(100%, 600px);
+  }
 }
+
 
 @media (max-width: 760px) {
   .review-rail > :nth-child(4), .review-rail > :nth-child(5), .review-rail > :nth-child(6) {
@@ -154,6 +165,37 @@
       grid-column: 3;
       width: 27px;
       height: 27px;
+    }
+}
+
+@media (max-width: 520px) {
+  .review-img {
+      min-height: 0;
+      aspect-ratio: 1 / 1;
+      align-self: start;
+    }
+}
+
+@media (max-width: 520px) {
+  .review-body {
+      min-height: 0;
+      align-self: start;
+      padding-bottom: 10px;
+    }
+}
+
+@media (max-width: 520px) {
+  .review-body strong {
+      margin-bottom: 9px;
+    }
+}
+
+@media (max-width: 520px) {
+  .review-body p {
+      min-height: 0;
+      margin-bottom: 12px;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
     }
 }
 
@@ -326,8 +368,9 @@
 
 @media (min-width: 1121px) and (max-width: 1500px) {
   .reviews-section .rail-viewport {
-      overflow-x: hidden;
-    }
+    overflow: visible;
+    clip-path: inset(-40px 0 -40px 0);
+  }
 }
 
 @media (min-width: 1121px) and (max-width: 1500px) {

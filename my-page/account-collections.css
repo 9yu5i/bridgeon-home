@@ -57,7 +57,7 @@
   color: var(--account-purple);
   background: #eadcff;
   font-size: 13px;
-  font-weight: 900;
+  font-weight: 600;
 }
 
 .account-collection-tabs {
@@ -83,7 +83,7 @@
   color: var(--account-ink);
   background: #fff;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
@@ -97,7 +97,7 @@
 
 @media (max-width: 1120px) {
   .account-collection-main {
-    padding: 19px 22px 86px;
+    padding: 30px 22px 86px;
   }
 
   .account-collection-shell {

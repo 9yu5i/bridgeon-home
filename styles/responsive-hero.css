@@ -8,7 +8,8 @@
 
 @media (max-width: 1120px) {
   .hero {
-      --hero-card-width: clamp(320px, 44vw, 500px);
+      --hero-card-width: clamp(327px, 42vw, 459px);
+      --hero-card-ratio: 327 / 384;
       --hero-card-gap: clamp(12px, 1.8vw, 20px);
       display: block;
       min-height: auto;
@@ -21,7 +22,7 @@
 @media (max-width: 1120px) {
   .hero-frame {
       width: 100%;
-      height: clamp(360px, 50vw, 540px);
+      height: auto;
       overflow: hidden;
       border-radius: 0;
       background: #fff;
@@ -34,7 +35,7 @@
   .hero-track {
       align-items: center;
       gap: var(--hero-card-gap);
-      height: 100%;
+      height: auto;
       transition: transform 0.48s cubic-bezier(0.22, 0.61, 0.36, 1);
       will-change: transform;
     }
@@ -44,11 +45,13 @@
   .hero-slide-item {
       flex: 0 0 var(--hero-card-width);
       width: var(--hero-card-width);
-      height: clamp(300px, 42vw, 450px);
-      aspect-ratio: auto;
+      height: auto;
+      aspect-ratio: var(--hero-card-ratio);
       border-radius: 9px;
       overflow: hidden;
-      transition: height 0.35s ease;
+      transform: scale(0.84);
+      transform-origin: center;
+      transition: transform 0.35s ease;
     }
 }
 
@@ -60,7 +63,8 @@
 
 @media (max-width: 1120px) {
   .hero-slide-item.is-active {
-      height: clamp(360px, 50vw, 540px);
+      height: auto;
+      transform: scale(1);
     }
 }
 
@@ -180,9 +184,10 @@
 @media (max-width: 760px) {
   .hero {
       --hero-card-width: min(327px, calc(100vw - 72px));
-      --hero-card-gap: 20px;
+      --hero-card-ratio: 327 / 384;
+      --hero-card-gap: 1px;
       display: block;
-      min-height: calc(384px + 20px);
+      min-height: auto;
       padding: 20px 0 0;
       overflow: hidden;
       background: #fff;
@@ -192,7 +197,7 @@
 @media (max-width: 760px) {
   .hero-frame {
       width: 100%;
-      height: 384px;
+      height: auto;
       overflow: hidden;
       border-radius: 0;
       background: #fff;
@@ -204,7 +209,7 @@
 @media (max-width: 760px) {
   .hero-track {
       gap: var(--hero-card-gap);
-      height: 100%;
+      height: auto;
       align-items: center;
       transition: transform 0.48s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
@@ -214,11 +219,13 @@
   .hero-slide-item {
       flex-basis: var(--hero-card-width);
       width: var(--hero-card-width);
-      height: 320px;
-      aspect-ratio: auto;
+      height: auto;
+      aspect-ratio: var(--hero-card-ratio);
       border-radius: 7px;
       overflow: hidden;
-      transition: height 0.35s ease;
+      transform: scale(0.84);
+      transform-origin: center;
+      transition: transform 0.35s ease;
     }
 }
 
@@ -230,7 +237,8 @@
 
 @media (max-width: 760px) {
   .hero-slide-item.is-active {
-      height: 384px;
+      height: auto;
+      transform: scale(1);
     }
 }
 

@@ -55,8 +55,21 @@
     linear-gradient(135deg, #ff8fbe 0%, #ffc2d7 45%, #ffd8e8 100%);
 }
 
+.listing-page--new .listing-hero {
+  background:
+    radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.82) 0 5%, transparent 18%),
+    radial-gradient(circle at 82% 20%, rgba(255, 255, 255, 0.45) 0 4%, transparent 17%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.02)),
+    linear-gradient(135deg, #a98cff 0%, #c6ecff 46%, #ffe0f1 100%);
+}
+
 .listing-page--best .listing-hero-kicker {
   color: rgba(255, 255, 255, 0.95);
+  font-size: clamp(14px, 1.6vw, 24px);
+}
+
+.listing-page--new .listing-hero-kicker {
+  color: rgba(255, 255, 255, 0.96);
   font-size: clamp(14px, 1.6vw, 24px);
 }
 
@@ -66,15 +79,24 @@
   text-shadow: 0 8px 28px rgba(199, 66, 122, 0.22);
 }
 
-.listing-page--best .listing-breadcrumbs {
+.listing-page--new .listing-hero-title {
+  font-size: clamp(46px, 8vw, 118px);
+  letter-spacing: 0;
+  text-shadow: 0 8px 28px rgba(76, 62, 170, 0.2);
+}
+
+.listing-page--best .listing-breadcrumbs,
+.listing-page--new .listing-breadcrumbs {
   margin-bottom: 0;
 }
 
-.listing-layout--best {
+.listing-layout--best,
+.listing-layout--new {
   display: block;
 }
 
-.listing-results--best {
+.listing-results--best,
+.listing-results--new {
   padding-left: 0;
 }
 
@@ -129,6 +151,181 @@
   border-color: var(--purple);
   color: #fff;
   background: var(--purple);
+}
+
+.listing-brand-sections {
+  display: grid;
+  gap: 56px;
+  width: 100%;
+  margin: 34px auto 0;
+}
+
+.listing-brand-section {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+
+.listing-brand-banner {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: clamp(220px, 32vw, 360px);
+  padding: clamp(22px, 3vw, 36px);
+  overflow: hidden;
+  border-radius: 16px;
+  color: #fff;
+  text-decoration: none;
+  isolation: isolate;
+}
+
+.listing-brand-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(105deg, rgba(12, 10, 16, 0.72) 0%, rgba(12, 10, 16, 0.28) 48%, rgba(12, 10, 16, 0.12) 100%),
+    linear-gradient(145deg, #d8c8ff, #9f7aef);
+}
+
+.listing-brand-banner--green::before {
+  background:
+    linear-gradient(105deg, rgba(12, 10, 16, 0.72) 0%, rgba(12, 10, 16, 0.28) 48%, rgba(12, 10, 16, 0.12) 100%),
+    linear-gradient(145deg, #e9f7ce 0%, #7db89a 52%, #2f5d4a 100%);
+}
+
+.listing-brand-banner--pink::before {
+  background:
+    linear-gradient(105deg, rgba(12, 10, 16, 0.72) 0%, rgba(12, 10, 16, 0.28) 48%, rgba(12, 10, 16, 0.12) 100%),
+    linear-gradient(145deg, #fff0f8 0%, #e48bb8 52%, #6d2f55 100%);
+}
+
+.listing-brand-banner--blue::before {
+  background:
+    linear-gradient(105deg, rgba(12, 10, 16, 0.72) 0%, rgba(12, 10, 16, 0.28) 48%, rgba(12, 10, 16, 0.12) 100%),
+    linear-gradient(145deg, #edf9ff 0%, #6eb8dc 48%, #234e6d 100%);
+}
+
+.listing-brand-banner--skin::before {
+  background:
+    linear-gradient(105deg, rgba(12, 10, 16, 0.72) 0%, rgba(12, 10, 16, 0.28) 48%, rgba(12, 10, 16, 0.12) 100%),
+    linear-gradient(145deg, #ffe8e6 0%, #d98aa8 52%, #6a3344 100%);
+}
+
+.listing-brand-banner--mint::before {
+  background:
+    linear-gradient(105deg, rgba(12, 10, 16, 0.72) 0%, rgba(12, 10, 16, 0.28) 48%, rgba(12, 10, 16, 0.12) 100%),
+    linear-gradient(145deg, #edfff7 0%, #78c0a0 48%, #2b5d49 100%);
+}
+
+.listing-brand-banner--lavender::before {
+  background:
+    linear-gradient(105deg, rgba(12, 10, 16, 0.72) 0%, rgba(12, 10, 16, 0.28) 48%, rgba(12, 10, 16, 0.12) 100%),
+    linear-gradient(145deg, #f4efff 0%, #a88cf0 48%, #3d2a6d 100%);
+}
+
+.listing-brand-banner--aqua::before {
+  background:
+    linear-gradient(105deg, rgba(12, 10, 16, 0.72) 0%, rgba(12, 10, 16, 0.28) 48%, rgba(12, 10, 16, 0.12) 100%),
+    linear-gradient(145deg, #e7fbff 0%, #5eb6d4 52%, #21556c 100%);
+}
+
+.listing-brand-banner--cream::before {
+  background:
+    linear-gradient(105deg, rgba(12, 10, 16, 0.72) 0%, rgba(12, 10, 16, 0.28) 48%, rgba(12, 10, 16, 0.12) 100%),
+    linear-gradient(145deg, #fff8df 0%, #d4b06a 52%, #6a4f28 100%);
+}
+
+.listing-brand-banner-copy {
+  display: grid;
+  gap: 10px;
+  max-width: 420px;
+}
+
+.listing-brand-banner-label {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.listing-brand-banner-name {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.listing-brand-banner-text {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.listing-brand-banner-cta {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  margin-left: auto;
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: var(--purple);
+  background: #fff;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transition: color 0.22s ease, background-color 0.22s ease;
+}
+
+.listing-brand-banner:hover .listing-brand-banner-cta,
+.listing-brand-banner:focus-visible .listing-brand-banner-cta {
+  color: #fff;
+  background: var(--purple);
+}
+
+.listing-brand-products {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.listing-brand-products-label {
+  margin: 0;
+  color: #8a8491;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.listing-brand-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.listing-brand-grid .listing-card {
+  width: 100%;
+  min-width: 0;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.listing-brand-grid .listing-card-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
 }
 
 /* Shell */
@@ -576,6 +773,25 @@
   font-weight: 800;
 }
 
+.listing-card-new-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #7b3fe4 0%, #f04dff 100%);
+  box-shadow: 0 8px 18px rgba(123, 63, 228, 0.24);
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 800;
+}
+
 .listing-card[data-rank="1"] .listing-card-rank,
 .listing-card[data-rank="2"] .listing-card-rank,
 .listing-card[data-rank="3"] .listing-card-rank {
@@ -792,7 +1008,8 @@
   height: 1px;
 }
 
-.listing-page--best .listing-card {
+.listing-page--best .listing-card,
+.listing-page--new .listing-card {
   animation: listing-card-load-in 0.32s ease both;
 }
 
@@ -944,6 +1161,30 @@
     font-size: 12px;
   }
 
+  .listing-brand-sections {
+    gap: 36px;
+    margin-top: 22px;
+  }
+
+  .listing-brand-section {
+    gap: 16px;
+  }
+
+  .listing-brand-banner {
+    min-height: 180px;
+    padding: 20px 18px;
+    border-radius: 12px;
+  }
+
+  .listing-brand-banner-name {
+    font-size: 28px;
+  }
+
+  .listing-brand-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
   .listing-card-rank {
     top: 8px;
     left: 8px;
@@ -982,6 +1223,16 @@
   }
 
   .listing-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .listing-brand-sections {
+    gap: 48px;
+    margin-top: 40px;
+  }
+
+  .listing-brand-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
   }
@@ -1024,6 +1275,10 @@
     display: block;
   }
 
+  .listing-layout.listing-layout--new {
+    display: block;
+  }
+
   .listing-filters {
     display: block;
     position: sticky;
@@ -1036,7 +1291,8 @@
     padding-left: 32px;
   }
 
-  .listing-results--best {
+  .listing-results--best,
+  .listing-results--new {
     padding-left: 0;
   }
 
@@ -1046,6 +1302,31 @@
     grid-template-columns: repeat(auto-fill, var(--listing-card-width));
     gap: 20px;
     justify-content: center;
+  }
+
+  .listing-brand-sections {
+    width: min(100%, var(--listing-grid-width));
+    gap: 64px;
+    margin-top: 46px;
+  }
+
+  .listing-brand-section {
+    gap: 24px;
+  }
+
+  .listing-brand-banner {
+    min-height: 340px;
+    padding: 36px 40px;
+  }
+
+  .listing-brand-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .listing-page--new .listing-brand-grid .listing-card {
+    width: 100%;
+    outline: 0;
   }
 
   .listing-card {

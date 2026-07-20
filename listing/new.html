@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Best Products | BridgeOn</title>
+    <title>New Arrivals | BridgeOn</title>
     <link rel="stylesheet" href="../reset.css" />
     <link rel="stylesheet" href="../font.css" />
     <link rel="stylesheet" href="../common.css" />
     <link rel="stylesheet" href="../styles.css" />
     <link rel="stylesheet" href="./listing.css" />
   </head>
-  <body class="listing-page listing-page--best">
+  <body class="listing-page listing-page--new">
     <header class="site-header">
       <div class="promo-bar">
         <div class="promo-inner">
@@ -112,8 +112,8 @@
 
       <div class="category-menu">
         <nav class="category-nav" aria-label="Primary">
-          <a class="is-active" href="./best.html" aria-current="page">BEST</a>
-          <a href="./new.html">NEW</a>
+          <a href="./best.html">BEST</a>
+          <a class="is-active" href="./new.html" aria-current="page">NEW</a>
           <a href="#">Brand</a>
           <a href="./beauty.html" data-mega-target="beauty">Beauty</a>
           <a href="./k-food.html" data-mega-target="k-food">K-Food</a>
@@ -470,10 +470,10 @@
     </header>
 
     <main class="listing-main">
-      <section class="listing-hero listing-hero--best" aria-label="Best products promotion">
+      <section class="listing-hero listing-hero--new" aria-label="New arrivals promotion">
         <div class="listing-hero-inner">
-          <p class="listing-hero-kicker">Discover the Top 100 products</p>
-          <h2 class="listing-hero-title">BEST</h2>
+          <p class="listing-hero-kicker">Fresh arrivals by brand</p>
+          <h2 class="listing-hero-title">NEW ARRIVAL</h2>
         </div>
       </section>
 
@@ -481,22 +481,12 @@
         <nav class="listing-breadcrumbs desktop-only" aria-label="Breadcrumb">
           <a href="../index.html">Home</a>
           <span aria-hidden="true">&gt;</span>
-          <span>BEST</span>
+          <span>NEW</span>
         </nav>
 
-        <div class="listing-layout listing-layout--best">
-          <section class="listing-results listing-results--best" aria-label="Best product results">
-            <div class="listing-category-tabs" data-best-tabs role="tablist" aria-label="Best product categories">
-              <button type="button" class="is-active" data-best-category="all" role="tab" aria-selected="true">All</button>
-              <button type="button" data-best-category="beauty" role="tab" aria-selected="false">Beauty</button>
-              <button type="button" data-best-category="k-food" role="tab" aria-selected="false">K-Food</button>
-              <button type="button" data-best-category="lifestyle" role="tab" aria-selected="false">Lifestyle</button>
-              <button type="button" data-best-category="k-pop" role="tab" aria-selected="false">K-pop</button>
-              <button type="button" data-best-category="k-traditional" role="tab" aria-selected="false">K-Traditional</button>
-            </div>
-
-            <div class="listing-grid listing-grid--best" data-best-grid aria-live="polite"></div>
-            <div class="listing-load-sentinel" data-best-sentinel aria-hidden="true"></div>
+        <div class="listing-layout listing-layout--new">
+          <section class="listing-results listing-results--new" aria-label="New arrival product results">
+            <div class="listing-brand-sections" data-new-brand-sections aria-live="polite"></div>
           </section>
         </div>
       </div>
@@ -691,6 +681,6 @@
 
     <script src="../script.js"></script>
     <script src="./listing.js"></script>
-    <script src="./best.js"></script>
+    <script src="./new.js"></script>
   </body>
 </html>

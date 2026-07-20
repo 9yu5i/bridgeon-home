@@ -384,7 +384,7 @@ const openMobileMenu = () => {
   document.body.classList.add("is-mobile-menu-open");
   mobileMenuPanel.setAttribute("aria-hidden", "false");
   mobileMenuButtons.forEach((button) => {
-    if (!button.classList.contains("mobile-menu")) button.setAttribute("aria-expanded", "true");
+    button.setAttribute("aria-expanded", "true");
   });
 };
 
@@ -399,7 +399,7 @@ const closeMobileMenu = () => {
   mobileQuaternaryPanel?.setAttribute("aria-hidden", "true");
   mobileMenuPanel.setAttribute("aria-hidden", "true");
   mobileMenuButtons.forEach((button) => {
-    if (!button.classList.contains("mobile-menu")) button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-expanded", "false");
   });
 };
 
@@ -757,23 +757,8 @@ searchClearButtons.forEach((button) => {
 });
 
 mobileMenuButtons.forEach((button) => {
-  if (button.classList.contains("mobile-menu")) {
-    button.setAttribute("aria-label", "Go back");
-    button.removeAttribute("aria-controls");
-    button.removeAttribute("aria-expanded");
-  }
-
   button.addEventListener("click", (event) => {
     event.preventDefault();
-    if (button.classList.contains("mobile-menu")) {
-      if (window.history.length > 1) {
-        window.history.back();
-        return;
-      }
-      navigateWithPageTransition(getHomeUrl());
-      return;
-    }
-
     openMobileMenu();
   });
 });

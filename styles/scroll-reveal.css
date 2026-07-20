@@ -190,7 +190,13 @@ html.scroll-reveal-pending .editor-card > a {
 }
 
 .scroll-reveal-hero .today-pick {
-  transition-delay: 0.12s;
+  transition:
+    opacity 0.9s var(--scroll-reveal-ease) 0.12s,
+    transform 0.9s var(--scroll-reveal-ease) 0.12s,
+    width 0.3s ease,
+    height 0.3s ease,
+    padding 0.3s ease,
+    border-radius 0.3s ease;
 }
 
 .scroll-reveal-hero.is-inview .hero-frame,

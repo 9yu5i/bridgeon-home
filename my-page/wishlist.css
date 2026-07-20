@@ -32,9 +32,9 @@
     min-height: clamp(132px, 42vw, 230px);
   }
 
-  .wishlist-grid .mypage-product-body {
+ /*  .wishlist-grid .mypage-product-body {
     min-height: 170px;
-  }
+  } */
 }
 
 @media (min-width: 761px) and (max-width: 1120px) {

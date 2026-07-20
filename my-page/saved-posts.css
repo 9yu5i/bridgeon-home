@@ -88,10 +88,13 @@
   display: inline-block;
   width: 15px;
   height: 10px;
-  margin-right: 5px;
-  border: 2px solid currentColor;
-  border-radius: 50%;
+  margin-right: 6px;
+  margin-top: 4px;
   vertical-align: -1px;
+  background-image: url("../img/main-img/eye.png");
+  background-size: 15px 10px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .saved-reel-copy {

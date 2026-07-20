@@ -156,6 +156,7 @@
   display: grid;
   grid-template-columns: 154px minmax(0, 1fr);
   align-items: start;
+  align-self: center;
   gap: 18px;
   min-width: 0;
   min-height: 154px;
@@ -802,7 +803,7 @@ body.is-review-edit-open {
 
 @media (max-width: 1120px) {
   .reviews-page-main {
-    padding: 19px 22px 86px;
+    padding: 30px 22px 86px;
   }
 
   .reviews-page-shell {

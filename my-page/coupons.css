@@ -239,13 +239,12 @@
   margin-left: auto;
   color: #211b2c;
   font-size: 13px;
-  line-height: 1.25;
+  line-height: 1.2;
   font-weight: 500;
   text-align: left;
 }
 
 .coupon-ticket-top p b {
-  display: block;
   color: #E11867;
   font-weight: 700;
 }
@@ -358,7 +357,7 @@
 
 @media (max-width: 1120px) {
   .coupons-page-main {
-    padding: 19px 22px 86px;
+    padding: 30px 22px 86px;
   }
 
   .coupons-page-shell {
@@ -449,6 +448,10 @@
   }
 
   .coupon-ticket {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-content: start;
+    column-gap: 8px;
     min-height: 143px;
     padding: 17px 22px 19px;
     border-radius: 8px;
@@ -462,17 +465,29 @@
   }
 
   .coupon-ticket-top {
+    display: contents;
     min-height: 24px;
-    margin-bottom: 12px;
+    margin: 0;
   }
 
   .coupon-ticket-top p {
-    max-width: 142px;
+    grid-column: 1 / -1;
+    grid-row: 5;
+    max-width: none;
+    margin: 14px 0 0 !important;
     font-size: 12px;
+    line-height: 1.2;
   }
 
   .coupon-ticket h3 {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 12px;
     font-size: 21px;
+  }
+
+  .coupon-ticket:not(:has(.coupon-ticket-top)) h3 {
+    margin-top: 0;
   }
 
   .coupon-ticket h3 strong {
@@ -480,15 +495,21 @@
   }
 
   .coupon-name {
+    grid-column: 1 / -1;
+    grid-row: 3;
     font-size: 17px;
   }
 
   .coupon-terms {
+    grid-column: 1 / -1;
+    grid-row: 4;
     margin-top: 18px !important;
     font-size: 12px;
   }
 
   .coupon-expire-inline {
+    grid-column: 1 / -1;
+    grid-row: 6;
     font-size: 12px;
   }
 }
@@ -511,6 +532,22 @@
 
   .coupon-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 761px) and (max-width: 856px) {
+  .coupon-ticket {
+    column-gap: 10px;
+  }
+
+  .coupon-ticket-top p {
+    max-width: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .coupon-ticket-top p {
+    margin-left: 0 !important;
   }
 }
 

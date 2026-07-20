@@ -1,4 +1,4 @@
-﻿.trend-rail {
+.trend-rail {
   gap: var(--trend-gap);
   overflow: visible;
   scroll-snap-type: none;
@@ -70,6 +70,57 @@
 
 .review-rail.is-dragging {
   cursor: grabbing;
+}
+
+.review-rail.is-marquee {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  max-width: none;
+  overflow: visible;
+  cursor: default;
+  touch-action: pan-y;
+  animation: review-rail-marquee 42s linear infinite;
+}
+
+.review-rail.is-marquee .is-loop-clone {
+  pointer-events: auto;
+}
+
+.review-rail.is-marquee .review-cart-button {
+  position: relative;
+  z-index: 5;
+  pointer-events: auto;
+}
+
+.reviews-section .rail-viewport {
+  overflow: visible;
+  clip-path: inset(-40px 0 -40px 0);
+}
+
+.reviews-section .rail-wrap {
+  overflow: visible;
+}
+
+.reviews-section:hover .review-rail.is-marquee,
+.reviews-section:focus-within .review-rail.is-marquee {
+  animation-play-state: paused;
+}
+
+@keyframes review-rail-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-1 * var(--review-marquee-distance, 50%)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-rail.is-marquee {
+    animation: none;
+  }
 }
 
 .review-rail article {

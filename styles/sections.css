@@ -1,4 +1,4 @@
-﻿.page-shell {
+.page-shell {
   position: relative;
   z-index: 2;
   max-width: 1770px;
@@ -149,7 +149,7 @@
 
   .reviews-heading {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
     gap: 24px clamp(34px, 3.5vw, 70px);
   }
@@ -157,15 +157,6 @@
   .reviews-heading .inline-heading {
     grid-column: 1;
     min-width: 0;
-  }
-
-  .reviews-section .section-heading a {
-    position: static;
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: end;
-    align-self: center;
-    flex-shrink: 0;
   }
 
   .trend-section .tab-row,

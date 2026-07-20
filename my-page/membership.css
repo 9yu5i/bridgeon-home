@@ -314,7 +314,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
   min-height: 48px;
   margin: 20px 170px 0;
   border: 1px solid #e3e5f1;
@@ -325,22 +324,9 @@
   font-weight: 700;
 }
 
-.membership-validity span {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--membership-purple);
-  border-radius: 50%;
-  color: var(--membership-purple);
-  font-size: 15px;
-  font-style: italic;
-  font-weight: 900;
-}
-
 @media (max-width: 1120px) {
   .membership-page-main {
-    padding: 19px 22px 86px;
+    padding: 30px 22px 86px;
   }
 
   .membership-page-shell {

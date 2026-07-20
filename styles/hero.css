@@ -162,16 +162,23 @@
 }
 
 .today-pick {
-  --today-pick-collapsed-height: 170.5px;
+  --today-pick-height: 170.5px;
+  --today-pick-collapsed-height: var(--today-pick-height);
   position: absolute;
   top: 200px;
   right: 0;
+  box-sizing: border-box;
   width: 318px;
+  height: var(--today-pick-height);
   padding: 18px 20px 18px 24px;
   color: #fff;
   background: rgba(16, 16, 16, 0.9);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
-  transition: width 0.3s ease, padding 0.3s ease;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease,
+    padding 0.3s ease,
+    border-radius 0.3s ease;
 }
 
 @media (min-width: 761px) {
@@ -182,7 +189,7 @@
 
 .today-pick.is-collapsed {
   width: 28px;
-  height: min(var(--today-pick-height, var(--today-pick-collapsed-height)), var(--today-pick-collapsed-height));
+  height: var(--today-pick-height);
   padding: 0;
   overflow: hidden;
   border-radius: 8px 0 0 8px;
@@ -196,17 +203,18 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  transition-delay: 0s, 0.2s;
 }
 
 .today-pick-toggle {
   position: absolute;
-  top: 49.8%;
+  top: 50%;
   left: 0;
   z-index: 2;
   display: grid;
   place-items: center;
   width: 22px;
-  height: 170.5px;
+  height: var(--today-pick-height);
   padding: 0;
   border: 0;
   border-radius: 8px 0 0 8px;
@@ -214,6 +222,12 @@
   background: rgba(16, 16, 16, 0.95);
   transform: translate(-100%, -50%);
   cursor: pointer;
+  transition:
+    left 0.3s ease,
+    width 0.3s ease,
+    height 0.3s ease,
+    transform 0.3s ease,
+    border-radius 0.3s ease;
 }
 
 .today-pick-toggle svg {
@@ -233,7 +247,11 @@
 }
 
 .today-pick-panel {
-  transition: opacity 0.2s ease;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.2s ease 0.08s,
+    visibility 0s linear 0s;
 }
 
 .today-pick strong {

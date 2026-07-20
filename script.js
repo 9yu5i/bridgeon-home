@@ -370,9 +370,10 @@ if (todayPick && todayPickTrack) {
     const wasCollapsed = todayPickCollapsed;
     if (wasCollapsed) todayPick.classList.remove("is-collapsed");
 
-    todayPick.style.removeProperty("height");
-    const collapsedHeightLimit = parseFloat(getComputedStyle(todayPick).getPropertyValue("--today-pick-collapsed-height")) || 170.5;
-    todayPick.style.setProperty("--today-pick-height", `${Math.min(todayPick.offsetHeight, collapsedHeightLimit)}px`);
+    const previousInlineHeight = todayPick.style.height;
+    todayPick.style.height = "auto";
+    todayPick.style.setProperty("--today-pick-height", `${todayPick.offsetHeight}px`);
+    todayPick.style.height = previousInlineHeight;
 
     if (wasCollapsed) todayPick.classList.add("is-collapsed");
   };

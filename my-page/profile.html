@@ -127,6 +127,7 @@
       <div class="category-menu">
         <nav class="category-nav" aria-label="Primary">
           <a href="../listing/best.html">BEST</a>
+          <a href="../listing/new.html">NEW</a>
           <a href="#">Brand</a>
           <a href="../listing/beauty.html" data-mega-target="beauty">Beauty</a>
           <a href="../listing/k-food.html" data-mega-target="k-food">K-Food</a>
@@ -413,6 +414,7 @@
           <a href="#" data-mobile-submenu-open="categories">Categories<span aria-hidden="true">&gt;</span></a>
           <a href="#">Brand</a>
           <a href="../listing/best.html">Best Seller</a>
+          <a href="../listing/new.html">New Arrival</a>
           <a href="../timedeal/timedeal.html">Time Deal</a>
           <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
         </nav>
@@ -507,7 +509,6 @@
               <h1 id="profile-page-title">Profile</h1>
               <p>Manage your account details, security, shipping address, and preferences.</p>
             </div>
-            <button class="profile-save profile-save-desktop" type="button" data-profile-save>Save Changes</button>
           </div>
 
           <section class="profile-card profile-card--identity" aria-labelledby="profile-personal-title">
@@ -677,7 +678,7 @@
                       <option>Tunisia</option>
                       <option>Algeria</option>
                       <option>Mauritius</option>
-                      <option>R챕union</option>
+                      <option>R梨븋nion</option>
                       <option>Guadeloupe</option>
                       <option>Martinique</option>
                       <option>French Guiana</option>
@@ -723,6 +724,46 @@
             </div>
           </section>
 
+          <section class="profile-card profile-card--payment" aria-labelledby="profile-payment-title">
+            <div class="profile-card-head">
+              <div>
+                <h2 id="profile-payment-title">Payment Method</h2>
+                <p>Manage the payment methods used during checkout.</p>
+              </div>
+              <button type="button" class="profile-text-button" data-profile-add-payment>Add Payment</button>
+            </div>
+            <div class="profile-payment-list" data-profile-payment-list>
+              <article class="profile-payment-card" data-profile-payment-card data-payment-type="card" data-payment-label="Visa ending in 4242" data-payment-detail="Expires 05/28" data-payment-brand="VISA" data-payment-card-name="Name" data-payment-card-number="4242" data-payment-expiry="05/28" data-payment-default="true">
+                <span class="profile-payment-brand" aria-hidden="true">VISA</span>
+                <div>
+                  <strong>Visa ending in 4242</strong>
+                  <p>Expires 05/28</p>
+                </div>
+                <mark>Default</mark>
+                <div class="profile-payment-actions">
+                  <button type="button" data-profile-edit-payment>Edit</button>
+                  <button type="button" data-profile-set-default-payment disabled>Default</button>
+                  <button type="button" data-profile-delete-payment>Delete</button>
+                </div>
+              </article>
+              <article class="profile-payment-card" data-profile-payment-card data-payment-type="paypal" data-payment-label="PayPal" data-payment-detail="name@email.com" data-payment-brand="PayPal" data-payment-paypal-email="name@email.com" data-payment-default="false">
+                <span class="profile-payment-brand profile-payment-brand--paypal" aria-hidden="true">
+                  <img src="../cart/img/paypal.png" alt="">
+                </span>
+                <div>
+                  <strong>PayPal</strong>
+                  <p>name@email.com</p>
+                </div>
+                <mark hidden>Default</mark>
+                <div class="profile-payment-actions">
+                  <button type="button" data-profile-edit-payment>Edit</button>
+                  <button type="button" data-profile-set-default-payment>Set Default</button>
+                  <button type="button" data-profile-delete-payment>Delete</button>
+                </div>
+              </article>
+            </div>
+          </section>
+
           <section class="profile-card" aria-labelledby="profile-security-title">
             <div class="profile-card-head">
               <div>
@@ -731,15 +772,15 @@
               </div>
             </div>
             <div class="profile-security-grid">
-              <label class="profile-field">
+              <label class="profile-field profile-security-current">
                 <span>Current Password</span>
                 <input type="password" placeholder="Enter current password" autocomplete="current-password">
               </label>
-              <label class="profile-field">
+              <label class="profile-field profile-security-new">
                 <span>New Password</span>
                 <input type="password" placeholder="Enter new password" autocomplete="new-password">
               </label>
-              <label class="profile-field">
+              <label class="profile-field profile-security-confirm">
                 <span>Confirm Password</span>
                 <input type="password" placeholder="Confirm new password" autocomplete="new-password">
               </label>
@@ -816,7 +857,7 @@
             </div>
           </section>
 
-          <div class="profile-mobile-actions mobile-only">
+          <div class="profile-save-row">
             <button class="profile-save" type="button" data-profile-save>Save Changes</button>
           </div>
         </section>
@@ -894,6 +935,96 @@
           <div class="profile-address-dialog-actions">
             <button type="button" class="profile-address-cancel" data-profile-address-close>Cancel</button>
             <button type="submit" class="profile-address-submit" data-profile-address-submit>Save</button>
+          </div>
+        </form>
+      </section>
+    </div>
+    <div class="profile-payment-dialog" id="profile-payment-dialog" hidden aria-hidden="true">
+      <button type="button" class="profile-payment-backdrop" data-profile-payment-close aria-label="Close payment form"></button>
+      <section class="profile-payment-modal" role="dialog" aria-modal="true" aria-labelledby="profile-payment-dialog-title">
+        <button type="button" class="profile-payment-close" data-profile-payment-close aria-label="Close payment form">&times;</button>
+        <div class="profile-payment-dialog-head">
+          <h2 id="profile-payment-dialog-title">Payment Method</h2>
+          <p>Add or edit a payment method used during checkout.</p>
+        </div>
+        <form class="profile-payment-form" data-profile-payment-form novalidate>
+          <input type="hidden" name="mode" value="add">
+          <div class="profile-payment-form-grid">
+            <div class="profile-field">
+              <span>Payment Type</span>
+              <span class="profile-select-control realtrend-select-wrap">
+                <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="realtrend-select-value">Credit / Debit Card</span>
+                </button>
+                <ul class="realtrend-select-menu" role="listbox"></ul>
+                <select class="realtrend-select-native" name="type" tabindex="-1" aria-hidden="true" autocomplete="off" aria-label="Payment type">
+                  <option value="card" selected>Credit / Debit Card</option>
+                  <option value="paypal">PayPal</option>
+                </select>
+              </span>
+            </div>
+            <label class="profile-field" data-profile-payment-card-field>
+              <span>Cardholder Name</span>
+              <input type="text" name="cardName" placeholder="Name on card" autocomplete="cc-name">
+            </label>
+            <label class="profile-field" data-profile-payment-card-field>
+              <span>Card Number</span>
+              <input type="text" name="cardNumber" placeholder="0000 0000 0000 0000" autocomplete="cc-number" inputmode="numeric" maxlength="23">
+            </label>
+            <div class="profile-field profile-payment-expiry-field" data-profile-payment-card-field>
+              <span>Expiration</span>
+              <div class="profile-payment-expiry-selects">
+                <span class="profile-select-control realtrend-select-wrap">
+                  <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="realtrend-select-value">MM</span>
+                  </button>
+                  <ul class="realtrend-select-menu" role="listbox"></ul>
+                  <select class="realtrend-select-native" name="expiryMonth" tabindex="-1" aria-hidden="true" autocomplete="cc-exp-month" aria-label="Expiration month">
+                    <option value="" selected>MM</option>
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                  </select>
+                </span>
+                <span class="profile-select-control realtrend-select-wrap">
+                  <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                    <span class="realtrend-select-value">YY</span>
+                  </button>
+                  <ul class="realtrend-select-menu" role="listbox"></ul>
+                  <select class="realtrend-select-native" name="expiryYear" tabindex="-1" aria-hidden="true" autocomplete="cc-exp-year" aria-label="Expiration year">
+                    <option value="" selected>YY</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                    <option value="32">32</option>
+                    <option value="33">33</option>
+                    <option value="34">34</option>
+                    <option value="35">35</option>
+                  </select>
+                </span>
+              </div>
+            </div>
+            <label class="profile-field profile-payment-email-field" data-profile-payment-paypal-field hidden>
+              <span>PayPal Email</span>
+              <input type="email" name="paypalEmail" placeholder="name@email.com" autocomplete="email">
+            </label>
+          </div>
+          <p class="profile-payment-message" data-profile-payment-message aria-live="polite"></p>
+          <div class="profile-payment-dialog-actions">
+            <button type="button" class="profile-payment-cancel" data-profile-payment-close>Cancel</button>
+            <button type="submit" class="profile-payment-submit" data-profile-payment-submit>Save</button>
           </div>
         </form>
       </section>
