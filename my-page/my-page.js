@@ -9,6 +9,87 @@
     });
   });
 
+  const logoutLinks = Array.from(
+    document.querySelectorAll(".mypage-side-card a, .mypage-mobile-menu a")
+  ).filter((link) => link.querySelector(".mypage-side-icon--logout"));
+
+  if (logoutLinks.length) {
+    let logoutDialog = document.getElementById("mypage-logout-dialog");
+
+    if (!logoutDialog) {
+      logoutDialog = document.createElement("div");
+      logoutDialog.className = "mypage-logout-dialog";
+      logoutDialog.id = "mypage-logout-dialog";
+      logoutDialog.hidden = true;
+      logoutDialog.setAttribute("aria-hidden", "true");
+      logoutDialog.innerHTML = `
+        <button type="button" class="mypage-logout-backdrop" data-mypage-logout-close aria-label="Close logout dialog"></button>
+        <section class="mypage-logout-modal" role="dialog" aria-modal="true" aria-labelledby="mypage-logout-title">
+          <button type="button" class="mypage-logout-close" data-mypage-logout-close aria-label="Close logout dialog">&times;</button>
+          <span class="mypage-logout-icon" aria-hidden="true"></span>
+          <h2 id="mypage-logout-title">Log out?</h2>
+          <p>Are you sure you want to log out? You'll need to sign in again to access your account.</p>
+          <div class="mypage-logout-actions">
+            <button type="button" class="mypage-logout-cancel" data-mypage-logout-close>Cancel</button>
+            <button type="button" class="mypage-logout-confirm" data-mypage-logout-confirm>Log Out</button>
+          </div>
+        </section>
+      `;
+      document.body.appendChild(logoutDialog);
+    }
+
+    let logoutTrigger = null;
+
+    const closeLogoutDialog = () => {
+      logoutDialog.hidden = true;
+      logoutDialog.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("is-mypage-logout-open");
+      if (logoutTrigger && typeof logoutTrigger.focus === "function") {
+        logoutTrigger.focus();
+      }
+      logoutTrigger = null;
+    };
+
+    const openLogoutDialog = (trigger) => {
+      logoutTrigger = trigger;
+      logoutDialog.hidden = false;
+      logoutDialog.setAttribute("aria-hidden", "false");
+      document.body.classList.add("is-mypage-logout-open");
+      logoutDialog.querySelector("[data-mypage-logout-confirm]")?.focus();
+    };
+
+    const goToHome = () => {
+      const homeHref = new URL("../index.html", window.location.href).href;
+      if (window.BridgeOn?.navigateWithPageTransition) {
+        window.BridgeOn.navigateWithPageTransition(homeHref);
+        return;
+      }
+      window.location.href = homeHref;
+    };
+
+    logoutLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        openLogoutDialog(link);
+      });
+    });
+
+    logoutDialog.querySelectorAll("[data-mypage-logout-close]").forEach((button) => {
+      button.addEventListener("click", closeLogoutDialog);
+    });
+
+    logoutDialog.querySelector("[data-mypage-logout-confirm]")?.addEventListener("click", () => {
+      closeLogoutDialog();
+      goToHome();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !logoutDialog.hidden) {
+        closeLogoutDialog();
+      }
+    });
+  }
+
   const dialog = document.getElementById("mypage-avatar-dialog");
 
   if (dialog) {

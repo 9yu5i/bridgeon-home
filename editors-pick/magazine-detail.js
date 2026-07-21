@@ -341,6 +341,33 @@
   const params = new URLSearchParams(window.location.search);
   const currentSlug = params.get("article") || "better-layering-summer";
   const currentArticle = articles[currentSlug] || createFallbackArticle(currentSlug);
+  const MAGAZINE_CATEGORY_LABELS = {
+    beauty: "BEAUTY",
+    food: "FOOD",
+    "toys-crafts": "TOYS & CRAFTS",
+    "stationery-office": "STATIONERY & OFFICE",
+    kitchen: "KITCHEN",
+    travel: "TRAVEL",
+    "k-pop": "K-POP",
+    "k-drama": "K-DRAMA",
+    fashion: "FASHION",
+    "k-food": "K-FOOD",
+    "k-beauty": "K-BEAUTY",
+  };
+  const formatMagazineCategoryLabel = (value) => {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+
+    const slug = raw
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    if (MAGAZINE_CATEGORY_LABELS[slug]) return MAGAZINE_CATEGORY_LABELS[slug];
+
+    return raw.replace(/\s+GUIDE$/i, "").trim().toUpperCase();
+  };
 
   const setText = (selector, value) => {
     const node = document.querySelector(selector);
@@ -373,7 +400,13 @@
     return image;
   };
 
-  const createArticleHref = (slug) => `./magazine-detail.html?article=${encodeURIComponent(slug)}`;
+  const createArticleHref = (slug, category = "") => {
+    const detailUrl = new URL("./magazine-detail.html", window.location.href);
+    detailUrl.searchParams.set("article", slug);
+    const resolvedCategory = category || articles[slug]?.category || formatMagazineCategoryLabel(articles[slug]?.eyebrow);
+    if (resolvedCategory) detailUrl.searchParams.set("category", resolvedCategory);
+    return detailUrl.href;
+  };
 
   const renderBody = (article) => {
     const body = document.querySelector(".magazine-article-body");
@@ -477,22 +510,10 @@
   };
 
   const getArticleCategory = (article) => {
-    if (article.category) return String(article.category).trim().toUpperCase();
-
-    const eyebrow = String(article.eyebrow || "").trim();
-    if (!eyebrow) return "MAGAZINE";
-
-    const normalized = eyebrow.replace(/\s+GUIDE$/i, "").trim().toUpperCase();
-    const categoryMap = {
-      "K-FOOD": "FOOD",
-      "K-BEAUTY": "BEAUTY",
-      "K-DRAMA": "K-DRAMA",
-      "K-POP": "K-POP",
-      "TOYS & CRAFTS": "TOYS & CRAFTS",
-      "STATIONERY & OFFICE": "STATIONERY & OFFICE",
-    };
-
-    return categoryMap[normalized] || normalized;
+    const urlCategory = params.get("category");
+    if (urlCategory) return formatMagazineCategoryLabel(urlCategory);
+    if (article.category) return formatMagazineCategoryLabel(article.category);
+    return formatMagazineCategoryLabel(article.eyebrow) || "MAGAZINE";
   };
 
   document.title = `${currentArticle.title} | BridgeOn Magazine`;

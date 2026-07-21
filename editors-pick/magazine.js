@@ -24,9 +24,23 @@
   const getMagazineSlug = (card) =>
     card?.dataset.magazineSlug ||
     createMagazineSlug(card?.querySelector("h2, h3")?.textContent, "magazine-story");
+  const getCategoryFromCard = (card) => {
+    if (!card) return "";
+
+    if (card.dataset.magazineCategory) return card.dataset.magazineCategory;
+
+    const categoryLabel =
+      card.querySelector(".magazine-copy > p")?.textContent?.trim()
+      || card.querySelector(":scope > div > p")?.textContent?.trim()
+      || card.querySelector("p")?.textContent?.trim();
+
+    return categoryLabel || "";
+  };
   const getMagazineDetailHref = (card) => {
     const detailUrl = new URL("./magazine-detail.html", document.currentScript?.src || window.location.href);
     detailUrl.searchParams.set("article", getMagazineSlug(card));
+    const category = getCategoryFromCard(card);
+    if (category) detailUrl.searchParams.set("category", category);
     return detailUrl.href;
   };
   let activeFilter = "all";

@@ -1190,6 +1190,143 @@ body.is-mypage-avatar-open {
   background: #31136c;
 }
 
+.mypage-logout-dialog[hidden] {
+  display: none;
+}
+
+.mypage-logout-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+body.is-mypage-logout-open {
+  overflow: hidden;
+}
+
+.mypage-logout-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(19, 12, 36, 0.42);
+  cursor: default;
+}
+
+.mypage-logout-modal {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  width: min(400px, calc(100vw - 48px));
+  padding: 32px 28px 24px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 22px 54px rgba(37, 26, 62, 0.18);
+  text-align: center;
+}
+
+.mypage-logout-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #171320;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 300;
+  cursor: pointer;
+}
+
+.mypage-logout-close:hover,
+.mypage-logout-close:focus-visible {
+  color: #fff;
+  background: var(--purple, #7b3fe4);
+}
+
+.mypage-logout-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #f6f0ff;
+}
+
+.mypage-logout-icon::before {
+  content: "";
+  width: 28px;
+  height: 28px;
+  background: url("./img/logout_hover.png") center / contain no-repeat;
+}
+
+.mypage-logout-modal h2 {
+  margin: 4px 0 0;
+  color: #111;
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.mypage-logout-modal p {
+  margin: 0;
+  max-width: 30ch;
+  color: #6d657c;
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.mypage-logout-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.mypage-logout-cancel,
+.mypage-logout-confirm {
+  min-height: 46px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mypage-logout-cancel {
+  border: 1px solid #ded8e8;
+  color: #171320;
+  background: #fff;
+}
+
+.mypage-logout-cancel:hover,
+.mypage-logout-cancel:focus-visible {
+  border-color: var(--purple, #7b3fe4);
+  color: var(--purple, #7b3fe4);
+}
+
+.mypage-logout-confirm {
+  border: 0;
+  color: #fff;
+  background: var(--purple, #7b3fe4);
+}
+
+.mypage-logout-confirm:hover,
+.mypage-logout-confirm:focus-visible {
+  background: #31136c;
+}
+
 @media (max-width: 1120px) {
   .my-page {
     --mypage-hero-height: clamp(200px, 61.692vw, 248px);
