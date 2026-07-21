@@ -24,7 +24,7 @@ body.is-trend-product-sheet-open .trend-product-sheet {
   justify-content: center;
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 1300;
   top: 0;
   width: 100%;
   max-width: none;
@@ -502,12 +502,12 @@ a.realtrend-brand:hover {
   opacity: 0;
 }
 
-.realtrend-wish:hover .realtrend-wish-icon-default,
+.realtrend-wish:not(.is-hover-suppressed):hover .realtrend-wish-icon-default,
 .realtrend-wish.is-active .realtrend-wish-icon-default {
   opacity: 0;
 }
 
-.realtrend-wish:hover .realtrend-wish-icon-hover,
+.realtrend-wish:not(.is-hover-suppressed):hover .realtrend-wish-icon-hover,
 .realtrend-wish.is-active .realtrend-wish-icon-hover {
   opacity: 1;
 }
@@ -828,7 +828,7 @@ a.realtrend-brand:hover {
   }
 
   body.is-trend-product-sheet-open .bottom-nav {
-    z-index: 210;
+    z-index: 20;
   }
 
   body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-sheet-close {

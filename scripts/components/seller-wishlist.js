@@ -1,7 +1,6 @@
 ﻿(() => {
 const sellerRail = document.getElementById("seller-rail");
 const sellerWishlistQuery = window.matchMedia("(max-width: 1120px)");
-const sellerWishlistActiveRanks = new Set();
 const sellerWishlistIcons = {
   desktop: "img/main-img/heart2.png",
   dark: "img/mobile-icon/menu/wishlist.png",
@@ -23,33 +22,38 @@ const getSellerWishlistDefaultIcon = (card) => {
 const updateSellerWishlistIcons = () => {
   sellerRail?.querySelectorAll(".product-card").forEach((card) => {
     const rank = getSellerRank(card);
-    const button = card.querySelector('.card-actions button[aria-label="Wishlist"]');
+    const button =
+      card.querySelector('.card-actions button[aria-label="Wishlist"]')
+      || card.querySelector('.card-actions button[aria-label="Add to wishlist"]')
+      || card.querySelector('.card-actions button[aria-label="Remove from wishlist"]')
+      || card.querySelector(".card-actions button:last-child");
     const icon = button?.querySelector("img");
     if (!rank || !button || !icon) return;
 
-    const isActive = sellerWishlistActiveRanks.has(rank);
+    const isActive = button.classList.contains("is-active") || button.getAttribute("aria-pressed") === "true";
     button.setAttribute("aria-pressed", isActive ? "true" : "false");
     icon.src = isActive ? sellerWishlistIcons.active : getSellerWishlistDefaultIcon(card);
   });
 };
 
 document.addEventListener("click", (event) => {
-  const button = event.target.closest?.('.seller-section .card-actions button[aria-label="Wishlist"]');
+  if (window.BridgeOn?.wishlist?.toggle) return;
+
+  const button = event.target.closest?.('.seller-section .card-actions button:last-child');
   if (!button || !sellerRail || !sellerRail.contains(button)) return;
 
   event.preventDefault();
   event.stopPropagation();
 
   const card = button.closest(".product-card");
-  const rank = getSellerRank(card);
-  if (!rank) return;
-
-  if (sellerWishlistActiveRanks.has(rank)) sellerWishlistActiveRanks.delete(rank);
-  else sellerWishlistActiveRanks.add(rank);
+  const isActive = !button.classList.contains("is-active");
+  button.classList.toggle("is-active", isActive);
+  button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  button.setAttribute("aria-label", isActive ? "Remove from wishlist" : "Add to wishlist");
 
   const icon = button.querySelector("img");
   if (icon) {
-    icon.src = sellerWishlistActiveRanks.has(rank)
+    icon.src = isActive
       ? sellerWishlistIcons.active
       : getSellerWishlistDefaultIcon(card);
   }
@@ -57,7 +61,13 @@ document.addEventListener("click", (event) => {
   updateSellerWishlistIcons();
 }, true);
 
-sellerWishlistQuery.addEventListener?.("change", updateSellerWishlistIcons);
-window.addEventListener("resize", updateSellerWishlistIcons);
+const syncSellerWishlistIcons = () => {
+  if (sellerRail) window.BridgeOn?.wishlist?.syncButtons?.(sellerRail);
+  updateSellerWishlistIcons();
+};
+
+sellerWishlistQuery.addEventListener?.("change", syncSellerWishlistIcons);
+window.addEventListener("resize", syncSellerWishlistIcons);
+window.addEventListener("bridgeon:wishlistchange", updateSellerWishlistIcons);
 updateSellerWishlistIcons();
 })();

@@ -316,16 +316,24 @@
 }
 
 .listing-brand-grid .listing-card {
+  overflow: hidden;
+  border: 1px solid #ece7f4;
   width: 100%;
   min-width: 0;
   background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .listing-brand-grid .listing-card-image {
   width: 100%;
   height: auto;
   aspect-ratio: 1 / 1;
+  border-radius: 12px 12px 0 0;
+}
+
+.listing-brand-grid .listing-card-body,
+.listing-brand-grid .listing-card-actions--desktop {
+  background: #fff;
 }
 
 /* Shell */
@@ -845,16 +853,16 @@
 }
 
 .listing-card-wish.is-active::before,
-.listing-card-wish:hover::before,
+.listing-card-wish:not(.is-hover-suppressed):hover::before,
 .listing-card-wish-inline.is-active::before,
-.listing-card-wish-inline:hover::before {
+.listing-card-wish-inline:not(.is-hover-suppressed):hover::before {
   opacity: 0;
 }
 
 .listing-card-wish.is-active::after,
-.listing-card-wish:hover::after,
+.listing-card-wish:not(.is-hover-suppressed):hover::after,
 .listing-card-wish-inline.is-active::after,
-.listing-card-wish-inline:hover::after {
+.listing-card-wish-inline:not(.is-hover-suppressed):hover::after {
   opacity: 1;
 }
 
@@ -1329,6 +1337,7 @@
 
   .listing-page--new .listing-brand-grid .listing-card {
     width: 100%;
+    border: 1px solid #ece7f4;
     outline: 0;
   }
 

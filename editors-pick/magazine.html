@@ -198,13 +198,6 @@
 
     <main class="magazine-main">
       <section class="magazine-hero" aria-labelledby="magazine-title">
-        <nav class="magazine-breadcrumb desktop-only" aria-label="Breadcrumb">
-          <a href="../index.html">Home</a>
-          <span aria-hidden="true">&gt;</span>
-          <a href="./editors-pick.html">T.P Pick</a>
-          <span aria-hidden="true">&gt;</span>
-          <span>Magazine</span>
-        </nav>
         <div class="magazine-hero-copy">
           <p>BridgeOn Editorial</p>
           <h1 id="magazine-title">T.P Magazine</h1>
@@ -213,6 +206,14 @@
       </section>
 
       <section class="magazine-shell" aria-label="Magazine posts">
+        <nav class="magazine-breadcrumb desktop-only" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span aria-hidden="true">&gt;</span>
+          <a href="./editors-pick.html">T.P Pick</a>
+          <span aria-hidden="true">&gt;</span>
+          <span>Magazine</span>
+        </nav>
+
         <nav class="magazine-topic-tabs" aria-label="Magazine categories">
           <a class="is-active" href="#" data-magazine-filter="all">Home</a>
           <a href="#" data-magazine-filter="beauty">Beauty</a>
@@ -481,7 +482,6 @@
             </button>
           </div>
         </section>
-      </section>
 
       <section class="newsletter editors-newsletter magazine-newsletter">
         <div>
@@ -493,6 +493,7 @@
           <input id="magazine-newsletter-email" type="email" placeholder="Enter Your Email" />
           <button type="submit">SUBSCRIBE</button>
         </form>
+      </section>
       </section>
     </main>
 

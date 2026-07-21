@@ -91,6 +91,70 @@
 
   const formatPrice = (value) => cartApi.formatPrice(value);
   const parsePrice = (value) => cartApi.parsePrice(value);
+  const COLOR_OPTION_CHOICES = [
+    "01 Bare Apricot",
+    "02 Nutty Nude",
+    "03 Rose Crush",
+    "04 Fig Brown",
+    "05 Mauve Berry",
+    "06 Pink Sand",
+    "07 Plum Coke",
+    "08 Berry Pink",
+    "09 Red Drop",
+    "10 Coral Beige",
+    "11 Honey Glow",
+    "12 Dusty Fig",
+    "13 Petal Milk",
+    "14 Cocoa Rose",
+    "15 Lilac Syrup",
+    "16 Cherry Jam",
+    "17 Magenta Pop",
+  ];
+
+  const uniqueOptions = (options) => {
+    const unique = [];
+    options
+      .map((option) => String(option || "").trim())
+      .filter(Boolean)
+      .forEach((option) => {
+        if (!unique.includes(option)) unique.push(option);
+      });
+    return unique;
+  };
+
+  const getCartOptionChoices = (item) => {
+    const selectedOption = String(item.option || "").trim();
+    const storedChoices = uniqueOptions(Array.isArray(item.optionChoices) ? item.optionChoices : []);
+    const hasOnlySelectedChoice = storedChoices.length === 1 && storedChoices[0] === selectedOption;
+    const isColorOption = /^\d{2}\s/.test(selectedOption);
+    const isVolumeOption = /\b(50|100)ml$/i.test(selectedOption);
+
+    if (!selectedOption) return [];
+
+    if (isColorOption && (!storedChoices.length || hasOnlySelectedChoice || COLOR_OPTION_CHOICES.includes(selectedOption))) {
+      return COLOR_OPTION_CHOICES.includes(selectedOption)
+        ? COLOR_OPTION_CHOICES
+        : uniqueOptions([selectedOption, ...COLOR_OPTION_CHOICES]);
+    }
+
+    if (isVolumeOption && (!storedChoices.length || hasOnlySelectedChoice)) {
+      const baseOption = selectedOption.replace(/(?:\s+(?:50|100)ml)+$/i, "").trim();
+      if (baseOption) {
+        const volumeChoices = [`${baseOption} 50ml`, `${baseOption} 100ml`];
+        return volumeChoices.includes(selectedOption)
+          ? volumeChoices
+          : uniqueOptions([selectedOption, ...volumeChoices]);
+      }
+    }
+
+    if (storedChoices.length) {
+      return storedChoices.includes(selectedOption)
+        ? storedChoices
+        : uniqueOptions([selectedOption, ...storedChoices]);
+    }
+
+    return [selectedOption];
+  };
 
   const getToneClass = (tone) => {
     const safeTone = String(tone || "green").replace(/[^a-z-]/g, "");
@@ -216,16 +280,23 @@
 
   const createOptionMarkup = (item) => {
     if (!item.option) return "";
-    const option = escapeHtml(item.option);
+    const selectedOption = String(item.option || "").trim();
+    const options = getCartOptionChoices(item);
+    const optionMarkup = options
+      .map((option) => {
+        const isSelected = option === selectedOption;
+        return `<option${isSelected ? " selected" : ""}>${escapeHtml(option)}</option>`;
+      })
+      .join("");
 
     return `
       <span class="realtrend-select-wrap cart-option-select">
         <button type="button" class="realtrend-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Product option">
-          <span class="realtrend-select-value">${option}</span>
+          <span class="realtrend-select-value">${escapeHtml(selectedOption)}</span>
         </button>
         <ul class="realtrend-select-menu" role="listbox"></ul>
         <select class="realtrend-select-native" tabindex="-1" aria-hidden="true">
-          <option selected>${option}</option>
+          ${optionMarkup}
         </select>
       </span>
     `;
@@ -428,6 +499,19 @@
       const index = Number(optionItem.dataset.index);
       if (select && Number.isInteger(index) && index >= 0 && index < select.options.length) {
         select.selectedIndex = index;
+        const nextOption = select.selectedOptions[0]?.textContent?.trim() || "";
+        const optionChoices = Array.from(select.options)
+          .map((option) => option.textContent?.trim())
+          .filter(Boolean);
+        const cartItem = wrap.closest("[data-cart-item]");
+
+        if (cartItem?.dataset.cartItem && typeof cartApi.updateOption === "function") {
+          cartApi.updateOption(cartItem.dataset.cartItem, nextOption, optionChoices);
+          closeCartOptionSelects();
+          renderCart();
+          return;
+        }
+
         buildCartOptionMenu(wrap);
       }
       closeCartOptionSelects();

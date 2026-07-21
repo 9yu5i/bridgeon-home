@@ -12,13 +12,101 @@
   const popularNext = document.querySelector("[data-magazine-popular-next]");
   const desktopQuery = window.matchMedia("(min-width: 1121px)");
   const tabletQuery = window.matchMedia("(min-width: 761px)");
+  const compactTabsQuery = window.matchMedia("(max-width: 1120px)");
+  const topicTabs = document.querySelector(".magazine-topic-tabs");
   const categoryPageSize = 15;
+  const createMagazineSlug = (value, fallback = "magazine-story") =>
+    String(value || fallback)
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || fallback;
+  const getMagazineSlug = (card) =>
+    card?.dataset.magazineSlug ||
+    createMagazineSlug(card?.querySelector("h2, h3")?.textContent, "magazine-story");
+  const getMagazineDetailHref = (card) => {
+    const detailUrl = new URL("./magazine-detail.html", document.currentScript?.src || window.location.href);
+    detailUrl.searchParams.set("article", getMagazineSlug(card));
+    return detailUrl.href;
+  };
   let activeFilter = "all";
   let popularIndex = 0;
   let categoryPage = 0;
   let categoryItems = [];
 
   if (!filterButtons.length || !cards.length) return;
+
+  document
+    .querySelectorAll(".magazine-feature-card a, .magazine-side-card a, .magazine-post-card a")
+    .forEach((link) => {
+      const card = link.closest(".magazine-feature-card, .magazine-side-card, .magazine-post-card");
+      if (link.getAttribute("href") === "#") link.href = getMagazineDetailHref(card);
+    });
+
+  const openMagazineDetail = (card) => {
+    if (!card) return;
+    const href = getMagazineDetailHref(card);
+    if (window.BridgeOn?.navigateWithPageTransition) {
+      window.BridgeOn.navigateWithPageTransition(href);
+      return;
+    }
+    window.location.href = href;
+  };
+
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("a, button")) return;
+
+    const copy = event.target.closest(".magazine-copy");
+    if (copy) {
+      openMagazineDetail(copy.closest(".magazine-feature-card"));
+      return;
+    }
+
+    const popularCard = event.target.closest(".magazine-post-card.is-popular-visible");
+    if (popularCard) openMagazineDetail(popularCard);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    if (event.target.closest("a, button")) return;
+
+    const copy = event.target.closest(".magazine-copy");
+    if (copy) {
+      event.preventDefault();
+      openMagazineDetail(copy.closest(".magazine-feature-card"));
+      return;
+    }
+
+    const popularCard = event.target.closest(".magazine-post-card.is-popular-visible");
+    if (popularCard && event.target === popularCard) {
+      event.preventDefault();
+      openMagazineDetail(popularCard);
+    }
+  });
+
+  document.querySelectorAll(".magazine-copy").forEach((copy) => {
+    copy.tabIndex = 0;
+    copy.setAttribute("role", "link");
+    const title = copy.querySelector("h2")?.textContent?.trim();
+    if (title) copy.setAttribute("aria-label", `Read ${title}`);
+  });
+
+  const syncPopularCardLinks = () => {
+    cards.forEach((card) => {
+      const isVisible = card.classList.contains("is-popular-visible");
+      if (isVisible) {
+        card.tabIndex = 0;
+        card.setAttribute("role", "link");
+        const title = card.querySelector("h3")?.textContent?.trim();
+        if (title) card.setAttribute("aria-label", `Read ${title}`);
+        return;
+      }
+
+      card.removeAttribute("tabindex");
+      card.removeAttribute("role");
+      card.removeAttribute("aria-label");
+    });
+  };
 
   const getVisibleCards = () => cards;
   const getPopularViewSize = () => {
@@ -59,6 +147,7 @@
     clearPopularState();
 
     if (!postGrid) {
+      syncPopularCardLinks();
       syncPopularControls();
       return;
     }
@@ -72,6 +161,7 @@
       card.classList.add("is-popular-visible");
     });
 
+    syncPopularCardLinks();
     syncPopularControls();
   };
 
@@ -216,9 +306,45 @@
     setPopularIndex(popularIndex + 1);
   });
 
+  const syncTopicTabsOverflow = () => {
+    if (!topicTabs) return;
+
+    if (!compactTabsQuery.matches) {
+      topicTabs.classList.remove("is-fade-left", "is-fade-right");
+      return;
+    }
+
+    const maxScroll = Math.max(0, topicTabs.scrollWidth - topicTabs.clientWidth);
+    const scrollLeft = topicTabs.scrollLeft;
+    const canScrollLeft = scrollLeft > 2;
+    const canScrollRight = scrollLeft < maxScroll - 2;
+
+    topicTabs.classList.toggle("is-fade-left", canScrollLeft);
+    topicTabs.classList.toggle("is-fade-right", canScrollRight);
+  };
+
+  const nudgeTopicTabsOnce = () => {
+    if (!topicTabs || !compactTabsQuery.matches) return;
+    if (topicTabs.dataset.scrollHintPlayed === "true") return;
+
+    const maxScroll = topicTabs.scrollWidth - topicTabs.clientWidth;
+    if (maxScroll <= 8) return;
+
+    topicTabs.dataset.scrollHintPlayed = "true";
+    const hintDistance = Math.min(48, maxScroll);
+
+    topicTabs.scrollTo({ left: hintDistance, behavior: "smooth" });
+    window.setTimeout(() => {
+      topicTabs.scrollTo({ left: 0, behavior: "smooth" });
+    }, 420);
+  };
+
+  topicTabs?.addEventListener("scroll", syncTopicTabsOverflow, { passive: true });
+
   desktopQuery.addEventListener("change", () => {
     popularIndex = 0;
     syncPopularLayout();
+    syncTopicTabsOverflow();
   });
 
   tabletQuery.addEventListener("change", () => {
@@ -226,9 +352,20 @@
     syncPopularLayout();
   });
 
+  compactTabsQuery.addEventListener("change", () => {
+    syncTopicTabsOverflow();
+    nudgeTopicTabsOnce();
+  });
+
   window.addEventListener("resize", () => {
     syncPopularLayout();
+    syncTopicTabsOverflow();
   });
 
   syncPopularLayout();
+  syncTopicTabsOverflow();
+  window.requestAnimationFrame(() => {
+    syncTopicTabsOverflow();
+    nudgeTopicTabsOnce();
+  });
 })();

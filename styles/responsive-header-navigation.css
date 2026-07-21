@@ -1042,17 +1042,18 @@
 @media (max-width: 1120px) {
   .category-nav.is-compact-category-nav {
     justify-content: flex-start;
-    gap: 0;
+    gap: clamp(20px, 6vw, 34px);
+    padding-inline: 20px;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-padding-inline: clamp(16px, 4.5vw, 54px);
+    scroll-padding-inline: 20px;
   }
 
   .category-nav.is-compact-category-nav a {
     flex: 0 0 auto;
     width: auto;
     min-width: max-content;
-    padding-inline: clamp(14px, 3.4vw, 28px);
+    padding-inline: 0;
     white-space: nowrap;
   }
 
@@ -1064,6 +1065,8 @@
 @media (min-width: 761px) and (max-width: 1120px) {
   .category-nav.is-compact-category-nav {
     justify-content: center;
+    gap: clamp(30px, 4.2vw, 54px);
     padding-inline: clamp(20px, 3.5vw, 44px);
+    scroll-padding-inline: clamp(20px, 3.5vw, 44px);
   }
 }

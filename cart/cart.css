@@ -333,7 +333,7 @@ body.is-cart-country-open {
 
 .cart-items-card {
   grid-area: items;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid #ded8e8;
   border-radius: 16px;
   background: #fbf9ff;
@@ -1160,8 +1160,8 @@ body.is-cart-coupon-open {
 
 .cart-rec-card button {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 8px;
+  right: 8px;
   z-index: 2;
   display: grid;
   place-items: center;
@@ -1773,7 +1773,9 @@ body.is-cart-coupon-open {
   }
 
   .cart-qty button {
-    font-size: 14px;
+    font-size: 17px;
+    line-height: 1;
+    font-weight: 600;
   }
 
   .cart-item-total {

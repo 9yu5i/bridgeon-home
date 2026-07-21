@@ -5,6 +5,10 @@
   const PRODUCT_DETAIL_URL =
     window.BridgeOn?.productDetailUrl ||
     new URL("../../product-detail/product-detail.html", document.currentScript?.src || window.location.href).href;
+  const REALTREND_PAGE_URL = new URL(
+    "../../realtrend/realtrend.html",
+    document.currentScript?.src || window.location.href,
+  ).href;
 
 const initTrendProductSheet = () => {
   const productPanel = document.getElementById("trend-product-sheet");
@@ -29,6 +33,7 @@ const initTrendProductSheet = () => {
   const selectRebuilders = [];
   let selectClickLock = false;
   let cartToastTimer = null;
+  let trendCardPointer = null;
 
   const preventTrendSheetBackdropScroll = (event) => {
     if (!document.body.classList.contains("is-trend-product-sheet-open")) return;
@@ -144,6 +149,9 @@ const initTrendProductSheet = () => {
     brand: productCard?.querySelector(".realtrend-brand")?.textContent?.trim() || "BridgeOn",
     name: productNameEl?.textContent?.trim() || "Product",
     option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
+    optionChoices: Array.from(productSelect?.options || [])
+      .map((option) => option.textContent?.trim())
+      .filter(Boolean),
     price: productCard?.querySelector(".realtrend-price strong")?.textContent?.trim() || "US$22.00",
     originalPrice: productCard?.querySelector(".realtrend-price del")?.textContent?.trim() || "",
     tone: "green",
@@ -249,8 +257,9 @@ const initTrendProductSheet = () => {
     }
 
     if (select && name) {
-      if (select.options[0]) select.options[0].textContent = `${name} 50ml`;
-      if (select.options[1]) select.options[1].textContent = `${name} 100ml`;
+      const optionBaseName = name.replace(/\s+(50|100)ml$/i, "").trim() || name;
+      if (select.options[0]) select.options[0].textContent = `${optionBaseName} 50ml`;
+      if (select.options[1]) select.options[1].textContent = `${optionBaseName} 100ml`;
       select.selectedIndex = 0;
       if (selectValue) selectValue.textContent = select.options[0]?.textContent || "";
       selectRebuilders.forEach((rebuild) => rebuild());
@@ -260,6 +269,7 @@ const initTrendProductSheet = () => {
     wishBtn?.classList.remove("is-active");
     wishBtn?.setAttribute("aria-pressed", "false");
     wishBtn?.setAttribute("aria-label", "Add to wishlist");
+    window.BridgeOn?.wishlist?.syncButtons?.(productCard);
 
     productPanel.hidden = false;
     productPanel.setAttribute("aria-hidden", "false");
@@ -319,6 +329,7 @@ const initTrendProductSheet = () => {
       if (index < 0 || index >= select.options.length) return;
       select.selectedIndex = index;
       buildMenu();
+      window.BridgeOn?.wishlist?.syncButtons?.(productCard);
       closeMenu();
     };
 
@@ -387,6 +398,25 @@ const initTrendProductSheet = () => {
 
   cartToastClose?.addEventListener("click", hideCartToast);
 
+  const getRealtrendCardHref = (card) => {
+    const cards = Array.from(trendRail?.querySelectorAll(".reel-card:not(.is-loop-clone)") || []);
+    const index = Number.parseInt(card?.dataset.reelIndex || "", 10) || Math.max(1, cards.indexOf(card) + 1);
+    const url = new URL(REALTREND_PAGE_URL);
+    url.searchParams.set("reel", String(index));
+    return url.href;
+  };
+
+  const syncTrendCardLinks = () => {
+    trendRail?.querySelectorAll(".reel-card").forEach((card, index) => {
+      if (!card.dataset.reelIndex) card.dataset.reelIndex = String(index + 1);
+      if (!card.hasAttribute("tabindex")) card.tabIndex = 0;
+      card.setAttribute("role", "link");
+      card.setAttribute("aria-label", `Open Real Trend reel ${card.dataset.reelIndex}`);
+    });
+  };
+
+  syncTrendCardLinks();
+
   trendRail?.addEventListener(
     "pointerdown",
     (event) => {
@@ -395,12 +425,49 @@ const initTrendProductSheet = () => {
     true,
   );
 
+  trendRail?.addEventListener("pointerdown", (event) => {
+    const card = event.target.closest(".reel-card");
+    if (!card || !trendRail.contains(card) || event.target.closest(".reel-product em")) {
+      trendCardPointer = null;
+      return;
+    }
+
+    trendCardPointer = {
+      card,
+      x: event.clientX,
+      y: event.clientY,
+    };
+  });
+
   trendRail?.addEventListener("click", (event) => {
     const cartButton = event.target.closest(".reel-product em");
-    if (!cartButton || !trendRail.contains(cartButton)) return;
+    if (cartButton && trendRail.contains(cartButton)) {
+      event.preventDefault();
+      event.stopPropagation();
+      openTrendProductSheet(cartButton.closest(".reel-card"));
+      return;
+    }
+
+    const card = event.target.closest(".reel-card");
+    if (!card || !trendRail.contains(card)) return;
+
+    const pointerMoved =
+      trendCardPointer?.card === card &&
+      (Math.abs(event.clientX - trendCardPointer.x) > 8 || Math.abs(event.clientY - trendCardPointer.y) > 8);
+    trendCardPointer = null;
+    if (pointerMoved) return;
+
     event.preventDefault();
-    event.stopPropagation();
-    openTrendProductSheet(cartButton.closest(".reel-card"));
+    navigateWithPageTransition(getRealtrendCardHref(card));
+  });
+
+  trendRail?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const card = event.target.closest(".reel-card");
+    if (!card || !trendRail.contains(card)) return;
+
+    event.preventDefault();
+    navigateWithPageTransition(getRealtrendCardHref(card));
   });
 
   reviewRail?.addEventListener("click", (event) => {
@@ -427,16 +494,14 @@ const initTrendProductSheet = () => {
     openTrendProductSheet(cartButton.closest(".product-card"));
   });
 
-  const listingGrid = document.querySelector(".listing-grid");
-
-  listingGrid?.addEventListener("click", (event) => {
+  document.addEventListener("click", (event) => {
     const cartButton =
       event.target.closest('.listing-card-actions--desktop button[aria-label="Add to cart"]') ||
       event.target.closest(".listing-card-cart");
     if (!cartButton) return;
 
     const card = cartButton.closest(".listing-card");
-    if (!card || !listingGrid.contains(card)) return;
+    if (!card || !card.closest(".listing-grid, .listing-brand-grid")) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -514,19 +579,63 @@ const initTrendProductSheet = () => {
 initTrendProductSheet();
 
 const initProductDetailCardLinks = () => {
-  document.querySelectorAll(".listing-grid, .seller-rail, .mypage-product-grid").forEach((container) => {
-    container.addEventListener("click", (event) => {
-      if (event.defaultPrevented) return;
-      if (event.target.closest("a, button, input, select, textarea, label")) return;
+  const editorPickTargetSelector = ".editor-pick-image, .editor-pick-product h3";
+  const getDetailHref = (card) =>
+    card.dataset.productDetailLink
+      ? new URL(card.dataset.productDetailLink, window.location.href).href
+      : PRODUCT_DETAIL_URL;
+  const isEditorPickDetailTarget = (eventTarget, card) =>
+    card.classList.contains("editor-pick-card") && Boolean(eventTarget.closest(editorPickTargetSelector));
+  const syncEditorPickDetailTargets = (root = document) => {
+    root.querySelectorAll?.(".editor-pick-list .editor-pick-card").forEach((card) => {
+      const detailHref = getDetailHref(card);
 
-      const card = event.target.closest(".listing-card, .product-card, .mypage-product-card");
-      if (!card || !container.contains(card)) return;
-
-      const detailHref = card.dataset.productDetailLink
-        ? new URL(card.dataset.productDetailLink, window.location.href).href
-        : PRODUCT_DETAIL_URL;
-      navigateWithPageTransition(detailHref);
+      card.querySelectorAll(editorPickTargetSelector).forEach((target) => {
+        if (!target.hasAttribute("tabindex")) target.tabIndex = 0;
+        target.setAttribute("role", "link");
+        target.setAttribute("aria-label", `View ${card.querySelector(".editor-pick-product h3")?.textContent?.trim() || "product detail"}`);
+        if (target.classList.contains("editor-pick-image")) target.removeAttribute("aria-hidden");
+        target.dataset.productDetailHref = detailHref;
+      });
     });
+  };
+
+  syncEditorPickDetailTargets();
+
+  const editorPickList = document.querySelector(".editor-pick-list");
+  if (editorPickList && typeof MutationObserver === "function") {
+    new MutationObserver(() => syncEditorPickDetailTargets(editorPickList)).observe(editorPickList, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    if (event.defaultPrevented) return;
+    if (event.target.closest("a, button, input, select, textarea, label")) return;
+
+    const card = event.target.closest(".listing-card, .product-card, .editor-pick-card, .mypage-product-card");
+    if (!card) return;
+    if (!card.closest(".listing-grid, .listing-brand-grid, .seller-rail, .editor-pick-list, .mypage-product-grid")) {
+      return;
+    }
+
+    if (card.classList.contains("editor-pick-card") && !isEditorPickDetailTarget(event.target, card)) {
+      return;
+    }
+
+    navigateWithPageTransition(getDetailHref(card));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+
+    const target = event.target.closest?.(editorPickTargetSelector);
+    const card = target?.closest(".editor-pick-card");
+    if (!target || !card || !card.closest(".editor-pick-list")) return;
+
+    event.preventDefault();
+    navigateWithPageTransition(getDetailHref(card));
   });
 };
 

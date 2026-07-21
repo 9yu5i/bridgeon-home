@@ -276,6 +276,7 @@
     article.className = "listing-card listing-card--new";
     article.dataset.brand = brand.key;
     article.dataset.order = String(index + 1);
+    article.dataset.productDetailLink = "../product-detail/product-detail.html";
     article.innerHTML = `
       <div class="listing-card-media">
         <span class="listing-card-new-badge">NEW</span>

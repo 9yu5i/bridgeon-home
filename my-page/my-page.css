@@ -537,7 +537,7 @@
   grid-template-columns: 32px minmax(240px, 1fr) 32px;
   align-items: center;
   justify-items: center;
-  column-gap: 4px;
+  column-gap: 0;
 }
 
 .mypage-tier-labels {
@@ -555,20 +555,20 @@
 }
 
 .mypage-tier-labels span:first-child {
-  transform: translateX(8px);
+  transform: translateX(28px);
 }
 
 .mypage-tier-labels span:last-child {
   grid-column: 3;
-  transform: translateX(-8px);
+  transform: translateX(-28px);
 }
 
 .mypage-medal--silver {
-  transform: translateX(8px);
+  transform: translateX(28px);
 }
 
 .mypage-medal--gold {
-  transform: translateX(-8px);
+  transform: translateX(-28px);
 }
 
 .mypage-medal {
@@ -911,13 +911,13 @@
 }
 
 .mypage-wish.is-active::before,
-.mypage-wish:hover::before,
+.mypage-wish:not(.is-hover-suppressed):hover::before,
 .mypage-wish:focus-visible::before {
   opacity: 0;
 }
 
 .mypage-wish.is-active::after,
-.mypage-wish:hover::after,
+.mypage-wish:not(.is-hover-suppressed):hover::after,
 .mypage-wish:focus-visible::after {
   opacity: 1;
 }
@@ -1269,7 +1269,7 @@ body.is-mypage-avatar-open {
 
   .my-page .category-nav {
     justify-content: flex-start;
-    height: 39px;
+    height: 40px;
     overflow-x: auto;
     padding-inline: 0;
     scrollbar-width: none;
@@ -1301,6 +1301,18 @@ body.is-mypage-avatar-open {
 
   .my-page .category-nav .accent:last-child {
     color: var(--mypage-purple);
+  }
+
+  .my-page .category-nav.is-compact-category-nav {
+    gap: clamp(20px, 6vw, 34px);
+    padding-inline: 20px;
+  }
+
+  .my-page .category-nav.is-compact-category-nav a {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: max-content;
+    padding-inline: 0;
   }
 
   .mypage-main {
@@ -1485,7 +1497,7 @@ body.is-mypage-avatar-open {
   .mypage-tier-labels,
   .mypage-progress-row {
     grid-template-columns: 34px minmax(0, 1fr) 34px;
-    column-gap: 5px;
+    column-gap: 0;
   }
 
   .mypage-tier-labels span {
@@ -1494,12 +1506,12 @@ body.is-mypage-avatar-open {
 
   .mypage-tier-labels span:first-child,
   .mypage-medal--silver {
-    transform: translateX(6px);
+    transform: translateX(24px);
   }
 
   .mypage-tier-labels span:last-child,
   .mypage-medal--gold {
-    transform: translateX(-6px);
+    transform: translateX(-24px);
   }
 
   .mypage-medal {
@@ -1793,6 +1805,18 @@ body.is-mypage-avatar-open {
 }
 
 @media (min-width: 761px) and (max-width: 1120px) {
+  .my-page .category-nav.is-compact-category-nav {
+    justify-content: center;
+    gap: clamp(30px, 4.2vw, 54px);
+    padding-inline: clamp(20px, 3.5vw, 44px);
+  }
+
+  .my-page .category-nav.is-compact-category-nav a {
+    width: auto;
+    min-width: max-content;
+    padding-inline: 0;
+  }
+
   .mypage-profile-panel {
     min-height: 0;
     padding: 40px clamp(32px, 5vw, 56px) 52px;

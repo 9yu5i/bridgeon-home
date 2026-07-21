@@ -44,6 +44,14 @@
 
   const applyProductWishState = (productCard, slide) => {
 
+    if (window.BridgeOn?.wishlist?.syncButtons) {
+
+      window.BridgeOn.wishlist.syncButtons(productCard);
+
+      return;
+
+    }
+
     const key = getSlideWishKey(slide);
 
     const isWishlisted = key !== null && wishlistedSlideKeys.has(key);
@@ -208,9 +216,15 @@
 
 
 
+  const queryReel = Number.parseInt(new URLSearchParams(window.location.search).get("reel") || "", 10);
+
   let activeIndex = slides.findIndex((slide) => slide.classList.contains("is-active"));
 
   if (activeIndex < 0) activeIndex = 0;
+
+  if (Number.isFinite(queryReel) && queryReel > 0) {
+    activeIndex = (queryReel - 1) % slides.length;
+  }
 
 
 
@@ -980,6 +994,8 @@
       select.selectedIndex = index;
 
       buildMenu();
+
+      window.BridgeOn?.wishlist?.syncButtons?.(productCard);
 
       closeMenu();
 

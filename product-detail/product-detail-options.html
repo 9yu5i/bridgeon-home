@@ -738,6 +738,74 @@
     </aside>
 
     <div
+      class="product-deal-dialog"
+      id="product-deal-dialog"
+      aria-hidden="true"
+      hidden
+    >
+      <button type="button" class="product-deal-backdrop" aria-label="Close deal details"></button>
+      <section class="product-deal-modal" role="dialog" aria-modal="true" aria-labelledby="product-deal-title">
+        <button type="button" class="product-deal-close" aria-label="Close deal details">&times;</button>
+        <div class="product-deal-modal-head">
+          <span>Limited Deal</span>
+          <h2 id="product-deal-title">Buy More, Save More</h2>
+          <p>Choose a bundle size with a discounted unit price, then add it straight to your cart.</p>
+        </div>
+        <div class="product-deal-modal-product">
+          <span class="product-deal-modal-thumb" aria-hidden="true">img</span>
+          <div>
+            <p>numbuzin</p>
+            <strong>No.1 Pantothenic B5 Active Soothing Serum 80ml</strong>
+            <small>Current price <b>US$22.00</b></small>
+          </div>
+        </div>
+        <div class="product-deal-benefits" role="radiogroup" aria-label="Bundle quantity options">
+          <article
+            class="is-active"
+            data-deal-qty="2"
+            data-deal-discount="5"
+            role="radio"
+            tabindex="0"
+            aria-checked="true"
+          >
+            <b>2 PCS</b>
+            <strong>Extra 5% OFF</strong>
+            <em data-deal-tier-price>US$20.90 / ea</em>
+            <span>Best for restocking your daily routine.</span>
+          </article>
+          <article
+            data-deal-qty="3"
+            data-deal-discount="10"
+            role="radio"
+            tabindex="-1"
+            aria-checked="false"
+          >
+            <b>3 PCS</b>
+            <strong>Extra 10% OFF</strong>
+            <em data-deal-tier-price>US$19.80 / ea</em>
+            <span>Share one, keep two, save more.</span>
+          </article>
+          <article
+            data-deal-qty="4"
+            data-deal-discount="15"
+            role="radio"
+            tabindex="-1"
+            aria-checked="false"
+          >
+            <b>4 PCS</b>
+            <strong>Extra 15% OFF</strong>
+            <em data-deal-tier-price>US$18.70 / ea</em>
+            <span>Biggest savings for long-term use.</span>
+          </article>
+        </div>
+        <div class="product-deal-actions">
+          <button type="button" class="product-deal-add" data-product-deal-add>Add to Cart</button>
+          <button type="button" data-product-deal-close>Keep Shopping</button>
+        </div>
+      </section>
+    </div>
+
+    <div
       class="realtrend-cart-toast"
       id="product-detail-cart-toast"
       role="status"

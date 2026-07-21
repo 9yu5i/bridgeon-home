@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Better Layering For Summer | BridgeOn Magazine</title>
+    <link rel="stylesheet" href="../reset.css" />
+    <link rel="stylesheet" href="../font.css" />
+    <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="./editors-pick.css" />
+    <link rel="stylesheet" href="./magazine.css" />
+  </head>
+  <body class="editors-page magazine-page magazine-detail-page">
+    <header class="site-header">
+      <div class="promo-bar">
+        <div class="promo-inner">
+          <span><img src="../img/main-img/top_banner_lefticon.png" alt="lefticon">Free Shipping Over US$nn</span>
+          <span><img src="../img/main-img/top_banner_righticon.png" alt="righticon">Ships From Korea</span>
+          <span class="desktop-only">Language &#8744 </span>
+        </div>
+      </div>
+
+      <div class="header-main">
+        <button type="button" class="icon-button mobile-menu mobile-only" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false" aria-label="Open menu">
+          <img src="../img/mobile-icon/menu/hamburger_mobile.png" alt="" aria-hidden="true">
+        </button>
+        <a class="logo" href="../index.html" aria-label="BridgeOn home">Bridge<span>On</span></a>
+        <form class="search" role="search">
+          <label class="sr-only" for="site-search">Search</label>
+          <input id="site-search" type="search" placeholder="Best Sunscreen For 2026 Summer?" />
+          <button aria-label="Search">
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </button>
+        </form>
+        <div class="header-actions">
+          <button class="icon-button" aria-label="Account">
+            <img src="../img/main-img/top_banner_my.png" alt="mypage">
+          </button>
+          <a class="icon-button desktop-icon" aria-label="Wishlist" href="../my-page/wishlist.html">
+            <img src="../img/main-img/top_banner_wish.png" alt="wishlist">
+          </a>
+          <a class="icon-button cart-icon-button" aria-label="Cart, 3 items" href="../cart/cart.html">
+            <img src="../img/main-img/top_banner_cart.png" alt="cart">
+            <span class="cart-badge" aria-hidden="true">3</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="search-panel" aria-hidden="true">
+        <div class="search-mobile-bar">
+          <button type="button" class="search-mobile-back search-close" aria-label="Close search"></button>
+          <div class="search-mobile-input">
+            <input id="mobile-site-search" type="search" placeholder="Search Korean Trends" aria-label="Search Korean Trends" />
+            <img src="../img/search/search.png" alt="" aria-hidden="true">
+          </div>
+        </div>
+        <div class="search-mobile-content">
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading">
+              <h3><img src="../img/search/history.png" alt="" aria-hidden="true">Recent Searches</h3>
+              <button type="button" class="search-clear">Clear All</button>
+            </div>
+            <div class="recent-searches search-mobile-recent">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+            </div>
+          </section>
+          <section class="search-mobile-section">
+            <div class="search-mobile-heading trending">
+              <h3><span aria-hidden="true"></span>Trending Searches &#128293;</h3>
+            </div>
+            <ol class="trending-searches search-mobile-trending">
+              <li><b>1</b><span>sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>collagen cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>lip tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>toning pads</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>5</b><span>vitamin c serum</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </section>
+        </div>
+        <div class="search-panel-tabs" role="tablist" aria-label="Search suggestions">
+          <button type="button" class="is-active" data-search-tab="recent" role="tab" aria-selected="true">Recent Searches</button>
+          <button type="button" data-search-tab="trending" role="tab" aria-selected="false"><span aria-hidden="true"></span> Trending Searches &#128293;</button>
+        </div>
+        <div class="search-panel-body">
+          <div class="search-panel-section is-active" data-search-panel="recent" role="tabpanel">
+            <div class="recent-searches">
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>numbuzin serum<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>anua toner<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>mediube<span aria-hidden="true">&times;</span></button>
+              <button type="button"><span class="recent-icon" aria-hidden="true"></span>collagen mask<span aria-hidden="true">&times;</span></button>
+            </div>
+          </div>
+          <div class="search-panel-section" data-search-panel="trending" role="tabpanel" hidden>
+            <ol class="trending-searches">
+              <li><b>1</b><span>Sunscreen</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>2</b><span>Collagen Cream</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>3</b><span>Lip Tint</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>4</b><span>Toning Pads</span><em aria-hidden="true">&nearr;</em></li>
+              <li><b>5</b><span>Vitamin C Serum</span><em aria-hidden="true">&nearr;</em></li>
+            </ol>
+          </div>
+        </div>
+        <div class="search-panel-footer">
+          <button type="button" class="search-clear">Remove All Researches</button>
+          <button type="button" class="search-close">Close</button>
+        </div>
+      </div>
+
+      <div class="category-menu">
+        <nav class="category-nav" aria-label="Primary">
+          <a href="../listing/best.html">BEST</a>
+          <a href="../listing/new.html">NEW</a>
+          <a href="#">Brand</a>
+          <a href="../listing/beauty.html" data-mega-target="beauty">Beauty</a>
+          <a href="../listing/k-food.html" data-mega-target="k-food">K-Food</a>
+          <a href="../listing/lifestyle.html" data-mega-target="lifestyle">Lifestyle</a>
+          <a href="../listing/k-pop.html" data-mega-target="k-pop">K-POP</a>
+          <a href="../listing/k-traditional.html" data-mega-target="k-traditional">K-Traditional</a>
+          <a class="accent-warm" href="../timedeal/timedeal.html">Time Deal &#128293;</a>
+          <a class="accent is-active" href="./editors-pick.html" data-mega-target="tp-pick" aria-current="page">T.P Pick</a>
+        </nav>
+
+        <div class="category-mega" data-menu-panel="tp-pick" aria-label="T.P Pick category submenu">
+          <a class="mega-feature" href="./editors-pick.html">
+            <b>T.P Pick</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3><a class="mega-column-heading" href="./editors-pick.html">Editor's Pick</a></h3>
+          </div>
+          <div class="mega-column">
+            <h3><a class="mega-column-heading" href="./magazine.html">T.P Magazine</a></h3>
+          </div>
+          <div class="mega-column">
+            <h3><a class="mega-column-heading" href="../realtrend/realtrend.html">Real Trend</a></h3>
+          </div>
+        </div>
+      </div>
+
+      <aside class="mobile-menu-panel" id="mobile-menu-panel" aria-hidden="true" aria-label="Mobile menu">
+        <div class="mobile-menu-header">
+          <strong class="mobile-menu-title">MENU</strong>
+          <button type="button" class="mobile-menu-close" aria-label="Close menu"></button>
+        </div>
+        <nav class="mobile-menu-list" aria-label="Mobile categories">
+          <a href="../listing/best.html">BEST</a>
+          <a href="../listing/new.html">NEW</a>
+          <a href="#">Brand</a>
+          <a href="../timedeal/timedeal.html">Time Deal</a>
+          <a href="./editors-pick.html">Editor's Pick</a>
+          <a href="./magazine.html">T.P Magazine</a>
+          <a href="../realtrend/realtrend.html">Real Trend</a>
+        </nav>
+      </aside>
+    </header>
+
+    <main class="magazine-main magazine-detail-main">
+      <section class="magazine-detail-hero" aria-label="Magazine detail hero"></section>
+
+      <article class="magazine-detail-shell">
+        <nav class="magazine-breadcrumb desktop-only" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span aria-hidden="true">&gt;</span>
+          <a href="./magazine.html">T.P Magazine</a>
+          <span aria-hidden="true">&gt;</span>
+          <span>Beauty Guide</span>
+        </nav>
+
+        <div class="magazine-detail-hero-copy">
+          <p>BEAUTY</p>
+          <h1 id="magazine-detail-title">Better Layering For Summer: Sunscreen Routine</h1>
+          <header class="magazine-article-head">
+            <div>
+              <p>BridgeOn Editorial</p>
+              <time datetime="2026-07-06">Jul 6, 2026</time>
+              <span class="magazine-article-editor">Editor Nara</span>
+            </div>
+          </header>
+          <span>How editors keep a light, comfortable skincare routine while protecting glow on humid days.</span>
+        </div>
+
+        <div class="magazine-detail-hero-image magazine-image magazine-image--pink">
+          <span>img</span>
+        </div>
+
+        <div class="magazine-article-layout">
+          <div class="magazine-article-body">
+            <p class="magazine-article-lede">
+              Summer skin routines work best when each layer has a clear job. Instead of stacking heavy textures, our editors look for fresh hydration, a flexible sunscreen finish, and small reapply-friendly products that sit comfortably through the day.
+            </p>
+
+            <h2 id="summer-layering">Keep The First Layers Thin</h2>
+            <p>
+              Start with a watery toner or mist, then move into a serum that absorbs quickly. This keeps the base soft without making sunscreen feel slippery. If your skin gets oily by afternoon, skip rich cream in the morning and keep that step for nighttime.
+            </p>
+            <p>
+              The goal is not to use fewer products for the sake of it. The goal is to make every layer earn its place, so makeup and sunscreen can sit smoothly without pilling.
+            </p>
+
+            <figure class="magazine-article-figure">
+              <div class="magazine-image magazine-image--blue"><span>img</span></div>
+              <figcaption>Light textures and cooling finishes are easier to reapply during humid weather.</figcaption>
+            </figure>
+
+            <h2 id="routine-steps">A Simple Editor Routine</h2>
+            <ol>
+              <li>Hydrate with a toner pad or mist and press the product in lightly.</li>
+              <li>Use one targeted serum for calming, brightening, or barrier support.</li>
+              <li>Choose sunscreen with a finish you actually want to wear every day.</li>
+              <li>Carry a compact product for midday touch-ups around cheeks and nose.</li>
+            </ol>
+
+            <blockquote>
+              The best summer routine is the one that still feels clean after lunch.
+            </blockquote>
+
+            <h2 id="editor-picks">What Editors Are Saving</h2>
+            <p>
+              Cushion sunscreen, gel creams, and airy serums are the most saved categories this week. We also like products that make reapplication feel less like a chore, especially when commuting or traveling.
+            </p>
+
+            <div class="magazine-article-image-grid">
+              <div class="magazine-image magazine-image--paper"><span>img</span></div>
+              <div class="magazine-image magazine-image--food"><span>img</span></div>
+            </div>
+          </div>
+        </div>
+
+        <section class="magazine-related" aria-labelledby="related-title">
+          <div class="magazine-section-head">
+            <h2 id="related-title">Related Posts</h2>
+            <a href="./magazine.html">VIEW MORE -&gt;</a>
+          </div>
+          <div class="magazine-related-grid">
+            <article class="magazine-post-card is-popular-visible" data-magazine-category="beauty">
+              <a href="./magazine-detail.html" class="magazine-post-image magazine-image magazine-image--paper" aria-label="Read What Is Worth Buying This Month?"><span>img</span></a>
+              <p>BEAUTY</p>
+              <h3><a href="./magazine-detail.html">What Is Worth Buying This Month? Editor's Cart</a></h3>
+              <p class="magazine-post-excerpt">A quick editor shortlist of textures, formulas, and small beauty updates that feel useful right now.</p>
+              <span>Jul 8, 2026</span>
+            </article>
+            <article class="magazine-post-card is-popular-visible" data-magazine-category="beauty">
+              <a href="./magazine-detail.html" class="magazine-post-image magazine-image magazine-image--blue" aria-label="Read Daily Sunscreen Notes"><span>img</span></a>
+              <p>BEAUTY</p>
+              <h3><a href="./magazine-detail.html">Daily Sunscreen Notes From The BridgeOn Editors</a></h3>
+              <p class="magazine-post-excerpt">Our editors compare finish, comfort, and wear time across sunscreen picks for everyday use.</p>
+              <span>Jul 3, 2026</span>
+            </article>
+            <article class="magazine-post-card is-popular-visible" data-magazine-category="travel">
+              <a href="./magazine-detail.html" class="magazine-post-image magazine-image magazine-image--forest" aria-label="Read Rainy Season Getaways"><span>img</span></a>
+              <p>TRAVEL</p>
+              <h3><a href="./magazine-detail.html">The Ultimate Guide To Korea's Rainy Season Getaways</a></h3>
+              <p class="magazine-post-excerpt">Quiet travel routes, soft rainy-day styling notes, and places worth bookmarking for the season.</p>
+              <span>Jul 10, 2026</span>
+            </article>
+          </div>
+        </section>
+
+      <section class="newsletter editors-newsletter magazine-newsletter">
+        <div>
+          <h2>Be the first to know</h2>
+          <p>Get trend updates, exclusive offers, and more!</p>
+        </div>
+        <form>
+          <label class="sr-only" for="magazine-detail-newsletter-email">Email</label>
+          <input id="magazine-detail-newsletter-email" type="email" placeholder="Enter Your Email" />
+          <button type="submit">SUBSCRIBE</button>
+        </form>
+      </section>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-main">
+        <a class="logo footer-logo" href="../index.html">Bridge<span>On</span></a>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">MY ACCOUNT</button>
+          <div class="footer-links"><a href="../my-page/my-page.html">My Dashboard</a><a href="../my-page/orders.html">Orders</a><a href="../my-page/wishlist.html">Wishlist</a><a href="../my-page/reviews.html">My Reviews</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">CUSTOMER CARE</button>
+          <div class="footer-links"><a href="#">Help Center</a><a href="#">Shipping &amp; Delivery</a><a href="#">Returns &amp; Refunds</a><a href="#">Contact Us</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">POLICIES</button>
+          <div class="footer-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a><a href="#">Payment Security</a></div>
+        </div>
+        <div class="footer-group">
+          <button class="footer-toggle" type="button">COMPANY</button>
+          <div class="footer-links"><a href="#">About Us</a><a href="#">Become a Partner</a><a href="#">Careers</a></div>
+        </div>
+      </div>
+      <div class="footer-methods">
+        <div><strong>Payment Method</strong><span>PayPal</span><span>VISA</span><span>Master</span><span>AMEX</span><span>Alipay</span></div>
+        <div><strong>Delivery Method</strong><span>FedEx</span><span>DHL</span><span>aramex</span><span>EMS</span><span>parcel</span></div>
+      </div>
+      <p class="copyright">&copy; 2025 Bridge on, Inc. All rights reserved.</p>
+    </footer>
+
+    <button class="float-button to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+    </button>
+    <button class="float-button chat" aria-label="Chat">
+      <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
+    </button>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
+      <a href="../realtrend/realtrend.html"><img src="../img/mobile-icon/menu/tppick.png" alt="" aria-hidden="true"><span>T.P Pick</span></a>
+      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
+      <a href="../cart/cart.html" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
+      <a href="../my-page/my-page.html"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
+    </nav>
+
+    <script src="../script.js"></script>
+    <script src="./magazine-detail.js"></script>
+  </body>
+</html>

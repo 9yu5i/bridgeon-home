@@ -21,6 +21,12 @@
   const inquiryCloseButton = inquiryDialog?.querySelector(".product-inquiry-close");
   const inquiryForm = inquiryDialog?.querySelector(".product-inquiry-modal");
   const inquiryTextarea = inquiryDialog?.querySelector("textarea");
+  const dealDialog = document.getElementById("product-deal-dialog");
+  const dealOpenButton = document.querySelector(".product-deal-strip");
+  const dealBackdrop = dealDialog?.querySelector(".product-deal-backdrop");
+  const dealCloseButtons = dealDialog?.querySelectorAll(".product-deal-close, [data-product-deal-close]");
+  const dealAddButton = dealDialog?.querySelector("[data-product-deal-add]");
+  const dealTierButtons = dealDialog?.querySelectorAll(".product-deal-benefits article[data-deal-qty]");
   const productInfoPanel = document.querySelector(".product-info-panel");
   const recommendationsWrap = document.querySelector(".product-recommendations-wrap");
   const recommendationsCard = document.querySelector(".product-recommendations");
@@ -30,18 +36,62 @@
   let cartToastTimer = null;
   let stickyMeasureFrame = 0;
   let lastInquiryTrigger = null;
+  let lastDealTrigger = null;
+
+  const parsePriceValue = (value) => {
+    const parsed = Number.parseFloat(String(value || "").replace(/[^\d.]/g, ""));
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+
+  const formatPriceValue = (value) => `US$${Number(value || 0).toFixed(2)}`;
+
+  const getSelectedDealTier = () =>
+    dealDialog?.querySelector(".product-deal-benefits article.is-active[data-deal-qty]") ||
+    dealTierButtons?.[0] ||
+    null;
+
+  const getDealUnitPrice = (tier) => {
+    const basePrice = parsePriceValue(
+      document.querySelector(".product-price-current strong")?.textContent || "US$22.00",
+    );
+    const discount = Math.max(0, Number(tier?.dataset.dealDiscount || 0));
+    return basePrice * (1 - discount / 100);
+  };
+
+  const setActiveDealTier = (tier) => {
+    if (!tier || !dealTierButtons?.length) return;
+
+    dealTierButtons.forEach((button) => {
+      const isActive = button === tier;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-checked", isActive ? "true" : "false");
+      button.tabIndex = isActive ? 0 : -1;
+    });
+  };
+
+  const syncDealTierPrices = () => {
+    dealTierButtons?.forEach((tier) => {
+      const priceNode = tier.querySelector("[data-deal-tier-price]");
+      if (!priceNode) return;
+      priceNode.textContent = `${formatPriceValue(getDealUnitPrice(tier))} / ea`;
+    });
+  };
 
   const getCartToastProductName = () =>
     productNameEl?.textContent?.trim() || "This product";
 
   const getProductCartPayload = () => {
     const selectedColor = document.querySelector("[data-color-option].is-active")?.dataset.colorOption || "";
+    const colorChoices = Array.from(colorOptionButtons)
+      .map((button) => button.dataset.colorOption?.trim())
+      .filter(Boolean);
     const quantity = Number(qtyValue?.textContent || 1) || 1;
 
     return {
       brand: document.querySelector(".product-brand")?.textContent?.trim() || "BridgeOn",
       name: productNameEl?.textContent?.trim() || "Product",
       option: selectedColor,
+      optionChoices: colorChoices,
       price: document.querySelector(".product-price-current strong")?.textContent?.trim() || "US$22.00",
       originalPrice: document.querySelector(".product-price del")?.textContent?.trim() || "",
       tone: selectedColor ? "pink" : "green",
@@ -175,6 +225,42 @@
     lastInquiryTrigger = null;
   };
 
+  const syncDealDialogProduct = () => {
+    if (!dealDialog) return;
+    const brand = document.querySelector(".product-brand")?.textContent?.trim() || "BridgeOn";
+    const name = productNameEl?.textContent?.trim() || "Product";
+    const price = document.querySelector(".product-price-current strong")?.textContent?.trim() || "US$22.00";
+
+    const brandNode = dealDialog.querySelector(".product-deal-modal-product p");
+    const nameNode = dealDialog.querySelector(".product-deal-modal-product strong");
+    const priceNode = dealDialog.querySelector(".product-deal-modal-product small b");
+
+    if (brandNode) brandNode.textContent = brand;
+    if (nameNode) nameNode.textContent = name;
+    if (priceNode) priceNode.textContent = price;
+    syncDealTierPrices();
+  };
+
+  const openDealDialog = (trigger) => {
+    if (!dealDialog) return;
+    lastDealTrigger = trigger || document.activeElement;
+    if (!getSelectedDealTier() && dealTierButtons?.[0]) setActiveDealTier(dealTierButtons[0]);
+    syncDealDialogProduct();
+    dealDialog.hidden = false;
+    dealDialog.setAttribute("aria-hidden", "false");
+    document.body.classList.add("is-product-deal-open");
+    requestAnimationFrame(() => dealDialog.querySelector(".product-deal-close")?.focus({ preventScroll: true }));
+  };
+
+  const closeDealDialog = () => {
+    if (!dealDialog || dealDialog.hidden) return;
+    dealDialog.hidden = true;
+    dealDialog.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-product-deal-open");
+    lastDealTrigger?.focus?.({ preventScroll: true });
+    lastDealTrigger = null;
+  };
+
   inquiryOpenButtons.forEach((button) => {
     button.addEventListener("click", () => openInquiryDialog(button));
   });
@@ -189,7 +275,56 @@
   });
 
   window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeInquiryDialog();
+    if (event.key !== "Escape") return;
+    closeInquiryDialog();
+    closeDealDialog();
+  });
+
+  dealOpenButton?.addEventListener("click", () => openDealDialog(dealOpenButton));
+  dealBackdrop?.addEventListener("click", closeDealDialog);
+  dealCloseButtons?.forEach((button) => {
+    button.addEventListener("click", closeDealDialog);
+  });
+
+  dealTierButtons?.forEach((tier, index) => {
+    tier.addEventListener("click", () => setActiveDealTier(tier));
+    tier.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        setActiveDealTier(tier);
+        return;
+      }
+
+      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "ArrowDown" && event.key !== "ArrowUp") {
+        return;
+      }
+
+      event.preventDefault();
+      const offset = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : -1;
+      const nextIndex = (index + offset + dealTierButtons.length) % dealTierButtons.length;
+      const nextTier = dealTierButtons[nextIndex];
+      setActiveDealTier(nextTier);
+      nextTier.focus({ preventScroll: true });
+    });
+  });
+
+  dealAddButton?.addEventListener("click", () => {
+    const tier = getSelectedDealTier();
+    if (!tier) return;
+
+    const payload = getProductCartPayload();
+    const quantity = Math.max(2, Number(tier.dataset.dealQty || 2));
+    const unitPrice = getDealUnitPrice(tier);
+    const basePrice = document.querySelector(".product-price-current strong")?.textContent?.trim() || payload.price;
+
+    payload.quantity = quantity;
+    payload.price = formatPriceValue(unitPrice);
+    payload.originalPrice = basePrice;
+    payload.option = [payload.option, `${quantity} PCS Deal`].filter(Boolean).join(" · ");
+
+    window.BridgeOn?.cart?.add(payload);
+    showCartToast();
+    closeDealDialog();
   });
 
   addCartButton?.addEventListener("click", () => {
@@ -301,6 +436,8 @@
       if (optionColor) stage.style.setProperty("--selected-option-color", optionColor);
       stage.dataset.optionVariant = button.dataset.stageVariant || "0";
     }
+
+    window.BridgeOn?.wishlist?.syncButtons?.();
 
     if (shouldFocus) button.focus({ preventScroll: true });
   };

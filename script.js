@@ -55,6 +55,22 @@ const parseCartNumber = (value, fallback = 0) => {
 
 const formatCartPrice = (value) => `US$${parseCartNumber(value).toFixed(2)}`;
 
+const normalizeCartOptionChoices = (choices, selectedOption = "") => {
+  const normalizedChoices = Array.isArray(choices)
+    ? choices.map((choice) => String(choice || "").trim()).filter(Boolean)
+    : [];
+  const uniqueChoices = [];
+
+  normalizedChoices.forEach((choice) => {
+    if (!uniqueChoices.includes(choice)) uniqueChoices.push(choice);
+  });
+
+  return uniqueChoices;
+};
+
+const createCartItemId = ({ brand, name, option, price }) =>
+  [brand, name, option, price].join("|").toLowerCase().replace(/\s+/g, "-");
+
 const normalizeCartItem = (item = {}) => {
   const brand = String(item.brand || "BridgeOn").trim();
   const name = String(item.name || "Product").trim();
@@ -63,9 +79,10 @@ const normalizeCartItem = (item = {}) => {
   const originalPrice = item.originalPrice ? formatCartPrice(item.originalPrice) : "";
   const tone = String(item.tone || "green").trim();
   const quantity = Math.max(1, Number.parseInt(item.quantity, 10) || 1);
-  const id = item.id || [brand, name, option, price].join("|").toLowerCase().replace(/\s+/g, "-");
+  const optionChoices = normalizeCartOptionChoices(item.optionChoices, option);
+  const id = item.id || createCartItemId({ brand, name, option, price });
 
-  return { id, brand, name, option, price, originalPrice, tone, quantity };
+  return { id, brand, name, option, optionChoices, price, originalPrice, tone, quantity };
 };
 
 const readCartItems = () => {
@@ -121,6 +138,37 @@ window.BridgeOn.cart = {
     writeCartItems(items);
     updateCartBadges();
   },
+  updateOption(id, option, optionChoices = null) {
+    const items = readCartItems();
+    const itemIndex = items.findIndex((item) => item.id === id);
+    if (itemIndex < 0) return null;
+
+    const nextItem = normalizeCartItem({
+      ...items[itemIndex],
+      id: "",
+      option,
+      optionChoices: optionChoices || items[itemIndex].optionChoices,
+    });
+    const existingIndex = items.findIndex((item, index) => index !== itemIndex && item.id === nextItem.id);
+
+    if (existingIndex >= 0) {
+      items[existingIndex] = {
+        ...items[existingIndex],
+        quantity: items[existingIndex].quantity + nextItem.quantity,
+        optionChoices: normalizeCartOptionChoices(
+          [...(items[existingIndex].optionChoices || []), ...(nextItem.optionChoices || [])],
+          items[existingIndex].option,
+        ),
+      };
+      items.splice(itemIndex, 1);
+    } else {
+      items[itemIndex] = nextItem;
+    }
+
+    writeCartItems(items);
+    updateCartBadges();
+    return nextItem;
+  },
   remove(id) {
     writeCartItems(readCartItems().filter((item) => item.id !== id));
     updateCartBadges();
@@ -132,6 +180,263 @@ window.BridgeOn.cart = {
   },
   updateBadges: updateCartBadges,
 };
+
+const WISHLIST_STORAGE_KEY = "bridgeon-wishlist-items";
+const WISHLIST_BUTTON_SELECTOR = [
+  ".product-card .card-actions button:last-child",
+  ".listing-card-wish",
+  ".listing-card-wish-inline",
+  ".product-wish",
+  ".realtrend-wish",
+  ".editor-wish",
+  ".mypage-wish",
+].join(", ");
+
+const normalizeWishlistText = (value, fallback = "") =>
+  String(value || fallback).replace(/\s+/g, " ").trim();
+
+const sellerWishlistIcons = {
+  desktop: new URL("img/main-img/heart2.png", BRIDGEON_ROOT_URL).href,
+  dark: new URL("img/mobile-icon/menu/wishlist.png", BRIDGEON_ROOT_URL).href,
+  light: new URL("img/mobile-icon/menu/wishlist2.png", BRIDGEON_ROOT_URL).href,
+  active: new URL("img/mobile-icon/menu/wishlist-hover.png", BRIDGEON_ROOT_URL).href,
+};
+
+const sellerWishlistQuery = window.matchMedia("(max-width: 1120px)");
+
+const getProductCardRank = (card) => {
+  const rankNode = Array.from(card?.children || []).find((child) => child.tagName === "B");
+  return Number(rankNode?.textContent.trim() || 0);
+};
+
+const getProductCardWishlistDefaultIcon = (button) => {
+  const icon = button.querySelector("img");
+  const card = button.closest(".product-card");
+
+  if (card?.closest(".seller-section")) {
+    if (!sellerWishlistQuery.matches) return sellerWishlistIcons.desktop;
+    return getProductCardRank(card) <= 3 ? sellerWishlistIcons.light : sellerWishlistIcons.dark;
+  }
+
+  if (icon && !icon.dataset.wishlistDefaultSrc) {
+    const currentSrc = icon.getAttribute("src") || "";
+    const currentHref = currentSrc ? new URL(currentSrc, window.location.href).href : "";
+    if (currentHref !== sellerWishlistIcons.active) {
+      icon.dataset.wishlistDefaultSrc = currentSrc;
+    }
+  }
+
+  return icon?.dataset.wishlistDefaultSrc || sellerWishlistIcons.desktop;
+};
+
+const createWishlistId = ({ brand, name, option = "" }) =>
+  [brand, name, option]
+    .map((part) => normalizeWishlistText(part).toLowerCase())
+    .filter(Boolean)
+    .join("|");
+
+const normalizeWishlistItem = (item = {}) => {
+  const brand = normalizeWishlistText(item.brand, "BridgeOn");
+  const name = normalizeWishlistText(item.name, "Product");
+  const option = normalizeWishlistText(item.option);
+  const price = normalizeWishlistText(item.price);
+  const originalPrice = normalizeWishlistText(item.originalPrice);
+  const detailUrl = normalizeWishlistText(item.detailUrl);
+  const id = item.id || createWishlistId({ brand, name, option });
+
+  return { id, brand, name, option, price, originalPrice, detailUrl };
+};
+
+const readWishlistItems = () => {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(WISHLIST_STORAGE_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.map(normalizeWishlistItem).filter((item) => item.id) : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeWishlistItems = (items) => {
+  localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(items.map(normalizeWishlistItem)));
+  window.dispatchEvent(new CustomEvent("bridgeon:wishlistchange", { detail: { items: readWishlistItems() } }));
+};
+
+const getDirectText = (node) =>
+  Array.from(node?.childNodes || [])
+    .filter((child) => child.nodeType === Node.TEXT_NODE)
+    .map((child) => child.textContent.trim())
+    .join("");
+
+const getWishlistPayloadFromButton = (button) => {
+  const listingCard = button.closest(".listing-card");
+  if (listingCard) {
+    return normalizeWishlistItem({
+      brand: listingCard.querySelector(".listing-card-brand")?.textContent,
+      name: listingCard.querySelector(".listing-card-title")?.textContent,
+      price: listingCard.querySelector(".listing-card-price strong")?.textContent,
+      originalPrice: listingCard.querySelector(".listing-card-price del")?.textContent,
+      detailUrl: listingCard.dataset.productDetailLink || PRODUCT_DETAIL_URL,
+    });
+  }
+
+  const productCard = button.closest(".product-card");
+  if (productCard) {
+    const priceNode =
+      productCard.querySelector(".sale-price") ||
+      productCard.querySelector("small strong") ||
+      productCard.querySelector("small span");
+
+    return normalizeWishlistItem({
+      brand: productCard.querySelector(":scope > p")?.textContent || productCard.querySelector("p")?.textContent,
+      name: productCard.querySelector("h3")?.textContent,
+      price: priceNode?.textContent,
+      originalPrice: productCard.querySelector("small del")?.textContent || productCard.querySelector("del")?.textContent,
+      detailUrl: productCard.dataset.productDetailLink || PRODUCT_DETAIL_URL,
+    });
+  }
+
+  const editorCard = button.closest(".editor-pick-card");
+  if (editorCard) {
+    return normalizeWishlistItem({
+      brand: editorCard.querySelector(".editor-pick-product p")?.textContent,
+      name: editorCard.querySelector(".editor-pick-product h3")?.textContent,
+      price: editorCard.querySelector(".editor-price strong")?.textContent,
+      originalPrice: editorCard.querySelector(".editor-price del")?.textContent,
+      detailUrl: PRODUCT_DETAIL_URL,
+    });
+  }
+
+  const mypageCard = button.closest(".mypage-product-card");
+  if (mypageCard) {
+    const priceNode = mypageCard.querySelector(".mypage-product-body strong") || mypageCard.querySelector("strong");
+    return normalizeWishlistItem({
+      brand: mypageCard.querySelector(".mypage-product-body p")?.textContent,
+      name: mypageCard.querySelector(".mypage-product-body h3")?.textContent,
+      price: getDirectText(priceNode) || priceNode?.textContent,
+      originalPrice: priceNode?.querySelector("del")?.textContent,
+      detailUrl: mypageCard.dataset.productDetailLink || PRODUCT_DETAIL_URL,
+    });
+  }
+
+  const sheetCard = button.closest(".realtrend-product-card");
+  if (sheetCard) {
+    return normalizeWishlistItem({
+      brand: sheetCard.querySelector(".realtrend-brand")?.textContent,
+      name: sheetCard.querySelector(".realtrend-product-name")?.textContent,
+      option: sheetCard.querySelector(".realtrend-select-native")?.selectedOptions?.[0]?.textContent,
+      price: sheetCard.querySelector(".realtrend-price strong")?.textContent,
+      originalPrice: sheetCard.querySelector(".realtrend-price del")?.textContent,
+      detailUrl: PRODUCT_DETAIL_URL,
+    });
+  }
+
+  if (button.classList.contains("product-wish")) {
+    return normalizeWishlistItem({
+      brand: document.querySelector(".product-brand")?.textContent,
+      name: document.querySelector(".product-summary h1")?.textContent,
+      option: document.querySelector("[data-color-option].is-active")?.dataset.colorOption || "",
+      price: document.querySelector(".product-price-current strong")?.textContent,
+      originalPrice: document.querySelector(".product-price del")?.textContent,
+      detailUrl: window.location.href,
+    });
+  }
+
+  return null;
+};
+
+const setWishlistButtonState = (button, isActive) => {
+  button.classList.toggle("is-active", isActive);
+  if (isActive) button.classList.remove("is-hover-suppressed");
+  button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  button.setAttribute("aria-label", isActive ? "Remove from wishlist" : "Add to wishlist");
+
+  if (button.matches(".product-card .card-actions button:last-child")) {
+    const icon = button.querySelector("img");
+    if (icon) icon.src = isActive ? sellerWishlistIcons.active : getProductCardWishlistDefaultIcon(button);
+  }
+};
+
+const syncWishlistButtons = (root = document) => {
+  const scope = root && typeof root.querySelectorAll === "function" ? root : document;
+  const activeIds = new Set(readWishlistItems().map((item) => item.id));
+
+  scope.querySelectorAll(WISHLIST_BUTTON_SELECTOR).forEach((button) => {
+    const item = getWishlistPayloadFromButton(button);
+    if (!item?.id) return;
+    setWishlistButtonState(button, activeIds.has(item.id));
+  });
+};
+
+window.BridgeOn.wishlist = {
+  getItems: readWishlistItems,
+  setItems: writeWishlistItems,
+  isActive(item) {
+    const normalized = normalizeWishlistItem(item);
+    return readWishlistItems().some((wishlistItem) => wishlistItem.id === normalized.id);
+  },
+  toggle(item) {
+    const normalized = normalizeWishlistItem(item);
+    if (!normalized.id) return false;
+
+    const items = readWishlistItems();
+    const existingIndex = items.findIndex((wishlistItem) => wishlistItem.id === normalized.id);
+    const isActive = existingIndex < 0;
+
+    if (isActive) items.push(normalized);
+    else items.splice(existingIndex, 1);
+
+    writeWishlistItems(items);
+    syncWishlistButtons();
+    return isActive;
+  },
+  syncButtons: syncWishlistButtons,
+};
+
+document.addEventListener(
+  "click",
+  (event) => {
+    const button = event.target.closest?.(WISHLIST_BUTTON_SELECTOR);
+    if (!button) return;
+
+    const item = getWishlistPayloadFromButton(button);
+    if (!item?.id) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    const isActive = window.BridgeOn.wishlist.toggle(item);
+    button.classList.toggle("is-hover-suppressed", !isActive);
+  },
+  true,
+);
+
+document.addEventListener(
+  "pointerleave",
+  (event) => {
+    const button = event.target.closest?.(WISHLIST_BUTTON_SELECTOR);
+    button?.classList.remove("is-hover-suppressed");
+  },
+  true,
+);
+
+window.addEventListener("storage", (event) => {
+  if (event.key === WISHLIST_STORAGE_KEY) syncWishlistButtons();
+});
+
+syncWishlistButtons();
+
+if (typeof MutationObserver === "function") {
+  let wishlistSyncFrame = 0;
+  const scheduleWishlistSync = () => {
+    window.cancelAnimationFrame(wishlistSyncFrame);
+    wishlistSyncFrame = window.requestAnimationFrame(() => syncWishlistButtons());
+  };
+
+  new MutationObserver(scheduleWishlistSync).observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+}
 
 const loadBridgeOnComponent = (path) => {
   const componentScript = document.createElement("script");
@@ -183,6 +488,66 @@ updateCartBadges();
 window.addEventListener("storage", (event) => {
   if (event.key === CART_STORAGE_KEY) updateCartBadges();
 });
+
+const initMagazineDetailLinks = () => {
+  const homeMagazineSlugs = ["korean-sunscreens", "editor-beauty-cart", "korean-summer-snacks"];
+  const editorMagazineSlugs = ["summer-fruit-desserts", "rescene-kpop-style", "bts-anniversary-busan"];
+  const cardSelector = ".magazine-card, .editor-magazine-card";
+  const createMagazineSlug = (value, fallback = "magazine-story") =>
+    String(value || fallback)
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || fallback;
+
+  const getMagazineSlug = (card, index = 0) => {
+    if (card.dataset.magazineSlug) return card.dataset.magazineSlug;
+
+    const cardList = Array.from(card.parentElement?.querySelectorAll(cardSelector) || []);
+    const cardIndex = cardList.includes(card) ? cardList.indexOf(card) : index;
+
+    if (card.closest(".magazine-grid")) return homeMagazineSlugs[cardIndex] || `home-magazine-${cardIndex + 1}`;
+    if (card.closest(".editor-magazine-grid")) {
+      return editorMagazineSlugs[cardIndex] || `editor-magazine-${cardIndex + 1}`;
+    }
+
+    return createMagazineSlug(card.querySelector("h3")?.textContent, `magazine-story-${cardIndex + 1}`);
+  };
+
+  const getMagazineDetailHref = (card) => {
+    const detailUrl = new URL("editors-pick/magazine-detail.html", BRIDGEON_ROOT_URL);
+    detailUrl.searchParams.set("article", getMagazineSlug(card));
+    return detailUrl.href;
+  };
+
+  document.querySelectorAll(cardSelector).forEach((card, index) => {
+    card.dataset.magazineSlug = getMagazineSlug(card, index);
+    if (!card.hasAttribute("tabindex")) card.tabIndex = 0;
+    card.setAttribute("role", "link");
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.defaultPrevented) return;
+    if (event.target.closest("a, button, input, select, textarea, label")) return;
+
+    const card = event.target.closest(cardSelector);
+    if (!card) return;
+
+    event.preventDefault();
+    navigateWithPageTransition(getMagazineDetailHref(card));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const card = event.target.closest(cardSelector);
+    if (!card) return;
+
+    event.preventDefault();
+    navigateWithPageTransition(getMagazineDetailHref(card));
+  });
+};
+
+initMagazineDetailLinks();
 
 const initScrollReveals = () => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
