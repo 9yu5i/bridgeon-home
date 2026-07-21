@@ -209,6 +209,11 @@ const getProductCardRank = (card) => {
   return Number(rankNode?.textContent.trim() || 0);
 };
 
+const getListingCardRank = (card) => {
+  const rank = card?.dataset.rank || card?.querySelector(".listing-card-rank")?.textContent?.trim();
+  return rank ? String(rank) : "";
+};
+
 const getProductCardWishlistDefaultIcon = (button) => {
   const icon = button.querySelector("img");
   const card = button.closest(".product-card");
@@ -270,12 +275,14 @@ const getDirectText = (node) =>
 const getWishlistPayloadFromButton = (button) => {
   const listingCard = button.closest(".listing-card");
   if (listingCard) {
+    const rank = getListingCardRank(listingCard);
     return normalizeWishlistItem({
       brand: listingCard.querySelector(".listing-card-brand")?.textContent,
       name: listingCard.querySelector(".listing-card-title")?.textContent,
       price: listingCard.querySelector(".listing-card-price strong")?.textContent,
       originalPrice: listingCard.querySelector(".listing-card-price del")?.textContent,
       detailUrl: listingCard.dataset.productDetailLink || PRODUCT_DETAIL_URL,
+      option: rank ? `rank-${rank}` : "",
     });
   }
 
@@ -285,6 +292,7 @@ const getWishlistPayloadFromButton = (button) => {
       productCard.querySelector(".sale-price") ||
       productCard.querySelector("small strong") ||
       productCard.querySelector("small span");
+    const rank = getProductCardRank(productCard);
 
     return normalizeWishlistItem({
       brand: productCard.querySelector(":scope > p")?.textContent || productCard.querySelector("p")?.textContent,
@@ -292,6 +300,7 @@ const getWishlistPayloadFromButton = (button) => {
       price: priceNode?.textContent,
       originalPrice: productCard.querySelector("small del")?.textContent || productCard.querySelector("del")?.textContent,
       detailUrl: productCard.dataset.productDetailLink || PRODUCT_DETAIL_URL,
+      option: rank ? `rank-${rank}` : "",
     });
   }
 

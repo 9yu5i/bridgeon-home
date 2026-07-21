@@ -34,7 +34,7 @@ let categoryLinks = Array.from(document.querySelectorAll(".category-nav a"));
 const categoryMegaPanels = document.querySelectorAll("[data-menu-panel]");
 const compactHeaderSearchQuery = window.matchMedia("(max-width: 1120px)");
 const compactHeaderSearchPage = document.body.matches(
-  ".listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page"
+  ".listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page, .brand-page"
 );
 const headerAccountButtons = Array.from(
   document.querySelectorAll('.header-main .header-actions .icon-button[aria-label="Account"]')
@@ -50,6 +50,7 @@ const getListingPagePrefix = () => {
   if (document.body.classList.contains("cart-page")) return "../listing/";
   if (document.body.classList.contains("editors-page")) return "../listing/";
   if (document.body.classList.contains("my-page")) return "../listing/";
+  if (document.body.classList.contains("brand-page")) return "../listing/";
   if (document.body.classList.contains("listing-page")) return "./";
   return "listing/";
 };
@@ -62,7 +63,8 @@ const getRealtrendUrl = () => {
     document.body.classList.contains("product-detail-page") ||
     document.body.classList.contains("cart-page") ||
     document.body.classList.contains("editors-page") ||
-    document.body.classList.contains("my-page")
+    document.body.classList.contains("my-page") ||
+    document.body.classList.contains("brand-page")
   ) {
     return "../realtrend/realtrend.html";
   }
@@ -77,7 +79,8 @@ const getEditorsPickUrl = () => {
     document.body.classList.contains("product-detail-page") ||
     document.body.classList.contains("cart-page") ||
     document.body.classList.contains("realtrend-page") ||
-    document.body.classList.contains("my-page")
+    document.body.classList.contains("my-page") ||
+    document.body.classList.contains("brand-page")
   ) {
     return "../editors-pick/editors-pick.html";
   }
@@ -92,7 +95,8 @@ const getMyPageUrl = () => {
     document.body.classList.contains("product-detail-page") ||
     document.body.classList.contains("cart-page") ||
     document.body.classList.contains("editors-page") ||
-    document.body.classList.contains("realtrend-page")
+    document.body.classList.contains("realtrend-page") ||
+    document.body.classList.contains("brand-page")
   ) {
     return "../my-page/my-page.html";
   }
@@ -107,7 +111,8 @@ const getHomeUrl = () => {
     document.body.classList.contains("cart-page") ||
     document.body.classList.contains("editors-page") ||
     document.body.classList.contains("realtrend-page") ||
-    document.body.classList.contains("my-page")
+    document.body.classList.contains("my-page") ||
+    document.body.classList.contains("brand-page")
   ) {
     return "../index.html";
   }
@@ -142,6 +147,22 @@ const getBestListingUrl = () => `${getListingPagePrefix()}best.html`;
 
 const getNewListingUrl = () => `${getListingPagePrefix()}new.html`;
 
+const getBrandUrl = () => {
+  if (document.body.classList.contains("brand-page")) return "./index.html";
+  if (
+    document.body.classList.contains("listing-page") ||
+    document.body.classList.contains("timedeal-page") ||
+    document.body.classList.contains("product-detail-page") ||
+    document.body.classList.contains("cart-page") ||
+    document.body.classList.contains("editors-page") ||
+    document.body.classList.contains("realtrend-page") ||
+    document.body.classList.contains("my-page")
+  ) {
+    return "../brand/index.html";
+  }
+  return "brand/index.html";
+};
+
 const getTimeDealUrl = () => {
   if (document.body.classList.contains("timedeal-page")) return "./timedeal.html";
   if (
@@ -150,7 +171,8 @@ const getTimeDealUrl = () => {
     document.body.classList.contains("cart-page") ||
     document.body.classList.contains("editors-page") ||
     document.body.classList.contains("realtrend-page") ||
-    document.body.classList.contains("my-page")
+    document.body.classList.contains("my-page") ||
+    document.body.classList.contains("brand-page")
   ) {
     return "../timedeal/timedeal.html";
   }
@@ -165,7 +187,8 @@ const getTpMagazineUrl = () => {
     document.body.classList.contains("product-detail-page") ||
     document.body.classList.contains("cart-page") ||
     document.body.classList.contains("realtrend-page") ||
-    document.body.classList.contains("my-page")
+    document.body.classList.contains("my-page") ||
+    document.body.classList.contains("brand-page")
   ) {
     return "../editors-pick/magazine.html";
   }
@@ -211,6 +234,17 @@ const wireListingCategoryLinks = () => {
 };
 
 wireListingCategoryLinks();
+
+const wireBrandLinks = () => {
+  const brandUrl = getBrandUrl();
+  document.querySelectorAll(".category-nav a, .mobile-menu-list a").forEach((link) => {
+    if (link.textContent.replace(/\s+/g, " ").trim() === "Brand") {
+      link.setAttribute("href", brandUrl);
+    }
+  });
+};
+
+wireBrandLinks();
 
 document.querySelectorAll(".category-nav a[data-mega-target='tp-pick']").forEach((link) => {
   link.setAttribute("href", getEditorsPickUrl());
@@ -407,6 +441,171 @@ headerAccountButtons.forEach((button) => {
     navigateWithPageTransition(getMyPageUrl());
   });
 });
+
+const createSignInDialog = () => {
+  let dialog = document.getElementById("bridgeon-signin-dialog");
+  if (dialog) return dialog;
+
+  dialog = document.createElement("div");
+  dialog.className = "bridgeon-signin-dialog";
+  dialog.id = "bridgeon-signin-dialog";
+  dialog.hidden = true;
+  dialog.setAttribute("aria-hidden", "true");
+  dialog.innerHTML = `
+    <button type="button" class="bridgeon-signin-backdrop" data-bridgeon-signin-close aria-label="Close sign in dialog"></button>
+    <section class="bridgeon-signin-modal" role="dialog" aria-modal="true" aria-labelledby="bridgeon-signin-title">
+      <button type="button" class="bridgeon-signin-close" data-bridgeon-signin-close aria-label="Close sign in dialog">&times;</button>
+      <div class="bridgeon-signin-head">
+        <p>BridgeOn Account</p>
+        <h2 id="bridgeon-signin-title">Sign In</h2>
+        <span>Welcome back. Sign in to access your orders, wishlist, and saved picks.</span>
+      </div>
+      <form class="bridgeon-signin-form" data-bridgeon-signin-form novalidate>
+        <div class="bridgeon-signin-field">
+          <label for="bridgeon-signin-email">Email</label>
+          <input id="bridgeon-signin-email" name="email" type="email" autocomplete="email" placeholder="name@email.com" required>
+        </div>
+        <div class="bridgeon-signin-field">
+          <label for="bridgeon-signin-password">Password</label>
+          <input id="bridgeon-signin-password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+        </div>
+        <div class="bridgeon-signin-row">
+          <label class="bridgeon-signin-remember">
+            <input type="checkbox" name="remember" checked>
+            Keep me signed in
+          </label>
+          <a class="bridgeon-signin-forgot" href="#">Forgot password?</a>
+        </div>
+        <p class="bridgeon-signin-message" data-bridgeon-signin-message aria-live="polite"></p>
+        <button type="submit" class="bridgeon-signin-submit">Sign In</button>
+      </form>
+      <p class="bridgeon-signin-foot">New to BridgeOn? <a href="#">Create an account</a></p>
+    </section>
+  `;
+  document.body.appendChild(dialog);
+  return dialog;
+};
+
+let signInTrigger = null;
+
+const closeSignInDialog = () => {
+  const dialog = document.getElementById("bridgeon-signin-dialog");
+  if (!dialog || dialog.hidden) return;
+  dialog.hidden = true;
+  dialog.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("is-bridgeon-signin-open");
+  const message = dialog.querySelector("[data-bridgeon-signin-message]");
+  if (message) {
+    message.textContent = "";
+    message.classList.remove("is-success");
+  }
+  if (signInTrigger && typeof signInTrigger.focus === "function") {
+    signInTrigger.focus();
+  }
+  signInTrigger = null;
+};
+
+const openSignInDialog = (trigger) => {
+  const dialog = createSignInDialog();
+  signInTrigger = trigger || null;
+  dialog.hidden = false;
+  dialog.setAttribute("aria-hidden", "false");
+  document.body.classList.add("is-bridgeon-signin-open");
+  window.requestAnimationFrame(() => {
+    dialog.querySelector("#bridgeon-signin-email")?.focus();
+  });
+};
+
+const initSignInDialog = () => {
+  const dialog = createSignInDialog();
+  const form = dialog.querySelector("[data-bridgeon-signin-form]");
+  const message = dialog.querySelector("[data-bridgeon-signin-message]");
+
+  dialog.querySelectorAll("[data-bridgeon-signin-close]").forEach((button) => {
+    button.addEventListener("click", closeSignInDialog);
+  });
+
+  dialog.querySelector(".bridgeon-signin-forgot")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (message) {
+      message.textContent = "Password reset is not available in this prototype yet.";
+      message.classList.remove("is-success");
+    }
+  });
+
+  dialog.querySelector(".bridgeon-signin-foot a")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (message) {
+      message.textContent = "Account creation is not available in this prototype yet.";
+      message.classList.remove("is-success");
+    }
+  });
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const email = form.elements.email?.value?.trim() || "";
+    const password = form.elements.password?.value || "";
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (message) {
+        message.textContent = "Enter a valid email address.";
+        message.classList.remove("is-success");
+      }
+      form.elements.email?.focus();
+      return;
+    }
+
+    if (!password) {
+      if (message) {
+        message.textContent = "Enter your password.";
+        message.classList.remove("is-success");
+      }
+      form.elements.password?.focus();
+      return;
+    }
+
+    try {
+      sessionStorage.setItem("bridgeon-signed-in", "true");
+      sessionStorage.setItem("bridgeon-signin-email", email);
+    } catch {
+      /* storage may be unavailable */
+    }
+
+    closeSignInDialog();
+    navigateWithPageTransition(getMyPageUrl());
+  });
+};
+
+const initMobileMenuActions = () => {
+  const actions = document.querySelector(".mobile-menu-actions");
+  if (!actions) return;
+
+  actions.querySelectorAll("a").forEach((link) => {
+    const label = link.textContent.replace(/\s+/g, " ").trim().toLowerCase();
+
+    if (label === "my") {
+      link.href = getMyPageUrl();
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        closeMobileMenu();
+        navigateWithPageTransition(getMyPageUrl());
+      });
+      return;
+    }
+
+    if (label === "sign in") {
+      link.href = "#sign-in";
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        closeMobileMenu();
+        openSignInDialog(link);
+      });
+    }
+  });
+};
+
+initSignInDialog();
+initMobileMenuActions();
 
 const openMobileMenu = () => {
   if (!mobileMenuPanel) return;
@@ -674,7 +873,7 @@ const desktopCategoryNavHtml = categoryNav?.innerHTML || "";
 const compactCategoryNavItems = [
   { key: "best", label: "BEST", href: getBestListingUrl() },
   { key: "new", label: "NEW", href: getNewListingUrl() },
-  { key: "brand", label: "Brand", href: "#" },
+  { key: "brand", label: "Brand", href: getBrandUrl() },
   { key: "timedeal", label: "Timedeal", href: getTimeDealUrl(), className: "accent-warm" },
   { key: "editors", label: "Editor's Pick", href: getEditorsPickUrl() },
   { key: "magazine", label: "T.P Magazine", href: getTpMagazineUrl() },
@@ -684,6 +883,7 @@ const compactCategoryNavItems = [
 const getCompactCategoryNavActiveKey = () => {
   if (document.body.classList.contains("listing-page--best")) return "best";
   if (document.body.classList.contains("listing-page--new")) return "new";
+  if (document.body.classList.contains("brand-page")) return "brand";
   if (document.body.classList.contains("timedeal-page")) return "timedeal";
   if (document.body.classList.contains("realtrend-page")) return "realtrend";
   if (document.body.classList.contains("magazine-page")) return "magazine";
@@ -999,6 +1199,7 @@ document.addEventListener("pointerdown", (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
+  closeSignInDialog();
   closeSearchPanel();
   closeMobileMenu();
   closeCategoryMega();

@@ -3,6 +3,10 @@
   --mypage-soft: #f6f3ff;
   --mypage-line: #ddd5ea;
   --mypage-hero-height: clamp(280px, 35.15625vw, 675px);
+  --mypage-tier-medal-size: 32px;
+  --mypage-tier-medal-offset: 28px;
+  --mypage-tier-graph-max: 450px;
+  --mypage-tier-track-max: calc(var(--mypage-tier-medal-size) * 2 + var(--mypage-tier-graph-max));
   color: #111;
   background: #fff;
 }
@@ -534,7 +538,7 @@
 .mypage-tier-labels,
 .mypage-progress-row {
   display: grid;
-  grid-template-columns: 32px minmax(240px, 1fr) 32px;
+  grid-template-columns: var(--mypage-tier-medal-size) minmax(0, 1fr) var(--mypage-tier-medal-size);
   align-items: center;
   justify-items: center;
   column-gap: 0;
@@ -554,21 +558,8 @@
   line-height: 1;
 }
 
-.mypage-tier-labels span:first-child {
-  transform: translateX(28px);
-}
-
 .mypage-tier-labels span:last-child {
   grid-column: 3;
-  transform: translateX(-28px);
-}
-
-.mypage-medal--silver {
-  transform: translateX(28px);
-}
-
-.mypage-medal--gold {
-  transform: translateX(-28px);
 }
 
 .mypage-medal {
@@ -1297,7 +1288,7 @@ body.is-mypage-logout-open {
 
 .mypage-logout-cancel,
 .mypage-logout-confirm {
-  min-height: 46px;
+  min-height: 42px;
   border-radius: 999px;
   font-size: 14px;
   font-weight: 700;
@@ -1325,6 +1316,29 @@ body.is-mypage-logout-open {
 .mypage-logout-confirm:hover,
 .mypage-logout-confirm:focus-visible {
   background: #31136c;
+}
+
+@media (min-width: 1121px) {
+  .mypage-tier-labels,
+  .mypage-progress-row {
+    width: min(100%, var(--mypage-tier-track-max));
+    margin-inline: auto;
+    grid-template-columns:
+      var(--mypage-tier-medal-size)
+      minmax(0, var(--mypage-tier-graph-max))
+      var(--mypage-tier-medal-size);
+    column-gap: 0;
+  }
+
+  .mypage-tier-labels span:first-child,
+  .mypage-medal--silver {
+    transform: translateX(var(--mypage-tier-medal-offset));
+  }
+
+  .mypage-tier-labels span:last-child,
+  .mypage-medal--gold {
+    transform: translateX(calc(var(--mypage-tier-medal-offset) * -1));
+  }
 }
 
 @media (max-width: 1120px) {
@@ -1633,22 +1647,23 @@ body.is-mypage-logout-open {
 
   .mypage-tier-labels,
   .mypage-progress-row {
-    grid-template-columns: 34px minmax(0, 1fr) 34px;
-    column-gap: 0;
+    --mypage-tier-medal-size: 30px;
+    --mypage-tier-graph-gap: 24px;
+    width: auto;
+    margin-inline: 0;
+    grid-template-columns: var(--mypage-tier-medal-size) minmax(0, 1fr) var(--mypage-tier-medal-size);
+    column-gap: var(--mypage-tier-graph-gap);
   }
 
   .mypage-tier-labels span {
-    width: 34px;
+    width: 30px;
   }
 
   .mypage-tier-labels span:first-child,
-  .mypage-medal--silver {
-    transform: translateX(24px);
-  }
-
+  .mypage-medal--silver,
   .mypage-tier-labels span:last-child,
   .mypage-medal--gold {
-    transform: translateX(-24px);
+    transform: none;
   }
 
   .mypage-medal {
@@ -1989,6 +2004,13 @@ body.is-mypage-logout-open {
   .mypage-profile-panel {
     min-height: 0;
     padding: 27px 23px 48px;
+  }
+
+  .mypage-tier-labels,
+  .mypage-progress-row {
+    --mypage-tier-graph-gap: 24px;
+    grid-template-columns: 30px minmax(0, 1fr) 30px;
+    column-gap: var(--mypage-tier-graph-gap);
   }
 
   .mypage-orders {

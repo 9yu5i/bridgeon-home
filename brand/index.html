@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Editor's Pick | BridgeOn</title>
+    <title>All Brands | BridgeOn</title>
     <link rel="stylesheet" href="../reset.css" />
     <link rel="stylesheet" href="../font.css" />
     <link rel="stylesheet" href="../common.css" />
     <link rel="stylesheet" href="../styles.css" />
-    <link rel="stylesheet" href="./editors-pick.css" />
+    <link rel="stylesheet" href="./brand.css" />
   </head>
-  <body class="editors-page">
+  <body class="brand-page">
     <header class="site-header">
       <div class="promo-bar">
         <div class="promo-inner">
@@ -34,7 +34,7 @@
         </form>
         <div class="header-actions">
           <button class="icon-button" aria-label="Account">
-            <img src="../img/main-img/top_banner_my.png" alt="mypage">
+           <img src="../img/main-img/top_banner_my.png" alt="mypage">
           </button>
           <a class="icon-button desktop-icon" aria-label="Wishlist" href="../my-page/wishlist.html">
             <img src="../img/main-img/top_banner_wish.png" alt="wishlist">
@@ -114,26 +114,276 @@
         <nav class="category-nav" aria-label="Primary">
           <a href="../listing/best.html">BEST</a>
           <a href="../listing/new.html">NEW</a>
-          <a href="#">Brand</a>
-          <a href="../listing/beauty.html" data-mega-target="beauty">Beauty</a>
-          <a href="../listing/k-food.html" data-mega-target="k-food">K-Food</a>
-          <a href="../listing/lifestyle.html" data-mega-target="lifestyle">Lifestyle</a>
-          <a href="../listing/k-pop.html" data-mega-target="k-pop">K-POP</a>
-          <a href="../listing/k-traditional.html" data-mega-target="k-traditional">K-Traditional</a>
+          <a class="is-active" href="./index.html" aria-current="page">Brand</a>
+          <a href="./beauty.html" data-mega-target="beauty">Beauty</a>
+          <a href="./k-food.html" data-mega-target="k-food">K-Food</a>
+          <a href="./lifestyle.html" data-mega-target="lifestyle">Lifestyle</a>
+          <a href="./k-pop.html" data-mega-target="k-pop">K-POP</a>
+          <a href="./k-traditional.html" data-mega-target="k-traditional">K-Traditional</a>
           <a class="accent-warm" href="../timedeal/timedeal.html">Time Deal &#128293;</a>
-          <a class="accent is-active" href="./editors-pick.html" data-mega-target="tp-pick" aria-current="page">T.P Pick</a>
+          <a class="accent" href="../editors-pick/editors-pick.html" data-mega-target="tp-pick">T.P Pick</a>
         </nav>
 
-        <div class="category-mega" data-menu-panel="tp-pick" aria-label="T.P Pick category submenu">
-          <a class="mega-feature" href="./editors-pick.html">
-            <b>T.P Pick</b>
+        <div class="category-mega" data-menu-panel="beauty" aria-label="Beauty category submenu">
+          <a class="mega-feature" href="./beauty.html">
+            <b>Beauty</b>
             <strong>Trendy Pick</strong>
           </a>
           <div class="mega-column">
-            <h3><a class="mega-column-heading" href="./editors-pick.html">Editor's Pick</a></h3>
+            <h3>Skincare</h3>
+            <ul>
+              <li><a href="#">Cleansers</a></li>
+              <li><a href="#">Serum/Ampoule</a></li>
+              <li><a href="#">Moisturizers</a></li>
+              <li><a href="#">Toners</a></li>
+              <li><a href="#">Masks</a></li>
+              <li><a href="#">Suncare</a></li>
+              <li><a href="#">Trouble Care</a></li>
+              <li><a href="#">Sets</a></li>
+            </ul>
           </div>
           <div class="mega-column">
-            <h3><a class="mega-column-heading" href="./magazine.html">T.P Magazine</a></h3>
+            <h3>Makeup</h3>
+            <ul>
+              <li><a href="#">Face</a></li>
+              <li><a href="#">Eye</a></li>
+              <li><a href="#">Lip</a></li>
+              <li><a href="#">Cheeks</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Hair Care</h3>
+            <ul>
+              <li><a href="#">Daily Care</a></li>
+              <li><a href="#">Special Care</a></li>
+              <li><a href="#">Hair Color &amp; Perm</a></li>
+              <li><a href="#">Hair Styling</a></li>
+              <li><a href="#">Hair Perfume</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Body Care</h3>
+            <ul>
+              <li><a href="#">Bath &amp; Shower</a></li>
+              <li><a href="#">Body Moisturizers</a></li>
+              <li><a href="#">Fragrance</a></li>
+              <li><a href="#">Hand &amp; Foot Care</a></li>
+              <li><a href="#">Hair Removal</a></li>
+              <li><a href="#">Personal Care</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Beauty Tools</h3>
+            <ul>
+              <li><a href="#">Skincare</a></li>
+              <li><a href="#">Makeup</a></li>
+              <li><a href="#">Body Care</a></li>
+              <li><a href="#">Hair</a></li>
+              <li><a href="#">Hair Removal</a></li>
+              <li><a href="#">Beauty Devices</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Nail</h3>
+            <ul>
+              <li><a href="#">Nail Care</a></li>
+              <li><a href="#">Nail Polish</a></li>
+              <li><a href="#">Nail Art</a></li>
+              <li><a href="#">Nail Tips</a></li>
+              <li><a href="#">Nail Tools</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Mens's</h3>
+            <ul>
+              <li><a href="#">Face Care</a></li>
+              <li><a href="#">Hair Care</a></li>
+              <li><a href="#">Body Care</a></li>
+              <li><a href="#">Men's Makeup</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Supplements</h3>
+            <ul>
+              <li><a href="#">Beauty</a></li>
+              <li><a href="#">Slimming</a></li>
+              <li><a href="#">Health</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="k-food" aria-label="K-Food category submenu">
+          <a class="mega-feature" href="./k-food.html">
+            <b>K-Food</b>
+            <strong>Food Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3>Ramen &amp; Noodles</h3>
+            <ul>
+              <li><a href="#">Ramen/Cup Noodles</a></li>
+              <li><a href="#">Other Noodles</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Snacks &amp; Nuts</h3>
+            <ul>
+              <li><a href="#">Snacks</a></li>
+              <li><a href="#">Cookies &amp; Pies</a></li>
+              <li><a href="#">Natural Snacks</a></li>
+              <li><a href="#">Nuts</a></li>
+              <li><a href="#">Candy &amp; Chocolate</a></li>
+              <li><a href="#">Gim(Seaweed) Snacks</a></li>
+              <li><a href="#">Dried Fish</a></li>
+              <li><a href="#">Snack Sets</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Instant &amp; Quick Meals</h3>
+            <ul>
+              <li><a href="#">Meal Kits</a></li>
+              <li><a href="#">Instant Rice</a></li>
+              <li><a href="#">Instant Soups</a></li>
+              <li><a href="#">Street Food</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Beverages</h3>
+            <ul>
+              <li><a href="#">Coffee</a></li>
+              <li><a href="#">Tea</a></li>
+              <li><a href="#">Soft Drinks</a></li>
+              <li><a href="#">Health Drinks</a></li>
+              <li><a href="#">Others</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Kitchen Staples</h3>
+            <ul>
+              <li><a href="#">Pastes</a></li>
+              <li><a href="#">Sauces</a></li>
+              <li><a href="#">Marinades</a></li>
+              <li><a href="#">Oil</a></li>
+              <li><a href="#">Canned Food</a></li>
+              <li><a href="#">Powders</a></li>
+              <li><a href="#">Seasonings</a></li>
+              <li><a href="#">Dressing</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Kimchi &amp; Side Dishes</h3>
+            <ul>
+              <li><a href="#">Kimchi</a></li>
+              <li><a href="#">Side Dishes</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Health</h3>
+            <ul>
+              <li><a href="#">Ginseng</a></li>
+              <li><a href="#">Supplements</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="lifestyle" aria-label="Lifestyle category submenu">
+          <a class="mega-feature" href="./lifestyle.html">
+            <b>Lifestyle</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3>Toys &amp; Crafts</h3>
+            <ul>
+              <li><a href="#">Character</a></li>
+              <li><a href="#">Toys</a></li>
+              <li><a href="#">Games</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Stationery</h3>
+            <ul>
+              <li><a href="#">Character</a></li>
+              <li><a href="#">Paper Goods</a></li>
+              <li><a href="#">Writing Tools</a></li>
+              <li><a href="#">Study Gadgets</a></li>
+              <li><a href="#">Decor</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Kitchen</h3>
+            <ul>
+              <li><a href="#">Kitchen Appliances</a></li>
+              <li><a href="#">Storage</a></li>
+              <li><a href="#">Kitchenware</a></li>
+            </ul>
+          </div>
+          <div class="mega-column">
+            <h3>Living</h3>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="k-pop" aria-label="K-POP category submenu">
+          <a class="mega-feature" href="./k-pop.html">
+            <b>K-POP</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3>Bestseller</h3>
+          </div>
+          <div class="mega-column">
+            <h3>New Release</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Album</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Photo Book</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Goods</h3>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="k-traditional" aria-label="K-Traditional category submenu">
+          <a class="mega-feature" href="./k-traditional.html">
+            <b>K-Traditional</b>
+            <strong>Trendy Pick</strong>
+          </a>
+          <div class="mega-column">
+            <h3>Art&amp;Decor</h3>
+          </div>
+          <div class="mega-column">
+            <h3>DIY</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Fashion&amp;Accessories</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Stationery</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Home</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Kitchen</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Food</h3>
+          </div>
+          <div class="mega-column">
+            <h3>Games</h3>
+          </div>
+        </div>
+
+        <div class="category-mega" data-menu-panel="tp-pick" aria-label="T.P Pick category submenu">
+          <div class="mega-feature">
+            <b>T.P Pick</b>
+            <strong>Trendy Pick</strong>
+          </div>
+          <div class="mega-column">
+            <h3>Editor's Pick</h3>
+          </div>
+          <div class="mega-column">
+            <h3>T.P Magazine</h3>
           </div>
           <div class="mega-column">
             <h3><a class="mega-column-heading" href="../realtrend/realtrend.html">Real Trend</a></h3>
@@ -149,9 +399,9 @@
         <nav class="mobile-menu-list" aria-label="Mobile categories">
           <a href="#" data-mobile-submenu-open="categories">Categories<span aria-hidden="true">&gt;</span></a>
           <a href="#">Brand</a>
-          <a href="../listing/best.html">Best Seller</a>
-          <a href="../listing/new.html">New Arrival</a>
-          <a href="../timedeal/timedeal.html">Time Deal</a>
+          <a href="./best.html">Best Seller</a>
+          <a href="./new.html">New Arrival</a>
+          <a href="#">Time Deal</a>
           <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
         </nav>
         <section class="mobile-submenu-panel" aria-hidden="true" aria-label="Secondary categories">
@@ -162,12 +412,12 @@
             </button>
           </div>
           <nav class="mobile-submenu-list" aria-label="Second level categories">
-            <a href="../listing/beauty.html" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
-            <a href="../listing/k-food.html" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
-            <a href="../listing/lifestyle.html" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
-            <a href="../listing/k-pop.html" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
-            <a href="../listing/k-traditional.html" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
-            <a href="../timedeal/timedeal.html" data-mobile-third-open="time-deal">Time Deal</a>
+            <a href="./beauty.html" data-mobile-third-open="beauty">Beauty<span aria-hidden="true">&gt;</span></a>
+            <a href="./k-food.html" data-mobile-third-open="k-food">K-Food<span aria-hidden="true">&gt;</span></a>
+            <a href="./lifestyle.html" data-mobile-third-open="lifestyle">Lifestyle<span aria-hidden="true">&gt;</span></a>
+            <a href="./k-pop.html" data-mobile-third-open="k-pop">K-POP<span aria-hidden="true">&gt;</span></a>
+            <a href="./k-traditional.html" data-mobile-third-open="k-traditional">K-Traditional<span aria-hidden="true">&gt;</span></a>
+            <a href="#" data-mobile-third-open="time-deal">Time Deal</a>
             <a href="#" data-mobile-third-open="tp-pick">T.P Pick<span aria-hidden="true">&gt;</span></a>
           </nav>
           <section class="mobile-tertiary-panel" aria-hidden="true" aria-label="Third level categories">
@@ -219,220 +469,29 @@
       </aside>
     </header>
 
-    <main class="editors-main">
-      <section class="editors-hero" aria-label="Editor's Page introduction">
-        <nav class="editors-breadcrumb desktop-only" aria-label="Breadcrumb">
+    <main class="brand-main">
+      <div class="brand-shell">
+        <nav class="brand-breadcrumbs desktop-only" aria-label="Breadcrumb">
           <a href="../index.html">Home</a>
           <span aria-hidden="true">&gt;</span>
-          <a href="./editors-pick.html">T.P Pick</a>
-          <span aria-hidden="true">&gt;</span>
-          <span>Editor's Pick</span>
+          <span>All Brands</span>
         </nav>
-        <div class="editors-product editors-product--blue" aria-hidden="true"></div>
-        <div class="editors-product editors-product--yellow" aria-hidden="true"></div>
-        <div class="editors-product editors-product--white" aria-hidden="true"></div>
-        <div class="editors-hero-copy">
-          <p>EDITOR'S</p>
-          <h1>PAGE<span>+</span></h1>
-          <span>Meet our editors, explore their curated picks,<br>and discover their magazine stories.</span>
-        </div>
-        <div class="editors-hero-cards desktop-only" aria-hidden="true">
-          <article><b>1</b><strong>OUR EDITORS</strong><span>Get to know<br>the minds behind<br>the picks.</span></article>
-          <article><b>2</b><strong>EDITOR'S PICKS</strong><span>Handpicked skincare<br>essentials our<br>editors love.</span></article>
-          <article><b>3</b><strong>EDITORIAL MAGAZINE</strong><span>Read stories, tips<br>and trends from<br>our editors.</span></article>
-        </div>
-      </section>
 
-      <div class="editors-shell">
-        <section class="editors-intro" aria-labelledby="editors-title">
-          <h2 id="editors-title">Meet Our Editors</h2>
-          <p>Select an editor to see their picks</p>
-          <div class="editor-tabs" role="tablist" aria-label="Editors">
-            <button type="button" class="is-active" role="tab" aria-selected="true" data-editor-tab="0">
-              <span class="editor-avatar editor-avatar--seal"><i></i></span>
-              <b class="flag flag--kr" aria-hidden="true"></b>
-              <strong>Name</strong>
+        <h1 class="brand-page-title">All Brands</h1>
+
+        <div class="brand-toolbar">
+          <div class="brand-alpha" data-brand-alpha role="tablist" aria-label="Filter brands by letter"></div>
+          <form class="brand-search" role="search">
+            <label class="sr-only" for="brand-search-input">Search brands</label>
+            <input id="brand-search-input" type="search" placeholder="Search Brands" data-brand-search autocomplete="off" />
+            <button type="submit" aria-label="Search brands">
+              <img src="../img/search/search.png" alt="" aria-hidden="true">
             </button>
-            <button type="button" role="tab" aria-selected="false" data-editor-tab="1">
-              <span class="editor-avatar editor-avatar--duck"><i></i></span>
-              <b class="flag flag--ua" aria-hidden="true"></b>
-              <strong>Name</strong>
-            </button>
-            <button type="button" role="tab" aria-selected="false" data-editor-tab="2">
-              <span class="editor-avatar editor-avatar--cat"><i></i></span>
-              <b class="flag flag--us" aria-hidden="true"></b>
-              <strong>Name</strong>
-            </button>
-            <button type="button" role="tab" aria-selected="false" data-editor-tab="3">
-              <span class="editor-avatar editor-avatar--dog"><i></i></span>
-              <b class="flag flag--th" aria-hidden="true"></b>
-              <strong>Name</strong>
-            </button>
-            <button type="button" role="tab" aria-selected="false" data-editor-tab="4">
-              <span class="editor-avatar editor-avatar--hedgehog"><i></i></span>
-              <b class="flag flag--au" aria-hidden="true"></b>
-              <strong>Name</strong>
-            </button>
-          </div>
-
-          <article class="editor-profile">
-            <div class="editor-profile-avatar">
-              <span class="editor-avatar editor-avatar--seal"><i></i></span>
-              <b class="flag flag--kr" aria-hidden="true"></b>
-              <h3>Name</h3>
-            </div>
-            <div class="editor-profile-copy">
-              <ul class="editor-facts">
-                <li>
-                  <img src="img/location.png" alt="" aria-hidden="true">
-                  Busan, Korea
-                </li>
-                <li>
-                  <img src="img/birth.png" alt="" aria-hidden="true">
-                  25 years old
-                </li>
-                <li>
-                  <img src="img/skin.png" alt="" aria-hidden="true">
-                  Combo Skin
-                </li>
-              </ul>
-              <p>Passionate about clean beauty and ingredient-focused skincare. Sharing my favorite finds for healthier skin and everyday wellness.</p>
-              <div class="editor-tags">
-                <span># Skincare Expert</span>
-                <span># Sensitive Skin</span>
-                <span># Clean Beauty</span>
-                <span># Food Lover</span>
-              </div>
-            </div>
-            <aside class="editor-note">
-              <h3>Editor's Note</h3>
-              <p>Passionate about clean beauty and ingredient-focused skincare. Sharing my favorite finds for healthier skin and everyday wellness.</p>
-              <strong>Name <span aria-hidden="true">&#9829;</span></strong>
-            </aside>
-          </article>
-        </section>
-
-        <section class="editor-picks" aria-labelledby="editor-picks-title">
-          <div class="editor-section-heading">
-            <h2 id="editor-picks-title">Name&rsquo;s Picks <span>(nn items)</span></h2>
-          </div>
-          <div class="editor-category-tabs" role="tablist" aria-label="Pick categories">
-            <button type="button" class="is-active" data-pick-filter="beauty" aria-selected="true">Beauty</button>
-            <button type="button" data-pick-filter="k-food" aria-selected="false">K-Food</button>
-            <button type="button" data-pick-filter="lifestyle" aria-selected="false">Lifestyle</button>
-            <button type="button" data-pick-filter="k-pop" aria-selected="false">K-pop</button>
-            <button type="button" data-pick-filter="k-traditional" aria-selected="false">K-Traditional</button>
-          </div>
-
-          <div class="editor-pick-rail">
-            <div class="editor-pick-viewport">
-              <div class="editor-pick-list" data-editor-pick-list>
-              <article class="editor-pick-card" data-pick-category="beauty">
-                <div class="editor-pick-image editor-pick-image--rose" aria-hidden="true"><span></span></div>
-                <div class="editor-pick-product">
-                  <p>Anua</p>
-                  <h3>PDRN Hyaluronic Acid Hydrating Capsule Mist 100ml</h3>
-                  <div class="editor-rating"><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</div>
-                  <div class="editor-price"><strong>US$18.40</strong><del>US$23.00</del></div>
-                  <div class="editor-pick-actions">
-                    <button type="button" class="editor-cart" aria-label="Add to cart"><img src="../img/listing/cart_hover.png" alt="" aria-hidden="true"></button>
-                    <button type="button" class="editor-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                  </div>
-                </div>
-                <aside class="editor-pick-note">
-                  <h4><span aria-hidden="true"></span> Why I Picked It!</h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <div><span>#Smooth</span><span>#PDRN</span></div>
-                </aside>
-              </article>
-
-              <article class="editor-pick-card" data-pick-category="beauty">
-                <div class="editor-pick-image editor-pick-image--blue" aria-hidden="true"><span></span></div>
-                <div class="editor-pick-product">
-                  <p>Anua</p>
-                  <h3>PDRN Hyaluronic Acid Hydrating Capsule Mist 100ml</h3>
-                  <div class="editor-rating"><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</div>
-                  <div class="editor-price"><strong>US$18.40</strong><del>US$23.00</del></div>
-                  <div class="editor-pick-actions">
-                    <button type="button" class="editor-cart" aria-label="Add to cart"><img src="../img/listing/cart_hover.png" alt="" aria-hidden="true"></button>
-                    <button type="button" class="editor-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                  </div>
-                </div>
-                <aside class="editor-pick-note">
-                  <h4><span aria-hidden="true"></span> Why I Picked It!</h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <div><span>#Smooth</span><span>#PDRN</span><span>#Texture</span></div>
-                </aside>
-              </article>
-
-              <article class="editor-pick-card" data-pick-category="k-food">
-                <div class="editor-pick-image editor-pick-image--green" aria-hidden="true"><span></span></div>
-                <div class="editor-pick-product">
-                  <p>Anua</p>
-                  <h3>PDRN Hyaluronic Acid Hydrating Capsule Mist 100ml</h3>
-                  <div class="editor-rating"><img src="../img/main-img/star.png" alt="" aria-hidden="true">4.8 (1,256)</div>
-                  <div class="editor-price"><strong>US$18.40</strong><del>US$23.00</del></div>
-                  <div class="editor-pick-actions">
-                    <button type="button" class="editor-cart" aria-label="Add to cart"><img src="../img/listing/cart_hover.png" alt="" aria-hidden="true"></button>
-                    <button type="button" class="editor-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
-                  </div>
-                </div>
-                <aside class="editor-pick-note">
-                  <h4><span aria-hidden="true"></span> Why I Picked It!</h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <div><span>#Smooth</span><span>#PDRN</span><span>#Texture</span></div>
-                </aside>
-              </article>
-              </div>
-            </div>
-            <div class="editor-pick-meter" data-pick-meter>
-              <div class="editor-pick-meter-track" aria-hidden="true"><span data-pick-meter-fill></span></div>
-              <p class="editor-pick-meter-label" data-pick-meter-label>1 / 3</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="editor-magazine" aria-labelledby="editor-mag-title">
-          <div class="editor-magazine-heading">
-            <h2 id="editor-mag-title">From Name&rsquo;s Magazine</h2>
-            <a href="./magazine.html">VIEW ALL -&gt;</a>
-          </div>
-          <div class="editor-magazine-grid" data-editor-magazine>
-            <article class="editor-magazine-card editor-magazine-card--yellow">
-              <div class="editor-magazine-image editor-magazine-image--fruit" aria-hidden="true"></div>
-              <h3>5 Korean Sunscreens You Should Try</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-              <small>Jul 21, 2026 夷?Beauty</small>
-            </article>
-            <article class="editor-magazine-card editor-magazine-card--green">
-              <div class="editor-magazine-image editor-magazine-image--paper" aria-hidden="true"></div>
-              <h3>5 Korean Sunscreens You Should Try</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-              <small>Jul 21, 2026 夷?Beauty</small>
-            </article>
-            <article class="editor-magazine-card editor-magazine-card--lavender">
-              <div class="editor-magazine-image editor-magazine-image--stage" aria-hidden="true"></div>
-              <h3>5 Korean Sunscreens You Should Try</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam ...</p>
-              <small>Jul 21, 2026 夷?Beauty</small>
-            </article>
-          </div>
-          <div class="editor-magazine-dots" aria-hidden="true">
-            <span class="is-active"></span><span></span><span></span>
-          </div>
-        </section>
-
-        <section class="newsletter editors-newsletter">
-          <div>
-            <h2>Be the first to know</h2>
-            <p>Get trend updates, exclusive offers, and more!</p>
-          </div>
-          <form>
-            <label class="sr-only" for="newsletter-email">Email</label>
-            <input id="newsletter-email" type="email" placeholder="Enter Your Email" />
-            <button type="submit">SUBSCRIBE</button>
           </form>
-        </section>
+        </div>
+
+        <div class="brand-directory" data-brand-directory aria-live="polite"></div>
+        <p class="brand-empty" data-brand-empty hidden>No brands found.</p>
       </div>
     </main>
 
@@ -441,42 +500,27 @@
         <a class="logo footer-logo" href="../index.html">Bridge<span>On</span></a>
         <div class="footer-group">
           <button class="footer-toggle" type="button">MY ACCOUNT</button>
-          <div class="footer-links"><a href="#">My Dashboard</a><a href="#">Orders</a><a href="#">Wishlist</a><a href="#">My Reviews</a></div>
+          <div class="footer-links"><a href="#">My Account</a><a href="#">Customer Service</a><a href="#">Order Tracking</a></div>
         </div>
         <div class="footer-group">
-          <button class="footer-toggle" type="button">CUSTOMER CARE</button>
-          <div class="footer-links"><a href="#">Help Center</a><a href="#">Shipping &amp; Delivery</a><a href="#">Returns &amp; Refunds</a><a href="#">Contact Us</a></div>
+          <button class="footer-toggle" type="button">ABOUT US</button>
+          <div class="footer-links"><a href="#">About Us</a><a href="#">Contact Us</a><a href="#">Join Us</a></div>
         </div>
         <div class="footer-group">
           <button class="footer-toggle" type="button">POLICIES</button>
-          <div class="footer-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a><a href="#">Payment Security</a></div>
+          <div class="footer-links"><a href="#">Terms of Use</a><a href="#">Privacy &amp; Cookie Policy</a></div>
         </div>
         <div class="footer-group">
-          <button class="footer-toggle" type="button">COMPANY</button>
-          <div class="footer-links"><a href="#">About Us</a><a href="#">Become a Partner</a><a href="#">Careers</a></div>
+          <button class="footer-toggle" type="button">CONTACT US</button>
+          <div class="footer-links"><a href="mailto:help@bridge.com">help@bridge.com</a></div>
         </div>
       </div>
       <div class="footer-methods">
         <div><strong>Payment Method</strong><span>PayPal</span><span>VISA</span><span>Master</span><span>AMEX</span><span>Alipay</span></div>
         <div><strong>Delivery Method</strong><span>FedEx</span><span>DHL</span><span>aramex</span><span>EMS</span><span>parcel</span></div>
       </div>
-      <p class="copyright">&copy; 2025 Bridge on, Inc. All rights reserved.</p>
+      <p class="copyright">嶺?2025 Bridge on, Inc. All rights reserved.</p>
     </footer>
-
-    <button class="float-button to-top" aria-label="Back to top">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
-    </button>
-    <button class="float-button chat" aria-label="Chat">
-      <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
-    </button>
-
-    <nav class="bottom-nav" aria-label="Mobile navigation">
-      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
-      <a href="../realtrend/realtrend.html"><img src="../img/mobile-icon/menu/tppick.png" alt="" aria-hidden="true"><span>T.P Pick</span></a>
-      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
-      <a href="../cart/cart.html" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
-      <a href="../my-page/my-page.html"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
-    </nav>
 
     <aside class="realtrend-panel trend-product-sheet" id="trend-product-sheet" hidden aria-hidden="true" aria-label="Product details">
       <article class="realtrend-product-card">
@@ -623,7 +667,23 @@
       <div class="realtrend-cart-toast-thumb" aria-hidden="true"></div>
     </div>
 
+    <button class="float-button to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+    </button>
+    <button class="float-button chat" aria-label="Chat">
+      <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
+    </button>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <a href="#" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false"><img src="../img/Menu/hamburger.png" alt="" aria-hidden="true"><span>Menu</span></a>
+      <a href="../realtrend/realtrend.html"><img src="../img/mobile-icon/menu/tppick.png" alt="" aria-hidden="true"><span>T.P Pick</span></a>
+      <a href="../index.html"><img src="../img/Menu/home.png" alt="" aria-hidden="true"><span>Home</span></a>
+      <a href="../cart/cart.html" class="cart-link"><b>3</b><img src="../img/Menu/cart.png" alt="" aria-hidden="true"><span>Cart</span></a>
+      <a href="../my-page/my-page.html"><img src="../img/Menu/menu.png" alt="" aria-hidden="true"><span>My</span></a>
+    </nav>
+
     <script src="../script.js"></script>
-    <script src="./editors-pick.js"></script>
+    <script src="./brand.js"></script>
+    <script src="./new.js"></script>
   </body>
 </html>

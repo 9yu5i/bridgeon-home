@@ -383,7 +383,9 @@
       document.body.classList.add("is-orders-modal-open");
       window.requestAnimationFrame(() => {
         const activeDialog = type === "review" ? reviewDialog : trackDialog;
-        activeDialog.querySelector("input, textarea, button")?.focus();
+        activeDialog.scrollTop = 0;
+        activeDialog.setAttribute("tabindex", "-1");
+        activeDialog.focus({ preventScroll: true });
       });
     };
 
