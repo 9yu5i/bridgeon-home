@@ -43,8 +43,17 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
 
   const getGap = () => parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap) || 0;
 
+  const getActiveCards = () =>
+    originalCards.filter(
+      (card) =>
+        rail.contains(card) &&
+        !card.classList.contains("is-loop-clone") &&
+        !card.classList.contains("is-tab-hidden") &&
+        !card.hidden
+    );
+
   const getStep = (direction = 1) => {
-    const cards = [...rail.children].filter((child) => !child.classList.contains("is-loop-clone"));
+    const cards = getActiveCards();
     const card = direction > 0 ? cards[0] : cards[cards.length - 1];
     if (!card) return 0;
     return card.getBoundingClientRect().width + getGap();
@@ -70,7 +79,16 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
     currentX = 0;
     rail.classList.remove("is-dragging");
     rail.querySelectorAll(".is-loop-clone").forEach((clone) => clone.remove());
-    originalCards.forEach((card) => rail.appendChild(card));
+    originalCards.forEach((card) => {
+      if (!card.classList.contains("is-tab-hidden") && !card.hidden) {
+        rail.appendChild(card);
+      }
+    });
+    originalCards.forEach((card) => {
+      if (card.classList.contains("is-tab-hidden") || card.hidden) {
+        rail.appendChild(card);
+      }
+    });
     resetRailPosition();
   };
 
@@ -135,12 +153,13 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
 
   const finishForward = (fromX = 0) => {
     const step = getStep(1);
-    if (!step) {
+    const activeCards = getActiveCards();
+    const firstCard = activeCards[0];
+    if (!step || !firstCard) {
       isAnimating = false;
       return;
     }
 
-    const firstCard = rail.firstElementChild;
     const loopClone = firstCard.cloneNode(true);
     loopClone.setAttribute("aria-hidden", "true");
     loopClone.classList.add("is-loop-clone");
@@ -158,13 +177,14 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
 
   const finishBackward = (fromX = 0) => {
     const step = getStep(-1);
-    if (!step) {
+    const activeCards = getActiveCards();
+    const firstCard = activeCards[0];
+    const lastCard = activeCards[activeCards.length - 1];
+    if (!step || !firstCard || !lastCard) {
       isAnimating = false;
       return;
     }
 
-    const firstCard = rail.firstElementChild;
-    const lastCard = rail.lastElementChild;
     const loopClone = lastCard.cloneNode(true);
     loopClone.setAttribute("aria-hidden", "true");
     loopClone.classList.add("is-loop-clone");
@@ -192,7 +212,7 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
       resetToOriginalOrder();
       return;
     }
-    if (isAnimating || !rail.firstElementChild) return;
+    if (isAnimating || getActiveCards().length < 2) return;
     isAnimating = true;
 
     if (direction > 0) finishForward(0);
@@ -287,6 +307,10 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
 
   disableLoopMedia?.addEventListener("change", () => {
     if (isLoopDisabled()) resetToOriginalOrder();
+  });
+
+  rail.addEventListener("bridgeon:railfilterchange", () => {
+    resetToOriginalOrder();
   });
 
   if (isLoopDisabled()) resetToOriginalOrder();

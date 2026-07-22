@@ -45,6 +45,17 @@ const navigateWithPageTransition = (href) => {
 window.BridgeOn = window.BridgeOn || {};
 window.BridgeOn.navigateWithPageTransition = navigateWithPageTransition;
 window.BridgeOn.productDetailUrl = PRODUCT_DETAIL_URL;
+window.BridgeOn.cartPageUrl = new URL("cart/cart.html", BRIDGEON_ROOT_URL).href;
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".realtrend-cart-toast-close")) return;
+
+  const toast = event.target.closest(".realtrend-cart-toast.is-visible");
+  if (!toast) return;
+
+  event.preventDefault();
+  navigateWithPageTransition(window.BridgeOn.cartPageUrl);
+});
 
 const CART_STORAGE_KEY = "bridgeon-cart-items";
 
@@ -68,21 +79,108 @@ const normalizeCartOptionChoices = (choices, selectedOption = "") => {
   return uniqueChoices;
 };
 
-const createCartItemId = ({ brand, name, option, price }) =>
-  [brand, name, option, price].join("|").toLowerCase().replace(/\s+/g, "-");
+const createCartItemId = ({ brand, name, option }) =>
+  [brand, name, option].join("|").toLowerCase().replace(/\s+/g, "-");
+
+const stripCartBundleOptionSuffix = (option) =>
+  String(option || "")
+    .replace(/\s*·\s*\d+\s*PCS Deal$/i, "")
+    .replace(/^\d+\s*PCS Deal$/i, "")
+    .trim();
+
+const DEFAULT_PRODUCT_DEAL_BUNDLE_TIERS = [
+  { qty: 2, discount: 5 },
+  { qty: 3, discount: 10 },
+  { qty: 4, discount: 15 },
+];
+
+const normalizeCartBundleTiers = (tiers) => {
+  if (!Array.isArray(tiers)) return [];
+
+  return tiers
+    .map((tier) => ({
+      qty: Math.max(2, Number.parseInt(tier?.qty, 10) || 0),
+      discount: Math.max(0, Number(tier?.discount) || 0),
+    }))
+    .filter((tier) => tier.qty >= 2 && tier.discount > 0)
+    .sort((a, b) => a.qty - b.qty);
+};
+
+const getActiveCartBundleTier = (tiers, quantity) => {
+  let active = null;
+  normalizeCartBundleTiers(tiers).forEach((tier) => {
+    if (quantity >= tier.qty) active = tier;
+  });
+  return active;
+};
+
+const itemHasProductDealBundle = (item = {}) => {
+  if (item.hasBundleDeal) return true;
+  if (normalizeCartBundleTiers(item.bundleTiers).length) return true;
+  if (/PCS Deal/i.test(String(item.option || ""))) return true;
+
+  const detailUrl = String(item.detailUrl || "");
+  return /product-detail(?:-options)?\.html/i.test(detailUrl);
+};
+
+const resolveCartBundleTiers = (item = {}) => {
+  const fromItem = normalizeCartBundleTiers(item.bundleTiers);
+  if (fromItem.length) return fromItem;
+
+  if (/PCS Deal/i.test(String(item.option || "")) || itemHasProductDealBundle(item)) {
+    return normalizeCartBundleTiers(DEFAULT_PRODUCT_DEAL_BUNDLE_TIERS);
+  }
+
+  return [];
+};
 
 const normalizeCartItem = (item = {}) => {
   const brand = String(item.brand || "BridgeOn").trim();
   const name = String(item.name || "Product").trim();
-  const option = String(item.option || "").trim();
-  const price = formatCartPrice(item.price || "US$22.00");
-  const originalPrice = item.originalPrice ? formatCartPrice(item.originalPrice) : "";
+  const option = stripCartBundleOptionSuffix(item.option);
   const tone = String(item.tone || "green").trim();
   const quantity = Math.max(1, Number.parseInt(item.quantity, 10) || 1);
-  const optionChoices = normalizeCartOptionChoices(item.optionChoices, option);
-  const id = item.id || createCartItemId({ brand, name, option, price });
+  const optionChoices = normalizeCartOptionChoices(
+    (Array.isArray(item.optionChoices) ? item.optionChoices : []).map(stripCartBundleOptionSuffix),
+    option,
+  ).filter((choice) => choice && !/PCS Deal/i.test(choice));
+  const detailUrl = String(item.detailUrl || "").trim();
+  const brandUrl = String(item.brandUrl || "").trim();
+  const hasBundleDeal = itemHasProductDealBundle(item);
+  const bundleTiers = resolveCartBundleTiers(item);
+  const originalPrice = item.originalPrice ? formatCartPrice(item.originalPrice) : "";
+  const inferredBasePrice =
+    item.basePrice ||
+    (bundleTiers.length && item.originalPrice ? item.originalPrice : item.price) ||
+    "US$22.00";
+  const basePrice = formatCartPrice(inferredBasePrice);
+  const activeBundle = getActiveCartBundleTier(bundleTiers, quantity);
+  const price = activeBundle
+    ? formatCartPrice(parseCartNumber(basePrice) * (1 - activeBundle.discount / 100))
+    : basePrice;
+  const bundleLabel = activeBundle
+    ? `Bundle ${activeBundle.qty}+ · ${activeBundle.discount}% OFF`
+    : "";
+  const id = item.id || createCartItemId({ brand, name, option });
 
-  return { id, brand, name, option, optionChoices, price, originalPrice, tone, quantity };
+  return {
+    id,
+    brand,
+    name,
+    option,
+    optionChoices,
+    price,
+    basePrice,
+    originalPrice,
+    tone,
+    quantity,
+    detailUrl,
+    brandUrl,
+    hasBundleDeal: hasBundleDeal || bundleTiers.length > 0,
+    bundleTiers,
+    bundleLabel,
+    isBundle: Boolean(activeBundle),
+  };
 };
 
 const readCartItems = () => {
@@ -119,22 +217,48 @@ window.BridgeOn.cart = {
   getCount: getCartCount,
   formatPrice: formatCartPrice,
   parsePrice: parseCartNumber,
+  defaultBundleTiers: DEFAULT_PRODUCT_DEAL_BUNDLE_TIERS,
+  getActiveBundleTier: getActiveCartBundleTier,
   setItems: writeCartItems,
   add(item) {
     const nextItem = normalizeCartItem(item);
     const items = readCartItems();
-    const existing = items.find((cartItem) => cartItem.id === nextItem.id);
+    const existingIndex = items.findIndex((cartItem) => cartItem.id === nextItem.id);
 
-    if (existing) existing.quantity += nextItem.quantity;
-    else items.push(nextItem);
+    if (existingIndex >= 0) {
+      const existing = items[existingIndex];
+      items[existingIndex] = normalizeCartItem({
+        ...existing,
+        ...nextItem,
+        quantity: existing.quantity + nextItem.quantity,
+        bundleTiers: nextItem.bundleTiers?.length ? nextItem.bundleTiers : existing.bundleTiers,
+        hasBundleDeal: Boolean(nextItem.hasBundleDeal || existing.hasBundleDeal),
+        basePrice: existing.basePrice || nextItem.basePrice,
+        originalPrice: existing.originalPrice || nextItem.originalPrice,
+        detailUrl: existing.detailUrl || nextItem.detailUrl,
+        brandUrl: existing.brandUrl || nextItem.brandUrl,
+        optionChoices: normalizeCartOptionChoices(
+          [...(existing.optionChoices || []), ...(nextItem.optionChoices || [])],
+          existing.option || nextItem.option,
+        ),
+      });
+    } else {
+      items.push(nextItem);
+    }
 
     writeCartItems(items);
     updateCartBadges();
     return nextItem;
   },
   updateQuantity(id, quantity) {
-    const items = readCartItems()
-      .map((item) => item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item);
+    const items = readCartItems().map((item) =>
+      item.id === id
+        ? normalizeCartItem({
+            ...item,
+            quantity: Math.max(1, quantity),
+          })
+        : item,
+    );
     writeCartItems(items);
     updateCartBadges();
   },
@@ -190,6 +314,7 @@ const WISHLIST_BUTTON_SELECTOR = [
   ".realtrend-wish",
   ".editor-wish",
   ".mypage-wish",
+  ".deal-share-button",
 ].join(", ");
 
 const normalizeWishlistText = (value, fallback = "") =>
@@ -339,6 +464,19 @@ const getWishlistPayloadFromButton = (button) => {
     });
   }
 
+  const dealCard = button.closest(".deal-card");
+  if (dealCard) {
+    const priceNode = dealCard.querySelector(".deal-copy strong");
+    return normalizeWishlistItem({
+      brand: "BridgeOn",
+      name: dealCard.querySelector(".deal-copy h3")?.textContent,
+      price: getDirectText(priceNode) || priceNode?.childNodes?.[0]?.textContent,
+      originalPrice: priceNode?.querySelector("del")?.textContent,
+      detailUrl: dealCard.dataset.productDetailLink || PRODUCT_DETAIL_URL,
+      option: dealCard.dataset.dealSlider || "",
+    });
+  }
+
   if (button.classList.contains("product-wish")) {
     return normalizeWishlistItem({
       brand: document.querySelector(".product-brand")?.textContent,
@@ -406,6 +544,29 @@ document.addEventListener(
   (event) => {
     const button = event.target.closest?.(WISHLIST_BUTTON_SELECTOR);
     if (!button) return;
+
+    const wishlistCard = button.closest(".wishlist-content .mypage-product-card");
+    if (wishlistCard) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      const item = getWishlistPayloadFromButton(button);
+      if (item?.id && window.BridgeOn.wishlist.isActive(item)) {
+        window.BridgeOn.wishlist.toggle(item);
+      }
+
+      const content = wishlistCard.closest(".wishlist-content");
+      const grid = content?.querySelector(".wishlist-grid");
+      const countEl = content?.querySelector(".account-collection-head strong");
+      wishlistCard.remove();
+
+      if (countEl && grid) {
+        const count = grid.querySelectorAll(".mypage-product-card").length;
+        countEl.textContent = `${count} item${count === 1 ? "" : "s"}`;
+      }
+      return;
+    }
 
     const item = getWishlistPayloadFromButton(button);
     if (!item?.id) return;
@@ -558,6 +719,94 @@ const initMagazineDetailLinks = () => {
 
 initMagazineDetailLinks();
 
+const initEditorCardProductRotator = () => {
+  const rotators = document.querySelectorAll(".editor-card-products");
+  if (!rotators.length) return;
+
+  rotators.forEach((rotator) => {
+    const cards = Array.from(rotator.querySelectorAll(".editor-card-product"));
+    if (!cards.length) return;
+
+    let activeIndex = Math.max(0, cards.findIndex((card) => card.classList.contains("is-active")));
+    let timerId = null;
+    let isPaused = false;
+
+    const syncCardState = () => {
+      cards.forEach((card, index) => {
+        const isActive = index === activeIndex;
+        card.classList.toggle("is-active", isActive);
+        card.setAttribute("aria-hidden", isActive ? "false" : "true");
+        card.tabIndex = isActive ? 0 : -1;
+      });
+    };
+
+    rotator.classList.add("is-rotator-ready");
+    cards.forEach((card) => {
+      card.classList.remove("is-exiting");
+    });
+    syncCardState();
+
+    const setActiveCard = (nextIndex) => {
+      if (nextIndex === activeIndex || !cards[nextIndex]) return;
+
+      const currentCard = cards[activeIndex];
+      const nextCard = cards[nextIndex];
+
+      currentCard.classList.remove("is-active");
+      currentCard.classList.add("is-exiting");
+      nextCard.classList.remove("is-exiting");
+      nextCard.classList.add("is-active");
+      activeIndex = nextIndex;
+      syncCardState();
+
+      window.setTimeout(() => {
+        currentCard.classList.remove("is-exiting");
+      }, 720);
+    };
+
+    const goNext = () => {
+      setActiveCard((activeIndex + 1) % cards.length);
+    };
+
+    const stop = () => {
+      if (!timerId) return;
+      window.clearInterval(timerId);
+      timerId = null;
+    };
+
+    const start = () => {
+      stop();
+      if (cards.length < 2 || isPaused || document.hidden) return;
+      timerId = window.setInterval(goNext, 4200);
+    };
+
+    rotator.addEventListener("mouseenter", () => {
+      isPaused = true;
+      stop();
+    });
+
+    rotator.addEventListener("mouseleave", () => {
+      isPaused = false;
+      start();
+    });
+
+    rotator.addEventListener("focusin", () => {
+      isPaused = true;
+      stop();
+    });
+
+    rotator.addEventListener("focusout", () => {
+      isPaused = false;
+      start();
+    });
+
+    document.addEventListener("visibilitychange", start);
+    start();
+  });
+};
+
+initEditorCardProductRotator();
+
 const initScrollReveals = () => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     document.documentElement.classList.remove("scroll-reveal-pending");
@@ -637,13 +886,12 @@ const hero = document.querySelector(".hero");
 
   const editorialSection = document.querySelector(".editorial-section");
   if (editorialSection) {
+    addLineReveal(editorialSection);
     const editorCard = editorialSection.querySelector(".editor-card");
-    editorCard?.querySelector(":scope > span")?.classList.add("scroll-reveal-split-left");
-    editorCard?.querySelectorAll(":scope > div h2, :scope > div h3, :scope > div p").forEach((el) => {
-      el.classList.add("scroll-reveal-split-right");
-    });
-    editorCard?.querySelector(":scope > button")?.classList.add("scroll-reveal-split-right");
-    editorCard?.querySelector(":scope > a")?.classList.add("scroll-reveal-split-right");
+    if (editorCard) {
+      editorCard.classList.add("scroll-reveal-soft");
+      editorCard.querySelector(".editor-card-copy")?.classList.add("scroll-reveal-split-left");
+    }
     editorialSection.querySelector(".magazine-block")?.classList.add("scroll-reveal-soft");
     addStaggerItems(editorialSection.querySelector(".magazine-grid"), ".magazine-card", 0.08);
   }
@@ -818,13 +1066,7 @@ if (todayPick && todayPickTrack) {
   startTodayPickAutoplay();
 }
 
-document.querySelectorAll(".tab-row button, .tag-tabs button").forEach((button) => {
-  button.addEventListener("click", () => {
-    const group = button.parentElement;
-    group.querySelectorAll("button").forEach((item) => item.classList.remove("is-active"));
-    button.classList.add("is-active");
-  });
-});
+loadBridgeOnComponent("scripts/components/section-tabs.js");
 
 loadBridgeOnComponent("scripts/components/seller-wishlist.js");
 

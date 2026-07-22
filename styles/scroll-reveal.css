@@ -41,19 +41,22 @@ html.scroll-reveal-pending .deal-grid .deal-card {
   transition: none !important;
 }
 
-html.scroll-reveal-pending .editor-card > span {
+html.scroll-reveal-pending .editor-card {
+  opacity: 0;
+  transform: translateY(36px) scale(0.985);
+  filter: blur(8px);
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .editor-card-copy {
   opacity: 0;
   transform: translateX(-28px);
   transition: none !important;
 }
 
-html.scroll-reveal-pending .editor-card > div h2,
-html.scroll-reveal-pending .editor-card > div h3,
-html.scroll-reveal-pending .editor-card > div p,
-html.scroll-reveal-pending .editor-card > button,
-html.scroll-reveal-pending .editor-card > a {
+html.scroll-reveal-pending .editor-card-products .editor-card-product {
   opacity: 0;
-  transform: translateX(28px);
+  transform: translateY(22px) scale(0.96);
   transition: none !important;
 }
 
@@ -65,11 +68,15 @@ html.scroll-reveal-pending .editor-card > a {
 }
 
 .scroll-reveal-soft {
+  --scroll-reveal-scale: 1;
+  --scroll-reveal-blur: 0px;
   opacity: 0;
-  transform: translateY(var(--scroll-reveal-distance));
+  transform: translateY(var(--scroll-reveal-distance)) scale(var(--scroll-reveal-scale));
+  filter: blur(var(--scroll-reveal-blur));
   transition:
     opacity var(--scroll-reveal-duration) var(--scroll-reveal-ease),
-    transform var(--scroll-reveal-duration) var(--scroll-reveal-ease);
+    transform var(--scroll-reveal-duration) var(--scroll-reveal-ease),
+    filter var(--scroll-reveal-duration) var(--scroll-reveal-ease);
 }
 
 .scroll-reveal-soft.scroll-reveal-slow {
@@ -78,9 +85,28 @@ html.scroll-reveal-pending .editor-card > a {
 }
 
 .scroll-reveal-soft.is-inview,
-.is-inview > .scroll-reveal-soft {
+.is-inview > .scroll-reveal-soft,
+.is-inview .scroll-reveal-soft {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.editor-card.scroll-reveal-soft {
+  --scroll-reveal-distance: 36px;
+  --scroll-reveal-duration: 0.94s;
+  --scroll-reveal-scale: 0.985;
+  --scroll-reveal-blur: 8px;
+  transform-origin: center top;
+  transition:
+    opacity var(--scroll-reveal-duration) var(--scroll-reveal-ease),
+    transform var(--scroll-reveal-duration) var(--scroll-reveal-ease),
+    filter var(--scroll-reveal-duration) var(--scroll-reveal-ease),
+    box-shadow var(--scroll-reveal-duration) var(--scroll-reveal-ease);
+}
+
+.editor-card.scroll-reveal-soft:not(.is-inview) {
+  box-shadow: 0 8px 20px rgba(49, 19, 108, 0.08);
 }
 
 .scroll-reveal-line {
@@ -187,6 +213,20 @@ html.scroll-reveal-pending .editor-card > a {
   transition:
     opacity 0.9s var(--scroll-reveal-ease),
     transform 0.9s var(--scroll-reveal-ease);
+}
+
+.scroll-reveal-stagger .editor-card-product.scroll-reveal-item {
+  transform: translateY(22px) scale(0.96);
+  transition:
+    opacity 0.72s var(--scroll-reveal-ease),
+    transform 0.72s var(--scroll-reveal-ease),
+    box-shadow 0.72s var(--scroll-reveal-ease);
+  transition-delay: calc(0.16s + (var(--reveal-index, 0) * var(--reveal-stagger, 0.08s)));
+}
+
+.scroll-reveal-stagger.is-inview .editor-card-product.scroll-reveal-item,
+.is-inview .scroll-reveal-stagger .editor-card-product.scroll-reveal-item {
+  transform: translateY(0) scale(1);
 }
 
 .scroll-reveal-hero .today-pick {

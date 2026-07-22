@@ -9,7 +9,22 @@
 
   const TOTAL_PRODUCTS = 100;
   const LOAD_SIZE = 20;
-  let activeCategory = "all";
+  const VALID_CATEGORIES = new Set([
+    "all",
+    "beauty",
+    "k-food",
+    "lifestyle",
+    "k-pop",
+    "k-traditional",
+  ]);
+
+  const readCategoryFromUrl = () => {
+    const category = new URLSearchParams(window.location.search).get("category") || "all";
+    const normalized = category.trim().toLowerCase();
+    return VALID_CATEGORIES.has(normalized) ? normalized : "all";
+  };
+
+  let activeCategory = readCategoryFromUrl();
   let observer = null;
 
   const products = [
@@ -197,6 +212,9 @@
   };
 
   const PRODUCT_DETAIL_OPTIONS_HREF = "../product-detail/product-detail-options.html";
+  /* Matches product-detail .product-thumbnails: 1st = card thumb, 2nd = hover */
+  const RANK1_IMAGE = "../img/listing/originall.jpg";
+  const RANK1_IMAGE_HOVER = "../img/listing/hoverr.jpg";
 
   const createCard = (product) => {
     const article = document.createElement("article");
@@ -205,10 +223,16 @@
     if (product.rank === 2) {
       article.dataset.productDetailLink = PRODUCT_DETAIL_OPTIONS_HREF;
     }
+
+    const imageStyle =
+      product.rank === 1
+        ? ` style="--listing-image: url('${RANK1_IMAGE}'); --listing-image-hover: url('${RANK1_IMAGE_HOVER}');"`
+        : "";
+
     article.innerHTML = `
       <div class="listing-card-media">
         <span class="listing-card-rank" aria-label="Rank ${product.rank}">${product.rank}</span>
-        <div class="listing-card-image listing-card-image--${escapeHtml(product.tone)}" aria-hidden="true"></div>
+        <div class="listing-card-image listing-card-image--${escapeHtml(product.tone)}"${imageStyle} aria-hidden="true"></div>
         <button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="false"></button>
       </div>
       <div class="listing-card-body">
@@ -262,6 +286,25 @@
     );
   };
 
+  const syncCategoryTabs = () => {
+    if (!tabs) return;
+    tabs.querySelectorAll("[data-best-category]").forEach((tab) => {
+      const isActive = (tab.dataset.bestCategory || "all") === activeCategory;
+      tab.classList.toggle("is-active", isActive);
+      tab.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+  };
+
+  const writeCategoryToUrl = (category) => {
+    const url = new URL(window.location.href);
+    if (category && category !== "all") {
+      url.searchParams.set("category", category);
+    } else {
+      url.searchParams.delete("category");
+    }
+    window.history.replaceState({}, "", url);
+  };
+
   const resetProducts = () => {
     loaded = 0;
     isLoading = false;
@@ -277,14 +320,12 @@
     if (!button || !tabs.contains(button)) return;
 
     activeCategory = button.dataset.bestCategory || "all";
-    tabs.querySelectorAll("[data-best-category]").forEach((tab) => {
-      const isActive = tab === button;
-      tab.classList.toggle("is-active", isActive);
-      tab.setAttribute("aria-selected", isActive ? "true" : "false");
-    });
+    writeCategoryToUrl(activeCategory);
+    syncCategoryTabs();
     resetProducts();
   });
 
+  syncCategoryTabs();
   resetProducts();
 
   if (!("IntersectionObserver" in window)) {

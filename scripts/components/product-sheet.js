@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
   const navigateWithPageTransition = window.BridgeOn?.navigateWithPageTransition || ((href) => {
     window.location.href = href;
   });
@@ -34,6 +34,12 @@ const initTrendProductSheet = () => {
   let selectClickLock = false;
   let cartToastTimer = null;
   let trendCardPointer = null;
+  let sellerCardPointer = null;
+
+  const getSellerCardDetailHref = (card) =>
+    card.dataset.productDetailLink
+      ? new URL(card.dataset.productDetailLink, window.location.href).href
+      : PRODUCT_DETAIL_URL;
 
   const preventTrendSheetBackdropScroll = (event) => {
     if (!document.body.classList.contains("is-trend-product-sheet-open")) return;
@@ -145,18 +151,91 @@ const initTrendProductSheet = () => {
     return productNameEl?.textContent?.trim() || "This product";
   };
 
-  const getSheetCartPayload = () => ({
-    brand: productCard?.querySelector(".realtrend-brand")?.textContent?.trim() || "BridgeOn",
-    name: productNameEl?.textContent?.trim() || "Product",
-    option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
-    optionChoices: Array.from(productSelect?.options || [])
-      .map((option) => option.textContent?.trim())
-      .filter(Boolean),
-    price: productCard?.querySelector(".realtrend-price strong")?.textContent?.trim() || "US$22.00",
-    originalPrice: productCard?.querySelector(".realtrend-price del")?.textContent?.trim() || "",
-    tone: "green",
-    quantity: Number(qtyEl?.textContent || 1) || 1,
-  });
+  const SHEET_BUNDLE_TIERS =
+    window.BridgeOn?.cart?.defaultBundleTiers ||
+    [
+      { qty: 2, discount: 5 },
+      { qty: 3, discount: 10 },
+      { qty: 4, discount: 15 },
+    ];
+
+  const formatSheetPrice = (value) =>
+    window.BridgeOn?.cart?.formatPrice?.(value) || `US$${Number(value || 0).toFixed(2)}`;
+
+  const parseSheetPrice = (value) =>
+    window.BridgeOn?.cart?.parsePrice?.(value) ||
+    Number.parseFloat(String(value || "").replace(/[^\d.]/g, "")) ||
+    0;
+
+  const getSheetBasePriceText = () =>
+    productCard?.dataset.sheetBasePrice ||
+    productCard?.querySelector(".realtrend-price strong")?.textContent?.trim() ||
+    "US$22.00";
+
+  const ensureSheetBundleMark = () => {
+    const priceRow = productCard?.querySelector(".realtrend-price");
+    if (!priceRow) return null;
+
+    let mark = priceRow.querySelector(".realtrend-bundle-mark");
+    if (!mark) {
+      mark = document.createElement("span");
+      mark.className = "realtrend-bundle-mark";
+      mark.hidden = true;
+      priceRow.appendChild(mark);
+    }
+    return mark;
+  };
+
+  const syncSheetBundlePricing = () => {
+    if (!productCard) return;
+
+    const quantity = Number(qtyEl?.textContent || 1) || 1;
+    const basePriceText = getSheetBasePriceText();
+    const basePrice = parseSheetPrice(basePriceText);
+    const activeBundle =
+      window.BridgeOn?.cart?.getActiveBundleTier?.(SHEET_BUNDLE_TIERS, quantity) ||
+      SHEET_BUNDLE_TIERS.reduce((active, tier) => (quantity >= tier.qty ? tier : active), null);
+    const unitPrice = activeBundle ? basePrice * (1 - activeBundle.discount / 100) : basePrice;
+    const priceStrong = productCard.querySelector(".realtrend-price strong");
+    const bundleMark = ensureSheetBundleMark();
+
+    if (priceStrong) priceStrong.textContent = formatSheetPrice(unitPrice);
+    if (bundleMark) {
+      if (activeBundle) {
+        bundleMark.hidden = false;
+        bundleMark.textContent = `Bundle ${activeBundle.qty}+ · ${activeBundle.discount}% OFF`;
+      } else {
+        bundleMark.hidden = true;
+        bundleMark.textContent = "";
+      }
+    }
+
+    productCard.classList.toggle("is-bundle-active", Boolean(activeBundle));
+  };
+
+  const getSheetCartPayload = () => {
+    const brandEl = productCard?.querySelector(".realtrend-brand");
+    const basePrice = getSheetBasePriceText();
+    const quantity = Number(qtyEl?.textContent || 1) || 1;
+
+    return {
+      brand: brandEl?.textContent?.trim() || "BridgeOn",
+      name: productNameEl?.textContent?.trim() || "Product",
+      option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
+      optionChoices: Array.from(productSelect?.options || [])
+        .map((option) => option.textContent?.trim())
+        .filter(Boolean),
+      price: basePrice,
+      basePrice,
+      originalPrice: productCard?.querySelector(".realtrend-price del")?.textContent?.trim() || "",
+      tone: "green",
+      quantity,
+      detailUrl: PRODUCT_DETAIL_URL,
+      brandUrl: brandEl instanceof HTMLAnchorElement ? brandEl.href : "",
+      hasBundleDeal: true,
+      bundleTiers: SHEET_BUNDLE_TIERS,
+    };
+  };
 
   const hideCartToast = () => {
     if (!cartToast?.classList.contains("is-visible")) return;
@@ -231,7 +310,7 @@ const initTrendProductSheet = () => {
     if (brandEl) {
       brandEl.textContent = brand;
       if (brandEl instanceof HTMLAnchorElement) {
-        brandEl.href = `${brandPathPrefix}brand/${slugifyBrand(brand)}.html`;
+        brandEl.href = `${brandPathPrefix}brand/detail.html?brand=${slugifyBrand(brand)}`;
       }
     }
 
@@ -240,6 +319,7 @@ const initTrendProductSheet = () => {
     const saleText = rawPrice.startsWith("$") ? `US${rawPrice}` : rawPrice || "US$22.00";
     const sale = Number.parseFloat(saleText.replace(/[^\d.]/g, "") || "22");
 
+    productCard.dataset.sheetBasePrice = saleText;
     if (priceStrong) priceStrong.textContent = saleText;
 
     if (originalPrice) {
@@ -266,6 +346,7 @@ const initTrendProductSheet = () => {
     }
 
     if (qtyEl) qtyEl.textContent = "1";
+    syncSheetBundlePricing();
     wishBtn?.classList.remove("is-active");
     wishBtn?.setAttribute("aria-pressed", "false");
     wishBtn?.setAttribute("aria-label", "Add to wishlist");
@@ -372,6 +453,7 @@ const initTrendProductSheet = () => {
       const delta = Number(button.dataset.qty || 0);
       const next = Math.max(1, Number(qtyEl.textContent || 1) + delta);
       qtyEl.textContent = String(next);
+      syncSheetBundlePricing();
     });
   });
 
@@ -481,17 +563,57 @@ const initTrendProductSheet = () => {
   sellerRail?.addEventListener(
     "pointerdown",
     (event) => {
-      if (event.target.closest('.card-actions button[aria-label="Add to cart"]')) event.stopPropagation();
+      if (event.target.closest(".card-actions button")) {
+        sellerCardPointer = null;
+        if (event.target.closest('.card-actions button[aria-label="Add to cart"]')) {
+          event.stopPropagation();
+        }
+        return;
+      }
+
+      const card = event.target.closest(".product-card");
+      sellerCardPointer =
+        card && sellerRail.contains(card)
+          ? { card, x: event.clientX, y: event.clientY }
+          : null;
     },
     true,
   );
 
   sellerRail?.addEventListener("click", (event) => {
     const cartButton = event.target.closest('.card-actions button[aria-label="Add to cart"]');
-    if (!cartButton || !sellerRail.contains(cartButton)) return;
+    if (cartButton && sellerRail.contains(cartButton)) {
+      event.preventDefault();
+      event.stopPropagation();
+      sellerCardPointer = null;
+      openTrendProductSheet(cartButton.closest(".product-card"));
+      return;
+    }
+
+    if (event.target.closest(".card-actions button")) {
+      sellerCardPointer = null;
+      return;
+    }
+
+    const card =
+      event.target.closest(".product-card") ||
+      sellerCardPointer?.card ||
+      document.elementFromPoint(event.clientX, event.clientY)?.closest(".product-card");
+
+    if (!card || !sellerRail.contains(card)) {
+      sellerCardPointer = null;
+      return;
+    }
+
+    const pointerMoved =
+      sellerCardPointer?.card === card &&
+      (Math.abs(event.clientX - sellerCardPointer.x) > 8 ||
+        Math.abs(event.clientY - sellerCardPointer.y) > 8);
+    sellerCardPointer = null;
+    if (pointerMoved) return;
+
     event.preventDefault();
-    event.stopPropagation();
-    openTrendProductSheet(cartButton.closest(".product-card"));
+    navigateWithPageTransition(getSellerCardDetailHref(card));
   });
 
   document.addEventListener("click", (event) => {

@@ -33,6 +33,7 @@
 }
 
 .section-heading h2,
+.editorial-section-title,
 .mobile-section-title {
   margin: 0;
   color: var(--purple);
@@ -80,6 +81,7 @@
   background: transparent;
   font-size: 17px;
   font-weight: 500;
+  cursor: pointer;
   transition: color 0.3s ease;
 }
 
@@ -204,7 +206,10 @@
   scroll-snap-align: start;
 }
 
+.card-rail > .is-tab-hidden {
+  display: none !important;
+}
+
 .card-rail .is-loop-clone {
   pointer-events: none;
 }
-

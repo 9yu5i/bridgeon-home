@@ -31,12 +31,22 @@
   padding-left: 0;
 }
 
-/* Hero — same height as beauty listing hero */
 .timedeal-page .listing-hero--time-deal {
+  position: relative;
+  z-index: 3;
   background:
     radial-gradient(circle at 78% 18%, rgba(123, 63, 228, 0.35), transparent 42%),
     linear-gradient(120deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.72)),
     linear-gradient(135deg, #3a2a52 0%, #1a1228 55%, #120d1a 100%);
+}
+
+.timedeal-page .listing-shell {
+  position: relative;
+  z-index: 2;
+}
+
+.timedeal-page .listing-card[hidden] {
+  display: none !important;
 }
 
 .timedeal-hero-inner {

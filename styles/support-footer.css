@@ -1,4 +1,4 @@
-﻿.share-pick {
+.share-pick {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
@@ -276,6 +276,11 @@
   background: #fff;
   font-size: 24px;
   box-shadow: 0 10px 30px rgba(31, 20, 52, 0.24);
+  transition:
+    color 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
 .float-button svg {
@@ -308,5 +313,45 @@
   height: 20px;
   margin: auto;
   object-fit: contain;
+  transition: filter 0.35s ease;
+}
+
+@keyframes float-button-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .float-button.to-top:hover {
+    color: #fff;
+    background: var(--purple);
+    border-color: var(--purple);
+    animation: float-button-bob 1.15s ease-in-out infinite;
+    box-shadow: 0 16px 34px rgba(31, 20, 52, 0.28);
+  }
+
+  .float-button.chat:hover {
+    color: var(--purple);
+    background: #fff;
+    border-color: #d9c6ff;
+    box-shadow: 0 16px 34px rgba(31, 20, 52, 0.28);
+  }
+
+  .float-button.chat:hover img {
+    filter: brightness(0) saturate(100%) invert(32%) sepia(74%) saturate(1800%) hue-rotate(239deg) brightness(95%) contrast(96%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float-button.to-top:hover {
+    animation: none;
+    transform: translateY(-2px);
+  }
 }
 

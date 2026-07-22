@@ -170,7 +170,7 @@
           ...items.map((brand) => {
             const item = document.createElement("li");
             const link = document.createElement("a");
-            link.href = `./${slugify(brand.name)}.html`;
+            link.href = `./detail.html?brand=${slugify(brand.name)}`;
             link.textContent = brand.name;
             if (brand.isNew) {
               const badge = document.createElement("span");

@@ -129,45 +129,95 @@
 
   const padTime = (value) => String(Math.max(0, value)).padStart(2, "0");
 
-  const initCountdown = () => {
-    const hoursEl = document.querySelector("[data-timedeal-hours]");
-    const minutesEl = document.querySelector("[data-timedeal-minutes]");
-    const secondsEl = document.querySelector("[data-timedeal-seconds]");
-    if (!hoursEl || !minutesEl || !secondsEl) return;
-
-    const endAt = Date.now() + (6 * 60 * 60 + 42 * 60 + 18) * 1000;
-
-    const tick = () => {
-      const remainingMs = Math.max(0, endAt - Date.now());
-      const totalSeconds = Math.floor(remainingMs / 1000);
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-
-      hoursEl.textContent = padTime(hours);
-      minutesEl.textContent = padTime(minutes);
-      secondsEl.textContent = padTime(seconds);
-    };
-
-    tick();
-    window.setInterval(tick, 1000);
+  const scheduleMeta = {
+    now: {
+      label: "Deal Ends In",
+      durationMs: (6 * 60 * 60 + 42 * 60 + 18) * 1000,
+    },
+    "upcoming-1": {
+      label: "Next Deal Starts In",
+      durationMs: (2 * 60 * 60 + 15 * 60 + 40) * 1000,
+    },
+    "upcoming-2": {
+      label: "Next Deal Starts In",
+      durationMs: (8 * 60 * 60 + 5 * 60 + 12) * 1000,
+    },
+    tomorrow: {
+      label: "Opens Tomorrow In",
+      durationMs: (18 * 60 * 60 + 22 * 60 + 8) * 1000,
+    },
   };
 
-  const initTabGroup = (selector, activeClass = "is-active", onActivate) => {
-    document.querySelectorAll(selector).forEach((group) => {
-      group.addEventListener("click", (event) => {
-        const button = event.target.closest("button[role='tab']");
-        if (!button || !group.contains(button)) return;
+  const scheduleSets = {
+    now: [0, 1, 2, 3, 4, 5, 6, 7],
+    "upcoming-1": [4, 5, 6, 7, 8, 9, 10, 11],
+    "upcoming-2": [2, 3, 8, 9, 10, 11, 12, 13],
+    tomorrow: [0, 1, 12, 13, 14, 15],
+  };
 
-        group.querySelectorAll("button[role='tab']").forEach((tab) => {
-          const isActive = tab === button;
-          tab.classList.toggle(activeClass, isActive);
-          tab.setAttribute("aria-selected", isActive ? "true" : "false");
-        });
+  const categoryCycle = ["beauty", "beauty", "k-food", "lifestyle", "k-pop", "k-traditional", "beauty", "beauty"];
 
-        onActivate?.(button, group);
-      });
+  const cards = [...document.querySelectorAll(".listing-results .listing-grid > .listing-card")];
+  const countdownLabel = document.querySelector(".timedeal-countdown-label");
+  const hoursEl = document.querySelector("[data-timedeal-hours]");
+  const minutesEl = document.querySelector("[data-timedeal-minutes]");
+  const secondsEl = document.querySelector("[data-timedeal-seconds]");
+  const countDesktop = document.querySelector(".timedeal-toolbar .listing-count strong");
+  const countMobile = document.querySelector(".timedeal-toolbar .listing-count .mobile-only");
+
+  cards.forEach((card, index) => {
+    card.dataset.timedealIndex = String(index);
+    card.dataset.timedealCategory = categoryCycle[index % categoryCycle.length];
+  });
+
+  let activeSchedule = "now";
+  let activeCategory = "all";
+  let countdownEndAt = Date.now() + scheduleMeta.now.durationMs;
+  let countdownTimerId = 0;
+
+  const updateCountdownDisplay = () => {
+    if (!hoursEl || !minutesEl || !secondsEl) return;
+    const remainingMs = Math.max(0, countdownEndAt - Date.now());
+    const totalSeconds = Math.floor(remainingMs / 1000);
+    hoursEl.textContent = padTime(Math.floor(totalSeconds / 3600));
+    minutesEl.textContent = padTime(Math.floor((totalSeconds % 3600) / 60));
+    secondsEl.textContent = padTime(totalSeconds % 60);
+  };
+
+  const setCountdownForSchedule = (scheduleKey) => {
+    const meta = scheduleMeta[scheduleKey] || scheduleMeta.now;
+    if (countdownLabel) countdownLabel.textContent = meta.label;
+    countdownEndAt = Date.now() + meta.durationMs;
+    updateCountdownDisplay();
+  };
+
+  const updateProductCount = (visibleCount) => {
+    const label = visibleCount.toLocaleString("en-US");
+    if (countDesktop) countDesktop.textContent = `(${label})`;
+    if (countMobile) countMobile.textContent = `All Products (${label} Items)`;
+  };
+
+  const renderDealCards = () => {
+    const indexes = new Set(scheduleSets[activeSchedule] || scheduleSets.now);
+    let visibleCount = 0;
+
+    cards.forEach((card, index) => {
+      const matchesSchedule = indexes.has(index);
+      const matchesCategory =
+        activeCategory === "all" || card.dataset.timedealCategory === activeCategory;
+      const isVisible = matchesSchedule && matchesCategory;
+      card.hidden = !isVisible;
+      if (isVisible) visibleCount += 1;
     });
+
+    updateProductCount(visibleCount);
+  };
+
+  const initCountdown = () => {
+    if (!hoursEl || !minutesEl || !secondsEl) return;
+    setCountdownForSchedule(activeSchedule);
+    window.clearInterval(countdownTimerId);
+    countdownTimerId = window.setInterval(updateCountdownDisplay, 1000);
   };
 
   const scrollScheduleTabIntoView = (tab) => {
@@ -200,12 +250,20 @@
     let isPointerInside = false;
     const hoverFollowQuery = window.matchMedia("(min-width: 761px) and (pointer: fine)");
 
-    const setActiveTab = (tab) => {
+    const setActiveTab = (tab, { commit = false } = {}) => {
       tabs.forEach((item) => {
         const isActive = item === tab;
         item.classList.toggle("is-active", isActive);
         item.setAttribute("aria-selected", isActive ? "true" : "false");
       });
+
+      if (!commit) return;
+
+      pinnedTab = tab;
+      activeSchedule = tab.dataset.timedealSchedule || "now";
+      setCountdownForSchedule(activeSchedule);
+      renderDealCards();
+      scrollScheduleTabIntoView(tab);
     };
 
     const tabFromPointer = (clientX) => {
@@ -246,16 +304,35 @@
     schedule.addEventListener("click", (event) => {
       const tab = event.target.closest(".timedeal-schedule-tab[role='tab']");
       if (!tab || !schedule.contains(tab)) return;
+      setActiveTab(tab, { commit: true });
+    });
 
-      pinnedTab = tab;
-      setActiveTab(tab);
-      scrollScheduleTabIntoView(tab);
+    activeSchedule = pinnedTab.dataset.timedealSchedule || "now";
+    setActiveTab(pinnedTab, { commit: true });
+  };
+
+  const initCategoryTabs = () => {
+    const group = document.querySelector(".timedeal-categories");
+    if (!group) return;
+
+    group.addEventListener("click", (event) => {
+      const button = event.target.closest("button[role='tab']");
+      if (!button || !group.contains(button)) return;
+
+      group.querySelectorAll("button[role='tab']").forEach((tab) => {
+        const isActive = tab === button;
+        tab.classList.toggle("is-active", isActive);
+        tab.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+
+      activeCategory = button.dataset.timedealCategory || "all";
+      renderDealCards();
     });
   };
 
   initCountdown();
+  initCategoryTabs();
   initScheduleTabs();
-  initTabGroup(".timedeal-categories");
 
   const activeScheduleTab = document.querySelector(".timedeal-schedule-tab.is-active");
   if (activeScheduleTab && window.matchMedia("(max-width: 760px)").matches) {

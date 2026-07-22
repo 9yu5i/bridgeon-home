@@ -9,7 +9,7 @@
     {
       key: "anua",
       name: "Anua",
-      href: "../brand/anua.html",
+      href: "../brand/detail.html?brand=anua",
       tone: "green",
       products: [
         {
@@ -41,7 +41,7 @@
     {
       key: "numbuzin",
       name: "numbuzin",
-      href: "../brand/numbuzin.html",
+      href: "../brand/detail.html?brand=numbuzin",
       tone: "pink",
       products: [
         {
@@ -73,7 +73,7 @@
     {
       key: "medicube",
       name: "medicube",
-      href: "../brand/medicube.html",
+      href: "../brand/detail.html?brand=medicube",
       tone: "lavender",
       products: [
         {
@@ -105,7 +105,7 @@
     {
       key: "celimax",
       name: "Celimax",
-      href: "../brand/celimax.html",
+      href: "../brand/detail.html?brand=celimax",
       tone: "blue",
       products: [
         {
@@ -137,7 +137,7 @@
     {
       key: "romand",
       name: "rom&nd",
-      href: "../brand/romand.html",
+      href: "../brand/detail.html?brand=rom-nd",
       tone: "skin",
       products: [
         {
@@ -169,7 +169,7 @@
     {
       key: "beauty-of-joseon",
       name: "Beauty of Joseon",
-      href: "../brand/beauty-of-joseon.html",
+      href: "../brand/detail.html?brand=beauty-of-joseon",
       tone: "cream",
       products: [
         {
@@ -201,7 +201,7 @@
     {
       key: "round-lab",
       name: "Round Lab",
-      href: "../brand/round-lab.html",
+      href: "../brand/detail.html?brand=round-lab",
       tone: "aqua",
       products: [
         {

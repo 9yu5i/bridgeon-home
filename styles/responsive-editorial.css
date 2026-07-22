@@ -393,7 +393,7 @@
 
 @media (max-width: 1120px) {
   .magazine-card p {
-      margin: 0;
+      margin: 8px 0;
       padding: 0 12px clamp(14px, 2.5vw, 18px);
       color: #111;
       font-size: clamp(13px, 2vw, 15px);
@@ -633,4 +633,612 @@
   .magazine-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+}
+
+/* Final responsive shape for the home T.P Magazine latest-stories block. */
+@media (min-width: 1121px) {
+  .editorial-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: start !important;
+    gap: clamp(28px, 3vw, 42px) !important;
+  }
+
+  .magazine-grid {
+    grid-template-columns: minmax(0, 1.28fr) minmax(0, 1fr) !important;
+    grid-template-rows: none !important;
+    gap: 20px clamp(24px, 2.1vw, 34px) !important;
+  }
+
+  .magazine-side-list {
+    display: grid !important;
+    align-content: start !important;
+    gap: 22px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .magazine-card-feature .magazine-thumb {
+    max-height: 348px !important;
+    aspect-ratio: 802 / 430 !important;
+  }
+
+  .magazine-card-compact > a {
+    grid-template-columns: clamp(168px, 14vw, 200px) minmax(0, 1fr) !important;
+    width: 100% !important;
+    min-height: 125px !important;
+    column-gap: 22px !important;
+    row-gap: 7px !important;
+    align-items: start !important;
+  }
+
+  .magazine-card-compact .magazine-thumb {
+    width: clamp(168px, 14vw, 200px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 802 / 500 !important;
+  }
+
+  .magazine-card-feature h3 {
+    font-size: 26px !important;
+  }
+
+  .magazine-card-compact h3 {
+    font-size: 19px !important;
+  }
+
+  .magazine-card-compact .magazine-kicker {
+    font-size: 12px !important;
+  }
+
+  .magazine-card-compact .magazine-summary {
+    display: block !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-size: 16px !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+  }
+
+  .magazine-card-compact time {
+    font-size: 13px !important;
+  }
+
+  .magazine-card {
+    display: block !important;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .editorial-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: clamp(28px, 4vw, 42px) !important;
+  }
+
+  .magazine-block {
+    display: grid !important;
+    gap: clamp(18px, 2.4vw, 24px) !important;
+    padding: clamp(24px, 3vw, 32px) !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+  }
+
+  .magazine-block .section-heading {
+    margin: 0 !important;
+  }
+
+  .magazine-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: none !important;
+    gap: clamp(28px, 3.4vw, 38px) clamp(16px, 2.4vw, 24px) !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    scroll-snap-type: none !important;
+  }
+
+  .magazine-side-list {
+    display: grid !important;
+    gap: clamp(12px, 1.8vw, 18px) !important;
+    min-width: 0 !important;
+  }
+
+  .magazine-card {
+    flex: initial !important;
+    min-width: 0 !important;
+    border-radius: 0 !important;
+    scroll-snap-align: none !important;
+  }
+
+  .magazine-card-feature {
+    grid-row: auto !important;
+  }
+
+  .magazine-card .magazine-thumb {
+    height: auto !important;
+    color: #fff !important;
+    background: #bdbdbb !important;
+    font-size: clamp(18px, 2.6vw, 26px) !important;
+  }
+
+  .magazine-card-feature .magazine-thumb {
+    max-height: none !important;
+    aspect-ratio: 802 / 430 !important;
+    border-radius: 8px !important;
+  }
+
+  .magazine-card-feature h3 {
+    font-size: clamp(20px, 2.5vw, 24px) !important;
+  }
+
+  .magazine-card-compact > a {
+    grid-template-columns: clamp(150px, 23vw, 190px) minmax(0, 1fr) !important;
+    align-content: center !important;
+    align-items: start !important;
+    min-height: clamp(94px, 14.35vw, 119px) !important;
+    column-gap: clamp(14px, 2.2vw, 20px) !important;
+    row-gap: 6px !important;
+  }
+
+  .magazine-card-compact .magazine-thumb {
+    align-self: start !important;
+    width: clamp(150px, 23vw, 190px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 802 / 500 !important;
+    border-radius: 7px !important;
+    font-size: 0 !important;
+  }
+
+  .magazine-card h3 {
+    min-height: 0 !important;
+    padding: 0 !important;
+    font-size: clamp(16px, 2vw, 20px) !important;
+  }
+
+  .magazine-card-compact h3 {
+    font-size: clamp(16px, 2vw, 18px) !important;
+  }
+
+  .magazine-summary {
+    padding: 0 !important;
+    font-size: clamp(13px, 1.6vw, 15px) !important;
+  }
+
+  .magazine-card-compact .magazine-summary,
+  .magazine-card-compact time {
+    font-size: clamp(12px, 1.55vw, 14px) !important;
+  }
+
+  .magazine-block::before,
+  .magazine-block::after {
+    display: none !important;
+  }
+}
+
+/* Final responsive shape for the home T.P Pick editor card. */
+@media (min-width: 1121px) {
+  .editor-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 0.86fr) minmax(360px, 1fr) !important;
+    align-items: center !important;
+    gap: clamp(22px, 3vw, 38px) !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: clamp(226px, 17vw, 260px) !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    padding: clamp(24px, 2.6vw, 34px) !important;
+    container-type: normal !important;
+  }
+
+  .editor-card-copy {
+    display: grid !important;
+    align-content: center !important;
+    width: auto !important;
+    max-width: 440px !important;
+    margin: 0 !important;
+  }
+
+  .editor-card h2 {
+    display: block !important;
+    margin: 0 0 8px !important;
+    font-size: clamp(20px, 1.8vw, 28px) !important;
+  }
+
+  .editor-card h3 {
+    max-width: 420px !important;
+    margin: 0 0 8px !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    font-size: clamp(22px, 2.15vw, 34px) !important;
+    line-height: 1.12 !important;
+  }
+
+  .editor-card p {
+    max-width: 330px !important;
+    margin: 0 !important;
+    font-size: clamp(13px, 1.08vw, 16px) !important;
+    line-height: 1.42 !important;
+  }
+
+  .editor-card .editor-name-button,
+  .editor-card .editor-card-cta {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  .editor-card-products {
+    position: relative !important;
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: clamp(218px, 15.5vw, 248px) !important;
+    overflow: hidden !important;
+    border-radius: 16px !important;
+  }
+
+  .editor-card .editor-card-product {
+    position: absolute !important;
+    inset: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(150px, 0.82fr) minmax(0, 1.08fr) !important;
+    grid-template-rows: minmax(116px, 1fr) auto !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    padding: 0 !important;
+    border-radius: 16px !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .editor-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 0.82fr) minmax(300px, 1fr) !important;
+    align-items: center !important;
+    gap: clamp(18px, 3vw, 28px) !important;
+    min-height: 228px !important;
+    height: auto !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+    margin: clamp(60px, 6.5vw, 76px) 0 0 !important;
+    padding: clamp(22px, 3vw, 30px) !important;
+    border-radius: 14px !important;
+    container-type: normal !important;
+  }
+
+  .editor-card-copy {
+    display: grid !important;
+    align-content: center !important;
+    width: auto !important;
+    max-width: 360px !important;
+  }
+
+  .editor-card h2 {
+    display: block !important;
+    margin: 0 0 7px !important;
+    font-size: clamp(18px, 2.7vw, 24px) !important;
+  }
+
+  .editor-card h3 {
+    max-width: 340px !important;
+    margin: 0 0 7px !important;
+    white-space: normal !important;
+    font-size: clamp(20px, 3.2vw, 28px) !important;
+    line-height: 1.12 !important;
+  }
+
+  .editor-card p {
+    max-width: 300px !important;
+    font-size: clamp(12px, 1.8vw, 15px) !important;
+    line-height: 1.38 !important;
+  }
+
+  .editor-card .editor-name-button,
+  .editor-card .editor-card-cta {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    font-weight: 800 !important;
+  }
+
+  .editor-card-products {
+    position: relative !important;
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: clamp(214px, 25vw, 246px) !important;
+    overflow: hidden !important;
+    border-radius: 16px !important;
+  }
+
+  .editor-card .editor-card-product {
+    position: absolute !important;
+    inset: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(130px, 0.78fr) minmax(0, 1.08fr) !important;
+    grid-template-rows: minmax(104px, 1fr) auto !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    padding: 0 !important;
+    border-radius: 16px !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+  }
+
+  .editor-product-thumb {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    min-height: 100% !important;
+  }
+
+  .editor-product-copy {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    min-height: 0 !important;
+    padding: 12px 14px !important;
+  }
+
+  .editor-card-product .editor-pick-note {
+    grid-column: 2 !important;
+    grid-row: 1 / 3 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .editor-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 18px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    margin: clamp(54px, 14vw, 66px) 0 0 !important;
+    padding: 20px !important;
+    border-radius: 16px !important;
+    container-type: normal !important;
+  }
+
+  .editor-card-copy {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .editor-card h2 {
+    display: block !important;
+    margin: 0 0 7px !important;
+    font-size: 18px !important;
+  }
+
+  .editor-card h3 {
+    max-width: 270px !important;
+    margin: 0 0 7px !important;
+    white-space: normal !important;
+    font-size: 24px !important;
+    line-height: 1.1 !important;
+  }
+
+  .editor-card p {
+    max-width: 260px !important;
+    margin: 0 !important;
+    font-size: 13px !important;
+    line-height: 1.38 !important;
+  }
+
+  .editor-card .editor-name-button,
+  .editor-card .editor-card-cta {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    font-weight: 800 !important;
+  }
+
+  .editor-name-button {
+    height: 30px !important;
+    margin-bottom: 12px !important;
+    padding: 0 14px !important;
+    font-size: 12px !important;
+  }
+
+  .editor-card-cta {
+    height: 34px !important;
+    margin-top: 16px !important;
+    padding: 0 16px !important;
+    font-size: 12px !important;
+  }
+
+  .editor-card-products {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    min-height: clamp(220px, 60vw, 276px) !important;
+    margin-right: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    border-radius: 16px !important;
+    scroll-snap-type: none !important;
+  }
+
+  .editor-card-products::-webkit-scrollbar {
+    display: none;
+  }
+
+  .editor-card-product {
+    flex: initial !important;
+    scroll-snap-align: start !important;
+  }
+
+  .editor-card .editor-card-product {
+    position: absolute !important;
+    inset: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(112px, 0.86fr) minmax(0, 1.08fr) !important;
+    grid-template-rows: minmax(118px, 1fr) auto !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    padding: 0 !important;
+    border-radius: 16px !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+  }
+
+  .editor-product-thumb {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    min-height: 100% !important;
+  }
+
+  .editor-product-copy {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    min-height: 0 !important;
+    padding: 12px 14px !important;
+  }
+
+  .editor-card-product .editor-pick-note {
+    grid-column: 2 !important;
+    grid-row: 1 / 3 !important;
+    padding: 14px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .editorial-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: clamp(34px, 8vw, 48px) !important;
+  }
+
+  .magazine-block {
+    display: grid !important;
+    gap: 18px !important;
+    padding: 20px !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+  }
+
+  .magazine-block .section-heading {
+    margin: 0 !important;
+  }
+
+  .magazine-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: none !important;
+    gap: 24px !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    scroll-snap-type: none !important;
+    touch-action: auto !important;
+    cursor: auto !important;
+  }
+
+  .magazine-side-list {
+    display: grid !important;
+    gap: 16px !important;
+    min-width: 0 !important;
+  }
+
+  .magazine-grid.is-dragging {
+    cursor: auto !important;
+  }
+
+  .magazine-card {
+    flex: initial !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    border-radius: 0 !important;
+    scroll-snap-align: none !important;
+  }
+
+  .magazine-card-feature {
+    grid-row: auto !important;
+  }
+
+  .magazine-card .magazine-thumb {
+    height: auto !important;
+    color: #fff !important;
+    background: #bdbdbb !important;
+  }
+
+  .magazine-card-feature .magazine-thumb {
+    aspect-ratio: 802 / 430 !important;
+    border-radius: 8px !important;
+    font-size: 0 !important;
+  }
+
+  .magazine-card-compact > a {
+    grid-template-columns: clamp(126px, 37vw, 156px) minmax(0, 1fr) !important;
+    align-content: center !important;
+    align-items: start !important;
+    min-height: clamp(79px, 23.1vw, 97px) !important;
+    column-gap: 12px !important;
+    row-gap: 5px !important;
+  }
+
+  .magazine-card-compact .magazine-thumb {
+    align-self: start !important;
+    width: clamp(126px, 37vw, 156px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 802 / 500 !important;
+    border-radius: 7px !important;
+    font-size: 0 !important;
+  }
+
+  .magazine-card h3 {
+    min-height: 0 !important;
+    padding: 0 !important;
+    font-size: 18px !important;
+    line-height: 1.3 !important;
+    margin-top: 6px !important;
+  }
+
+  .magazine-card-compact h3 {
+    font-size: 16px !important;
+  }
+
+  .magazine-kicker {
+    margin-top: 8px !important;
+    font-size: 13px !important;
+  }
+
+  .magazine-card-compact .magazine-kicker {
+    margin-top: 0 !important;
+    font-size: 12px !important;
+  }
+
+  .magazine-summary {
+    padding: 0 !important;
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+  }
+
+  .magazine-card-compact .magazine-summary {
+    display: none !important;
+  }
+
+  .magazine-card-compact time {
+    font-size: 14px !important;
+  }
+
+  .magazine-block::before,
+  .magazine-block::after {
+    display: none !important;
+  }
 }

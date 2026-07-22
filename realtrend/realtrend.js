@@ -80,7 +80,7 @@
 
       .replace(/\s+/g, "-");
 
-    return `../brand/${slug}.html`;
+    return `../brand/detail.html?brand=${slug}`;
 
   };
 
@@ -101,6 +101,59 @@
   };
 
 
+
+  const syncRealtrendBundlePricing = (card = document.querySelector(".realtrend-product-card")) => {
+    if (!card) return;
+
+    const qtyEl = document.getElementById("realtrend-qty") || card.querySelector(".realtrend-qty output");
+    const quantity = Number(qtyEl?.textContent || 1) || 1;
+    const basePriceText =
+      card.dataset.sheetBasePrice ||
+      card.querySelector(".realtrend-price strong")?.textContent?.trim() ||
+      "US$22.00";
+    const basePrice =
+      window.BridgeOn?.cart?.parsePrice?.(basePriceText) ||
+      Number.parseFloat(String(basePriceText).replace(/[^\d.]/g, "")) ||
+      0;
+    const bundleTiers =
+      window.BridgeOn?.cart?.defaultBundleTiers ||
+      [
+        { qty: 2, discount: 5 },
+        { qty: 3, discount: 10 },
+        { qty: 4, discount: 15 },
+      ];
+    const activeBundle =
+      window.BridgeOn?.cart?.getActiveBundleTier?.(bundleTiers, quantity) ||
+      bundleTiers.reduce((active, tier) => (quantity >= tier.qty ? tier : active), null);
+    const unitPrice = activeBundle ? basePrice * (1 - activeBundle.discount / 100) : basePrice;
+    const priceStrong = card.querySelector(".realtrend-price strong");
+    const priceRow = card.querySelector(".realtrend-price");
+    let bundleMark = priceRow?.querySelector(".realtrend-bundle-mark");
+
+    if (priceRow && !bundleMark) {
+      bundleMark = document.createElement("span");
+      bundleMark.className = "realtrend-bundle-mark";
+      bundleMark.hidden = true;
+      priceRow.appendChild(bundleMark);
+    }
+
+    if (priceStrong) {
+      priceStrong.textContent =
+        window.BridgeOn?.cart?.formatPrice?.(unitPrice) || `US$${Number(unitPrice || 0).toFixed(2)}`;
+    }
+
+    if (bundleMark) {
+      if (activeBundle) {
+        bundleMark.hidden = false;
+        bundleMark.textContent = `Bundle ${activeBundle.qty}+ · ${activeBundle.discount}% OFF`;
+      } else {
+        bundleMark.hidden = true;
+        bundleMark.textContent = "";
+      }
+    }
+
+    card.classList.toggle("is-bundle-active", Boolean(activeBundle));
+  };
 
   const syncProductCardFromSlide = (slide) => {
 
@@ -148,7 +201,10 @@
 
     if (nameEl && name) nameEl.textContent = name;
 
-    if (priceStrong && strong) priceStrong.textContent = strong;
+    if (priceStrong && strong) {
+      productCard.dataset.sheetBasePrice = strong;
+      priceStrong.textContent = strong;
+    }
 
     if (priceDel && del) priceDel.textContent = del;
 
@@ -187,6 +243,8 @@
 
 
     if (qtyEl) qtyEl.textContent = "1";
+
+    syncRealtrendBundlePricing(productCard);
 
 
 
@@ -813,6 +871,8 @@
 
       qtyOutput.textContent = String(next);
 
+      syncRealtrendBundlePricing();
+
     });
 
   });
@@ -1289,23 +1349,39 @@
 
 
 
-  const getRealtrendCartPayload = () => ({
+  const getRealtrendCartPayload = () => {
+    const brandEl = productCard?.querySelector(".realtrend-brand");
+    const basePrice =
+      productCard?.dataset.sheetBasePrice ||
+      productCard?.querySelector(".realtrend-price strong")?.textContent?.trim() ||
+      "US$22.00";
+    const quantity = Number(productCard?.querySelector(".realtrend-qty output")?.textContent || 1) || 1;
+    const bundleTiers =
+      window.BridgeOn?.cart?.defaultBundleTiers ||
+      [
+        { qty: 2, discount: 5 },
+        { qty: 3, discount: 10 },
+        { qty: 4, discount: 15 },
+      ];
 
-    brand: productCard?.querySelector(".realtrend-brand")?.textContent?.trim() || "BridgeOn",
-
-    name: productNameEl?.textContent?.trim() || "Product",
-
-    option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
-
-    price: productCard?.querySelector(".realtrend-price strong")?.textContent?.trim() || "US$22.00",
-
-    originalPrice: productCard?.querySelector(".realtrend-price del")?.textContent?.trim() || "",
-
-    tone: "green",
-
-    quantity: Number(productCard?.querySelector(".realtrend-qty output")?.textContent || 1) || 1,
-
-  });
+    return {
+      brand: brandEl?.textContent?.trim() || "BridgeOn",
+      name: productNameEl?.textContent?.trim() || "Product",
+      option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
+      optionChoices: Array.from(productSelect?.options || [])
+        .map((option) => option.textContent?.trim())
+        .filter(Boolean),
+      price: basePrice,
+      basePrice,
+      originalPrice: productCard?.querySelector(".realtrend-price del")?.textContent?.trim() || "",
+      tone: "green",
+      quantity,
+      detailUrl: window.BridgeOn?.productDetailUrl || "../product-detail/product-detail.html",
+      brandUrl: brandEl instanceof HTMLAnchorElement ? brandEl.href : "",
+      hasBundleDeal: true,
+      bundleTiers,
+    };
+  };
 
 
 

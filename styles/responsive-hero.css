@@ -366,6 +366,7 @@
     .scroll-reveal-hero .today-pick {
       opacity: 1 !important;
       transform: none !important;
+      filter: none !important;
       transition: none !important;
     }
 }

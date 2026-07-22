@@ -302,18 +302,39 @@
     `;
   };
 
-  const createItemMarkup = (item) => `
-    <article class="cart-item" data-cart-item="${escapeHtml(item.id)}">
+  const slugifyBrand = (brand) =>
+    String(brand || "")
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+
+  const getCartItemDetailUrl = (item) =>
+    item.detailUrl || "../product-detail/product-detail.html";
+
+  const getCartItemBrandUrl = (item) =>
+    item.brandUrl || `../brand/detail.html?brand=${encodeURIComponent(slugifyBrand(item.brand) || "brand")}`;
+
+  const createItemMarkup = (item) => {
+    const detailUrl = escapeHtml(getCartItemDetailUrl(item));
+    const brandUrl = escapeHtml(getCartItemBrandUrl(item));
+    const unitComparePrice = item.isBundle ? item.basePrice : item.originalPrice;
+    const showUnitCompare =
+      unitComparePrice && parsePrice(unitComparePrice) > parsePrice(item.price);
+
+    return `
+    <article class="cart-item${item.isBundle ? " is-bundle" : ""}" data-cart-item="${escapeHtml(item.id)}">
       <label class="cart-item-check"><input type="checkbox" data-cart-check value="${escapeHtml(item.id)}"${selectedIds.has(item.id) ? " checked" : ""}></label>
-      <div class="cart-item-image ${getToneClass(item.tone)}" aria-hidden="true"></div>
+      <a class="cart-item-image ${getToneClass(item.tone)}" href="${detailUrl}" aria-label="View ${escapeHtml(item.name)}"></a>
       <div class="cart-item-info">
-        <p>${escapeHtml(item.brand)}</p>
-        <h2>${escapeHtml(item.name)}</h2>
+        <p><a class="cart-item-brand" href="${brandUrl}">${escapeHtml(item.brand)}</a></p>
+        <h2><a class="cart-item-name" href="${detailUrl}">${escapeHtml(item.name)}</a></h2>
         ${createOptionMarkup(item)}
-        <div class="cart-item-links"><button type="button">Move to Wishlist ♡</button><span>|</span><button type="button" data-cart-delete>Delete</button></div>
+        ${item.isBundle ? `<span class="cart-item-bundle-mark">${escapeHtml(item.bundleLabel)}</span>` : ""}
+        <div class="cart-item-links"><button type="button" data-cart-wishlist>Move to Wishlist ♡</button><span>|</span><button type="button" data-cart-delete>Delete</button></div>
       </div>
       <div class="cart-item-amounts">
-        <p class="cart-item-price">${item.originalPrice ? `<del>${escapeHtml(item.originalPrice)}</del>` : ""}<strong>${escapeHtml(item.price)}</strong></p>
+        <p class="cart-item-price">${showUnitCompare ? `<del>${escapeHtml(unitComparePrice)}</del>` : ""}<strong>${escapeHtml(item.price)}</strong></p>
         <strong class="cart-item-total">${formatPrice(parsePrice(item.price) * item.quantity)}</strong>
       </div>
       <div class="cart-qty" data-cart-qty>
@@ -323,6 +344,7 @@
       </div>
     </article>
   `;
+  };
 
   const syncSelectAll = () => {
     const checks = Array.from(document.querySelectorAll("[data-cart-check]"));
@@ -530,6 +552,62 @@
       const nextQty = Math.max(1, (current?.quantity || 1) + Number(qtyButton.dataset.cartQtyChange));
       cartApi.updateQuantity(item.dataset.cartItem, nextQty);
       renderCart();
+      return;
+    }
+
+    const wishlistButton = event.target.closest("[data-cart-wishlist]");
+    if (wishlistButton) {
+      const itemNode = wishlistButton.closest("[data-cart-item]");
+      const itemId = itemNode?.dataset.cartItem;
+      const current = itemId ? cartApi.getItems().find((cartItem) => cartItem.id === itemId) : null;
+      if (!current || !itemNode || itemNode.classList.contains("is-moving-to-wishlist")) return;
+
+      const wishlistApi = window.BridgeOn?.wishlist;
+      const wishlistPayload = {
+        brand: current.brand,
+        name: current.name,
+        option: current.option,
+        price: current.price,
+        originalPrice: current.originalPrice || current.basePrice || "",
+        detailUrl: current.detailUrl || getCartItemDetailUrl(current),
+      };
+
+      if (wishlistApi && !wishlistApi.isActive?.(wishlistPayload) && typeof wishlistApi.toggle === "function") {
+        wishlistApi.toggle(wishlistPayload);
+      }
+
+      const finishMove = () => {
+        cartApi.remove(itemId);
+        renderCart();
+      };
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduceMotion) {
+        finishMove();
+        return;
+      }
+
+      const leaveHeight = Math.ceil(itemNode.getBoundingClientRect().height);
+      itemNode.style.height = `${leaveHeight}px`;
+      itemNode.style.overflow = "hidden";
+      void itemNode.offsetHeight;
+      itemNode.classList.add("is-moving-to-wishlist");
+
+      let finished = false;
+      const complete = () => {
+        if (finished) return;
+        finished = true;
+        itemNode.removeEventListener("transitionend", onTransitionEnd);
+        finishMove();
+      };
+      const onTransitionEnd = (transitionEvent) => {
+        if (transitionEvent.target !== itemNode) return;
+        if (transitionEvent.propertyName !== "height") return;
+        complete();
+      };
+
+      itemNode.addEventListener("transitionend", onTransitionEnd);
+      window.setTimeout(complete, 480);
       return;
     }
 

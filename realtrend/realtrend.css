@@ -704,6 +704,23 @@
     gap: 4px 8px;
   }
 
+  .realtrend-bundle-mark {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: #fff;
+    background: linear-gradient(135deg, #7b3fe4 0%, #f04dff 100%);
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .realtrend-bundle-mark[hidden] {
+    display: none;
+  }
+
   .realtrend-price del,
   .realtrend-price mark {
     order: 1;

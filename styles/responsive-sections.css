@@ -114,7 +114,8 @@
 @media (min-width: 1021px) and (max-width: 1120px) {
   .page-shell {
       --deal-grid-gap: clamp(14px, 2vw, 24px);
-      --deal-row-height: calc((761px - 72px) * 148 / 356);
+      /* Stacked deal cards size to content; do not lock to legacy landscape row height */
+      --deal-row-height: auto;
     }
 }
 

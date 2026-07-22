@@ -1118,11 +1118,11 @@
     if (!content) return;
 
     const buttons = Array.from(tabs.querySelectorAll("button"));
-    const items = Array.from(content.querySelectorAll("[data-account-category]"));
-    if (!buttons.length || !items.length) return;
+    if (!buttons.length || !content.querySelector("[data-account-category]")) return;
 
     const applyFilter = (filter) => {
       const activeFilter = filter || "all";
+      const items = Array.from(content.querySelectorAll("[data-account-category]"));
 
       buttons.forEach((button) => {
         const buttonFilter = normalizeAccountFilter(button.dataset.accountFilter || button.textContent);
@@ -1144,6 +1144,97 @@
 
     const initialButton = buttons.find((button) => button.classList.contains("is-active")) || buttons[0];
     applyFilter(normalizeAccountFilter(initialButton?.dataset.accountFilter || initialButton?.textContent || "all"));
+  });
+
+  const SAVED_REELS_COUNT_KEY = "bridgeon-saved-reels-count";
+  const SAVED_REELS_REMOVED_KEY = "bridgeon-saved-reels-removed";
+  const DEFAULT_SAVED_REELS_COUNT = 12;
+
+  const readSavedReelsCount = () => {
+    const stored = Number(localStorage.getItem(SAVED_REELS_COUNT_KEY));
+    return Number.isFinite(stored) && stored >= 0 ? stored : DEFAULT_SAVED_REELS_COUNT;
+  };
+
+  const syncMypageSavedReelsCount = (count = readSavedReelsCount()) => {
+    document.querySelectorAll(".mypage-reel-stats strong").forEach((node) => {
+      node.textContent = String(count);
+    });
+  };
+
+  document.querySelectorAll(".saved-content").forEach((content) => {
+    const countEl = content.querySelector(".account-collection-head strong");
+    const grid = content.querySelector(".saved-reel-grid");
+    if (!grid) return;
+
+    const normalizeSavedReelId = (value) =>
+      String(value || "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+
+    const getSavedReelId = (card) =>
+      normalizeSavedReelId(card.querySelector(".saved-reel-copy b")?.textContent);
+
+    const readRemovedSavedReels = () => {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(SAVED_REELS_REMOVED_KEY) || "[]");
+        return Array.isArray(parsed)
+          ? parsed.map(normalizeSavedReelId).filter(Boolean)
+          : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const writeRemovedSavedReels = (ids) => {
+      localStorage.setItem(SAVED_REELS_REMOVED_KEY, JSON.stringify([...new Set(ids)]));
+    };
+
+    const updateReelCount = () => {
+      const count = grid.querySelectorAll(".saved-reel-card").length;
+      localStorage.setItem(SAVED_REELS_COUNT_KEY, String(count));
+      if (countEl) countEl.textContent = `${count} reel${count === 1 ? "" : "s"}`;
+      syncMypageSavedReelsCount(count);
+    };
+
+    const removedIds = new Set(readRemovedSavedReels());
+    grid.querySelectorAll(".saved-reel-card").forEach((card) => {
+      const id = getSavedReelId(card);
+      if (id && removedIds.has(id)) card.remove();
+    });
+
+    grid.addEventListener("click", (event) => {
+      const button = event.target.closest(".saved-reel-card > button");
+      if (!button || !grid.contains(button)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const card = button.closest(".saved-reel-card");
+      if (!card) return;
+
+      const id = getSavedReelId(card);
+      if (id) {
+        removedIds.add(id);
+        writeRemovedSavedReels([...removedIds]);
+      }
+
+      card.remove();
+      updateReelCount();
+    });
+
+    updateReelCount();
+  });
+
+  syncMypageSavedReelsCount();
+
+  document.querySelectorAll(".wishlist-content").forEach((content) => {
+    const countEl = content.querySelector(".account-collection-head strong");
+    const grid = content.querySelector(".wishlist-grid");
+    if (!countEl || !grid) return;
+
+    const count = grid.querySelectorAll(".mypage-product-card").length;
+    countEl.textContent = `${count} item${count === 1 ? "" : "s"}`;
   });
 
   document.querySelectorAll(".points-history-tabs").forEach((tabs) => {

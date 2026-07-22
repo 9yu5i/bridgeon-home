@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
   const navigateWithPageTransition = window.BridgeOn?.navigateWithPageTransition || ((href) => {
     window.location.href = href;
   });
@@ -34,7 +34,7 @@ let categoryLinks = Array.from(document.querySelectorAll(".category-nav a"));
 const categoryMegaPanels = document.querySelectorAll("[data-menu-panel]");
 const compactHeaderSearchQuery = window.matchMedia("(max-width: 1120px)");
 const compactHeaderSearchPage = document.body.matches(
-  ".listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page, .brand-page"
+  ".listing-page, .timedeal-page, .product-detail-page, .cart-page, .editors-page, .realtrend-page, .brand-page, .my-page"
 );
 const headerAccountButtons = Array.from(
   document.querySelectorAll('.header-main .header-actions .icon-button[aria-label="Account"]')
@@ -49,6 +49,7 @@ const getListingPagePrefix = () => {
   if (document.body.classList.contains("product-detail-page")) return "../listing/";
   if (document.body.classList.contains("cart-page")) return "../listing/";
   if (document.body.classList.contains("editors-page")) return "../listing/";
+  if (document.body.classList.contains("realtrend-page")) return "../listing/";
   if (document.body.classList.contains("my-page")) return "../listing/";
   if (document.body.classList.contains("brand-page")) return "../listing/";
   if (document.body.classList.contains("listing-page")) return "./";
@@ -144,6 +145,8 @@ const getListingCategoryUrl = (key) => {
 const getBeautyListingUrl = () => getListingCategoryUrl("beauty");
 
 const getBestListingUrl = () => `${getListingPagePrefix()}best.html`;
+
+const getSearchListingUrl = () => `${getListingPagePrefix()}search.html`;
 
 const getNewListingUrl = () => `${getListingPagePrefix()}new.html`;
 
@@ -338,8 +341,18 @@ const updateSearchPanelBounds = () => {
 
 updateSearchPanelBounds();
 
+const clearSearchQueryInputs = () => {
+  if (searchInput) searchInput.value = "";
+  if (mobileSearchInput) mobileSearchInput.value = "";
+  document.querySelectorAll(".search-mobile-input").forEach((wrap) => {
+    wrap.classList.remove("is-filled");
+  });
+};
+
 const openSearchPanel = (options = {}) => {
   if (!searchPanel) return;
+  const wasOpen = searchPanel.classList.contains("is-open");
+  if (!wasOpen) clearSearchQueryInputs();
   closeCategoryMega();
   updateSearchPanelBounds();
   searchPanel.classList.add("is-open");
@@ -1013,14 +1026,179 @@ const queueCloseCategoryMega = () => {
   categoryMenuTimer = window.setTimeout(closeCategoryMega, 90);
 };
 
+const SEARCH_HISTORY_KEY = "bridgeon-recent-searches";
+const MAX_SEARCH_HISTORY = 8;
+
+const normalizeSearchQuery = (value) => String(value || "").replace(/\s+/g, " ").trim();
+
+const readSearchHistory = () => {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY) || "[]");
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map(normalizeSearchQuery).filter(Boolean).slice(0, MAX_SEARCH_HISTORY);
+  } catch {
+    return [];
+  }
+};
+
+const writeSearchHistory = (items) => {
+  localStorage.setItem(
+    SEARCH_HISTORY_KEY,
+    JSON.stringify(items.map(normalizeSearchQuery).filter(Boolean).slice(0, MAX_SEARCH_HISTORY))
+  );
+};
+
+const getSearchQueryFromButton = (button) => {
+  const clone = button.cloneNode(true);
+  clone.querySelectorAll("span").forEach((span) => span.remove());
+  return normalizeSearchQuery(clone.textContent);
+};
+
+const createRecentSearchButton = (query) => {
+  const button = document.createElement("button");
+  button.type = "button";
+
+  const icon = document.createElement("span");
+  icon.className = "recent-icon";
+  icon.setAttribute("aria-hidden", "true");
+
+  const label = document.createTextNode(query);
+
+  const remove = document.createElement("span");
+  remove.setAttribute("aria-hidden", "true");
+  remove.textContent = "\u00d7";
+
+  button.append(icon, label, remove);
+  return button;
+};
+
+const renderSearchHistory = (items = readSearchHistory()) => {
+  document.querySelectorAll(".recent-searches").forEach((list) => {
+    list.replaceChildren(...items.map(createRecentSearchButton));
+  });
+};
+
+const seedSearchHistoryFromDom = () => {
+  if (localStorage.getItem(SEARCH_HISTORY_KEY) !== null) return;
+
+  const seed = [];
+  const seen = new Set();
+  document.querySelector(".recent-searches")?.querySelectorAll(":scope > button").forEach((button) => {
+    const query = getSearchQueryFromButton(button);
+    const key = query.toLowerCase();
+    if (!query || seen.has(key)) return;
+    seen.add(key);
+    seed.push(query);
+  });
+
+  writeSearchHistory(seed);
+};
+
+const addSearchHistory = (query) => {
+  const normalized = normalizeSearchQuery(query);
+  if (!normalized) return;
+
+  const next = [
+    normalized,
+    ...readSearchHistory().filter((item) => item.toLowerCase() !== normalized.toLowerCase()),
+  ].slice(0, MAX_SEARCH_HISTORY);
+
+  writeSearchHistory(next);
+  renderSearchHistory(next);
+};
+
+const removeSearchHistory = (query) => {
+  const normalized = normalizeSearchQuery(query).toLowerCase();
+  const next = readSearchHistory().filter((item) => item.toLowerCase() !== normalized);
+  writeSearchHistory(next);
+  renderSearchHistory(next);
+};
+
+const getSearchResultsUrl = (query) => {
+  const url = new URL(getSearchListingUrl(), window.location.href);
+  url.searchParams.set("q", normalizeSearchQuery(query));
+  return url.href;
+};
+
+const submitSearch = (rawQuery) => {
+  const query = normalizeSearchQuery(rawQuery);
+  if (!query) {
+    openSearchPanel({ focusMobile: compactHeaderSearchQuery.matches });
+    return;
+  }
+
+  addSearchHistory(query);
+  closeSearchPanel();
+  navigateWithPageTransition(getSearchResultsUrl(query));
+};
+
+const syncSearchInputs = (value) => {
+  if (searchInput) searchInput.value = value;
+  if (mobileSearchInput) mobileSearchInput.value = value;
+  document.querySelectorAll(".search-mobile-input").forEach((wrap) => {
+    wrap.classList.toggle("is-filled", Boolean(normalizeSearchQuery(value)));
+  });
+};
+
+document.querySelectorAll(".search-mobile-input").forEach((wrap) => {
+  const input = wrap.querySelector("input");
+  if (!input) return;
+
+  let clearButton = wrap.querySelector(".search-mobile-clear");
+  if (!clearButton) {
+    clearButton = document.createElement("button");
+    clearButton.type = "button";
+    clearButton.className = "search-mobile-clear";
+    clearButton.setAttribute("aria-label", "Clear search");
+    input.insertAdjacentElement("afterend", clearButton);
+  }
+
+  let submitButton = wrap.querySelector(".search-mobile-submit");
+  const icon = wrap.querySelector("img");
+  if (!submitButton) {
+    submitButton = document.createElement("button");
+    submitButton.type = "button";
+    submitButton.className = "search-mobile-submit";
+    submitButton.setAttribute("aria-label", "Search");
+    if (icon) {
+      icon.replaceWith(submitButton);
+      submitButton.appendChild(icon);
+    } else {
+      wrap.appendChild(submitButton);
+    }
+  }
+
+  clearButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    syncSearchInputs("");
+    input.focus({ preventScroll: true });
+  });
+
+  submitButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    submitSearch(input.value);
+  });
+
+  wrap.classList.toggle("is-filled", Boolean(normalizeSearchQuery(input.value)));
+});
+
+seedSearchHistoryFromDom();
+renderSearchHistory();
+
 searchInput?.addEventListener("focus", openSearchPanel);
 searchInput?.addEventListener("click", openSearchPanel);
 searchInput?.addEventListener("input", () => {
-  if (mobileSearchInput) mobileSearchInput.value = searchInput.value;
+  syncSearchInputs(searchInput.value);
 });
 
 mobileSearchInput?.addEventListener("input", () => {
-  if (searchInput) searchInput.value = mobileSearchInput.value;
+  syncSearchInputs(mobileSearchInput.value);
+});
+
+mobileSearchInput?.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  submitSearch(mobileSearchInput.value);
 });
 
 document.querySelectorAll("[data-bottom-search-open]").forEach((button) => {
@@ -1033,7 +1211,7 @@ document.querySelectorAll("[data-bottom-search-open]").forEach((button) => {
 
 searchForm?.addEventListener("submit", (event) => {
   event.preventDefault();
-  openSearchPanel();
+  submitSearch(searchInput?.value || mobileSearchInput?.value || "");
 });
 
 searchTabs.forEach((button) => {
@@ -1061,7 +1239,8 @@ searchCloseButtons.forEach((button) => {
 
 searchClearButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelectorAll(".recent-searches").forEach((list) => list.replaceChildren());
+    writeSearchHistory([]);
+    renderSearchHistory([]);
   });
 });
 
@@ -1070,13 +1249,30 @@ document.querySelectorAll(".recent-searches").forEach((list) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
 
-    const closeIcon = target.closest("span");
     const button = target.closest("button");
-    if (!button || !closeIcon || button.lastElementChild !== closeIcon) return;
+    if (!button || !list.contains(button)) return;
+
+    const closeIcon = target.closest("span");
+    if (closeIcon && button.lastElementChild === closeIcon) {
+      event.preventDefault();
+      event.stopPropagation();
+      removeSearchHistory(getSearchQueryFromButton(button));
+      return;
+    }
 
     event.preventDefault();
-    event.stopPropagation();
-    button.remove();
+    submitSearch(getSearchQueryFromButton(button));
+  });
+});
+
+document.querySelectorAll(".trending-searches").forEach((list) => {
+  list.addEventListener("click", (event) => {
+    const item = event.target.closest("li");
+    if (!item || !list.contains(item)) return;
+    const query = normalizeSearchQuery(item.querySelector("span")?.textContent);
+    if (!query) return;
+    event.preventDefault();
+    submitSearch(query);
   });
 });
 

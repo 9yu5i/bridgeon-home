@@ -80,22 +80,49 @@
   const getCartToastProductName = () =>
     productNameEl?.textContent?.trim() || "This product";
 
+  const getProductBundleTiers = () =>
+    Array.from(dealTierButtons || []).map((tier) => ({
+      qty: Number(tier.dataset.dealQty || 0),
+      discount: Number(tier.dataset.dealDiscount || 0),
+    }));
+
+  const syncDealDialogThumb = () => {
+    const thumb = dealDialog?.querySelector(".product-deal-modal-thumb");
+    const firstThumbnail = document.querySelector(".product-thumbnails button, .product-thumbnails [data-detail-thumb]");
+    if (!thumb || !firstThumbnail) return;
+
+    const styles = getComputedStyle(firstThumbnail);
+    thumb.textContent = "";
+    thumb.style.backgroundImage = styles.backgroundImage;
+    thumb.style.backgroundSize = styles.backgroundSize || "cover";
+    thumb.style.backgroundPosition = styles.backgroundPosition || "center";
+    thumb.style.backgroundRepeat = styles.backgroundRepeat || "no-repeat";
+  };
+
   const getProductCartPayload = () => {
     const selectedColor = document.querySelector("[data-color-option].is-active")?.dataset.colorOption || "";
     const colorChoices = Array.from(colorOptionButtons)
       .map((button) => button.dataset.colorOption?.trim())
       .filter(Boolean);
     const quantity = Number(qtyValue?.textContent || 1) || 1;
+    const brandLink = document.querySelector(".product-brand");
+    const salePrice = document.querySelector(".product-price-current strong")?.textContent?.trim() || "US$22.00";
+    const bundleTiers = getProductBundleTiers();
 
     return {
-      brand: document.querySelector(".product-brand")?.textContent?.trim() || "BridgeOn",
+      brand: brandLink?.textContent?.trim() || "BridgeOn",
       name: productNameEl?.textContent?.trim() || "Product",
       option: selectedColor,
       optionChoices: colorChoices,
-      price: document.querySelector(".product-price-current strong")?.textContent?.trim() || "US$22.00",
+      price: salePrice,
+      basePrice: salePrice,
       originalPrice: document.querySelector(".product-price del")?.textContent?.trim() || "",
       tone: selectedColor ? "pink" : "green",
       quantity,
+      detailUrl: window.location.href.split(/[?#]/)[0],
+      brandUrl: brandLink?.href || new URL("../brand/detail.html", window.location.href).href,
+      hasBundleDeal: bundleTiers.length > 0,
+      bundleTiers,
     };
   };
 
@@ -238,6 +265,7 @@
     if (brandNode) brandNode.textContent = brand;
     if (nameNode) nameNode.textContent = name;
     if (priceNode) priceNode.textContent = price;
+    syncDealDialogThumb();
     syncDealTierPrices();
   };
 
@@ -314,13 +342,14 @@
 
     const payload = getProductCartPayload();
     const quantity = Math.max(2, Number(tier.dataset.dealQty || 2));
-    const unitPrice = getDealUnitPrice(tier);
     const basePrice = document.querySelector(".product-price-current strong")?.textContent?.trim() || payload.price;
+    const listPrice = document.querySelector(".product-price del")?.textContent?.trim() || "";
 
     payload.quantity = quantity;
-    payload.price = formatPriceValue(unitPrice);
-    payload.originalPrice = basePrice;
-    payload.option = [payload.option, `${quantity} PCS Deal`].filter(Boolean).join(" · ");
+    payload.basePrice = basePrice;
+    payload.price = basePrice;
+    payload.originalPrice = listPrice || payload.originalPrice;
+    payload.bundleTiers = getProductBundleTiers();
 
     window.BridgeOn?.cart?.add(payload);
     showCartToast();
