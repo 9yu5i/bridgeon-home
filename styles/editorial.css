@@ -54,6 +54,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 28px;
+  touch-action: pan-y;
 }
 
 .editor-card-track {
@@ -68,38 +69,33 @@
 
 .editor-card-track .editor-card {
   width: 100%;
-  opacity: 0 !important;
+  opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translateY(10px) scale(0.985);
-  transition:
-    opacity 0.42s ease,
-    transform 0.42s ease,
-    visibility 0.42s ease;
+  transform: none;
+  transition: opacity 0.35s ease;
 }
 
 .editor-card-track .editor-card.is-active {
   position: relative;
   z-index: 1;
-  opacity: 1 !important;
+  opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateY(0) scale(1);
+  transform: none;
 }
 
 .editor-card-track .editor-card.is-active.scroll-reveal-soft:not(.is-inview) {
   /* Keep active slide readable even if section reveal has not fired yet. */
   filter: none;
+  opacity: 1;
+  visibility: visible;
 }
 
 .editor-card-track .editor-card:not(.is-active) {
   position: absolute;
   inset: 0;
   z-index: 0;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  filter: none !important;
 }
 
 .editor-card {
@@ -109,6 +105,9 @@
   --editor-ink: #2a1b4a;
   --editor-muted: #6d6284;
   --editor-price: #e54d6a;
+  --editor-card-border: rgba(123, 63, 228, 0.12);
+  --editor-card-shadow: 0 18px 40px rgba(70, 40, 120, 0.12);
+  --editor-card-bg: linear-gradient(135deg, #f3ecff 0%, #ebe2ff 52%, #f7f2ff 100%);
   position: relative;
   display: grid;
   grid-template-columns: minmax(190px, 0.68fr) minmax(210px, 0.82fr) minmax(420px, 1.55fr);
@@ -120,16 +119,28 @@
   padding: 0;
   overflow: hidden;
   isolation: isolate;
-  border: 1px solid rgba(123, 63, 228, 0.18);
+  border: 1px solid var(--editor-card-border);
   border-radius: 28px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.42), rgba(235, 226, 255, 0.35)),
-    linear-gradient(125deg, #efe6ff 0%, #e4d6ff 46%, #f0e9ff 100%);
-  box-shadow:
-    0 22px 48px rgba(70, 40, 120, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: var(--editor-card-bg);
+  box-shadow: var(--editor-card-shadow);
+}
+
+.editor-card--chloe {
+  --editor-card-border: rgba(123, 63, 228, 0.14);
+  --editor-card-shadow: 0 18px 40px rgba(98, 56, 170, 0.12);
+  --editor-card-bg: linear-gradient(135deg, #f3ecff 0%, #ebe2ff 52%, #f7f2ff 100%);
+}
+
+.editor-card--mila {
+  --editor-card-border: rgba(214, 120, 84, 0.16);
+  --editor-card-shadow: 0 18px 40px rgba(180, 90, 60, 0.1);
+  --editor-card-bg: linear-gradient(135deg, #fff3eb 0%, #ffe6d8 52%, #fff8f3 100%);
+}
+
+.editor-card--nara {
+  --editor-card-border: rgba(96, 120, 210, 0.14);
+  --editor-card-shadow: 0 18px 40px rgba(70, 90, 170, 0.1);
+  --editor-card-bg: linear-gradient(135deg, #eef2ff 0%, #e4eafc 52%, #f5f7ff 100%);
 }
 
 .editor-card-profile {

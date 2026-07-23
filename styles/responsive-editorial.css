@@ -143,11 +143,9 @@
   }
 
   .editorial-section .editor-card {
-    background:
-      linear-gradient(145deg, rgba(255, 255, 255, 0.42), rgba(235, 226, 255, 0.35)),
-      linear-gradient(125deg, #efe6ff 0%, #e4d6ff 46%, #f0e9ff 100%) !important;
-    border: 1px solid rgba(123, 63, 228, 0.18) !important;
-    box-shadow: 0 18px 40px rgba(70, 40, 120, 0.14) !important;
+    background: var(--editor-card-bg) !important;
+    border: 1px solid var(--editor-card-border) !important;
+    box-shadow: var(--editor-card-shadow) !important;
     overflow: hidden !important;
     aspect-ratio: auto !important;
     max-height: none !important;
@@ -261,11 +259,38 @@
     overflow: hidden !important;
   }
 
+  .editorial-section .editor-card-track {
+    display: block !important;
+    transform: none !important;
+  }
+
+  .editorial-section .editor-card-track .editor-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    flex: none !important;
+  }
+
+  .editorial-section .editor-card-track .editor-card.is-active {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 1 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
   .editorial-section .editor-card-track .editor-card:not(.is-active) {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
     opacity: 0 !important;
     visibility: hidden !important;
     pointer-events: none !important;
-    z-index: 0 !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
 
@@ -813,11 +838,9 @@
     padding: 0 !important;
     border-radius: 28px !important;
     container-type: normal !important;
-    background:
-      linear-gradient(145deg, rgba(255, 255, 255, 0.42), rgba(235, 226, 255, 0.35)),
-      linear-gradient(125deg, #efe6ff 0%, #e4d6ff 46%, #f0e9ff 100%) !important;
-    border: 1px solid rgba(123, 63, 228, 0.18) !important;
-    box-shadow: 0 22px 48px rgba(70, 40, 120, 0.16) !important;
+    background: var(--editor-card-bg) !important;
+    border: 1px solid var(--editor-card-border) !important;
+    box-shadow: var(--editor-card-shadow) !important;
   }
 
   .editorial-section .editor-card-copy {

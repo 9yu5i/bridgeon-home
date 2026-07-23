@@ -119,21 +119,6 @@ html.new-scroll-reveal-pending .listing-page--new .listing-brand-grid .listing-c
   box-shadow: 0 8px 20px rgba(49, 19, 108, 0.08);
 }
 
-.scroll-reveal-line {
-  display: block;
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 0.72s var(--scroll-reveal-ease),
-    transform 0.72s var(--scroll-reveal-ease);
-}
-
-.scroll-reveal-line.is-inview,
-.is-inview .scroll-reveal-line {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .scroll-reveal-rail:not(.is-inview) .inline-heading p,
 .scroll-reveal-rail:not(.is-inview) .tab-row,
 .scroll-reveal-rail:not(.is-inview) .tag-tabs,
@@ -317,5 +302,26 @@ html.new-scroll-reveal-pending .listing-page--new .listing-brand-grid .listing-c
 
 .realtrend-cart-toast.is-visible {
   z-index: 210;
+}
+
+/* T.P Pick editor carousel: beat scroll-reveal hide/transform on inactive slides. */
+.editor-card-track .editor-card.scroll-reveal-soft {
+  transition: opacity 0.35s ease !important;
+}
+
+.editor-card-track .editor-card.scroll-reveal-soft:not(.is-active) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+.editor-card-track .editor-card.scroll-reveal-soft.is-active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  filter: none !important;
+  transform: none !important;
 }
 

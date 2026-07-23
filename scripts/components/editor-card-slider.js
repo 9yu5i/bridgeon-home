@@ -2,12 +2,13 @@
   const slider = document.querySelector("[data-editor-card-slider]");
   if (!slider) return;
 
+  const viewport = slider.querySelector(".editor-card-viewport");
   const track = slider.querySelector(".editor-card-track");
-  const slides = Array.from(slider.querySelectorAll(".editor-card"));
+  const slides = Array.from(slider.querySelectorAll(".editor-card-track > .editor-card"));
   const bullets = Array.from(slider.querySelectorAll("[data-editor-card-bullet]"));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  if (!track || slides.length < 2) {
+  if (!viewport || !track || slides.length < 2) {
     slider.querySelector(".editor-card-bullets")?.remove();
     return;
   }
@@ -15,7 +16,13 @@
   let index = Math.max(0, slides.findIndex((slide) => slide.classList.contains("is-active")));
   let timerId = null;
   let paused = false;
+  let isDragging = false;
+  let pointerId = null;
+  let startX = 0;
+  let startY = 0;
+  let axisLocked = "";
   const delay = 5400;
+  const swipeThreshold = 48;
 
   const closeEditorNotes = (exceptCard = null) => {
     slider.querySelectorAll(".editor-card-product.is-note-open").forEach((card) => {
@@ -44,6 +51,7 @@
 
   const render = () => {
     track.classList.toggle("is-reduced-motion", reduceMotion.matches);
+    track.style.transform = "";
 
     slides.forEach((slide, slideIndex) => {
       setSlideInteractive(slide, slideIndex === index);
@@ -55,6 +63,7 @@
   const goTo = (nextIndex) => {
     closeEditorNotes();
     index = (nextIndex + slides.length) % slides.length;
+    isDragging = false;
     render();
   };
 
@@ -124,12 +133,70 @@
     closeEditorNotes();
   });
 
+  const endDrag = (clientX) => {
+    if (!isDragging) return;
+
+    const delta = clientX - startX;
+    isDragging = false;
+    pointerId = null;
+    axisLocked = "";
+
+    if (Math.abs(delta) >= swipeThreshold) {
+      goTo(delta < 0 ? index + 1 : index - 1);
+    }
+
+    restart();
+  };
+
+  viewport.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    if (event.target.closest("a, button, .editor-pick-note")) return;
+
+    isDragging = true;
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    startY = event.clientY;
+    axisLocked = "";
+    paused = true;
+    stop();
+    viewport.setPointerCapture?.(event.pointerId);
+  });
+
+  viewport.addEventListener("pointermove", (event) => {
+    if (!isDragging || event.pointerId !== pointerId) return;
+
+    const deltaX = event.clientX - startX;
+    const deltaY = event.clientY - startY;
+
+    if (!axisLocked) {
+      if (Math.abs(deltaX) < 6 && Math.abs(deltaY) < 6) return;
+      axisLocked = Math.abs(deltaX) >= Math.abs(deltaY) ? "x" : "y";
+      if (axisLocked === "y") {
+        isDragging = false;
+        pointerId = null;
+        axisLocked = "";
+        restart();
+      }
+    }
+  });
+
+  viewport.addEventListener("pointerup", (event) => {
+    if (event.pointerId !== pointerId) return;
+    endDrag(event.clientX);
+  });
+
+  viewport.addEventListener("pointercancel", (event) => {
+    if (event.pointerId !== pointerId) return;
+    endDrag(event.clientX);
+  });
+
   slider.addEventListener("mouseenter", () => {
     paused = true;
     stop();
   });
 
   slider.addEventListener("mouseleave", () => {
+    if (isDragging) return;
     paused = false;
     start();
   });
@@ -140,6 +207,7 @@
   });
 
   slider.addEventListener("focusout", () => {
+    if (isDragging) return;
     paused = false;
     start();
   });

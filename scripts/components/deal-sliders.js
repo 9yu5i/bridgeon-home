@@ -18,124 +18,124 @@
     special: [
       {
         badge: "TODAY'S PICK",
-        title: "numbuzin No.3<br />PHA Skin Prep Bubble Mask 90ml",
-        body: "A bouncy collagen serum that hydrates deeply without any stickiness.",
-        isTimer: false,
-        price: "US$28.00",
-        originalPrice: "$36.00",
-        discount: "22% OFF",
-        rating: "4.9",
-        reviews: "1,275 reviews",
-        mediaLabel: "img 1",
-        detailUrl: "product-detail/product-detail.html",
-      },
-      {
-        badge: "TODAY'S PICK",
-        title: "Anua<br />PDRN Serum 30ml",
-        body: "Helps improve skin texture while keeping moisture locked in.",
-        isTimer: false,
+        title: "Anua<br><span class=\"deal-product-name\">PDRN Serum 30ml</span>",
+        quote: "Boosts skin elasticity and keeps it looking plump all day.",
         price: "US$19.20",
-        originalPrice: "$32.00",
-        discount: "40% OFF",
-        rating: "4.8",
-        reviews: "842 reviews",
-        mediaLabel: "img 2",
+        originalPrice: "US$24.00",
+        discount: "20% OFF",
+        mediaImage: "img/deals/todays-pick.png?v=5",
+        cta: "Discover This Pick",
         detailUrl: "product-detail/product-detail.html",
       },
       {
         badge: "TODAY'S PICK",
-        title: "SKIN1004<br />Madagascar Ampoule 55ml",
-        body: "Calms irritation and leaves the skin balanced and clear.",
-        isTimer: false,
+        title: "numbuzin<br><span class=\"deal-product-name\">No.3 Bubble Mask</span>",
+        quote: "A bouncy prep mask that hydrates deeply without stickiness.",
+        price: "US$28.00",
+        originalPrice: "US$36.00",
+        discount: "22% OFF",
+        mediaImage: "img/deals/todays-pick.png?v=5",
+        cta: "Discover This Pick",
+        detailUrl: "product-detail/product-detail.html",
+      },
+      {
+        badge: "TODAY'S PICK",
+        title: "SKIN1004<br><span class=\"deal-product-name\">Madagascar Ampoule</span>",
+        quote: "Calms irritation and leaves skin balanced and clear.",
         price: "US$17.90",
-        originalPrice: "$29.00",
+        originalPrice: "US$29.00",
         discount: "38% OFF",
-        rating: "4.7",
-        reviews: "936 reviews",
-        mediaLabel: "img 3",
+        mediaImage: "img/deals/todays-pick.png?v=5",
+        cta: "Discover This Pick",
         detailUrl: "product-detail/product-detail.html",
       },
       {
         badge: "TODAY'S PICK",
-        title: "Torriden<br />Dive-In Serum 50ml",
-        body: "Lightweight hydration for a fresh and plump glass-skin look.",
-        isTimer: false,
+        title: "Torriden<br><span class=\"deal-product-name\">Dive-In Serum 50ml</span>",
+        quote: "Lightweight hydration for a fresh glass-skin look.",
         price: "US$15.50",
-        originalPrice: "$24.00",
+        originalPrice: "US$24.00",
         discount: "35% OFF",
-        rating: "4.9",
-        reviews: "1,088 reviews",
-        mediaLabel: "img 4",
+        mediaImage: "img/deals/todays-pick.png?v=5",
+        cta: "Discover This Pick",
         detailUrl: "product-detail/product-detail.html",
       },
       {
         badge: "TODAY'S PICK",
-        title: "Round Lab<br />Birch Juice Sun Cream",
-        body: "Daily UV care with smooth finish and no white cast.",
-        isTimer: false,
+        title: "Round Lab<br><span class=\"deal-product-name\">Birch Juice Sun Cream</span>",
+        quote: "Daily UV care with a smooth finish and no white cast.",
         price: "US$14.80",
-        originalPrice: "$22.00",
+        originalPrice: "US$22.00",
         discount: "33% OFF",
-        rating: "4.8",
-        reviews: "764 reviews",
-        mediaLabel: "img 5",
+        mediaImage: "img/deals/todays-pick.png?v=5",
+        cta: "Discover This Pick",
         detailUrl: "product-detail/product-detail.html",
       },
     ],
     time: [
       {
-        badge: "Time Deal",
-        title: "medicube<br />PDRN Pink Collagen Capsule Cream 55g",
-        body: "06 : 42 : 18",
-        isTimer: true,
-        price: "$28.00",
-        originalPrice: "$36.00",
-        discount: "22% OFF",
-        mediaLabel: "img 1",
+        badge: "FLASH TIME DEAL",
+        brand: "COSRX",
+        title: "The Vitamin C 23 Serum",
+        timer: "04 : 07 : 29",
+        price: "US$16.90",
+        originalPrice: "US$26.00",
+        discount: "35% OFF",
+        tag: "Lowest price today",
+        mediaImage: "img/deals/time-deal.png?v=2",
+        cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail-options.html",
       },
       {
-        badge: "Time Deal",
-        title: "COSRX<br />The Vitamin C 23 Serum",
-        body: "05 : 12 : 44",
-        isTimer: true,
-        price: "$16.90",
-        originalPrice: "$25.00",
-        discount: "32% OFF",
-        mediaLabel: "img 2",
+        badge: "FLASH TIME DEAL",
+        brand: "medicube",
+        title: "PDRN Pink Collagen Capsule Cream",
+        timer: "06 : 42 : 18",
+        price: "US$28.00",
+        originalPrice: "US$36.00",
+        discount: "22% OFF",
+        tag: "Lowest price today",
+        mediaImage: "img/deals/time-deal.png?v=2",
+        cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail.html",
       },
       {
-        badge: "Time Deal",
-        title: "VT<br />Reedle Shot 100",
-        body: "04 : 07 : 29",
-        isTimer: true,
-        price: "$23.40",
-        originalPrice: "$31.00",
+        badge: "FLASH TIME DEAL",
+        brand: "VT",
+        title: "Reedle Shot 100",
+        timer: "05 : 12 : 44",
+        price: "US$23.40",
+        originalPrice: "US$31.00",
         discount: "24% OFF",
-        mediaLabel: "img 3",
+        tag: "Lowest price today",
+        mediaImage: "img/deals/time-deal.png?v=2",
+        cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail.html",
       },
       {
-        badge: "Time Deal",
-        title: "Dr.G<br />Red Blemish Clear Cream",
-        body: "03 : 19 : 06",
-        isTimer: true,
-        price: "$18.20",
-        originalPrice: "$27.00",
+        badge: "FLASH TIME DEAL",
+        brand: "Dr.G",
+        title: "Red Blemish Clear Cream",
+        timer: "03 : 19 : 06",
+        price: "US$18.20",
+        originalPrice: "US$27.00",
         discount: "29% OFF",
-        mediaLabel: "img 4",
+        tag: "Lowest price today",
+        mediaImage: "img/deals/time-deal.png?v=2",
+        cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail.html",
       },
       {
-        badge: "Time Deal",
-        title: "Beauty of Joseon<br />Relief Sun SPF50+",
-        body: "02 : 33 : 51",
-        isTimer: true,
-        price: "$13.50",
-        originalPrice: "$20.00",
+        badge: "FLASH TIME DEAL",
+        brand: "Beauty of Joseon",
+        title: "Relief Sun SPF50+",
+        timer: "02 : 33 : 51",
+        price: "US$13.50",
+        originalPrice: "US$20.00",
         discount: "32% OFF",
-        mediaLabel: "img 5",
+        tag: "Lowest price today",
+        mediaImage: "img/deals/time-deal.png?v=2",
+        cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail.html",
       },
     ],
@@ -147,16 +147,21 @@
     if (!slides || !slides.length) return;
 
     const mediaLabel = card.querySelector(".deal-media-label");
+    const mediaImage = card.querySelector(".deal-media-image");
     const badge = card.querySelector(".deal-top span");
+    const brand = card.querySelector(".deal-brand");
     const title = card.querySelector(".deal-copy h3");
-    const rating = card.querySelector(".deal-rating");
-    const body = card.querySelector(".deal-copy p");
+    const quote = card.querySelector(".deal-quote p") || card.querySelector(".deal-quote");
+    const tag = card.querySelector(".deal-tag");
     const timer = card.querySelector(".deal-timer");
-    const price = card.querySelector(".deal-copy strong");
+    const priceStrong = card.querySelector(".deal-price strong");
+    const priceMark = card.querySelector(".deal-price mark");
+    const priceDel = card.querySelector(".deal-price del");
+    const mediaBadge = card.querySelector("[data-deal-media-badge]");
+    const shopButton = card.querySelector(".deal-shop-button");
     const counter = card.querySelector(".deal-nav-status");
     const prevButton = card.querySelector(".deal-nav-btn.prev");
     const nextButton = card.querySelector(".deal-nav-btn.next");
-    const shopButton = card.querySelector(".deal-shop-button");
     let index = 0;
     let autoTimer = null;
     const autoDelay = 5000;
@@ -165,34 +170,51 @@
       getProductDetailUrl(slides[index]?.detailUrl || DEFAULT_DETAIL_URL);
 
     const renderTimer = (value) => {
-      const [hours = "00", minutes = "00", seconds = "00"] = value
+      const [hours = "00", minutes = "00", seconds = "00"] = String(value)
         .split(":")
         .map((part) => part.trim());
       return `
-      <span class="deal-timer-heading">Ends in</span>
       <span class="deal-timer-unit"><b>${hours}</b><em>HRS</em></span>
       <span class="deal-timer-separator">:</span>
-      <span class="deal-timer-unit"><b>${minutes}</b><em>MINS</em></span>
+      <span class="deal-timer-unit"><b>${minutes}</b><em>MIN</em></span>
       <span class="deal-timer-separator">:</span>
-      <span class="deal-timer-unit"><b>${seconds}</b><em>SECS</em></span>
+      <span class="deal-timer-unit"><b>${seconds}</b><em>SEC</em></span>
     `;
+    };
+
+    const renderBadge = (item) => {
+      if (!badge) return;
+      if (sliderKey === "special") {
+        badge.innerHTML = `<i aria-hidden="true">&#9733;</i> ${item.badge}`;
+        return;
+      }
+      badge.innerHTML = `<i aria-hidden="true">&#9889;</i> ${item.badge}`;
     };
 
     const renderSlide = () => {
       const item = slides[index];
+      if (mediaImage && item.mediaImage) {
+        mediaImage.src = item.mediaImage;
+        mediaImage.alt = String(item.title || "")
+          .replace(/<[^>]+>/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
       if (mediaLabel) mediaLabel.textContent = item.mediaLabel;
-      if (badge) badge.textContent = item.badge;
+      renderBadge(item);
+      if (brand) brand.textContent = item.brand || "";
       if (title) title.innerHTML = item.title;
-      if (rating) {
-        rating.innerHTML = `<span><img src="img/main-img/star.png" alt="rating"></span><b>${item.rating}</b><em>| ${item.reviews}</em>`;
+      if (quote) quote.textContent = item.quote || "";
+      if (tag && item.tag) {
+        tag.innerHTML = `<span aria-hidden="true">&#128293;</span> ${item.tag}`;
       }
-      if (body) {
-        body.classList.toggle("timer", item.isTimer);
-        body.innerHTML = item.isTimer ? `Ends in <b>${item.body}</b>` : item.body;
-      }
-      if (timer) timer.innerHTML = renderTimer(item.body);
-      if (price) {
-        price.innerHTML = `${item.price} <del>${item.originalPrice}</del> <mark>${item.discount}</mark>`;
+      if (timer && item.timer) timer.innerHTML = renderTimer(item.timer);
+      if (priceStrong) priceStrong.textContent = item.price;
+      if (priceMark) priceMark.textContent = item.discount;
+      if (priceDel) priceDel.textContent = item.originalPrice;
+      if (mediaBadge) mediaBadge.textContent = item.discount;
+      if (shopButton && item.cta) {
+        shopButton.innerHTML = `${item.cta} <span aria-hidden="true">&rarr;</span>`;
       }
       if (counter) counter.textContent = `${index + 1} / ${slides.length}`;
       card.dataset.productDetailLink = getCurrentDetailUrl();
