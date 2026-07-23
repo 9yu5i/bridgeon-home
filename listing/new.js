@@ -3,7 +3,10 @@
   if (!page.classList.contains("listing-page--new")) return;
 
   const sectionsRoot = document.querySelector("[data-new-brand-sections]");
-  if (!sectionsRoot) return;
+  if (!sectionsRoot) {
+    document.documentElement.classList.remove("new-scroll-reveal-pending");
+    return;
+  }
 
   const brands = [
     {
@@ -271,6 +274,75 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
 
+  const revealRoot = document.documentElement;
+  const revealQuery = [
+    ".listing-hero.new-reveal-hero",
+    ".listing-brand-section.new-reveal-section",
+  ].join(",");
+
+  const revealElement = (element) => {
+    if (!element || element.classList.contains("is-inview")) return;
+    element.classList.add("is-inview");
+    element.querySelectorAll(
+      ".scroll-reveal-soft, .scroll-reveal-stagger, .scroll-reveal-line, .scroll-reveal-split-left, .scroll-reveal-split-right",
+    ).forEach((child) => child.classList.add("is-inview"));
+  };
+
+  const prepareScrollReveal = () => {
+    document.querySelector(".listing-hero")?.classList.add("new-reveal-hero");
+
+    sectionsRoot.querySelectorAll(".listing-brand-section").forEach((section, sectionIndex) => {
+      section.classList.add("new-reveal-section");
+      section.style.setProperty("--reveal-section-index", String(sectionIndex));
+      section.querySelector(".listing-brand-banner")?.classList.add("scroll-reveal-soft", "new-reveal-banner");
+      section.querySelector(".listing-brand-products-label")?.classList.add("scroll-reveal-line");
+
+      const productGrid = section.querySelector(".listing-brand-grid");
+      productGrid?.classList.add("scroll-reveal-stagger", "new-reveal-grid");
+      productGrid?.querySelectorAll(".listing-card").forEach((card, cardIndex) => {
+        card.classList.add("scroll-reveal-item", "new-reveal-card");
+        card.style.setProperty("--reveal-index", String(cardIndex));
+        card.style.setProperty("--reveal-stagger", "0.07s");
+      });
+    });
+  };
+
+  const initScrollReveal = () => {
+    prepareScrollReveal();
+
+    const targets = Array.from(document.querySelectorAll(revealQuery));
+    if (!targets.length) {
+      revealRoot.classList.remove("new-scroll-reveal-pending");
+      return;
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      targets.forEach(revealElement);
+      revealRoot.classList.remove("new-scroll-reveal-pending");
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      revealRoot.classList.remove("new-scroll-reveal-pending");
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          revealElement(entry.target);
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: "0px 0px -12% 0px",
+        threshold: 0.14,
+      },
+    );
+
+    targets.forEach((target) => observer.observe(target));
+  };
+
   const createCard = (brand, product, index) => {
     const article = document.createElement("article");
     article.className = "listing-card listing-card--new";
@@ -337,4 +409,5 @@
   };
 
   sectionsRoot.replaceChildren(...brands.map((brand) => createBrandSection(brand)));
+  initScrollReveal();
 })();

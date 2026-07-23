@@ -58,7 +58,8 @@ High-level ownership:
 - `styles/trend-product-sheet.css` owns the shared Real Trend product sheet popup, option controls, add-to-cart CTA, wishlist state, reviews, and cart toast.
 - `realtrend/realtrend.css` is only for the Real Trend video page.
 - `editors-pick/editors-pick.css` is only for the Editor's Pick page.
-- `my-page/my-page.css` is only for the My Page dashboard; `my-page/orders.css` is only for the My Page orders page; `my-page/reviews.css` is only for the My Reviews page; `my-page/coupons.css` is only for the Coupons page.
+- `my-page/my-page.css` is shared by the My Page dashboard and account subpages.
+- `my-page/orders.css`, `my-page/reviews.css`, `my-page/coupons.css`, `my-page/profile.css`, `my-page/points.css`, `my-page/membership.css`, `my-page/account-collections.css`, `my-page/wishlist.css`, and `my-page/saved-posts.css` own their matching account page additions.
 
 ## JavaScript Ownership
 
@@ -70,9 +71,15 @@ Current component scripts:
 - `scripts/components/loop-rail.js`: generic rail buttons and loop rails.
 - `scripts/components/product-sheet.js`: shared add-to-cart/product option sheet and product-card-to-detail navigation.
 - `scripts/components/seller-wishlist.js`: Best Sellers wishlist icon state.
+- `scripts/components/editor-card-slider.js`: home T.P Pick editor card slider and editor note toggles.
 - `scripts/components/magazine-slider.js`: mobile T.P Magazine drag slider and progress bar.
+- `scripts/components/magazine-links.js`: magazine card keyboard/click links to article detail pages.
+- `scripts/components/support-footer.js`: footer accordions, floating to-top button, and newsletter form helpers.
+- `scripts/components/scroll-reveal.js`: home scroll reveal class setup and viewport activation.
 - `scripts/components/deal-sliders.js`: Today's Pick and Time Deal card sliders.
 - `scripts/components/hero-slider.js`: main hero carousel.
+- `scripts/components/today-pick-panel.js`: desktop hero Today's Pick mini panel autoplay, collapse, and scroll-to-deal behavior.
+- `scripts/components/section-tabs.js`: shared category/tab filtering for home sections.
 - `editors-pick/editors-pick.js`: Editor's Pick page editor selection, pick filters, wishlist state, and magazine dots.
 
 Keep new behavior in focused files under `scripts/components/` or `scripts/pages/` when possible.

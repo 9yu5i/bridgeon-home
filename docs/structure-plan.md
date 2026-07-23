@@ -35,10 +35,8 @@ This project remains a static frontend for now. The first goal is to preserve th
 - `styles/scroll-reveal.css` owns scroll reveal state and animation classes.
 - `styles/trend-product-sheet.css` owns the shared Real Trend product sheet popup, option controls, add-to-cart CTA, wishlist state, reviews, and cart toast.
 - `realtrend/realtrend.css` should stay scoped to the Real Trend video page.
-- `my-page/my-page.css` should stay scoped to the My Page dashboard.
-- `my-page/orders.css` should stay scoped to the My Page orders page while reusing `my-page/my-page.css` sidebar, header, and footer styling.
-- `my-page/reviews.css` should stay scoped to the My Reviews page while reusing `my-page/my-page.css` sidebar, header, and footer styling.
-- `my-page/coupons.css` should stay scoped to the Coupons page while reusing `my-page/my-page.css` sidebar, header, and footer styling.
+- `my-page/my-page.css` should stay shared by the My Page dashboard and account subpages.
+- `my-page/orders.css`, `my-page/reviews.css`, `my-page/coupons.css`, `my-page/profile.css`, `my-page/points.css`, `my-page/membership.css`, `my-page/account-collections.css`, `my-page/wishlist.css`, and `my-page/saved-posts.css` should stay scoped to their matching account page additions while reusing `my-page/my-page.css`.
 - New home CSS should be added as focused files under `styles/`, then imported from `styles.css` in ownership order.
 - Do not add new page-end patch blocks; place changes in the owning CSS file instead.
 - Known layout debt: `styles/base.css` still applies desktop `html { zoom: 0.9; }`. Remove it only in a visual calibration pass that adjusts desktop max width, section padding, card widths, gaps, and type sizes together.
@@ -59,10 +57,16 @@ styles/
 - `scripts/components/loop-rail.js` now owns generic `data-scroll` buttons and the loop rails for Real Trend, Best Sellers, and Customer Real Picks.
 - `scripts/components/product-sheet.js` now owns the shared add-to-cart/product option sheet and product-card-to-detail navigation.
 - `scripts/components/seller-wishlist.js` now owns Best Sellers wishlist icon state.
+- `scripts/components/editor-card-slider.js` now owns the home T.P Pick editor card slider and editor note toggles.
 - `scripts/components/magazine-slider.js` now owns the mobile T.P Magazine drag slider and progress bar.
+- `scripts/components/magazine-links.js` now owns magazine card keyboard/click links to article detail pages.
+- `scripts/components/support-footer.js` now owns footer accordions, the floating to-top button, and newsletter form helpers.
+- `scripts/components/scroll-reveal.js` now owns home scroll reveal class setup and viewport activation.
 - `scripts/components/deal-sliders.js` now owns Today's Pick and Time Deal card sliders.
 - `scripts/components/hero-slider.js` now owns the main hero carousel.
-- Existing code should be extracted next in this order: today's pick toggle, footer/newsletter helpers, scroll reveal setup.
+- `scripts/components/today-pick-panel.js` now owns the desktop hero Today's Pick mini panel autoplay, collapse, and scroll-to-deal behavior.
+- `scripts/components/section-tabs.js` now owns shared category/tab filtering for home sections.
+- Existing code should be extracted next in this order: remaining home-only helpers.
 
 Suggested next files:
 
@@ -73,8 +77,14 @@ scripts/
     deal-sliders.js
     hero-slider.js
     loop-rail.js
+    editor-card-slider.js
     magazine-slider.js
+    magazine-links.js
     product-sheet.js
+    support-footer.js
+    scroll-reveal.js
+    today-pick-panel.js
+    section-tabs.js
     seller-wishlist.js
   pages/
     home.js

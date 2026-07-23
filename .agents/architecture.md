@@ -17,18 +17,14 @@ flowchart TD
   C --> CJ["cart/cart.js"]
   M["my-page/my-page.html"] --> S
   M --> MC["my-page/my-page.css"]
-  MO["my-page/orders.html"] --> S
-  MO --> MC
-  MO --> MOC["my-page/orders.css"]
-  MR["my-page/reviews.html"] --> S
-  MR --> MC
-  MR --> MRC["my-page/reviews.css"]
-  MCP["my-page/coupons.html"] --> S
-  MCP --> MC
-  MCP --> MCPC["my-page/coupons.css"]
+  MAS["my-page account subpages"] --> S
+  MAS --> MC
+  MAS --> MASC["my-page/* page css"]
   E["editors-pick/editors-pick.html"] --> S
   E --> EC["editors-pick/editors-pick.css"]
   E --> EJ["editors-pick/editors-pick.js"]
+  MG["editors-pick/magazine*.html"] --> S
+  MG --> MGC["editors-pick/magazine.css"]
   TD["timedeal/timedeal.html"] --> S
   TD --> JS
   RT["realtrend/realtrend.html"] --> S
@@ -62,9 +58,15 @@ Important extracted components:
 - `loop-rail.js`
 - `product-sheet.js`
 - `seller-wishlist.js`
+- `editor-card-slider.js`
 - `magazine-slider.js`
+- `magazine-links.js`
+- `support-footer.js`
+- `scroll-reveal.js`
 - `deal-sliders.js`
 - `hero-slider.js`
+- `today-pick-panel.js`
+- `section-tabs.js`
 
 ## Shared Product Sheet
 

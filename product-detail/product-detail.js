@@ -373,11 +373,31 @@
   cartToastClose?.addEventListener("click", hideCartToast);
 
   const recommendationList = document.querySelector(".product-recommendation-list");
+  const recommendationMobileQuery = window.matchMedia("(max-width: 760px)");
   let recDragActive = false;
   let recDragStartX = 0;
   let recDragScrollLeft = 0;
   let recDragMoved = false;
   let suppressRecommendationClick = false;
+
+  const getRecommendationStride = () => {
+    if (!recommendationList) return 1;
+    const card = recommendationList.querySelector(".product-rec-card");
+    if (!card) return recommendationList.clientWidth || 1;
+    const styles = getComputedStyle(recommendationList);
+    const gap = parseFloat(styles.columnGap || styles.gap || "0") || 0;
+    return card.getBoundingClientRect().width + gap;
+  };
+
+  const snapRecommendationList = () => {
+    if (!recommendationList || !recommendationMobileQuery.matches) return;
+    const stride = getRecommendationStride();
+    const nearestCard = Math.round(recommendationList.scrollLeft / stride);
+    recommendationList.scrollTo({
+      left: nearestCard * stride,
+      behavior: "smooth",
+    });
+  };
 
   recommendationList?.addEventListener("pointerdown", (event) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
@@ -409,6 +429,11 @@
     if (recommendationList.hasPointerCapture(event.pointerId)) {
       recommendationList.releasePointerCapture(event.pointerId);
     }
+
+    if (recommendationMobileQuery.matches) {
+      snapRecommendationList();
+    }
+
     if (recDragMoved) {
       window.setTimeout(() => {
         suppressRecommendationClick = false;
@@ -799,5 +824,191 @@
   document.addEventListener("click", (event) => {
     if (event.target.closest(".product-reviews-sort .realtrend-select-wrap")) return;
     reviewsSortSelectApis.forEach((api) => api.closeMenu());
+  });
+
+  let shareDialog = null;
+  let shareTrigger = null;
+  let shareCopyTimer = null;
+
+  const ensureShareDialog = () => {
+    if (shareDialog) return shareDialog;
+
+    shareDialog = document.createElement("div");
+    shareDialog.className = "deal-share-dialog";
+    shareDialog.id = "product-share-dialog";
+    shareDialog.hidden = true;
+    shareDialog.setAttribute("aria-hidden", "true");
+    shareDialog.innerHTML = `
+      <button type="button" class="deal-share-backdrop" data-deal-share-close aria-label="Close share dialog"></button>
+      <section class="deal-share-modal" role="dialog" aria-modal="true" aria-labelledby="product-share-title">
+        <button type="button" class="deal-share-close" data-deal-share-close aria-label="Close share dialog">&times;</button>
+        <p class="deal-share-eyebrow">Share</p>
+        <h2 id="product-share-title">Share this product</h2>
+        <p class="deal-share-product" data-deal-share-name></p>
+        <label class="deal-share-link-field">
+          <span class="sr-only">Product link</span>
+          <input type="text" data-deal-share-input readonly>
+          <button type="button" class="deal-share-copy" data-deal-share-copy>Copy Link</button>
+        </label>
+        <div class="deal-share-social" aria-label="Share on social">
+          <button type="button" class="deal-share-social-button" data-deal-share-channel="sms" aria-label="Share via Messages">
+            <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
+            <span>Messages</span>
+          </button>
+          <button type="button" class="deal-share-social-button" data-deal-share-channel="instagram" aria-label="Share on Instagram">
+            <img src="../img/mobile-icon/menu/insta.png" alt="" aria-hidden="true">
+            <span>Instagram</span>
+          </button>
+          <button type="button" class="deal-share-social-button" data-deal-share-channel="facebook" aria-label="Share on Facebook">
+            <img src="../img/mobile-icon/menu/facebook.png" alt="" aria-hidden="true">
+            <span>Facebook</span>
+          </button>
+          <button type="button" class="deal-share-social-button" data-deal-share-channel="twitter" aria-label="Share on X">
+            <img src="../img/mobile-icon/menu/twitter.png" alt="" aria-hidden="true">
+            <span>X</span>
+          </button>
+        </div>
+        <p class="deal-share-status" data-deal-share-status aria-live="polite"></p>
+      </section>
+    `;
+    document.body.appendChild(shareDialog);
+
+    const closeShareDialog = () => {
+      shareDialog.hidden = true;
+      shareDialog.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("is-deal-share-open");
+      if (shareTrigger && typeof shareTrigger.focus === "function") {
+        shareTrigger.focus();
+      }
+      shareTrigger = null;
+    };
+
+    const setStatus = (message, isSuccess = false) => {
+      const status = shareDialog.querySelector("[data-deal-share-status]");
+      if (!status) return;
+      status.textContent = message;
+      status.classList.toggle("is-success", isSuccess);
+      window.clearTimeout(shareCopyTimer);
+      if (message) {
+        shareCopyTimer = window.setTimeout(() => {
+          status.textContent = "";
+          status.classList.remove("is-success");
+        }, 2200);
+      }
+    };
+
+    const copyShareLink = async () => {
+      const input = shareDialog.querySelector("[data-deal-share-input]");
+      const value = input?.value || "";
+      if (!value) return;
+
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(value);
+        } else {
+          input.focus();
+          input.select();
+          document.execCommand("copy");
+        }
+        setStatus("Link copied!", true);
+      } catch {
+        setStatus("Could not copy the link.");
+      }
+    };
+
+    shareDialog.querySelectorAll("[data-deal-share-close]").forEach((button) => {
+      button.addEventListener("click", closeShareDialog);
+    });
+
+    shareDialog.querySelector("[data-deal-share-copy]")?.addEventListener("click", copyShareLink);
+
+    shareDialog.querySelectorAll("[data-deal-share-channel]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const channel = button.dataset.dealShareChannel;
+        const input = shareDialog.querySelector("[data-deal-share-input]");
+        const name =
+          shareDialog.querySelector("[data-deal-share-name]")?.textContent || "BridgeOn product";
+        const url = input?.value || window.location.href;
+        const shareText = `Check out ${name} on BridgeOn`;
+        const encodedUrl = encodeURIComponent(url);
+        const encodedText = encodeURIComponent(`${shareText}\n${url}`);
+
+        if (channel === "sms") {
+          window.location.href = `sms:?&body=${encodedText}`;
+          return;
+        }
+
+        if (channel === "facebook") {
+          window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+            "_blank",
+            "noopener,noreferrer"
+          );
+          return;
+        }
+
+        if (channel === "twitter") {
+          window.open(
+            `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodeURIComponent(shareText)}`,
+            "_blank",
+            "noopener,noreferrer"
+          );
+          return;
+        }
+
+        if (channel === "instagram") {
+          try {
+            if (navigator.clipboard?.writeText) {
+              await navigator.clipboard.writeText(url);
+            } else if (input) {
+              input.focus();
+              input.select();
+              document.execCommand("copy");
+            }
+            setStatus("Link copied. Paste it in Instagram.", true);
+          } catch {
+            setStatus("Copy the link, then open Instagram.");
+          }
+          window.open("https://www.instagram.com/", "_blank", "noopener,noreferrer");
+        }
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && shareDialog && !shareDialog.hidden) {
+        closeShareDialog();
+      }
+    });
+
+    shareDialog._close = closeShareDialog;
+    shareDialog._setStatus = setStatus;
+    return shareDialog;
+  };
+
+  const openShareDialog = (trigger) => {
+    const dialog = ensureShareDialog();
+    const nameEl = dialog.querySelector("[data-deal-share-name]");
+    const input = dialog.querySelector("[data-deal-share-input]");
+    const productName =
+      productNameEl?.textContent?.trim() ||
+      document.querySelector(".product-summary h1")?.textContent?.trim() ||
+      "BridgeOn product";
+
+    shareTrigger = trigger || null;
+    if (nameEl) nameEl.textContent = productName;
+    if (input) input.value = window.location.href;
+    dialog._setStatus?.("");
+
+    dialog.hidden = false;
+    dialog.setAttribute("aria-hidden", "false");
+    document.body.classList.add("is-deal-share-open");
+    dialog.querySelector(".deal-share-copy")?.focus();
+  };
+
+  document.querySelectorAll(".product-share").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      openShareDialog(button);
+    });
   });
 })();

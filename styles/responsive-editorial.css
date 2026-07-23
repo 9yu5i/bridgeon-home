@@ -1,157 +1,4 @@
-/* Responsive editorial rules extracted from responsive-home.css. */
-
-@media (max-width: 1120px) {
-  .editorial-grid {
-      grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 1120px) {
-  .editor-card {
-      max-width: none;
-    }
-}
-
-@media (max-width: 1120px) {
-  .magazine-block {
-      min-height: 0;
-    }
-}
-
-@media (max-width: 760px) {
-  .editorial-section {
-      margin-top: clamp(48px, 5.6vw, 72px) !important;
-    }
-}
-
-@media (max-width: 760px) {
-  .editorial-grid {
-      gap: 48px;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card {
-      grid-template-columns: 1fr 60px;
-      min-height: 142px;
-      padding: 15px;
-      border-radius: 8px;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card h2 {
-      margin-bottom: 7px;
-      font-size: 12px;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card h3 {
-      margin-bottom: 4px;
-      font-size: 14px;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card p {
-      margin-bottom: 8px;
-      font-size: 10px;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card button,
-    .editor-card a {
-      height: 18px;
-      padding: 0 9px;
-      font-size: 7px;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card button {
-      width: clamp(78px, 25vw, 108px);
-      white-space: nowrap;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card a {
-      right: 12px;
-      bottom: 12px;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card > span {
-      font-size: 0;
-    }
-}
-
-@media (max-width: 760px) {
-  .magazine-block {
-      padding: 16px;
-      border-radius: 12px;
-    }
-}
-
-@media (max-width: 760px) {
-  .magazine-grid {
-      display: flex;
-      gap: 17px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      scroll-snap-type: x proximity;
-    }
-}
-
-@media (max-width: 760px) {
-  .magazine-card {
-      flex: 0 0 142px;
-      scroll-snap-align: start;
-      border-radius: 7px;
-    }
-}
-
-@media (max-width: 760px) {
-  .magazine-card div {
-      height: 90px;
-      font-size: 0;
-    }
-}
-
-@media (max-width: 760px) {
-  .magazine-card h3 {
-      min-height: 35px;
-      padding: 9px 8px 2px;
-      font-size: 8px;
-    }
-}
-
-@media (max-width: 760px) {
-  .magazine-card p {
-      padding: 0 8px 9px;
-      font-size: 7px;
-    }
-}
-
-@media (max-width: 380px) {
-  .magazine-card {
-      flex-basis: 132px;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card {
-      box-sizing: border-box;
-      width: 100%;
-      max-width: 100%;
-      margin-left: 0;
-      margin-right: 0;
-      overflow: hidden;
-    }
-}
+/* Responsive editorial rules. */
 
 @media (max-width: 1120px) {
   .editorial-section {
@@ -495,146 +342,6 @@
     }
 }
 
-@media (min-width: 761px) and (max-width: 1120px) {
-  .editor-card {
-      aspect-ratio: auto;
-      height: calc((761px - 72px) * 142 / 356);
-      min-height: calc((761px - 72px) * 142 / 356);
-      max-height: calc((761px - 72px) * 142 / 356);
-    }
-}
-
-@media (max-width: 760px) {
-  .editorial-section {
-      margin-top: clamp(48px, 5.6vw, 72px) !important;
-    }
-}
-
-@media (max-width: 760px) {
-  .editor-card {
-      box-sizing: border-box;
-      width: 100%;
-      max-width: 100%;
-      margin-left: 0;
-      margin-right: 0;
-      overflow: hidden;
-    }
-}
-
-@media (min-width: 1121px) {
-  .editorial-grid {
-      grid-template-columns: minmax(0, min(611px, calc(611 / 1920 * 100vw))) minmax(0, 1fr);
-      align-items: stretch;
-    }
-}
-
-@media (min-width: 1121px) {
-  .editor-card {
-      width: 100%;
-      max-width: 100%;
-      min-width: 0;
-      height: auto;
-      min-height: 0;
-      aspect-ratio: 611 / 337;
-      container-type: inline-size;
-    }
-}
-
-@media (min-width: 1121px) {
-  .editor-card > div {
-      margin-top: -1.96cqi;
-      width: 100%;
-      max-width: none;
-    }
-}
-
-@media (min-width: 1121px) {
-  .editor-card > span {
-      top: 5.24cqi;
-      right: 5.24cqi;
-      bottom: 5.24cqi;
-      width: 24.55cqi;
-      z-index: 1;
-    }
-}
-
-@media (min-width: 1121px) {
-  .editor-card h2 {
-      margin-bottom: 3.93cqi;
-      font-size: 30px;
-    }
-}
-
-@media (min-width: 1121px) {
-  .editor-card h3 {
-      margin-bottom: 1.64cqi;
-      font-size: 21px;
-      white-space: nowrap;
-    }
-}
-
-@media (min-width: 1121px) {
-  .editor-card p {
-      margin-bottom: 3.93cqi;
-      font-size: 18px;
-     }
-}
-
-@media (min-width: 1121px) {
-  .editor-card button {
-      position: absolute;
-      left: 5.24cqi;
-      bottom: 5.73cqi;
-      z-index: 3;
-      margin-top: 0;
-    }
-}
-
-@media (min-width: 1121px) {
-  .editor-card a {
-      position: absolute;
-      right: 4.91cqi;
-      bottom: 5.73cqi;
-      z-index: 3;
-    }
-}
-
-@media (min-width: 1121px) and (max-width: 1570px) {
-  .magazine-block {
-      min-height: 0;
-      align-self: stretch;
-    }
-}
-
-@media (min-width: 1121px) and (max-width: 1570px) {
-  .magazine-grid {
-      flex: 1;
-      min-height: 0;
-      align-items: stretch;
-      overflow: visible;
-      padding: 0;
-      scroll-snap-type: none;
-    }
-}
-
-@media (min-width: 1121px) and (max-width: 1280px) {
-  .magazine-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 1121px) and (max-width: 1280px) {
-  .magazine-card:nth-child(n + 3) {
-      display: none;
-    }
-}
-
-@media (min-width: 1281px) and (max-width: 1570px) {
-  .magazine-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
 /* Final responsive shape for the home T.P Magazine latest-stories block. */
 @media (min-width: 1121px) {
   .editorial-grid {
@@ -652,14 +359,14 @@
   .magazine-side-list {
     display: grid !important;
     align-content: start !important;
-    gap: 22px !important;
+    gap: 27px !important;
     width: 100% !important;
     min-width: 0 !important;
   }
 
   .magazine-card-feature .magazine-thumb {
-    max-height: 348px !important;
-    aspect-ratio: 802 / 430 !important;
+    max-height: none !important;
+    aspect-ratio: 802 / 500 !important;
   }
 
   .magazine-card-compact > a {
@@ -764,7 +471,7 @@
 
   .magazine-card-feature .magazine-thumb {
     max-height: none !important;
-    aspect-ratio: 802 / 430 !important;
+    aspect-ratio: 802 / 500 !important;
     border-radius: 8px !important;
   }
 
@@ -814,307 +521,6 @@
   .magazine-block::before,
   .magazine-block::after {
     display: none !important;
-  }
-}
-
-/* Final responsive shape for the home T.P Pick editor card. */
-@media (min-width: 1121px) {
-  .editor-card {
-    display: grid !important;
-    grid-template-columns: minmax(0, 0.86fr) minmax(360px, 1fr) !important;
-    align-items: center !important;
-    gap: clamp(22px, 3vw, 38px) !important;
-    width: 100% !important;
-    max-width: none !important;
-    min-height: clamp(226px, 17vw, 260px) !important;
-    height: auto !important;
-    aspect-ratio: auto !important;
-    padding: clamp(24px, 2.6vw, 34px) !important;
-    container-type: normal !important;
-  }
-
-  .editor-card-copy {
-    display: grid !important;
-    align-content: center !important;
-    width: auto !important;
-    max-width: 440px !important;
-    margin: 0 !important;
-  }
-
-  .editor-card h2 {
-    display: block !important;
-    margin: 0 0 8px !important;
-    font-size: clamp(20px, 1.8vw, 28px) !important;
-  }
-
-  .editor-card h3 {
-    max-width: 420px !important;
-    margin: 0 0 8px !important;
-    overflow: visible !important;
-    white-space: normal !important;
-    font-size: clamp(22px, 2.15vw, 34px) !important;
-    line-height: 1.12 !important;
-  }
-
-  .editor-card p {
-    max-width: 330px !important;
-    margin: 0 !important;
-    font-size: clamp(13px, 1.08vw, 16px) !important;
-    line-height: 1.42 !important;
-  }
-
-  .editor-card .editor-name-button,
-  .editor-card .editor-card-cta {
-    position: static !important;
-    inset: auto !important;
-    width: auto !important;
-    min-width: 0 !important;
-  }
-
-  .editor-card-products {
-    position: relative !important;
-    display: block !important;
-    width: auto !important;
-    max-width: none !important;
-    min-height: clamp(218px, 15.5vw, 248px) !important;
-    overflow: hidden !important;
-    border-radius: 16px !important;
-  }
-
-  .editor-card .editor-card-product {
-    position: absolute !important;
-    inset: 0 !important;
-    display: grid !important;
-    grid-template-columns: minmax(150px, 0.82fr) minmax(0, 1.08fr) !important;
-    grid-template-rows: minmax(116px, 1fr) auto !important;
-    align-items: stretch !important;
-    justify-content: stretch !important;
-    height: 100% !important;
-    min-height: 100% !important;
-    padding: 0 !important;
-    border-radius: 16px !important;
-    font-size: inherit !important;
-    font-weight: inherit !important;
-  }
-}
-
-@media (min-width: 761px) and (max-width: 1120px) {
-  .editor-card {
-    display: grid !important;
-    grid-template-columns: minmax(0, 0.82fr) minmax(300px, 1fr) !important;
-    align-items: center !important;
-    gap: clamp(18px, 3vw, 28px) !important;
-    min-height: 228px !important;
-    height: auto !important;
-    max-height: none !important;
-    aspect-ratio: auto !important;
-    margin: clamp(60px, 6.5vw, 76px) 0 0 !important;
-    padding: clamp(22px, 3vw, 30px) !important;
-    border-radius: 14px !important;
-    container-type: normal !important;
-  }
-
-  .editor-card-copy {
-    display: grid !important;
-    align-content: center !important;
-    width: auto !important;
-    max-width: 360px !important;
-  }
-
-  .editor-card h2 {
-    display: block !important;
-    margin: 0 0 7px !important;
-    font-size: clamp(18px, 2.7vw, 24px) !important;
-  }
-
-  .editor-card h3 {
-    max-width: 340px !important;
-    margin: 0 0 7px !important;
-    white-space: normal !important;
-    font-size: clamp(20px, 3.2vw, 28px) !important;
-    line-height: 1.12 !important;
-  }
-
-  .editor-card p {
-    max-width: 300px !important;
-    font-size: clamp(12px, 1.8vw, 15px) !important;
-    line-height: 1.38 !important;
-  }
-
-  .editor-card .editor-name-button,
-  .editor-card .editor-card-cta {
-    position: static !important;
-    inset: auto !important;
-    width: auto !important;
-    min-width: 0 !important;
-    font-weight: 800 !important;
-  }
-
-  .editor-card-products {
-    position: relative !important;
-    display: block !important;
-    width: auto !important;
-    max-width: none !important;
-    min-height: clamp(214px, 25vw, 246px) !important;
-    overflow: hidden !important;
-    border-radius: 16px !important;
-  }
-
-  .editor-card .editor-card-product {
-    position: absolute !important;
-    inset: 0 !important;
-    display: grid !important;
-    grid-template-columns: minmax(130px, 0.78fr) minmax(0, 1.08fr) !important;
-    grid-template-rows: minmax(104px, 1fr) auto !important;
-    align-items: stretch !important;
-    justify-content: stretch !important;
-    height: 100% !important;
-    min-height: 100% !important;
-    padding: 0 !important;
-    border-radius: 16px !important;
-    font-size: inherit !important;
-    font-weight: inherit !important;
-  }
-
-  .editor-product-thumb {
-    grid-column: 1 !important;
-    grid-row: 1 !important;
-    min-height: 100% !important;
-  }
-
-  .editor-product-copy {
-    grid-column: 1 !important;
-    grid-row: 2 !important;
-    min-height: 0 !important;
-    padding: 12px 14px !important;
-  }
-
-  .editor-card-product .editor-pick-note {
-    grid-column: 2 !important;
-    grid-row: 1 / 3 !important;
-  }
-}
-
-@media (max-width: 760px) {
-  .editor-card {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 18px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 0 !important;
-    height: auto !important;
-    aspect-ratio: auto !important;
-    margin: clamp(54px, 14vw, 66px) 0 0 !important;
-    padding: 20px !important;
-    border-radius: 16px !important;
-    container-type: normal !important;
-  }
-
-  .editor-card-copy {
-    width: auto !important;
-    max-width: none !important;
-    margin: 0 !important;
-  }
-
-  .editor-card h2 {
-    display: block !important;
-    margin: 0 0 7px !important;
-    font-size: 18px !important;
-  }
-
-  .editor-card h3 {
-    max-width: 270px !important;
-    margin: 0 0 7px !important;
-    white-space: normal !important;
-    font-size: 24px !important;
-    line-height: 1.1 !important;
-  }
-
-  .editor-card p {
-    max-width: 260px !important;
-    margin: 0 !important;
-    font-size: 13px !important;
-    line-height: 1.38 !important;
-  }
-
-  .editor-card .editor-name-button,
-  .editor-card .editor-card-cta {
-    position: static !important;
-    inset: auto !important;
-    width: auto !important;
-    min-width: 0 !important;
-    font-weight: 800 !important;
-  }
-
-  .editor-name-button {
-    height: 30px !important;
-    margin-bottom: 12px !important;
-    padding: 0 14px !important;
-    font-size: 12px !important;
-  }
-
-  .editor-card-cta {
-    height: 34px !important;
-    margin-top: 16px !important;
-    padding: 0 16px !important;
-    font-size: 12px !important;
-  }
-
-  .editor-card-products {
-    position: relative !important;
-    display: block !important;
-    width: 100% !important;
-    min-height: clamp(220px, 60vw, 276px) !important;
-    margin-right: 0 !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    border-radius: 16px !important;
-    scroll-snap-type: none !important;
-  }
-
-  .editor-card-products::-webkit-scrollbar {
-    display: none;
-  }
-
-  .editor-card-product {
-    flex: initial !important;
-    scroll-snap-align: start !important;
-  }
-
-  .editor-card .editor-card-product {
-    position: absolute !important;
-    inset: 0 !important;
-    display: grid !important;
-    grid-template-columns: minmax(112px, 0.86fr) minmax(0, 1.08fr) !important;
-    grid-template-rows: minmax(118px, 1fr) auto !important;
-    align-items: stretch !important;
-    justify-content: stretch !important;
-    height: 100% !important;
-    min-height: 100% !important;
-    padding: 0 !important;
-    border-radius: 16px !important;
-    font-size: inherit !important;
-    font-weight: inherit !important;
-  }
-
-  .editor-product-thumb {
-    grid-column: 1 !important;
-    grid-row: 1 !important;
-    min-height: 100% !important;
-  }
-
-  .editor-product-copy {
-    grid-column: 1 !important;
-    grid-row: 2 !important;
-    min-height: 0 !important;
-    padding: 12px 14px !important;
-  }
-
-  .editor-card-product .editor-pick-note {
-    grid-column: 2 !important;
-    grid-row: 1 / 3 !important;
-    padding: 14px !important;
   }
 }
 
@@ -1177,7 +583,7 @@
   }
 
   .magazine-card-feature .magazine-thumb {
-    aspect-ratio: 802 / 430 !important;
+    aspect-ratio: 802 / 500 !important;
     border-radius: 8px !important;
     font-size: 0 !important;
   }
@@ -1239,6 +645,588 @@
 
   .magazine-block::before,
   .magazine-block::after {
+    display: none !important;
+  }
+}
+
+/* New T.P Pick 3-column editorial card overrides */
+@media (min-width: 1121px) {
+  .editorial-section .editor-card-carousel,
+  .editorial-section .editor-card-viewport,
+  .editorial-section .editor-card-track {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .editorial-section .editor-card-viewport {
+    border-radius: 28px !important;
+  }
+
+  .editorial-section .editor-card {
+    display: grid !important;
+    grid-template-columns: minmax(190px, 0.68fr) minmax(210px, 0.82fr) minmax(420px, 1.55fr) !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    min-height: clamp(328px, 18.75vw, 360px) !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    padding: 0 !important;
+    border-radius: 28px !important;
+    container-type: normal !important;
+  }
+
+  .editorial-section .editor-card-copy {
+    display: grid !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: clamp(28px, 3vw, 40px) clamp(14px, 1.6vw, 24px) !important;
+    background: transparent !important;
+    border-inline: 0 !important;
+  }
+
+  .editorial-section .editor-card > div {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .editorial-section .editor-card-heading,
+  .editorial-section .editor-card h2.editor-card-heading {
+    display: block !important;
+    max-width: 14ch !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    font-size: clamp(28px, 2.4vw, 40px) !important;
+    line-height: 1.12 !important;
+    color: var(--editor-ink, #2a1b4a) !important;
+  }
+
+  .editorial-section .editor-profile-name,
+  .editorial-section .editor-card h3.editor-profile-name {
+    display: block !important;
+    max-width: none !important;
+    margin: 6px 0 0 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    color: var(--editor-ink, #2a1b4a) !important;
+    font-size: clamp(20px, 1.5vw, 24px) !important;
+    line-height: 1.15 !important;
+  }
+
+  .editorial-section .editor-card-quote p,
+  .editorial-section .editor-profile-role,
+  .editorial-section .editor-profile-sign {
+    position: static !important;
+    max-width: none !important;
+    width: auto !important;
+    margin: 0 !important;
+  }
+
+  .editorial-section .editor-card-quote p {
+    max-width: 34ch !important;
+    font-size: clamp(14px, 1.05vw, 16px) !important;
+    line-height: 1.55 !important;
+  }
+
+  .editorial-section .editor-card-cta {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    margin-top: 6px !important;
+  }
+
+  .editorial-section .editor-card-products {
+    position: relative !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-rows: none !important;
+    align-items: center !important;
+    gap: clamp(10px, 0.95vw, 14px) !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    padding: clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px) 0 !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+  }
+
+  .editorial-section .editor-card-product,
+  .editorial-section .editor-card .editor-card-product {
+    position: relative !important;
+    inset: auto !important;
+    display: block !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: none !important;
+    height: clamp(248px, 15.6vw, 292px) !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+  }
+
+  .editorial-section .editor-product-link {
+    display: grid !important;
+    grid-template-rows: clamp(108px, 6.8vw, 128px) minmax(0, 1fr) !important;
+    height: 100% !important;
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  .editorial-section .editor-product-thumb,
+  .editorial-section .editor-product-copy {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  .editorial-section .editor-product-thumb {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .editorial-section .editor-product-copy {
+    align-content: start !important;
+    padding: 10px 12px 42px !important;
+    overflow: hidden !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+  }
+
+  .editorial-section .editor-product-copy strong {
+    display: -webkit-box !important;
+    min-height: calc(1.25em * 2) !important;
+    overflow: hidden !important;
+    color: var(--editor-ink, #2a1b4a) !important;
+    font-size: clamp(13px, 0.92vw, 15px) !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .editorial-section .editor-note-trigger {
+    left: 12px !important;
+    right: auto !important;
+    bottom: 12px !important;
+  }
+
+  .editorial-section .editor-product-add {
+    right: 12px !important;
+    bottom: 12px !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note {
+    position: absolute !important;
+    inset: 10px !important;
+    display: grid !important;
+    opacity: 0 !important;
+    transform: translateY(8px) !important;
+  }
+
+  .editorial-section .editor-note-trigger {
+    display: grid !important;
+  }
+
+  .editorial-section .editor-note-trigger:hover + .editor-pick-note,
+  .editorial-section .editor-note-trigger:focus-visible + .editor-pick-note,
+  .editorial-section .editor-card-product.is-note-open .editor-pick-note {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .editorial-section .editor-card-carousel,
+  .editorial-section .editor-card-viewport,
+  .editorial-section .editor-card-track {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .editorial-section .editor-card-viewport {
+    border-radius: 24px !important;
+  }
+
+  .editorial-section .editor-card-controls {
+    top: clamp(52px, 6vw, 68px) !important;
+    right: 14px !important;
+    padding: 5px !important;
+  }
+
+  .editorial-section .editor-card-arrow {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 19px !important;
+  }
+
+  .editorial-section .editor-card {
+    display: grid !important;
+    grid-template-columns: minmax(180px, 0.78fr) minmax(0, 1.1fr) !important;
+    grid-template-areas:
+      "profile copy"
+      "products products" !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+    margin: clamp(40px, 5vw, 56px) 0 0 !important;
+    padding: 0 !important;
+    border-radius: 24px !important;
+    container-type: normal !important;
+  }
+
+  .editorial-section .editor-card-profile {
+    grid-area: profile;
+  }
+
+  .editorial-section .editor-card-copy {
+    grid-area: copy;
+    display: grid !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 28px 22px !important;
+    background: transparent !important;
+    border: 0 !important;
+  }
+
+  .editorial-section .editor-card > div {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .editorial-section .editor-card-heading,
+  .editorial-section .editor-card h2.editor-card-heading {
+    display: block !important;
+    max-width: none !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    font-size: clamp(24px, 3.2vw, 32px) !important;
+    line-height: 1.15 !important;
+    color: var(--editor-ink, #2a1b4a) !important;
+  }
+
+  .editorial-section .editor-profile-name,
+  .editorial-section .editor-card h3.editor-profile-name {
+    display: block !important;
+    max-width: none !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    margin: 6px 0 0 !important;
+    font-size: 22px !important;
+    color: var(--editor-ink, #2a1b4a) !important;
+  }
+
+  .editorial-section .editor-card-quote p {
+    max-width: none !important;
+    position: static !important;
+  }
+
+  .editorial-section .editor-card-products {
+    grid-area: products;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-rows: none !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    width: 100% !important;
+    padding: 16px 18px 18px !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+  }
+
+  .editorial-section .editor-card-product,
+  .editorial-section .editor-card .editor-card-product {
+    position: relative !important;
+    inset: auto !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    min-height: 0 !important;
+    height: clamp(250px, 29vw, 288px) !important;
+  }
+
+  .editorial-section .editor-product-link {
+    display: grid !important;
+    grid-template-rows: clamp(100px, 15vw, 128px) minmax(0, 1fr) !important;
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  .editorial-section .editor-product-thumb,
+  .editorial-section .editor-product-copy {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  .editorial-section .editor-product-thumb {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .editorial-section .editor-product-copy {
+    align-content: start !important;
+    padding: 12px 14px 10px !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+  }
+
+  .editorial-section .editor-note-trigger {
+    display: none !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note {
+    position: static !important;
+    inset: auto !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    display: grid !important;
+    gap: 5px !important;
+    padding: 0 44px 14px 14px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note b {
+    font-size: 12px !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note > span {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+  }
+
+  .editorial-section .editor-product-add {
+    right: 12px !important;
+    bottom: 12px !important;
+  }
+
+  .editorial-section .editor-card-cta {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .editorial-section .editor-card-carousel,
+  .editorial-section .editor-card-viewport,
+  .editorial-section .editor-card-track {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .editorial-section .editor-card-viewport {
+    border-radius: 22px !important;
+  }
+
+  .editorial-section .editor-card-controls {
+    top: clamp(48px, 11vw, 62px) !important;
+    right: 12px !important;
+    gap: 6px !important;
+    padding: 5px !important;
+  }
+
+  .editorial-section .editor-card-status {
+    min-width: 32px !important;
+    font-size: 11px !important;
+  }
+
+  .editorial-section .editor-card-arrow {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 18px !important;
+  }
+
+  .editorial-section .editor-card-title {
+    display: block !important;
+    margin: 0 0 14px !important;
+  }
+
+  .editorial-section .editor-card {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    margin: clamp(40px, 10vw, 54px) 0 0 !important;
+    padding: 0 !important;
+    border-radius: 22px !important;
+    container-type: normal !important;
+  }
+
+  .editorial-section .editor-card-profile {
+    padding: 24px 18px 20px !important;
+  }
+
+  .editorial-section .editor-card-copy {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 22px 18px !important;
+    background: transparent !important;
+    border: 0 !important;
+  }
+
+  .editorial-section .editor-card-heading,
+  .editorial-section .editor-card h2.editor-card-heading {
+    display: block !important;
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: 26px !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    color: var(--editor-ink, #2a1b4a) !important;
+  }
+
+  .editorial-section .editor-profile-name,
+  .editorial-section .editor-card h3.editor-profile-name {
+    display: block !important;
+    max-width: none !important;
+    white-space: normal !important;
+    overflow: visible !important;
+  }
+
+  .editorial-section .editor-card-quote p {
+    max-width: none !important;
+    font-size: 14px !important;
+    position: static !important;
+  }
+
+  .editorial-section .editor-card-cta {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 42px !important;
+    margin-top: 8px !important;
+  }
+
+  .editorial-section .editor-card-products {
+    display: flex !important;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
+    gap: 10px !important;
+    padding: 14px 14px 16px !important;
+    min-height: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    scroll-snap-type: x proximity !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .editorial-section .editor-card-products::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .editorial-section .editor-card-product,
+  .editorial-section .editor-card .editor-card-product {
+    position: relative !important;
+    inset: auto !important;
+    display: grid !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    flex: 0 0 clamp(148px, 45vw, 176px) !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto !important;
+    min-height: 0 !important;
+    padding-right: 0 !important;
+    scroll-snap-align: start !important;
+  }
+
+  .editorial-section .editor-product-link {
+    display: grid !important;
+    grid-template-rows: 96px minmax(0, auto) !important;
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  .editorial-section .editor-card-product .editor-product-thumb {
+    height: 96px !important;
+    min-height: 0 !important;
+  }
+
+  .editorial-section .editor-card-product .editor-product-copy {
+    padding: 10px 12px 8px !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+  }
+
+  .editorial-section .editor-note-trigger {
+    display: none !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note {
+    position: static !important;
+    inset: auto !important;
+    grid-column: auto !important;
+    grid-row: auto !important;
+    display: grid !important;
+    gap: 4px !important;
+    padding: 0 40px 12px 12px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note b {
+    gap: 5px !important;
+    font-size: 11px !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note b::before {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note > span {
+    font-size: 11px !important;
+    line-height: 1.32 !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+  }
+
+  .editorial-section .editor-product-thumb,
+  .editorial-section .editor-product-copy {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  .editorial-section .editor-product-desc {
     display: none !important;
   }
 }

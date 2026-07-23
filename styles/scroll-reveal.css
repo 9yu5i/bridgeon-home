@@ -1,4 +1,4 @@
-﻿/* Scroll reveal ??main page sections */
+/* Scroll reveal for main page sections */
 html.scroll-reveal-pending .content-section .section-heading,
 html.scroll-reveal-pending .mobile-cats,
 html.scroll-reveal-pending .share-pick,
@@ -57,6 +57,15 @@ html.scroll-reveal-pending .editor-card-copy {
 html.scroll-reveal-pending .editor-card-products .editor-card-product {
   opacity: 0;
   transform: translateY(22px) scale(0.96);
+  transition: none !important;
+}
+
+html.new-scroll-reveal-pending .listing-page--new .listing-hero-inner,
+html.new-scroll-reveal-pending .listing-page--new .listing-brand-banner,
+html.new-scroll-reveal-pending .listing-page--new .listing-brand-products-label,
+html.new-scroll-reveal-pending .listing-page--new .listing-brand-grid .listing-card {
+  opacity: 0;
+  transform: translateY(28px);
   transition: none !important;
 }
 
@@ -206,6 +215,21 @@ html.scroll-reveal-pending .editor-card-products .editor-card-product {
   transform: translateX(0);
 }
 
+.scroll-reveal-split-right.is-inview .editor-card-product,
+.is-inview .scroll-reveal-split-right .editor-card-product {
+  opacity: 1;
+  transform: none;
+}
+
+.scroll-reveal-split-right.is-inview .editor-product-copy,
+.scroll-reveal-split-right.is-inview .editor-product-copy strong,
+.is-inview .scroll-reveal-split-right .editor-product-copy,
+.is-inview .scroll-reveal-split-right .editor-product-copy strong {
+  opacity: 1;
+  color: var(--editor-ink, #2a1b4a);
+  visibility: visible;
+}
+
 .scroll-reveal-hero .hero-frame,
 .scroll-reveal-hero .today-pick {
   opacity: 0;
@@ -243,6 +267,35 @@ html.scroll-reveal-pending .editor-card-products .editor-card-product {
 .scroll-reveal-hero.is-inview .today-pick {
   opacity: 1;
   transform: translateY(0);
+}
+
+.listing-page--new .new-reveal-hero .listing-hero-inner {
+  opacity: 0;
+  transform: translateY(24px) scale(0.985);
+  transition:
+    opacity 0.9s var(--scroll-reveal-ease),
+    transform 0.9s var(--scroll-reveal-ease);
+}
+
+.listing-page--new .new-reveal-hero.is-inview .listing-hero-inner {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.listing-page--new .new-reveal-banner.scroll-reveal-soft {
+  --scroll-reveal-distance: 30px;
+  --scroll-reveal-duration: 0.86s;
+  --scroll-reveal-scale: 0.99;
+  --scroll-reveal-blur: 4px;
+}
+
+.listing-page--new .new-reveal-grid .new-reveal-card {
+  transform: translateY(24px) scale(0.985);
+}
+
+.listing-page--new .new-reveal-grid.is-inview .new-reveal-card,
+.listing-page--new .is-inview .new-reveal-grid .new-reveal-card {
+  transform: translateY(0) scale(1);
 }
 
 .realtrend-cart-toast {
