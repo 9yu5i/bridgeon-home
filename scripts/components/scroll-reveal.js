@@ -81,13 +81,9 @@
   const editorialSection = document.querySelector(".editorial-section");
   if (editorialSection) {
     addLineReveal(editorialSection);
-    const editorCard = editorialSection.querySelector(".editor-card");
-    if (editorCard) {
+    editorialSection.querySelectorAll(".editor-card").forEach((editorCard) => {
       editorCard.classList.add("scroll-reveal-soft");
-      editorCard.querySelector(".editor-card-profile")?.classList.add("scroll-reveal-split-left");
-      editorCard.querySelector(".editor-card-copy")?.classList.add("scroll-reveal-split-left");
-      editorCard.querySelector(".editor-card-products")?.classList.add("scroll-reveal-split-right");
-    }
+    });
     editorialSection.querySelector(".magazine-block")?.classList.add("scroll-reveal-soft");
     addStaggerItems(editorialSection.querySelector(".magazine-grid"), ".magazine-card", 0.08);
   }

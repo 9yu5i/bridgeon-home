@@ -4,13 +4,11 @@
 
   const track = slider.querySelector(".editor-card-track");
   const slides = Array.from(slider.querySelectorAll(".editor-card"));
-  const prevButton = slider.querySelector("[data-editor-card-prev]");
-  const nextButton = slider.querySelector("[data-editor-card-next]");
-  const status = slider.querySelector("[data-editor-card-status]");
+  const bullets = Array.from(slider.querySelectorAll("[data-editor-card-bullet]"));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   if (!track || slides.length < 2) {
-    slider.querySelector(".editor-card-controls")?.remove();
+    slider.querySelector(".editor-card-bullets")?.remove();
     return;
   }
 
@@ -35,21 +33,29 @@
     });
   };
 
-  const render = (animate = true) => {
-    track.classList.toggle("is-drag-disabled", !animate || reduceMotion.matches);
-    track.style.transform = `translateX(-${index * 100}%)`;
+  const syncBullets = () => {
+    bullets.forEach((bullet, bulletIndex) => {
+      const isActive = bulletIndex === index;
+      bullet.classList.toggle("is-active", isActive);
+      bullet.setAttribute("aria-selected", isActive ? "true" : "false");
+      bullet.tabIndex = isActive ? 0 : -1;
+    });
+  };
+
+  const render = () => {
+    track.classList.toggle("is-reduced-motion", reduceMotion.matches);
 
     slides.forEach((slide, slideIndex) => {
       setSlideInteractive(slide, slideIndex === index);
     });
 
-    if (status) status.textContent = `${index + 1} / ${slides.length}`;
+    syncBullets();
   };
 
-  const goTo = (nextIndex, animate = true) => {
+  const goTo = (nextIndex) => {
     closeEditorNotes();
     index = (nextIndex + slides.length) % slides.length;
-    render(animate);
+    render();
   };
 
   const stop = () => {
@@ -68,14 +74,33 @@
     start();
   };
 
-  prevButton?.addEventListener("click", () => {
-    goTo(index - 1);
-    restart();
-  });
+  bullets.forEach((bullet) => {
+    bullet.addEventListener("click", () => {
+      const nextIndex = Number(bullet.getAttribute("data-editor-card-bullet"));
+      if (Number.isNaN(nextIndex)) return;
+      goTo(nextIndex);
+      restart();
+    });
 
-  nextButton?.addEventListener("click", () => {
-    goTo(index + 1);
-    restart();
+    bullet.addEventListener("keydown", (event) => {
+      let nextIndex = index;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        nextIndex = index + 1;
+      } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        nextIndex = index - 1;
+      } else if (event.key === "Home") {
+        nextIndex = 0;
+      } else if (event.key === "End") {
+        nextIndex = slides.length - 1;
+      } else {
+        return;
+      }
+
+      event.preventDefault();
+      goTo(nextIndex);
+      bullets[index]?.focus();
+      restart();
+    });
   });
 
   slider.addEventListener("click", (event) => {
@@ -120,10 +145,10 @@
   });
 
   reduceMotion.addEventListener?.("change", () => {
-    render(false);
+    render();
     start();
   });
 
-  render(false);
+  render();
   start();
 })();

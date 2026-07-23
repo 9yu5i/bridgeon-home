@@ -129,6 +129,146 @@
     }
 }
 
+/* Neutralize legacy editor-card banner rules for the current T.P Pick layout. */
+@media (max-width: 1120px) {
+  .editorial-section .editor-card-title {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    margin: 0 0 14px !important;
+    color: var(--editor-ink, #2a1b4a) !important;
+    font-size: clamp(22px, 4.2vw, 30px) !important;
+    line-height: 1.1 !important;
+    font-weight: 700 !important;
+  }
+
+  .editorial-section .editor-card {
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.42), rgba(235, 226, 255, 0.35)),
+      linear-gradient(125deg, #efe6ff 0%, #e4d6ff 46%, #f0e9ff 100%) !important;
+    border: 1px solid rgba(123, 63, 228, 0.18) !important;
+    box-shadow: 0 18px 40px rgba(70, 40, 120, 0.14) !important;
+    overflow: hidden !important;
+    aspect-ratio: auto !important;
+    max-height: none !important;
+    container-type: normal !important;
+  }
+
+  .editorial-section .editor-card > div {
+    position: relative !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  .editorial-section .editor-card a,
+  .editorial-section .editor-card .editor-product-link,
+  .editorial-section .editor-card .editor-card-cta {
+    position: static !important;
+    inset: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    padding: initial !important;
+    color: inherit !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .editorial-section .editor-card .editor-card-cta {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 42px !important;
+    padding: 0 20px !important;
+    border-radius: 999px !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #9b6cff 0%, var(--purple) 48%, #6428d4 100%) !important;
+    box-shadow: 0 14px 28px rgba(99, 48, 190, 0.28) !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+  }
+
+  .editorial-section .editor-card .editor-product-link {
+    display: grid !important;
+  }
+
+  .editorial-section .editor-card-products {
+    position: relative !important;
+    display: grid !important;
+    width: 100% !important;
+    max-width: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .editorial-section .editor-card-product {
+    position: relative !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .editorial-section .editor-card .editor-note-trigger,
+  .editorial-section .editor-card .editor-product-add {
+    position: absolute !important;
+    inset: auto !important;
+    top: auto !important;
+    z-index: 7 !important;
+    display: grid !important;
+    place-items: center !important;
+    width: var(--editor-thumb-action-size, 28px) !important;
+    min-width: var(--editor-thumb-action-size, 28px) !important;
+    max-width: var(--editor-thumb-action-size, 28px) !important;
+    height: var(--editor-thumb-action-size, 28px) !important;
+    min-height: var(--editor-thumb-action-size, 28px) !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    box-shadow: 0 8px 16px rgba(99, 48, 190, 0.14) !important;
+  }
+
+  .editorial-section .editor-card .editor-note-trigger {
+    left: var(--editor-thumb-action-inset, 10px) !important;
+    right: auto !important;
+    bottom: calc(
+      var(--editor-copy-height, 88px) + var(--editor-thumb-action-inset, 10px)
+    ) !important;
+    border: 1px solid rgba(123, 63, 228, 0.22) !important;
+    color: transparent !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+  }
+
+  .editorial-section .editor-card .editor-product-add {
+    right: var(--editor-thumb-action-inset, 10px) !important;
+    left: auto !important;
+    bottom: calc(
+      var(--editor-copy-height, 88px) + var(--editor-thumb-action-inset, 10px)
+    ) !important;
+    border: 0 !important;
+    color: #fff !important;
+    background: linear-gradient(145deg, #9b6cff, var(--purple)) !important;
+    box-shadow: 0 8px 16px rgba(99, 48, 190, 0.28) !important;
+  }
+
+  .editorial-section .editor-card-viewport,
+  .editorial-section .editor-card-track {
+    background: transparent !important;
+    overflow: hidden !important;
+  }
+
+  .editorial-section .editor-card-track .editor-card:not(.is-active) {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+  }
+}
+
 @media (max-width: 1120px) {
   .editor-card > span {
       position: absolute;
@@ -612,7 +752,7 @@
     padding: 0 !important;
     font-size: 18px !important;
     line-height: 1.3 !important;
-    margin-top: 6px !important;
+    margin-top: 1px !important;
   }
 
   .magazine-card-compact h3 {
@@ -673,12 +813,21 @@
     padding: 0 !important;
     border-radius: 28px !important;
     container-type: normal !important;
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.42), rgba(235, 226, 255, 0.35)),
+      linear-gradient(125deg, #efe6ff 0%, #e4d6ff 46%, #f0e9ff 100%) !important;
+    border: 1px solid rgba(123, 63, 228, 0.18) !important;
+    box-shadow: 0 22px 48px rgba(70, 40, 120, 0.16) !important;
   }
 
   .editorial-section .editor-card-copy {
-    display: grid !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
     width: auto !important;
     max-width: none !important;
+    height: 100% !important;
     margin: 0 !important;
     padding: clamp(28px, 3vw, 40px) clamp(14px, 1.6vw, 24px) !important;
     background: transparent !important;
@@ -693,21 +842,25 @@
 
   .editorial-section .editor-card-heading,
   .editorial-section .editor-card h2.editor-card-heading {
-    display: block !important;
+    display: -webkit-box !important;
     max-width: 14ch !important;
+    min-height: calc(clamp(28px, 2.4vw, 40px) * 1.12 * 2) !important;
     margin: 0 !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     white-space: normal !important;
     font-size: clamp(28px, 2.4vw, 40px) !important;
     line-height: 1.12 !important;
     color: var(--editor-ink, #2a1b4a) !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
   }
 
   .editorial-section .editor-profile-name,
   .editorial-section .editor-card h3.editor-profile-name {
     display: block !important;
     max-width: none !important;
-    margin: 6px 0 0 !important;
+    margin: 0 !important;
     overflow: visible !important;
     white-space: normal !important;
     color: var(--editor-ink, #2a1b4a) !important;
@@ -715,19 +868,25 @@
     line-height: 1.15 !important;
   }
 
-  .editorial-section .editor-card-quote p,
-  .editorial-section .editor-profile-role,
-  .editorial-section .editor-profile-sign {
-    position: static !important;
-    max-width: none !important;
-    width: auto !important;
-    margin: 0 !important;
+  .editorial-section .editor-card-quote {
+    min-height: calc(
+      clamp(42px, 3.4vw, 56px) * 0.55
+      + clamp(14px, 1.05vw, 16px) * 1.55 * 3
+    ) !important;
   }
 
   .editorial-section .editor-card-quote p {
+    position: static !important;
+    display: -webkit-box !important;
     max-width: 34ch !important;
+    width: auto !important;
+    margin: 0 !important;
+    overflow: hidden !important;
     font-size: clamp(14px, 1.05vw, 16px) !important;
     line-height: 1.55 !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 3 !important;
+    line-clamp: 3 !important;
   }
 
   .editorial-section .editor-card-cta {
@@ -736,7 +895,8 @@
     width: auto !important;
     min-width: 0 !important;
     height: 44px !important;
-    margin-top: 6px !important;
+    margin-top: 4px !important;
+    justify-self: center !important;
   }
 
   .editorial-section .editor-card-products {
@@ -744,12 +904,14 @@
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     grid-template-rows: none !important;
-    align-items: center !important;
+    align-items: stretch !important;
+    align-self: stretch !important;
     gap: clamp(10px, 0.95vw, 14px) !important;
     width: auto !important;
     max-width: none !important;
     min-height: 0 !important;
-    padding: clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px) clamp(18px, 2vw, 24px) 0 !important;
+    height: 100% !important;
+    padding: clamp(28px, 3vw, 40px) clamp(18px, 2vw, 24px) clamp(28px, 3vw, 40px) 0 !important;
     overflow: visible !important;
     border-radius: 0 !important;
     border: 0 !important;
@@ -762,7 +924,7 @@
     display: block !important;
     grid-template-columns: 1fr !important;
     grid-template-rows: none !important;
-    height: clamp(248px, 15.6vw, 292px) !important;
+    height: 100% !important;
     min-height: 0 !important;
     padding: 0 !important;
     opacity: 1 !important;
@@ -770,11 +932,12 @@
     pointer-events: auto !important;
     font-size: inherit !important;
     font-weight: inherit !important;
+    --editor-copy-height: 88px !important;
   }
 
   .editorial-section .editor-product-link {
     display: grid !important;
-    grid-template-rows: clamp(108px, 6.8vw, 128px) minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) auto !important;
     height: 100% !important;
     color: inherit !important;
     text-decoration: none !important;
@@ -792,55 +955,68 @@
   }
 
   .editorial-section .editor-product-copy {
-    align-content: start !important;
-    padding: 10px 12px 42px !important;
+    align-content: center !important;
+    gap: 4px !important;
+    min-height: var(--editor-copy-height, 88px) !important;
+    padding: 10px 12px !important;
     overflow: hidden !important;
     background: rgba(255, 255, 255, 0.92) !important;
+    box-sizing: border-box !important;
   }
 
   .editorial-section .editor-product-copy strong {
     display: -webkit-box !important;
-    min-height: calc(1.25em * 2) !important;
+    min-height: 0 !important;
     overflow: hidden !important;
     color: var(--editor-ink, #2a1b4a) !important;
-    font-size: clamp(13px, 0.92vw, 15px) !important;
-    line-height: 1.25 !important;
+    font-size: clamp(13px, 0.95vw, 15px) !important;
+    line-height: 1.2 !important;
     font-weight: 800 !important;
     -webkit-box-orient: vertical !important;
-    -webkit-line-clamp: 2 !important;
-    line-clamp: 2 !important;
+    -webkit-line-clamp: 1 !important;
+    line-clamp: 1 !important;
     opacity: 1 !important;
     visibility: visible !important;
   }
 
+  .editorial-section .editor-note-trigger,
+  .editorial-section .editor-product-add {
+    top: auto !important;
+    bottom: calc(
+      var(--editor-copy-height, 88px) + var(--editor-thumb-action-inset)
+    ) !important;
+  }
+
   .editorial-section .editor-note-trigger {
-    left: 12px !important;
+    left: var(--editor-thumb-action-inset) !important;
     right: auto !important;
-    bottom: 12px !important;
+    display: grid !important;
   }
 
   .editorial-section .editor-product-add {
-    right: 12px !important;
-    bottom: 12px !important;
+    right: var(--editor-thumb-action-inset) !important;
+    left: auto !important;
   }
 
   .editorial-section .editor-card-product .editor-pick-note {
     position: absolute !important;
-    inset: 10px !important;
+    inset: 0 !important;
+    z-index: 9 !important;
     display: grid !important;
     opacity: 0 !important;
-    transform: translateY(8px) !important;
-  }
-
-  .editorial-section .editor-note-trigger {
-    display: grid !important;
+    pointer-events: none !important;
+    transform: translateY(8px) scale(0.985) !important;
   }
 
   .editorial-section .editor-note-trigger:hover + .editor-pick-note,
   .editorial-section .editor-note-trigger:focus-visible + .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-note-trigger:hover) .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-note-trigger:focus-visible) .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-pick-note:hover) .editor-pick-note,
   .editorial-section .editor-card-product.is-note-open .editor-pick-note {
     opacity: 1 !important;
-    transform: translateY(0) !important;
+    pointer-events: auto !important;
+    transform: translateY(0) scale(1) !important;
   }
 }
 
@@ -856,16 +1032,8 @@
     border-radius: 24px !important;
   }
 
-  .editorial-section .editor-card-controls {
-    top: clamp(52px, 6vw, 68px) !important;
-    right: 14px !important;
-    padding: 5px !important;
-  }
-
-  .editorial-section .editor-card-arrow {
-    width: 26px !important;
-    height: 26px !important;
-    font-size: 19px !important;
+  .editorial-section .editor-card-bullets {
+    gap: 8px !important;
   }
 
   .editorial-section .editor-card {
@@ -880,7 +1048,7 @@
     height: auto !important;
     max-height: none !important;
     aspect-ratio: auto !important;
-    margin: clamp(40px, 5vw, 56px) 0 0 !important;
+    margin: 0 !important;
     padding: 0 !important;
     border-radius: 24px !important;
     container-type: normal !important;
@@ -890,9 +1058,23 @@
     grid-area: profile;
   }
 
+  .editorial-section .editor-card-profile .editor-avatar {
+    width: 88px !important;
+    height: 88px !important;
+  }
+
+  .editorial-section .editor-card-profile .flag {
+    top: calc(88px - 20px) !important;
+    right: calc(50% - 44px) !important;
+    bottom: auto !important;
+    width: 22px !important;
+    height: 22px !important;
+  }
+
   .editorial-section .editor-card-copy {
     grid-area: copy;
     display: grid !important;
+    justify-items: start !important;
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
@@ -942,6 +1124,7 @@
     align-items: stretch !important;
     gap: 12px !important;
     width: 100% !important;
+    height: auto !important;
     padding: 16px 18px 18px !important;
     min-height: 0 !important;
     overflow: visible !important;
@@ -953,19 +1136,24 @@
   .editorial-section .editor-card .editor-card-product {
     position: relative !important;
     inset: auto !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    grid-template-rows: auto auto !important;
+    display: block !important;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
     opacity: 1 !important;
     transform: none !important;
     pointer-events: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
     min-height: 0 !important;
-    height: clamp(250px, 29vw, 288px) !important;
+    height: auto !important;
+    overflow: hidden !important;
+    --editor-copy-height: 78px !important;
   }
 
   .editorial-section .editor-product-link {
     display: grid !important;
-    grid-template-rows: clamp(100px, 15vw, 128px) minmax(0, 1fr) !important;
+    grid-template-rows: auto auto !important;
+    height: auto !important;
     color: inherit !important;
     text-decoration: none !important;
   }
@@ -977,56 +1165,98 @@
   }
 
   .editorial-section .editor-product-thumb {
+    width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
+    aspect-ratio: 1 / 1 !important;
   }
 
   .editorial-section .editor-product-copy {
-    align-content: start !important;
-    padding: 12px 14px 10px !important;
+    align-content: center !important;
+    gap: 4px !important;
+    min-height: var(--editor-copy-height, 78px) !important;
+    padding: 10px 10px !important;
     background: rgba(255, 255, 255, 0.92) !important;
+    box-sizing: border-box !important;
+  }
+
+  .editorial-section .editor-product-copy strong {
+    font-size: clamp(12px, 1.6vw, 14px) !important;
   }
 
   .editorial-section .editor-note-trigger {
-    display: none !important;
+    display: grid !important;
+    top: auto !important;
+    left: var(--editor-thumb-action-inset, 10px) !important;
+    right: auto !important;
+    bottom: calc(
+      var(--editor-copy-height, 84px) + var(--editor-thumb-action-inset, 10px)
+    ) !important;
   }
 
   .editorial-section .editor-card-product .editor-pick-note {
-    position: static !important;
-    inset: auto !important;
-    grid-column: auto !important;
-    grid-row: auto !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 9 !important;
     display: grid !important;
-    gap: 5px !important;
-    padding: 0 44px 14px 14px !important;
+    align-content: center !important;
+    justify-items: stretch !important;
+    gap: 8px !important;
+    padding: 12px !important;
     border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
+    border-radius: inherit !important;
+    background:
+      linear-gradient(155deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 238, 255, 0.98) 52%, rgba(236, 226, 255, 0.96) 100%) !important;
+    box-shadow:
+      inset 0 0 0 1px rgba(123, 63, 228, 0.14),
+      0 18px 36px rgba(49, 19, 108, 0.16) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(8px) scale(0.985) !important;
+  }
+
+  .editorial-section .editor-note-trigger:hover + .editor-pick-note,
+  .editorial-section .editor-note-trigger:focus-visible + .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-note-trigger:hover) .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-note-trigger:focus-visible) .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-pick-note:hover) .editor-pick-note,
+  .editorial-section .editor-card-product.is-note-open .editor-pick-note {
     opacity: 1 !important;
-    transform: none !important;
+    pointer-events: auto !important;
+    transform: translateY(0) scale(1) !important;
   }
 
-  .editorial-section .editor-card-product .editor-pick-note b {
-    font-size: 12px !important;
+  .editorial-section .editor-card-product .editor-pick-note-label {
+    height: 18px !important;
+    padding: 0 7px !important;
+    font-size: 9px !important;
   }
 
-  .editorial-section .editor-card-product .editor-pick-note > span {
+  .editorial-section .editor-card-product .editor-pick-note-title {
+    font-size: 14px !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note-body {
     font-size: 12px !important;
-    line-height: 1.35 !important;
-    -webkit-line-clamp: 2 !important;
-    line-clamp: 2 !important;
+    line-height: 1.4 !important;
+    -webkit-line-clamp: 5 !important;
+    line-clamp: 5 !important;
   }
 
   .editorial-section .editor-product-add {
-    right: 12px !important;
-    bottom: 12px !important;
+    top: auto !important;
+    right: var(--editor-thumb-action-inset, 10px) !important;
+    bottom: calc(
+      var(--editor-copy-height, 84px) + var(--editor-thumb-action-inset, 10px)
+    ) !important;
   }
 
   .editorial-section .editor-card-cta {
     position: static !important;
     inset: auto !important;
     width: auto !important;
+    margin-top: 4px !important;
+    justify-self: center !important;
   }
 }
 
@@ -1042,22 +1272,17 @@
     border-radius: 22px !important;
   }
 
-  .editorial-section .editor-card-controls {
-    top: clamp(48px, 11vw, 62px) !important;
-    right: 12px !important;
-    gap: 6px !important;
-    padding: 5px !important;
+  .editorial-section .editor-card-bullets {
+    gap: 7px !important;
   }
 
-  .editorial-section .editor-card-status {
-    min-width: 32px !important;
-    font-size: 11px !important;
+  .editorial-section .editor-card-bullet {
+    width: 7px !important;
+    height: 7px !important;
   }
 
-  .editorial-section .editor-card-arrow {
-    width: 24px !important;
-    height: 24px !important;
-    font-size: 18px !important;
+  .editorial-section .editor-card-bullet.is-active {
+    width: 18px !important;
   }
 
   .editorial-section .editor-card-title {
@@ -1068,40 +1293,76 @@
   .editorial-section .editor-card {
     display: grid !important;
     grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "profile"
+      "copy"
+      "products" !important;
+    align-items: stretch !important;
     gap: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
     min-height: 0 !important;
     height: auto !important;
+    max-height: none !important;
     aspect-ratio: auto !important;
-    margin: clamp(40px, 10vw, 54px) 0 0 !important;
+    margin: 0 !important;
     padding: 0 !important;
     border-radius: 22px !important;
     container-type: normal !important;
   }
 
   .editorial-section .editor-card-profile {
-    padding: 24px 18px 20px !important;
+    grid-area: profile;
+    display: grid !important;
+    justify-items: center !important;
+    align-content: start !important;
+    gap: 10px !important;
+    padding: 22px 18px 8px !important;
+  }
+
+  .editorial-section .editor-card-profile .editor-avatar {
+    width: 76px !important;
+    height: 76px !important;
+  }
+
+  .editorial-section .editor-card-profile .flag {
+    top: calc(76px - 16px) !important;
+    right: calc(50% - 38px) !important;
+    bottom: auto !important;
+    width: 18px !important;
+    height: 18px !important;
   }
 
   .editorial-section .editor-card-copy {
-    width: auto !important;
+    grid-area: copy;
+    display: grid !important;
+    justify-items: start !important;
+    gap: 12px !important;
+    width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
-    padding: 22px 18px !important;
+    padding: 8px 18px 16px !important;
     background: transparent !important;
     border: 0 !important;
+  }
+
+  .editorial-section .editor-card > div {
+    width: 100% !important;
+    max-width: none !important;
   }
 
   .editorial-section .editor-card-heading,
   .editorial-section .editor-card h2.editor-card-heading {
     display: block !important;
     max-width: none !important;
+    min-height: 0 !important;
     margin: 0 !important;
-    font-size: 26px !important;
-    line-height: 1.15 !important;
-    white-space: normal !important;
     overflow: visible !important;
+    white-space: normal !important;
+    font-size: clamp(22px, 6vw, 28px) !important;
+    line-height: 1.2 !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
     color: var(--editor-ink, #2a1b4a) !important;
   }
 
@@ -1111,12 +1372,28 @@
     max-width: none !important;
     white-space: normal !important;
     overflow: visible !important;
+    margin: 4px 0 0 !important;
+    font-size: 18px !important;
+    color: var(--editor-ink, #2a1b4a) !important;
+  }
+
+  .editorial-section .editor-card-quote {
+    min-height: 0 !important;
   }
 
   .editorial-section .editor-card-quote p {
     max-width: none !important;
     font-size: 14px !important;
+    line-height: 1.45 !important;
     position: static !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+  }
+
+  .editorial-section .editor-pick-badge {
+    height: 26px !important;
+    padding: 0 10px !important;
+    font-size: 10px !important;
   }
 
   .editorial-section .editor-card-cta {
@@ -1124,16 +1401,24 @@
     inset: auto !important;
     width: auto !important;
     min-width: 0 !important;
-    height: 42px !important;
-    margin-top: 8px !important;
+    max-width: none !important;
+    height: 40px !important;
+    margin-top: 2px !important;
+    padding: 0 18px !important;
+    justify-self: center !important;
+    font-size: 12px !important;
   }
 
   .editorial-section .editor-card-products {
+    grid-area: products;
     display: flex !important;
     grid-template-columns: none !important;
     grid-template-rows: none !important;
+    align-items: stretch !important;
     gap: 10px !important;
-    padding: 14px 14px 16px !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 4px 18px 18px !important;
     min-height: 0 !important;
     overflow-x: auto !important;
     overflow-y: visible !important;
@@ -1152,78 +1437,133 @@
   .editorial-section .editor-card .editor-card-product {
     position: relative !important;
     inset: auto !important;
-    display: grid !important;
+    display: block !important;
+    grid-template-columns: none !important;
+    grid-template-rows: none !important;
     opacity: 1 !important;
     transform: none !important;
     pointer-events: auto !important;
-    height: auto !important;
-    min-width: 0 !important;
-    flex: 0 0 clamp(148px, 45vw, 176px) !important;
-    grid-template-columns: 1fr !important;
-    grid-template-rows: auto auto !important;
+    flex: 0 0 clamp(156px, 44vw, 176px) !important;
+    width: clamp(156px, 44vw, 176px) !important;
+    min-width: clamp(156px, 44vw, 176px) !important;
     min-height: 0 !important;
-    padding-right: 0 !important;
+    height: auto !important;
+    overflow: hidden !important;
     scroll-snap-align: start !important;
+    --editor-copy-height: 76px !important;
+    --editor-thumb-action-inset: 8px !important;
+    --editor-thumb-action-size: 26px !important;
   }
 
   .editorial-section .editor-product-link {
     display: grid !important;
-    grid-template-rows: 96px minmax(0, auto) !important;
+    grid-template-rows: auto auto !important;
+    height: auto !important;
     color: inherit !important;
     text-decoration: none !important;
-  }
-
-  .editorial-section .editor-card-product .editor-product-thumb {
-    height: 96px !important;
-    min-height: 0 !important;
-  }
-
-  .editorial-section .editor-card-product .editor-product-copy {
-    padding: 10px 12px 8px !important;
-    background: rgba(255, 255, 255, 0.92) !important;
-  }
-
-  .editorial-section .editor-note-trigger {
-    display: none !important;
-  }
-
-  .editorial-section .editor-card-product .editor-pick-note {
-    position: static !important;
-    inset: auto !important;
-    grid-column: auto !important;
-    grid-row: auto !important;
-    display: grid !important;
-    gap: 4px !important;
-    padding: 0 40px 12px 12px !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .editorial-section .editor-card-product .editor-pick-note b {
-    gap: 5px !important;
-    font-size: 11px !important;
-  }
-
-  .editorial-section .editor-card-product .editor-pick-note b::before {
-    width: 14px !important;
-    height: 14px !important;
-  }
-
-  .editorial-section .editor-card-product .editor-pick-note > span {
-    font-size: 11px !important;
-    line-height: 1.32 !important;
-    -webkit-line-clamp: 2 !important;
-    line-clamp: 2 !important;
   }
 
   .editorial-section .editor-product-thumb,
   .editorial-section .editor-product-copy {
     grid-column: auto !important;
     grid-row: auto !important;
+  }
+
+  .editorial-section .editor-product-thumb {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+
+  .editorial-section .editor-product-copy {
+    align-content: center !important;
+    gap: 4px !important;
+    min-height: var(--editor-copy-height, 76px) !important;
+    padding: 10px !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    box-sizing: border-box !important;
+  }
+
+  .editorial-section .editor-product-copy small {
+    font-size: 11px !important;
+  }
+
+  .editorial-section .editor-product-copy strong {
+    font-size: 13px !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+  }
+
+  .editorial-section .editor-product-price {
+    font-size: 12px !important;
+  }
+
+  .editorial-section .editor-note-trigger {
+    display: grid !important;
+    top: auto !important;
+    left: var(--editor-thumb-action-inset, 8px) !important;
+    right: auto !important;
+    bottom: calc(
+      var(--editor-copy-height, 76px) + var(--editor-thumb-action-inset, 8px)
+    ) !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 9 !important;
+    display: grid !important;
+    align-content: center !important;
+    justify-items: stretch !important;
+    gap: 6px !important;
+    padding: 12px !important;
+    border: 0 !important;
+    border-radius: inherit !important;
+    background:
+      linear-gradient(155deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 238, 255, 0.98) 52%, rgba(236, 226, 255, 0.96) 100%) !important;
+    box-shadow:
+      inset 0 0 0 1px rgba(123, 63, 228, 0.14),
+      0 18px 36px rgba(49, 19, 108, 0.16) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(8px) scale(0.985) !important;
+  }
+
+  .editorial-section .editor-note-trigger:hover + .editor-pick-note,
+  .editorial-section .editor-note-trigger:focus-visible + .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-note-trigger:hover) .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-note-trigger:focus-visible) .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-pick-note:hover) .editor-pick-note,
+  .editorial-section .editor-card-product.is-note-open .editor-pick-note {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateY(0) scale(1) !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note-label {
+    height: 16px !important;
+    padding: 0 6px !important;
+    font-size: 8px !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note-title {
+    font-size: 13px !important;
+  }
+
+  .editorial-section .editor-card-product .editor-pick-note-body {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    -webkit-line-clamp: 5 !important;
+    line-clamp: 5 !important;
+  }
+
+  .editorial-section .editor-product-add {
+    top: auto !important;
+    right: var(--editor-thumb-action-inset, 8px) !important;
+    bottom: calc(
+      var(--editor-copy-height, 76px) + var(--editor-thumb-action-inset, 8px)
+    ) !important;
   }
 
   .editorial-section .editor-product-desc {

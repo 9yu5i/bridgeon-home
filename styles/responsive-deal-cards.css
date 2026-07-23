@@ -221,7 +221,7 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     justify-items: stretch;
-    gap: clamp(14px, 2vw, 20px);
+    gap: clamp(12px, 1.6vw, 16px);
     width: 100%;
     max-width: 100%;
     min-width: 0;
@@ -1020,7 +1020,7 @@
 @media (min-width: 761px) and (max-width: 1120px) {
   .deals-section .deal-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(14px, 2vw, 20px);
+    gap: clamp(12px, 1.6vw, 16px);
     align-items: stretch;
     height: auto;
   }
@@ -1033,13 +1033,13 @@
     display: grid !important;
     grid-template-columns: 1fr !important;
     grid-template-rows: auto 1fr;
-    gap: clamp(12px, 1.8vw, 16px);
+    gap: clamp(8px, 1.2vw, 12px);
     min-height: 0;
     height: 100%;
     max-height: none;
     aspect-ratio: auto !important;
-    padding: clamp(12px, 1.8vw, 16px);
-    border-radius: clamp(16px, 2.2vw, 20px);
+    padding: clamp(10px, 1.4vw, 14px);
+    border-radius: clamp(14px, 1.8vw, 18px);
   }
 
   .deals-section .deal-media,
@@ -1056,9 +1056,9 @@
     max-width: none;
     height: auto;
     min-height: 0;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 10;
     pointer-events: auto;
-    border-radius: clamp(14px, 2vw, 18px);
+    border-radius: clamp(12px, 1.6vw, 16px);
     background:
       radial-gradient(75% 65% at 72% 28%, rgba(255, 255, 255, 0.72), transparent 58%),
       linear-gradient(155deg, #f6f2ec 0%, #ebe4da 46%, #d9d0c4 100%) !important;
@@ -1073,61 +1073,61 @@
     width: 100% !important;
     height: 100% !important;
     min-height: 0 !important;
-    padding: 2px 2px clamp(40px, 6vw, 48px) 4px !important;
+    padding: 0 2px clamp(34px, 4.8vw, 42px) 2px !important;
   }
 
   .deals-section .deal-card.special .deal-copy,
   .deals-section .deal-grid .deal-card.special .deal-copy {
     grid-template-rows:
-      clamp(20px, 3vw, 24px)
+      clamp(18px, 2.4vw, 22px)
       auto
       auto
-      minmax(26px, auto) !important;
-    row-gap: clamp(8px, 1.4vw, 12px);
+      minmax(22px, auto) !important;
+    row-gap: clamp(6px, 1vw, 10px);
   }
 
   .deals-section .deal-card.time .deal-copy,
   .deals-section .deal-grid .deal-card.time .deal-copy {
     grid-template-rows:
-      clamp(20px, 3vw, 24px)
+      clamp(18px, 2.4vw, 22px)
       auto
-      minmax(26px, auto) !important;
-    row-gap: clamp(8px, 1.4vw, 12px);
+      minmax(22px, auto) !important;
+    row-gap: clamp(6px, 1vw, 10px);
   }
 
   .deals-section .deal-top span,
   .deals-section .deal-card.special .deal-top span,
   .deals-section .deal-card.time .deal-top span {
-    min-height: clamp(20px, 2.8vw, 24px);
-    padding: 0 clamp(8px, 1.2vw, 11px);
-    font-size: clamp(9px, 1.3vw, 11px);
+    min-height: clamp(18px, 2.4vw, 22px);
+    padding: 0 clamp(7px, 1vw, 10px);
+    font-size: clamp(9px, 1.15vw, 10px);
   }
 
   .deals-section .deal-copy h3,
   .deals-section .deal-card.special .deal-copy h3,
   .deals-section .deal-card.time .deal-copy h3 {
     color: #fff;
-    font-size: clamp(16px, 2.4vw, 21px);
+    font-size: clamp(14px, 1.9vw, 17px);
     line-height: 1.25;
-    height: 3.75em;
-    min-height: 3.75em;
-    max-height: 3.75em;
+    height: 2.5em;
+    min-height: 2.5em;
+    max-height: 2.5em;
   }
 
   .deals-section .deal-copy p,
   .deals-section .deal-card.special .deal-copy p {
     color: rgba(255, 255, 255, 0.82);
-    font-size: clamp(13px, 1.9vw, 16px);
-    line-height: 1.45;
-    height: 2.9em !important;
-    min-height: 2.9em !important;
-    max-height: 2.9em !important;
+    font-size: clamp(12px, 1.55vw, 14px);
+    line-height: 1.4;
+    height: 2.8em !important;
+    min-height: 2.8em !important;
+    max-height: 2.8em !important;
   }
 
   .deals-section .deal-copy strong,
   .deals-section .deal-card.special .deal-copy strong,
   .deals-section .deal-card.time .deal-copy strong {
-    font-size: clamp(15px, 2.2vw, 19px);
+    font-size: clamp(13px, 1.8vw, 16px);
   }
 
   .deals-section .deal-copy del,

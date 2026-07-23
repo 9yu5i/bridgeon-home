@@ -95,7 +95,8 @@ html.new-scroll-reveal-pending .listing-page--new .listing-brand-grid .listing-c
 
 .scroll-reveal-soft.is-inview,
 .is-inview > .scroll-reveal-soft,
-.is-inview .scroll-reveal-soft {
+.is-inview .scroll-reveal-soft,
+.editor-card.is-active.scroll-reveal-soft {
   opacity: 1;
   transform: translateY(0) scale(1);
   filter: blur(0);
@@ -204,19 +205,25 @@ html.new-scroll-reveal-pending .listing-page--new .listing-brand-grid .listing-c
 }
 
 .scroll-reveal-split-left.is-inview,
-.is-inview .scroll-reveal-split-left {
+.is-inview .scroll-reveal-split-left,
+.editor-card.is-inview .scroll-reveal-split-left,
+.editor-card.is-active .scroll-reveal-split-left {
   opacity: 1;
   transform: translateX(0);
 }
 
 .scroll-reveal-split-right.is-inview,
-.is-inview .scroll-reveal-split-right {
+.is-inview .scroll-reveal-split-right,
+.editor-card.is-inview .scroll-reveal-split-right,
+.editor-card.is-active .scroll-reveal-split-right {
   opacity: 1;
   transform: translateX(0);
 }
 
 .scroll-reveal-split-right.is-inview .editor-card-product,
-.is-inview .scroll-reveal-split-right .editor-card-product {
+.is-inview .scroll-reveal-split-right .editor-card-product,
+.editor-card.is-inview .scroll-reveal-split-right .editor-card-product,
+.editor-card.is-active .scroll-reveal-split-right .editor-card-product {
   opacity: 1;
   transform: none;
 }
@@ -224,7 +231,11 @@ html.new-scroll-reveal-pending .listing-page--new .listing-brand-grid .listing-c
 .scroll-reveal-split-right.is-inview .editor-product-copy,
 .scroll-reveal-split-right.is-inview .editor-product-copy strong,
 .is-inview .scroll-reveal-split-right .editor-product-copy,
-.is-inview .scroll-reveal-split-right .editor-product-copy strong {
+.is-inview .scroll-reveal-split-right .editor-product-copy strong,
+.editor-card.is-inview .scroll-reveal-split-right .editor-product-copy,
+.editor-card.is-inview .scroll-reveal-split-right .editor-product-copy strong,
+.editor-card.is-active .scroll-reveal-split-right .editor-product-copy,
+.editor-card.is-active .scroll-reveal-split-right .editor-product-copy strong {
   opacity: 1;
   color: var(--editor-ink, #2a1b4a);
   visibility: visible;
