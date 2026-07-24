@@ -568,14 +568,6 @@
               <h2>Real Trend? <span aria-hidden="true">&#128248;</span></h2>
               <p>Real People. Real Reviews.</p>
             </div>
-            <div class="tab-row" role="tablist" aria-label="Real Trend categories">
-              <button type="button" class="is-active" role="tab" aria-selected="true" data-tab="all">All</button>
-              <button type="button" role="tab" aria-selected="false" data-tab="beauty">#Beauty</button>
-              <button type="button" role="tab" aria-selected="false" data-tab="k-food">#K-Food</button>
-              <button type="button" role="tab" aria-selected="false" data-tab="lifestyle">#Lifestyle</button>
-              <button type="button" role="tab" aria-selected="false" data-tab="k-pop">#K-Pop</button>
-              <button type="button" role="tab" aria-selected="false" data-tab="k-traditional">#K-Traditional</button>
-            </div>
             <a href="realtrend/realtrend.html">VIEW ALL REELS +</a>
           </div>
           <div class="rail-wrap">
@@ -645,7 +637,10 @@
             <article class="deal-card special" data-deal-slider="special">
               <div class="deal-copy">
                 <div class="deal-top"><span><i aria-hidden="true">&#9733;</i> TODAY'S PICK</span></div>
-                <h3>Anua<br><span class="deal-product-name">PDRN Serum 30ml</span></h3>
+                <div class="deal-heading">
+                  <h3>Anua</h3>
+                  <p class="deal-product-name">PDRN Serum 30ml</p>
+                </div>
                 <blockquote class="deal-quote">
                   <span class="deal-quote-mark" aria-hidden="true">&ldquo;</span>
                   <p>Boosts skin elasticity and keeps it looking plump all day.</p>
@@ -697,7 +692,6 @@
                   <mark>35% OFF</mark>
                   <del>US$26.00</del>
                 </div>
-                <p class="deal-tag"><span aria-hidden="true">&#128293;</span> Lowest price today</p>
                 <div class="deal-actions">
                   <button type="button" class="deal-shop-button">
                     Claim This Deal
@@ -730,9 +724,15 @@
           <div class="editorial-grid">
             <h2 class="editor-card-title">T.P Pick</h2>
             <div class="editor-card-carousel" data-editor-card-slider>
+              <div class="editor-card-tabs" role="tablist" aria-label="Choose editor picks" data-editor-card-tabs>
+                <button type="button" class="editor-card-tab is-active" role="tab" aria-selected="true" data-editor-card-tab="0" id="editor-card-tab-0">Chloe Kim</button>
+                <button type="button" class="editor-card-tab" role="tab" aria-selected="false" data-editor-card-tab="1" id="editor-card-tab-1" tabindex="-1">Mila Park</button>
+                <button type="button" class="editor-card-tab" role="tab" aria-selected="false" data-editor-card-tab="2" id="editor-card-tab-2" tabindex="-1">Nara Lee</button>
+              </div>
               <div class="editor-card-viewport">
                 <div class="editor-card-track">
-                  <article class="editor-card editor-card--chloe is-active">
+                  <article class="editor-card editor-card--chloe is-active" data-editor-id="chloe" aria-labelledby="editor-card-tab-0">
+                    <div class="editor-card-intro">
                     <aside class="editor-card-profile">
                       <div class="editor-profile-avatar">
                         <span class="editor-avatar editor-avatar--cat" aria-hidden="true"><i></i></span>
@@ -753,6 +753,7 @@
                         <i>#Glow Prep</i>
                         <i>#Barrier Friendly</i>
                       </div>
+                    </div>
                     </div>
 
                     <div class="editor-card-products" data-layout="static" aria-label="Chloe's picked products">
@@ -807,10 +808,28 @@
                         </div>
                         <button type="button" class="editor-product-add" aria-label="Add Dive-In Serum to cart">+</button>
                       </article>
+                      <article class="editor-card-product" data-product-detail-link="product-detail/product-detail.html">
+                        <a class="editor-product-link" href="product-detail/product-detail.html">
+                          <span class="editor-product-thumb">img</span>
+                          <span class="editor-product-copy">
+                            <small>COSRX</small>
+                            <strong>Advanced Snail 96 Mucin</strong>
+                            <span class="editor-product-price"><em>US$17.90</em><del>US$25.00</del></span>
+                          </span>
+                        </a>
+                        <button type="button" class="editor-note-trigger" aria-label="View editor note" aria-expanded="false"></button>
+                        <div class="editor-pick-note" role="note">
+                          <span class="editor-pick-note-label">EDITOR'S NOTE</span>
+                          <strong class="editor-pick-note-title">Why I Picked It!</strong>
+                          <p class="editor-pick-note-body">A repair-focused essence that keeps skin calm after heat and daily sun stress.</p>
+                        </div>
+                        <button type="button" class="editor-product-add" aria-label="Add Advanced Snail 96 Mucin to cart">+</button>
+                      </article>
                     </div>
                   </article>
 
-                  <article class="editor-card editor-card--mila" aria-hidden="true">
+                  <article class="editor-card editor-card--mila" data-editor-id="mila" aria-labelledby="editor-card-tab-1" aria-hidden="true">
+                    <div class="editor-card-intro">
                     <aside class="editor-card-profile">
                       <div class="editor-profile-avatar">
                         <span class="editor-avatar editor-avatar--duck" aria-hidden="true"><i></i></span>
@@ -831,6 +850,7 @@
                         <i>#K-Food</i>
                         <i>#Small Joys</i>
                       </div>
+                    </div>
                     </div>
 
                     <div class="editor-card-products" data-layout="static" aria-label="Mila's picked products">
@@ -885,10 +905,28 @@
                         </div>
                         <button type="button" class="editor-product-add" aria-label="Add Mini Desk Organizer to cart">+</button>
                       </article>
+                      <article class="editor-card-product" data-product-detail-link="product-detail/product-detail.html">
+                        <a class="editor-product-link" href="product-detail/product-detail.html">
+                          <span class="editor-product-thumb">img</span>
+                          <span class="editor-product-copy">
+                            <small>Binggrae</small>
+                            <strong>Banana Flavored Milk 6 Pack</strong>
+                            <span class="editor-product-price"><em>US$9.80</em><del>US$13.00</del></span>
+                          </span>
+                        </a>
+                        <button type="button" class="editor-note-trigger" aria-label="View editor note" aria-expanded="false"></button>
+                        <div class="editor-pick-note" role="note">
+                          <span class="editor-pick-note-label">EDITOR'S NOTE</span>
+                          <strong class="editor-pick-note-title">Why I Picked It!</strong>
+                          <p class="editor-pick-note-body">A nostalgic sweet sip that makes weekend snack trays feel instantly more fun.</p>
+                        </div>
+                        <button type="button" class="editor-product-add" aria-label="Add Banana Flavored Milk 6 Pack to cart">+</button>
+                      </article>
                     </div>
                   </article>
 
-                  <article class="editor-card editor-card--nara" aria-hidden="true">
+                  <article class="editor-card editor-card--nara" data-editor-id="nara" aria-labelledby="editor-card-tab-2" aria-hidden="true">
+                    <div class="editor-card-intro">
                     <aside class="editor-card-profile">
                       <div class="editor-profile-avatar">
                         <span class="editor-avatar editor-avatar--seal" aria-hidden="true"><i></i></span>
@@ -909,6 +947,7 @@
                         <i>#Sensitive Skin</i>
                         <i>#Clean Beauty</i>
                       </div>
+                    </div>
                     </div>
 
                     <div class="editor-card-products" data-layout="static" aria-label="Nara's picked products">
@@ -963,14 +1002,26 @@
                         </div>
                         <button type="button" class="editor-product-add" aria-label="Add Relief Sun SPF50+ to cart">+</button>
                       </article>
+                      <article class="editor-card-product" data-product-detail-link="product-detail/product-detail.html">
+                        <a class="editor-product-link" href="product-detail/product-detail.html">
+                          <span class="editor-product-thumb">img</span>
+                          <span class="editor-product-copy">
+                            <small>Illiyoon</small>
+                            <strong>Ceramide Ato Concentrate</strong>
+                            <span class="editor-product-price"><em>US$16.40</em><del>US$23.00</del></span>
+                          </span>
+                        </a>
+                        <button type="button" class="editor-note-trigger" aria-label="View editor note" aria-expanded="false"></button>
+                        <div class="editor-pick-note" role="note">
+                          <span class="editor-pick-note-label">EDITOR'S NOTE</span>
+                          <strong class="editor-pick-note-title">Why I Picked It!</strong>
+                          <p class="editor-pick-note-body">Barrier support for reactive days when skin needs comfort more than shine.</p>
+                        </div>
+                        <button type="button" class="editor-product-add" aria-label="Add Ceramide Ato Concentrate to cart">+</button>
+                      </article>
                     </div>
                   </article>
                 </div>
-              </div>
-              <div class="editor-card-bullets" role="tablist" aria-label="Editor pick slides">
-                <button type="button" class="editor-card-bullet is-active" role="tab" aria-selected="true" aria-label="Editor pick 1" data-editor-card-bullet="0"></button>
-                <button type="button" class="editor-card-bullet" role="tab" aria-selected="false" aria-label="Editor pick 2" data-editor-card-bullet="1" tabindex="-1"></button>
-                <button type="button" class="editor-card-bullet" role="tab" aria-selected="false" aria-label="Editor pick 3" data-editor-card-bullet="2" tabindex="-1"></button>
               </div>
             </div>
             <div class="magazine-block">

@@ -18,7 +18,6 @@ html.scroll-reveal-pending .content-section .mobile-section-title {
 }
 
 html.scroll-reveal-pending .trend-section .inline-heading p,
-html.scroll-reveal-pending .trend-section .tab-row,
 html.scroll-reveal-pending .trend-section .section-heading > a,
 html.scroll-reveal-pending .seller-section .tag-tabs,
 html.scroll-reveal-pending .seller-section .section-heading > a {
@@ -120,7 +119,6 @@ html.new-scroll-reveal-pending .listing-page--new .listing-brand-grid .listing-c
 }
 
 .scroll-reveal-rail:not(.is-inview) .inline-heading p,
-.scroll-reveal-rail:not(.is-inview) .tab-row,
 .scroll-reveal-rail:not(.is-inview) .tag-tabs,
 .scroll-reveal-rail:not(.is-inview) .section-heading > a {
   opacity: 0;
@@ -128,7 +126,6 @@ html.new-scroll-reveal-pending .listing-page--new .listing-brand-grid .listing-c
 }
 
 .scroll-reveal-rail.is-inview .inline-heading p,
-.scroll-reveal-rail.is-inview .tab-row,
 .scroll-reveal-rail.is-inview .tag-tabs,
 .scroll-reveal-rail.is-inview .section-heading > a {
   opacity: 1;

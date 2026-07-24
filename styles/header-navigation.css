@@ -1,4 +1,4 @@
-﻿
+
 
 .site-header {
   position: relative;
@@ -495,7 +495,6 @@
 
 .category-nav::-webkit-scrollbar,
 .card-rail::-webkit-scrollbar,
-.tab-row::-webkit-scrollbar,
 .tag-tabs::-webkit-scrollbar,
 .magazine-grid::-webkit-scrollbar {
   display: none;

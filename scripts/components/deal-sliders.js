@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
   const navigateWithPageTransition =
     window.BridgeOn?.navigateWithPageTransition || ((href) => {
       window.location.href = href;
@@ -18,7 +18,8 @@
     special: [
       {
         badge: "TODAY'S PICK",
-        title: "Anua<br><span class=\"deal-product-name\">PDRN Serum 30ml</span>",
+        brand: "Anua",
+        title: "PDRN Serum 30ml",
         quote: "Boosts skin elasticity and keeps it looking plump all day.",
         price: "US$19.20",
         originalPrice: "US$24.00",
@@ -29,7 +30,8 @@
       },
       {
         badge: "TODAY'S PICK",
-        title: "numbuzin<br><span class=\"deal-product-name\">No.3 Bubble Mask</span>",
+        brand: "numbuzin",
+        title: "No.3 Bubble Mask",
         quote: "A bouncy prep mask that hydrates deeply without stickiness.",
         price: "US$28.00",
         originalPrice: "US$36.00",
@@ -40,7 +42,8 @@
       },
       {
         badge: "TODAY'S PICK",
-        title: "SKIN1004<br><span class=\"deal-product-name\">Madagascar Ampoule</span>",
+        brand: "SKIN1004",
+        title: "Madagascar Ampoule",
         quote: "Calms irritation and leaves skin balanced and clear.",
         price: "US$17.90",
         originalPrice: "US$29.00",
@@ -51,7 +54,8 @@
       },
       {
         badge: "TODAY'S PICK",
-        title: "Torriden<br><span class=\"deal-product-name\">Dive-In Serum 50ml</span>",
+        brand: "Torriden",
+        title: "Dive-In Serum 50ml",
         quote: "Lightweight hydration for a fresh glass-skin look.",
         price: "US$15.50",
         originalPrice: "US$24.00",
@@ -62,7 +66,8 @@
       },
       {
         badge: "TODAY'S PICK",
-        title: "Round Lab<br><span class=\"deal-product-name\">Birch Juice Sun Cream</span>",
+        brand: "Round Lab",
+        title: "Birch Juice Sun Cream",
         quote: "Daily UV care with a smooth finish and no white cast.",
         price: "US$14.80",
         originalPrice: "US$22.00",
@@ -81,7 +86,6 @@
         price: "US$16.90",
         originalPrice: "US$26.00",
         discount: "35% OFF",
-        tag: "Lowest price today",
         mediaImage: "img/deals/time-deal.png?v=2",
         cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail-options.html",
@@ -94,7 +98,6 @@
         price: "US$28.00",
         originalPrice: "US$36.00",
         discount: "22% OFF",
-        tag: "Lowest price today",
         mediaImage: "img/deals/time-deal.png?v=2",
         cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail.html",
@@ -107,7 +110,6 @@
         price: "US$23.40",
         originalPrice: "US$31.00",
         discount: "24% OFF",
-        tag: "Lowest price today",
         mediaImage: "img/deals/time-deal.png?v=2",
         cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail.html",
@@ -120,7 +122,6 @@
         price: "US$18.20",
         originalPrice: "US$27.00",
         discount: "29% OFF",
-        tag: "Lowest price today",
         mediaImage: "img/deals/time-deal.png?v=2",
         cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail.html",
@@ -133,7 +134,6 @@
         price: "US$13.50",
         originalPrice: "US$20.00",
         discount: "32% OFF",
-        tag: "Lowest price today",
         mediaImage: "img/deals/time-deal.png?v=2",
         cta: "Claim This Deal",
         detailUrl: "product-detail/product-detail.html",
@@ -151,8 +151,8 @@
     const badge = card.querySelector(".deal-top span");
     const brand = card.querySelector(".deal-brand");
     const title = card.querySelector(".deal-copy h3");
+    const productName = card.querySelector(".deal-product-name");
     const quote = card.querySelector(".deal-quote p") || card.querySelector(".deal-quote");
-    const tag = card.querySelector(".deal-tag");
     const timer = card.querySelector(".deal-timer");
     const priceStrong = card.querySelector(".deal-price strong");
     const priceMark = card.querySelector(".deal-price mark");
@@ -195,19 +195,22 @@
       const item = slides[index];
       if (mediaImage && item.mediaImage) {
         mediaImage.src = item.mediaImage;
-        mediaImage.alt = String(item.title || "")
-          .replace(/<[^>]+>/g, " ")
+        mediaImage.alt = [item.brand, item.title]
+          .filter(Boolean)
+          .join(" ")
           .replace(/\s+/g, " ")
           .trim();
       }
       if (mediaLabel) mediaLabel.textContent = item.mediaLabel;
       renderBadge(item);
-      if (brand) brand.textContent = item.brand || "";
-      if (title) title.innerHTML = item.title;
-      if (quote) quote.textContent = item.quote || "";
-      if (tag && item.tag) {
-        tag.innerHTML = `<span aria-hidden="true">&#128293;</span> ${item.tag}`;
+      if (sliderKey === "special") {
+        if (title) title.textContent = item.brand || "";
+        if (productName) productName.textContent = item.title || "";
+      } else {
+        if (brand) brand.textContent = item.brand || "";
+        if (title) title.textContent = item.title || "";
       }
+      if (quote) quote.textContent = item.quote || "";
       if (timer && item.timer) timer.innerHTML = renderTimer(item.timer);
       if (priceStrong) priceStrong.textContent = item.price;
       if (priceMark) priceMark.textContent = item.discount;

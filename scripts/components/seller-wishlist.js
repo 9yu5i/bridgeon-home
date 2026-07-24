@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
 const sellerRail = document.getElementById("seller-rail");
 const sellerWishlistQuery = window.matchMedia("(max-width: 1120px)");
 const sellerWishlistIcons = {
@@ -69,5 +69,6 @@ const syncSellerWishlistIcons = () => {
 sellerWishlistQuery.addEventListener?.("change", syncSellerWishlistIcons);
 window.addEventListener("resize", syncSellerWishlistIcons);
 window.addEventListener("bridgeon:wishlistchange", updateSellerWishlistIcons);
-updateSellerWishlistIcons();
+sellerRail?.addEventListener("bridgeon:railfilterchange", syncSellerWishlistIcons);
+syncSellerWishlistIcons();
 })();

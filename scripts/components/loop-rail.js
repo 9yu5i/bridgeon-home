@@ -32,7 +32,9 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
   const disableLoopMedia = disableLoopQuery ? window.matchMedia(disableLoopQuery) : null;
   const isLoopDisabled = () =>
     disableLoopMedia ? disableLoopMedia.matches : false;
-  const originalCards = Array.from(rail.children);
+  let originalCards = Array.from(rail.children).filter(
+    (card) => !card.classList.contains("is-loop-clone")
+  );
 
   let isAnimating = false;
   let autoTimer = null;
@@ -44,9 +46,8 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
   const getGap = () => parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap) || 0;
 
   const getActiveCards = () =>
-    originalCards.filter(
+    Array.from(rail.children).filter(
       (card) =>
-        rail.contains(card) &&
         !card.classList.contains("is-loop-clone") &&
         !card.classList.contains("is-tab-hidden") &&
         !card.hidden
@@ -310,6 +311,10 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
   });
 
   rail.addEventListener("bridgeon:railfilterchange", () => {
+    rail.querySelectorAll(".is-loop-clone").forEach((clone) => clone.remove());
+    originalCards = Array.from(rail.children).filter(
+      (card) => !card.classList.contains("is-loop-clone")
+    );
     resetToOriginalOrder();
   });
 
@@ -329,7 +334,6 @@ const initReviewMarquee = () => {
   const rail = document.getElementById("review-rail");
   if (!rail) return;
 
-  const mobileMedia = window.matchMedia("(max-width: 760px)");
   const reduceMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
   const originalCards = Array.from(rail.children).filter(
     (child) => !child.classList.contains("is-loop-clone"),
@@ -354,7 +358,7 @@ const initReviewMarquee = () => {
 
   const enableMarquee = () => {
     clearClones();
-    if (mobileMedia.matches || reduceMotionMedia.matches) return;
+    if (reduceMotionMedia.matches) return;
 
     originalCards.forEach((card) => {
       const clone = card.cloneNode(true);
@@ -372,7 +376,6 @@ const initReviewMarquee = () => {
   };
 
   enableMarquee();
-  mobileMedia.addEventListener("change", enableMarquee);
   reduceMotionMedia.addEventListener("change", enableMarquee);
   window.addEventListener("resize", () => {
     if (!rail.classList.contains("is-marquee")) return;

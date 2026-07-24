@@ -16,4 +16,4 @@ Current extracted component:
 - `components/deal-sliders.js`: Today's Pick and Time Deal card sliders.
 - `components/hero-slider.js`: main hero carousel.
 - `components/today-pick-panel.js`: desktop hero Today's Pick mini panel autoplay, collapse, and scroll-to-deal behavior.
-- `components/section-tabs.js`: shared category/tab filtering for home sections.
+- `components/section-tabs.js`: Best Sellers category rail filtering and VIEW ALL link wiring.

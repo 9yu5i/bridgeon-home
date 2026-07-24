@@ -79,7 +79,7 @@ Current component scripts:
 - `scripts/components/deal-sliders.js`: Today's Pick and Time Deal card sliders.
 - `scripts/components/hero-slider.js`: main hero carousel.
 - `scripts/components/today-pick-panel.js`: desktop hero Today's Pick mini panel autoplay, collapse, and scroll-to-deal behavior.
-- `scripts/components/section-tabs.js`: shared category/tab filtering for home sections.
+- `scripts/components/section-tabs.js`: Best Sellers category rail filtering and VIEW ALL link wiring.
 - `editors-pick/editors-pick.js`: Editor's Pick page editor selection, pick filters, wishlist state, and magazine dots.
 
 Keep new behavior in focused files under `scripts/components/` or `scripts/pages/` when possible.

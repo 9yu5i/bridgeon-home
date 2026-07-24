@@ -5,11 +5,11 @@
   const viewport = slider.querySelector(".editor-card-viewport");
   const track = slider.querySelector(".editor-card-track");
   const slides = Array.from(slider.querySelectorAll(".editor-card-track > .editor-card"));
-  const bullets = Array.from(slider.querySelectorAll("[data-editor-card-bullet]"));
+  const tabs = Array.from(slider.querySelectorAll("[data-editor-card-tab]"));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   if (!viewport || !track || slides.length < 2) {
-    slider.querySelector(".editor-card-bullets")?.remove();
+    slider.querySelector("[data-editor-card-tabs]")?.remove();
     return;
   }
 
@@ -23,6 +23,7 @@
   let axisLocked = "";
   const delay = 5400;
   const swipeThreshold = 48;
+  const compactNoteMq = window.matchMedia("(max-width: 1120px)");
 
   const closeEditorNotes = (exceptCard = null) => {
     slider.querySelectorAll(".editor-card-product.is-note-open").forEach((card) => {
@@ -40,12 +41,12 @@
     });
   };
 
-  const syncBullets = () => {
-    bullets.forEach((bullet, bulletIndex) => {
-      const isActive = bulletIndex === index;
-      bullet.classList.toggle("is-active", isActive);
-      bullet.setAttribute("aria-selected", isActive ? "true" : "false");
-      bullet.tabIndex = isActive ? 0 : -1;
+  const syncTabs = () => {
+    tabs.forEach((tab, tabIndex) => {
+      const isActive = tabIndex === index;
+      tab.classList.toggle("is-active", isActive);
+      tab.setAttribute("aria-selected", isActive ? "true" : "false");
+      tab.tabIndex = isActive ? 0 : -1;
     });
   };
 
@@ -57,7 +58,7 @@
       setSlideInteractive(slide, slideIndex === index);
     });
 
-    syncBullets();
+    syncTabs();
   };
 
   const goTo = (nextIndex) => {
@@ -83,15 +84,15 @@
     start();
   };
 
-  bullets.forEach((bullet) => {
-    bullet.addEventListener("click", () => {
-      const nextIndex = Number(bullet.getAttribute("data-editor-card-bullet"));
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const nextIndex = Number(tab.getAttribute("data-editor-card-tab"));
       if (Number.isNaN(nextIndex)) return;
       goTo(nextIndex);
       restart();
     });
 
-    bullet.addEventListener("keydown", (event) => {
+    tab.addEventListener("keydown", (event) => {
       let nextIndex = index;
       if (event.key === "ArrowRight" || event.key === "ArrowDown") {
         nextIndex = index + 1;
@@ -107,12 +108,22 @@
 
       event.preventDefault();
       goTo(nextIndex);
-      bullets[index]?.focus();
+      tabs[index]?.focus();
       restart();
     });
   });
 
   slider.addEventListener("click", (event) => {
+    if (!compactNoteMq.matches) return;
+
+    const note = event.target.closest(".editor-pick-note");
+    if (note && slider.contains(note)) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeEditorNotes();
+      return;
+    }
+
     const trigger = event.target.closest(".editor-note-trigger");
     if (!trigger || !slider.contains(trigger)) return;
 
@@ -129,8 +140,26 @@
   });
 
   document.addEventListener("click", (event) => {
+    if (!compactNoteMq.matches) return;
     if (event.target.closest(".editor-note-trigger, .editor-pick-note")) return;
     closeEditorNotes();
+  });
+
+  compactNoteMq.addEventListener?.("change", () => {
+    if (!compactNoteMq.matches) closeEditorNotes();
+  });
+
+  slider.querySelectorAll(".editor-card-products").forEach((rail) => {
+    rail.addEventListener(
+      "wheel",
+      (event) => {
+        if (rail.scrollWidth <= rail.clientWidth + 1) return;
+        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+        event.preventDefault();
+        rail.scrollLeft += event.deltaY;
+      },
+      { passive: false }
+    );
   });
 
   const endDrag = (clientX) => {
@@ -150,7 +179,7 @@
 
   viewport.addEventListener("pointerdown", (event) => {
     if (event.button !== 0) return;
-    if (event.target.closest("a, button, .editor-pick-note")) return;
+    if (event.target.closest("a, button, .editor-pick-note, .editor-card-products")) return;
 
     isDragging = true;
     pointerId = event.pointerId;

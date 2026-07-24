@@ -1,4 +1,4 @@
-﻿.seller-heading {
+.seller-heading {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
@@ -13,7 +13,56 @@
 .seller-heading .tag-tabs {
   grid-column: 1;
   grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   min-width: 0;
+  margin: 0;
+}
+
+.seller-heading .tag-tabs button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1.5px solid #e4dcf2;
+  border-radius: 999px;
+  color: #7a708f;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.seller-heading .tag-tabs button:hover,
+.seller-heading .tag-tabs button:focus-visible {
+  border-color: rgba(123, 63, 228, 0.45);
+  color: var(--purple);
+  outline: none;
+}
+
+.seller-heading .tag-tabs button.is-active {
+  border-color: var(--purple);
+  color: #fff;
+  background: var(--purple);
+  box-shadow: 0 8px 18px rgba(123, 63, 228, 0.22);
+}
+
+.seller-heading .tag-tabs button.is-active:hover,
+.seller-heading .tag-tabs button.is-active:focus-visible {
+  color: #fff;
+  background: #6d35cf;
 }
 
 .product-card {

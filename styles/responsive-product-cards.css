@@ -305,10 +305,16 @@
 }
 
 @media (max-width: 760px) {
+  .seller-section .tag-tabs {
+      gap: 8px;
+      flex-wrap: nowrap;
+  }
+
   .seller-section .tag-tabs button {
-      font-size: 14px;
-      padding-bottom: 5px;
-      font-weight: 600;
+      min-height: 32px;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 700;
     }
 }
 
@@ -703,7 +709,7 @@
       white-space: normal;
       font-size: clamp(13px, 6cqi, 17px);
       line-height: 1.35;
-      font-weight: 400;
+      font-weight: 600;
     }
 }
 
