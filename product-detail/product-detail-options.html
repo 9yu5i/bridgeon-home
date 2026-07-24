@@ -315,7 +315,7 @@
             <div class="product-tabs" role="tablist" aria-label="Product detail tabs">
               <button type="button" class="is-active" role="tab" aria-selected="true" aria-controls="panel-use" id="tab-use" data-detail-tab="use">How to use</button>
               <button type="button" role="tab" aria-selected="false" aria-controls="panel-ingredients" id="tab-ingredients" data-detail-tab="ingredients">Ingredients</button>
-              <button type="button" role="tab" aria-selected="false" aria-controls="panel-reviews" id="tab-reviews" data-detail-tab="reviews">Reviews <span class="product-reviews-count">(1,256)</span></button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="panel-reviews" id="tab-reviews" data-detail-tab="reviews">Reviews<span class="product-reviews-count"> (1,256)</span></button>
               <button type="button" role="tab" aria-selected="false" aria-controls="panel-qa" id="tab-qa" data-detail-tab="qa">Q&amp;A</button>
             </div>
             <div class="product-tab-panels">
@@ -452,12 +452,9 @@
                       </li>
                     </ul>
 
-                    <nav class="product-reviews-pagination" aria-label="Reviews pagination">
-                      <button type="button" data-review-page="prev" aria-label="Previous page">&lt;</button>
-                      <button type="button" data-review-page="1" class="is-active" aria-current="page">1</button>
-                      <button type="button" data-review-page="2">2</button>
-                      <button type="button" data-review-page="next" aria-label="Next page">&gt;</button>
-                    </nav>
+                    <div class="product-reviews-more-wrap">
+                      <button type="button" class="product-reviews-more" data-reviews-more>More</button>
+                    </div>
                   </section>
                 </div>
               </div>
@@ -498,15 +495,9 @@
                     </article>
                   </div>
 
-                  <nav class="product-qa-pagination" aria-label="Q&A pagination">
-                    <button type="button" aria-label="Previous Q&A page">&lt;</button>
-                    <button type="button" class="is-active" aria-current="page">1</button>
-                    <button type="button">2</button>
-                    <button type="button">3</button>
-                    <span aria-hidden="true">...</span>
-                    <button type="button">5</button>
-                    <button type="button" aria-label="Next Q&A page">&gt;</button>
-                  </nav>
+                  <div class="product-reviews-more-wrap product-qa-more-wrap">
+                    <button type="button" class="product-reviews-more product-qa-more" data-qa-more>More</button>
+                  </div>
                 </section>
               </div>
             </div>

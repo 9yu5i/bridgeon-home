@@ -18,6 +18,10 @@
 
   const slides = Array.from(track.querySelectorAll(".realtrend-slide"));
 
+  const slideCount = slides.length;
+
+
+
   const slideProductOptions = [
 
     ["No.3 PHA Skin Prep Bubble Mask 90ml", "No.3 PHA Skin Prep Bubble Mask 180ml"],
@@ -274,6 +278,50 @@
 
 
 
+  const createLoopClone = (source) => {
+
+    const clone = source.cloneNode(true);
+
+    clone.classList.add("is-loop-clone");
+
+    clone.classList.remove("is-active");
+
+    clone.removeAttribute("data-index");
+
+    clone.setAttribute("aria-hidden", "true");
+
+    clone.querySelectorAll("video").forEach((video) => {
+
+      video.removeAttribute("id");
+
+      video.pause?.();
+
+      video.removeAttribute("autoplay");
+
+    });
+
+    return clone;
+
+  };
+
+
+
+  if (slideCount > 1) {
+
+    const firstClone = createLoopClone(slides[0]);
+
+    const lastClone = createLoopClone(slides[slideCount - 1]);
+
+    track.insertBefore(lastClone, slides[0]);
+
+    track.appendChild(firstClone);
+
+  }
+
+
+
+
+
   const queryReel = Number.parseInt(new URLSearchParams(window.location.search).get("reel") || "", 10);
 
   let activeIndex = slides.findIndex((slide) => slide.classList.contains("is-active"));
@@ -340,7 +388,7 @@
 
     const height = feed.clientHeight;
 
-    slides.forEach((slide) => {
+    track.querySelectorAll(".realtrend-slide").forEach((slide) => {
 
       slide.style.height = `${height}px`;
 
@@ -352,9 +400,17 @@
 
 
 
+
+
+
+
   const updateTrack = (index, { animate = true } = {}) => {
 
     const height = syncSlideHeights();
+
+    // +1 offset accounts for the prepended last-slide clone.
+
+    const visualIndex = slideCount > 1 ? index + 1 : index;
 
     track.style.transition = animate
 
@@ -362,9 +418,11 @@
 
       : "none";
 
-    track.style.transform = `translateY(-${index * height}px)`;
+    track.style.transform = `translateY(-${visualIndex * height}px)`;
 
   };
+
+
 
 
 
@@ -464,55 +522,99 @@
 
 
 
-    const nextIndex = (index + slides.length) % slides.length;
+    const nextIndex = ((index % slideCount) + slideCount) % slideCount;
 
     if (nextIndex === activeIndex && animate) return;
 
 
 
-    activeIndex = nextIndex;
+    const wrappingForward =
+
+      animate &&
+
+      slideCount > 1 &&
+
+      activeIndex === slideCount - 1 &&
+
+      nextIndex === 0 &&
+
+      index > activeIndex;
+
+    const wrappingBackward =
+
+      animate &&
+
+      slideCount > 1 &&
+
+      activeIndex === 0 &&
+
+      nextIndex === slideCount - 1 &&
+
+      index < activeIndex;
 
 
 
-    slides.forEach((slide, i) => {
+    const applyActiveState = (targetIndex) => {
 
-      const isActive = i === activeIndex;
+      activeIndex = targetIndex;
 
-      slide.classList.toggle("is-active", isActive);
+      slides.forEach((slide, i) => {
 
-      slide.setAttribute("aria-hidden", isActive ? "false" : "true");
+        const isActive = i === activeIndex;
 
-    });
+        slide.classList.toggle("is-active", isActive);
+
+        slide.setAttribute("aria-hidden", isActive ? "false" : "true");
+
+      });
+
+      progressValue = 0;
+
+      playbackElapsed = 0;
+
+      updateProgressUI();
+
+      syncVideoTime();
+
+      if (resumePlayback) isPlaying = true;
+
+      updatePlayOverlay();
+
+      syncProductCardFromSlide(getActiveSlide());
+
+    };
 
 
 
-    updateTrack(activeIndex, { animate });
+    if (wrappingForward || wrappingBackward) {
+
+      isAnimating = true;
+
+      applyActiveState(nextIndex);
+
+      updateTrack(wrappingForward ? slideCount : -1, { animate: true });
 
 
 
-    progressValue = 0;
+      window.setTimeout(() => {
 
-    playbackElapsed = 0;
+        updateTrack(activeIndex, { animate: false });
 
-    updateProgressUI();
+        void track.offsetHeight;
 
-    syncVideoTime();
+        isAnimating = false;
 
+      }, TRANSITION_MS);
 
-
-    if (resumePlayback) {
-
-      isPlaying = true;
+      return;
 
     }
 
 
 
-    updatePlayOverlay();
+    applyActiveState(nextIndex);
 
-
-
-    syncProductCardFromSlide(getActiveSlide());
+    updateTrack(activeIndex, { animate });
 
 
 
@@ -529,6 +631,8 @@
     }
 
   };
+
+
 
 
 
@@ -876,6 +980,404 @@
     });
 
   });
+
+
+
+  let shareDialog = null;
+
+  let shareTrigger = null;
+
+  let shareCopyTimer = null;
+
+
+
+  const getShareReelName = () => {
+
+    const slide = getActiveSlide();
+
+    return (
+
+      slide?.querySelector(".realtrend-mobile-product-copy h3")?.textContent?.trim() ||
+
+      document.querySelector(".realtrend-product-name")?.textContent?.trim() ||
+
+      "BridgeOn Real Trend"
+
+    );
+
+  };
+
+
+
+  const getShareReelUrl = () => {
+
+    const url = new URL(window.location.href);
+
+    url.searchParams.set("reel", String(activeIndex + 1));
+
+    return url.href;
+
+  };
+
+
+
+  const ensureShareDialog = () => {
+
+    if (shareDialog) return shareDialog;
+
+
+
+    shareDialog = document.createElement("div");
+
+    shareDialog.className = "deal-share-dialog";
+
+    shareDialog.id = "realtrend-share-dialog";
+
+    shareDialog.hidden = true;
+
+    shareDialog.setAttribute("aria-hidden", "true");
+
+    shareDialog.innerHTML = `
+
+      <button type="button" class="deal-share-backdrop" data-deal-share-close aria-label="Close share dialog"></button>
+
+      <section class="deal-share-modal" role="dialog" aria-modal="true" aria-labelledby="realtrend-share-title">
+
+        <button type="button" class="deal-share-close" data-deal-share-close aria-label="Close share dialog">&times;</button>
+
+        <p class="deal-share-eyebrow">Share</p>
+
+        <h2 id="realtrend-share-title">Share this reel</h2>
+
+        <p class="deal-share-product" data-deal-share-name></p>
+
+        <label class="deal-share-link-field">
+
+          <span class="sr-only">Reel link</span>
+
+          <input type="text" data-deal-share-input readonly>
+
+          <button type="button" class="deal-share-copy" data-deal-share-copy>Copy Link</button>
+
+        </label>
+
+        <div class="deal-share-social" aria-label="Share on social">
+
+          <button type="button" class="deal-share-social-button" data-deal-share-channel="sms" aria-label="Share via Messages">
+
+            <img src="../img/Menu/chat.png" alt="" aria-hidden="true">
+
+            <span>Messages</span>
+
+          </button>
+
+          <button type="button" class="deal-share-social-button" data-deal-share-channel="instagram" aria-label="Share on Instagram">
+
+            <img src="../img/mobile-icon/menu/insta.png" alt="" aria-hidden="true">
+
+            <span>Instagram</span>
+
+          </button>
+
+          <button type="button" class="deal-share-social-button" data-deal-share-channel="facebook" aria-label="Share on Facebook">
+
+            <img src="../img/mobile-icon/menu/facebook.png" alt="" aria-hidden="true">
+
+            <span>Facebook</span>
+
+          </button>
+
+          <button type="button" class="deal-share-social-button" data-deal-share-channel="twitter" aria-label="Share on X">
+
+            <img src="../img/mobile-icon/menu/twitter.png" alt="" aria-hidden="true">
+
+            <span>X</span>
+
+          </button>
+
+        </div>
+
+        <p class="deal-share-status" data-deal-share-status aria-live="polite"></p>
+
+      </section>
+
+    `;
+
+    document.body.appendChild(shareDialog);
+
+
+
+    const closeShareDialog = () => {
+
+      shareDialog.hidden = true;
+
+      shareDialog.setAttribute("aria-hidden", "true");
+
+      document.body.classList.remove("is-deal-share-open");
+
+      if (shareTrigger && typeof shareTrigger.focus === "function") {
+
+        shareTrigger.focus();
+
+      }
+
+      shareTrigger = null;
+
+    };
+
+
+
+    const setStatus = (message, isSuccess = false) => {
+
+      const status = shareDialog.querySelector("[data-deal-share-status]");
+
+      if (!status) return;
+
+      status.textContent = message;
+
+      status.classList.toggle("is-success", isSuccess);
+
+      window.clearTimeout(shareCopyTimer);
+
+      if (message) {
+
+        shareCopyTimer = window.setTimeout(() => {
+
+          status.textContent = "";
+
+          status.classList.remove("is-success");
+
+        }, 2200);
+
+      }
+
+    };
+
+
+
+    const copyShareLink = async () => {
+
+      const input = shareDialog.querySelector("[data-deal-share-input]");
+
+      const value = input?.value || "";
+
+      if (!value) return;
+
+
+
+      try {
+
+        if (navigator.clipboard?.writeText) {
+
+          await navigator.clipboard.writeText(value);
+
+        } else {
+
+          input.focus();
+
+          input.select();
+
+          document.execCommand("copy");
+
+        }
+
+        setStatus("Link copied!", true);
+
+      } catch {
+
+        setStatus("Could not copy the link.");
+
+      }
+
+    };
+
+
+
+    shareDialog.querySelectorAll("[data-deal-share-close]").forEach((button) => {
+
+      button.addEventListener("click", closeShareDialog);
+
+    });
+
+
+
+    shareDialog.querySelector("[data-deal-share-copy]")?.addEventListener("click", copyShareLink);
+
+
+
+    shareDialog.querySelectorAll("[data-deal-share-channel]").forEach((button) => {
+
+      button.addEventListener("click", async () => {
+
+        const channel = button.dataset.dealShareChannel;
+
+        const input = shareDialog.querySelector("[data-deal-share-input]");
+
+        const name =
+
+          shareDialog.querySelector("[data-deal-share-name]")?.textContent || "BridgeOn Real Trend";
+
+        const url = input?.value || window.location.href;
+
+        const shareText = `Check out ${name} on BridgeOn`;
+
+        const encodedUrl = encodeURIComponent(url);
+
+        const encodedText = encodeURIComponent(`${shareText}\n${url}`);
+
+
+
+        if (channel === "sms") {
+
+          window.location.href = `sms:?&body=${encodedText}`;
+
+          return;
+
+        }
+
+
+
+        if (channel === "facebook") {
+
+          window.open(
+
+            `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+
+            "_blank",
+
+            "noopener,noreferrer"
+
+          );
+
+          return;
+
+        }
+
+
+
+        if (channel === "twitter") {
+
+          window.open(
+
+            `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodeURIComponent(shareText)}`,
+
+            "_blank",
+
+            "noopener,noreferrer"
+
+          );
+
+          return;
+
+        }
+
+
+
+        if (channel === "instagram") {
+
+          try {
+
+            if (navigator.clipboard?.writeText) {
+
+              await navigator.clipboard.writeText(url);
+
+            } else if (input) {
+
+              input.focus();
+
+              input.select();
+
+              document.execCommand("copy");
+
+            }
+
+            setStatus("Link copied. Paste it in Instagram.", true);
+
+          } catch {
+
+            setStatus("Copy the link, then open Instagram.");
+
+          }
+
+          window.open("https://www.instagram.com/", "_blank", "noopener,noreferrer");
+
+        }
+
+      });
+
+    });
+
+
+
+    document.addEventListener("keydown", (event) => {
+
+      if (event.key === "Escape" && shareDialog && !shareDialog.hidden) {
+
+        closeShareDialog();
+
+      }
+
+    });
+
+
+
+    shareDialog._close = closeShareDialog;
+
+    shareDialog._setStatus = setStatus;
+
+    return shareDialog;
+
+  };
+
+
+
+  const openShareDialog = (trigger) => {
+
+    const dialog = ensureShareDialog();
+
+    const nameEl = dialog.querySelector("[data-deal-share-name]");
+
+    const input = dialog.querySelector("[data-deal-share-input]");
+
+
+
+    shareTrigger = trigger || null;
+
+    if (nameEl) nameEl.textContent = getShareReelName();
+
+    if (input) input.value = getShareReelUrl();
+
+    dialog._setStatus?.("");
+
+
+
+    dialog.hidden = false;
+
+    dialog.setAttribute("aria-hidden", "false");
+
+    document.body.classList.add("is-deal-share-open");
+
+    dialog.querySelector(".deal-share-copy")?.focus();
+
+  };
+
+
+
+  document.querySelectorAll(".realtrend-slide:not(.is-loop-clone) [data-social-share]").forEach((button) => {
+
+    button.addEventListener("click", (event) => {
+
+      event.preventDefault();
+
+      event.stopPropagation();
+
+      openShareDialog(button);
+
+    });
+
+  });
+
+
 
 
 

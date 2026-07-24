@@ -931,15 +931,15 @@
 @media (min-width: 1121px) {
   .seller-rail .product-card p {
       margin: 6.1cqi 4.4cqi 1.8cqi;
-      font-size: 5.3cqi;
+      font-size: 6cqi;
     }
 }
 
 @media (min-width: 1121px) {
   .seller-rail .product-card h3 {
       min-height: 15.4cqi;
-      margin: 0 4.4cqi 2.6cqi;
-      font-size: 6.1cqi;
+      font-size: 6.8cqi;
+      font-weight: 700;
     }
 }
 

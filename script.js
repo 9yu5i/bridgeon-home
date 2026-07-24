@@ -1,4 +1,5 @@
 const PAGE_TRANSITION_KEY = "bridgeon-page-transition";
+const SCROLL_TOP_ON_NAV_KEY = "bridgeon-scroll-top";
 const PAGE_TRANSITION_MS = 320;
 const BRIDGEON_ROOT_URL = new URL("./", document.currentScript?.src || window.location.href);
 const PRODUCT_DETAIL_URL = new URL("product-detail/product-detail.html", BRIDGEON_ROOT_URL).href;
@@ -22,12 +23,65 @@ const isHashOnlyNavigation = (url) =>
   url.search === window.location.search &&
   Boolean(url.hash);
 
+const markScrollTopOnNextPage = () => {
+  try {
+    sessionStorage.setItem(SCROLL_TOP_ON_NAV_KEY, "1");
+  } catch {
+    /* ignore quota / private mode failures */
+  }
+
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+};
+
+const forceScrollToTop = () => {
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+};
+
+const consumeScrollTopOnLoad = () => {
+  let shouldScrollTop = false;
+
+  try {
+    shouldScrollTop = sessionStorage.getItem(SCROLL_TOP_ON_NAV_KEY) === "1";
+    if (shouldScrollTop) sessionStorage.removeItem(SCROLL_TOP_ON_NAV_KEY);
+  } catch {
+    return;
+  }
+
+  if (!shouldScrollTop) return;
+
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
+  forceScrollToTop();
+  window.requestAnimationFrame(forceScrollToTop);
+  window.addEventListener("load", forceScrollToTop, { once: true });
+  window.addEventListener(
+    "pageshow",
+    () => {
+      forceScrollToTop();
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "auto";
+      }
+    },
+    { once: true },
+  );
+};
+
+consumeScrollTopOnLoad();
+
 const navigateWithPageTransition = (href) => {
   const url = resolveSameOriginUrl(href);
   if (!url || isHashOnlyNavigation(url)) {
     window.location.href = href;
     return;
   }
+
+  markScrollTopOnNextPage();
 
   if (!shouldAnimatePageTransition() || hasNativeCrossDocTransitions()) {
     window.location.href = url.href;
@@ -615,7 +669,42 @@ const loadBridgeOnComponent = (path) => {
   document.head.append(componentScript);
 };
 
+const isForwardPageLink = (link, event) => {
+  if (!link || link.target === "_blank" || link.hasAttribute("download")) return false;
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
+
+  const href = link.getAttribute("href");
+  if (!href || href.startsWith("#") || href.startsWith("javascript:")) return false;
+  if (href.startsWith("mailto:") || href.startsWith("tel:")) return false;
+
+  const url = resolveSameOriginUrl(href);
+  return Boolean(url && !isHashOnlyNavigation(url));
+};
+
 const initPageTransitions = () => {
+  // Capture phase so logo / native view-transition navigations also reset scroll.
+  document.addEventListener(
+    "click",
+    (event) => {
+      const link = event.target.closest("a[href]");
+      if (!link) return;
+
+      // Home logo on the main page uses href="#"; send the user to the top.
+      if (link.classList.contains("logo")) {
+        const href = link.getAttribute("href") || "";
+        if (href === "#" || href === "") {
+          event.preventDefault();
+          forceScrollToTop();
+          return;
+        }
+      }
+
+      if (!isForwardPageLink(link, event)) return;
+      markScrollTopOnNextPage();
+    },
+    true,
+  );
+
   if (!shouldAnimatePageTransition()) return;
 
   if (!hasNativeCrossDocTransitions()) {
@@ -629,19 +718,11 @@ const initPageTransitions = () => {
 
     document.addEventListener("click", (event) => {
       const link = event.target.closest("a[href]");
-      if (!link || link.target === "_blank" || link.hasAttribute("download")) return;
+      if (!isForwardPageLink(link, event)) return;
       if (event.defaultPrevented) return;
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
-      const href = link.getAttribute("href");
-      if (!href || href.startsWith("#") || href.startsWith("javascript:")) return;
-      if (href.startsWith("mailto:") || href.startsWith("tel:")) return;
-
-      const url = resolveSameOriginUrl(href);
-      if (!url || isHashOnlyNavigation(url)) return;
 
       event.preventDefault();
-      navigateWithPageTransition(url.href);
+      navigateWithPageTransition(resolveSameOriginUrl(link.getAttribute("href")).href);
     });
   }
 

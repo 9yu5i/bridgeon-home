@@ -1,8 +1,8 @@
-.deal-grid,
+﻿.deal-grid,
 .editorial-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr);
-  gap: 18px;
+  gap: 24px;
 }
 
 .deal-card {
@@ -689,7 +689,7 @@
 
 .deal-card.time .deal-copy del {
   color: #aaa;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 400;
 }
 
@@ -928,7 +928,7 @@ body.is-deal-share-open {
 
 /* === Redesigned Special Deals cards === */
 .deals-section {
-  gap: 16px;
+  gap: 24px;
 }
 
 .deals-section .deals-heading {
@@ -1003,8 +1003,8 @@ body.is-deal-share-open {
   height: 380px;
   min-height: 380px;
   max-height: 380px;
-  background: #f3eefc;
-  box-shadow: 0 10px 28px rgba(98, 56, 170, 0.08);
+  background: linear-gradient(135deg, #eef8f3 0%, #e4f3ec 48%, #f4fbf7 100%);
+  box-shadow: 0 10px 28px rgba(46, 120, 92, 0.08);
 }
 
 .deals-section .deal-card.time {
@@ -1320,7 +1320,7 @@ body.is-deal-share-open {
 }
 
 .deals-section .deal-card.special:hover {
-  box-shadow: 0 12px 32px rgba(98, 56, 170, 0.12);
+  box-shadow: 0 12px 32px rgba(46, 120, 92, 0.12);
 }
 
 .deals-section .deal-copy {
@@ -1591,12 +1591,13 @@ body.is-deal-share-open {
   overflow: hidden;
   align-content: start;
   flex: 0 1 auto;
+  gap: 2px;
 }
 
 .deals-section .deal-card.special .deal-quote-mark {
   display: block;
-  margin: 0 0 6px;
-  line-height: 1;
+  margin: 0;
+  line-height: 0.7;
 }
 
 .deals-section .deal-card.special .deal-quote p {

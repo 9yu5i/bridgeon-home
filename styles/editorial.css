@@ -11,7 +11,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 20px;
   min-width: 0;
 }
 
@@ -38,7 +38,7 @@
   box-shadow: 0 8px 18px rgba(70, 40, 120, 0.08);
   backdrop-filter: blur(10px);
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
@@ -198,7 +198,7 @@
   color: var(--purple);
   background: rgba(255, 255, 255, 0.82);
   box-shadow: 0 8px 18px rgba(83, 42, 150, 0.1);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.04em;
 }
@@ -235,9 +235,6 @@
     radial-gradient(circle at 50% 54%, #261f1e 0 8%, transparent 9%),
     radial-gradient(circle at 50% 45%, #c9c1ba 0 48%, transparent 49%),
     #eadde5;
-  box-shadow:
-    0 0 0 1px rgba(23, 16, 38, 0.05),
-    0 12px 28px rgba(70, 40, 120, 0.16);
 }
 
 .editor-card-profile .editor-avatar i {
@@ -411,7 +408,7 @@
   align-items: center;
   height: 28px;
   padding: 15px 12px;
-  border-radius: 10px;
+  border-radius: 999px;
   color: var(--purple);
   background: rgba(255, 255, 255, 0.7);
   font-size: 16px;
@@ -433,7 +430,7 @@
   background: linear-gradient(135deg, #9b6cff 0%, var(--purple) 48%, #6428d4 100%);
   box-shadow: 0 14px 28px rgba(99, 48, 190, 0.28);
   font-size: clamp(11px, 1.05vw, 13px);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
   transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
@@ -890,7 +887,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: clamp(16px, 2vw, 24px);
+  gap: clamp(22px, 2.5vw, 32px);
 }
 
 .magazine-block {
@@ -1016,7 +1013,7 @@
 }
 
 .magazine-card-feature h3 {
-  margin-top: 14px;
+  margin-top: 10px;
   font-size: 26px;
 }
 

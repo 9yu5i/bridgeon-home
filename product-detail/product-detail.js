@@ -615,8 +615,66 @@
     });
   });
 
-  document.querySelectorAll(".product-qa-question[aria-controls]").forEach((button) => {
-    button.addEventListener("click", () => {
+  const qaList = document.querySelector(".product-qa-list");
+  const qaMoreButton = document.querySelector("[data-qa-more]");
+  const qaMoreWrap = qaMoreButton?.closest(".product-qa-more-wrap");
+  const QA_BATCH = 2;
+  const QA_TOTAL = 6;
+  let qaVisibleCount = QA_BATCH;
+
+  const syncQaVisibility = () => {
+    if (!qaList) return;
+
+    const total = qaList.children.length;
+    qaVisibleCount = Math.min(Math.max(qaVisibleCount, 0), total);
+
+    Array.from(qaList.children).forEach((item, index) => {
+      const isVisible = index < qaVisibleCount;
+      item.hidden = !isVisible;
+
+      if (!isVisible) {
+        const question = item.querySelector(".product-qa-question[aria-controls]");
+        const answer = question
+          ? document.getElementById(question.getAttribute("aria-controls"))
+          : null;
+        if (question) question.setAttribute("aria-expanded", "false");
+        if (answer) answer.hidden = true;
+      }
+    });
+
+    const hasMore = qaVisibleCount < total;
+    if (qaMoreWrap) qaMoreWrap.hidden = !hasMore;
+    if (qaMoreButton) {
+      qaMoreButton.hidden = !hasMore;
+      qaMoreButton.disabled = !hasMore;
+    }
+
+    queueRecommendationsStickyTop();
+  };
+
+  if (qaList) {
+    const seeds = Array.from(qaList.querySelectorAll(".product-qa-item"));
+    let seedIndex = 0;
+    while (qaList.children.length < QA_TOTAL && seeds.length) {
+      const seed = seeds[seedIndex % seeds.length];
+      const clone = seed.cloneNode(true);
+      const question = clone.querySelector(".product-qa-question[aria-controls]");
+      const answer = clone.querySelector(".product-qa-answer");
+      if (question && answer) {
+        const nextId = `product-qa-answer-${qaList.children.length + 1}`;
+        answer.id = nextId;
+        answer.hidden = true;
+        question.setAttribute("aria-controls", nextId);
+        question.setAttribute("aria-expanded", "false");
+      }
+      qaList.appendChild(clone);
+      seedIndex += 1;
+    }
+
+    qaList.addEventListener("click", (event) => {
+      const button = event.target.closest(".product-qa-question[aria-controls]");
+      if (!button || !qaList.contains(button)) return;
+
       const answer = document.getElementById(button.getAttribute("aria-controls"));
       if (!answer) return;
       const isExpanded = button.getAttribute("aria-expanded") === "true";
@@ -624,28 +682,31 @@
       answer.hidden = isExpanded;
       queueRecommendationsStickyTop();
     });
+
+    qaVisibleCount = Math.min(QA_BATCH, qaList.children.length);
+    syncQaVisibility();
+  }
+
+  qaMoreButton?.addEventListener("click", () => {
+    if (!qaList) return;
+    qaVisibleCount = Math.min(qaVisibleCount + QA_BATCH, qaList.children.length);
+    syncQaVisibility();
   });
 
   const reviewsList = document.querySelector(".product-reviews-list");
-  const reviewsPagination = document.querySelector(".product-reviews-pagination");
-  const REVIEWS_PER_PAGE = 6;
-  let reviewsCurrentPage = 1;
+  const reviewsMoreButton = document.querySelector("[data-reviews-more]");
+  const reviewsMoreWrap = reviewsMoreButton?.closest(".product-reviews-more-wrap");
+  const REVIEWS_BATCH = 6;
+  let reviewsVisibleCount = REVIEWS_BATCH;
 
-  const getReviewsTotalPages = () => {
-    if (!reviewsList) return 1;
-    return Math.max(1, Math.ceil(reviewsList.children.length / REVIEWS_PER_PAGE));
-  };
-
-  const setReviewPage = (page) => {
+  const syncReviewsVisibility = () => {
     if (!reviewsList) return;
 
-    const totalPages = getReviewsTotalPages();
-    const nextPage = Math.min(Math.max(page, 1), totalPages);
-    reviewsCurrentPage = nextPage;
+    const total = reviewsList.children.length;
+    reviewsVisibleCount = Math.min(Math.max(reviewsVisibleCount, 0), total);
 
     Array.from(reviewsList.children).forEach((item, index) => {
-      const itemPage = Math.floor(index / REVIEWS_PER_PAGE) + 1;
-      const isVisible = itemPage === nextPage;
+      const isVisible = index < reviewsVisibleCount;
       item.hidden = !isVisible;
 
       if (!isVisible) {
@@ -656,14 +717,12 @@
       }
     });
 
-    reviewsPagination?.querySelectorAll("[data-review-page]").forEach((button) => {
-      const value = button.dataset.reviewPage;
-      if (value === "prev" || value === "next") return;
-      const pageNumber = Number(value);
-      const isActive = pageNumber === nextPage;
-      button.classList.toggle("is-active", isActive);
-      button.toggleAttribute("aria-current", isActive);
-    });
+    const hasMore = reviewsVisibleCount < total;
+    if (reviewsMoreWrap) reviewsMoreWrap.hidden = !hasMore;
+    if (reviewsMoreButton) {
+      reviewsMoreButton.hidden = !hasMore;
+      reviewsMoreButton.disabled = !hasMore;
+    }
 
     queueRecommendationsStickyTop();
   };
@@ -675,7 +734,8 @@
         reviewsList.appendChild(seedItem.cloneNode(true));
       }
     }
-    setReviewPage(1);
+    reviewsVisibleCount = Math.min(REVIEWS_BATCH, reviewsList.children.length);
+    syncReviewsVisibility();
 
     reviewsList.addEventListener("click", (event) => {
       const button = event.target.closest(".product-review-photo");
@@ -701,22 +761,13 @@
     });
   }
 
-  reviewsPagination?.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-review-page]");
-    if (!button) return;
-
-    const action = button.dataset.reviewPage;
-    if (action === "prev") {
-      setReviewPage(reviewsCurrentPage - 1);
-      return;
-    }
-    if (action === "next") {
-      setReviewPage(reviewsCurrentPage + 1);
-      return;
-    }
-
-    const pageNumber = Number(action);
-    if (!Number.isNaN(pageNumber)) setReviewPage(pageNumber);
+  reviewsMoreButton?.addEventListener("click", () => {
+    if (!reviewsList) return;
+    reviewsVisibleCount = Math.min(
+      reviewsVisibleCount + REVIEWS_BATCH,
+      reviewsList.children.length
+    );
+    syncReviewsVisibility();
   });
 
   const initReviewsSortSelect = (wrap) => {

@@ -476,15 +476,18 @@ body.is-cart-country-open {
 .cart-item-bundle-mark {
   display: inline-flex;
   align-items: center;
+  width: max-content;
+  max-width: 100%;
   margin: 0 0 10px;
   padding: 4px 10px;
   border-radius: 999px;
   color: #fff;
   background: linear-gradient(135deg, #7b3fe4 0%, #f04dff 100%);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .cart-item-info h2 {
@@ -1624,7 +1627,7 @@ body.is-cart-coupon-open {
   }
 
   .cart-summary-card dl div {
-    min-height: 30px;
+    min-height: 34px;
   }
 
   .cart-summary-card dt,
@@ -1633,7 +1636,7 @@ body.is-cart-coupon-open {
   }
 
   .cart-summary-promo {
-    min-height: 38px !important;
+    min-height: 34px;
     margin: 5px 0 8px;
     padding: 0 14px;
   }
@@ -1768,7 +1771,7 @@ body.is-cart-coupon-open {
   }
 
   .cart-option-select {
-    width: 100%;
+    width: auto;
     min-width: 0;
     max-width: 100%;
   }
@@ -1779,9 +1782,19 @@ body.is-cart-coupon-open {
   }
 
   .cart-option-select .realtrend-select-trigger {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     height: 28px;
     padding: 0 30px 0 10px;
     font-size: 12px;
+  }
+
+  .cart-option-select .realtrend-select-value {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .cart-option-select::after {
@@ -1996,6 +2009,15 @@ body.is-cart-coupon-open {
 
   .cart-content {
     gap: 34px;
+  }
+
+  .cart-item-info {
+    padding-right: 110px;
+  }
+
+  .cart-option-select {
+    width: min(100%, 200px);
+    max-width: min(100%, 200px);
   }
 
   .cart-recommendations {
