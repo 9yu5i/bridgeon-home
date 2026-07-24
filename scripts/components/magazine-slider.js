@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
 const magazineGrid = document.querySelector(".magazine-grid");
 const magazineBlock = document.querySelector(".magazine-block");
 const magazineSliderQuery = window.matchMedia("(max-width: 760px)");

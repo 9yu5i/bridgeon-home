@@ -139,6 +139,21 @@
     trigger.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
   });
 
+  /* Touch: dismiss as soon as the finger lifts on the open note. */
+  slider.addEventListener(
+    "pointerup",
+    (event) => {
+      if (!compactNoteMq.matches || event.pointerType === "mouse") return;
+      const note = event.target.closest(".editor-pick-note");
+      if (!note || !slider.contains(note)) return;
+      if (!note.closest(".editor-card-product.is-note-open")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      closeEditorNotes();
+    },
+    true
+  );
+
   document.addEventListener("click", (event) => {
     if (!compactNoteMq.matches) return;
     if (event.target.closest(".editor-note-trigger, .editor-pick-note")) return;

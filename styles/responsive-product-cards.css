@@ -796,9 +796,9 @@
       line-clamp: 2;
       text-overflow: ellipsis;
       white-space: normal;
-      font-size: 12px;
+      font-size: 13px;
       line-height: 1.35;
-      font-weight: 500;
+      font-weight: 600;
     }
 }
 

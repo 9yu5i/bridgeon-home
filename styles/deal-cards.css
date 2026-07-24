@@ -2,7 +2,7 @@
 .editorial-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr);
-  gap: 30px;
+  gap: 18px;
 }
 
 .deal-card {
@@ -928,7 +928,7 @@ body.is-deal-share-open {
 
 /* === Redesigned Special Deals cards === */
 .deals-section {
-  gap: 28px;
+  gap: 16px;
 }
 
 .deals-section .deals-heading {

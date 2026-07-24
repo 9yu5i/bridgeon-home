@@ -6,11 +6,38 @@
     position: static;
     inset: auto;
     display: block;
-    margin: 0 0 14px;
+    margin: 0 0 6px;
     color: var(--editor-ink, #2a1b4a);
     font-size: clamp(22px, 4.2vw, 30px);
     line-height: 1.1;
     font-weight: 700;
+  }
+
+  .editorial-section .editor-card-carousel {
+    gap: 8px;
+  }
+
+  /* Compact: open only via trigger class; ignore sticky hover so tap-to-dismiss works. */
+  .editorial-section .editor-note-trigger:hover + .editor-pick-note,
+  .editorial-section .editor-note-trigger:focus-visible + .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-note-trigger:hover) .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-note-trigger:focus-visible) .editor-pick-note,
+  .editorial-section .editor-card-product:has(.editor-pick-note:hover) .editor-pick-note {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px) scale(0.985);
+    transition-delay: 0.08s;
+  }
+
+  .editorial-section .editor-card-product.is-note-open .editor-pick-note,
+  .editorial-section .editor-card-product.is-note-open:has(.editor-pick-note:hover) .editor-pick-note {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    cursor: pointer;
+    transform: translateY(0) scale(1);
+    transition-delay: 0s;
   }
 
   .editorial-section .editor-card {
@@ -54,7 +81,6 @@
     border-radius: 999px;
     color: #fff;
     background: linear-gradient(135deg, #9b6cff 0%, var(--purple) 48%, #6428d4 100%);
-    box-shadow: 0 14px 28px rgba(99, 48, 190, 0.28);
     font-size: clamp(10px, 1.5vw, 12px);
     font-weight: 600;
   }
@@ -91,20 +117,20 @@
     position: absolute;
     inset: auto;
     top: calc(
-      100cqw - var(--editor-thumb-action-size, 28px) - var(--editor-thumb-action-inset, 10px)
+      100cqw - var(--editor-thumb-action-size, 34px) - var(--editor-thumb-action-inset, 10px)
     );
     bottom: auto;
     z-index: 7;
     display: grid;
     place-items: center;
-    width: var(--editor-thumb-action-size, 28px);
-    min-width: var(--editor-thumb-action-size, 28px);
-    max-width: var(--editor-thumb-action-size, 28px);
-    height: var(--editor-thumb-action-size, 28px);
-    min-height: var(--editor-thumb-action-size, 28px);
+    width: var(--editor-thumb-action-size, 34px);
+    min-width: var(--editor-thumb-action-size, 34px);
+    max-width: var(--editor-thumb-action-size, 34px);
+    height: var(--editor-thumb-action-size, 34px);
+    min-height: var(--editor-thumb-action-size, 34px);
     padding: 0;
     border-radius: 50%;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     line-height: 1;
     box-shadow: 0 8px 16px rgba(99, 48, 190, 0.14);
@@ -269,7 +295,6 @@
 @media (max-width: 1120px) {
   .magazine-card p {
       margin: 8px 0;
-      padding: 0 12px clamp(14px, 2.5vw, 18px);
       color: #111;
       font-size: clamp(13px, 2vw, 15px);
       line-height: 1.2;
@@ -375,7 +400,7 @@
   .editorial-grid {
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
-    gap: clamp(28px, 3vw, 42px);
+    gap: clamp(16px, 2vw, 24px);
   }
 
   .magazine-grid {
@@ -448,7 +473,7 @@
 @media (min-width: 761px) and (max-width: 1120px) {
   .editorial-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(28px, 4vw, 42px);
+    gap: clamp(16px, 2.4vw, 24px);
   }
 
   .magazine-block {
@@ -555,7 +580,7 @@
 @media (max-width: 760px) {
   .editorial-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(34px, 8vw, 48px);
+    gap: clamp(20px, 5vw, 28px);
   }
 
   .magazine-block {
@@ -640,11 +665,11 @@
     padding: 0;
     font-size: 18px;
     line-height: 1.3;
-    margin-top: 1px;
+    margin-top: 4px;
   }
 
   .magazine-card-compact h3 {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .magazine-kicker {
@@ -668,7 +693,7 @@
   }
 
   .magazine-card-compact time {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .magazine-block::before,
@@ -853,6 +878,7 @@
     font-weight: inherit;
     scroll-snap-align: start;
     --editor-copy-height: 72px;
+    --editor-thumb-action-size: 34px;
   }
 
   .editorial-section .editor-product-link {
@@ -955,6 +981,10 @@
     min-width: 0;
   }
 
+  .editorial-section .editor-card-carousel {
+    gap: 8px;
+  }
+
   .editorial-section .editor-card-viewport {
     border-radius: 24px;
   }
@@ -1027,18 +1057,18 @@
   }
 
   .editorial-section .editor-card-profile .editor-avatar {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
     flex: 0 0 auto;
   }
 
   .editorial-section .editor-card-profile .flag {
-    top: calc(48px - 14px);
+    top: calc(42px - 12px);
     right: auto;
-    left: 32px;
+    left: 28px;
     bottom: auto;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 
   .editorial-section .editor-card-copy {
@@ -1073,7 +1103,7 @@
     margin: 0;
     overflow: hidden;
     white-space: normal;
-    font-size: clamp(17px, 2.2vw, 22px);
+    font-size: 17ㅔㅌ;
     line-height: 1.2;
     color: var(--editor-ink, #2a1b4a);
     -webkit-box-orient: vertical;
@@ -1100,14 +1130,14 @@
   .editorial-section .editor-card-quote p {
     max-width: none;
     position: static;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.4;
     -webkit-line-clamp: 2;
     line-clamp: 2;
   }
 
   .editorial-section .editor-pick-tags {
-    gap: 4px;
+    gap: 8px;
   }
 
   .editorial-section .editor-pick-tags i {
@@ -1116,6 +1146,7 @@
     font-size: 14px;
     font-weight: 500;
     border-radius: 999px;
+    background-color: #f3ecfd;
   }
 
   .editorial-section .editor-card-cta,
@@ -1125,11 +1156,10 @@
     width: auto;
     min-width: 0;
     max-width: none;
-    height: clamp(30px, 3.4vw, 34px);
     margin: 0 0 0 auto;
-    padding: 0 clamp(10px, 1.4vw, 14px);
+    padding: 10px clamp(10px, 1.4vw, 14px);
     justify-self: auto;
-    font-size: clamp(13px, 1.2vw, 16px);
+    font-size: 15px;
   }
 
   .editorial-section .editor-card-products {
@@ -1218,7 +1248,7 @@
   }
 
   .editorial-section .editor-product-copy strong {
-    font-size: clamp(12px, 1.5vw, 13px);
+    font-size: 16px;
     -webkit-line-clamp: 1;
     line-clamp: 1;
   }
@@ -1299,6 +1329,10 @@
     min-width: 0;
   }
 
+  .editorial-section .editor-card-carousel {
+    gap: 18px;
+  }
+
   .editorial-section .editor-card-viewport {
     border-radius: 22px;
   }
@@ -1310,12 +1344,12 @@
   .editorial-section .editor-card-tab {
     min-height: 30px;
     padding: 0 12px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .editorial-section .editor-card-title {
     display: block;
-    margin: 0 0 14px;
+    margin: 0 0 4px;
   }
 
   .editorial-section .editor-card {
@@ -1385,18 +1419,18 @@
   }
 
   .editorial-section .editor-card-profile .editor-avatar {
-    width: 52px;
-    height: 52px;
+    width: 44px;
+    height: 44px;
     flex: 0 0 auto;
   }
 
   .editorial-section .editor-card-profile .flag {
-    top: calc(52px - 14px);
+    top: calc(44px - 12px);
     right: auto;
-    left: 36px;
+    left: 30px;
     bottom: auto;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 
   .editorial-section .editor-card-copy {
@@ -1405,7 +1439,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 8px;
+    gap: 10px;
     width: 100%;
     max-width: none;
     margin: 0;
@@ -1443,7 +1477,7 @@
     white-space: normal;
     overflow: visible;
     margin: 0;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--editor-ink, #2a1b4a);
   }
 
@@ -1453,7 +1487,7 @@
 
   .editorial-section .editor-card-quote p {
     max-width: none;
-    font-size: 12px;
+    font-size: 15px;
     line-height: 1.4;
     position: static;
     -webkit-line-clamp: 3;
@@ -1465,13 +1499,16 @@
   }
 
   .editorial-section .editor-pick-tags {
-    gap: 4px;
+    gap: 8px;
   }
 
   .editorial-section .editor-pick-tags i {
-    height: 20px;
-    padding: 0 8px;
-    font-size: 9px;
+    height: auto;
+    min-height: 24px;
+    padding: 1px 10px;
+    font-size: 14px;
+    background-color: #f3ecfd;
+    border-radius: 999px;
   }
 
   .editorial-section .editor-card-cta,
@@ -1541,7 +1578,7 @@
     scroll-snap-align: start;
     --editor-copy-height: 58px;
     --editor-thumb-action-inset: 6px;
-    --editor-thumb-action-size: 24px;
+    --editor-thumb-action-size: 30px;
   }
 
   .editorial-section .editor-product-link {
@@ -1566,7 +1603,7 @@
     grid-row: 2;
     align-content: start;
     align-self: start;
-    gap: 2px;
+    gap: 4px;
     min-height: 0;
     padding: 7px 8px 8px;
     background: rgba(255, 255, 255, 0.92);
@@ -1574,11 +1611,11 @@
   }
 
   .editorial-section .editor-product-copy small {
-    font-size: 10px;
+    font-size: 13px;
   }
 
   .editorial-section .editor-product-copy strong {
-    font-size: 11px;
+    font-size: 14px;
     -webkit-line-clamp: 1;
     line-clamp: 1;
   }
@@ -1591,9 +1628,15 @@
   .editorial-section .editor-note-trigger,
   .editorial-section .editor-product-add {
     top: calc(
-      100cqw - var(--editor-thumb-action-size, 24px) - var(--editor-thumb-action-inset, 6px)
+      100cqw - var(--editor-thumb-action-size, 30px) - var(--editor-thumb-action-inset, 6px)
     );
     bottom: auto;
+    width: var(--editor-thumb-action-size, 30px);
+    min-width: var(--editor-thumb-action-size, 30px);
+    max-width: var(--editor-thumb-action-size, 30px);
+    height: var(--editor-thumb-action-size, 30px);
+    min-height: var(--editor-thumb-action-size, 30px);
+    font-size: 18px;
   }
 
   .editorial-section .editor-note-trigger {
@@ -1601,6 +1644,11 @@
     left: var(--editor-thumb-action-inset, 6px);
     right: auto;
     z-index: 8;
+  }
+
+  .editorial-section .editor-note-trigger::before {
+    width: 16px;
+    height: 16px;
   }
 
   .editorial-section .editor-card-product .editor-pick-note {

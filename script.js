@@ -1,4 +1,4 @@
-﻿const PAGE_TRANSITION_KEY = "bridgeon-page-transition";
+const PAGE_TRANSITION_KEY = "bridgeon-page-transition";
 const PAGE_TRANSITION_MS = 320;
 const BRIDGEON_ROOT_URL = new URL("./", document.currentScript?.src || window.location.href);
 const PRODUCT_DETAIL_URL = new URL("product-detail/product-detail.html", BRIDGEON_ROOT_URL).href;

@@ -94,6 +94,7 @@
       right: 7px;
       bottom: calc(var(--reel-product-height) + var(--reel-title-offset) + 6px);
       font-size: 14px;
+      font-weight: 600;
     }
 }
 
