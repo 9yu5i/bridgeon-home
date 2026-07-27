@@ -165,15 +165,72 @@
   });
 
   slider.querySelectorAll(".editor-card-products").forEach((rail) => {
+    let railDragging = false;
+    let railPointerId = null;
+    let railStartX = 0;
+    let railScrollLeft = 0;
+    let railMoved = false;
+    let suppressClick = false;
+
+    const canScrollRail = () => rail.scrollWidth > rail.clientWidth + 2;
+
     rail.addEventListener(
       "wheel",
       (event) => {
-        if (rail.scrollWidth <= rail.clientWidth + 1) return;
-        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+        if (!canScrollRail()) return;
+        const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+        if (!delta) return;
         event.preventDefault();
-        rail.scrollLeft += event.deltaY;
+        rail.scrollLeft += delta;
       },
       { passive: false }
+    );
+
+    rail.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+      if (event.target.closest("a, button")) return;
+      if (!canScrollRail()) return;
+
+      railDragging = true;
+      railMoved = false;
+      suppressClick = false;
+      railPointerId = event.pointerId;
+      railStartX = event.clientX;
+      railScrollLeft = rail.scrollLeft;
+      rail.setPointerCapture?.(event.pointerId);
+    });
+
+    rail.addEventListener("pointermove", (event) => {
+      if (!railDragging || event.pointerId !== railPointerId) return;
+      const deltaX = event.clientX - railStartX;
+      if (!railMoved && Math.abs(deltaX) > 4) {
+        railMoved = true;
+        rail.classList.add("is-dragging");
+      }
+      if (!railMoved) return;
+      rail.scrollLeft = railScrollLeft - deltaX;
+    });
+
+    const endRailDrag = (event) => {
+      if (!railDragging || event.pointerId !== railPointerId) return;
+      suppressClick = railMoved;
+      railDragging = false;
+      railPointerId = null;
+      railMoved = false;
+      rail.classList.remove("is-dragging");
+    };
+
+    rail.addEventListener("pointerup", endRailDrag);
+    rail.addEventListener("pointercancel", endRailDrag);
+    rail.addEventListener(
+      "click",
+      (event) => {
+        if (!suppressClick) return;
+        suppressClick = false;
+        event.preventDefault();
+        event.stopPropagation();
+      },
+      true
     );
   });
 

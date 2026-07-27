@@ -475,6 +475,16 @@
   cursor: grabbing;
 }
 
+.editor-card-products.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.editor-card-products.is-dragging * {
+  pointer-events: none;
+}
+
 .editor-card-products::-webkit-scrollbar {
   display: none;
 }
