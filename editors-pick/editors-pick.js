@@ -3,19 +3,24 @@
   if (!page.classList.contains("editors-page")) return;
 
   const editorButtons = Array.from(document.querySelectorAll("[data-editor-tab]"));
+  const editorTabs = document.querySelector(".editor-tabs");
   const pickTabs = Array.from(document.querySelectorAll("[data-pick-filter]"));
   const pickList = document.querySelector("[data-editor-pick-list]");
   const magazineGrid = document.querySelector("[data-editor-magazine]");
   const magazineDotsWrap = document.querySelector(".editor-magazine-dots");
+  const profileDotsWrap = document.querySelector(".editor-profile-dots");
+  const profileTrack = document.querySelector("[data-editor-profile-track]");
   const picksTitle = document.querySelector("#editor-picks-title");
   const magazineTitle = document.querySelector("#editor-mag-title");
+  const profileCard = document.querySelector(".editor-profile");
   const profileAvatarWrap = document.querySelector(".editor-profile-avatar");
   const profileAvatar = document.querySelector(".editor-profile-avatar .editor-avatar");
   const profileFlag = document.querySelector(".editor-profile-avatar .flag");
   const profileAvatarName = document.querySelector(".editor-profile-avatar h3");
   const profileCopyName = document.querySelector(".editor-profile-copy h3");
   const profileFacts = document.querySelector(".editor-facts");
-  const profileBio = document.querySelector(".editor-profile-copy p");
+  const profileRole = document.querySelector(".editor-role");
+  const profileBio = document.querySelector(".editor-bio");
   const profileTags = document.querySelector(".editor-tags");
   const editorNoteText = document.querySelector(".editor-note p");
   const editorNoteSignature = document.querySelector(".editor-note strong");
@@ -23,6 +28,9 @@
   const editors = [
     {
       name: "Nara",
+      handle: "@nara_editor",
+      role: "Clean Beauty Editor · Ingredient-focused Skincare",
+      theme: "nara",
       avatar: "seal",
       flag: "kr",
       facts: ["Busan, Korea", "25 years old", "Combo Skin"],
@@ -90,6 +98,9 @@
     },
     {
       name: "Mila",
+      handle: "@mila_editor",
+      role: "Comfort Beauty Editor · Dry Skin Care",
+      theme: "mila",
       avatar: "duck",
       flag: "ua",
       facts: ["Kyiv, Ukraine", "24 years old", "Dry Skin"],
@@ -157,6 +168,9 @@
     },
     {
       name: "Jules",
+      handle: "@jules_editor",
+      role: "Trend Editor · Texture and Color",
+      theme: "jules",
       avatar: "cat",
       flag: "us",
       facts: ["Austin, USA", "27 years old", "Oily Skin"],
@@ -224,6 +238,9 @@
     },
     {
       name: "Pim",
+      handle: "@pim_editor",
+      role: "Lifestyle Editor · Warm Weather Routines",
+      theme: "pim",
       avatar: "dog",
       flag: "th",
       facts: ["Bangkok, Thailand", "26 years old", "Combination Skin"],
@@ -291,6 +308,9 @@
     },
     {
       name: "Ava",
+      handle: "@ava_editor",
+      role: "Culture Editor · K-Pop and Collectibles",
+      theme: "ava",
       avatar: "hedgehog",
       flag: "au",
       facts: ["Melbourne, Australia", "29 years old", "Normal Skin"],
@@ -364,6 +384,11 @@
   let isPickScrollSyncing = false;
   let pickScrollReleaseTimer = 0;
   let pickScrollSettleTimer = 0;
+  let isProfileScrollSyncing = false;
+  let profileScrollReleaseTimer = 0;
+  let profileScrollSettleTimer = 0;
+  let profileLoopResetTimer = 0;
+  let activeProfileCloneSlide = "";
 
   const pickPrev = document.querySelector("[data-pick-prev]");
   const pickNext = document.querySelector("[data-pick-next]");
@@ -405,6 +430,10 @@
   ];
 
   const renderProfile = (editor) => {
+    if (profileCard) {
+      profileCard.dataset.editorTheme = editor.theme || editor.avatar;
+    }
+
     if (profileAvatar) {
       profileAvatar.className = `editor-avatar editor-avatar--${editor.avatar}`;
       profileAvatar.innerHTML = "<i></i>";
@@ -416,6 +445,7 @@
 
     if (profileAvatarName) profileAvatarName.textContent = editor.name;
     if (profileCopyName) profileCopyName.textContent = editor.name;
+    if (profileRole) profileRole.textContent = editor.role || "Trend Editor";
     if (profileBio) profileBio.textContent = editor.bio;
     if (editorNoteText) editorNoteText.textContent = editor.note;
     if (editorNoteSignature) editorNoteSignature.innerHTML = `${escapeHtml(editor.name)} <span aria-hidden="true">&#9829;</span>`;
@@ -433,6 +463,292 @@
     profileAvatarWrap?.setAttribute("aria-label", `${editor.name} profile`);
   };
 
+  const updateProfileDots = () => {
+    if (!profileDotsWrap) return;
+
+    if (profileDotsWrap.children.length !== editors.length) {
+      profileDotsWrap.innerHTML = editors.map(() => "<span></span>").join("");
+    }
+
+    Array.from(profileDotsWrap.children).forEach((dot, index) => {
+      dot.classList.toggle("is-active", index === activeEditorIndex);
+    });
+  };
+
+  const prettyText = (value) => escapeHtml(value).replace(/\s*(?:\uC9A8|\u00B7)\s*/g, " &middot; ");
+
+  const enableHorizontalDragScroll = (scroller, { mouseDrag = true } = {}) => {
+    if (!scroller) return;
+    let dragState = null;
+    let suppressClick = false;
+
+    scroller.addEventListener("pointerdown", (event) => {
+      if (event.button && event.button !== 0) return;
+      if (!mouseDrag && event.pointerType === "mouse") return;
+      if (scroller.scrollWidth <= scroller.clientWidth + 2) return;
+
+      dragState = {
+        id: event.pointerId,
+        startX: event.clientX,
+        scrollLeft: scroller.scrollLeft,
+        moved: false,
+      };
+      scroller.setPointerCapture?.(event.pointerId);
+    });
+
+    scroller.addEventListener("pointermove", (event) => {
+      if (!dragState || dragState.id !== event.pointerId) return;
+
+      const deltaX = event.clientX - dragState.startX;
+      // Ignore tiny jitter so simple clicks still fire (esp. with html zoom).
+      if (Math.abs(deltaX) > 8) {
+        dragState.moved = true;
+        suppressClick = true;
+      }
+      if (!dragState.moved) return;
+      scroller.scrollLeft = dragState.scrollLeft - deltaX;
+    });
+
+    const endDrag = (event) => {
+      if (!dragState || dragState.id !== event.pointerId) return;
+      const moved = dragState.moved;
+      scroller.releasePointerCapture?.(event.pointerId);
+      dragState = null;
+      if (moved) {
+        window.setTimeout(() => {
+          suppressClick = false;
+        }, 180);
+      }
+    };
+
+    scroller.addEventListener("pointerup", endDrag);
+    scroller.addEventListener("pointercancel", endDrag);
+    scroller.addEventListener("click", (event) => {
+      if (!suppressClick) return;
+      event.preventDefault();
+      event.stopPropagation();
+      suppressClick = false;
+    }, true);
+  };
+
+  const renderProfileCard = (editor, index, options = {}) => `
+    <article class="editor-profile${index === activeEditorIndex && !options.clone ? " is-active" : ""}" data-editor-theme="${escapeHtml(editor.theme || editor.avatar)}" data-editor-index="${index}" data-profile-slide="${options.slideIndex ?? index}"${options.clone ? ' data-editor-clone="true"' : ""} aria-label="${escapeHtml(editor.name)} editor profile">
+      <div class="editor-profile-main">
+        <div class="editor-profile-avatar" aria-label="${escapeHtml(editor.name)} profile">
+          <span class="editor-avatar editor-avatar--${escapeHtml(editor.avatar)}"><i></i></span>
+          <b class="flag flag--${escapeHtml(editor.flag)}" aria-hidden="true"></b>
+          <h3>${escapeHtml(editor.name)}</h3>
+        </div>
+        <div class="editor-profile-copy">
+          <div class="editor-profile-heading">
+            <div class="editor-profile-title">
+              <h3>${escapeHtml(editor.name)}</h3>
+              <ul class="editor-facts">
+                ${editor.facts.map((fact, factIndex) => `<li>${factIcons[factIndex] || ""}${escapeHtml(fact)}</li>`).join("")}
+              </ul>
+            </div>
+          </div>
+          <strong class="editor-role">${prettyText(editor.role || "Trend Editor")}</strong>
+          <p class="editor-bio">${escapeHtml(editor.bio)}</p>
+          <div class="editor-tags">
+            ${editor.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}
+          </div>
+        </div>
+      </div>
+      <aside class="editor-note">
+        <h3>Editor's Note</h3>
+        <p>${escapeHtml(editor.note)}</p>
+        <strong>${escapeHtml(editor.name)} <span aria-hidden="true">&#9829;</span></strong>
+      </aside>
+    </article>
+  `;
+
+  const updateActiveProfileCards = () => {
+    if (!profileTrack) return;
+
+    profileTrack.querySelectorAll("[data-editor-index]").forEach((card) => {
+      const isCloneActive = activeProfileCloneSlide && card.dataset.profileSlide === activeProfileCloneSlide;
+      const isRealActive = !activeProfileCloneSlide
+        && Number(card.dataset.editorIndex) === activeEditorIndex
+        && !card.dataset.editorClone;
+      const isActive = Boolean(isCloneActive || isRealActive);
+      card.classList.toggle("is-active", isActive);
+      card.setAttribute("aria-current", isActive ? "true" : "false");
+    });
+  };
+
+  const renderProfileCarousel = () => {
+    if (!profileTrack) return;
+    const slides = [
+      { editor: editors[editors.length - 1], index: editors.length - 1, clone: true },
+      ...editors.map((editor, index) => ({ editor, index, clone: false })),
+      { editor: editors[0], index: 0, clone: true },
+    ];
+
+    profileTrack.innerHTML = slides
+      .map((slide, slideIndex) => renderProfileCard(slide.editor, slide.index, {
+        clone: slide.clone,
+        slideIndex,
+      }))
+      .join("");
+    updateActiveProfileCards();
+  };
+
+  const getProfileCard = (index, { clone = false, edge = "end" } = {}) => {
+    if (!profileTrack) return null;
+    const selector = clone
+      ? `[data-editor-index="${index}"][data-editor-clone]`
+      : `[data-editor-index="${index}"]:not([data-editor-clone])`;
+    const cards = Array.from(profileTrack.querySelectorAll(selector));
+    if (!cards.length) return null;
+    return edge === "start" ? cards[0] : cards[cards.length - 1];
+  };
+
+  const getProfileScrollLeftForCard = (card) =>
+    Math.max(0, card.offsetLeft - (profileTrack.clientWidth - card.offsetWidth) / 2);
+
+  const beginProfileLoopJump = () => {
+    if (!profileTrack) return;
+    isProfileScrollSyncing = true;
+    profileTrack.classList.add("is-loop-jumping");
+    profileTrack.style.scrollBehavior = "auto";
+    profileTrack.style.scrollSnapType = "none";
+  };
+
+  const endProfileLoopJump = (delay = 32) => {
+    if (!profileTrack) return;
+    window.clearTimeout(profileScrollReleaseTimer);
+    profileScrollReleaseTimer = window.setTimeout(() => {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          if (!profileTrack) return;
+          profileTrack.style.scrollBehavior = "";
+          profileTrack.style.scrollSnapType = "";
+          profileTrack.classList.remove("is-loop-jumping");
+          isProfileScrollSyncing = false;
+        });
+      });
+    }, delay);
+  };
+
+  const scrollProfileCardIntoView = (card, { instant = false, releaseDelay = 0, holdSync = false } = {}) => {
+    if (!profileTrack || !card) return;
+
+    const targetLeft = getProfileScrollLeftForCard(card);
+    const useInstant = instant || reduceMotionQuery.matches;
+    isProfileScrollSyncing = true;
+
+    if (useInstant) {
+      beginProfileLoopJump();
+      profileTrack.scrollLeft = targetLeft;
+      void profileTrack.offsetHeight;
+      if (!holdSync) endProfileLoopJump(releaseDelay || 40);
+      return;
+    }
+
+    profileTrack.scrollTo({
+      left: targetLeft,
+      behavior: "smooth",
+    });
+
+    if (holdSync) return;
+
+    window.clearTimeout(profileScrollReleaseTimer);
+    profileScrollReleaseTimer = window.setTimeout(() => {
+      isProfileScrollSyncing = false;
+    }, releaseDelay || 560);
+  };
+
+  const resetProfileCloneToRealCard = (index, delay = 90) => {
+    window.clearTimeout(profileLoopResetTimer);
+    profileLoopResetTimer = window.setTimeout(() => {
+      const card = getProfileCard(index);
+      if (!card || !profileTrack) return;
+
+      const targetLeft = getProfileScrollLeftForCard(card);
+      const alreadySettled = !activeProfileCloneSlide
+        && Math.abs(profileTrack.scrollLeft - targetLeft) < 1.5;
+
+      if (alreadySettled) {
+        endProfileLoopJump(0);
+        return;
+      }
+
+      beginProfileLoopJump();
+      profileTrack.scrollLeft = targetLeft;
+      void profileTrack.offsetHeight;
+
+      activeProfileCloneSlide = "";
+      updateActiveProfileCards();
+
+      endProfileLoopJump(48);
+    }, reduceMotionQuery.matches ? 30 : delay);
+  };
+
+  const scrollProfileToEditor = (index, { instant = false, wrapDirection = "" } = {}) => {
+    if (!profileTrack) return;
+    window.clearTimeout(profileLoopResetTimer);
+
+    const card = getProfileCard(index);
+    if (!card) return;
+
+    const shouldUseForwardClone = wrapDirection === "forward" && index === 0 && !instant;
+    const shouldUseBackwardClone = wrapDirection === "backward" && index === editors.length - 1 && !instant;
+    const cloneCard = shouldUseForwardClone
+      ? getProfileCard(0, { clone: true, edge: "end" })
+      : shouldUseBackwardClone
+        ? getProfileCard(editors.length - 1, { clone: true, edge: "start" })
+        : null;
+
+    if (cloneCard) {
+      activeProfileCloneSlide = cloneCard.dataset.profileSlide || "";
+      updateActiveProfileCards();
+
+      const finishWrap = () => {
+        profileTrack.removeEventListener("scrollend", finishWrap);
+        window.clearTimeout(profileLoopResetTimer);
+        resetProfileCloneToRealCard(index, 0);
+      };
+
+      isProfileScrollSyncing = true;
+      profileTrack.addEventListener("scrollend", finishWrap);
+      scrollProfileCardIntoView(cloneCard, { holdSync: true });
+
+      // Fallback for browsers without reliable scrollend.
+      resetProfileCloneToRealCard(index, reduceMotionQuery.matches ? 30 : 540);
+      return;
+    }
+
+    activeProfileCloneSlide = "";
+    updateActiveProfileCards();
+    scrollProfileCardIntoView(card, { instant });
+  };
+
+  const getClosestProfileSlide = () => {
+    if (!profileTrack) return null;
+    const cards = Array.from(profileTrack.querySelectorAll("[data-editor-index]"));
+    const midpoint = profileTrack.scrollLeft + profileTrack.clientWidth / 2;
+    let closestCard = null;
+    let closestDistance = Infinity;
+
+    cards.forEach((card) => {
+      const cardMidpoint = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(cardMidpoint - midpoint);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestCard = card;
+      }
+    });
+
+    return closestCard
+      ? {
+          index: Number(closestCard.dataset.editorIndex),
+          isClone: Boolean(closestCard.dataset.editorClone),
+          slideId: closestCard.dataset.profileSlide || "",
+        }
+      : null;
+  };
+
   const renderPickCard = (pick) => `
     <article class="editor-pick-card" data-pick-category="${escapeHtml(pick.category)}">
       <div class="editor-pick-image editor-pick-image--${escapeHtml(pick.image)}" aria-hidden="true"><span></span></div>
@@ -447,9 +763,11 @@
         </div>
       </div>
       <aside class="editor-pick-note">
-        <h4><span aria-hidden="true"></span> Why I Picked It!</h4>
-        <p>${escapeHtml(pick.reason)}</p>
-        <div>${pick.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+        <div class="editor-pick-note-copy">
+          <h4><span aria-hidden="true"></span> Why I Picked It!</h4>
+          <p>${escapeHtml(pick.reason)}</p>
+          <div class="editor-pick-tags">${pick.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+        </div>
       </aside>
     </article>
   `;
@@ -780,7 +1098,9 @@
   const setActiveEditor = (index, options = {}) => {
     const nextIndex = Number.isInteger(index) ? index : 0;
     const editor = editors[nextIndex] || editors[0];
+    const previousEditorIndex = activeEditorIndex;
     activeEditorIndex = editors.indexOf(editor);
+    activeProfileCloneSlide = options.activeCloneSlide || "";
     if (options.resetFilter !== false) activePickFilter = "beauty";
 
     editorButtons.forEach((button, buttonIndex) => {
@@ -789,7 +1109,21 @@
       button.setAttribute("aria-selected", isActive ? "true" : "false");
     });
 
-    renderProfile(editor);
+    if (!profileTrack) renderProfile(editor);
+    updateActiveProfileCards();
+    updateProfileDots();
+    if (!options.fromProfileScroll) {
+      const wrapDirection = options.wrapDirection
+        || (!options.instantScroll && previousEditorIndex === editors.length - 1 && activeEditorIndex === 0
+          ? "forward"
+          : !options.instantScroll && previousEditorIndex === 0 && activeEditorIndex === editors.length - 1
+            ? "backward"
+            : "");
+      scrollProfileToEditor(activeEditorIndex, {
+        instant: Boolean(options.instantScroll),
+        wrapDirection,
+      });
+    }
     renderMagazines(editor);
     setActivePickFilter(activePickFilter, { forceRender: true, instantScroll: true });
     updateMagazineDots();
@@ -816,7 +1150,80 @@
       if (label) label.textContent = editor.name;
     }
 
-    button.addEventListener("click", () => setActiveEditor(index));
+    button.addEventListener("click", () => {
+      const lastEditorIndex = editors.length - 1;
+      const wrapDirection = activeEditorIndex === lastEditorIndex && index === 0
+        ? "forward"
+        : activeEditorIndex === 0 && index === lastEditorIndex
+          ? "backward"
+          : "";
+      setActiveEditor(index, { wrapDirection });
+    });
+  });
+
+  profileTrack?.addEventListener("click", (event) => {
+    const card = event.target.closest("[data-editor-index]");
+    if (!card) return;
+    const index = Number(card.dataset.editorIndex);
+    if (!Number.isInteger(index)) return;
+
+    const lastEditorIndex = editors.length - 1;
+    const isCloneCard = Boolean(card.dataset.editorClone);
+    const isActiveLastCard = activeEditorIndex === lastEditorIndex && index === lastEditorIndex && !isCloneCard;
+
+    if (isActiveLastCard) {
+      setActiveEditor(0, {
+        wrapDirection: "forward",
+        resetFilter: false,
+      });
+      return;
+    }
+
+    if (index !== activeEditorIndex || isCloneCard) {
+      const wrapDirection = activeEditorIndex === lastEditorIndex && index === 0
+        ? "forward"
+        : activeEditorIndex === 0 && index === lastEditorIndex
+          ? "backward"
+          : "";
+      setActiveEditor(index, { wrapDirection });
+    }
+  });
+
+  const syncEditorFromProfileScroll = () => {
+    const nextSlide = getClosestProfileSlide();
+    if (!nextSlide) return;
+
+    if (nextSlide.index !== activeEditorIndex || nextSlide.isClone) {
+      if (nextSlide.isClone) {
+        setActiveEditor(nextSlide.index, {
+          fromProfileScroll: true,
+          activeCloneSlide: nextSlide.slideId,
+          resetFilter: nextSlide.index === activeEditorIndex ? false : undefined,
+        });
+        resetProfileCloneToRealCard(nextSlide.index);
+        return;
+      }
+
+      setActiveEditor(nextSlide.index, {
+        fromProfileScroll: true,
+        resetFilter: nextSlide.index === activeEditorIndex ? false : undefined,
+      });
+    }
+  };
+
+  profileTrack?.addEventListener("scroll", () => {
+    if (isProfileScrollSyncing) return;
+
+    window.clearTimeout(profileScrollSettleTimer);
+    profileScrollSettleTimer = window.setTimeout(() => {
+      syncEditorFromProfileScroll();
+    }, 90);
+  }, { passive: true });
+
+  profileTrack?.addEventListener("scrollend", () => {
+    if (isProfileScrollSyncing) return;
+    window.clearTimeout(profileScrollSettleTimer);
+    syncEditorFromProfileScroll();
   });
 
   pickTabs.forEach((button) => {
@@ -992,5 +1399,9 @@
     window.requestAnimationFrame(updateMagazineDots);
   }, { passive: true });
 
-  setActiveEditor(0);
+  enableHorizontalDragScroll(editorTabs);
+  enableHorizontalDragScroll(profileTrack, { mouseDrag: false });
+
+  renderProfileCarousel();
+  setActiveEditor(0, { instantScroll: true });
 })();

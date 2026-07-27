@@ -87,7 +87,7 @@
         originalPrice: "US$26.00",
         discount: "35% OFF",
         mediaImage: "img/deals/time-deal.png?v=3",
-        cta: "Claim This Deal",
+        cta: "Shop This Deal",
         detailUrl: "product-detail/product-detail-options.html",
       },
       {
@@ -99,7 +99,7 @@
         originalPrice: "US$36.00",
         discount: "22% OFF",
         mediaImage: "img/deals/time-deal.png?v=3",
-        cta: "Claim This Deal",
+        cta: "Shop This Deal",
         detailUrl: "product-detail/product-detail.html",
       },
       {
@@ -111,7 +111,7 @@
         originalPrice: "US$31.00",
         discount: "24% OFF",
         mediaImage: "img/deals/time-deal.png?v=3",
-        cta: "Claim This Deal",
+        cta: "Shop This Deal",
         detailUrl: "product-detail/product-detail.html",
       },
       {
@@ -123,7 +123,7 @@
         originalPrice: "US$27.00",
         discount: "29% OFF",
         mediaImage: "img/deals/time-deal.png?v=3",
-        cta: "Claim This Deal",
+        cta: "Shop This Deal",
         detailUrl: "product-detail/product-detail.html",
       },
       {
@@ -135,7 +135,7 @@
         originalPrice: "US$20.00",
         discount: "32% OFF",
         mediaImage: "img/deals/time-deal.png?v=3",
-        cta: "Claim This Deal",
+        cta: "Shop This Deal",
         detailUrl: "product-detail/product-detail.html",
       },
     ],
@@ -215,7 +215,13 @@
       if (priceStrong) priceStrong.textContent = item.price;
       if (priceMark) priceMark.textContent = item.discount;
       if (priceDel) priceDel.textContent = item.originalPrice;
-      if (mediaBadge) mediaBadge.textContent = item.discount;
+      if (mediaBadge) {
+        if (sliderKey === "time") {
+          mediaBadge.innerHTML = String(item.discount).replace(/\s+/, "<br>");
+        } else {
+          mediaBadge.textContent = item.discount;
+        }
+      }
       if (shopButton && item.cta) {
         shopButton.innerHTML = `${item.cta} <span aria-hidden="true">&rarr;</span>`;
       }
