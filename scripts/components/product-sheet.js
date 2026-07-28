@@ -130,6 +130,24 @@ const initTrendProductSheet = () => {
       };
     }
 
+    if (source.classList.contains("deal-time-rail-card")) {
+      return {
+        brand: source.querySelector(".deal-time-rail-brand")?.textContent?.trim() || "",
+        name: source.querySelector(".deal-time-rail-name")?.textContent?.trim() || "",
+        rawPrice: source.querySelector(".deal-time-rail-price strong")?.textContent?.trim() || "",
+        originalPrice: source.querySelector(".deal-time-rail-price del")?.textContent?.trim() || "",
+      };
+    }
+
+    if (source.classList.contains("deal-pick-detail")) {
+      return {
+        brand: source.querySelector("[data-deal-pick-brand]")?.textContent?.trim() || "",
+        name: source.querySelector("[data-deal-pick-title]")?.textContent?.trim() || "",
+        rawPrice: source.querySelector("[data-deal-pick-price]")?.textContent?.trim() || "",
+        originalPrice: source.querySelector("[data-deal-pick-original]")?.textContent?.trim() || "",
+      };
+    }
+
     if (source.classList.contains("mypage-product-card")) {
       const strong = source.querySelector(".mypage-product-body strong") || source.querySelector("strong");
       const priceText =
@@ -501,8 +519,20 @@ const initTrendProductSheet = () => {
   };
 
   const syncTrendCardLinks = () => {
-    trendRail?.querySelectorAll(".reel-card").forEach((card, index) => {
-      if (!card.dataset.reelIndex) card.dataset.reelIndex = String(index + 1);
+    if (!trendRail) return;
+    const originalCards = Array.from(trendRail.querySelectorAll(".reel-card:not(.is-loop-clone)"));
+    const originalCount = Math.max(originalCards.length, 1);
+
+    trendRail.querySelectorAll(".reel-card").forEach((card, index) => {
+      const explicitIndex = Number.parseInt(card.getAttribute("data-reel-index") || "", 10);
+      if (Number.isFinite(explicitIndex) && explicitIndex > 0) {
+        card.dataset.reelIndex = String(explicitIndex);
+      } else {
+        const originalIndex = originalCards.indexOf(card);
+        card.dataset.reelIndex = String(
+          originalIndex >= 0 ? originalIndex + 1 : (index % originalCount) + 1,
+        );
+      }
       if (!card.hasAttribute("tabindex")) card.tabIndex = 0;
       card.setAttribute("role", "link");
       card.setAttribute("aria-label", `Open Real Trend reel ${card.dataset.reelIndex}`);
@@ -670,6 +700,30 @@ const initTrendProductSheet = () => {
 
     const card = cartButton.closest(".editor-card-product");
     if (!card || !card.closest(".editor-card-products")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    openTrendProductSheet(card);
+  });
+
+  document.addEventListener("click", (event) => {
+    const cartButton = event.target.closest(".deal-time-rail-cart");
+    if (!cartButton) return;
+
+    const card = cartButton.closest(".deal-time-rail-card");
+    if (!card || !card.closest("[data-deal-time-rail]")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    openTrendProductSheet(card);
+  });
+
+  document.addEventListener("click", (event) => {
+    const cartButton = event.target.closest("[data-deal-pick-cart]");
+    if (!cartButton) return;
+
+    const card = cartButton.closest(".deal-pick-detail");
+    if (!card || !card.closest("[data-deal-pick-compact]")) return;
 
     event.preventDefault();
     event.stopPropagation();

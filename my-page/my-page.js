@@ -983,7 +983,7 @@
   });
 
   const pageSortSelectRoot =
-    ".orders-select-row .realtrend-select-wrap, .reviews-select-row .realtrend-select-wrap, .profile-field .realtrend-select-wrap";
+    ".orders-select-row .realtrend-select-wrap, .reviews-select-row .realtrend-select-wrap, .profile-field .realtrend-select-wrap, .help-board-filter .realtrend-select-wrap, .help-faq-filter .realtrend-select-wrap, .help-topic-form .realtrend-select-wrap";
 
   const initOrdersSortSelect = (wrap) => {
     const select = wrap.querySelector(".realtrend-select-native");
@@ -1030,7 +1030,7 @@
       });
       valueEl.textContent = select.selectedOptions[0]?.textContent?.trim() || "";
       if (
-        wrap.closest(".profile-field") ||
+        wrap.closest(".profile-field, .help-board-filter, .help-faq-filter, .help-topic-form") ||
         (wrap.closest(".orders-select-row, .reviews-select-row") &&
           window.matchMedia("(max-width: 1120px)").matches)
       ) {
@@ -1148,7 +1148,13 @@
 
   const SAVED_REELS_COUNT_KEY = "bridgeon-saved-reels-count";
   const SAVED_REELS_REMOVED_KEY = "bridgeon-saved-reels-removed";
-  const DEFAULT_SAVED_REELS_COUNT = 12;
+  const DEFAULT_SAVED_REELS_COUNT = 6;
+
+  try {
+    localStorage.removeItem(SAVED_REELS_REMOVED_KEY);
+  } catch {
+    /* ignore private mode storage failures */
+  }
 
   const readSavedReelsCount = () => {
     const stored = Number(localStorage.getItem(SAVED_REELS_COUNT_KEY));
@@ -1166,42 +1172,12 @@
     const grid = content.querySelector(".saved-reel-grid");
     if (!grid) return;
 
-    const normalizeSavedReelId = (value) =>
-      String(value || "")
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase();
-
-    const getSavedReelId = (card) =>
-      normalizeSavedReelId(card.querySelector(".saved-reel-copy b")?.textContent);
-
-    const readRemovedSavedReels = () => {
-      try {
-        const parsed = JSON.parse(localStorage.getItem(SAVED_REELS_REMOVED_KEY) || "[]");
-        return Array.isArray(parsed)
-          ? parsed.map(normalizeSavedReelId).filter(Boolean)
-          : [];
-      } catch {
-        return [];
-      }
-    };
-
-    const writeRemovedSavedReels = (ids) => {
-      localStorage.setItem(SAVED_REELS_REMOVED_KEY, JSON.stringify([...new Set(ids)]));
-    };
-
     const updateReelCount = () => {
       const count = grid.querySelectorAll(".saved-reel-card").length;
       localStorage.setItem(SAVED_REELS_COUNT_KEY, String(count));
       if (countEl) countEl.textContent = `${count} reel${count === 1 ? "" : "s"}`;
       syncMypageSavedReelsCount(count);
     };
-
-    const removedIds = new Set(readRemovedSavedReels());
-    grid.querySelectorAll(".saved-reel-card").forEach((card) => {
-      const id = getSavedReelId(card);
-      if (id && removedIds.has(id)) card.remove();
-    });
 
     grid.addEventListener("click", (event) => {
       const button = event.target.closest(".saved-reel-card > button");
@@ -1212,12 +1188,6 @@
 
       const card = button.closest(".saved-reel-card");
       if (!card) return;
-
-      const id = getSavedReelId(card);
-      if (id) {
-        removedIds.add(id);
-        writeRemovedSavedReels([...removedIds]);
-      }
 
       card.remove();
       updateReelCount();
@@ -1233,8 +1203,26 @@
     const grid = content.querySelector(".wishlist-grid");
     if (!countEl || !grid) return;
 
-    const count = grid.querySelectorAll(".mypage-product-card").length;
-    countEl.textContent = `${count} item${count === 1 ? "" : "s"}`;
+    const updateWishlistCount = () => {
+      const count = grid.querySelectorAll(".mypage-product-card").length;
+      countEl.textContent = `${count} item${count === 1 ? "" : "s"}`;
+    };
+
+    grid.addEventListener("click", (event) => {
+      const button = event.target.closest(".mypage-wish");
+      if (!button || !grid.contains(button)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const card = button.closest(".mypage-product-card");
+      if (!card) return;
+
+      card.remove();
+      updateWishlistCount();
+    });
+
+    updateWishlistCount();
   });
 
   document.querySelectorAll(".points-history-tabs").forEach((tabs) => {

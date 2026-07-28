@@ -2340,31 +2340,34 @@ body.is-product-inquiry-open {
 }
 
 .product-review-photo {
+  position: relative;
   display: block;
   width: 72px;
-  height: 72px;
+  height: auto;
+  aspect-ratio: 1 / 1;
   padding: 0;
   border: 0;
   overflow: hidden;
   background: transparent;
   cursor: pointer;
-  transition: width 0.35s ease, height 0.35s ease;
+  transition: width 0.35s ease;
 }
 
 .product-review-photo-inner {
+  position: absolute;
+  inset: 0;
   display: block;
-  width: 100%;
-  height: 100%;
   border-radius: 6px;
   background:
     linear-gradient(155deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0)),
     linear-gradient(135deg, #f7f2ff 0%, #ddd2ef 100%);
+  background-size: cover;
+  background-position: center;
   transition: background 0.35s ease;
 }
 
 .product-review-item.is-photo-expanded .product-review-photo {
   width: min(100%, 420px);
-  height: min(calc(min(100vw - 80px, 420px) * 0.75), 315px);
 }
 
 .product-review-item.is-photo-expanded .product-review-photo-inner {
@@ -2869,13 +2872,10 @@ body.is-product-inquiry-open {
 
   .product-review-photo {
     width: 72px;
-    height: 72px;
   }
 
   .product-review-item.is-photo-expanded .product-review-photo {
     width: 100%;
-    height: calc(100vw * 0.56);
-    max-height: 315px;
   }
 
   .product-recommendations {

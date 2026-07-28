@@ -404,7 +404,7 @@
 }
 
 .editor-profile {
-  --editor-profile-hero-bg: linear-gradient(180deg, #dff1ff 0%, #f8fbff 100%);
+  --editor-profile-hero-bg: linear-gradient(180deg, #dff1ff 0%, #f8fbff 72%, #ffffff 100%);
   --editor-profile-border: rgba(170, 190, 230, 0.58);
   position: relative;
   flex: 0 0 var(--editor-profile-card-width, min(1040px, calc(100% - 144px)));
@@ -495,27 +495,27 @@
 }
 
 .editor-profile[data-editor-theme="nara"] {
-  --editor-profile-hero-bg: linear-gradient(180deg, #cfeaff 0%, #f7fbff 100%);
+  --editor-profile-hero-bg: linear-gradient(180deg, #cfeaff 0%, #f7fbff 72%, #ffffff 100%);
   --editor-profile-border: rgba(153, 202, 237, 0.66);
 }
 
 .editor-profile[data-editor-theme="mila"] {
-  --editor-profile-hero-bg: linear-gradient(180deg, #fff0b8 0%, #fff9ec 100%);
+  --editor-profile-hero-bg: linear-gradient(180deg, #fff0b8 0%, #fff9ec 72%, #ffffff 100%);
   --editor-profile-border: rgba(236, 202, 115, 0.55);
 }
 
 .editor-profile[data-editor-theme="jules"] {
-  --editor-profile-hero-bg: linear-gradient(180deg, #e7ddff 0%, #f9f5ff 100%);
+  --editor-profile-hero-bg: linear-gradient(180deg, #e7ddff 0%, #f9f5ff 72%, #ffffff 100%);
   --editor-profile-border: rgba(177, 162, 238, 0.56);
 }
 
 .editor-profile[data-editor-theme="pim"] {
-  --editor-profile-hero-bg: linear-gradient(180deg, #ffe7d8 0%, #fff8f1 100%);
+  --editor-profile-hero-bg: linear-gradient(180deg, #ffe7d8 0%, #fff8f1 72%, #ffffff 100%);
   --editor-profile-border: rgba(235, 175, 142, 0.58);
 }
 
 .editor-profile[data-editor-theme="ava"] {
-  --editor-profile-hero-bg: linear-gradient(180deg, #d9f5e3 0%, #f5fbf7 100%);
+  --editor-profile-hero-bg: linear-gradient(180deg, #d9f5e3 0%, #f5fbf7 72%, #ffffff 100%);
   --editor-profile-border: rgba(141, 210, 160, 0.56);
 }
 
@@ -653,7 +653,18 @@
   margin-top: -4px;
 }
 
-.editor-tags span,
+.editor-tags span{
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: var(--editor-purple);
+  background: #f3eefc;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .editor-pick-note span {
   display: inline-flex;
   align-items: center;
@@ -661,9 +672,9 @@
   padding: 6px 12px;
   border-radius: 999px;
   color: var(--editor-purple);
-  background: #f0e8ff;
+  background: #fff;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .editor-note {
@@ -857,16 +868,16 @@
   }
 
   .editor-facts li {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .editor-role {
-    font-size: 15px;
+    font-size: 17px;
   }
 
   .editor-bio {
     max-width: 620px;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.44;
   }
 
@@ -876,8 +887,8 @@
 
   .editor-tags span {
     min-height: 24px;
-    padding: 5px 10px;
-    font-size: 13px;
+    padding: 8px 13px;
+    font-size: 15px;
   }
 
   .editor-note {
@@ -891,7 +902,7 @@
   }
 
   .editor-note p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.45;
   }
 
@@ -1155,17 +1166,17 @@
   }
 
   .editor-pick-product p {
-    font-size: clamp(12px, 0.73vw, 14px);
+    font-size: 14px;
   }
 
   .editor-pick-product h3 {
     margin-bottom: 6px;
-    font-size: clamp(14px, 0.85vw, 16px);
+    font-size: 18px;
   }
 
   .editor-rating {
     margin-bottom: clamp(8px, 0.75vw, 12px);
-    font-size: clamp(12px, 0.68vw, 13px);
+    font-size: 13px;
   }
 
   .editor-price {
@@ -1177,7 +1188,7 @@
   }
 
   .editor-price del {
-    font-size: clamp(12px, 0.73vw, 14px);
+    font-size: 13px;
   }
 
   .editor-pick-actions {
@@ -1195,12 +1206,12 @@
 
   .editor-pick-note h4 {
     margin-bottom: 8px;
-    font-size: clamp(13px, 0.8vw, 15px);
+    font-size: 17px;
   }
 
   .editor-pick-note p {
-    margin-bottom: 12px;
-    font-size: clamp(12px, 0.73vw, 14px);
+    margin-bottom: 20px;
+    font-size: 15px;
     line-height: 1.4;
   }
 }
@@ -1339,7 +1350,7 @@
     overflow-y: hidden;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
-    padding: 4px 4px 8px;
+    padding: 8px 6px 10px;
     scrollbar-width: none;
   }
 
@@ -1754,7 +1765,7 @@
     justify-content: flex-start;
     gap: clamp(24px, 4.5vw, 34px);
     margin: 0 -16px 20px;
-    padding: 3px 16px 8px;
+    padding: 8px 16px 10px;
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
@@ -1956,7 +1967,7 @@
     min-width: 0;
     gap: 4px;
     color: #7a5cc8;
-    font-size: clamp(12px, 2.8vw, 13px);
+    font-size: 13px;
     line-height: 1.35;
     font-weight: 600;
   }
@@ -1976,7 +1987,7 @@
     grid-column: 1 / -1;
     grid-row: 3;
     margin: clamp(4px, 1vw, 7px) 0 0;
-    font-size: clamp(13px, 3vw, 15px);
+    font-size: 15px;
     line-height: 1.45;
     font-weight: 700;
   }
@@ -1987,7 +1998,7 @@
     display: block;
     margin: 2px 0 0;
     color: #342c43;
-    font-size: clamp(13px, 3.1vw, 14px);
+    font-size: 14px;
     line-height: 1.56;
     font-weight: 500;
   }
@@ -2004,14 +2015,14 @@
   .editor-note h3 {
     margin: 0 0 clamp(8px, 1.8vw, 12px);
     color: var(--editor-purple);
-    font-size: clamp(13px, 1.75vw, 15px);
+    font-size: 15px;
     line-height: 1.25;
     font-weight: 700;
   }
 
   .editor-note p {
     color: #171320;
-    font-size: clamp(12px, 1.45vw, 13px);
+    font-size: 14px;
     line-height: 1.52;
     font-weight: 500;
   }
@@ -2019,9 +2030,17 @@
   .editor-note strong {
     margin-top: clamp(12px, 2.2vw, 18px);
     color: #171320;
-    font-size: clamp(12px, 1.5vw, 14px);
+    font-size: 14px;
   }
 
+  .editor-tags span{
+    min-height: clamp(21px, 2.5vw, 24px);
+    color: var(--editor-purple);
+    background: #f6f0ff;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  /* editor-tags */
   .editor-tags {
     grid-column: 1 / -1;
     grid-row: 5;
@@ -2029,13 +2048,11 @@
     margin-top: clamp(4px, 1.2vw, 9px);
   }
 
-  .editor-tags span,
   .editor-pick-tags span {
     min-height: clamp(21px, 2.5vw, 24px);
-    padding: 4px clamp(8px, 1.6vw, 12px);
     color: var(--editor-purple);
-    background: #f0e8ff;
-    font-size: clamp(11px, 1.4vw, 12px);
+    background: #fff;
+    font-size: 13px;
     font-weight: 600;
   }
 
@@ -2047,10 +2064,14 @@
   .editor-pick-card {
     --editor-pick-product-pad-y: 12px;
     --editor-pick-product-pad-inline: 12px;
+    --editor-pick-image-size: clamp(120px, 34vw, 160px);
     position: relative;
     display: grid;
-    grid-template-columns: clamp(96px, 28vw, 128px) minmax(0, 1fr);
+    grid-template-columns: var(--editor-pick-image-size) minmax(0, 1fr);
     grid-template-rows: auto auto;
+    align-items: start;
+    column-gap: 14px;
+    row-gap: 8px;
     width: 100%;
     min-height: 0;
     height: auto;
@@ -2067,7 +2088,11 @@
     grid-column: 1;
     grid-row: 1;
     align-self: stretch;
-    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: auto;
+    min-width: 0;
     min-height: 0;
     height: auto;
     overflow: hidden;
@@ -2078,42 +2103,8 @@
       linear-gradient(145deg, #efe1ff 0%, #f8eef7 55%, #fff 100%);
   }
 
-  .editor-pick-image::before {
-    content: "EDITOR'S PICK";
-    position: absolute;
-    left: 8px;
-    top: 8px;
-    z-index: 1;
-    max-width: calc(100% - 16px);
-    min-height: 20px;
-    padding: 0 8px 0 18px;
-    overflow: hidden;
-    border-radius: 999px;
-    color: var(--editor-purple);
-    background: #fff;
-    box-shadow: 0 4px 10px rgba(49, 19, 108, 0.08);
-    font-size: 9px;
-    line-height: 20px;
-    font-weight: 800;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  .editor-pick-image::after {
-    content: "";
-    position: absolute;
-    left: 14px;
-    top: 14px;
-    z-index: 2;
-    width: 7px;
-    height: 7px;
-    background: var(--editor-purple);
-    clip-path: polygon(50% 0, 61% 33%, 96% 35%, 68% 55%, 79% 90%, 50% 70%, 21% 90%, 32% 55%, 4% 35%, 39% 33%);
-  }
-
   .editor-pick-image span {
-    inset: 18% 16% 12%;
+    inset: 14% 12%;
     height: auto;
     border-radius: 12px;
   }
@@ -2121,16 +2112,24 @@
   .editor-pick-product {
     grid-column: 2;
     grid-row: 1;
+    align-self: stretch;
+    box-sizing: border-box;
+    min-width: 0;
     min-height: 0;
-    padding: 12px 12px 10px;
+    max-width: 100%;
+    padding: 12px 14px 10px 2px;
+    overflow: hidden;
     background: #fff;
   }
 
   .editor-pick-product p {
     margin-bottom: 2px;
+    overflow: hidden;
     color: #7a6470;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .editor-pick-product h3 {
@@ -2141,11 +2140,13 @@
     line-height: 1.25;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .editor-rating {
     margin-bottom: 6px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .editor-rating img {
@@ -2169,7 +2170,7 @@
 
   .editor-price del {
     order: 1;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1;
   }
 
@@ -2237,16 +2238,16 @@
   }
 
   .editor-pick-note-copy {
-    padding: 10px 12px;
+    padding: 15px 12px;
     border-radius: 10px;
     background: #f6f0ff;
   }
 
   .editor-pick-note h4 {
     gap: 6px;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     color: var(--editor-purple);
-    font-size: 11px;
+    font-size: 15px;
     text-transform: uppercase;
   }
 
@@ -2265,7 +2266,7 @@
     margin: 0 0 8px;
     overflow: hidden;
     color: #4f475d;
-    font-size: 12px;
+    font-size: 16px;
     line-height: 1.4;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -2384,11 +2385,12 @@
   }
 
   .editor-pick-card {
-    grid-template-columns: 88px minmax(0, 1fr);
+    --editor-pick-image-size: 112px;
+    column-gap: 12px;
   }
 
   .editor-pick-product {
-    padding: 10px 10px 8px;
+    padding: 10px 10px 8px 0;
   }
 
   .editor-pick-note {

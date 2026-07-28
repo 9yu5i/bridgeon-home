@@ -16,9 +16,14 @@
   min-height: 152px;
 }
 
-.wishlist-grid .mypage-wish.is-active::before,
+/* Wishlist items are already saved: always show the pressed (filled) heart. */
+.wishlist-grid .mypage-wish.is-active::before {
+  opacity: 0;
+}
+
 .wishlist-grid .mypage-wish.is-active::after {
   opacity: 1;
+  background-image: url("../img/listing/wish_hover.png");
 }
 
 @media (max-width: 1120px) {

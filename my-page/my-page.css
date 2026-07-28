@@ -4,8 +4,8 @@
   --mypage-line: #ddd5ea;
   --mypage-hero-height: clamp(280px, 35.15625vw, 675px);
   --mypage-tier-medal-size: 32px;
-  --mypage-tier-medal-offset: 28px;
-  --mypage-tier-graph-max: 450px;
+  --mypage-tier-medal-offset: 8px;
+  --mypage-tier-graph-max: 420px;
   --mypage-tier-track-max: calc(var(--mypage-tier-medal-size) * 2 + var(--mypage-tier-graph-max));
   color: #111;
   background: #fff;
@@ -320,30 +320,44 @@
 
 .mypage-dashboard {
   display: grid;
-  gap: 24px;
+  row-gap: 20px;
 }
 
 .mypage-profile-panel {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 128px minmax(0, 1fr) 220px;
-  grid-template-rows: auto auto auto;
-  align-items: start;
-  column-gap: 32px;
-  row-gap: 12px;
+  grid-template-columns: 150px minmax(0, 1fr) 270px;
+  align-items: center;
+  column-gap: clamp(30px, 3.2vw, 54px);
+  row-gap: 14px;
+  overflow: hidden;
   min-height: 0;
-  padding: 40px 48px 26px;
-  border-color: rgba(255, 255, 255, 0.62);
-  border-radius: 12px;
+  padding: clamp(36px, 3vw, 54px) clamp(40px, 4.2vw, 68px) clamp(38px, 3.2vw, 56px);
+  border-color: rgba(255, 255, 255, 0.68);
+  border-radius: 20px;
   color: #fff;
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(8px);
+  background:
+    radial-gradient(circle at 82% 7%, rgba(255, 224, 252, 0.5) 0 9%, transparent 28%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.07) 50%, rgba(255, 255, 255, 0.24) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.44),
+    0 28px 70px rgba(30, 4, 70, 0.2);
+  backdrop-filter: blur(12px);
 }
 
-.mypage-profile-main,
-.mypage-membership {
+.mypage-profile-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(100deg, rgba(30, 8, 70, 0.38), transparent 42%),
+    radial-gradient(ellipse at 58% 82%, rgba(255, 255, 255, 0.22), transparent 48%);
+  pointer-events: none;
+}
+
+.mypage-profile-main {
   display: contents;
 }
 
@@ -352,54 +366,116 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 0;
-  width: 128px;
+  justify-content: center;
+  gap: 18px;
+  width: 150px;
   grid-column: 1;
-  grid-row: 1 / 3;
-  align-self: stretch;
+  grid-row: 1;
+  align-self: center;
 }
 
 .mypage-welcome {
+  display: grid;
+  gap: 14px;
   grid-column: 2;
   grid-row: 1;
   min-width: 0;
-  max-width: 520px;
+  max-width: 560px;
   padding-top: 2px;
+  align-content: center;
 }
 
 .mypage-membership-card {
-  grid-column: 2;
-  grid-row: 2;
+  display: grid;
+  gap: 8px;
+  width: min(100%, 420px);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #fff;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.mypage-membership-card::before,
+.mypage-membership-card::after {
+  content: none;
+}
+
+.mypage-progress-labels {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.mypage-progress-labels span {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.mypage-progress-labels strong {
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.mypage-progress-track {
+  position: relative;
+  display: block;
   width: 100%;
-  max-width: 570px;
-  min-height: 98px;
-  margin-top: 20px;
-  padding: 16px 28px 14px;
-  border-radius: 18px;
-  background: rgba(34, 12, 60, 0.54);
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.mypage-progress-track i {
+  display: block;
+  width: 67%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #e8ddff 0%, #7b3fe4 100%);
 }
 
 .mypage-membership-link {
-  display: block;
-  grid-column: 2;
-  grid-row: 3;
-  width: 100%;
-  max-width: 570px;
+  display: inline-flex;
+  width: fit-content;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mypage-membership-link:hover,
+.mypage-membership-link:focus-visible {
   color: #fff;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 400;
 }
 
 .mypage-stats {
   display: grid;
   grid-column: 3;
-  grid-row: 1 / 3;
-  align-self: end;
-  width: 220px;
-  border-radius: 20px;
-  background: rgba(56, 22, 74, 0.4);
+  grid-row: 1;
+  align-self: center;
+  width: 270px;
+  gap: 0;
+  overflow: hidden;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 22px;
+  background: rgba(47, 18, 77, 0.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 18px 40px rgba(29, 7, 56, 0.16);
 }
 
 .mypage-avatar,
@@ -410,11 +486,12 @@
 
 .mypage-avatar {
   position: relative;
-  width: 128px;
-  height: 128px;
+  width: 138px;
+  height: 138px;
   margin-top: 10px;
   overflow: hidden;
   background: #fff1fb;
+  box-shadow: 0 18px 40px rgba(36, 7, 74, 0.2);
 }
 
 .mypage-avatar-photo {
@@ -476,14 +553,38 @@
 }
 
 .mypage-welcome p {
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .mypage-welcome h1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   margin-top: 6px;
-  font-size: 36px;
+  font-size: clamp(38px, 2.7vw, 48px);
+  line-height: 1;
+  font-weight: 850;
+  letter-spacing: 0;
+}
+
+.mypage-current-tier {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  font-size: 12px;
   line-height: 1;
   font-weight: 800;
+  letter-spacing: 0.02em;
 }
 
 .mypage-edit-desktop {
@@ -536,116 +637,54 @@
 }
 
 .mypage-tier-labels,
-.mypage-progress-row {
-  display: grid;
-  grid-template-columns: var(--mypage-tier-medal-size) minmax(0, 1fr) var(--mypage-tier-medal-size);
-  align-items: center;
-  justify-items: center;
-  column-gap: 0;
-}
-
-.mypage-tier-labels {
-  margin-bottom: -14px;
-  font-size: 17px;
-  font-weight: 500;
-}
-
-.mypage-tier-labels span {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  text-align: center;
-  line-height: 1;
-}
-
-.mypage-tier-labels span:last-child {
-  grid-column: 3;
-}
-
 .mypage-medal {
-  display: grid;
-  place-items: center;
-  justify-self: center;
-  width: 32px;
-  height: 32px;
-  overflow: hidden;
-  color: #fff;
-  font-size: 0;
-  background: transparent;
+  display: none;
 }
 
-.mypage-medal img {
-  display: block;
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-}
-
-.mypage-progress-row div {
-  flex: 1;
-  min-width: 0;
-  text-align: center;
-}
-
-.mypage-progress-lead {
-  display: block;
-  margin: 0 0 5px;
-  font-size: 13px;
-  line-height: 1.15;
-  font-weight: 400;
-}
-
-.mypage-progress-row p {
-  margin: 0 0 13px;
-  font-size: 13px;
-  line-height: 1.1;
-  font-weight: 400;
-}
-
-.mypage-progress-row span {
-  display: block;
-  height: 7px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.52);
-}
-
-.mypage-progress-row i {
-  display: block;
-  width: 64%;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--mypage-purple, #7b3fe4);
-}
-
-.mypage-progress-row small {
-  display: block;
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 500;
+.mypage-progress-row,
+.mypage-progress-meta,
+.mypage-progress-copy,
+.mypage-progress-goal,
+.mypage-progress-foot,
+.mypage-progress-stats,
+.mypage-membership-head {
+  display: none;
 }
 
 .mypage-stats a {
   display: grid;
-  grid-template-columns: 22px 1fr auto 14px;
+  grid-template-columns: 28px 1fr auto 12px;
   align-items: center;
-  gap: 10px;
-  min-height: 56px;
-  padding: 0 22px;
+  gap: 12px;
+  min-height: 58px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 16px;
   color: #fff;
   font-size: 13px;
-  font-weight: 300;
+  font-weight: 500;
+  background: transparent;
+  box-shadow: none;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .mypage-stats a + a {
-  border-top: 1px solid rgba(255, 255, 255, 0.36);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.mypage-stats a:hover,
+.mypage-stats a:focus-visible {
+  background: rgba(255, 255, 255, 0.24);
+  transform: translateY(-2px);
 }
 
 .mypage-stats span {
   display: grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .mypage-stats span img {
@@ -656,8 +695,8 @@
 }
 
 .mypage-stats strong {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 800;
 }
 
 .mypage-card {
@@ -667,8 +706,11 @@
 .mypage-orders {
   position: relative;
   z-index: 2;
-  padding: 28px 48px 32px;
+  padding: 30px 48px 34px;
+  border: 0;
+  border-radius: 18px;
   background: #fff;
+  box-shadow: 0 18px 36px rgba(33, 17, 65, 0.13);
 }
 
 .mypage-card-head {
@@ -676,60 +718,77 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 26px;
 }
 
 .mypage-card-head h2 {
   margin: 0;
   color: #1a1522;
-  font-size: 24px;
+  font-size: 25px;
   line-height: 1;
   font-weight: 800;
 }
 
 .mypage-card-head a {
-  color: #111;
+  color: #21162d;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.mypage-card-head a:hover,
+.mypage-card-head a:focus-visible {
+  color: var(--mypage-purple);
 }
 
 .mypage-order-status {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  min-height: 70px;
+  border-radius: 16px;
 }
 
 .mypage-order-status a {
   display: grid;
-  grid-template-columns: 42px auto;
+  grid-template-columns: 46px auto;
   grid-template-rows: auto auto;
   align-items: center;
   justify-content: center;
-  column-gap: 14px;
+  column-gap: 13px;
   color: #111;
+  border-radius: 14px;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .mypage-order-status a + a {
-  border-left: 2px solid #d0cbd8;
+  border-left: 1px solid #ddd5ea;
+}
+
+.mypage-order-status a:hover,
+.mypage-order-status a:focus-visible {
+  background: #f8f3ff;
+  transform: translateY(-1px);
 }
 
 .mypage-order-status span {
   grid-row: 1 / 3;
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
 }
 
 .mypage-order-status span img {
   display: block;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   object-fit: contain;
 }
 
 .mypage-order-status strong {
-  font-size: 27px;
+  font-size: 28px;
   line-height: 1;
+  font-weight: 800;
 }
 
 .mypage-order-status b {
@@ -882,6 +941,9 @@
 
 .mypage-wish img {
   display: none;
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
 }
 
 .mypage-wish::before,
@@ -892,12 +954,19 @@
   margin: auto;
   width: 14px;
   height: 14px;
-  background: url("../editors-pick/img/wish.png") center / contain no-repeat;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
   transition: opacity 0.25s ease;
 }
 
+.mypage-wish::before {
+  background-image: url("../img/listing/wish.png");
+  opacity: 1;
+}
+
 .mypage-wish::after {
-  background-image: url("../img/mobile-icon/menu/wishlist-hover.png");
+  background-image: url("../img/listing/wish_hover.png");
   opacity: 0;
 }
 
@@ -913,10 +982,18 @@
   opacity: 1;
 }
 
+.mypage-wishlist .mypage-wish::before {
+  opacity: 0;
+}
+
+.mypage-wishlist .mypage-wish::after {
+  opacity: 1;
+}
+
 .mypage-lower {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 18px;
 }
 
 .mypage-recent,
@@ -1318,29 +1395,6 @@ body.is-mypage-logout-open {
   background: #31136c;
 }
 
-@media (min-width: 1121px) {
-  .mypage-tier-labels,
-  .mypage-progress-row {
-    width: min(100%, var(--mypage-tier-track-max));
-    margin-inline: auto;
-    grid-template-columns:
-      var(--mypage-tier-medal-size)
-      minmax(0, var(--mypage-tier-graph-max))
-      var(--mypage-tier-medal-size);
-    column-gap: 0;
-  }
-
-  .mypage-tier-labels span:first-child,
-  .mypage-medal--silver {
-    transform: translateX(var(--mypage-tier-medal-offset));
-  }
-
-  .mypage-tier-labels span:last-child,
-  .mypage-medal--gold {
-    transform: translateX(calc(var(--mypage-tier-medal-offset) * -1));
-  }
-}
-
 @media (max-width: 1120px) {
   .my-page {
     --mypage-hero-height: clamp(200px, 61.692vw, 248px);
@@ -1512,8 +1566,7 @@ body.is-mypage-logout-open {
     grid-template-columns: auto auto 1fr;
     grid-template-areas:
       "avatar welcome ."
-      "points points points"
-      "membership membership membership";
+      "points points points";
     justify-content: start;
     column-gap: clamp(16px, 3.2vw, 28px);
     row-gap: clamp(16px, 3vw, 22px);
@@ -1564,6 +1617,7 @@ body.is-mypage-logout-open {
     max-width: none;
     align-self: center;
     padding-top: 0;
+    gap: 10px;
   }
 
   .mypage-welcome p {
@@ -1572,6 +1626,15 @@ body.is-mypage-logout-open {
 
   .mypage-welcome h1 {
     font-size: clamp(30px, 6vw, 42px);
+  }
+
+  .mypage-membership-card {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .mypage-membership-link {
+    font-size: 12px;
   }
 
   .mypage-edit-desktop {
@@ -1611,85 +1674,6 @@ body.is-mypage-logout-open {
 
   .mypage-mobile-points b {
     font-size: 15px;
-  }
-
-  .mypage-membership {
-    display: grid;
-    grid-area: membership;
-    position: static;
-    gap: 10px;
-    width: 100%;
-    max-width: none;
-  }
-
-  .mypage-membership-card {
-    grid-column: auto;
-    grid-row: auto;
-    width: 100%;
-    max-width: none;
-    min-height: 114px;
-    margin-top: 0;
-    padding: 14px 16px 13px;
-    border-radius: 9px;
-    background: rgba(21, 10, 33, 0.62);
-  }
-
-  .mypage-membership-link {
-    grid-column: auto;
-    grid-row: auto;
-    width: 100%;
-    max-width: none;
-  }
-
-  .mypage-tier-labels {
-    font-size: 14px;
-  }
-
-  .mypage-tier-labels,
-  .mypage-progress-row {
-    --mypage-tier-medal-size: 30px;
-    --mypage-tier-graph-gap: 24px;
-    width: auto;
-    margin-inline: 0;
-    grid-template-columns: var(--mypage-tier-medal-size) minmax(0, 1fr) var(--mypage-tier-medal-size);
-    column-gap: var(--mypage-tier-graph-gap);
-  }
-
-  .mypage-tier-labels span {
-    width: 30px;
-  }
-
-  .mypage-tier-labels span:first-child,
-  .mypage-medal--silver,
-  .mypage-tier-labels span:last-child,
-  .mypage-medal--gold {
-    transform: none;
-  }
-
-  .mypage-medal {
-    width: 30px;
-    height: 30px;
-  }
-
-  .mypage-medal img {
-    width: 30px;
-    height: 30px;
-  }
-
-  .mypage-progress-lead {
-    font-size: 13px;
-    font-weight: 300;
-  }
-
-  .mypage-progress-row p {
-    font-size: 12px;
-    font-weight: 300;
-  }
-
-  .mypage-progress-row small,
-  .mypage-membership-link {
-    font-size: 14px;
-    font-weight: 300;
   }
 
   .mypage-card {
@@ -2004,13 +1988,6 @@ body.is-mypage-logout-open {
   .mypage-profile-panel {
     min-height: 0;
     padding: 27px 23px 48px;
-  }
-
-  .mypage-tier-labels,
-  .mypage-progress-row {
-    --mypage-tier-graph-gap: 24px;
-    grid-template-columns: 30px minmax(0, 1fr) 30px;
-    column-gap: var(--mypage-tier-graph-gap);
   }
 
   .mypage-orders {

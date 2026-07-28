@@ -407,6 +407,10 @@
   padding: 0 14px;
 }
 
+.orders-card:not([data-order-status="delivered"]):not([data-order-status="shipped"]) .orders-track-button {
+  display: none;
+}
+
 .orders-card-actions button:hover,
 .orders-mobile-item button:hover {
   color: #fff;

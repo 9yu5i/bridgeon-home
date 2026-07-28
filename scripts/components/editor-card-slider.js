@@ -173,6 +173,68 @@
     let suppressClick = false;
 
     const canScrollRail = () => rail.scrollWidth > rail.clientWidth + 2;
+    const controls = document.createElement("div");
+    controls.className = "editor-product-rail-controls";
+    controls.setAttribute("aria-label", "Browse editor picked products");
+    controls.innerHTML = `
+      <button class="editor-product-rail-button" type="button" data-editor-product-prev aria-label="Previous picked product"><span aria-hidden="true">&lsaquo;</span></button>
+      <button class="editor-product-rail-button" type="button" data-editor-product-next aria-label="Next picked product"><span aria-hidden="true">&rsaquo;</span></button>
+    `;
+    rail.insertAdjacentElement("afterend", controls);
+
+    const getRailStep = () => {
+      const firstCard = rail.querySelector(".editor-card-product");
+      if (!firstCard) return rail.clientWidth * 0.72;
+
+      const railStyle = window.getComputedStyle(rail);
+      const gap = Number.parseFloat(railStyle.columnGap || railStyle.gap || "0") || 0;
+      return firstCard.getBoundingClientRect().width + gap;
+    };
+
+    const syncRailControls = () => {
+      const hasOverflow = canScrollRail();
+      rail.classList.toggle("has-product-overflow", hasOverflow);
+      controls.hidden = !hasOverflow;
+    };
+
+    const scrollRail = (direction) => {
+      if (!canScrollRail()) return;
+
+      const maxScrollLeft = rail.scrollWidth - rail.clientWidth;
+      const currentLeft = rail.scrollLeft;
+      let nextLeft = currentLeft + direction * getRailStep();
+
+      if (direction > 0 && currentLeft >= maxScrollLeft - 4) {
+        nextLeft = 0;
+      } else if (direction < 0 && currentLeft <= 4) {
+        nextLeft = maxScrollLeft;
+      } else {
+        nextLeft = Math.max(0, Math.min(maxScrollLeft, nextLeft));
+      }
+
+      rail.scrollTo({
+        left: nextLeft,
+        behavior: reduceMotion.matches ? "auto" : "smooth",
+      });
+    };
+
+    controls.querySelector("[data-editor-product-prev]")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      scrollRail(-1);
+    });
+
+    controls.querySelector("[data-editor-product-next]")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      scrollRail(1);
+    });
+
+    syncRailControls();
+    window.addEventListener("resize", syncRailControls);
+    if ("ResizeObserver" in window) {
+      new ResizeObserver(syncRailControls).observe(rail);
+    }
 
     rail.addEventListener(
       "wheel",

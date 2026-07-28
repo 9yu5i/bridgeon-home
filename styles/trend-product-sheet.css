@@ -40,6 +40,11 @@ body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-card {
   height: auto;
   max-height: none;
   flex-shrink: 0;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255, 198, 224, 0.42) 0%, transparent 46%),
+    radial-gradient(circle at 96% 6%, rgba(176, 152, 255, 0.34) 0%, transparent 44%),
+    radial-gradient(circle at 70% 100%, rgba(255, 220, 210, 0.28) 0%, transparent 42%),
+    linear-gradient(168deg, #fff9fc 0%, #f4eefc 52%, #ebe3f8 100%);
 }
 
 body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-card.is-select-open,

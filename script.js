@@ -360,6 +360,7 @@ window.BridgeOn.cart = {
 };
 
 const WISHLIST_STORAGE_KEY = "bridgeon-wishlist-items";
+const WISHLIST_PAGE_REMOVED_KEY = "bridgeon-wishlist-page-removed";
 const WISHLIST_BUTTON_SELECTOR = [
   ".product-card .card-actions button:last-child",
   ".listing-card-wish",
@@ -370,6 +371,7 @@ const WISHLIST_BUTTON_SELECTOR = [
   ".mypage-wish",
   ".deal-share-button",
 ].join(", ");
+const SAVED_WISHLIST_CARD_SELECTOR = ".wishlist-content .mypage-product-card, .mypage-wishlist .mypage-product-card";
 
 const normalizeWishlistText = (value, fallback = "") =>
   String(value || fallback).replace(/\s+/g, " ").trim();
@@ -443,6 +445,23 @@ const readWishlistItems = () => {
 const writeWishlistItems = (items) => {
   localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(items.map(normalizeWishlistItem)));
   window.dispatchEvent(new CustomEvent("bridgeon:wishlistchange", { detail: { items: readWishlistItems() } }));
+};
+
+const readWishlistPageRemovedIds = () => {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(WISHLIST_PAGE_REMOVED_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.map(String).filter(Boolean) : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeWishlistPageRemovedIds = (ids) => {
+  try {
+    localStorage.setItem(WISHLIST_PAGE_REMOVED_KEY, JSON.stringify([...new Set(ids)]));
+  } catch {
+    /* ignore quota / private mode failures */
+  }
 };
 
 const getDirectText = (node) =>
@@ -557,11 +576,53 @@ const setWishlistButtonState = (button, isActive) => {
   }
 };
 
+const getWishlistPageCardId = (card) => {
+  const button = card?.querySelector(".mypage-wish");
+  const item = button ? getWishlistPayloadFromButton(button) : null;
+  return item?.id || "";
+};
+
+const updateWishlistPageCount = (content) => {
+  const countEl = content?.querySelector(".account-collection-head strong");
+  const grid = content?.querySelector(".wishlist-grid");
+  if (!countEl || !grid) return;
+
+  const count = grid.querySelectorAll(".mypage-product-card").length;
+  countEl.textContent = `${count} item${count === 1 ? "" : "s"}`;
+};
+
+const syncWishlistPageCards = (root = document) => {
+  const scope = root && typeof root.querySelectorAll === "function" ? root : document;
+  const removedIds = new Set(readWishlistPageRemovedIds());
+
+  scope.querySelectorAll(".wishlist-content, .mypage-wishlist").forEach((content) => {
+    const shouldApplyRemovedState = content.classList.contains("wishlist-content");
+
+    content.querySelectorAll(".mypage-product-grid .mypage-product-card").forEach((card) => {
+      const id = getWishlistPageCardId(card);
+      if (shouldApplyRemovedState && id && removedIds.has(id)) {
+        card.remove();
+        return;
+      }
+
+      const button = card.querySelector(".mypage-wish");
+      if (button) setWishlistButtonState(button, true);
+    });
+
+    updateWishlistPageCount(content);
+  });
+};
+
 const syncWishlistButtons = (root = document) => {
   const scope = root && typeof root.querySelectorAll === "function" ? root : document;
   const activeIds = new Set(readWishlistItems().map((item) => item.id));
 
   scope.querySelectorAll(WISHLIST_BUTTON_SELECTOR).forEach((button) => {
+    if (button.closest(SAVED_WISHLIST_CARD_SELECTOR)) {
+      setWishlistButtonState(button, true);
+      return;
+    }
+
     const item = getWishlistPayloadFromButton(button);
     if (!item?.id) return;
     setWishlistButtonState(button, activeIds.has(item.id));
@@ -599,7 +660,7 @@ document.addEventListener(
     const button = event.target.closest?.(WISHLIST_BUTTON_SELECTOR);
     if (!button) return;
 
-    const wishlistCard = button.closest(".wishlist-content .mypage-product-card");
+    const wishlistCard = button.closest(SAVED_WISHLIST_CARD_SELECTOR);
     if (wishlistCard) {
       event.preventDefault();
       event.stopPropagation();
@@ -610,15 +671,14 @@ document.addEventListener(
         window.BridgeOn.wishlist.toggle(item);
       }
 
-      const content = wishlistCard.closest(".wishlist-content");
-      const grid = content?.querySelector(".wishlist-grid");
-      const countEl = content?.querySelector(".account-collection-head strong");
-      wishlistCard.remove();
-
-      if (countEl && grid) {
-        const count = grid.querySelectorAll(".mypage-product-card").length;
-        countEl.textContent = `${count} item${count === 1 ? "" : "s"}`;
+      const cardId = getWishlistPageCardId(wishlistCard);
+      if (cardId && wishlistCard.closest(".wishlist-content")) {
+        writeWishlistPageRemovedIds([...readWishlistPageRemovedIds(), cardId]);
       }
+
+      const content = wishlistCard.closest(".wishlist-content");
+      wishlistCard.remove();
+      updateWishlistPageCount(content);
       return;
     }
 
@@ -648,6 +708,7 @@ window.addEventListener("storage", (event) => {
 });
 
 syncWishlistButtons();
+syncWishlistPageCards();
 
 if (typeof MutationObserver === "function") {
   let wishlistSyncFrame = 0;
@@ -759,3 +820,5 @@ loadBridgeOnComponent("scripts/components/magazine-slider.js");
 loadBridgeOnComponent("scripts/components/support-footer.js");
 
 loadBridgeOnComponent("scripts/components/product-sheet.js");
+
+loadBridgeOnComponent("scripts/components/trend-card-links.js");

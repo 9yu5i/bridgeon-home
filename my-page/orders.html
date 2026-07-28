@@ -493,7 +493,7 @@
             <a href="./saved-posts.html"><span class="mypage-side-icon mypage-side-icon--saved" aria-hidden="true"></span>Saved posts</a>
             <a href="./membership.html"><span class="mypage-side-icon mypage-side-icon--membership" aria-hidden="true"></span>Membership</a>
             <a href="./points.html"><span class="mypage-side-icon mypage-side-icon--points" aria-hidden="true"></span>Points</a>
-            <a href="#"><span class="mypage-side-icon mypage-side-icon--help" aria-hidden="true"></span>Help Center</a>
+            <a href="./help-center.html"><span class="mypage-side-icon mypage-side-icon--help" aria-hidden="true"></span>Help Center</a>
             <a href="#"><span class="mypage-side-icon mypage-side-icon--logout" aria-hidden="true"></span>Log Out</a>
           </nav>
           <article class="mypage-invite mypage-invite--desktop">
@@ -557,7 +557,7 @@
           </div>
 
           <section class="orders-list" aria-label="Order list">
-            <article class="orders-card">
+            <article class="orders-card" data-order-status="delivered">
               <div class="orders-card-head">
                 <div>
                   <h2>Order <span>#nnnnnnnnn</span></h2>
@@ -583,7 +583,7 @@
                 </div>
                 <div class="orders-card-actions desktop-only">
                   <button type="button">Write a Review</button>
-                  <button type="button">Track Order</button>
+                  <button type="button" class="orders-track-button">Track Order</button>
                 </div>
                 <div class="orders-mobile-items">
                   <section class="orders-mobile-item">
@@ -594,7 +594,7 @@
                       <strong>US$18.40</strong>
                     </div>
                     <button type="button">Write A Review</button>
-                    <button type="button">Track Order</button>
+                    <button type="button" class="orders-track-button">Track Order</button>
                   </section>
                   <section class="orders-mobile-item">
                     <span class="orders-mobile-thumb orders-mobile-thumb--green"></span>
@@ -605,7 +605,7 @@
                       <strong>US$18.40</strong>
                     </div>
                     <button type="button">Write A Review</button>
-                    <button type="button">Track Order</button>
+                    <button type="button" class="orders-track-button">Track Order</button>
                   </section>
                   <section class="orders-mobile-item">
                     <span class="orders-mobile-thumb orders-mobile-thumb--rose"></span>
@@ -615,13 +615,13 @@
                       <strong>US$18.40</strong>
                     </div>
                     <button type="button">Write A Review</button>
-                    <button type="button">Track Order</button>
+                    <button type="button" class="orders-track-button">Track Order</button>
                   </section>
                 </div>
               </div>
             </article>
 
-            <article class="orders-card">
+            <article class="orders-card" data-order-status="shipped">
               <div class="orders-card-head">
                 <div>
                   <h2>Order <span>#nnnnnnnnn</span></h2>
@@ -647,7 +647,7 @@
                 </div>
                 <div class="orders-card-actions desktop-only">
                   <button type="button">Write a Review</button>
-                  <button type="button">Track Order</button>
+                  <button type="button" class="orders-track-button">Track Order</button>
                 </div>
                 <div class="orders-mobile-items">
                   <section class="orders-mobile-item">
@@ -658,7 +658,7 @@
                       <strong>US$18.40</strong>
                     </div>
                     <button type="button">Write A Review</button>
-                    <button type="button">Track Order</button>
+                    <button type="button" class="orders-track-button">Track Order</button>
                   </section>
                   <section class="orders-mobile-item">
                     <span class="orders-mobile-thumb orders-mobile-thumb--green"></span>
@@ -669,7 +669,7 @@
                       <strong>US$18.40</strong>
                     </div>
                     <button type="button">Write A Review</button>
-                    <button type="button">Track Order</button>
+                    <button type="button" class="orders-track-button">Track Order</button>
                   </section>
                   <section class="orders-mobile-item">
                     <span class="orders-mobile-thumb orders-mobile-thumb--rose"></span>
@@ -679,13 +679,13 @@
                       <strong>US$18.40</strong>
                     </div>
                     <button type="button">Write A Review</button>
-                    <button type="button">Track Order</button>
+                    <button type="button" class="orders-track-button">Track Order</button>
                   </section>
                 </div>
               </div>
             </article>
 
-            <article class="orders-card desktop-only">
+            <article class="orders-card desktop-only" data-order-status="processing">
               <div class="orders-card-head">
                 <div>
                   <h2>Order <span>#nnnnnnnnn</span></h2>
@@ -698,11 +698,11 @@
                 <div class="orders-thumbs"><span class="orders-thumb orders-thumb--pink"></span><span class="orders-thumb orders-thumb--purple"></span><span class="orders-thumb orders-thumb--blue"></span><span class="orders-thumb orders-thumb--face"><em>+2</em></span></div>
                 <div class="orders-desktop-meta"><p><span>Items</span><b>4 items</b></p><p><span>Payment</span><b>PayPal</b></p></div>
                 <div class="orders-address"><span>Shipping Address</span><b>Name<br>123 nnnn St.<br>nnnn, United State<br>90007</b></div>
-                <div class="orders-card-actions"><button type="button">Write a Review</button><button type="button">Track Order</button></div>
+                <div class="orders-card-actions"><button type="button">Write a Review</button><button type="button" class="orders-track-button">Track Order</button></div>
               </div>
             </article>
 
-            <article class="orders-card desktop-only">
+            <article class="orders-card desktop-only" data-order-status="cancelled">
               <div class="orders-card-head">
                 <div>
                   <h2>Order <span>#nnnnnnnnn</span></h2>
@@ -715,11 +715,11 @@
                 <div class="orders-thumbs"><span class="orders-thumb orders-thumb--pink"></span><span class="orders-thumb orders-thumb--purple"></span></div>
                 <div class="orders-desktop-meta"><p><span>Items</span><b>2 items</b></p><p><span>Payment</span><b>Credit Card **** 4242</b></p></div>
                 <div class="orders-address"><span>Reason</span><b>Customer cancelled</b></div>
-                <div class="orders-card-actions"><button type="button">Write a Review</button><button type="button">Track Order</button></div>
+                <div class="orders-card-actions"><button type="button">Write a Review</button><button type="button" class="orders-track-button">Track Order</button></div>
               </div>
             </article>
 
-            <article class="orders-card desktop-only">
+            <article class="orders-card desktop-only" data-order-status="processing">
               <div class="orders-card-head">
                 <div><h2>Order <span>#nnnnnnnnn</span></h2><time datetime="2025-04-28">Apr 28, 2025</time></div>
                 <mark>Processing</mark><strong>US$124.50</strong>
@@ -728,11 +728,11 @@
                 <div class="orders-thumbs"><span class="orders-thumb orders-thumb--pink"></span><span class="orders-thumb orders-thumb--purple"></span><span class="orders-thumb orders-thumb--blue"></span><span class="orders-thumb orders-thumb--face"><em>+2</em></span></div>
                 <div class="orders-desktop-meta"><p><span>Items</span><b>4 items</b></p><p><span>Payment</span><b>PayPal</b></p></div>
                 <div class="orders-address"><span>Shipping Address</span><b>Name<br>123 nnnn St.<br>nnnn, United State<br>90007</b></div>
-                <div class="orders-card-actions"><button type="button">Write a Review</button><button type="button">Track Order</button></div>
+                <div class="orders-card-actions"><button type="button">Write a Review</button><button type="button" class="orders-track-button">Track Order</button></div>
               </div>
             </article>
 
-            <article class="orders-card desktop-only">
+            <article class="orders-card desktop-only" data-order-status="cancelled">
               <div class="orders-card-head">
                 <div><h2>Order <span>#nnnnnnnnn</span></h2><time datetime="2025-04-28">Apr 28, 2025</time></div>
                 <mark class="is-cancelled">Cancelled</mark><strong>US$32.00</strong>
@@ -741,7 +741,7 @@
                 <div class="orders-thumbs"><span class="orders-thumb orders-thumb--pink"></span><span class="orders-thumb orders-thumb--purple"></span></div>
                 <div class="orders-desktop-meta"><p><span>Items</span><b>2 items</b></p><p><span>Payment</span><b>Credit Card **** 4242</b></p></div>
                 <div class="orders-address"><span>Reason</span><b>Customer cancelled</b></div>
-                <div class="orders-card-actions"><button type="button">Write a Review</button><button type="button">Track Order</button></div>
+                <div class="orders-card-actions"><button type="button">Write a Review</button><button type="button" class="orders-track-button">Track Order</button></div>
               </div>
             </article>
           </section>
@@ -752,9 +752,9 @@
         <span aria-hidden="true"></span>
         <div>
           <h2>Need help with your order?</h2>
-          <p>Visit our <a href="#">Help Center</a> for FAQs or contact our customer support.</p>
+          <p>Visit our <a href="./help-center.html">Help Center</a> for FAQs or contact our customer support.</p>
         </div>
-        <a href="#">Go to Help Center <b aria-hidden="true">-&gt;</b></a>
+        <a href="./help-center.html">Go to Help Center <b aria-hidden="true">-&gt;</b></a>
       </section>
     </main>
 
@@ -767,7 +767,7 @@
         </div>
         <div class="footer-group">
           <button class="footer-toggle" type="button">CUSTOMER CARE</button>
-          <div class="footer-links"><a href="#">Help Center</a><a href="#">Shipping &amp; Delivery</a><a href="#">Returns &amp; Refunds</a><a href="#">Contact Us</a></div>
+          <div class="footer-links"><a href="./help-center.html">Help Center</a><a href="#">Shipping &amp; Delivery</a><a href="#">Returns &amp; Refunds</a><a href="#">Contact Us</a></div>
         </div>
         <div class="footer-group">
           <button class="footer-toggle" type="button">POLICIES</button>

@@ -39,8 +39,10 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
   let isAnimating = false;
   let autoTimer = null;
   let dragActive = false;
+  let didDrag = false;
   let startX = 0;
   let currentX = 0;
+  const DRAG_THRESHOLD = 8;
   let activeAnimation = null;
 
   const getGap = () => parseFloat(getComputedStyle(rail).columnGap || getComputedStyle(rail).gap) || 0;
@@ -77,6 +79,7 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
     activeAnimation = null;
     isAnimating = false;
     dragActive = false;
+    didDrag = false;
     currentX = 0;
     rail.classList.remove("is-dragging");
     rail.querySelectorAll(".is-loop-clone").forEach((clone) => clone.remove());
@@ -268,15 +271,20 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
     if (isInteractiveRailTarget(event)) return;
     stopAuto();
     dragActive = true;
+    didDrag = false;
     startX = event.clientX;
     currentX = 0;
-    rail.classList.add("is-dragging");
     rail.setPointerCapture(event.pointerId);
   });
 
   rail.addEventListener("pointermove", (event) => {
     if (!dragActive || isAnimating) return;
     currentX = event.clientX - startX;
+    if (!didDrag && Math.abs(currentX) < DRAG_THRESHOLD) return;
+    if (!didDrag) {
+      didDrag = true;
+      rail.classList.add("is-dragging");
+    }
     rail.style.transition = "none";
     rail.style.transform = `translateX(${currentX}px)`;
   });
@@ -285,6 +293,11 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
     if (!dragActive) return;
     dragActive = false;
     rail.classList.remove("is-dragging");
+
+    if (!didDrag) {
+      currentX = 0;
+      return;
+    }
 
     const forwardStep = getStep(1);
     const backwardStep = getStep(-1);
@@ -305,6 +318,16 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
 
   rail.addEventListener("pointerup", endDrag);
   rail.addEventListener("pointercancel", endDrag);
+  rail.addEventListener(
+    "click",
+    (event) => {
+      if (!didDrag) return;
+      didDrag = false;
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    true,
+  );
 
   disableLoopMedia?.addEventListener("change", () => {
     if (isLoopDisabled()) resetToOriginalOrder();

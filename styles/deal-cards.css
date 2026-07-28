@@ -2340,3 +2340,14 @@ body.is-deal-share-open {
     white-space: normal;
   }
 }
+
+/* Mobile/tablet Time Deal compact — shown at max-width 1120px */
+.deal-time-compact {
+  display: none;
+}
+
+/* Mobile/tablet Today's Pick card — shown at max-width 1120px */
+.deal-pick-card,
+.deal-pick-compact {
+  display: none;
+}

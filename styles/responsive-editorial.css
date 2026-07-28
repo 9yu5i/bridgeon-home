@@ -17,12 +17,17 @@
     gap: 8px;
   }
 
-  /* Compact: open only via trigger class; ignore sticky hover so tap-to-dismiss works. */
-  .editorial-section .editor-note-trigger:hover + .editor-pick-note,
-  .editorial-section .editor-note-trigger:focus-visible + .editor-pick-note,
-  .editorial-section .editor-card-product:has(.editor-note-trigger:hover) .editor-pick-note,
-  .editorial-section .editor-card-product:has(.editor-note-trigger:focus-visible) .editor-pick-note,
-  .editorial-section .editor-card-product:has(.editor-pick-note:hover) .editor-pick-note {
+  .editorial-section .editor-product-rail-controls {
+    display: none;
+  }
+
+  /* Compact: open only via trigger class; ignore sticky hover so tap-to-dismiss works.
+     Scope hover-suppression to closed cards so sticky :hover cannot hide an open note. */
+  .editorial-section .editor-card-product:not(.is-note-open) .editor-note-trigger:hover + .editor-pick-note,
+  .editorial-section .editor-card-product:not(.is-note-open) .editor-note-trigger:focus-visible + .editor-pick-note,
+  .editorial-section .editor-card-product:not(.is-note-open):has(.editor-note-trigger:hover) .editor-pick-note,
+  .editorial-section .editor-card-product:not(.is-note-open):has(.editor-note-trigger:focus-visible) .editor-pick-note,
+  .editorial-section .editor-card-product:not(.is-note-open):has(.editor-pick-note:hover) .editor-pick-note {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -31,6 +36,10 @@
   }
 
   .editorial-section .editor-card-product.is-note-open .editor-pick-note,
+  .editorial-section .editor-card-product.is-note-open .editor-note-trigger:hover + .editor-pick-note,
+  .editorial-section .editor-card-product.is-note-open .editor-note-trigger:focus-visible + .editor-pick-note,
+  .editorial-section .editor-card-product.is-note-open:has(.editor-note-trigger:hover) .editor-pick-note,
+  .editorial-section .editor-card-product.is-note-open:has(.editor-note-trigger:focus-visible) .editor-pick-note,
   .editorial-section .editor-card-product.is-note-open:has(.editor-pick-note:hover) .editor-pick-note {
     opacity: 1;
     visibility: visible;

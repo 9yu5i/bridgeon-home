@@ -489,6 +489,59 @@
   display: none;
 }
 
+.editor-product-rail-controls {
+  position: absolute;
+  z-index: 18;
+  top: clamp(18px, 2vw, 26px);
+  right: clamp(18px, 2vw, 28px);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid rgba(123, 63, 228, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 26px rgba(70, 40, 120, 0.14);
+  backdrop-filter: blur(12px);
+}
+
+.editor-product-rail-controls[hidden] {
+  display: none;
+}
+
+.editor-product-rail-button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--purple, #7b3fe4);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color 0.22s ease,
+    background 0.22s ease,
+    transform 0.22s ease;
+}
+
+.editor-product-rail-button:hover,
+.editor-product-rail-button:focus-visible {
+  color: #fff;
+  background: var(--purple, #7b3fe4);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.editor-product-rail-button span {
+  display: block;
+  margin-top: -1px;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 800;
+}
+
 .editor-card-product {
   --editor-copy-height: 72px;
   --editor-thumb-action-inset: 10px;

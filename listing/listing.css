@@ -1128,7 +1128,7 @@
   margin: 0 0 4px;
   overflow: hidden;
   color: #8f86a0;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1187,7 +1187,7 @@
 
 .listing-card-price del {
   color: #8f86a0;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .listing-card-actions--desktop {
