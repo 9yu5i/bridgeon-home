@@ -21,26 +21,7 @@
     display: none;
   }
 
-  /* Compact: open only via trigger class; ignore sticky hover so tap-to-dismiss works.
-     Scope hover-suppression to closed cards so sticky :hover cannot hide an open note. */
-  .editorial-section .editor-card-product:not(.is-note-open) .editor-note-trigger:hover + .editor-pick-note,
-  .editorial-section .editor-card-product:not(.is-note-open) .editor-note-trigger:focus-visible + .editor-pick-note,
-  .editorial-section .editor-card-product:not(.is-note-open):has(.editor-note-trigger:hover) .editor-pick-note,
-  .editorial-section .editor-card-product:not(.is-note-open):has(.editor-note-trigger:focus-visible) .editor-pick-note,
-  .editorial-section .editor-card-product:not(.is-note-open):has(.editor-pick-note:hover) .editor-pick-note {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateY(8px) scale(0.985);
-    transition-delay: 0.08s;
-  }
-
-  .editorial-section .editor-card-product.is-note-open .editor-pick-note,
-  .editorial-section .editor-card-product.is-note-open .editor-note-trigger:hover + .editor-pick-note,
-  .editorial-section .editor-card-product.is-note-open .editor-note-trigger:focus-visible + .editor-pick-note,
-  .editorial-section .editor-card-product.is-note-open:has(.editor-note-trigger:hover) .editor-pick-note,
-  .editorial-section .editor-card-product.is-note-open:has(.editor-note-trigger:focus-visible) .editor-pick-note,
-  .editorial-section .editor-card-product.is-note-open:has(.editor-pick-note:hover) .editor-pick-note {
+  .editorial-section .editor-card-product.is-note-open .editor-pick-note {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -305,7 +286,7 @@
   .magazine-card p {
       margin: 8px 0;
       color: #111;
-      font-size: clamp(13px, 2vw, 15px);
+      font-size: 14px;
       line-height: 1.2;
     }
 }
@@ -968,15 +949,11 @@
     transition-delay: 0.08s;
   }
 
-  /* Desktop: hover / keyboard focus reveals the note (not click-to-toggle). */
-  .editorial-section .editor-note-trigger:hover + .editor-pick-note,
-  .editorial-section .editor-note-trigger:focus-visible + .editor-pick-note,
-  .editorial-section .editor-card-product:has(.editor-note-trigger:hover) .editor-pick-note,
-  .editorial-section .editor-card-product:has(.editor-note-trigger:focus-visible) .editor-pick-note,
-  .editorial-section .editor-card-product:has(.editor-pick-note:hover) .editor-pick-note {
+  .editorial-section .editor-card-product.is-note-open .editor-pick-note {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+    cursor: pointer;
     transform: translateY(0) scale(1);
     transition-delay: 0s;
   }
@@ -1072,12 +1049,12 @@
   }
 
   .editorial-section .editor-card-profile .flag {
-    top: calc(42px - 12px);
+    top: calc(42px - 14px);
     right: auto;
-    left: 28px;
+    left: 27px;
     bottom: auto;
-    width: 14px;
-    height: 14px;
+    width: 17px;
+    height: 17px;
   }
 
   .editorial-section .editor-card-copy {
@@ -1434,12 +1411,12 @@
   }
 
   .editorial-section .editor-card-profile .flag {
-    top: calc(44px - 12px);
+    top: calc(44px - 14px);
     right: auto;
-    left: 30px;
+    left: 29px;
     bottom: auto;
-    width: 14px;
-    height: 14px;
+    width: 17px;
+    height: 17px;
   }
 
   .editorial-section .editor-card-copy {
@@ -1497,6 +1474,7 @@
   .editorial-section .editor-card-quote p {
     max-width: none;
     font-size: 15px;
+    font-weight: 600;
     line-height: 1.4;
     position: static;
     -webkit-line-clamp: 3;
@@ -1692,17 +1670,17 @@
   }
 
   .editorial-section .editor-card-product .editor-pick-note-label {
-    height: 16px;
+    height: 25px;
     padding: 0 6px;
-    font-size: 8px;
-  }
-
-  .editorial-section .editor-card-product .editor-pick-note-title {
     font-size: 13px;
   }
 
+  .editorial-section .editor-card-product .editor-pick-note-title {
+    font-size: 16px;
+  }
+
   .editorial-section .editor-card-product .editor-pick-note-body {
-    font-size: 12px;
+    font-size: 15px;
     line-height: 1.4;
     -webkit-line-clamp: 5;
     line-clamp: 5;

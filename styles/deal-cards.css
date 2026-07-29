@@ -1,4 +1,4 @@
-﻿.deal-grid,
+.deal-grid,
 .editorial-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr);

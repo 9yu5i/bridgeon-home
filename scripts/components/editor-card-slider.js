@@ -23,7 +23,6 @@
   let axisLocked = "";
   const delay = 5400;
   const swipeThreshold = 48;
-  const compactNoteMq = window.matchMedia("(max-width: 1120px)");
 
   const closeEditorNotes = (exceptCard = null) => {
     slider.querySelectorAll(".editor-card-product.is-note-open").forEach((card) => {
@@ -114,8 +113,6 @@
   });
 
   slider.addEventListener("click", (event) => {
-    if (!compactNoteMq.matches) return;
-
     const note = event.target.closest(".editor-pick-note");
     if (note && slider.contains(note)) {
       event.preventDefault();
@@ -139,29 +136,9 @@
     trigger.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
   });
 
-  /* Touch: dismiss as soon as the finger lifts on the open note. */
-  slider.addEventListener(
-    "pointerup",
-    (event) => {
-      if (!compactNoteMq.matches || event.pointerType === "mouse") return;
-      const note = event.target.closest(".editor-pick-note");
-      if (!note || !slider.contains(note)) return;
-      if (!note.closest(".editor-card-product.is-note-open")) return;
-      event.preventDefault();
-      event.stopPropagation();
-      closeEditorNotes();
-    },
-    true
-  );
-
   document.addEventListener("click", (event) => {
-    if (!compactNoteMq.matches) return;
     if (event.target.closest(".editor-note-trigger, .editor-pick-note")) return;
     closeEditorNotes();
-  });
-
-  compactNoteMq.addEventListener?.("change", () => {
-    if (!compactNoteMq.matches) closeEditorNotes();
   });
 
   slider.querySelectorAll(".editor-card-products").forEach((rail) => {

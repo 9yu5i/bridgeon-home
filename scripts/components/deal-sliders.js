@@ -383,11 +383,11 @@
                     <p class="deal-time-rail-brand">${brand}</p>
                     <h4 class="deal-time-rail-name">${name}</h4>
                     <div class="deal-time-rail-price">
-                      <del>${escapeHtml(item.originalPrice)}</del>
                       <span class="deal-time-rail-price-row">
-                        <strong>${escapeHtml(item.price)}</strong>
+                        <del>${escapeHtml(item.originalPrice)}</del>
                         <span class="discount">${escapeHtml(discount)}</span>
                       </span>
+                      <strong>${escapeHtml(item.price)}</strong>
                     </div>
                   </a>
                   <button type="button" class="deal-time-rail-cart" aria-label="Add ${name} to cart">

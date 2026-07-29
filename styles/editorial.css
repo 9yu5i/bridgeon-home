@@ -414,7 +414,7 @@
   font-size: 16px;
   line-height: 1;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .editor-card-cta {
@@ -797,11 +797,6 @@
   cursor: inherit;
 }
 
-.editor-note-trigger:hover + .editor-pick-note,
-.editor-note-trigger:focus-visible + .editor-pick-note,
-.editor-card-product:has(.editor-note-trigger:hover) .editor-pick-note,
-.editor-card-product:has(.editor-note-trigger:focus-visible) .editor-pick-note,
-.editor-card-product:has(.editor-pick-note:hover) .editor-pick-note,
 .editor-card-product.is-note-open .editor-pick-note {
   opacity: 1;
   visibility: visible;
