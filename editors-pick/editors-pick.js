@@ -25,7 +25,10 @@
   const editorNoteText = document.querySelector(".editor-note p");
   const editorNoteSignature = document.querySelector(".editor-note strong");
 
-  const editors = [
+  const editors =
+    Array.isArray(window.BridgeOn?.editorData) && window.BridgeOn.editorData.length
+      ? window.BridgeOn.editorData
+      : [
     {
       name: "Nara",
       handle: "@nara_editor",

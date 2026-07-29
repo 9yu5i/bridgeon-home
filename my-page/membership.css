@@ -427,17 +427,38 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .membership-benefits {
     padding: 26px 12px;
   }
 
   .membership-tier-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    grid-template-columns: none;
+    gap: 14px;
+    margin: 0 -6px;
+    padding: 6px 6px 14px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: 6px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .membership-tier-grid::-webkit-scrollbar {
+    display: none;
   }
 
   .membership-tier {
+    flex: 0 0 min(82vw, 310px);
     padding-right: 16px;
     padding-left: 16px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+
+  .membership-tier dl div {
+    min-height: 76px;
   }
 }

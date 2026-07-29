@@ -128,22 +128,23 @@
 
   .review-card footer {
     grid-column: 1;
-    grid-template-columns: 32px minmax(0, 1fr) 26px;
-    gap: 0 10px;
-    min-height: 0;
-    padding: 5px 12px;
+    grid-template-columns: 40px minmax(0, 1fr) 30px;
+    gap: 0 12px;
+    min-height: 58px;
+    padding: 8px 12px;
   }
 
   .review-card footer i {
     grid-column: 1;
-    width: 32px;
-    height: 32px;
-    font-size: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 11px;
   }
 
   .review-card footer p {
     grid-column: 2;
-    font-size: 13px;
+    font-size: 14px;
+    line-height: 1.28;
   }
 
   .review-card footer b {
@@ -151,10 +152,10 @@
   }
 
   .review-card footer .review-cart-button {
-    --review-cart-icon-size: 15px;
+    --review-cart-icon-size: 17px;
     grid-column: 3;
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
   }
 }
 
@@ -215,25 +216,27 @@
   }
 
   .review-card footer {
-    grid-template-columns: 24px minmax(0, 1fr) 22px;
-    gap: 0 6px;
-    padding: 3px 8px;
+    grid-template-columns: 30px minmax(0, 1fr) 26px;
+    gap: 0 8px;
+    min-height: 48px;
+    padding: 6px 8px;
   }
 
   .review-card footer i {
-    width: 24px;
-    height: 24px;
-    font-size: 7px;
+    width: 30px;
+    height: 30px;
+    font-size: 8px;
   }
 
   .review-card footer p {
-    font-size: 11px;
+    font-size: 12px;
+    line-height: 1.25;
   }
 
   .review-card footer .review-cart-button {
-    --review-cart-icon-size: 12px;
-    width: 24px;
-    height: 24px;
+    --review-cart-icon-size: 14px;
+    width: 26px;
+    height: 26px;
   }
 }
 

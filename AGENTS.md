@@ -71,6 +71,7 @@ Current component scripts:
 - `scripts/components/loop-rail.js`: generic rail buttons and loop rails.
 - `scripts/components/product-sheet.js`: shared add-to-cart/product option sheet and product-card-to-detail navigation.
 - `scripts/components/seller-wishlist.js`: Best Sellers wishlist icon state.
+- `scripts/components/editor-data.js`: shared Editor's Pick editor data used by the home T.P Pick card and the Editor's Pick page.
 - `scripts/components/editor-card-slider.js`: home T.P Pick editor card slider and editor note toggles.
 - `scripts/components/magazine-slider.js`: mobile T.P Magazine drag slider and progress bar.
 - `scripts/components/magazine-links.js`: magazine card keyboard/click links to article detail pages.

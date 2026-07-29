@@ -489,6 +489,7 @@ body.is-orders-modal-open {
 }
 
 .orders-modal-layer {
+  --orders-purple: var(--purple, #7b3fe4);
   position: fixed;
   inset: 0;
   z-index: 1500;

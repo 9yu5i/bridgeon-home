@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../common.css" />
     <link rel="stylesheet" href="../styles.css" />
     <link rel="stylesheet" href="./my-page.css" />
+    <link rel="stylesheet" href="./orders.css" />
   </head>
   <body class="my-page">
     <header class="site-header mypage-site-header">
@@ -524,14 +525,14 @@
                 <div class="mypage-welcome">
                   <p>Welcome Back,</p>
                   <h1 id="mypage-title">Name <span class="mypage-current-tier">Silver</span></h1>
-                  <div class="mypage-membership-card" aria-label="Membership progress to Gold">
-                    <div class="mypage-progress-labels">
-                      <span>Next: Gold</span>
-                      <strong>US$100 / US$150</strong>
-                    </div>
-                    <span class="mypage-progress-track" aria-hidden="true"><i></i></span>
+                </div>
+
+                <div class="mypage-membership-card" aria-label="Membership progress to Gold">
+                  <div class="mypage-progress-labels">
+                    <span>100 points to Gold</span>
+                    <strong>US$100 / US$150</strong>
                   </div>
-                  <a class="mypage-membership-link" href="./membership.html">View all membership benefits &gt;</a>
+                  <span class="mypage-progress-track" aria-hidden="true"><i></i></span>
                 </div>
 
                 <div class="mypage-mobile-points mobile-only">
@@ -540,7 +541,7 @@
                 </div>
               </div>
 
-              <div class="mypage-stats desktop-only">
+              <div class="mypage-stats">
                 <a href="./points.html"><span aria-hidden="true"><img src="./img/points_white.png" alt=""></span><strong>1,240</strong><b>Points</b><em aria-hidden="true">&gt;</em></a>
                 <a href="./coupons.html"><span aria-hidden="true"><img src="./img/coupons_white.png" alt=""></span><strong>4</strong><b>Coupons</b><em aria-hidden="true">&gt;</em></a>
                 <a href="./wishlist.html"><span aria-hidden="true"><img src="./img/wishllist_white.png" alt=""></span><strong>12</strong><b>Wishlist</b><em aria-hidden="true">&gt;</em></a>
@@ -550,7 +551,7 @@
             <section class="mypage-card mypage-orders" aria-labelledby="mypage-orders-title">
               <div class="mypage-card-head">
                 <h2 id="mypage-orders-title">My Orders</h2>
-                <a href="./orders.html">View all Orders <span aria-hidden="true">-&gt;</span></a>
+                <a href="./orders.html"><span class="mypage-link-desktop">Track all orders</span><span class="mypage-link-mobile">Track all</span> <span aria-hidden="true">-&gt;</span></a>
               </div>
               <div class="mypage-order-status">
                 <a href="./orders.html"><span aria-hidden="true"><img src="./img/pending.png" alt=""></span><strong data-mobile-count="0">2</strong><b>Pending</b></a>
@@ -558,24 +559,61 @@
                 <a href="./orders.html"><span aria-hidden="true"><img src="./img/shipped.png" alt=""></span><strong data-mobile-count="1">2</strong><b>Shipped</b></a>
                 <a href="./orders.html"><span aria-hidden="true"><img src="./img/delivered.png" alt=""></span><strong data-mobile-count="2">2</strong><b>Delivered</b></a>
               </div>
+              <article class="mypage-order-preview" aria-label="Latest order status, 3 items" data-order-status="Shipped" data-order-date="May 24, 2025" data-order-price="US$18.40">
+                <div class="mypage-order-preview-image"><em>3 items</em></div>
+                <div class="mypage-order-preview-copy">
+                  <mark class="mypage-order-state">Shipped</mark>
+                  <h3>PDRN Pink Peptide Serum 50ml</h3>
+                  <p><span>Order #BR1234567890</span></p>
+                </div>
+                <div class="mypage-order-timeline" aria-label="Order progress">
+                  <span class="is-complete"><img src="./img/pending.png" alt="" aria-hidden="true"><b>Pending</b></span>
+                  <span class="is-complete"><img src="./img/preparing.png" alt="" aria-hidden="true"><b>Preparing</b></span>
+                  <span class="is-current"><img src="./img/shipped.png" alt="" aria-hidden="true"><b>Shipped</b></span>
+                  <span><img src="./img/delivered.png" alt="" aria-hidden="true"><b>Delivered</b></span>
+                </div>
+                <p class="mypage-order-delivery"><span>Estimated delivery</span><strong>May 28 - May 30</strong></p>
+                <div class="mypage-order-buttons">
+                  <button type="button" data-mypage-order-track>Track order</button>
+                  <a href="./orders.html">Order details</a>
+                </div>
+              </article>
             </section>
 
-            <section class="mypage-mobile-menu mobile-only" aria-label="Account shortcuts">
-              <a href="./profile.html"><span class="mypage-side-icon mypage-side-icon--profile" aria-hidden="true"></span>Profile</a>
-              <a href="./reviews.html"><span class="mypage-side-icon mypage-side-icon--review" aria-hidden="true"></span>My Reviews</a>
-              <a href="./wishlist.html"><span class="mypage-side-icon mypage-side-icon--wishlist" aria-hidden="true"></span>Wishlist</a>
-              <a href="./coupons.html"><span class="mypage-side-icon mypage-side-icon--coupons" aria-hidden="true"></span>Coupons</a>
-              <a href="./saved-posts.html"><span class="mypage-side-icon mypage-side-icon--saved" aria-hidden="true"></span>Saved posts</a>
-              <a href="./membership.html"><span class="mypage-side-icon mypage-side-icon--membership" aria-hidden="true"></span>Membership</a>
-              <a href="./points.html"><span class="mypage-side-icon mypage-side-icon--points" aria-hidden="true"></span>Points</a>
-              <a href="./help-center.html"><span class="mypage-side-icon mypage-side-icon--help" aria-hidden="true"></span>Help Center</a>
-              <a href="#"><span class="mypage-side-icon mypage-side-icon--logout" aria-hidden="true"></span>Log Out</a>
+            <section class="mypage-mobile-activity mobile-only" aria-labelledby="mypage-activity-title">
+              <div class="mypage-card-head">
+                <h2 id="mypage-activity-title">My Activity</h2>
+              </div>
+              <div class="mypage-mobile-card-grid">
+                <a href="./reviews.html"><span class="mypage-side-icon mypage-side-icon--review" aria-hidden="true"></span><strong>12</strong><b>My Reviews</b></a>
+                <a href="./wishlist.html"><span class="mypage-side-icon mypage-side-icon--wishlist" aria-hidden="true"></span><strong>12</strong><b>Wishlist</b></a>
+                <a href="./saved-posts.html"><span class="mypage-side-icon mypage-side-icon--saved" aria-hidden="true"></span><strong>8</strong><b>Saved Posts</b></a>
+              </div>
+            </section>
+
+            <section class="mypage-mobile-menu mobile-only" aria-labelledby="mypage-service-title">
+              <div class="mypage-card-head">
+                <h2 id="mypage-service-title">Service Hub</h2>
+              </div>
+              <div class="mypage-mobile-card-grid mypage-mobile-card-grid--service">
+                <a href="./profile.html"><span class="mypage-side-icon mypage-side-icon--profile" aria-hidden="true"></span><b>Profile</b></a>
+                <a href="./coupons.html"><span class="mypage-side-icon mypage-side-icon--coupons" aria-hidden="true"></span><b>Coupons</b></a>
+                <a href="./points.html"><span class="mypage-side-icon mypage-side-icon--points" aria-hidden="true"></span><b>Points</b></a>
+                <a href="./membership.html"><span class="mypage-side-icon mypage-side-icon--membership" aria-hidden="true"></span><b>Membership</b></a>
+                <a href="./help-center.html"><span class="mypage-side-icon mypage-side-icon--help" aria-hidden="true"></span><b>Help Center</b></a>
+                <a href="./profile.html"><span class="mypage-side-icon mypage-side-icon--profile" aria-hidden="true"></span><b>Settings</b></a>
+              </div>
             </section>
 
             <article class="mypage-invite mypage-invite--mobile mobile-only">
-              <h2>Invite Friends &amp; Get Rewards!</h2>
+              <h2>Invite Friends<br>&amp; Get Rewards!</h2>
+              <p>Share the love.<br>Earn exclusive rewards together.</p>
               <button type="button">INVITE NOW</button>
             </article>
+
+            <div class="mypage-mobile-logout mobile-only">
+              <a href="#"><span class="mypage-side-icon mypage-side-icon--logout" aria-hidden="true"></span>Log Out</a>
+            </div>
 
             <section class="mypage-card mypage-wishlist desktop-only" aria-labelledby="mypage-wishlist-title">
               <div class="mypage-card-head">
@@ -704,11 +742,11 @@
         </div>
         <div class="footer-group">
           <button class="footer-toggle" type="button">POLICIES</button>
-          <div class="footer-links"><a href="#">Terms of Service</a><a href="#">Privacy Policy</a><a href="#">Payment Security</a></div>
+          <div class="footer-links"><a href="./help-topic.html?topic=terms">Terms of Service</a><a href="./help-topic.html?topic=privacy">Privacy Policy</a></div>
         </div>
         <div class="footer-group">
           <button class="footer-toggle" type="button">COMPANY</button>
-          <div class="footer-links"><a href="#">About Us</a><a href="#">Become a Partner</a><a href="#">Careers</a></div>
+          <div class="footer-links"><a href="./help-topic.html?topic=about">About Us</a></div>
         </div>
       </div>
       <div class="footer-methods">
@@ -876,6 +914,45 @@
         <p id="trend-cart-toast-message"></p>
       </div>
       <div class="realtrend-cart-toast-thumb" aria-hidden="true"></div>
+    </div>
+
+    <div class="orders-modal-layer" data-orders-modal-layer hidden aria-hidden="true">
+      <button type="button" class="orders-modal-backdrop" data-orders-modal-close aria-label="Close order popup"></button>
+
+      <section class="orders-dialog orders-track-dialog" data-orders-dialog="track" role="dialog" aria-modal="true" aria-labelledby="orders-track-title" hidden>
+        <p class="orders-dialog-eyebrow">Track Order</p>
+        <div class="orders-track-head">
+          <div>
+            <h2 id="orders-track-title" data-orders-track-order>Order #nnnnnnnnn</h2>
+            <p data-orders-track-date>May 6, 2025</p>
+          </div>
+          <mark data-orders-track-status>Shipped</mark>
+        </div>
+        <div class="orders-track-product">
+          <span class="orders-dialog-thumb" data-orders-track-thumb aria-hidden="true"></span>
+          <div>
+            <strong data-orders-track-name>Product name</strong>
+            <small data-orders-track-price>US$0.00</small>
+          </div>
+        </div>
+        <ol class="orders-track-steps" aria-label="Tracking progress">
+          <li class="is-complete"><b></b><span>Order Placed</span><em>May 6</em></li>
+          <li class="is-complete"><b></b><span>Packed</span><em>May 7</em></li>
+          <li class="is-active"><b></b><span>Shipped</span><em>In transit</em></li>
+          <li><b></b><span>Out for Delivery</span><em>Pending</em></li>
+          <li><b></b><span>Delivered</span><em>Pending</em></li>
+        </ol>
+        <div class="orders-track-info">
+          <p><span>Carrier</span><b>BridgeOn Express</b></p>
+          <p><span>Tracking No.</span><b>BO-2025-0008</b></p>
+          <p><span>Estimated Arrival</span><b>May 12, 2025</b></p>
+          <p><span>Shipping Address</span><b>Name, 123 nnnn St., United State 90007</b></p>
+        </div>
+        <div class="orders-dialog-actions">
+          <button type="button" class="orders-dialog-secondary" data-orders-modal-close>Close</button>
+          <button type="button" class="orders-dialog-primary">View Tracking Detail</button>
+        </div>
+      </section>
     </div>
 
     <div

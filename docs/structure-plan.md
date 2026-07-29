@@ -57,6 +57,7 @@ styles/
 - `scripts/components/loop-rail.js` now owns generic `data-scroll` buttons and the loop rails for Real Trend, Best Sellers, and Customer Real Picks.
 - `scripts/components/product-sheet.js` now owns the shared add-to-cart/product option sheet and product-card-to-detail navigation.
 - `scripts/components/seller-wishlist.js` now owns Best Sellers wishlist icon state.
+- `scripts/components/editor-data.js` now owns shared editor profile, pick, and magazine data used by both the home T.P Pick card and the Editor's Pick page.
 - `scripts/components/editor-card-slider.js` now owns the home T.P Pick editor card slider and editor note toggles.
 - `scripts/components/magazine-slider.js` now owns the mobile T.P Magazine drag slider and progress bar.
 - `scripts/components/magazine-links.js` now owns magazine card keyboard/click links to article detail pages.
@@ -81,6 +82,7 @@ scripts/
     magazine-slider.js
     magazine-links.js
     product-sheet.js
+    editor-data.js
     support-footer.js
     scroll-reveal.js
     today-pick-panel.js

@@ -9,8 +9,43 @@
     });
   });
 
+  const membershipTierRail = document.querySelector(".membership-tier-grid");
+
+  if (membershipTierRail) {
+    const currentTier = membershipTierRail.querySelector(".membership-tier.is-current");
+    const mobileTierMedia = window.matchMedia("(max-width: 760px)");
+
+    const showCurrentTierFirst = () => {
+      if (!currentTier || !mobileTierMedia.matches) return;
+
+      window.requestAnimationFrame(() => {
+        const railBox = membershipTierRail.getBoundingClientRect();
+        const tierBox = currentTier.getBoundingClientRect();
+        const railStyles = window.getComputedStyle(membershipTierRail);
+        const railPadding = parseFloat(railStyles.paddingLeft) || 0;
+        const nextLeft = tierBox.left - railBox.left + membershipTierRail.scrollLeft - railPadding;
+
+        membershipTierRail.scrollTo({
+          left: Math.max(0, nextLeft),
+          behavior: "auto",
+        });
+      });
+    };
+
+    showCurrentTierFirst();
+    window.addEventListener("load", showCurrentTierFirst, { once: true });
+
+    if (typeof mobileTierMedia.addEventListener === "function") {
+      mobileTierMedia.addEventListener("change", showCurrentTierFirst);
+    } else if (typeof mobileTierMedia.addListener === "function") {
+      mobileTierMedia.addListener(showCurrentTierFirst);
+    }
+  }
+
   const logoutLinks = Array.from(
-    document.querySelectorAll(".mypage-side-card a, .mypage-mobile-menu a")
+    document.querySelectorAll(
+      ".mypage-side-card a, .mypage-mobile-menu a, .mypage-mobile-logout a"
+    )
   ).filter((link) => link.querySelector(".mypage-side-icon--logout"));
 
   if (logoutLinks.length) {
@@ -284,8 +319,9 @@
 
   const ordersModalLayer = document.querySelector("[data-orders-modal-layer]");
   const ordersList = document.querySelector(".orders-list");
+  const mypageOrderPreview = document.querySelector(".mypage-order-preview");
 
-  if (ordersModalLayer && ordersList) {
+  if (ordersModalLayer && (ordersList || mypageOrderPreview)) {
     const reviewDialog = ordersModalLayer.querySelector('[data-orders-dialog="review"]');
     const trackDialog = ordersModalLayer.querySelector('[data-orders-dialog="track"]');
     const reviewRating = ordersModalLayer.querySelector(".orders-review-rating");
@@ -314,8 +350,8 @@
     const closeOrdersModal = () => {
       ordersModalLayer.hidden = true;
       ordersModalLayer.setAttribute("aria-hidden", "true");
-      reviewDialog.hidden = true;
-      trackDialog.hidden = true;
+      if (reviewDialog) reviewDialog.hidden = true;
+      if (trackDialog) trackDialog.hidden = true;
       document.body.classList.remove("is-orders-modal-open");
       resetReviewUpload();
       if (ordersModalTrigger && typeof ordersModalTrigger.focus === "function") {
@@ -327,12 +363,34 @@
     const getOrderModalData = (button) => {
       const item = button.closest(".orders-mobile-item");
       const card = button.closest(".orders-card");
-      const thumb = item?.querySelector(".orders-mobile-thumb") || card?.querySelector(".orders-thumb");
-      const orderTitle = card?.querySelector(".orders-card-head h2")?.textContent?.trim() || "Order #nnnnnnnnn";
-      const status = card?.querySelector(".orders-card-head mark")?.textContent?.trim() || "Shipped";
-      const date = card?.querySelector(".orders-card-head time")?.textContent?.trim() || "";
-      const name = item?.querySelector("h3")?.textContent?.trim() || "Selected items";
-      const price = item?.querySelector("strong")?.textContent?.trim() || card?.querySelector(".orders-card-head > strong")?.textContent?.trim() || "";
+      const preview = button.closest(".mypage-order-preview");
+      const thumb =
+        item?.querySelector(".orders-mobile-thumb") ||
+        card?.querySelector(".orders-thumb") ||
+        preview?.querySelector(".mypage-order-preview-image");
+      const orderTitle =
+        card?.querySelector(".orders-card-head h2")?.textContent?.trim() ||
+        preview?.querySelector(".mypage-order-preview-copy p span")?.textContent?.trim() ||
+        preview?.querySelector(".mypage-order-preview-copy p")?.textContent?.trim() ||
+        "Order #nnnnnnnnn";
+      const status =
+        card?.querySelector(".orders-card-head mark")?.textContent?.trim() ||
+        preview?.dataset.orderStatus ||
+        preview?.querySelector(".mypage-order-timeline .is-current b")?.textContent?.trim() ||
+        "Shipped";
+      const date =
+        card?.querySelector(".orders-card-head time")?.textContent?.trim() ||
+        preview?.dataset.orderDate ||
+        "";
+      const name =
+        item?.querySelector("h3")?.textContent?.trim() ||
+        preview?.querySelector(".mypage-order-preview-copy h3")?.textContent?.trim() ||
+        "Selected items";
+      const price =
+        item?.querySelector("strong")?.textContent?.trim() ||
+        card?.querySelector(".orders-card-head > strong")?.textContent?.trim() ||
+        preview?.dataset.orderPrice ||
+        "";
       const toneClass = Array.from(thumb?.classList || []).find((className) =>
         className.includes("--")
       );
@@ -376,20 +434,21 @@
       const data = getOrderModalData(button);
       fillOrderModal(type, data);
       if (type === "review") resetReviewUpload();
-      reviewDialog.hidden = type !== "review";
-      trackDialog.hidden = type !== "track";
+      if (reviewDialog) reviewDialog.hidden = type !== "review";
+      if (trackDialog) trackDialog.hidden = type !== "track";
       ordersModalLayer.hidden = false;
       ordersModalLayer.setAttribute("aria-hidden", "false");
       document.body.classList.add("is-orders-modal-open");
       window.requestAnimationFrame(() => {
         const activeDialog = type === "review" ? reviewDialog : trackDialog;
+        if (!activeDialog) return;
         activeDialog.scrollTop = 0;
         activeDialog.setAttribute("tabindex", "-1");
         activeDialog.focus({ preventScroll: true });
       });
     };
 
-    ordersList.addEventListener("click", (event) => {
+    ordersList?.addEventListener("click", (event) => {
       const button = event.target.closest(".orders-mobile-item button, .orders-card-actions button");
       if (!button || !ordersList.contains(button)) return;
 
@@ -399,6 +458,12 @@
       } else if (label.includes("track")) {
         openOrdersModal("track", button);
       }
+    });
+
+    mypageOrderPreview?.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-mypage-order-track]");
+      if (!button || !mypageOrderPreview.contains(button)) return;
+      openOrdersModal("track", button);
     });
 
     ordersModalLayer.querySelectorAll("[data-orders-modal-close]").forEach((button) => {

@@ -625,6 +625,11 @@
   filter: brightness(0) saturate(100%) invert(42%) sepia(42%) saturate(1200%) hue-rotate(230deg) brightness(95%) contrast(92%);
 }
 
+.editor-facts li:nth-child(3) img {
+  width: 21px;
+  height: 21px;
+}
+
 .editor-role {
   grid-column: 1 / -1;
   display: block;
@@ -1981,6 +1986,11 @@
     width: clamp(10px, 1.35vw, 13px);
     height: clamp(10px, 1.35vw, 13px);
     filter: brightness(0) saturate(100%) invert(42%) sepia(42%) saturate(1200%) hue-rotate(230deg) brightness(95%) contrast(92%);
+  }
+
+  .editor-facts li:nth-child(3) img {
+    width: clamp(15px, 1.9vw, 18px);
+    height: clamp(15px, 1.9vw, 18px);
   }
 
   .editor-role {

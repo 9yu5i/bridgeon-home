@@ -6,6 +6,7 @@
 flowchart TD
   A["index.html"] --> S["styles.css"]
   A --> JS["script.js"]
+  A --> ED["scripts/components/editor-data.js"]
   L["listing/*.html"] --> S
   L --> LC["listing/listing.css"]
   L --> JS
@@ -22,6 +23,7 @@ flowchart TD
   MAS --> MASC["my-page/* page css"]
   E["editors-pick/editors-pick.html"] --> S
   E --> EC["editors-pick/editors-pick.css"]
+  E --> ED
   E --> EJ["editors-pick/editors-pick.js"]
   MG["editors-pick/magazine*.html"] --> S
   MG --> MGC["editors-pick/magazine.css"]
@@ -49,6 +51,7 @@ flowchart TD
 - Extracted behavior lives in `scripts/components/`.
 - `listing/best.js` owns the Best products page ranked 100-item scroll loader.
 - `cart/cart.js` owns cart item selection, quantity, delete, and promo form behavior.
+- `scripts/components/editor-data.js` owns shared editor profile, pick, and magazine data for the home T.P Pick card and the Editor's Pick page.
 - `editors-pick/editors-pick.js` owns Editor's Pick page editor selection, pick filters, wishlist state, magazine dots, and tablet/mobile horizontal snap paging between pick categories.
 - `product-detail/product-detail.js` handles product detail specific interactions.
 
@@ -58,6 +61,7 @@ Important extracted components:
 - `loop-rail.js`
 - `product-sheet.js`
 - `seller-wishlist.js`
+- `editor-data.js`
 - `editor-card-slider.js`
 - `magazine-slider.js`
 - `magazine-links.js`
@@ -85,6 +89,8 @@ Do not make non-Real Trend pages load `realtrend/realtrend.css` to get product s
 ## Data And Templates
 
 The project still uses copied HTML for many repeated cards.
+
+Editor data is now centralized in `scripts/components/editor-data.js` so the home T.P Pick tabs/cards and the Editor's Pick page stay aligned.
 
 Future extraction targets:
 
