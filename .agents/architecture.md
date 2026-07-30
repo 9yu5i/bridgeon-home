@@ -107,5 +107,11 @@ The static storefront is the visual source for a future Firstmall work skin, not
 Keep Firstmall commerce behavior as the source of truth for goods, options, stock, cart, wishlist,
 member, order, coupon, point, review, inquiry, and payment data.
 
+The first isolated work-skin package lives in `firstmall-workskin/`. It currently contains the
+active My Page dashboard template, its scoped stylesheet, and upload/testing instructions.
+Existing Firstmall header, footer, LNB, index, and account subpages remain untouched.
+Server-runtime Firstmall HTML is validated separately by
+`tools/check-firstmall-workskin.mjs`.
+
 The detailed readiness and page mapping are documented in
 `docs/firstmall-integration-readiness.md`.

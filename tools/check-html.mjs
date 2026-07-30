@@ -3,7 +3,7 @@ import { dirname, extname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const skipDirs = new Set([".git", ".agents", "node_modules"]);
+const skipDirs = new Set([".git", ".agents", "firstmall-workskin", "node_modules"]);
 const localPageExtensions = new Set(["", ".html"]);
 
 const collectHtmlFiles = (directory) =>

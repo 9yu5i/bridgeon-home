@@ -1,0 +1,322 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ BridgeOn My Page Dashboard / Firstmall work skin
+- Upload target: [skin folder]/mypage/dashboard.html
+- Data source: variables confirmed on the active dashboard page
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="../css/bridgeon-mypage.css" />
+
+<div class="subpage_wrap bo-mypage-shell">
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a class="on" href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/main/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a href="/service/cs">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+
+	<main class="subpage_container bo-mypage" aria-labelledby="bo-dashboard-title">
+		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
+
+		<section class="bo-profile" aria-labelledby="bo-dashboard-title">
+			<div class="bo-profile__identity">
+				<span class="bo-profile__avatar">
+					<img src="{member.profile_image}" alt="{member.name}" onerror="this.style.display='none';" />
+					<i aria-hidden="true"></i>
+				</span>
+				<a class="bo-profile__edit" href="/mypage/myinfo">
+					Edit Profile
+					<svg viewBox="0 0 24 24" aria-hidden="true">
+						<path d="M12 20h9" />
+						<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
+					</svg>
+				</a>
+			</div>
+
+			<div class="bo-profile__welcome">
+				<p>Welcome Back,</p>
+				<div class="bo-profile__name-row">
+					<h1 id="bo-dashboard-title">{member.name}</h1>
+					<span class="bo-profile__tier">{member.current_level.group_name}</span>
+				</div>
+				<div class="bo-profile__progress">
+					<p>
+						<span><b aria-hidden="true">★</b> Progress to {member.next_level.group_name}</span>
+						<strong>{=get_currency_price(member.order_sum,2)} / {=get_currency_price(member.next_level.order_sum_price,2)}</strong>
+					</p>
+					<progress
+						class="bo-profile__progress-track"
+						value="{member.order_sum}"
+						max="{member.next_level.order_sum_price}"
+						aria-label="Membership progress toward {member.next_level.group_name}"
+					></progress>
+				</div>
+			</div>
+
+			<nav class="bo-profile__stats" aria-label="Account benefits">
+				<a href="/mypage/emoney">
+					<span class="bo-profile__stat-icon" aria-hidden="true">P</span>
+					<strong data-account-stat="points">{=number_format(showMypageTop('emoney'))}</strong>
+					<small>Points</small>
+					<i aria-hidden="true">›</i>
+				</a>
+				<a href="/mypage/coupon">
+					<span class="bo-profile__stat-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24"><path d="M3 7h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4Z" /></svg>
+					</span>
+					<strong data-account-stat="coupons">{=number_format(member.coupon_count)}</strong>
+					<small>Coupons</small>
+					<i aria-hidden="true">›</i>
+				</a>
+				<a href="/mypage/wish">
+					<span class="bo-profile__stat-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" /></svg>
+					</span>
+					<strong>{wishlist_count}</strong>
+					<small>Wishlist</small>
+					<i aria-hidden="true">›</i>
+				</a>
+			</nav>
+		</section>
+
+		<section class="bo-card bo-orders" aria-labelledby="bo-dashboard-orders">
+			<header class="bo-card__head">
+				<h2 id="bo-dashboard-orders">My Orders</h2>
+				<a href="/mypage/order_catalog">Track all orders <span aria-hidden="true">→</span></a>
+			</header>
+
+			<!--{ ? orders }-->
+			<div class="bo-live-orders">
+				<!--{ @ orders }-->
+				<article class="bo-live-order">
+					<div class="bo-live-order__products">
+						<!--{ @ .items }-->
+							<!--{ @ ..options }-->
+							<a class="bo-live-order__product" href="/goods/view?no={..goods_seq}">
+								<span class="bo-live-order__image">
+									<img src="{=viewImg(..goods_seq, 'thumbCart')}" alt="{..goods_name}" onerror="this.src='../images/common/noimage_list.gif';" />
+									<em>{=number_format(...ea)} item</em>
+								</span>
+								<span class="bo-live-order__copy">
+									<mark>{.mstep}</mark>
+									<strong>{..goods_name}</strong>
+									<small>Order #{.order_seq}</small>
+									<!--{ ? ...option1 }--><small>{...option1}</small><!--{ / }-->
+								</span>
+							</a>
+							<!--{ / }-->
+						<!--{ / }-->
+					</div>
+
+					<!--{ ? .step <= 75 }-->
+					<div class="bo-live-order__timeline" aria-label="Order status">
+						<span class="{? .step > 25}is-complete{:}is-current{/}"><i aria-hidden="true">◷</i><small>Pending</small></span>
+						<span class="{? .step > 45}is-complete{: .step >= 35}is-current{/}"><i aria-hidden="true">◇</i><small>Preparing</small></span>
+						<span class="{? .step > 70}is-complete{: .step >= 50}is-current{/}"><i aria-hidden="true">▣</i><small>Shipped</small></span>
+						<span class="{? .step >= 75}is-current{/}"><i aria-hidden="true">✓</i><small>Delivered</small></span>
+					</div>
+					<!--{ / }-->
+
+					<footer class="bo-live-order__foot">
+						<p>
+							<small>{=date('Y.m.d',strtotime(.regist_date))}</small>
+							<strong>{=get_currency_price(.settleprice,2)}</strong>
+						</p>
+						<a href="/mypage/order_view?no={.order_seq}">Order details</a>
+					</footer>
+				</article>
+				<!--{ / }-->
+			</div>
+			<!--{ : }-->
+			<div class="bo-order-empty">
+				<span aria-hidden="true">▢</span>
+				<strong>No orders yet</strong>
+				<p>Your actual orders will appear here after you place an order.</p>
+				<a href="/main/index">Start shopping</a>
+			</div>
+			<!--{ / }-->
+		</section>
+
+		<section class="bo-mobile-card bo-mobile-activity" aria-labelledby="bo-mobile-activity-title">
+			<header class="bo-mobile-card__head">
+				<h2 id="bo-mobile-activity-title">My Activity</h2>
+			</header>
+			<nav class="bo-mobile-activity__grid" aria-label="My activity">
+				<a href="/mypage/mygdreview_catalog">
+					<span class="bo-mobile-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6-4.4-4.3 6.1-.9Z" /></svg>
+					</span>
+					<strong class="bo-mobile-activity__view">View</strong>
+					<small>My Reviews</small>
+				</a>
+				<a href="/mypage/wish">
+					<span class="bo-mobile-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" /></svg>
+					</span>
+					<strong>{wishlist_count}</strong>
+					<small>Wishlist</small>
+				</a>
+				<a href="/mypage/saved_posts">
+					<span class="bo-mobile-icon bo-mobile-icon--filled" aria-hidden="true">
+						<svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z" /></svg>
+					</span>
+					<strong>{shortform_summary.saved_count}</strong>
+					<small>Saved Posts</small>
+				</a>
+			</nav>
+		</section>
+
+		<section class="bo-mobile-card bo-mobile-service" aria-labelledby="bo-mobile-service-title">
+			<header class="bo-mobile-card__head">
+				<h2 id="bo-mobile-service-title">Service Hub</h2>
+			</header>
+			<nav class="bo-mobile-service__grid" aria-label="Account services">
+				<a href="/mypage/myinfo">
+					<span class="bo-mobile-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg></span>
+					<strong>Profile</strong>
+				</a>
+				<a href="/mypage/coupon">
+					<span class="bo-mobile-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4Z" /></svg></span>
+					<strong>Coupons</strong>
+				</a>
+				<a href="/mypage/emoney">
+					<span class="bo-mobile-icon bo-mobile-icon--letter" aria-hidden="true">P</span>
+					<strong>Points</strong>
+				</a>
+				<a href="/main/membership">
+					<span class="bo-mobile-icon bo-mobile-icon--filled" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 2.2 4.5 5 .7-3.6 3.5.8 5-4.4-2.3-4.4 2.3.8-5-3.6-3.5 5-.7Z" /></svg></span>
+					<strong>Membership</strong>
+				</a>
+				<a href="/service/cs">
+					<span class="bo-mobile-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 10v6M12 7h.01" /></svg></span>
+					<strong>Help Center</strong>
+				</a>
+				<a href="/mypage/myinfo">
+					<span class="bo-mobile-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg></span>
+					<strong>Settings</strong>
+				</a>
+			</nav>
+		</section>
+
+		<article class="bo-mobile-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+			<span class="bo-mobile-invite__gift" aria-hidden="true"></span>
+		</article>
+
+		<a class="bo-mobile-logout" href="/login_process/logout">
+			<span aria-hidden="true">↪</span>
+			Log Out
+		</a>
+
+		<section class="bo-card bo-wishlist bo-desktop-dashboard-card" aria-labelledby="bo-dashboard-wishlist">
+			<header class="bo-card__head">
+				<h2 id="bo-dashboard-wishlist">Wishlist ({wishlist_count})</h2>
+				<a href="/mypage/wish">View all <span aria-hidden="true">→</span></a>
+			</header>
+
+			<!--{ ? wishlist_count <= 0 }-->
+			<div class="bo-empty">
+				<strong>No items in your wishlist yet.</strong>
+			</div>
+			<!--{ : }-->
+			<div class="bo-product-rail">
+				<!--{ @ wishlist_list }-->
+				<article class="bo-product">
+					<a class="bo-product__image" href="/goods/view?no={.goods_seq}">
+						<img src="{.image}" alt="{.goods_name}" onerror="this.src='/data/icon/goods/error/noimage_list.gif';" />
+					</a>
+					<div class="bo-product__body">
+						<small
+							class="bo-product__brand"
+							data-brand-code="{.brand_code}"
+							data-brand="{.brand}"
+						><!--{ ? .brand_title }-->{.brand_title}<!--{ : .brand_name }-->{.brand_name}<!--{ / }--></small>
+						<a class="bo-product__name" href="/goods/view?no={.goods_seq}">{.goods_name}</a>
+						<p class="bo-product__price">
+							<strong>{=get_currency_price(.price,2)}</strong>
+							<!--{ ? .consumer_price > .price }--><del>{=get_currency_price(.consumer_price,2)}</del><!--{ / }-->
+						</p>
+						<div class="bo-product__actions">
+							<a class="bo-product__cart" href="/goods/view?no={.goods_seq}" aria-label="Choose options for {.goods_name}">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l2 10h9l2-7H7M10 19a1 1 0 1 0 0 .01M17 19a1 1 0 1 0 0 .01" /></svg>
+							</a>
+							<a class="bo-product__wish" href="/mypage/wish" aria-label="Manage {.goods_name} in wishlist">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" /></svg>
+							</a>
+						</div>
+					</div>
+				</article>
+				<!--{ / }-->
+			</div>
+			<!--{ / }-->
+		</section>
+
+		<div class="bo-bottom-grid bo-desktop-dashboard-card">
+			<section class="bo-card" aria-labelledby="bo-dashboard-recent">
+				<header class="bo-card__head">
+					<h2 id="bo-dashboard-recent">Recently Viewed</h2>
+					<a href="/goods/recently">View all <span aria-hidden="true">→</span></a>
+				</header>
+
+				<!--{ ? recently_viewed_list }-->
+				<div class="bo-recent-rail">
+					<!--{ @ recently_viewed_list }-->
+					<a href="/goods/view?no={.goods_seq}">
+						<img src="{=viewImg(.goods_seq, 'thumbScroll')}" alt="{.goods_name}" onerror="this.src='/data/icon/goods/error/noimage_list.gif';" />
+					</a>
+					<!--{ / }-->
+				</div>
+				<!--{ : }-->
+				<div class="bo-empty"><strong>No recently viewed products.</strong></div>
+				<!--{ / }-->
+			</section>
+
+			<section class="bo-card bo-realtrend-card" aria-labelledby="bo-dashboard-reels">
+				<header class="bo-card__head">
+					<h2 id="bo-dashboard-reels">Real Trend</h2>
+					<a href="/mypage/saved_posts">View all <span aria-hidden="true">→</span></a>
+				</header>
+				<div class="bo-reel-stats">
+					<a href="/mypage/saved_posts">
+						<span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z" /></svg></span>
+						<strong>{shortform_summary.saved_count}</strong>
+						<small>Saved Reels</small>
+					</a>
+				</div>
+			</section>
+		</div>
+
+	</main>
+
+	<section class="bo-newsletter bo-scroll-reveal" aria-labelledby="bo-newsletter-title">
+		<div>
+			<h2 id="bo-newsletter-title">Be the first to know</h2>
+			<p>Get trend updates, exclusive offers, and more!</p>
+		</div>
+		<form action="/member_process/newsletter" method="post">
+			<label for="bo-newsletter-email">Email address</label>
+			<input id="bo-newsletter-email" name="email" type="email" placeholder="Enter Your Email" />
+			<button type="submit">SUBSCRIBE</button>
+		</form>
+	</section>
+</div>
+
+<script src="/data/skin/{skin}/common/mypage_ui.js"></script>
+<script src="../js/bridgeon-mypage.js"></script>

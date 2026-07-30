@@ -1,5 +1,50 @@
 # BridgeOn Decisions
 
+## 2026-07-30: Preserve Firstmall HTML Modules And Add Separate BridgeOn CSS
+
+Decision:
+
+- Use the storefront URL to locate the owning Firstmall HTML entry file.
+- Modify existing entry and module HTML files in place within the work-skin package.
+- Preserve Firstmall's modular template structure for complex pages such as goods view.
+- Add new scoped BridgeOn CSS files and link them from the modified HTML.
+- Do not mix BridgeOn rules into Firstmall `css/common.css` or `css/user.css`.
+
+Why:
+
+- Firstmall routes usually correspond directly to skin-relative HTML paths.
+- Existing modules carry platform behavior and are safer to retain than replacing a complex page
+  with one monolithic template.
+- The current shared CSS files are already large; isolated CSS makes review, rollback, and future
+  maintenance safer.
+
+## 2026-07-30: Start Firstmall Integration With An Isolated My Page Work Skin
+
+Decision:
+
+- Keep the downloaded production skin outside the project unchanged.
+- Put upload candidates under `firstmall-workskin/` using their eventual skin-relative paths.
+- Use variables verified in the active Firstmall `mypage/index.html` and the live
+  `/mypage/dashboard` page.
+- Keep `/mypage/dashboard` as the active dashboard entry point and retain Firstmall account/order
+  pages as the source of truth for actions.
+- Limit the first upload to `mypage/dashboard.html` and `css/bridgeon-mypage.css`; preserve the
+  existing global header, footer, LNB, index, and account subpages.
+- Validate the server template with `tools/check-firstmall-workskin.mjs` instead of treating its
+  runtime routes and `{skin}` values as local static files.
+
+Why:
+
+- A live signed-in screenshot confirmed that `mypage/dashboard.html` receives member, wishlist,
+  recently viewed, and shortform data.
+- A later signed-in check showed that its custom `order_summary.*` values do not match the
+  account's real order history. The work skin must use the standard `{orders}` collection and an
+  explicit empty state instead.
+- Restricting the first change to the active dashboard makes rollback possible without altering
+  shared navigation or unrelated pages.
+- A separate work-skin package prevents accidental edits to the downloaded or active skin and
+  allows previewing the redesign before production upload.
+
 ## 2026-07-30: Sync Real Trend Saves To Saved Posts
 
 Decision:

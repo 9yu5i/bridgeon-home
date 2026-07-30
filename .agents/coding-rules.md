@@ -48,3 +48,17 @@ Run before finishing shared or structural work:
 npm run check
 git diff --check
 ```
+
+## Firstmall Work-Skin Rules
+
+- Treat the public URL as the primary route-to-template clue. For example,
+  `/goods/view?no=...` maps to `[skin]/goods/view.html`.
+- Inspect the entry template and every loaded module before changing a complex page.
+- Preserve Firstmall's existing template/module split instead of consolidating a complex page into
+  one large HTML file.
+- Modify the existing Firstmall HTML files that own the page or module.
+- Put BridgeOn styles in new, page- or component-scoped CSS files and link them from the owning
+  HTML.
+- Do not add BridgeOn rules to Firstmall's large `css/common.css` or `css/user.css`.
+- Keep upload candidates under `firstmall-workskin/` using the same relative paths as the target
+  skin.
