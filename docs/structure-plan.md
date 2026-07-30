@@ -51,13 +51,15 @@ styles/
 
 ## JavaScript
 
-- `script.js` remains the root legacy script for now because it depends on `document.currentScript` paths and shared page behavior.
-- New behavior should go into focused files under `scripts/components/` or `scripts/pages/`.
+- `script.js` is the small root entry for page transitions and shared BridgeOn URLs.
+- `scripts/components/bootstrap.js` loads shared presentation components.
+- `scripts/prototype/` contains every controller and data source expected to be removed or replaced
+  when Firstmall becomes the source of truth.
+- Prototype script tags use `data-prototype`, making the discard boundary machine-checkable.
+- New presentation behavior should go into focused files under `scripts/components/`.
+- Static data and Firstmall-replaceable behavior must go under `scripts/prototype/`.
 - `scripts/components/header-navigation.js` now owns search, mobile menu, category link wiring, mobile category browsing, and the desktop mega menu.
 - `scripts/components/loop-rail.js` now owns generic `data-scroll` buttons and the loop rails for Real Trend, Best Sellers, and Customer Real Picks.
-- `scripts/components/product-sheet.js` now owns the shared add-to-cart/product option sheet and product-card-to-detail navigation.
-- `scripts/components/seller-wishlist.js` now owns Best Sellers wishlist icon state.
-- `scripts/components/editor-data.js` now owns shared editor profile, pick, and magazine data used by both the home T.P Pick card and the Editor's Pick page.
 - `scripts/components/editor-card-slider.js` now owns the home T.P Pick editor card slider and editor note toggles.
 - `scripts/components/magazine-slider.js` now owns the mobile T.P Magazine drag slider and progress bar.
 - `scripts/components/magazine-links.js` now owns magazine card keyboard/click links to article detail pages.
@@ -67,30 +69,10 @@ styles/
 - `scripts/components/hero-slider.js` now owns the main hero carousel.
 - `scripts/components/today-pick-panel.js` now owns the desktop hero Today's Pick mini panel autoplay, collapse, and scroll-to-deal behavior.
 - `scripts/components/section-tabs.js` now owns shared category/tab filtering for home sections.
-- Existing code should be extracted next in this order: remaining home-only helpers.
-
-Suggested next files:
-
-```text
-scripts/
-  components/
-    header-navigation.js
-    deal-sliders.js
-    hero-slider.js
-    loop-rail.js
-    editor-card-slider.js
-    magazine-slider.js
-    magazine-links.js
-    product-sheet.js
-    editor-data.js
-    support-footer.js
-    scroll-reveal.js
-    today-pick-panel.js
-    section-tabs.js
-    seller-wishlist.js
-  pages/
-    home.js
-```
+- `my-page/profile-birthday.js` owns the birthday calendar.
+- `my-page/help-topic-data.js` owns static Help Center topic content.
+- `my-page/help-topic.js` owns Help Center topic rendering and interaction instead of using an
+  inline script.
 
 ## Data
 
@@ -110,8 +92,12 @@ Run this before and after structural changes:
 npm run check
 ```
 
-This checks JavaScript syntax, CSS brace balance, local CSS/HTML asset paths, local page links,
-and duplicate HTML IDs without requiring external packages.
+This checks JavaScript syntax, single-reference unused declarations, CSS brace balance, unused CSS
+classes, local CSS/HTML asset paths, local page links, duplicate HTML IDs, executable inline
+scripts, and prototype markers without requiring external packages.
+
+Run `npm run audit:placeholders` to inventory unresolved placeholder links before Firstmall URL
+mapping. The audit is informational because those URLs cannot be finalized without the work skin.
 
 Firstmall integration readiness and the prototype/commerce boundary are documented in
 `docs/firstmall-integration-readiness.md`.

@@ -411,6 +411,10 @@
 
 .product-detail-options-page .product-stage-art {
   --selected-option-color: #ff7370;
+}
+
+/* Variants 0 and 1 stay photo shots, so only the art variants get the tinted stage. */
+.product-detail-options-page .product-stage-art[data-variant]:not([data-variant="1"]) {
   background:
     radial-gradient(circle at 68% 20%, rgba(255, 255, 255, 0.58) 0 10%, transparent 11%),
     linear-gradient(120deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 42%),
@@ -1174,6 +1178,21 @@ body.is-product-deal-open {
     inset 0 -4px 8px rgba(70, 0, 20, 0.08),
     0 0 0 3px #fff,
     0 0 0 5px #ff4b91;
+}
+
+.product-color-option.is-sold-out,
+.product-color-option:disabled {
+  opacity: 0.34;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.product-color-option.is-sold-out:hover,
+.product-color-option.is-sold-out:focus-visible,
+.product-color-option:disabled:hover,
+.product-color-option:disabled:focus-visible {
+  transform: none;
+  box-shadow: inset 0 -4px 8px rgba(70, 0, 20, 0.08);
 }
 
 .product-quantity {
@@ -3010,26 +3029,33 @@ body.is-product-inquiry-open {
     background: #202020;
   }
 
-  .product-detail-page .header-main > .mobile-menu,
+  .product-detail-page .header-main > .mobile-menu:not(.is-page-back),
   .product-detail-page .header-main > .logo,
   .product-detail-page .header-main > .search,
   .product-detail-page .header-main > .header-actions {
     display: none !important;
   }
 
+  .product-detail-page .header-main > .mobile-menu.is-page-back {
+    display: grid !important;
+    color: #fff;
+  }
+
   .product-detail-page .product-mobile-gnb {
     display: flex !important;
+    flex: 1 1 auto;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
+    justify-content: flex-end;
+    width: auto;
+    min-width: 0;
+  }
+
+  .product-detail-page .product-mobile-gnb-back {
+    display: none !important;
   }
 
   .product-detail-page .product-mobile-gnb-actions {
     gap: 1px;
-  }
-
-  .product-detail-page .product-mobile-gnb-back {
-    justify-content: start;
   }
 
   .product-detail-page .product-mobile-gnb-button {

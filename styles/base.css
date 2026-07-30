@@ -16,7 +16,8 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  overflow-x: hidden;
+  /* clip instead of hidden so the body never becomes a scroll container and sticky headers keep working. */
+  overflow-x: clip;
   background: #292626;
   color: var(--ink);
   font-family: "Pretendard", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;

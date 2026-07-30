@@ -649,17 +649,6 @@
   line-clamp: 1;
 }
 
-.editor-product-desc {
-  display: -webkit-box;
-  overflow: hidden;
-  color: var(--editor-muted);
-  font-size: 12px;
-  line-height: 1.4;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
-
 .editor-product-price {
   display: flex;
   flex-wrap: nowrap;
@@ -755,10 +744,6 @@
   transform: translateY(-1px);
   background: linear-gradient(145deg, #a274ff, #31136c);
   box-shadow: 0 10px 18px rgba(49, 19, 108, 0.26);
-}
-
-.editor-name-button {
-  display: none;
 }
 
 .editor-card-product .editor-pick-note {

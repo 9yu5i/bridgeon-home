@@ -39,6 +39,19 @@ for (const file of files) {
   const displayPath = relative(root, file);
   const ids = new Map();
 
+  if (/<script\b(?![^>]*\bsrc\s*=)[^>]*>[\s\S]*?<\/script>/i.test(html)) {
+    failed = true;
+    console.error(`Inline executable script: ${displayPath}`);
+  }
+
+  for (const match of html.matchAll(/<script\b([^>]*)\bsrc\s*=\s*(["'])(.*?)\2[^>]*>/gi)) {
+    if (!match[3].includes("scripts/prototype/")) continue;
+    if (/\bdata-prototype(?:\s|=|>)/i.test(match[0])) continue;
+
+    failed = true;
+    console.error(`Prototype script missing data-prototype: ${displayPath} -> ${match[3]}`);
+  }
+
   for (const match of html.matchAll(/\bid\s*=\s*(["'])(.*?)\1/gi)) {
     const id = match[2].trim();
     if (!id) continue;

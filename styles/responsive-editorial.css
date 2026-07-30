@@ -1690,7 +1690,4 @@
     right: var(--editor-thumb-action-inset, 6px);
   }
 
-  .editorial-section .editor-product-desc {
-    display: none;
-  }
 }

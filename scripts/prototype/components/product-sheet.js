@@ -4,9 +4,9 @@
   });
   const PRODUCT_DETAIL_URL =
     window.BridgeOn?.productDetailUrl ||
-    new URL("../../product-detail/product-detail.html", document.currentScript?.src || window.location.href).href;
+    new URL("../../../product-detail/product-detail.html", document.currentScript?.src || window.location.href).href;
   const REALTREND_PAGE_URL = new URL(
-    "../../realtrend/realtrend.html",
+    "../../../realtrend/realtrend.html",
     document.currentScript?.src || window.location.href,
   ).href;
 
@@ -18,6 +18,8 @@ const initTrendProductSheet = () => {
   if (!productPanel) return;
 
   const productCard = productPanel.querySelector(".realtrend-product-card");
+  const productHead = productCard?.querySelector(".realtrend-product-head");
+  const productThumb = productCard?.querySelector(".realtrend-product-thumb");
   const closeButton = productPanel.querySelector(".realtrend-product-sheet-close");
   const qtyEl = productPanel.querySelector("#trend-product-qty");
   const productSelect = productCard?.querySelector(".realtrend-select-native");
@@ -40,6 +42,22 @@ const initTrendProductSheet = () => {
     card.dataset.productDetailLink
       ? new URL(card.dataset.productDetailLink, window.location.href).href
       : PRODUCT_DETAIL_URL;
+
+  const getSheetDetailHref = () => productCard?.dataset.wishlistDetailUrl || PRODUCT_DETAIL_URL;
+
+  const syncSheetDetailTargets = () => {
+    const href = getSheetDetailHref();
+    const productLabel = productNameEl?.textContent?.trim() || "product";
+
+    [productThumb, productNameEl].forEach((target) => {
+      if (!target) return;
+      if (!target.hasAttribute("tabindex")) target.tabIndex = 0;
+      target.setAttribute("role", "link");
+      target.setAttribute("aria-label", `View ${productLabel} details`);
+      if (target === productThumb) target.removeAttribute("aria-hidden");
+      target.dataset.productDetailHref = href;
+    });
+  };
 
   const preventTrendSheetBackdropScroll = (event) => {
     if (!document.body.classList.contains("is-trend-product-sheet-open")) return;
@@ -176,9 +194,71 @@ const initTrendProductSheet = () => {
   };
 
   const getCartToastProductName = () => {
-    const selectedOption = productSelect?.selectedOptions?.[0]?.textContent?.trim();
-    if (selectedOption) return selectedOption;
-    return productNameEl?.textContent?.trim() || "This product";
+    const productName = productNameEl?.textContent?.trim() || "";
+    const selectedOption = productSelect?.selectedOptions?.[0]?.textContent?.trim() || "";
+    if (!selectedOption) return productName || "This product";
+    if (!productName || selectedOption.includes(productName)) return selectedOption;
+    return `${productName} (${selectedOption})`;
+  };
+
+  /* Mirrors the color list on product-detail-options.html. */
+  const SHEET_COLOR_OPTIONS = [
+    { label: "01 Bare Apricot" },
+    { label: "02 Nutty Nude" },
+    { label: "03 Rose Crush" },
+    { label: "04 Fig Brown" },
+    { label: "05 Mauve Berry" },
+    { label: "06 Pink Sand" },
+    { label: "07 Plum Coke" },
+    { label: "08 Berry Pink" },
+    { label: "09 Red Drop" },
+    { label: "10 Coral Beige" },
+    { label: "11 Honey Glow" },
+    { label: "12 Dusty Fig" },
+    { label: "13 Petal Milk" },
+    { label: "14 Cocoa Rose" },
+    { label: "15 Lilac Syrup" },
+    { label: "16 Cherry Jam" },
+    { label: "17 Magenta Pop" },
+    { label: "18 Soft Clay", soldOut: true },
+    { label: "19 Velvet Wine", soldOut: true },
+  ];
+  const OPTIONS_DETAIL_PATTERN = /product-detail-options\.html/i;
+
+  const getSourceDetailHref = (source) =>
+    source?.dataset?.productDetailLink ||
+    source?.closest?.("[data-product-detail-link]")?.dataset.productDetailLink ||
+    "";
+
+  const getSourceWishlistCategory = (source) => {
+    const sourceCategory =
+      source?.dataset?.category ||
+      source?.dataset?.accountCategory ||
+      source?.dataset?.timedealCategory ||
+      "";
+    if (sourceCategory) return sourceCategory;
+
+    const pageCategory = Array.from(document.body.classList)
+      .find((name) => name.startsWith("listing-page--"))
+      ?.replace("listing-page--", "");
+    return pageCategory || "beauty";
+  };
+
+  const normalizeSheetOptionChoice = (choice) => {
+    if (typeof choice === "string") return { label: choice, soldOut: false };
+    return {
+      label: choice?.label || "",
+      soldOut: Boolean(choice?.soldOut),
+    };
+  };
+
+  const getSheetOptionChoices = (source, name) => {
+    if (OPTIONS_DETAIL_PATTERN.test(getSourceDetailHref(source))) {
+      return SHEET_COLOR_OPTIONS.map(normalizeSheetOptionChoice);
+    }
+
+    const baseName = name.replace(/\s+(50|100)ml$/i, "").trim() || name;
+    return [`${baseName} 50ml`, `${baseName} 100ml`].map(normalizeSheetOptionChoice);
   };
 
   const SHEET_BUNDLE_TIERS =
@@ -253,6 +333,7 @@ const initTrendProductSheet = () => {
       name: productNameEl?.textContent?.trim() || "Product",
       option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
       optionChoices: Array.from(productSelect?.options || [])
+        .filter((option) => !option.disabled)
         .map((option) => option.textContent?.trim())
         .filter(Boolean),
       price: basePrice,
@@ -336,6 +417,12 @@ const initTrendProductSheet = () => {
     const select = productCard.querySelector(".realtrend-select-native");
     const selectValue = productCard.querySelector(".realtrend-select-value");
     const wishBtn = productCard.querySelector(".realtrend-wish");
+    const detailHref = getSourceDetailHref(source);
+
+    productCard.dataset.wishlistCategory = getSourceWishlistCategory(source);
+    productCard.dataset.wishlistDetailUrl = detailHref
+      ? new URL(detailHref, window.location.href).href
+      : PRODUCT_DETAIL_URL;
 
     if (brandEl) {
       brandEl.textContent = brand;
@@ -345,6 +432,7 @@ const initTrendProductSheet = () => {
     }
 
     if (nameEl) nameEl.textContent = name;
+    syncSheetDetailTargets();
 
     const saleText = rawPrice.startsWith("$") ? `US${rawPrice}` : rawPrice || "US$22.00";
     const sale = Number.parseFloat(saleText.replace(/[^\d.]/g, "") || "22");
@@ -367,11 +455,21 @@ const initTrendProductSheet = () => {
     }
 
     if (select && name) {
-      const optionBaseName = name.replace(/\s+(50|100)ml$/i, "").trim() || name;
-      if (select.options[0]) select.options[0].textContent = `${optionBaseName} 50ml`;
-      if (select.options[1]) select.options[1].textContent = `${optionBaseName} 100ml`;
-      select.selectedIndex = 0;
-      if (selectValue) selectValue.textContent = select.options[0]?.textContent || "";
+      const optionChoices = getSheetOptionChoices(source, name);
+      select.replaceChildren(
+        ...optionChoices.map((choice) => {
+          const option = document.createElement("option");
+          option.textContent = choice.label;
+          option.disabled = Boolean(choice.soldOut);
+          return option;
+        }),
+      );
+      const firstAvailableIndex = optionChoices.findIndex((choice) => !choice.soldOut);
+      select.selectedIndex = firstAvailableIndex >= 0 ? firstAvailableIndex : 0;
+      if (selectValue) {
+        selectValue.textContent =
+          optionChoices[firstAvailableIndex >= 0 ? firstAvailableIndex : 0]?.label || "";
+      }
       selectRebuilders.forEach((rebuild) => rebuild());
     }
 
@@ -406,11 +504,16 @@ const initTrendProductSheet = () => {
       Array.from(select.options).forEach((option, index) => {
         const item = document.createElement("li");
         const isSelected = index === select.selectedIndex;
+        const isSoldOut = Boolean(option.disabled);
         item.setAttribute("role", "option");
         item.dataset.index = String(index);
-        item.textContent = option.textContent;
+        item.textContent = isSoldOut ? `${option.textContent} (Sold out)` : option.textContent;
         item.classList.toggle("is-selected", isSelected);
+        item.classList.toggle("is-sold-out", isSoldOut);
         item.setAttribute("aria-selected", isSelected ? "true" : "false");
+        if (isSoldOut) {
+          item.setAttribute("aria-disabled", "true");
+        }
         menu.appendChild(item);
       });
       valueEl.textContent = select.selectedOptions[0]?.textContent?.trim() || "";
@@ -438,6 +541,7 @@ const initTrendProductSheet = () => {
 
     const selectIndex = (index) => {
       if (index < 0 || index >= select.options.length) return;
+      if (select.options[index]?.disabled) return;
       select.selectedIndex = index;
       buildMenu();
       window.BridgeOn?.wishlist?.syncButtons?.(productCard);
@@ -485,13 +589,6 @@ const initTrendProductSheet = () => {
       qtyEl.textContent = String(next);
       syncSheetBundlePricing();
     });
-  });
-
-  productCard?.querySelector(".realtrend-wish")?.addEventListener("click", (event) => {
-    const button = event.currentTarget;
-    const isActive = button.classList.toggle("is-active");
-    button.setAttribute("aria-pressed", isActive ? "true" : "false");
-    button.setAttribute("aria-label", isActive ? "Remove from wishlist" : "Add to wishlist");
   });
 
   productCard?.querySelector(".realtrend-add-cart")?.addEventListener("click", (event) => {
@@ -744,16 +841,6 @@ const initTrendProductSheet = () => {
   const mypageProductGrid = document.querySelector(".mypage-product-grid");
 
   mypageProductGrid?.addEventListener("click", (event) => {
-    const wishButton = event.target.closest(".mypage-wish");
-    if (wishButton && mypageProductGrid.contains(wishButton)) {
-      event.preventDefault();
-      event.stopPropagation();
-      const isActive = wishButton.classList.toggle("is-active");
-      wishButton.setAttribute("aria-pressed", isActive ? "true" : "false");
-      wishButton.setAttribute("aria-label", isActive ? "Remove from wishlist" : "Add to wishlist");
-      return;
-    }
-
     const cartButton = event.target.closest(".mypage-cart");
     if (!cartButton || !mypageProductGrid.contains(cartButton)) return;
 
@@ -763,6 +850,24 @@ const initTrendProductSheet = () => {
   });
 
   closeButton?.addEventListener("click", closeTrendProductSheet);
+
+  productHead?.addEventListener("click", (event) => {
+    const target = event.target.closest(".realtrend-product-thumb, .realtrend-product-name");
+    if (!target || !productHead.contains(target)) return;
+    if (event.target.closest("a, button")) return;
+
+    event.preventDefault();
+    navigateWithPageTransition(getSheetDetailHref());
+  });
+
+  productHead?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const target = event.target.closest(".realtrend-product-thumb, .realtrend-product-name");
+    if (!target || !productHead.contains(target)) return;
+
+    event.preventDefault();
+    navigateWithPageTransition(getSheetDetailHref());
+  });
 
   productPanel.addEventListener("click", (event) => {
     if (event.target.closest(".realtrend-product-card")) return;

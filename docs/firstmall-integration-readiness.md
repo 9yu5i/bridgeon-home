@@ -36,11 +36,12 @@ server-provided values.
 The following files are useful for previewing the design, but their data-changing behavior should
 not be copied into the production skin as the source of truth:
 
-- `script.js`: local cart and wishlist storage
-- `cart/cart.js`: prototype cart editing
-- `scripts/components/product-sheet.js`: prototype option and add-to-cart flow
-- `my-page/my-page.js`: prototype profile, order, address, payment, and account interactions
-- `product-detail/product-detail.js`: prototype purchase and detail interactions
+- `scripts/prototype/cart-store.js`: local cart storage
+- `scripts/prototype/wishlist-store.js`: local wishlist storage
+- `scripts/prototype/pages/cart.js`: prototype cart editing
+- `scripts/prototype/components/product-sheet.js`: prototype option and add-to-cart flow
+- `scripts/prototype/pages/my-page*.js`: prototype profile, order, address, payment, and account interactions
+- `scripts/prototype/pages/product-detail.js`: prototype purchase and detail interactions
 
 During integration, keep only presentation behavior that does not duplicate Firstmall commerce
 logic.

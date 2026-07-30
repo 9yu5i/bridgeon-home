@@ -1,6 +1,4 @@
 .cart-page {
-  /* overflow-x: hidden on body creates a scroll container and kills position: sticky */
-  overflow-x: clip;
   background: #fff;
 }
 

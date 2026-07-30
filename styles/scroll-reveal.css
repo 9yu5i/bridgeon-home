@@ -11,7 +11,9 @@ html.scroll-reveal-pending .magazine-block {
 
 html.scroll-reveal-pending .content-section .section-heading h2,
 html.scroll-reveal-pending .content-section .inline-heading h2,
-html.scroll-reveal-pending .content-section .mobile-section-title {
+html.scroll-reveal-pending .content-section .mobile-section-title,
+html.scroll-reveal-pending .content-section .editorial-section-title,
+html.scroll-reveal-pending .content-section .editor-card-title {
   opacity: 0;
   transform: translateY(24px);
   transition: none !important;
@@ -37,6 +39,14 @@ html.scroll-reveal-pending .magazine-grid .magazine-card {
 html.scroll-reveal-pending .deal-grid .deal-card {
   opacity: 0;
   transform: scale(0.92);
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .deal-grid .deal-pick-card,
+html.scroll-reveal-pending .deal-grid .deal-time-compact,
+html.scroll-reveal-pending .editor-card-carousel {
+  opacity: 0;
+  transform: translateY(24px);
   transition: none !important;
 }
 
@@ -116,6 +126,20 @@ html.new-scroll-reveal-pending .listing-page--new .listing-brand-grid .listing-c
 
 .editor-card.scroll-reveal-soft:not(.is-inview) {
   box-shadow: 0 8px 20px rgba(49, 19, 108, 0.08);
+}
+
+.scroll-reveal-line {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.72s var(--scroll-reveal-ease),
+    transform 0.72s var(--scroll-reveal-ease);
+}
+
+.scroll-reveal-line.is-inview,
+.is-inview .scroll-reveal-line {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .scroll-reveal-rail:not(.is-inview) .inline-heading p,

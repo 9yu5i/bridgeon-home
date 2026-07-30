@@ -1,5 +1,12 @@
 (() => {
 
+  const navigateWithPageTransition = window.BridgeOn?.navigateWithPageTransition || ((href) => {
+    window.location.href = href;
+  });
+  const PRODUCT_DETAIL_URL =
+    window.BridgeOn?.productDetailUrl ||
+    new URL("../../../product-detail/product-detail.html", document.currentScript?.src || window.location.href).href;
+
   const feed = document.getElementById("realtrend-feed");
 
   const track = document.getElementById("realtrend-track");
@@ -90,22 +97,6 @@
 
 
 
-  const resetSocialToggle = (button) => {
-
-    button.classList.remove("is-active");
-
-    button.setAttribute("aria-pressed", "false");
-
-    const icon = button.querySelector("img");
-
-    const defaultSrc = icon?.getAttribute("data-icon-default");
-
-    if (icon && defaultSrc) icon.src = defaultSrc;
-
-  };
-
-
-
   const syncRealtrendBundlePricing = (card = document.querySelector(".realtrend-product-card")) => {
     if (!card) return;
 
@@ -173,6 +164,8 @@
 
     const nameEl = productCard.querySelector(".realtrend-product-name");
 
+    const productThumb = productCard.querySelector(".realtrend-product-thumb");
+
     const priceStrong = productCard.querySelector(".realtrend-price strong");
 
     const priceDel = productCard.querySelector(".realtrend-price del");
@@ -193,6 +186,12 @@
 
     const del = mobileCopy.querySelector(".realtrend-mobile-price del")?.textContent?.trim();
 
+    const detailHref = slide?.dataset?.productDetailLink
+      ? new URL(slide.dataset.productDetailLink, window.location.href).href
+      : PRODUCT_DETAIL_URL;
+
+    productCard.dataset.wishlistDetailUrl = detailHref;
+
 
 
     if (brandEl && brand) {
@@ -204,6 +203,16 @@
     }
 
     if (nameEl && name) nameEl.textContent = name;
+
+    const productLabel = nameEl?.textContent?.trim() || name || "product";
+    [productThumb, nameEl].forEach((target) => {
+      if (!target) return;
+      if (!target.hasAttribute("tabindex")) target.tabIndex = 0;
+      target.setAttribute("role", "link");
+      target.setAttribute("aria-label", `View ${productLabel} details`);
+      if (target === productThumb) target.removeAttribute("aria-hidden");
+      target.dataset.productDetailHref = detailHref;
+    });
 
     if (priceStrong && strong) {
       productCard.dataset.sheetBasePrice = strong;
@@ -1383,6 +1392,12 @@
 
   document.querySelectorAll("[data-social-toggle]").forEach((button) => {
 
+    /* Save toggles are owned by scripts/prototype/saved-posts-store.js. */
+
+    if (button.dataset.socialToggle === "save") return;
+
+
+
     const icon = button.querySelector("img");
 
     if (!icon) return;
@@ -1412,6 +1427,8 @@
     });
 
   });
+
+  window.BridgeOn?.savedPosts?.syncButtons?.(document);
 
 
 
@@ -1878,7 +1895,7 @@
       originalPrice: productCard?.querySelector(".realtrend-price del")?.textContent?.trim() || "",
       tone: "green",
       quantity,
-      detailUrl: window.BridgeOn?.productDetailUrl || "../product-detail/product-detail.html",
+      detailUrl: productCard?.dataset.wishlistDetailUrl || PRODUCT_DETAIL_URL,
       brandUrl: brandEl instanceof HTMLAnchorElement ? brandEl.href : "",
       hasBundleDeal: true,
       bundleTiers,
@@ -2083,6 +2100,28 @@
 
 
 
+  const productHead = productCard?.querySelector(".realtrend-product-head");
+
+  const getRealtrendDetailHref = () => productCard?.dataset.wishlistDetailUrl || PRODUCT_DETAIL_URL;
+
+  productHead?.addEventListener("click", (event) => {
+    const target = event.target.closest(".realtrend-product-thumb, .realtrend-product-name");
+    if (!target || !productHead.contains(target)) return;
+    if (event.target.closest("a, button")) return;
+
+    event.preventDefault();
+    navigateWithPageTransition(getRealtrendDetailHref());
+  });
+
+  productHead?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const target = event.target.closest(".realtrend-product-thumb, .realtrend-product-name");
+    if (!target || !productHead.contains(target)) return;
+
+    event.preventDefault();
+    navigateWithPageTransition(getRealtrendDetailHref());
+  });
+
   productCard?.addEventListener("click", (event) => {
 
     event.stopPropagation();
@@ -2115,4 +2154,3 @@
   });
 
 })();
-

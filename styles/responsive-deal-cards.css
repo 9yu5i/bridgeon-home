@@ -34,8 +34,7 @@
     display: none !important;
   }
 
-  .deals-section .deal-pick-card,
-  .deals-section .deal-pick-compact {
+  .deals-section .deal-pick-card {
     position: relative;
     display: grid;
     gap: 16px;
@@ -945,8 +944,7 @@
   .deals-section .deal-heading,
   .deals-section .deal-timer,
   .deals-section .deal-quote,
-  .deals-section .deal-price,
-  .deals-section .deal-tag {
+  .deals-section .deal-price {
     position: static;
     inset: auto;
     flex: 0 0 auto;
@@ -1159,10 +1157,6 @@
     color: #fff;
   }
 
-  .deals-section .deal-card.time .deal-tag {
-    display: none !important;
-  }
-
   .deals-section .deal-price {
     width: 100%;
     min-width: 0;
@@ -1206,13 +1200,6 @@
 
   .deals-section .deal-card.time .deal-price del {
     color: rgba(255, 255, 255, 0.54);
-  }
-
-  .deals-section .deal-tag {
-    height: auto;
-    max-height: none;
-    overflow: visible;
-    font-size: 12px;
   }
 
   .deals-section .deal-card.special .deal-actions,
@@ -1526,8 +1513,7 @@
     padding: 4px 2px 12px;
   }
 
-  .deals-section .deal-pick-card,
-  .deals-section .deal-pick-compact {
+  .deals-section .deal-pick-card{
     padding: 18px 14px 16px;
     border-radius: 18px;
     gap: 15px;
@@ -1775,10 +1761,6 @@
 
   .deals-section .deal-price del {
     font-size: 11px;
-  }
-
-  .deals-section .deal-tag {
-    font-size: 10px;
   }
 
   .deals-section .deal-card.special .deal-actions,

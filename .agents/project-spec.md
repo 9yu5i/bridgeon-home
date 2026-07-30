@@ -65,7 +65,9 @@ When the user asks for a visual change, assume it must work responsively unless 
 - Do not remove that zoom without a dedicated visual calibration pass.
 - `script.js` remains a legacy entry point and still loads extracted component scripts.
 - Some repeated card HTML remains duplicated and should eventually move to data/templates.
-- `listing/best.html` renders ranked products through `listing/best.js`; it starts with an initial batch and loads more on scroll until 100 products are visible.
+- `listing/best.html` renders ranked prototype products through
+  `scripts/prototype/pages/listing-best.js`; it starts with an initial batch and loads more on
+  scroll until 100 products are visible.
 - Existing static HTML page paths use relative asset URLs; verify all paths when moving shared code.
 
 ## Validation

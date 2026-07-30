@@ -4,6 +4,18 @@
   gap: 22px;
 }
 
+.saved-reel-grid .saved-posts-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 48px 20px;
+  border: 1px dashed #d9c9ff;
+  border-radius: 12px;
+  color: #756d7c;
+  background: #fff;
+  font-size: 14px;
+  text-align: center;
+}
+
 .saved-reel-card {
   position: relative;
   overflow: hidden;
@@ -108,14 +120,6 @@
   display: block;
   font-size: 21px;
   line-height: 1.15;
-}
-
-.saved-reel-copy small {
-  display: block;
-  margin-top: 8px;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 13px;
-  line-height: 1.35;
 }
 
 .saved-reel-card button {

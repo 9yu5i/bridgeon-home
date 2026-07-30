@@ -1,7 +1,13 @@
 /* Trend rail product sheet popup */
-.trend-product-sheet {
+.trend-product-sheet,
+.realtrend-page {
   --rt-purple: #7b3fe4;
   --rt-purple-dark: #5422ba;
+  --rt-product-card-surface:
+    radial-gradient(circle at 8% 0%, rgba(255, 198, 224, 0.42) 0%, transparent 46%),
+    radial-gradient(circle at 96% 6%, rgba(176, 152, 255, 0.34) 0%, transparent 44%),
+    radial-gradient(circle at 70% 100%, rgba(255, 220, 210, 0.28) 0%, transparent 42%),
+    linear-gradient(168deg, #fff9fc 0%, #f4eefc 52%, #ebe3f8 100%);
 }
 
 .trend-product-sheet[hidden] {
@@ -40,11 +46,7 @@ body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-card {
   height: auto;
   max-height: none;
   flex-shrink: 0;
-  background:
-    radial-gradient(circle at 8% 0%, rgba(255, 198, 224, 0.42) 0%, transparent 46%),
-    radial-gradient(circle at 96% 6%, rgba(176, 152, 255, 0.34) 0%, transparent 44%),
-    radial-gradient(circle at 70% 100%, rgba(255, 220, 210, 0.28) 0%, transparent 42%),
-    linear-gradient(168deg, #fff9fc 0%, #f4eefc 52%, #ebe3f8 100%);
+  background: var(--rt-product-card-surface);
 }
 
 body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-card.is-select-open,
@@ -117,7 +119,7 @@ body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-sheet-c
   position: relative;
   padding: 24px;
   border-radius: 28px;
-  background: linear-gradient(180deg, #e8ebf2 0%, #dfe3ec 100%);
+  background: var(--rt-product-card-surface);
 }
 
 .realtrend-product-card.is-select-open {
@@ -215,6 +217,54 @@ a.realtrend-brand:hover {
   word-break: break-word;
 }
 
+body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-thumb,
+body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-name {
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    outline-color 0.2s ease;
+}
+
+body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-thumb:hover,
+body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-thumb:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(55, 34, 99, 0.14);
+  outline: 2px solid rgba(123, 63, 228, 0.28);
+  outline-offset: 2px;
+}
+
+body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-name:hover,
+body.is-trend-product-sheet-open .trend-product-sheet .realtrend-product-name:focus-visible {
+  color: var(--rt-purple);
+  outline: none;
+}
+
+.realtrend-page .realtrend-panel .realtrend-product-thumb,
+.realtrend-page .realtrend-panel .realtrend-product-name {
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    outline-color 0.2s ease;
+}
+
+.realtrend-page .realtrend-panel .realtrend-product-thumb:hover,
+.realtrend-page .realtrend-panel .realtrend-product-thumb:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(55, 34, 99, 0.14);
+  outline: 2px solid rgba(123, 63, 228, 0.28);
+  outline-offset: 2px;
+}
+
+.realtrend-page .realtrend-panel .realtrend-product-name:hover,
+.realtrend-page .realtrend-panel .realtrend-product-name:focus-visible {
+  color: var(--rt-purple);
+  outline: none;
+}
+
 .realtrend-rating {
   display: flex;
   flex-wrap: wrap;
@@ -264,7 +314,7 @@ a.realtrend-brand:hover {
   padding: 3px 8px;
   border-radius: 999px;
   color: var(--rt-purple);
-  background: #f2ebff;
+  background: #fff;
   font-size: 12px;
   font-weight: 700;
   text-decoration: none;
@@ -446,6 +496,18 @@ body.is-trend-product-sheet-open .trend-product-sheet .realtrend-price strong {
 .realtrend-select-menu li.is-selected {
   color: var(--rt-purple);
   background: #f2ebff;
+}
+
+.realtrend-select-menu li.is-sold-out {
+  opacity: 0.34;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.realtrend-select-menu li.is-sold-out:hover,
+.realtrend-select-menu li.is-sold-out.is-selected {
+  color: #111;
+  background: transparent;
 }
 
 .realtrend-qty-block {

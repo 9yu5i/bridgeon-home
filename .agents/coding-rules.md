@@ -20,8 +20,11 @@
 ## JavaScript Rules
 
 - Prefer focused files under `scripts/components/` or `scripts/pages/`.
-- Keep page-specific product detail behavior in `product-detail/product-detail.js`.
-- Avoid duplicating shared behavior already handled by `scripts/components/product-sheet.js`.
+- Keep Firstmall-replaceable product detail behavior in
+  `scripts/prototype/pages/product-detail.js`.
+- Avoid duplicating the current mock sheet behavior in
+  `scripts/prototype/components/product-sheet.js`.
+- Keep Firstmall-replaceable sample state and data under `scripts/prototype/`.
 - Do not remove old behavior from `script.js` until the replacement component is verified.
 
 ## Asset Rules
@@ -45,4 +48,3 @@ Run before finishing shared or structural work:
 npm run check
 git diff --check
 ```
-

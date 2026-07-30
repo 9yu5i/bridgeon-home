@@ -11,6 +11,8 @@ const searchTabs = document.querySelectorAll("[data-search-tab]");
 const searchSections = document.querySelectorAll("[data-search-panel]");
 const searchCloseButtons = document.querySelectorAll(".search-close");
 const searchClearButtons = document.querySelectorAll(".search-clear");
+const usesHeaderPageBack = document.body.matches(".my-page, .product-detail-page");
+const pageBackButtons = document.querySelectorAll("[data-page-back], .header-main > .mobile-menu.is-page-back");
 const mobileMenuButtons = document.querySelectorAll("[data-mobile-menu-open]");
 const mobileSearchOpenButtons = document.querySelectorAll("[data-mobile-search-open]");
 const mobileMenuPanel = document.querySelector(".mobile-menu-panel");
@@ -27,8 +29,6 @@ const mobileTertiaryList = document.querySelector(".mobile-tertiary-list");
 const mobileCategoryContent = document.querySelector(".mobile-category-content");
 const mobileQuaternaryPanel = document.querySelector(".mobile-quaternary-panel");
 const mobileQuaternaryBackButton = document.querySelector(".mobile-quaternary-back");
-const mobileQuaternaryTitle = document.querySelector(".mobile-quaternary-title");
-const mobileQuaternaryList = document.querySelector(".mobile-quaternary-list");
 const categoryMenu = document.querySelector(".category-menu");
 let categoryLinks = Array.from(document.querySelectorAll(".category-nav a"));
 const categoryMegaPanels = document.querySelectorAll("[data-menu-panel]");
@@ -102,22 +102,6 @@ const getMyPageUrl = () => {
     return "../my-page/my-page.html";
   }
   return "my-page/my-page.html";
-};
-
-const getHomeUrl = () => {
-  if (
-    document.body.classList.contains("listing-page") ||
-    document.body.classList.contains("timedeal-page") ||
-    document.body.classList.contains("product-detail-page") ||
-    document.body.classList.contains("cart-page") ||
-    document.body.classList.contains("editors-page") ||
-    document.body.classList.contains("realtrend-page") ||
-    document.body.classList.contains("my-page") ||
-    document.body.classList.contains("brand-page")
-  ) {
-    return "../index.html";
-  }
-  return "index.html";
 };
 
 const listingCategoryPages = {
@@ -842,37 +826,6 @@ const closeMobileTertiary = () => {
   mobileTertiaryPanel.setAttribute("aria-hidden", "true");
 };
 
-const openMobileQuaternary = (index) => {
-  if (!mobileTertiaryPanel || !mobileQuaternaryPanel || !mobileQuaternaryList) return;
-  const branch = mobileThirdCategoryData[mobileCurrentThirdKey];
-  if (!branch || !branch[index]) return;
-
-  const target = branch[index];
-  if (!Array.isArray(target.children) || !target.children.length) {
-    closeMobileMenu();
-    return;
-  }
-  mobileQuaternaryList.replaceChildren(
-    ...target.children.map((label) => {
-      const link = document.createElement("a");
-      link.href = "#";
-      link.textContent = label;
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        closeMobileMenu();
-      });
-      return link;
-    }),
-  );
-
-  if (mobileQuaternaryTitle) {
-    mobileQuaternaryTitle.textContent = target.label;
-  }
-
-  mobileTertiaryPanel.classList.add("is-quaternary-open");
-  mobileQuaternaryPanel.setAttribute("aria-hidden", "false");
-};
-
 const closeMobileQuaternary = () => {
   if (!mobileTertiaryPanel || !mobileQuaternaryPanel) return;
   mobileTertiaryPanel.classList.remove("is-quaternary-open");
@@ -954,6 +907,54 @@ const syncCategoryNavMode = () => {
   }
   restoreDesktopCategoryNav();
 };
+
+/* The header sticks by its own negative offset so only the compact nav row stays on screen. */
+const syncCompactCategoryNavStuckState = () => {
+  if (!categoryMenu || !document.body.classList.contains("is-compact-category-nav-sticky")) {
+    document.body.classList.remove("is-compact-category-nav-stuck");
+    return;
+  }
+
+  document.body.classList.toggle(
+    "is-compact-category-nav-stuck",
+    categoryMenu.getBoundingClientRect().top <= 0
+  );
+};
+
+let compactCategoryNavStuckFrame = 0;
+
+const queueCompactCategoryNavStuckState = () => {
+  window.cancelAnimationFrame(compactCategoryNavStuckFrame);
+  compactCategoryNavStuckFrame = window.requestAnimationFrame(syncCompactCategoryNavStuckState);
+};
+
+const syncCompactCategoryNavSticky = () => {
+  const siteHeader = document.querySelector(".site-header");
+  if (!siteHeader || !categoryMenu) return;
+
+  const isCompactNavVisible =
+    categoryNavScrollQuery.matches &&
+    categoryNav?.classList.contains("is-compact-category-nav") &&
+    categoryMenu.offsetParent !== null;
+
+  if (!isCompactNavVisible) {
+    document.body.classList.remove("is-compact-category-nav-sticky");
+    document.body.classList.remove("is-compact-category-nav-stuck");
+    document.body.style.removeProperty("--compact-category-nav-offset");
+    return;
+  }
+
+  const offset = Math.max(
+    0,
+    Math.round(categoryMenu.getBoundingClientRect().top - siteHeader.getBoundingClientRect().top)
+  );
+
+  document.body.style.setProperty("--compact-category-nav-offset", `${offset}px`);
+  document.body.classList.add("is-compact-category-nav-sticky");
+  syncCompactCategoryNavStuckState();
+};
+
+window.addEventListener("scroll", queueCompactCategoryNavStuckState, { passive: true });
 
 const getCurrentCategoryLink = () => (
   categoryNav?.querySelector('a[aria-current="page"]') ||
@@ -1282,6 +1283,37 @@ mobileMenuButtons.forEach((button) => {
     openMobileMenu();
   });
 });
+
+const getHeaderBackFallbackUrl = () => {
+  if (
+    document.body.classList.contains("my-page") ||
+    document.body.classList.contains("product-detail-page")
+  ) {
+    return new URL("../index.html", window.location.href).href;
+  }
+  return new URL("index.html", window.location.href).href;
+};
+
+pageBackButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+    navigateWithPageTransition(getHeaderBackFallbackUrl());
+  });
+});
+
+if (usesHeaderPageBack) {
+  document.querySelectorAll(".header-main > .mobile-menu.is-page-back").forEach((button) => {
+    button.removeAttribute("data-mobile-menu-open");
+    button.removeAttribute("aria-controls");
+    button.removeAttribute("aria-expanded");
+    if (!button.getAttribute("aria-label")) button.setAttribute("aria-label", "Go back");
+  });
+}
+
 mobileMenuCloseButton?.addEventListener("click", closeMobileMenu);
 mobileSubmenuOpenButton?.addEventListener("click", (event) => {
   event.preventDefault();
@@ -1348,11 +1380,13 @@ const wireCategoryNavLinks = () => {
 
 syncCategoryNavMode();
 wireCategoryNavLinks();
+syncCompactCategoryNavSticky();
 
 const resyncCategoryNav = () => {
   syncCategoryNavMode();
   wireCategoryNavLinks();
   queueScrollCurrentCategoryIntoView();
+  syncCompactCategoryNavSticky();
 };
 
 if (categoryNavScrollQuery.addEventListener) {
@@ -1385,7 +1419,10 @@ categoryMenu?.addEventListener("focusout", (event) => {
 });
 
 queueScrollCurrentCategoryIntoView();
-window.addEventListener("load", () => queueScrollCurrentCategoryIntoView());
+window.addEventListener("load", () => {
+  queueScrollCurrentCategoryIntoView();
+  syncCompactCategoryNavSticky();
+});
 
 document.addEventListener("pointerdown", (event) => {
   if (!searchPanel?.classList.contains("is-open")) return;
@@ -1406,5 +1443,6 @@ window.addEventListener("resize", () => {
   if (window.matchMedia("(min-width: 1121px)").matches) closeMobileMenu();
   else closeCategoryMega();
   queueScrollCurrentCategoryIntoView();
+  syncCompactCategoryNavSticky();
 });
 })();

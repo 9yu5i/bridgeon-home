@@ -1252,20 +1252,6 @@
   opacity: 1;
 }
 
-.listing-load-status {
-  display: flex;
-  justify-content: center;
-  margin: 42px 0 0;
-  color: #7d748b;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.listing-load-status strong {
-  color: var(--purple);
-  font-weight: 800;
-}
-
 .listing-load-sentinel {
   width: 100%;
   height: 1px;

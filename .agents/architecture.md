@@ -6,16 +6,16 @@
 flowchart TD
   A["index.html"] --> S["styles.css"]
   A --> JS["script.js"]
-  A --> ED["scripts/components/editor-data.js"]
+  A --> ED["scripts/prototype/data/editor-data.js"]
   L["listing/*.html"] --> S
   L --> LC["listing/listing.css"]
   L --> JS
   PD["product-detail/*.html"] --> S
   PD --> PDC["product-detail/product-detail.css"]
-  PD --> PDJ["product-detail/product-detail.js"]
+  PD --> PDJ["scripts/prototype/pages/product-detail.js"]
   C["cart/cart.html"] --> S
   C --> CC["cart/cart.css"]
-  C --> CJ["cart/cart.js"]
+  C --> CJ["scripts/prototype/pages/cart.js"]
   M["my-page/my-page.html"] --> S
   M --> MC["my-page/my-page.css"]
   MAS["my-page account subpages"] --> S
@@ -24,7 +24,7 @@ flowchart TD
   E["editors-pick/editors-pick.html"] --> S
   E --> EC["editors-pick/editors-pick.css"]
   E --> ED
-  E --> EJ["editors-pick/editors-pick.js"]
+  E --> EJ["scripts/prototype/pages/editors-pick.js"]
   MG["editors-pick/magazine*.html"] --> S
   MG --> MGC["editors-pick/magazine.css"]
   TD["timedeal/timedeal.html"] --> S
@@ -34,6 +34,7 @@ flowchart TD
   RT --> JS
   S --> TPS["styles/trend-product-sheet.css"]
   JS --> COMP["scripts/components/*.js"]
+  JS --> PROTO["scripts/prototype/*"]
 ```
 
 ## CSS Architecture
@@ -47,21 +48,20 @@ flowchart TD
 
 ## JavaScript Architecture
 
-- `script.js` is still the legacy root script.
-- Extracted behavior lives in `scripts/components/`.
-- `listing/best.js` owns the Best products page ranked 100-item scroll loader.
-- `cart/cart.js` owns cart item selection, quantity, delete, and promo form behavior.
-- `scripts/components/editor-data.js` owns shared editor profile, pick, and magazine data for the home T.P Pick card and the Editor's Pick page.
-- `editors-pick/editors-pick.js` owns Editor's Pick page editor selection, pick filters, wishlist state, magazine dots, and tablet/mobile horizontal snap paging between pick categories.
-- `product-detail/product-detail.js` handles product detail specific interactions.
+- `script.js` owns page transitions and shared BridgeOn URL helpers.
+- `scripts/components/bootstrap.js` loads shared presentation components in a stable order.
+- Extracted presentation behavior lives in `scripts/components/`.
+- Firstmall-replaceable data, storage, pricing, cart, wishlist, listing generation, product detail,
+  brand, Editor's Pick, Real Trend, and account controllers live under `scripts/prototype/`.
+- Every HTML script tag loading that directory carries `data-prototype`.
+- `my-page/profile-birthday.js` owns the birthday calendar.
+- `my-page/help-topic-data.js` owns static Help Center topic content.
+- `my-page/help-topic.js` owns Help Center topic rendering and interaction.
 
 Important extracted components:
 
 - `header-navigation.js`
 - `loop-rail.js`
-- `product-sheet.js`
-- `seller-wishlist.js`
-- `editor-data.js`
 - `editor-card-slider.js`
 - `magazine-slider.js`
 - `magazine-links.js`
@@ -82,7 +82,7 @@ Shared CSS:
 
 Shared JS:
 
-- `scripts/components/product-sheet.js`
+- `scripts/prototype/components/product-sheet.js` (replace during Firstmall integration)
 
 Do not make non-Real Trend pages load `realtrend/realtrend.css` to get product sheet styling.
 
@@ -90,7 +90,8 @@ Do not make non-Real Trend pages load `realtrend/realtrend.css` to get product s
 
 The project still uses copied HTML for many repeated cards.
 
-Editor data is now centralized in `scripts/components/editor-data.js` so the home T.P Pick tabs/cards and the Editor's Pick page stay aligned.
+Editor sample data is centralized in `scripts/prototype/data/editor-data.js` so the home T.P Pick
+tabs/cards and the Editor's Pick page stay aligned during prototype use.
 
 Future extraction targets:
 

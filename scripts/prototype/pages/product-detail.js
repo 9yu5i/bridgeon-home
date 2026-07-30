@@ -1,7 +1,6 @@
 (() => {
   const qtyValue = document.querySelector("[data-product-qty-value]");
   const addCartButton = document.querySelector(".product-add-cart");
-  const wishButton = document.querySelector(".product-wish");
   const stage = document.querySelector("[data-detail-stage]");
   const thumbnailButtons = document.querySelectorAll("[data-detail-thumb]");
   const tabButtons = document.querySelectorAll("[data-detail-tab]");
@@ -102,6 +101,7 @@
   const getProductCartPayload = () => {
     const selectedColor = document.querySelector("[data-color-option].is-active")?.dataset.colorOption || "";
     const colorChoices = Array.from(colorOptionButtons)
+      .filter((button) => !button.classList.contains("is-sold-out") && !button.disabled)
       .map((button) => button.dataset.colorOption?.trim())
       .filter(Boolean);
     const quantity = Number(qtyValue?.textContent || 1) || 1;
@@ -221,17 +221,6 @@
       const next = Math.max(1, Number(qtyValue.textContent || 1) + delta);
       qtyValue.textContent = String(next);
     });
-  });
-
-  wishButton?.addEventListener("click", () => {
-    const isActive = wishButton.classList.toggle("is-active");
-    wishButton.classList.toggle("is-hover-suppressed", !isActive);
-    wishButton.setAttribute("aria-pressed", isActive ? "true" : "false");
-    wishButton.setAttribute("aria-label", isActive ? "Remove from wishlist" : "Add to wishlist");
-  });
-
-  wishButton?.addEventListener("pointerleave", () => {
-    wishButton.classList.remove("is-hover-suppressed");
   });
 
   const openInquiryDialog = (trigger) => {
@@ -472,8 +461,11 @@
     openRecommendedProduct(card);
   });
 
+  const isColorOptionAvailable = (button) =>
+    Boolean(button) && !button.classList.contains("is-sold-out") && !button.disabled;
+
   const selectColorOption = (button, shouldFocus = false) => {
-    if (!button) return;
+    if (!isColorOptionAvailable(button)) return;
 
     colorOptionButtons.forEach((item) => {
       const isActive = item === button;
@@ -496,6 +488,19 @@
     if (shouldFocus) button.focus({ preventScroll: true });
   };
 
+  const getNextAvailableColorOption = (startIndex, direction) => {
+    const total = colorOptionButtons.length;
+    if (!total) return null;
+
+    for (let step = 1; step <= total; step += 1) {
+      const nextIndex = (startIndex + direction * step + total * step) % total;
+      const nextButton = colorOptionButtons[nextIndex];
+      if (isColorOptionAvailable(nextButton)) return nextButton;
+    }
+
+    return null;
+  };
+
   colorOptionButtons.forEach((button, index) => {
     button.addEventListener("click", () => selectColorOption(button));
 
@@ -510,12 +515,14 @@
       if (!direction) return;
 
       event.preventDefault();
-      const nextIndex = (index + direction + colorOptionButtons.length) % colorOptionButtons.length;
-      selectColorOption(colorOptionButtons[nextIndex], true);
+      selectColorOption(getNextAvailableColorOption(index, direction), true);
     });
   });
 
-  selectColorOption(document.querySelector(".product-color-option.is-active"));
+  selectColorOption(
+    document.querySelector(".product-color-option.is-active:not(.is-sold-out):not(:disabled)") ||
+      Array.from(colorOptionButtons).find(isColorOptionAvailable),
+  );
 
   const thumbnailList = document.querySelector(".product-thumbnails");
   const thumbnailBackgroundProps = [

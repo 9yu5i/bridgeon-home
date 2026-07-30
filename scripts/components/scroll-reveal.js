@@ -11,7 +11,7 @@
 
   const addLineReveal = (root) => {
     root.querySelectorAll(
-      ".section-heading h2, .inline-heading h2, .mobile-section-title, .editor-card-title",
+      ".section-heading h2, .inline-heading h2, .mobile-section-title, .editorial-section-title, .editor-card-title",
     ).forEach((heading) => {
       heading.classList.add("scroll-reveal-line");
     });
@@ -75,12 +75,20 @@
         item.style.setProperty("--reveal-index", String(index));
         item.style.setProperty("--reveal-stagger", "0.1s");
       });
+      // Compact cards replace the desktop deal cards below 1120px, so they keep their own order.
+      dealGrid.querySelectorAll(".deal-pick-card, .deal-time-compact").forEach((item, index) => {
+        item.classList.add("scroll-reveal-item");
+        item.style.setProperty("--reveal-index", String(index));
+        item.style.setProperty("--reveal-stagger", "0.1s");
+      });
     }
   }
 
   const editorialSection = document.querySelector(".editorial-section");
   if (editorialSection) {
     addLineReveal(editorialSection);
+    // The carousel keeps its own opacity control on slides, so reveal the wrapper instead.
+    editorialSection.querySelector(".editor-card-carousel")?.classList.add("scroll-reveal-soft");
     editorialSection.querySelectorAll(".editor-card").forEach((editorCard) => {
       editorCard.classList.add("scroll-reveal-soft");
     });

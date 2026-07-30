@@ -38,8 +38,8 @@
             </a>
           </div>
         </nav>
-        <button type="button" class="icon-button mobile-menu mobile-only" data-mobile-menu-open aria-controls="mobile-menu-panel" aria-expanded="false" aria-label="Open menu">
-          <img src="../img/mobile-icon/menu/hamburger_mobile.png" alt="" aria-hidden="true">
+        <button type="button" class="icon-button mobile-menu mobile-only is-page-back" data-page-back aria-label="Go back">
+          <span class="mobile-menu-back-icon" aria-hidden="true"></span>
         </button>
         <a class="logo" href="../index.html" aria-label="BridgeOn home">Bridge<span>On</span></a>
         <form class="search" role="search">
@@ -551,6 +551,8 @@
                 <button type="button" class="product-color-option" style="--option-color: #dc9ccf" data-color-option="15 Lilac Syrup" data-stage-variant="14" role="radio" aria-checked="false" aria-label="15 Lilac Syrup"></button>
                 <button type="button" class="product-color-option" style="--option-color: #b3000b" data-color-option="16 Cherry Jam" data-stage-variant="15" role="radio" aria-checked="false" aria-label="16 Cherry Jam"></button>
                 <button type="button" class="product-color-option" style="--option-color: #b8008c" data-color-option="17 Magenta Pop" data-stage-variant="16" role="radio" aria-checked="false" aria-label="17 Magenta Pop"></button>
+                <button type="button" class="product-color-option is-sold-out" style="--option-color: #c9a08a" data-color-option="18 Soft Clay" data-stage-variant="17" role="radio" aria-checked="false" aria-disabled="true" aria-label="18 Soft Clay (Sold out)" disabled></button>
+                <button type="button" class="product-color-option is-sold-out" style="--option-color: #5c1f3a" data-color-option="19 Velvet Wine" data-stage-variant="18" role="radio" aria-checked="false" aria-disabled="true" aria-label="19 Velvet Wine (Sold out)" disabled></button>
               </div>
             </section>
 
@@ -1179,6 +1181,11 @@
     </button>
 
     <script src="../script.js"></script>
-    <script src="./product-detail.js"></script>
+    <script data-prototype src="../scripts/prototype/cart-store.js"></script>
+    <script data-prototype src="../scripts/prototype/wishlist-store.js"></script>
+    <script data-prototype src="../scripts/prototype/components/product-sheet.js"></script>
+    <script data-prototype src="../scripts/prototype/components/seller-wishlist.js"></script>
+    <script src="../scripts/components/bootstrap.js"></script>
+    <script data-prototype src="../scripts/prototype/pages/product-detail.js"></script>
   </body>
 </html>

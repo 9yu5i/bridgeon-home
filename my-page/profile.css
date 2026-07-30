@@ -718,11 +718,6 @@ section[aria-labelledby="profile-address-title"] .profile-text-button {
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.profile-address-card.is-editing {
-  border-color: var(--profile-purple);
-  box-shadow: 0 0 0 3px rgba(123, 63, 228, 0.12);
-}
-
 .profile-address-card strong {
   display: block;
   margin-bottom: 6px;

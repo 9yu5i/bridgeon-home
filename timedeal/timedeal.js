@@ -1,23 +1,4 @@
 (() => {
-  const syncCardWish = (card, isActive) => {
-    card.querySelectorAll(".listing-card-wish, .listing-card-wish-inline").forEach((button) => {
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-pressed", isActive ? "true" : "false");
-      button.setAttribute("aria-label", isActive ? "Remove from wishlist" : "Add to wishlist");
-    });
-  };
-
-  document.querySelectorAll(".listing-card").forEach((card) => {
-    card.querySelectorAll(".listing-card-wish, .listing-card-wish-inline").forEach((button) => {
-      button.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        const isActive = !button.classList.contains("is-active");
-        syncCardWish(card, isActive);
-      });
-    });
-  });
-
   const initListingSortSelect = (wrap) => {
     const select = wrap.querySelector(".realtrend-select-native");
     const trigger = wrap.querySelector(".realtrend-select-trigger");

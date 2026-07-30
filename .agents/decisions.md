@@ -1,5 +1,52 @@
 # BridgeOn Decisions
 
+## 2026-07-30: Sync Real Trend Saves To Saved Posts
+
+Decision:
+
+- Store Real Trend save state in `scripts/prototype/saved-posts-store.js`.
+- Render My Page Saved Posts and the dashboard saved-reels count from that store.
+- Keep the Real Trend save button and Saved Posts remove button on the same product-level id.
+
+Why:
+
+- Saved posts should behave like wishlist: save once anywhere, show and remove everywhere.
+
+## 2026-07-30: Key Wishlist State By Product
+
+Decision:
+
+- Identify a wishlist entry by brand and product name only, in `scripts/prototype/wishlist-store.js`.
+- Do not include card rank, deal slider, or the selected product option in the id.
+- Do not store or display selected options on My Page wishlist cards.
+- Let `scripts/prototype/wishlist-store.js` own every wishlist toggle instead of per-page handlers.
+- Render the My Page dashboard preview and dedicated Wishlist page from the same prototype store.
+
+Why:
+
+- One product must show one wishlist state across listing cards, the quick cart sheet, and product
+  detail, and changing an option must not clear it.
+- Local per-page toggles produced state that was never stored and could disagree with the store.
+- Rendering account wishlist cards from that store keeps add and remove actions synchronized in
+  both directions.
+
+## 2026-07-30: Isolate Firstmall-Replaced Prototype Runtime
+
+Decision:
+
+- Keep presentation-only behavior under `scripts/components/`.
+- Move static data, browser storage, mock commerce, generated catalog, and account mutation
+  controllers under `scripts/prototype/`.
+- Mark every prototype script tag with `data-prototype`.
+- Fail validation when a prototype script tag is not marked.
+
+Why:
+
+- The production Firstmall skin must use Firstmall goods, cart, wishlist, member, order, review,
+  coupon, address, payment, and content data as the source of truth.
+- A visible file and markup boundary makes replaceable code easy to audit and remove without
+  discarding reusable presentation behavior.
+
 ## 2026-07-15: Add My Page Coupons Page
 
 Decision:

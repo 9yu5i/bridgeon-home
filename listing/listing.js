@@ -179,27 +179,6 @@
     updateRange(maxInput);
   });
 
-  const syncCardWish = (card, isActive) => {
-    card.querySelectorAll(".listing-card-wish, .listing-card-wish-inline").forEach((button) => {
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-pressed", isActive ? "true" : "false");
-      button.setAttribute("aria-label", isActive ? "Remove from wishlist" : "Add to wishlist");
-    });
-  };
-
-  document.addEventListener("click", (event) => {
-    const button = event.target.closest(".listing-card-wish, .listing-card-wish-inline");
-    if (!button) return;
-
-    const card = button.closest(".listing-card");
-    if (!card) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-    const isActive = !button.classList.contains("is-active");
-    syncCardWish(card, isActive);
-  });
-
   const initListingSortSelect = (wrap) => {
     const select = wrap.querySelector(".realtrend-select-native");
     const trigger = wrap.querySelector(".realtrend-select-trigger");

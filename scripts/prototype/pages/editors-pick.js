@@ -1238,15 +1238,6 @@
   pickPrev?.addEventListener("click", goPrevPick);
   pickNext?.addEventListener("click", goNextPick);
 
-  pickList?.addEventListener("click", (event) => {
-    const button = event.target.closest(".editor-wish");
-    if (!button) return;
-
-    const isActive = !button.classList.contains("is-active");
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", isActive ? "true" : "false");
-  });
-
   let pickScrollFrame = 0;
   const schedulePickScrollSync = () => {
     if (!isCompactPicks() || isPickScrollSyncing) return;

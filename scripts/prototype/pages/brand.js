@@ -85,13 +85,6 @@
     return "#";
   };
 
-  const escapeHtml = (value) =>
-    String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-
   const sortedBrands = [...brands].sort((a, b) =>
     a.name.localeCompare(b.name, "en", { sensitivity: "base" })
   );

@@ -67,11 +67,16 @@ The active extraction plan is documented in `docs/structure-plan.md`.
 
 Current component scripts:
 
+- `script.js`: page transitions and shared BridgeOn URL helpers only.
+- `scripts/components/bootstrap.js`: shared presentation component loading.
+- `scripts/prototype/cart-store.js`: static-prototype cart storage and badge state; replace during Firstmall integration.
+- `scripts/prototype/wishlist-store.js`: static-prototype wishlist storage and UI state; replace during Firstmall integration.
+- `scripts/prototype/saved-posts-store.js`: static-prototype Real Trend saved posts storage and My Page sync; replace during Firstmall integration.
 - `scripts/components/header-navigation.js`: search, mobile menu, category link wiring, mobile category browsing, and desktop mega menu.
 - `scripts/components/loop-rail.js`: generic rail buttons and loop rails.
-- `scripts/components/product-sheet.js`: shared add-to-cart/product option sheet and product-card-to-detail navigation.
-- `scripts/components/seller-wishlist.js`: Best Sellers wishlist icon state.
-- `scripts/components/editor-data.js`: shared Editor's Pick editor data used by the home T.P Pick card and the Editor's Pick page.
+- `scripts/prototype/components/product-sheet.js`: mock add-to-cart/product option sheet and product-card-to-detail navigation.
+- `scripts/prototype/components/seller-wishlist.js`: mock Best Sellers wishlist icon state.
+- `scripts/prototype/data/editor-data.js`: static Editor's Pick sample data used by the home T.P Pick card and the Editor's Pick page.
 - `scripts/components/editor-card-slider.js`: home T.P Pick editor card slider and editor note toggles.
 - `scripts/components/magazine-slider.js`: mobile T.P Magazine drag slider and progress bar.
 - `scripts/components/magazine-links.js`: magazine card keyboard/click links to article detail pages.
@@ -81,14 +86,20 @@ Current component scripts:
 - `scripts/components/hero-slider.js`: main hero carousel.
 - `scripts/components/today-pick-panel.js`: desktop hero Today's Pick mini panel autoplay, collapse, and scroll-to-deal behavior.
 - `scripts/components/section-tabs.js`: Best Sellers category rail filtering and VIEW ALL link wiring.
-- `editors-pick/editors-pick.js`: Editor's Pick page editor selection, pick filters, wishlist state, and magazine dots.
+- `scripts/prototype/pages/`: static page controllers for cart, listings, brands, Editor's Pick, Real Trend, product detail, and My Page.
+- `my-page/profile-birthday.js`: profile birthday calendar behavior.
+- `my-page/help-topic-data.js`: static Help Center topic content.
+- `my-page/help-topic.js`: Help Center topic rendering, search, and accordion behavior.
 
-Keep new behavior in focused files under `scripts/components/` or `scripts/pages/` when possible.
+Keep presentation behavior in focused files under `scripts/components/`. Keep static data and
+Firstmall-replaceable behavior under `scripts/prototype/`.
 
 ## Page Loading Rules
 
 - Non-Real Trend pages should not load `realtrend/realtrend.css` directly.
-- Shared product sheet behavior should come from `styles/trend-product-sheet.css` and `scripts/components/product-sheet.js`.
+- Shared product sheet styling comes from `styles/trend-product-sheet.css`; its current behavior is
+  prototype-only in `scripts/prototype/components/product-sheet.js`.
+- Every HTML script tag that loads `scripts/prototype/` must include `data-prototype`.
 - If a stylesheet or script is shared by many pages, confirm every page path before changing relative URLs.
 
 ## Design Rules
@@ -108,7 +119,12 @@ npm run check
 git diff --check
 ```
 
-`npm run check` verifies JavaScript syntax, CSS brace balance, and local CSS asset paths. `git diff --check` catches trailing whitespace and blank-line issues.
+`npm run check` verifies JavaScript syntax, single-reference unused declarations, CSS brace balance,
+unused CSS classes, local assets, HTML links, duplicate IDs, inline scripts, and prototype markers.
+`git diff --check` catches trailing whitespace and blank-line issues.
+
+`npm run audit:placeholders` reports unresolved `href="#"` links that must be mapped to Firstmall
+categories, policies, social accounts, or member actions.
 
 ## Branch Note
 

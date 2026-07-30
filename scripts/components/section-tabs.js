@@ -195,7 +195,7 @@
 
     let currentTab = "all";
 
-    const setActive = (activeButton) => {
+    const setActive = (activeButton, shouldScroll = true) => {
       currentTab = getTabKey(activeButton);
 
       buttons.forEach((button) => {
@@ -206,11 +206,13 @@
       });
 
       renderSellerRanking(rail, currentTab);
-      activeButton.scrollIntoView({
-        behavior: "smooth",
-        inline: "nearest",
-        block: "nearest",
-      });
+      if (shouldScroll) {
+        activeButton.scrollIntoView({
+          behavior: "smooth",
+          inline: "nearest",
+          block: "nearest",
+        });
+      }
     };
 
     group.addEventListener("click", (event) => {
@@ -256,7 +258,7 @@
 
     const initial = buttons.find((button) => button.classList.contains("is-active")) || buttons[0];
     currentTab = getTabKey(initial);
-    setActive(initial);
+    setActive(initial, false);
   };
 
   document.querySelectorAll(".seller-heading .tag-tabs").forEach(initSellerTabs);
