@@ -5,6 +5,8 @@
 - Keep `AGENTS.md` and `.agents/` in sync with structural changes.
 - Continue moving CSS and JavaScript into focused ownership files.
 - Preserve current visual behavior while reducing legacy file weight.
+- Obtain an export of the active Firstmall skin and map its shared, main, goods, cart, and member
+  templates before starting production integration.
 
 ## Next Cleanup Targets
 
@@ -40,4 +42,3 @@
 
 - Prefer `main` for future shared branches if the remote expects it.
 - Keep structural refactors and visual changes in separate commits when possible.
-

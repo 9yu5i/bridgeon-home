@@ -110,4 +110,8 @@ Run this before and after structural changes:
 npm run check
 ```
 
-This currently checks JavaScript syntax, CSS brace balance, and local CSS asset paths without requiring external packages.
+This checks JavaScript syntax, CSS brace balance, local CSS/HTML asset paths, local page links,
+and duplicate HTML IDs without requiring external packages.
+
+Firstmall integration readiness and the prototype/commerce boundary are documented in
+`docs/firstmall-integration-readiness.md`.

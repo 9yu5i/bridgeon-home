@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node tools/check-js.mjs && node tools/check-css.mjs",
+    "check": "node tools/check-js.mjs && node tools/check-css.mjs && node tools/check-html.mjs",
     "check:js": "node tools/check-js.mjs",
-    "check:css": "node tools/check-css.mjs"
+    "check:css": "node tools/check-css.mjs",
+    "check:html": "node tools/check-html.mjs"
   }
 }

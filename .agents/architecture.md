@@ -99,3 +99,12 @@ Future extraction targets:
 - Customer Real Picks
 - Listing cards
 - Category menu data
+
+## Firstmall Integration Boundary
+
+The static storefront is the visual source for a future Firstmall work skin, not a drop-in skin.
+Keep Firstmall commerce behavior as the source of truth for goods, options, stock, cart, wishlist,
+member, order, coupon, point, review, inquiry, and payment data.
+
+The detailed readiness and page mapping are documented in
+`docs/firstmall-integration-readiness.md`.

@@ -2257,8 +2257,6 @@
     }
     yearSelect?.replaceChildren(...yearOptions);
 
-    const positionCalendar = () => {};
-
     const renderBirthdayCalendar = () => {
       if (monthSelect) monthSelect.value = String(viewMonth);
       if (yearSelect) yearSelect.value = String(viewYear);
@@ -2284,7 +2282,6 @@
         days.appendChild(button);
       }
 
-      positionCalendar();
     };
 
     const closeBirthdayCalendar = ({ restoreFocus = false } = {}) => {
@@ -2384,7 +2381,5 @@
       }
     });
 
-    window.addEventListener("resize", positionCalendar);
-    window.addEventListener("scroll", positionCalendar, true);
   }
 })();
