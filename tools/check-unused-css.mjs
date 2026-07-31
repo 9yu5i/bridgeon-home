@@ -5,6 +5,16 @@ import { fileURLToPath } from "node:url";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const skipDirs = new Set([".git", ".agents", "node_modules"]);
 const nonSelectorTokens = new Set(["inner", "jsdelivr", "net", "w3"]);
+const serverRenderedClasses = new Set([
+  // Firstmall inserts these through `{# form_member}` at runtime.
+  "address_area",
+  "member_icon_list",
+  "row_email",
+  "row_phone",
+  "size_full",
+  "size_mail1",
+  "size_mail2",
+]);
 
 const collectFiles = (directory, extensions) =>
   readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -33,6 +43,8 @@ for (const file of cssFiles) {
 }
 
 const hasUsage = (className) => {
+  if (serverRenderedClasses.has(className)) return true;
+
   const escapedName = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   if (
     new RegExp(`(^|[^A-Za-z0-9_-])${escapedName}([^A-Za-z0-9_-]|$)`).test(usageSource)

@@ -1,5 +1,5 @@
 (() => {
-  const selectApis = window.BridgeOn.myPage.selectApis;
+  const selectApis = window.TrendyPicker.myPage.selectApis;
   const paymentDialog = document.getElementById("profile-payment-dialog");
   const paymentForm = paymentDialog?.querySelector("[data-profile-payment-form]");
   const paymentList = document.querySelector("[data-profile-payment-list]");

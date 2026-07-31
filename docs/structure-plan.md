@@ -1,4 +1,4 @@
-# BridgeOn Structure Plan
+# TrendyPicker Structure Plan
 
 ## Current Direction
 
@@ -51,7 +51,7 @@ styles/
 
 ## JavaScript
 
-- `script.js` is the small root entry for page transitions and shared BridgeOn URLs.
+- `script.js` is the small root entry for page transitions and shared TrendyPicker URLs.
 - `scripts/components/bootstrap.js` loads shared presentation components.
 - `scripts/prototype/` contains every controller and data source expected to be removed or replaced
   when Firstmall becomes the source of truth.

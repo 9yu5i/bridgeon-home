@@ -37,7 +37,7 @@ const updateSellerWishlistIcons = () => {
 };
 
 document.addEventListener("click", (event) => {
-  if (window.BridgeOn?.wishlist?.toggle) return;
+  if (window.TrendyPicker?.wishlist?.toggle) return;
 
   const button = event.target.closest?.('.seller-section .card-actions button:last-child');
   if (!button || !sellerRail || !sellerRail.contains(button)) return;
@@ -62,13 +62,13 @@ document.addEventListener("click", (event) => {
 }, true);
 
 const syncSellerWishlistIcons = () => {
-  if (sellerRail) window.BridgeOn?.wishlist?.syncButtons?.(sellerRail);
+  if (sellerRail) window.TrendyPicker?.wishlist?.syncButtons?.(sellerRail);
   updateSellerWishlistIcons();
 };
 
 sellerWishlistQuery.addEventListener?.("change", syncSellerWishlistIcons);
 window.addEventListener("resize", syncSellerWishlistIcons);
-window.addEventListener("bridgeon:wishlistchange", updateSellerWishlistIcons);
-sellerRail?.addEventListener("bridgeon:railfilterchange", syncSellerWishlistIcons);
+window.addEventListener("trendypicker:wishlistchange", updateSellerWishlistIcons);
+sellerRail?.addEventListener("trendypicker:railfilterchange", syncSellerWishlistIcons);
 syncSellerWishlistIcons();
 })();

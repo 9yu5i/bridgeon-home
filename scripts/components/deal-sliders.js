@@ -1,12 +1,12 @@
 (() => {
   const navigateWithPageTransition =
-    window.BridgeOn?.navigateWithPageTransition || ((href) => {
+    window.TrendyPicker?.navigateWithPageTransition || ((href) => {
       window.location.href = href;
     });
 
   const getProductDetailUrl = (path) => {
     if (!path) {
-      return window.BridgeOn?.productDetailUrl || new URL("product-detail/product-detail.html", window.location.href).href;
+      return window.TrendyPicker?.productDetailUrl || new URL("product-detail/product-detail.html", window.location.href).href;
     }
     if (/^https?:\/\//i.test(path)) return path;
     return new URL(path, window.location.href).href;
@@ -227,7 +227,7 @@
       }
       if (counter) counter.textContent = `${index + 1} / ${slides.length}`;
       card.dataset.productDetailLink = getCurrentDetailUrl();
-      window.BridgeOn?.wishlist?.syncButtons?.(card);
+      window.TrendyPicker?.wishlist?.syncButtons?.(card);
     };
 
     const goToSlide = (nextIndex) => {

@@ -1,5 +1,5 @@
 (() => {
-  const navigateWithPageTransition = window.BridgeOn?.navigateWithPageTransition || ((href) => {
+  const navigateWithPageTransition = window.TrendyPicker?.navigateWithPageTransition || ((href) => {
     window.location.href = href;
   });
 
@@ -440,43 +440,43 @@ headerAccountButtons.forEach((button) => {
 });
 
 const createSignInDialog = () => {
-  let dialog = document.getElementById("bridgeon-signin-dialog");
+  let dialog = document.getElementById("trendypicker-signin-dialog");
   if (dialog) return dialog;
 
   dialog = document.createElement("div");
-  dialog.className = "bridgeon-signin-dialog";
-  dialog.id = "bridgeon-signin-dialog";
+  dialog.className = "trendypicker-signin-dialog";
+  dialog.id = "trendypicker-signin-dialog";
   dialog.hidden = true;
   dialog.setAttribute("aria-hidden", "true");
   dialog.innerHTML = `
-    <button type="button" class="bridgeon-signin-backdrop" data-bridgeon-signin-close aria-label="Close sign in dialog"></button>
-    <section class="bridgeon-signin-modal" role="dialog" aria-modal="true" aria-labelledby="bridgeon-signin-title">
-      <button type="button" class="bridgeon-signin-close" data-bridgeon-signin-close aria-label="Close sign in dialog">&times;</button>
-      <div class="bridgeon-signin-head">
-        <p>BridgeOn Account</p>
-        <h2 id="bridgeon-signin-title">Sign In</h2>
+    <button type="button" class="trendypicker-signin-backdrop" data-trendypicker-signin-close aria-label="Close sign in dialog"></button>
+    <section class="trendypicker-signin-modal" role="dialog" aria-modal="true" aria-labelledby="trendypicker-signin-title">
+      <button type="button" class="trendypicker-signin-close" data-trendypicker-signin-close aria-label="Close sign in dialog">&times;</button>
+      <div class="trendypicker-signin-head">
+        <p>TrendyPicker Account</p>
+        <h2 id="trendypicker-signin-title">Sign In</h2>
         <span>Welcome back. Sign in to access your orders, wishlist, and saved picks.</span>
       </div>
-      <form class="bridgeon-signin-form" data-bridgeon-signin-form novalidate>
-        <div class="bridgeon-signin-field">
-          <label for="bridgeon-signin-email">Email</label>
-          <input id="bridgeon-signin-email" name="email" type="email" autocomplete="email" placeholder="name@email.com" required>
+      <form class="trendypicker-signin-form" data-trendypicker-signin-form novalidate>
+        <div class="trendypicker-signin-field">
+          <label for="trendypicker-signin-email">Email</label>
+          <input id="trendypicker-signin-email" name="email" type="email" autocomplete="email" placeholder="name@email.com" required>
         </div>
-        <div class="bridgeon-signin-field">
-          <label for="bridgeon-signin-password">Password</label>
-          <input id="bridgeon-signin-password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+        <div class="trendypicker-signin-field">
+          <label for="trendypicker-signin-password">Password</label>
+          <input id="trendypicker-signin-password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
         </div>
-        <div class="bridgeon-signin-row">
-          <label class="bridgeon-signin-remember">
+        <div class="trendypicker-signin-row">
+          <label class="trendypicker-signin-remember">
             <input type="checkbox" name="remember" checked>
             Keep me signed in
           </label>
-          <a class="bridgeon-signin-forgot" href="#">Forgot password?</a>
+          <a class="trendypicker-signin-forgot" href="#">Forgot password?</a>
         </div>
-        <p class="bridgeon-signin-message" data-bridgeon-signin-message aria-live="polite"></p>
-        <button type="submit" class="bridgeon-signin-submit">Sign In</button>
+        <p class="trendypicker-signin-message" data-trendypicker-signin-message aria-live="polite"></p>
+        <button type="submit" class="trendypicker-signin-submit">Sign In</button>
       </form>
-      <p class="bridgeon-signin-foot">New to BridgeOn? <a href="#">Create an account</a></p>
+      <p class="trendypicker-signin-foot">New to TrendyPicker? <a href="#">Create an account</a></p>
     </section>
   `;
   document.body.appendChild(dialog);
@@ -486,12 +486,12 @@ const createSignInDialog = () => {
 let signInTrigger = null;
 
 const closeSignInDialog = () => {
-  const dialog = document.getElementById("bridgeon-signin-dialog");
+  const dialog = document.getElementById("trendypicker-signin-dialog");
   if (!dialog || dialog.hidden) return;
   dialog.hidden = true;
   dialog.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("is-bridgeon-signin-open");
-  const message = dialog.querySelector("[data-bridgeon-signin-message]");
+  document.body.classList.remove("is-trendypicker-signin-open");
+  const message = dialog.querySelector("[data-trendypicker-signin-message]");
   if (message) {
     message.textContent = "";
     message.classList.remove("is-success");
@@ -507,22 +507,22 @@ const openSignInDialog = (trigger) => {
   signInTrigger = trigger || null;
   dialog.hidden = false;
   dialog.setAttribute("aria-hidden", "false");
-  document.body.classList.add("is-bridgeon-signin-open");
+  document.body.classList.add("is-trendypicker-signin-open");
   window.requestAnimationFrame(() => {
-    dialog.querySelector("#bridgeon-signin-email")?.focus();
+    dialog.querySelector("#trendypicker-signin-email")?.focus();
   });
 };
 
 const initSignInDialog = () => {
   const dialog = createSignInDialog();
-  const form = dialog.querySelector("[data-bridgeon-signin-form]");
-  const message = dialog.querySelector("[data-bridgeon-signin-message]");
+  const form = dialog.querySelector("[data-trendypicker-signin-form]");
+  const message = dialog.querySelector("[data-trendypicker-signin-message]");
 
-  dialog.querySelectorAll("[data-bridgeon-signin-close]").forEach((button) => {
+  dialog.querySelectorAll("[data-trendypicker-signin-close]").forEach((button) => {
     button.addEventListener("click", closeSignInDialog);
   });
 
-  dialog.querySelector(".bridgeon-signin-forgot")?.addEventListener("click", (event) => {
+  dialog.querySelector(".trendypicker-signin-forgot")?.addEventListener("click", (event) => {
     event.preventDefault();
     if (message) {
       message.textContent = "Password reset is not available in this prototype yet.";
@@ -530,7 +530,7 @@ const initSignInDialog = () => {
     }
   });
 
-  dialog.querySelector(".bridgeon-signin-foot a")?.addEventListener("click", (event) => {
+  dialog.querySelector(".trendypicker-signin-foot a")?.addEventListener("click", (event) => {
     event.preventDefault();
     if (message) {
       message.textContent = "Account creation is not available in this prototype yet.";
@@ -562,8 +562,8 @@ const initSignInDialog = () => {
     }
 
     try {
-      sessionStorage.setItem("bridgeon-signed-in", "true");
-      sessionStorage.setItem("bridgeon-signin-email", email);
+      sessionStorage.setItem("trendypicker-signed-in", "true");
+      sessionStorage.setItem("trendypicker-signin-email", email);
     } catch {
       /* storage may be unavailable */
     }
@@ -1027,7 +1027,7 @@ const queueCloseCategoryMega = () => {
   categoryMenuTimer = window.setTimeout(closeCategoryMega, 90);
 };
 
-const SEARCH_HISTORY_KEY = "bridgeon-recent-searches";
+const SEARCH_HISTORY_KEY = "trendypicker-recent-searches";
 const MAX_SEARCH_HISTORY = 8;
 
 const normalizeSearchQuery = (value) => String(value || "").replace(/\s+/g, " ").trim();

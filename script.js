@@ -1,8 +1,8 @@
-const PAGE_TRANSITION_KEY = "bridgeon-page-transition";
-const SCROLL_TOP_ON_NAV_KEY = "bridgeon-scroll-top";
+const PAGE_TRANSITION_KEY = "trendypicker-page-transition";
+const SCROLL_TOP_ON_NAV_KEY = "trendypicker-scroll-top";
 const PAGE_TRANSITION_MS = 320;
-const BRIDGEON_ROOT_URL = new URL("./", document.currentScript?.src || window.location.href);
-const PRODUCT_DETAIL_URL = new URL("product-detail/product-detail.html", BRIDGEON_ROOT_URL).href;
+const TRENDYPICKER_ROOT_URL = new URL("./", document.currentScript?.src || window.location.href);
+const PRODUCT_DETAIL_URL = new URL("product-detail/product-detail.html", TRENDYPICKER_ROOT_URL).href;
 
 const shouldAnimatePageTransition = () =>
   !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -122,10 +122,10 @@ const navigateWithPageTransition = (href) => {
   }, PAGE_TRANSITION_MS);
 };
 
-window.BridgeOn = window.BridgeOn || {};
-window.BridgeOn.navigateWithPageTransition = navigateWithPageTransition;
-window.BridgeOn.productDetailUrl = PRODUCT_DETAIL_URL;
-window.BridgeOn.cartPageUrl = new URL("cart/cart.html", BRIDGEON_ROOT_URL).href;
+window.TrendyPicker = window.TrendyPicker || {};
+window.TrendyPicker.navigateWithPageTransition = navigateWithPageTransition;
+window.TrendyPicker.productDetailUrl = PRODUCT_DETAIL_URL;
+window.TrendyPicker.cartPageUrl = new URL("cart/cart.html", TRENDYPICKER_ROOT_URL).href;
 
 document.addEventListener("click", (event) => {
   if (event.target.closest(".realtrend-cart-toast-close")) return;
@@ -134,7 +134,7 @@ document.addEventListener("click", (event) => {
   if (!toast) return;
 
   event.preventDefault();
-  navigateWithPageTransition(window.BridgeOn.cartPageUrl);
+  navigateWithPageTransition(window.TrendyPicker.cartPageUrl);
 });
 
 const isForwardPageLink = (link, event) => {

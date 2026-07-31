@@ -110,7 +110,7 @@
     const bundleTiers = getProductBundleTiers();
 
     return {
-      brand: brandLink?.textContent?.trim() || "BridgeOn",
+      brand: brandLink?.textContent?.trim() || "TrendyPicker",
       name: productNameEl?.textContent?.trim() || "Product",
       option: selectedColor,
       optionChoices: colorChoices,
@@ -243,7 +243,7 @@
 
   const syncDealDialogProduct = () => {
     if (!dealDialog) return;
-    const brand = document.querySelector(".product-brand")?.textContent?.trim() || "BridgeOn";
+    const brand = document.querySelector(".product-brand")?.textContent?.trim() || "TrendyPicker";
     const name = productNameEl?.textContent?.trim() || "Product";
     const price = document.querySelector(".product-price-current strong")?.textContent?.trim() || "US$22.00";
 
@@ -340,7 +340,7 @@
     payload.originalPrice = listPrice || payload.originalPrice;
     payload.bundleTiers = getProductBundleTiers();
 
-    window.BridgeOn?.cart?.add(payload);
+    window.TrendyPicker?.cart?.add(payload);
     showCartToast();
     closeDealDialog();
   });
@@ -348,7 +348,7 @@
   addCartButton?.addEventListener("click", () => {
     const label = addCartButton.querySelector(".product-add-cart-label");
     const originalText = "Add to Cart";
-    window.BridgeOn?.cart?.add(getProductCartPayload());
+    window.TrendyPicker?.cart?.add(getProductCartPayload());
     addCartButton.classList.add("is-added");
     if (label) label.textContent = "Added";
     showCartToast();
@@ -483,7 +483,7 @@
       stage.dataset.optionVariant = button.dataset.stageVariant || "0";
     }
 
-    window.BridgeOn?.wishlist?.syncButtons?.();
+    window.TrendyPicker?.wishlist?.syncButtons?.();
 
     if (shouldFocus) button.focus({ preventScroll: true });
   };
@@ -985,9 +985,9 @@
         const channel = button.dataset.dealShareChannel;
         const input = shareDialog.querySelector("[data-deal-share-input]");
         const name =
-          shareDialog.querySelector("[data-deal-share-name]")?.textContent || "BridgeOn product";
+          shareDialog.querySelector("[data-deal-share-name]")?.textContent || "TrendyPicker product";
         const url = input?.value || window.location.href;
-        const shareText = `Check out ${name} on BridgeOn`;
+        const shareText = `Check out ${name} on TrendyPicker`;
         const encodedUrl = encodeURIComponent(url);
         const encodedText = encodeURIComponent(`${shareText}\n${url}`);
 
@@ -1050,7 +1050,7 @@
     const productName =
       productNameEl?.textContent?.trim() ||
       document.querySelector(".product-summary h1")?.textContent?.trim() ||
-      "BridgeOn product";
+      "TrendyPicker product";
 
     shareTrigger = trigger || null;
     if (nameEl) nameEl.textContent = productName;

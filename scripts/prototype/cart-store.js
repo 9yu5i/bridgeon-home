@@ -1,5 +1,5 @@
 (() => {
-  const CART_STORAGE_KEY = "bridgeon-cart-items";
+  const CART_STORAGE_KEY = "trendypicker-cart-items";
   
   const parseCartNumber = (value, fallback = 0) => {
     const parsed = Number.parseFloat(String(value || "").replace(/[^\d.]/g, ""));
@@ -77,7 +77,7 @@
   };
   
   const normalizeCartItem = (item = {}) => {
-    const brand = String(item.brand || "BridgeOn").trim();
+    const brand = String(item.brand || "TrendyPicker").trim();
     const name = String(item.name || "Product").trim();
     const option = stripCartBundleOptionSuffix(item.option);
     const tone = String(item.tone || "green").trim();
@@ -136,7 +136,7 @@
   
   const writeCartItems = (items) => {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items.map(normalizeCartItem)));
-    window.dispatchEvent(new CustomEvent("bridgeon:cartchange", { detail: { items: readCartItems() } }));
+    window.dispatchEvent(new CustomEvent("trendypicker:cartchange", { detail: { items: readCartItems() } }));
   };
   
   const getCartCount = () =>
@@ -154,7 +154,7 @@
     });
   };
   
-  window.BridgeOn.cart = {
+  window.TrendyPicker.cart = {
     getItems: readCartItems,
     getCount: getCartCount,
     formatPrice: formatCartPrice,

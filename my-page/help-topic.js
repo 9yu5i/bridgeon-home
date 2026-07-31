@@ -1,10 +1,10 @@
 (() => {
-  const topics = window.BridgeOn?.helpTopics || {};
+  const topics = window.TrendyPicker?.helpTopics || {};
   const params = new URLSearchParams(window.location.search);
   const topicKey = topics[params.get("topic")] ? params.get("topic") : "notice";
   const topic = topics[topicKey];
 
-  document.title = `${topic.title} | Help Center | BridgeOn`;
+  document.title = `${topic.title} | Help Center | TrendyPicker`;
   document.querySelector("[data-help-category]").textContent = topic.category;
   document.querySelector("[data-help-kicker]").textContent = topic.category;
   document.querySelector("[data-help-title]").textContent = topic.title;

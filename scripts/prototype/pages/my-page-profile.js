@@ -241,8 +241,8 @@
     });
   });
 
-  window.BridgeOn = window.BridgeOn || {};
-  window.BridgeOn.profile = {
+  window.TrendyPicker = window.TrendyPicker || {};
+  window.TrendyPicker.profile = {
     getCallingCode: getProfileCallingCode,
   };
   

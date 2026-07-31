@@ -1,6 +1,6 @@
 (() => {
-  const PRODUCT_DETAIL_URL = window.BridgeOn.productDetailUrl;
-  const WISHLIST_STORAGE_KEY = "bridgeon-wishlist-items";
+  const PRODUCT_DETAIL_URL = window.TrendyPicker.productDetailUrl;
+  const WISHLIST_STORAGE_KEY = "trendypicker-wishlist-items";
   const WISHLIST_BUTTON_SELECTOR = [
     ".product-card .card-actions button:last-child",
     ".listing-card-wish",
@@ -44,10 +44,10 @@
     );
   
   const sellerWishlistIcons = {
-    desktop: new URL("img/main-img/heart2.png", BRIDGEON_ROOT_URL).href,
-    dark: new URL("img/mobile-icon/menu/wishlist.png", BRIDGEON_ROOT_URL).href,
-    light: new URL("img/mobile-icon/menu/wishlist2.png", BRIDGEON_ROOT_URL).href,
-    active: new URL("img/mobile-icon/menu/wishlist-hover.png", BRIDGEON_ROOT_URL).href,
+    desktop: new URL("img/main-img/heart2.png", TRENDYPICKER_ROOT_URL).href,
+    dark: new URL("img/mobile-icon/menu/wishlist.png", TRENDYPICKER_ROOT_URL).href,
+    light: new URL("img/mobile-icon/menu/wishlist2.png", TRENDYPICKER_ROOT_URL).href,
+    active: new URL("img/mobile-icon/menu/wishlist-hover.png", TRENDYPICKER_ROOT_URL).href,
   };
   
   const sellerWishlistQuery = window.matchMedia("(max-width: 1120px)");
@@ -85,7 +85,7 @@
       .join("|");
   
   const normalizeWishlistItem = (item = {}) => {
-    const brand = normalizeWishlistText(item.brand, "BridgeOn");
+    const brand = normalizeWishlistText(item.brand, "TrendyPicker");
     const name = normalizeWishlistText(item.name, "Product");
     const price = normalizeWishlistText(item.price);
     const originalPrice = normalizeWishlistText(item.originalPrice);
@@ -121,7 +121,7 @@
   
   const writeWishlistItems = (items) => {
     localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(items.map(normalizeWishlistItem)));
-    window.dispatchEvent(new CustomEvent("bridgeon:wishlistchange", { detail: { items: readWishlistItems() } }));
+    window.dispatchEvent(new CustomEvent("trendypicker:wishlistchange", { detail: { items: readWishlistItems() } }));
   };
   
   const getDirectText = (node) =>
@@ -205,7 +205,7 @@
     if (dealCard) {
       const priceNode = dealCard.querySelector(".deal-copy strong");
       return normalizeWishlistItem({
-        brand: "BridgeOn",
+        brand: "TrendyPicker",
         name: dealCard.querySelector(".deal-copy h3")?.textContent,
         price: getDirectText(priceNode) || priceNode?.childNodes?.[0]?.textContent,
         originalPrice: priceNode?.querySelector("del")?.textContent,
@@ -357,7 +357,7 @@
     });
   };
   
-  window.BridgeOn.wishlist = {
+  window.TrendyPicker.wishlist = {
     getItems: readWishlistItems,
     setItems: writeWishlistItems,
     isActive(item) {
@@ -395,8 +395,8 @@
         event.stopImmediatePropagation();
   
         const item = getWishlistPayloadFromButton(button);
-        if (item?.id && window.BridgeOn.wishlist.isActive(item)) {
-          window.BridgeOn.wishlist.toggle(item);
+        if (item?.id && window.TrendyPicker.wishlist.isActive(item)) {
+          window.TrendyPicker.wishlist.toggle(item);
         }
         return;
       }
@@ -407,7 +407,7 @@
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-      const isActive = window.BridgeOn.wishlist.toggle(item);
+      const isActive = window.TrendyPicker.wishlist.toggle(item);
       button.classList.toggle("is-hover-suppressed", !isActive);
     },
     true,
@@ -428,7 +428,7 @@
     syncWishlistButtons();
   });
 
-  window.addEventListener("bridgeon:wishlistchange", () => {
+  window.addEventListener("trendypicker:wishlistchange", () => {
     syncWishlistPageCards();
     syncWishlistButtons();
   });

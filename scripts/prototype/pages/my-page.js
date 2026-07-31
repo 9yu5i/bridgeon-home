@@ -95,8 +95,8 @@
 
     const goToHome = () => {
       const homeHref = new URL("../index.html", window.location.href).href;
-      if (window.BridgeOn?.navigateWithPageTransition) {
-        window.BridgeOn.navigateWithPageTransition(homeHref);
+      if (window.TrendyPicker?.navigateWithPageTransition) {
+        window.TrendyPicker.navigateWithPageTransition(homeHref);
         return;
       }
       window.location.href = homeHref;
@@ -136,7 +136,7 @@
       ".mypage-edit-fab, .mypage-edit-desktop"
     );
 
-    const storageKey = "bridgeon-mypage-avatar";
+    const storageKey = "trendypicker-mypage-avatar";
     let draftUrl = null;
     let openTrigger = null;
 
@@ -355,9 +355,9 @@
   };
 
   const ordersSortSelectApis = new Map();
-  window.BridgeOn = window.BridgeOn || {};
-  window.BridgeOn.myPage = window.BridgeOn.myPage || {};
-  window.BridgeOn.myPage.selectApis = ordersSortSelectApis;
+  window.TrendyPicker = window.TrendyPicker || {};
+  window.TrendyPicker.myPage = window.TrendyPicker.myPage || {};
+  window.TrendyPicker.myPage.selectApis = ordersSortSelectApis;
 
   document.querySelectorAll(pageSortSelectRoot).forEach((wrap) => {
     const api = initOrdersSortSelect(wrap);
@@ -414,7 +414,7 @@
     applyFilter(normalizeAccountFilter(initialButton?.dataset.accountFilter || initialButton?.textContent || "all"));
   });
 
-  window.BridgeOn?.savedPosts?.syncPage?.();
+  window.TrendyPicker?.savedPosts?.syncPage?.();
 
   document.querySelectorAll(".points-history-tabs").forEach((tabs) => {
     const history = tabs.closest(".points-history");

@@ -5,7 +5,7 @@
   const viewport = slider.querySelector(".editor-card-viewport");
   const track = slider.querySelector(".editor-card-track");
   const tabsWrap = slider.querySelector("[data-editor-card-tabs]");
-  const sharedEditors = Array.isArray(window.BridgeOn?.editorData) ? window.BridgeOn.editorData : [];
+  const sharedEditors = Array.isArray(window.TrendyPicker?.editorData) ? window.TrendyPicker.editorData : [];
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   const escapeHtml = (value) =>
@@ -44,7 +44,7 @@
   const renderProductCard = (pick = {}) => {
     const detailUrl = escapeHtml(pick.detailUrl || getProductDetailUrl(pick));
     const productName = escapeHtml(pick.name || "Editor's Pick Product");
-    const brand = escapeHtml(pick.brand || "BridgeOn");
+    const brand = escapeHtml(pick.brand || "TrendyPicker");
     const price = escapeHtml(pick.price || "US$18.40");
     const originalPrice = escapeHtml(pick.originalPrice || "");
     const reason = escapeHtml(pick.reason || "A thoughtful pick from our editors.");

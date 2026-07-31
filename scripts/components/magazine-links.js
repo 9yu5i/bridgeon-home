@@ -1,5 +1,5 @@
 (() => {
-  const navigateWithPageTransition = window.BridgeOn?.navigateWithPageTransition || ((href) => {
+  const navigateWithPageTransition = window.TrendyPicker?.navigateWithPageTransition || ((href) => {
     window.location.href = href;
   });
   const magazineDetailUrl = new URL(

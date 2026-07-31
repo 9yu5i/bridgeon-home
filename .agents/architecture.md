@@ -1,4 +1,4 @@
-# BridgeOn Architecture
+# TrendyPicker Architecture
 
 ## High-Level Page Map
 
@@ -48,7 +48,7 @@ flowchart TD
 
 ## JavaScript Architecture
 
-- `script.js` owns page transitions and shared BridgeOn URL helpers.
+- `script.js` owns page transitions and shared TrendyPicker URL helpers.
 - `scripts/components/bootstrap.js` loads shared presentation components in a stable order.
 - Extracted presentation behavior lives in `scripts/components/`.
 - Firstmall-replaceable data, storage, pricing, cart, wishlist, listing generation, product detail,
@@ -108,8 +108,11 @@ Keep Firstmall commerce behavior as the source of truth for goods, options, stoc
 member, order, coupon, point, review, inquiry, and payment data.
 
 The first isolated work-skin package lives in `firstmall-workskin/`. It currently contains the
-active My Page dashboard template, its scoped stylesheet, and upload/testing instructions.
-Existing Firstmall header, footer, LNB, index, and account subpages remain untouched.
+active My Page dashboard template, the native `mypage/myinfo.html` profile form integration,
+their scoped styles and shared account script, and upload/testing instructions. The profile page
+keeps `{# form_member}` and Firstmall's original member handlers; the static prototype's payment
+and address samples are not part of the work skin. Existing Firstmall header, footer, index, and
+other account subpages remain untouched.
 Server-runtime Firstmall HTML is validated separately by
 `tools/check-firstmall-workskin.mjs`.
 

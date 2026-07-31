@@ -1,4 +1,4 @@
-# BridgeOn Agent Context
+# TrendyPicker Agent Context
 
 This folder stores durable project context for human and AI agents.
 Use it to avoid rebuilding the full project history inside one long chat.
@@ -35,4 +35,3 @@ Use it to avoid rebuilding the full project history inside one long chat.
 ```text
 Please read AGENTS.md and .agents/README.md first, then follow the project context before making changes.
 ```
-

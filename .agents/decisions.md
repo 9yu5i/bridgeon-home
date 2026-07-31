@@ -1,14 +1,51 @@
-# BridgeOn Decisions
+# TrendyPicker Decisions
 
-## 2026-07-30: Preserve Firstmall HTML Modules And Add Separate BridgeOn CSS
+## 2026-07-31: Reuse Firstmall Member Icon Upload On The Dashboard
+
+Decision:
+
+- Start the dashboard with a plain `#fff8ff` avatar and do not render a prototype face, icon, or
+  sample image source.
+- Open the TrendyPicker profile-photo modal from Edit Profile instead of navigating to
+  `/mypage/myinfo`.
+- Submit the selected `membericonFile` to Firstmall's existing
+  `../member_process/membericonsave` handler through `actionFrame`.
+- Keep general member-information editing on Firstmall's `/mypage/myinfo` page.
+
+Why:
+
+- The previous dashboard fallback was a prototype illustration rather than an account asset.
+- Reusing Firstmall's existing member-icon handler preserves its authenticated upload behavior
+  without introducing browser storage or a second profile-photo backend.
+
+## 2026-07-31: Map Dashboard Orders To Four Stages And Preserve Carrier Tracking
+
+Decision:
+
+- Present Firstmall order steps as Payment Pending/Confirmed, Preparing, Shipped, and Delivered.
+- Present the tracking dialog separately as Order Placed, Shipped, Out for Delivery, and Delivered,
+  using steps 50-55 for Shipped and 60-70 for Out for Delivery.
+- Open the TrendyPicker tracking dialog from a shipped dashboard order before leaving the site.
+- Send View Tracking Detail to UPS for `quick` shipments and to Korea Post EMS for `delivery`
+  shipments using the order's actual `custom_tracking_number`.
+- Do not fabricate estimated-delivery dates or tracking history when Firstmall does not provide
+  those values.
+
+Why:
+
+- The dashboard design requires four stable visual positions even though Firstmall has more
+  internal order step values.
+- Carrier tracking must remain the source of truth for detailed parcel movement.
+
+## 2026-07-30: Preserve Firstmall HTML Modules And Add Separate TrendyPicker CSS
 
 Decision:
 
 - Use the storefront URL to locate the owning Firstmall HTML entry file.
 - Modify existing entry and module HTML files in place within the work-skin package.
 - Preserve Firstmall's modular template structure for complex pages such as goods view.
-- Add new scoped BridgeOn CSS files and link them from the modified HTML.
-- Do not mix BridgeOn rules into Firstmall `css/common.css` or `css/user.css`.
+- Add new scoped TrendyPicker CSS files and link them from the modified HTML.
+- Do not mix TrendyPicker rules into Firstmall `css/common.css` or `css/user.css`.
 
 Why:
 
@@ -28,7 +65,7 @@ Decision:
   `/mypage/dashboard` page.
 - Keep `/mypage/dashboard` as the active dashboard entry point and retain Firstmall account/order
   pages as the source of truth for actions.
-- Limit the first upload to `mypage/dashboard.html` and `css/bridgeon-mypage.css`; preserve the
+- Limit the first upload to `mypage/dashboard.html` and `css/trendypicker-mypage.css`; preserve the
   existing global header, footer, LNB, index, and account subpages.
 - Validate the server template with `tools/check-firstmall-workskin.mjs` instead of treating its
   runtime routes and `{skin}` values as local static files.
@@ -222,3 +259,41 @@ Why:
 
 - `docs/` can describe implementation structure.
 - `.agents/` can tell future agents how to reason about and maintain the project.
+
+## 2026-07-31: Connect Profile Through Firstmall's Native Member Form
+
+Decision:
+
+- Use the active skin's `mypage/myinfo.html` and `{# form_member}` include as the functional source
+  of truth.
+- Add TrendyPicker layout wrappers to that template and keep its visual rules in the separate
+  `firstmall-workskin/css/trendypicker-profile.css`.
+- Preserve Firstmall's member-update, validation, password, phone verification, SNS, member-icon,
+  and withdrawal handlers.
+- Render only SNS providers supplied by Firstmall and proxy the TrendyPicker Connect/Manage controls
+  to the existing native SNS connection and disconnection handlers.
+- Do not copy the static prototype's sample payment methods, shipping address, or member values
+  into the work skin.
+
+Why:
+
+- The generated member fields and enabled features vary with Firstmall administration settings.
+- Rebuilding those controls as static HTML would disconnect validation and account behavior.
+- A scoped stylesheet gives the native form the TrendyPicker visual language without making
+  `common.css`, `user.css`, or `member/register_form.html` more complicated.
+
+## 2026-07-31: Use TrendyPicker As The Only Product Brand
+
+Decision:
+
+- Replace visible legacy branding with `TrendyPicker`.
+- Rename explicit legacy-branded work-skin files and their references to `trendypicker-*`.
+- Rename explicit code globals, storage keys, data attributes, query parameters, documentation,
+  and package metadata that used the previous product name.
+- Keep the established `bo-` CSS class namespace because it is an internal compatibility prefix,
+  not visible brand copy.
+
+Why:
+
+- The live site name is TrendyPicker.
+- Keeping one explicit brand name avoids shipping stale prototype naming into Firstmall.

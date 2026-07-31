@@ -1,6 +1,6 @@
 # Prototype Runtime
 
-Everything in this directory exists only to make the static BridgeOn prototype behave like a
+Everything in this directory exists only to make the static TrendyPicker prototype behave like a
 storefront before Firstmall is connected.
 
 Do not copy these files into the production Firstmall skin as commerce logic.

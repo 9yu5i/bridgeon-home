@@ -1,5 +1,5 @@
 (() => {
-  const SAVED_POSTS_STORAGE_KEY = "bridgeon-saved-posts";
+  const SAVED_POSTS_STORAGE_KEY = "trendypicker-saved-posts";
   const SAVE_BUTTON_SELECTOR = '[data-social-toggle="save"]';
   const REALTREND_PAGE_URL = new URL(
     "../../realtrend/realtrend.html",
@@ -78,7 +78,7 @@
   const writeSavedPosts = (items) => {
     localStorage.setItem(SAVED_POSTS_STORAGE_KEY, JSON.stringify(items.map(normalizeSavedPost)));
     window.dispatchEvent(
-      new CustomEvent("bridgeon:savedpostschange", { detail: { items: readSavedPosts() } }),
+      new CustomEvent("trendypicker:savedpostschange", { detail: { items: readSavedPosts() } }),
     );
   };
 
@@ -227,8 +227,8 @@
     syncSavedReelsCount(items.length);
   };
 
-  window.BridgeOn = window.BridgeOn || {};
-  window.BridgeOn.savedPosts = {
+  window.TrendyPicker = window.TrendyPicker || {};
+  window.TrendyPicker.savedPosts = {
     getItems: readSavedPosts,
     setItems: writeSavedPosts,
     isActive(item) {
@@ -266,7 +266,7 @@
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();
-        window.BridgeOn.savedPosts.toggle(item);
+        window.TrendyPicker.savedPosts.toggle(item);
         return;
       }
 
@@ -281,8 +281,8 @@
       event.stopImmediatePropagation();
 
       const item = getPayloadFromButton(removeButton);
-      if (item?.id && window.BridgeOn.savedPosts.isActive(item)) {
-        window.BridgeOn.savedPosts.toggle(item);
+      if (item?.id && window.TrendyPicker.savedPosts.isActive(item)) {
+        window.TrendyPicker.savedPosts.toggle(item);
       }
     },
     true,
@@ -294,7 +294,7 @@
     renderSavedPostsPage();
   });
 
-  window.addEventListener("bridgeon:savedpostschange", () => {
+  window.addEventListener("trendypicker:savedpostschange", () => {
     syncSaveButtons();
     renderSavedPostsPage();
   });

@@ -1,0 +1,609 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 회원정보 수정 @@
+- 파일위치 : [스킨폴더]/mypage/myinfo.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+{is_file_facebook_tag}
+{is_file_kakao_tag}
+
+<link rel="stylesheet" href="../css/trendypicker-mypage.css" />
+<link rel="stylesheet" href="../css/trendypicker-profile.css" />
+
+<div class="subpage_wrap bo-mypage-shell bo-profile-shell">
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a class="on" href="/mypage/myinfo" aria-current="page">Profile</a></li>
+				<li><a href="/mypage/order_catalog">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/main/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a href="/service/cs">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+
+	<main class="subpage_container myinfo_wrap bo-mypage bo-profile-page" aria-labelledby="bo-profile-page-title">
+		<header class="bo-profile-page__head">
+			<h1 id="bo-profile-page-title">Profile</h1>
+			<p>Manage your account details, security, and communication preferences.</p>
+		</header>
+
+		<form class="bo-profile-form" name="registFrm" id="registFrm" target="actionFrame" method="post" action="{=sslAction('../member_process/myinfo_modify')}" novalidate>
+		<input type="hidden" name="seq" value="{member_seq}"/>
+		<input type="hidden" name="rute" value="{rute}"/>
+		<div class="bo-profile-native-fields bo-profile-native-source" data-bo-native-source hidden>
+			{# form_member}
+		</div>
+
+		<section class="bo-profile-card" aria-labelledby="bo-personal-info-title">
+			<header class="bo-profile-card__head">
+				<div>
+					<h2 id="bo-personal-info-title">Personal Information</h2>
+					<p>Keep your profile information up to date.</p>
+				</div>
+				<span>Account settings</span>
+			</header>
+
+			<div class="bo-profile-identity">
+				<aside class="bo-profile-avatar-panel">
+					<div class="bo-profile-avatar-wrap">
+						<span class="bo-profile-avatar" aria-hidden="true">
+							<i></i>
+							<!--{? user_icon_file }-->
+							<img src="/data/icon/member/{user_icon_file}" alt="" data-bo-profile-avatar-image />
+							<!--{/}-->
+						</span>
+						<button type="button" class="bo-profile-avatar-edit profile-avatar-edit" data-bo-profile-avatar-edit aria-label="Edit profile photo"></button>
+					</div>
+					<strong>{member.name}</strong>
+					<small>{member.current_level.group_name} member</small>
+				</aside>
+
+				<!-- ------- 회원가입 입력폼. 파일위치 : [스킨폴더]/member/register_form.html ------- -->
+				<div class="bo-profile-native-fields bo-profile-personal-fields" data-bo-personal-fields>
+					<div class="resp_join_table"></div>
+				</div>
+				<!-- ------- //회원가입 입력폼 ------- -->
+			</div>
+		</section>
+
+		<section class="bo-profile-card bo-profile-password" aria-labelledby="bo-login-security-title" data-bo-password-card>
+			<header class="bo-profile-card__head">
+				<div>
+					<h2 id="bo-login-security-title">Login &amp; Security</h2>
+					<p>Update your password and account protection settings.</p>
+				</div>
+			</header>
+			<div class="bo-profile-native-fields bo-profile-password-fields" data-bo-password-fields>
+				<div class="resp_join_table"></div>
+			</div>
+			<div class="bo-profile-security-note">
+				<span aria-hidden="true"></span>
+				<p>Use 8-20 characters and combine at least two types of letters, numbers, or special characters.</p>
+				<button type="submit" class="bo-profile-action" data-bo-change-password>Change Password</button>
+			</div>
+		</section>
+
+		<section class="bo-profile-card bo-profile-address" aria-labelledby="bo-default-address-title">
+			<header class="bo-profile-card__head">
+				<div>
+					<h2 id="bo-default-address-title">Default Shipping Address</h2>
+					<p>This address is used first during checkout.</p>
+				</div>
+				<a class="bo-profile-outline-action" href="/mypage/delivery_address?tab=1">Manage Addresses</a>
+			</header>
+			<div class="bo-profile-address__state" data-bo-default-address aria-live="polite">
+				<div class="bo-profile-address__loading">Loading your default address...</div>
+			</div>
+		</section>
+
+		<section class="bo-profile-card bo-profile-preferences" aria-labelledby="bo-preferences-title">
+			<header class="bo-profile-card__head">
+				<div>
+					<h2 id="bo-preferences-title">Preferences</h2>
+					<p>Choose how TrendyPicker sends updates to you.</p>
+				</div>
+			</header>
+			<div class="bo-profile-preferences__list" data-bo-preferences></div>
+		</section>
+
+		<!--{? count(joinform.use_sns) > 0 }-->
+		<section class="bo-profile-card bo-profile-sns" aria-labelledby="bo-profile-sns-title">
+			<header class="bo-profile-card__head">
+				<div>
+					<h2 id="bo-profile-sns-title">Connected Accounts</h2>
+					<p>Link an available social account for faster sign-in.</p>
+				</div>
+			</header>
+			<ul class="member_sns_list bo-profile-sns__list">
+				<!--{@ joinform.use_sns }-->
+				<li class="bo-profile-sns__item">
+					<img
+						src="../images/design/sns_icon_{=.key_}{? !in_array(.key_, sns_joined_list)}_off{/}.png"
+						class="sns_icon {? !in_array(.key_, sns_joined_list) } {? .key_== 'facebook'}fb-login-button-mbconnect-direct{:}sns-login-button-mbconnect-direct{/} hand {/}"
+						snstype="{=.key_}"
+						alt=""
+						aria-hidden="true"
+					/>
+					<span class="bo-profile-sns__copy">
+						<strong>{=.nm}</strong>
+						<!--{? in_array(.key_, sns_joined_list)}-->
+						<small>Connected</small>
+						<!--{:}-->
+						<small>Not connected</small>
+						<!--{/}-->
+					</span>
+					<!--{? in_array(.key_, sns_joined_list)}-->
+					<button type="button" class="snsbuttondisconnectlay bo-profile-sns__button bo-profile-sns__button--manage">Manage</button>
+					<!--{:}-->
+					<button type="button" class="bo-profile-sns__button" data-bo-sns-connect>Connect</button>
+					<!--{/}-->
+				</li>
+				<!--{ / }-->
+			</ul>
+		</section>
+		<!--{ / }-->
+
+		<div class="bo-profile-save-row">
+			<button type="submit" class="bo-profile-save">Save Changes</button>
+		</div>
+		</form>
+		<form
+			id="trendypickerProfileImageForm"
+			method="post"
+			action="../member_process/membericonsave"
+			enctype="multipart/form-data"
+			target="actionFrame"
+			hidden
+		>
+			<input
+				type="file"
+				id="trendypickerProfileImageInput"
+				name="membericonFile"
+				accept="image/jpeg,image/png,image/gif"
+			/>
+		</form>
+
+		<section class="bo-profile-card bo-profile-danger" aria-labelledby="bo-close-account-title">
+			<div>
+				<h2 id="bo-close-account-title">Close Account</h2>
+				<p>If you wish to close your account, submit an account deletion request.</p>
+			</div>
+			<a href="/mypage/withdrawal" designElement="text" class="btn_resp size_c">Close Account</a>
+		</section>
+	</main>
+</div>
+<script type="text/javascript" src="../common/mypage_ui.js"></script><!-- mypage ui 공통 -->
+
+<!-- sns 계정 연결 해제 -->
+<div id="snsdisconnectlay" class="resp_layer_pop hide">
+	<h4 class="title">SNS 연동 해제</h4>
+	<div class="y_scroll_auto2">
+		<div class="layer_pop_contents v5">
+			<p class="stitle v4 gray_03 C">
+				SNS계정 정보를 삭제하여 연결을 해제할 수 있습니다<br />
+				<span class="pointcolor">연결이 해제되면 해당 SNS계정으로 쇼핑몰을 더 이상 이용할 수 없습니다.</span><br />
+			</p>
+			<ul class="lis_sns_disconnect Mt20">
+				<!--{ @ joinform.use_sns }-->
+				<!--{? in_array(.key_, sns_joined_list)}-->
+				<li>
+					<img src="../images/design/mypage_sns_{=substr(.key_,0,1)}.png" class="icon" snstype="sns_{=substr(.key_,0,1)}"  snsrute="{=.key_}" alt="{=.nm}"  title="{=.nm}"  />
+					<button type="button" class="{? .key_ == 'facebook'}fb-login-button-disconnect{:}sns-login-button-disconnect{/} btn_resp size_c color4 pointcolor3 imp" alt="{=.nm}"  title="{=.nm}" {? .key_ != 'facebook'} snstype="sns_{=substr(.key_,0,1)}"  snsrute="{=.key_}" {/}>연결해제</button>
+				</li>
+				<!--{ / }-->
+				<!--{ / }-->
+			</ul>
+		</div>
+	</div>
+	<div class="layer_bottom_btn_area2">
+		<button type="button" class="btn_resp size_c color5 Wmax" onclick="hideCenterLayer()">닫기</button>
+	</div>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+
+<!-- 휴대폰 인증 -->
+<!--{ ? confirmPhone == 'Y' }-->
+<div id="authphone" class="resp_layer_pop hide">
+	<h4 class="title">휴대폰 인증</h4>
+	<div class="y_scroll_auto2">
+		<div class="layer_pop_contents v5">
+			<input type="hidden" name="phonetype" id="phonetype" value="" />
+			<div class="resp_join_table">
+				<ul>
+					<li class="th "><p>변경할 휴대폰 번호</p></li>
+					<li class="td">
+						<input type="text" name="chg_phone[]" class="chg_phone size_phone" value="" maxlength="4" /> -
+						<input type="text" name="chg_phone[]" class="chg_phone size_phone" value="" maxlength="4" /> -
+						<input type="text" name="chg_phone[]" class="chg_phone size_phone" value="" maxlength="4" />
+						<span class="authnum_send"><button type="button" onclick="authphone_send();" class="btn_resp size_b">인증번호발송</button></span>
+					</li>
+				</ul>
+				<ul>
+					<li class="th "><p>인증번호 입력</p></li>
+					<li class="td">
+						<input type="text" name="authnum" id="authnum" value="" />
+						<button type="button" class="btn_resp size_b color2" onclick="authphone_confirm();">인증</button>
+						<p class="Pt5 hide auth_timer">(<span id="timer_min">3</span>분 <span id="timer_sec">00</span>초)</p>
+					</li>
+				</ul>
+			</div>
+			<p class="desc Mt10">※ 휴대폰번호 인증은 1일 3회로 제한됩니다.</p>
+		</div>
+	</div>
+	<div class="layer_bottom_btn_area2">
+		<button type="button" class="btn_resp size_c color5 Wmax" onclick="$('.chg_phone').attr('disabled',false); hideCenterLayer()">닫기</button>
+	</div>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+<!--{ / }-->
+
+<!-- 아이디/비밀번호 등록 -->
+{? sns_change == '0' && rute != 'none' && rute }
+<div id="sns_change_id" class="resp_layer_pop hide">
+	<h4 class="title">아이디/비밀번호 등록</h4>
+	<form id="sns_change_id_form">
+		<div class="y_scroll_auto2">
+			<div class="layer_pop_contents v5">
+				<div class="resp_join_table th_size2">
+					<ul>
+						<li class="th "><p>아이디</p></li>
+						<li class="td">
+							<input type="text" name="userid" id="userid" value="" onkeypress="filterKey();" class="eng_only" style="width:200px;" placeholder="공백 없는 영문/숫자 포함 6~20자" onpaste="javascript:return false;" />
+							<p id="id_info" class="guide_text"></p>
+						</li>
+					</ul>
+					<ul>
+						<li class="th "><p>비밀번호</p></li>
+						<li class="td">
+							<input type="password" name="password" value="" class="eng_only" style="width:200px;" />
+						</li>
+					</ul>
+					<ul>
+						<li class="th "><p>비밀번호 확인</p></li>
+						<li class="td">
+							<input type="password" name="re_password" value="" class="eng_only" style="width:200px;" />
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="layer_bottom_btn_area2 v2">
+			<ul class="basic_btn_area2">
+				<li><button type="button" class="btn_resp size_c color2" onclick="sns_change_id_func();">확인</button></li>
+				<li><button type="button" class="btn_resp size_c color5" onclick="hideCenterLayer()">취소</button></li>
+			</ul>
+		</div>
+	</form>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+{/}
+
+<!-- 아이콘 등록 -->
+{? joinform.user_icon=='Y' }
+<div id="membericonUpdatePopup" class="resp_layer_pop hide">
+	<h4 class="title">아이콘 등록</h4>
+	<div class="y_scroll_auto2">
+		<div class="layer_pop_contents v5 C">
+			<form name="membericonRegist" id="membericonRegist" method="post" action="" enctype="multipart/form-data"  target="actionFrame">
+				<p class="stitle v4 gray_03 Pt30 Pb30">
+					사이즈는 30 × 30 으로 등록해 주세요.
+				</p>
+				<input type="file" name="membericonFile" id="membericonFile" onChange="membericonFileUpload();" />
+			</form>
+		</div>
+	</div>
+	<div class="layer_bottom_btn_area2">
+		<button type="button" class="btn_resp size_c color5 Wmax" onclick="hideCenterLayer()">취소</button>
+	</div>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+{/}
+
+
+<script src="/app/javascript/js/skin-snslogin.js"></script>
+<script type="text/javascript">
+var return_url	= "../main/index";
+{?_GET.return_url }
+return_url		= "{_GET.return_url}";
+{: return_url }
+return_url		= "{return_url}";
+{/}
+var mobileapp	= "{mobileapp}";
+var m_device	= "{m_device}";
+var fbuserauth	= "{fbuserauth}";
+var jointype	= 'myinfo';
+var apple_authurl	= '{apple_authurl}';
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		$(".class_check_password_validation").each(function(){
+			init_check_password_validation($(this));
+		});
+
+		$("input[name='userid']").blur(function() {
+			if($(this).val()){
+				$.post("../member_process/id_chk", { userid : $(this).val() }, function(response){
+					var text = response.return_result;
+					var userid = response.userid;
+					$("#id_info").html(text);
+					$("input[name='userid']").val(userid);
+				},'json');
+			}
+		});
+
+		$('#find_email').change(function() {
+			$("input[name='email[1]']").val(this.value);
+		});
+
+		if('{mailing}'=='y') $("input:checkbox[name='mailing']").attr('checked','checked');
+		if('{sms}'=='y') $("input:checkbox[name='sms']").attr('checked','checked');
+
+		$("#registFrm").submit(function(){
+			$("input[name='bcellphone[]']").attr("disabled",false);
+			$("input[name='cellphone[]']").attr("disabled",false);
+			return true;
+		});
+	});
+
+
+	function view_address(str){
+
+		if(str == "street"){
+			$("#address_view").html("(도로명) "+$("input[name='address_street']").val());
+		}else{
+			$("#address_view").html("(지번) "+$("input[name='address']").val());
+		}
+		if($("#address_view").css("display") == "none"){
+			$("#address_view").show();
+		}else{
+			$("#address_view").hide();
+		}
+	}
+
+
+	function filterKey() {
+		var filter = "[0-9a-z]";
+	   if(filter){
+		  // fromCharCode : 매개 변수에서 ASCII 값이 나타내는 문자들로 구성된 문자열을 반환합니다
+		  var sKey = String.fromCharCode(event.keyCode);
+
+		  // RegExp
+		  // 정규표현을 취급하는 객체로 new를 사용하지 않고 정규표현 문자열을 변수에 대입하는 것으로도 동일한 결과
+		  var re = new RegExp(filter);
+
+		  // test() : 일치하는 문자열이 있는 경우 true, 없으면 false
+		  if(!re.test(sKey)) event.returnValue=false;
+	   }
+	}
+
+	{? sns_change == '0' && rute != 'none' && rute }
+	function sns_change_id(){
+		that = $('#sns_change_id');
+		$("input[name='userid']",that).val('');
+		$("input[name='password']",that).val('');
+		$("input[name='re_password']",that).val('');
+		$("#id_info",that).html('');
+		//아이디/비밀번호 등록
+		showCenterLayer('#sns_change_id');
+		//openDialog(getAlert('mb143'), 'sns_change_id', {'width':580,'height':220});
+	}
+
+	function sns_change_id_func(){
+
+		that		= $('#sns_change_id');
+		userid		= $("input[name='userid']",that).val();
+		password	= $("input[name='password']",that).val();
+		re_password	= $("input[name='re_password']",that).val();
+
+		if	(userid == ''){
+			//아이디 항목은 필수입니다.
+			openDialogAlert(getAlert('mb144'),'400','160',function(){});
+			return;
+		}
+
+		if	(password == ''){
+			//비밀번호 항목은 필수입니다.
+			openDialogAlert(getAlert('mb145'),'400','160',function(){});
+			return;
+		}
+
+		if	(re_password == ''){
+			//비밀번호확인 항목은 필수입니다.
+			openDialogAlert(getAlert('mb146'),'400','160',function(){});
+			return;
+		}
+
+		if	(password != re_password){
+			//비밀번호 확인이 일치하지 않습니다.
+			openDialogAlert(getAlert('mb147'),'400','160',function(){});
+			return;
+		}
+
+		$.ajax({
+			url: "../member_process/sns_update_id",
+			type: "post",
+			data : $('#sns_change_id_form').serialize(),
+			success : function(e){
+				if	(e == 'succ'){
+					//아이디 등록이 완료 되었습니다
+					msg = getAlert('mb148');
+					openDialogAlert(msg,'400','160',function(){location.reload();});
+				}else{
+					openDialogAlert(e,'400','160',function(){});
+				}
+			}
+		});
+	}
+	{/}
+
+	// 휴대폰 인증 사용시 인증팝업 :: 2016-04-19 lwh
+	function authphone_popup(phoneType){
+		$("#phonetype").val(phoneType);
+		$.each($("input[name='"+phoneType+"[]']"),function(idx){
+			$("input[name='chg_phone[]']").eq(idx).val($(this).val());
+		});
+		//휴대폰 인증안내
+		showCenterLayer('#authphone');
+		//openDialog(getAlert('mb149'), "authphone", {"width":"600","height":"250"});
+	}
+
+	// 인증번호 발신 :: 2016-04-19 lwh
+	function authphone_send(){
+		loadingStart();
+		var new_phone = '';
+		var old_phone = '';
+		var ptype = $("#phonetype").val();
+		$.each($("input[name='chg_phone[]']"),function(){ new_phone += $(this).val(); });
+		$.each($("input[name='"+ptype+"[]']"),function(){ old_phone += $(this).val(); });
+		if(!new_phone){
+			//변경할 휴대폰 번호를 입력해주세요.
+			openDialogAlert(getAlert('mb150'),'300','150',function(){});
+			return false;
+		}
+		if(new_phone == old_phone){
+			//기존 번호와 동일합니다.
+			openDialogAlert(getAlert('mb151'),'300','150',function(){});
+			return false;
+		}
+
+		var cellphone = $("input[name='chg_phone\\[\\]']").map(function() {
+			return btoa(this.value);
+		}).get();
+
+		var min = 2;
+		var sec = 59;
+		$.ajax({
+			'url' : '../member_process/authphone',
+			'data' : {'phone':new_phone,'cellphone[]':cellphone},
+			'dataType': 'json',
+			'success': function(res) {
+				loadingStop("body",true);
+				if(res.result){
+					$(".chg_phone").attr('disabled',true);
+					$(".authnum_send").hide();
+					$(".auth_timer").show();
+					var timer = setInterval(function(){
+						if(sec==0){
+							sec = 59;
+							if(min != 0) {
+								min = min - 1;
+							}
+						}else{
+							sec = sec - 1;
+						}
+						$('#timer_min').html(min);
+						$('#timer_sec').html(sec);
+
+						if(min == 0 && sec == 0){
+							clearInterval(timer);
+							$(".authnum_send").show();
+							$(".auth_timer").hide();
+							$.ajax({
+								'url':'../member_process/authphone_del',
+								'dataType': 'text',
+								'success': function(res) {
+								}
+							});
+						}
+					}, 1000);
+
+				}
+				alert(res.msg);
+			}
+		});
+	}
+
+	// 인증번호 확인 :: 2016-04-19 lwh
+	function authphone_confirm(){
+		var authnum = $("#authnum").val();
+		$("iframe[name='actionFrame']").attr('src','../member_process/authphone_confirm?authnum=' + authnum);
+		//hideCenterLayer();
+	}
+
+</script>
+
+{? joinform.user_icon=='Y' }
+<script type="text/javascript">
+	$(document).ready(function() {
+			$("button#membericonUpdate").live("click",function(){
+				$('#membericonRegist')[0].reset();
+				$("input[name=user_icon][value='99']").attr("checked",true);
+				//아이콘
+				showCenterLayer('#membericonUpdatePopup');
+				//openDialog(getAlert('mb152'), "membericonUpdatePopup", {"width":"380","height":"150","show" : "fade","hide" : "fade"});
+			});
+
+	});
+	function membericonFileUpload(str){
+		if(str > 0) {
+			//로고를 선택해 주세요.
+			alert(getAlert('mb153'));
+			return false;
+		}
+		var frm = $('#membericonRegist');
+		frm.attr("action","../member_process/membericonsave");
+		frm.submit();
+	}
+
+	function membericonDisplay(filenm){
+		$("#membericon_img").attr("src",filenm);
+		$("#membericon_img").css("display","block");
+		$("#membericonDelete").css("display","block");
+		$('#membericonRegist')[0].reset();
+		hideCenterLayer();
+		//$("#membericonUpdatePopup").dialog("close");
+	}
+</script>
+{/}
+
+<div
+	class="mypage-logout-dialog"
+	id="mypage-logout-dialog"
+	hidden
+	aria-hidden="true"
+>
+	<button
+		type="button"
+		class="mypage-logout-backdrop"
+		data-mypage-logout-close
+		aria-label="Close logout dialog"
+	></button>
+	<section
+		class="mypage-logout-modal"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="mypage-logout-title"
+	>
+		<button
+			type="button"
+			class="mypage-logout-close"
+			data-mypage-logout-close
+			aria-label="Close logout dialog"
+	>&times;</button>
+		<span class="mypage-logout-icon" aria-hidden="true"></span>
+		<h2 id="mypage-logout-title">Log out?</h2>
+		<p>Are you sure you want to log out? You'll need to sign in again to access your account.</p>
+		<div class="mypage-logout-actions">
+			<button type="button" class="mypage-logout-cancel" data-mypage-logout-close>Cancel</button>
+			<button type="button" class="mypage-logout-confirm" data-mypage-logout-confirm>Log Out</button>
+		</div>
+	</section>
+</div>
+
+<script src="../js/trendypicker-mypage.js"></script>
+<script src="../js/trendypicker-profile.js"></script>
+<script src="../js/trendypicker-profile-birthday.js"></script>

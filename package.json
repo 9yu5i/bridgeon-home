@@ -1,9 +1,10 @@
 {
-  "name": "bridgeon-home",
+  "name": "trendypicker-home",
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node tools/check-js.mjs && node tools/check-unused-js.mjs && node tools/check-css.mjs && node tools/check-unused-css.mjs && node tools/check-html.mjs && node tools/check-firstmall-workskin.mjs",
+    "check": "node tools/check-brand.mjs && node tools/check-js.mjs && node tools/check-unused-js.mjs && node tools/check-css.mjs && node tools/check-unused-css.mjs && node tools/check-html.mjs && node tools/check-firstmall-workskin.mjs",
+    "check:brand": "node tools/check-brand.mjs",
     "check:js": "node tools/check-js.mjs",
     "check:unused-js": "node tools/check-unused-js.mjs",
     "check:css": "node tools/check-css.mjs",

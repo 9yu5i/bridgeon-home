@@ -1,4 +1,4 @@
-# BridgeOn Coding Rules
+# TrendyPicker Coding Rules
 
 ## Before Editing
 
@@ -57,8 +57,8 @@ git diff --check
 - Preserve Firstmall's existing template/module split instead of consolidating a complex page into
   one large HTML file.
 - Modify the existing Firstmall HTML files that own the page or module.
-- Put BridgeOn styles in new, page- or component-scoped CSS files and link them from the owning
+- Put TrendyPicker styles in new, page- or component-scoped CSS files and link them from the owning
   HTML.
-- Do not add BridgeOn rules to Firstmall's large `css/common.css` or `css/user.css`.
+- Do not add TrendyPicker rules to Firstmall's large `css/common.css` or `css/user.css`.
 - Keep upload candidates under `firstmall-workskin/` using the same relative paths as the target
   skin.

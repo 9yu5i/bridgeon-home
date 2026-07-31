@@ -1,9 +1,9 @@
 (() => {
-  const navigateWithPageTransition = window.BridgeOn?.navigateWithPageTransition || ((href) => {
+  const navigateWithPageTransition = window.TrendyPicker?.navigateWithPageTransition || ((href) => {
     window.location.href = href;
   });
   const PRODUCT_DETAIL_URL =
-    window.BridgeOn?.productDetailUrl ||
+    window.TrendyPicker?.productDetailUrl ||
     new URL("../../../product-detail/product-detail.html", document.currentScript?.src || window.location.href).href;
   const REALTREND_PAGE_URL = new URL(
     "../../../realtrend/realtrend.html",
@@ -262,7 +262,7 @@ const initTrendProductSheet = () => {
   };
 
   const SHEET_BUNDLE_TIERS =
-    window.BridgeOn?.cart?.defaultBundleTiers ||
+    window.TrendyPicker?.cart?.defaultBundleTiers ||
     [
       { qty: 2, discount: 5 },
       { qty: 3, discount: 10 },
@@ -270,10 +270,10 @@ const initTrendProductSheet = () => {
     ];
 
   const formatSheetPrice = (value) =>
-    window.BridgeOn?.cart?.formatPrice?.(value) || `US$${Number(value || 0).toFixed(2)}`;
+    window.TrendyPicker?.cart?.formatPrice?.(value) || `US$${Number(value || 0).toFixed(2)}`;
 
   const parseSheetPrice = (value) =>
-    window.BridgeOn?.cart?.parsePrice?.(value) ||
+    window.TrendyPicker?.cart?.parsePrice?.(value) ||
     Number.parseFloat(String(value || "").replace(/[^\d.]/g, "")) ||
     0;
 
@@ -303,7 +303,7 @@ const initTrendProductSheet = () => {
     const basePriceText = getSheetBasePriceText();
     const basePrice = parseSheetPrice(basePriceText);
     const activeBundle =
-      window.BridgeOn?.cart?.getActiveBundleTier?.(SHEET_BUNDLE_TIERS, quantity) ||
+      window.TrendyPicker?.cart?.getActiveBundleTier?.(SHEET_BUNDLE_TIERS, quantity) ||
       SHEET_BUNDLE_TIERS.reduce((active, tier) => (quantity >= tier.qty ? tier : active), null);
     const unitPrice = activeBundle ? basePrice * (1 - activeBundle.discount / 100) : basePrice;
     const priceStrong = productCard.querySelector(".realtrend-price strong");
@@ -329,7 +329,7 @@ const initTrendProductSheet = () => {
     const quantity = Number(qtyEl?.textContent || 1) || 1;
 
     return {
-      brand: brandEl?.textContent?.trim() || "BridgeOn",
+      brand: brandEl?.textContent?.trim() || "TrendyPicker",
       name: productNameEl?.textContent?.trim() || "Product",
       option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
       optionChoices: Array.from(productSelect?.options || [])
@@ -478,7 +478,7 @@ const initTrendProductSheet = () => {
     wishBtn?.classList.remove("is-active");
     wishBtn?.setAttribute("aria-pressed", "false");
     wishBtn?.setAttribute("aria-label", "Add to wishlist");
-    window.BridgeOn?.wishlist?.syncButtons?.(productCard);
+    window.TrendyPicker?.wishlist?.syncButtons?.(productCard);
 
     productPanel.hidden = false;
     productPanel.setAttribute("aria-hidden", "false");
@@ -544,7 +544,7 @@ const initTrendProductSheet = () => {
       if (select.options[index]?.disabled) return;
       select.selectedIndex = index;
       buildMenu();
-      window.BridgeOn?.wishlist?.syncButtons?.(productCard);
+      window.TrendyPicker?.wishlist?.syncButtons?.(productCard);
       closeMenu();
     };
 
@@ -600,7 +600,7 @@ const initTrendProductSheet = () => {
       event.preventDefault();
       return;
     }
-    window.BridgeOn?.cart?.add(getSheetCartPayload());
+    window.TrendyPicker?.cart?.add(getSheetCartPayload());
     showCartToast();
     closeTrendProductSheet({ keepCartToast: true });
   });

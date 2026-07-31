@@ -1,10 +1,10 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
-@@ BridgeOn My Page Dashboard / Firstmall work skin
+@@ TrendyPicker My Page Dashboard / Firstmall work skin
 - Upload target: [skin folder]/mypage/dashboard.html
 - Data source: variables confirmed on the active dashboard page
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<link rel="stylesheet" href="../css/bridgeon-mypage.css" />
+<link rel="stylesheet" href="../css/trendypicker-mypage.css" />
 
 <div class="subpage_wrap bo-mypage-shell">
 	<aside class="bo-account-side">
@@ -31,21 +31,20 @@
 	</aside>
 
 	<main class="subpage_container bo-mypage" aria-labelledby="bo-dashboard-title">
-		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
-
 		<section class="bo-profile" aria-labelledby="bo-dashboard-title">
 			<div class="bo-profile__identity">
 				<span class="bo-profile__avatar">
-					<img src="{member.profile_image}" alt="{member.name}" onerror="this.style.display='none';" />
 					<i aria-hidden="true"></i>
 				</span>
-				<a class="bo-profile__edit" href="/mypage/myinfo">
+				<button
+					type="button"
+					class="bo-profile__edit"
+					data-mypage-avatar-open
+					aria-controls="mypage-avatar-dialog"
+					aria-expanded="false"
+				>
 					Edit Profile
-					<svg viewBox="0 0 24 24" aria-hidden="true">
-						<path d="M12 20h9" />
-						<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
-					</svg>
-				</a>
+				</button>
 			</div>
 
 			<div class="bo-profile__welcome">
@@ -54,18 +53,19 @@
 					<h1 id="bo-dashboard-title">{member.name}</h1>
 					<span class="bo-profile__tier">{member.current_level.group_name}</span>
 				</div>
-				<div class="bo-profile__progress">
-					<p>
-						<span><b aria-hidden="true">★</b> Progress to {member.next_level.group_name}</span>
-						<strong>{=get_currency_price(member.order_sum,2)} / {=get_currency_price(member.next_level.order_sum_price,2)}</strong>
-					</p>
-					<progress
-						class="bo-profile__progress-track"
-						value="{member.order_sum}"
-						max="{member.next_level.order_sum_price}"
-						aria-label="Membership progress toward {member.next_level.group_name}"
-					></progress>
-				</div>
+			</div>
+
+			<div class="bo-profile__progress">
+				<p>
+					<span><b aria-hidden="true">★</b> <!--{ ? member.next_level.order_sum_price > member.order_sum }-->US${=number_format(member.next_level.order_sum_price-member.order_sum,2)}<!--{ : }-->US$0.00<!--{ / }--> to <em>{member.next_level.group_name}</em></span>
+					<strong><!--{ ? member.order_sum > 0 }-->US${=number_format(member.order_sum,0)} / <!--{ / }-->US${=number_format(member.next_level.order_sum_price,0)}</strong>
+				</p>
+				<progress
+					class="bo-profile__progress-track"
+					value="{member.order_sum}"
+					max="{member.next_level.order_sum_price}"
+					aria-label="Membership progress toward {member.next_level.group_name}"
+				></progress>
 			</div>
 
 			<nav class="bo-profile__stats" aria-label="Account benefits">
@@ -76,17 +76,13 @@
 					<i aria-hidden="true">›</i>
 				</a>
 				<a href="/mypage/coupon">
-					<span class="bo-profile__stat-icon" aria-hidden="true">
-						<svg viewBox="0 0 24 24"><path d="M3 7h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4Z" /></svg>
-					</span>
+					<span class="bo-profile__stat-icon" aria-hidden="true"></span>
 					<strong data-account-stat="coupons">{=number_format(member.coupon_count)}</strong>
 					<small>Coupons</small>
 					<i aria-hidden="true">›</i>
 				</a>
 				<a href="/mypage/wish">
-					<span class="bo-profile__stat-icon" aria-hidden="true">
-						<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" /></svg>
-					</span>
+					<span class="bo-profile__stat-icon" aria-hidden="true"></span>
 					<strong>{wishlist_count}</strong>
 					<small>Wishlist</small>
 					<i aria-hidden="true">›</i>
@@ -94,16 +90,77 @@
 			</nav>
 		</section>
 
-		<section class="bo-card bo-orders" aria-labelledby="bo-dashboard-orders">
+		<section class="bo-card bo-orders mypage-orders" aria-labelledby="bo-dashboard-orders">
 			<header class="bo-card__head">
 				<h2 id="bo-dashboard-orders">My Orders</h2>
-				<a href="/mypage/order_catalog">Track all orders <span aria-hidden="true">→</span></a>
+				<a href="/mypage/order_catalog">
+					<span class="bo-track-all-desktop">Track all orders</span>
+					<span class="bo-track-all-mobile">Track all</span>
+					<span aria-hidden="true">→</span>
+				</a>
 			</header>
 
+			<div class="bo-live-orders bo-live-orders--preview" data-trendypicker-order-preview hidden>
+				<article
+					class="bo-live-order mypage-order-preview"
+					aria-label="Order preview"
+					data-order-seq="BR1234567890"
+					data-order-date="May 24, 2025"
+					data-order-status="Shipped"
+					data-order-step="55"
+					data-order-price="US$18.40"
+					data-order-shipping-method="quick"
+					data-order-tracking-number="1Z999AA10123456784"
+					data-order-estimated-arrival="May 28 - May 30"
+					data-order-shipping-address="Name, 123 Sample St., United States 90007"
+				>
+					<div class="bo-live-order__products">
+						<a class="bo-live-order__product" href="/mypage/order_catalog">
+							<span class="bo-live-order__image bo-live-order__image--preview">
+								<em>+2 items</em>
+							</span>
+							<span class="bo-live-order__copy">
+								<mark>Shipped</mark>
+								<strong>PDRN Pink Peptide Serum 50ml</strong>
+								<small>Order #BR1234567890</small>
+							</span>
+						</a>
+					</div>
+
+					<div class="bo-live-order__timeline" aria-label="Order status">
+						<span class="is-complete"><i aria-hidden="true"></i><small>Payment Confirmed</small></span>
+						<span class="is-complete"><i aria-hidden="true"></i><small>Preparing</small></span>
+						<span class="is-current"><i aria-hidden="true"></i><small>Shipped</small></span>
+						<span><i aria-hidden="true"></i><small>Delivered</small></span>
+					</div>
+
+					<footer class="bo-live-order__foot">
+						<p>
+							<small>Estimated delivery</small>
+							<strong>May 28 - May 30</strong>
+						</p>
+						<span class="bo-live-order__actions">
+							<a href="/mypage/order_catalog" data-bo-track-order>Track order</a>
+							<a href="/mypage/order_catalog">Order details</a>
+						</span>
+					</footer>
+				</article>
+			</div>
+
 			<!--{ ? orders }-->
-			<div class="bo-live-orders">
+			<div class="bo-live-orders" data-trendypicker-live-orders>
 				<!--{ @ orders }-->
-				<article class="bo-live-order">
+				<article
+					class="bo-live-order mypage-order-preview"
+					data-order-seq="{.order_seq}"
+					data-order-date="{=date('Y.m.d',strtotime(.regist_date))}"
+					data-order-status="{.mstep}"
+					data-order-step="{.step}"
+					data-order-price="{=get_currency_price(.settleprice,2)}"
+					data-order-shipping-method="{.shipping_method}"
+					data-order-tracking-number="{.custom_tracking_number}"
+					data-order-details-url="/mypage/order_view?no={.order_seq}"
+				>
 					<div class="bo-live-order__products">
 						<!--{ @ .items }-->
 							<!--{ @ ..options }-->
@@ -125,9 +182,9 @@
 
 					<!--{ ? .step <= 75 }-->
 					<div class="bo-live-order__timeline" aria-label="Order status">
-						<span class="{? .step > 25}is-complete{:}is-current{/}"><i aria-hidden="true">◷</i><small>Pending</small></span>
-						<span class="{? .step > 45}is-complete{: .step >= 35}is-current{/}"><i aria-hidden="true">◇</i><small>Preparing</small></span>
-						<span class="{? .step > 70}is-complete{: .step >= 50}is-current{/}"><i aria-hidden="true">▣</i><small>Shipped</small></span>
+						<span class="{? .step >= 35}is-complete{:}is-current{/}"><i aria-hidden="true">◷</i><small>{? .step == 15}Payment Pending{:}Payment Confirmed{/}</small></span>
+						<span class="{? .step >= 50}is-complete{: .step >= 35}is-current{/}"><i aria-hidden="true">◇</i><small>Preparing</small></span>
+						<span class="{? .step >= 75}is-complete{: .step >= 50}is-current{/}"><i aria-hidden="true">▣</i><small>Shipped</small></span>
 						<span class="{? .step >= 75}is-current{/}"><i aria-hidden="true">✓</i><small>Delivered</small></span>
 					</div>
 					<!--{ / }-->
@@ -137,13 +194,22 @@
 							<small>{=date('Y.m.d',strtotime(.regist_date))}</small>
 							<strong>{=get_currency_price(.settleprice,2)}</strong>
 						</p>
-						<a href="/mypage/order_view?no={.order_seq}">Order details</a>
+						<span class="bo-live-order__actions">
+							<!--{ ? .step > 45 && .step <= 75 && .custom_tracking_number }-->
+								<!--{ ? .shipping_method == 'quick' }-->
+								<a href="/mypage/order_view?no={.order_seq}" data-bo-track-order>Track order</a>
+								<!--{ : .shipping_method == 'delivery' }-->
+								<a href="/mypage/order_view?no={.order_seq}" data-bo-track-order>Track order</a>
+								<!--{ / }-->
+							<!--{ / }-->
+							<a href="/mypage/order_view?no={.order_seq}">Order details</a>
+						</span>
 					</footer>
 				</article>
 				<!--{ / }-->
 			</div>
 			<!--{ : }-->
-			<div class="bo-order-empty">
+			<div class="bo-order-empty" data-trendypicker-order-empty>
 				<span aria-hidden="true">▢</span>
 				<strong>No orders yet</strong>
 				<p>Your actual orders will appear here after you place an order.</p>
@@ -158,23 +224,17 @@
 			</header>
 			<nav class="bo-mobile-activity__grid" aria-label="My activity">
 				<a href="/mypage/mygdreview_catalog">
-					<span class="bo-mobile-icon" aria-hidden="true">
-						<svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6-4.4-4.3 6.1-.9Z" /></svg>
-					</span>
-					<strong class="bo-mobile-activity__view">View</strong>
+					<span class="bo-mobile-icon" aria-hidden="true"></span>
+					<strong class="bo-mobile-activity__view" data-account-stat="reviews">0</strong>
 					<small>My Reviews</small>
 				</a>
 				<a href="/mypage/wish">
-					<span class="bo-mobile-icon" aria-hidden="true">
-						<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" /></svg>
-					</span>
+					<span class="bo-mobile-icon" aria-hidden="true"></span>
 					<strong>{wishlist_count}</strong>
 					<small>Wishlist</small>
 				</a>
 				<a href="/mypage/saved_posts">
-					<span class="bo-mobile-icon bo-mobile-icon--filled" aria-hidden="true">
-						<svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z" /></svg>
-					</span>
+					<span class="bo-mobile-icon" aria-hidden="true"></span>
 					<strong>{shortform_summary.saved_count}</strong>
 					<small>Saved Posts</small>
 				</a>
@@ -187,28 +247,28 @@
 			</header>
 			<nav class="bo-mobile-service__grid" aria-label="Account services">
 				<a href="/mypage/myinfo">
-					<span class="bo-mobile-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg></span>
+					<span class="bo-mobile-icon" aria-hidden="true"></span>
 					<strong>Profile</strong>
 				</a>
 				<a href="/mypage/coupon">
-					<span class="bo-mobile-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4Z" /></svg></span>
+					<span class="bo-mobile-icon" aria-hidden="true"></span>
 					<strong>Coupons</strong>
 				</a>
 				<a href="/mypage/emoney">
-					<span class="bo-mobile-icon bo-mobile-icon--letter" aria-hidden="true">P</span>
+					<span class="bo-mobile-icon" aria-hidden="true"></span>
 					<strong>Points</strong>
 				</a>
 				<a href="/main/membership">
-					<span class="bo-mobile-icon bo-mobile-icon--filled" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 2.2 4.5 5 .7-3.6 3.5.8 5-4.4-2.3-4.4 2.3.8-5-3.6-3.5 5-.7Z" /></svg></span>
+					<span class="bo-mobile-icon" aria-hidden="true"></span>
 					<strong>Membership</strong>
 				</a>
 				<a href="/service/cs">
-					<span class="bo-mobile-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 10v6M12 7h.01" /></svg></span>
+					<span class="bo-mobile-icon" aria-hidden="true"></span>
 					<strong>Help Center</strong>
 				</a>
-				<a href="/mypage/myinfo">
-					<span class="bo-mobile-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg></span>
-					<strong>Settings</strong>
+				<a href="/login_process/logout">
+					<span class="bo-mobile-icon" aria-hidden="true"></span>
+					<strong>Log Out</strong>
 				</a>
 			</nav>
 		</section>
@@ -219,11 +279,6 @@
 			<a href="/mypage/myfbrecommend">INVITE NOW</a>
 			<span class="bo-mobile-invite__gift" aria-hidden="true"></span>
 		</article>
-
-		<a class="bo-mobile-logout" href="/login_process/logout">
-			<span aria-hidden="true">↪</span>
-			Log Out
-		</a>
 
 		<section class="bo-card bo-wishlist bo-desktop-dashboard-card" aria-labelledby="bo-dashboard-wishlist">
 			<header class="bo-card__head">
@@ -295,7 +350,7 @@
 				</header>
 				<div class="bo-reel-stats">
 					<a href="/mypage/saved_posts">
-						<span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z" /></svg></span>
+						<span aria-hidden="true"></span>
 						<strong>{shortform_summary.saved_count}</strong>
 						<small>Saved Reels</small>
 					</a>
@@ -318,5 +373,166 @@
 	</section>
 </div>
 
+<div class="orders-modal-layer" data-orders-modal-layer hidden aria-hidden="true">
+	<button
+		type="button"
+		class="orders-modal-backdrop"
+		data-orders-modal-close
+		aria-label="Close order tracking"
+	></button>
+	<section
+		class="orders-dialog orders-track-dialog"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="orders-track-title"
+		tabindex="-1"
+	>
+		<p class="orders-dialog-eyebrow">Track Order</p>
+		<div class="orders-track-head">
+			<div>
+				<h2 id="orders-track-title" data-orders-track-order>Order</h2>
+				<p data-orders-track-date></p>
+			</div>
+			<mark data-orders-track-status></mark>
+		</div>
+		<div class="orders-track-product">
+			<span class="orders-dialog-thumb" data-orders-track-thumb aria-hidden="true"></span>
+			<div>
+				<strong data-orders-track-name></strong>
+				<small data-orders-track-price></small>
+			</div>
+		</div>
+		<ol class="orders-track-steps" aria-label="Tracking progress">
+			<li data-orders-track-step="0"><b></b><span>Order Placed</span><em></em></li>
+			<li data-orders-track-step="1"><b></b><span>Shipped</span><em></em></li>
+			<li data-orders-track-step="2"><b></b><span>Out for Delivery</span><em></em></li>
+			<li data-orders-track-step="3"><b></b><span>Delivered</span><em></em></li>
+		</ol>
+		<div class="orders-track-info">
+			<p><span>Carrier</span><b data-orders-track-carrier></b></p>
+			<p><span>Tracking No.</span><b data-orders-track-number></b></p>
+			<p><span>Estimated Arrival</span><b data-orders-track-estimated>Not provided</b></p>
+			<p><span>Shipping Address</span><b data-orders-track-address>Loading...</b></p>
+		</div>
+		<div class="orders-dialog-actions">
+			<button type="button" class="orders-dialog-secondary" data-orders-modal-close>Close</button>
+			<button type="button" class="orders-dialog-primary" data-orders-track-primary>
+				View Tracking Detail
+			</button>
+		</div>
+	</section>
+</div>
+
+<form
+	id="trendypicker-epost-form"
+	method="post"
+	target="_blank"
+	action="https://trace.epost.go.kr/xtts/servlet/kpl.tts.common.svl.SttSVL"
+	hidden
+>
+	<input type="hidden" name="target_command" value="kpl.tts.tt.epost.cmd.RetrieveEmsTraceEngCmd" />
+	<input type="hidden" name="JspURI" value="/xtts/tt/epost/ems/EmsSearchResultEng.jsp" />
+	<input type="hidden" name="POST_CODE" value="" data-orders-epost-number />
+</form>
+
+<div
+	class="mypage-avatar-dialog"
+	id="mypage-avatar-dialog"
+	hidden
+	aria-hidden="true"
+>
+	<button
+		type="button"
+		class="mypage-avatar-backdrop"
+		data-mypage-avatar-close
+		aria-label="Close profile photo dialog"
+	></button>
+	<form
+		class="mypage-avatar-modal"
+		name="membericonRegist"
+		id="membericonRegist"
+		method="post"
+		action="../member_process/membericonsave"
+		enctype="multipart/form-data"
+		target="actionFrame"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="mypage-avatar-title"
+		data-mypage-avatar-form
+	>
+		<button
+			type="button"
+			class="mypage-avatar-close"
+			data-mypage-avatar-close
+			aria-label="Close profile photo dialog"
+		>&times;</button>
+		<h2 id="mypage-avatar-title">Change profile photo</h2>
+		<div class="mypage-avatar-preview" aria-hidden="true">
+			<img
+				class="mypage-avatar-preview-photo"
+				alt=""
+				data-mypage-avatar-preview
+				hidden
+			/>
+			<i aria-hidden="true"></i>
+		</div>
+		<p class="mypage-avatar-help">Choose a square JPG, PNG, or GIF image.</p>
+		<label class="mypage-avatar-upload" for="membericonFile">
+			<input
+				type="file"
+				name="membericonFile"
+				id="membericonFile"
+				accept="image/jpeg,image/png,image/gif"
+				data-mypage-avatar-input
+			/>
+			<span>Choose photo</span>
+		</label>
+		<button
+			type="button"
+			class="mypage-avatar-remove"
+			data-mypage-avatar-remove
+			hidden
+		>Remove photo</button>
+		<div class="mypage-avatar-actions">
+			<button type="button" class="mypage-avatar-cancel" data-mypage-avatar-close>Cancel</button>
+			<button type="submit" class="mypage-avatar-save" data-mypage-avatar-save disabled>Save</button>
+		</div>
+	</form>
+</div>
+
+<div
+	class="mypage-logout-dialog"
+	id="mypage-logout-dialog"
+	hidden
+	aria-hidden="true"
+>
+	<button
+		type="button"
+		class="mypage-logout-backdrop"
+		data-mypage-logout-close
+		aria-label="Close logout dialog"
+	></button>
+	<section
+		class="mypage-logout-modal"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="mypage-logout-title"
+	>
+		<button
+			type="button"
+			class="mypage-logout-close"
+			data-mypage-logout-close
+			aria-label="Close logout dialog"
+	>&times;</button>
+		<span class="mypage-logout-icon" aria-hidden="true"></span>
+		<h2 id="mypage-logout-title">Log out?</h2>
+		<p>Are you sure you want to log out? You'll need to sign in again to access your account.</p>
+		<div class="mypage-logout-actions">
+			<button type="button" class="mypage-logout-cancel" data-mypage-logout-close>Cancel</button>
+			<button type="button" class="mypage-logout-confirm" data-mypage-logout-confirm>Log Out</button>
+		</div>
+	</section>
+</div>
+
 <script src="/data/skin/{skin}/common/mypage_ui.js"></script>
-<script src="../js/bridgeon-mypage.js"></script>
+<script src="../js/trendypicker-mypage.js"></script>

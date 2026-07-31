@@ -337,14 +337,14 @@
 
   const renderProducts = (items) => {
     grid.replaceChildren(...items.map(createCard));
-    window.BridgeOn?.wishlist?.syncButtons?.(grid);
+    window.TrendyPicker?.wishlist?.syncButtons?.(grid);
   };
 
   const displayQuery = searchQuery || "Search";
   const hasResults = matchedProducts.length > 0;
 
   queryNode.textContent = displayQuery;
-  document.title = hasResults ? `${displayQuery} | BridgeOn` : `No results for ${displayQuery} | BridgeOn`;
+  document.title = hasResults ? `${displayQuery} | TrendyPicker` : `No results for ${displayQuery} | TrendyPicker`;
   page.classList.toggle("is-search-empty", !hasResults);
 
   document.querySelectorAll("#site-search, #mobile-site-search").forEach((input) => {

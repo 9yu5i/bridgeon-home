@@ -1,9 +1,9 @@
 (() => {
-  window.BridgeOn = window.BridgeOn || {};
+  window.TrendyPicker = window.TrendyPicker || {};
 
-  if (Array.isArray(window.BridgeOn.editorData) && window.BridgeOn.editorData.length) return;
+  if (Array.isArray(window.TrendyPicker.editorData) && window.TrendyPicker.editorData.length) return;
 
-  window.BridgeOn.editorData = [
+  window.TrendyPicker.editorData = [
     {
       name: "Nara",
       handle: "@nara_editor",

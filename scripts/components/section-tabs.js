@@ -12,13 +12,13 @@
   };
 
   const navigateWithPageTransition =
-    window.BridgeOn?.navigateWithPageTransition || ((href) => {
+    window.TrendyPicker?.navigateWithPageTransition || ((href) => {
       window.location.href = href;
     });
 
   const getBestListingUrl = (category = "all") => {
-    const fromBridgeOn = window.BridgeOn?.getBestListingUrl?.();
-    let base = fromBridgeOn;
+    const fromTrendyPicker = window.TrendyPicker?.getBestListingUrl?.();
+    let base = fromTrendyPicker;
     if (!base) {
       if (document.body.classList.contains("listing-page")) base = "./best.html";
       else if (
@@ -177,10 +177,10 @@
 
     rail.querySelectorAll(".is-loop-clone").forEach((clone) => clone.remove());
     rail.replaceChildren(...products.map((product, index) => createSellerCard(product, index + 1)));
-    window.BridgeOn?.wishlist?.syncButtons?.(rail);
+    window.TrendyPicker?.wishlist?.syncButtons?.(rail);
 
     rail.dispatchEvent(
-      new CustomEvent("bridgeon:railfilterchange", {
+      new CustomEvent("trendypicker:railfilterchange", {
         bubbles: true,
         detail: { tab: rankingKey, limit },
       })

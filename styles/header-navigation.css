@@ -692,11 +692,11 @@ a.mega-feature {
   display: none;
 }
 
-.bridgeon-signin-dialog[hidden] {
+.trendypicker-signin-dialog[hidden] {
   display: none;
 }
 
-.bridgeon-signin-dialog {
+.trendypicker-signin-dialog {
   position: fixed;
   inset: 0;
   z-index: 1300;
@@ -705,11 +705,11 @@ a.mega-feature {
   padding: 24px;
 }
 
-body.is-bridgeon-signin-open {
+body.is-trendypicker-signin-open {
   overflow: hidden;
 }
 
-.bridgeon-signin-backdrop {
+.trendypicker-signin-backdrop {
   position: absolute;
   inset: 0;
   border: 0;
@@ -717,7 +717,7 @@ body.is-bridgeon-signin-open {
   cursor: default;
 }
 
-.bridgeon-signin-modal {
+.trendypicker-signin-modal {
   position: relative;
   z-index: 1;
   display: grid;
@@ -729,7 +729,7 @@ body.is-bridgeon-signin-open {
   box-shadow: 0 22px 54px rgba(37, 26, 62, 0.18);
 }
 
-.bridgeon-signin-close {
+.trendypicker-signin-close {
   position: absolute;
   top: 14px;
   right: 14px;
@@ -748,19 +748,19 @@ body.is-bridgeon-signin-open {
   cursor: pointer;
 }
 
-.bridgeon-signin-close:hover,
-.bridgeon-signin-close:focus-visible {
+.trendypicker-signin-close:hover,
+.trendypicker-signin-close:focus-visible {
   color: #fff;
   background: var(--purple, #7b3fe4);
 }
 
-.bridgeon-signin-head {
+.trendypicker-signin-head {
   display: grid;
   gap: 8px;
   padding-right: 28px;
 }
 
-.bridgeon-signin-head p {
+.trendypicker-signin-head p {
   margin: 0;
   color: var(--purple, #7b3fe4);
   font-size: 13px;
@@ -769,7 +769,7 @@ body.is-bridgeon-signin-open {
   text-transform: uppercase;
 }
 
-.bridgeon-signin-head h2 {
+.trendypicker-signin-head h2 {
   margin: 0;
   color: #111;
   font-size: 28px;
@@ -777,30 +777,30 @@ body.is-bridgeon-signin-open {
   font-weight: 800;
 }
 
-.bridgeon-signin-head span {
+.trendypicker-signin-head span {
   color: #6d657c;
   font-size: 15px;
   line-height: 1.45;
   font-weight: 500;
 }
 
-.bridgeon-signin-form {
+.trendypicker-signin-form {
   display: grid;
   gap: 12px;
 }
 
-.bridgeon-signin-field {
+.trendypicker-signin-field {
   display: grid;
   gap: 8px;
 }
 
-.bridgeon-signin-field label {
+.trendypicker-signin-field label {
   color: #211b2c;
   font-size: 14px;
   font-weight: 700;
 }
 
-.bridgeon-signin-field input {
+.trendypicker-signin-field input {
   width: 100%;
   min-height: 48px;
   padding: 0 16px;
@@ -813,23 +813,23 @@ body.is-bridgeon-signin-open {
   font-weight: 500;
 }
 
-.bridgeon-signin-field input::placeholder {
+.trendypicker-signin-field input::placeholder {
   color: #aca4bb;
 }
 
-.bridgeon-signin-field input:focus {
+.trendypicker-signin-field input:focus {
   outline: 2px solid rgba(123, 63, 228, 0.18);
   border-color: var(--purple, #7b3fe4);
 }
 
-.bridgeon-signin-row {
+.trendypicker-signin-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
 }
 
-.bridgeon-signin-remember {
+.trendypicker-signin-remember {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -838,19 +838,19 @@ body.is-bridgeon-signin-open {
   font-weight: 600;
 }
 
-.bridgeon-signin-remember input {
+.trendypicker-signin-remember input {
   width: 16px;
   height: 16px;
   accent-color: var(--purple, #7b3fe4);
 }
 
-.bridgeon-signin-forgot {
+.trendypicker-signin-forgot {
   color: var(--purple, #7b3fe4);
   font-size: 13px;
   font-weight: 700;
 }
 
-.bridgeon-signin-submit {
+.trendypicker-signin-submit {
   min-height: 50px;
   margin-top: 4px;
   border: 0;
@@ -862,12 +862,12 @@ body.is-bridgeon-signin-open {
   cursor: pointer;
 }
 
-.bridgeon-signin-submit:hover,
-.bridgeon-signin-submit:focus-visible {
+.trendypicker-signin-submit:hover,
+.trendypicker-signin-submit:focus-visible {
   background: #31136c;
 }
 
-.bridgeon-signin-foot {
+.trendypicker-signin-foot {
   margin: 0;
   color: #6d657c;
   font-size: 14px;
@@ -875,12 +875,12 @@ body.is-bridgeon-signin-open {
   text-align: center;
 }
 
-.bridgeon-signin-foot a {
+.trendypicker-signin-foot a {
   color: var(--purple, #7b3fe4);
   font-weight: 700;
 }
 
-.bridgeon-signin-message {
+.trendypicker-signin-message {
   min-height: 18px;
   margin: -6px 0 0;
   color: #d14343;
@@ -888,17 +888,17 @@ body.is-bridgeon-signin-open {
   font-weight: 600;
 }
 
-.bridgeon-signin-message.is-success {
+.trendypicker-signin-message.is-success {
   color: #2f7a45;
 }
 
 @media (max-width: 760px) {
-  .bridgeon-signin-modal {
+  .trendypicker-signin-modal {
     width: min(100%, calc(100vw - 32px));
     padding: 28px 22px 20px;
   }
 
-  .bridgeon-signin-head h2 {
+  .trendypicker-signin-head h2 {
     font-size: 24px;
   }
 }

@@ -373,8 +373,8 @@
         "Brand";
       return {
         name: fallbackName,
-        tagline: "Discover standout picks from this BridgeOn brand.",
-        intro: `${fallbackName} brings curated Korean beauty and lifestyle favorites to BridgeOn. Explore signature formulas, category picks, and bestsellers selected for everyday routines.`,
+        tagline: "Discover standout picks from this TrendyPicker brand.",
+        intro: `${fallbackName} brings curated Korean beauty and lifestyle favorites to TrendyPicker. Explore signature formulas, category picks, and bestsellers selected for everyday routines.`,
         tone: "cream",
       };
     })();
@@ -490,7 +490,7 @@
     if (countNode) countNode.textContent = `(${countLabel})`;
     if (countMobileNode) countMobileNode.textContent = `${countLabel} Items`;
 
-    window.BridgeOn?.wishlist?.syncButtons?.(gridRoot);
+    window.TrendyPicker?.wishlist?.syncButtons?.(gridRoot);
   };
 
   const renderTabs = () => {
@@ -519,7 +519,7 @@
   if (breadcrumbNode) breadcrumbNode.textContent = profile.name;
   if (heroMedia) heroMedia.dataset.tone = profile.tone;
   if (aboutImage) aboutImage.dataset.tone = profile.tone;
-  document.title = `${profile.name} | BridgeOn`;
+  document.title = `${profile.name} | TrendyPicker`;
 
   renderTabs();
   renderProducts();

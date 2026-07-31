@@ -60,8 +60,8 @@
   const openMagazineDetail = (card) => {
     if (!card) return;
     const href = getMagazineDetailHref(card);
-    if (window.BridgeOn?.navigateWithPageTransition) {
-      window.BridgeOn.navigateWithPageTransition(href);
+    if (window.TrendyPicker?.navigateWithPageTransition) {
+      window.TrendyPicker.navigateWithPageTransition(href);
       return;
     }
     window.location.href = href;

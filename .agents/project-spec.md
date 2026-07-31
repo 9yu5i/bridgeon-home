@@ -1,8 +1,8 @@
-# BridgeOn Project Spec
+# TrendyPicker Project Spec
 
 ## Project Type
 
-BridgeOn is a static responsive ecommerce frontend prototype.
+TrendyPicker is a static responsive ecommerce frontend prototype.
 
 The current implementation focuses on visual fidelity and interaction behavior across:
 

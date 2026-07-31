@@ -1,6 +1,6 @@
 (() => {
-  const getCallingCode = window.BridgeOn.profile.getCallingCode;
-  const selectApis = window.BridgeOn.myPage.selectApis;
+  const getCallingCode = window.TrendyPicker.profile.getCallingCode;
+  const selectApis = window.TrendyPicker.myPage.selectApis;
   const addressDialog = document.getElementById("profile-address-dialog");
   const addressForm = addressDialog?.querySelector("[data-profile-address-form]");
   const addressSearchInput = addressForm?.querySelector("[data-profile-address-search]");

@@ -2,7 +2,7 @@
   const cartPage = document.querySelector(".cart-page");
   if (!cartPage) return;
 
-  const cartApi = window.BridgeOn?.cart;
+  const cartApi = window.TrendyPicker?.cart;
   const itemsContainer = document.querySelector("[data-cart-items]");
   const emptyMessage = document.querySelector("[data-cart-empty]");
   const selectAll = document.querySelector("[data-cart-select-all]");
@@ -562,7 +562,7 @@
       const current = itemId ? cartApi.getItems().find((cartItem) => cartItem.id === itemId) : null;
       if (!current || !itemNode || itemNode.classList.contains("is-moving-to-wishlist")) return;
 
-      const wishlistApi = window.BridgeOn?.wishlist;
+      const wishlistApi = window.TrendyPicker?.wishlist;
       const wishlistPayload = {
         brand: current.brand,
         name: current.name,
@@ -735,9 +735,9 @@
     }
   });
 
-  window.addEventListener("bridgeon:cartchange", renderCart);
+  window.addEventListener("trendypicker:cartchange", renderCart);
   window.addEventListener("storage", (event) => {
-    if (event.key === "bridgeon-cart-items") renderCart();
+    if (event.key === "trendypicker-cart-items") renderCart();
   });
 
   const SHIPPING_COUNTRIES = [
@@ -873,7 +873,7 @@
   const countrySearch = document.querySelector("[data-cart-country-search]");
   const shipCountryLabel = document.querySelector("[data-cart-ship-country]");
   const shipChangeButton = document.querySelector("[data-cart-ship-change]");
-  const STORAGE_KEY = "bridgeon-cart-ship-country";
+  const STORAGE_KEY = "trendypicker-cart-ship-country";
 
   let selectedCountry = localStorage.getItem(STORAGE_KEY) || "United States";
 

@@ -1,4 +1,4 @@
-# BridgeOn Firstmall My Page Work Skin
+# TrendyPicker Firstmall My Page Work Skin
 
 This folder is an upload-ready **work-skin package**, not a replacement for the downloaded
 Firstmall original.
@@ -8,14 +8,18 @@ Firstmall original.
 ```text
 firstmall-workskin/
 ├─ css/
-│  └─ bridgeon-mypage.css
+│  ├─ trendypicker-mypage.css
+│  └─ trendypicker-profile.css
 ├─ images/
 │  └─ mypage/
 │     └─ *.png
 ├─ js/
-│  └─ bridgeon-mypage.js
+│  ├─ trendypicker-mypage.js
+│  ├─ trendypicker-profile.js
+│  └─ trendypicker-profile-birthday.js
 └─ mypage/
-   └─ dashboard.html
+   ├─ dashboard.html
+   └─ myinfo.html
 ```
 
 ## Upload targets
@@ -23,10 +27,14 @@ firstmall-workskin/
 Upload each file to the matching path inside a **copied/test skin**:
 
 ```text
-[test skin]/css/bridgeon-mypage.css
+[test skin]/css/trendypicker-mypage.css
+[test skin]/css/trendypicker-profile.css
 [test skin]/images/mypage/*.png
-[test skin]/js/bridgeon-mypage.js
+[test skin]/js/trendypicker-mypage.js
+[test skin]/js/trendypicker-profile.js
+[test skin]/js/trendypicker-profile-birthday.js
 [test skin]/mypage/dashboard.html
+[test skin]/mypage/myinfo.html
 ```
 
 Do not upload to the active production skin first.
@@ -38,7 +46,7 @@ Do not upload to the active production skin first.
 - `{=number_format(showMypageTop('emoney'))}`: the current balance shown as Points by this
   skin's existing `/mypage/emoney` account page
 - The coupon stat keeps `{=number_format(member.coupon_count)}` as a server fallback, then
-  `js/bridgeon-mypage.js` reads the signed-in account's owned-coupon count from `/mypage/coupon?tab=1`.
+  `js/trendypicker-mypage.js` reads the signed-in account's owned-coupon count from `/mypage/coupon?tab=1`.
 - `{wishlist_count}` and `{wishlist_list}`: wishlist count and products
 - `{orders}`: actual recent order collection
 - `{recently_viewed_list}`: actual recently viewed products
@@ -48,23 +56,47 @@ The live screenshot confirmed that `/mypage/dashboard` is the active dashboard r
 member, wishlist, recently viewed, and shortform variables are populated. The previous custom
 `order_summary.*` values did not match the signed-in account and are not used. The order card now
 uses Firstmall's real `{orders}` collection and shows an empty state when that collection is empty.
-For safety, this package changes only the dashboard template and its scoped stylesheet. The
-existing Firstmall header, footer, LNB template, `mypage/index.html`, and account subpages remain
-untouched.
+The profile connection also preserves Firstmall's existing `{# form_member}` include, update
+endpoint, validation, phone verification, SNS account handling, and member-icon upload handler.
+It changes the existing `mypage/myinfo.html` markup only where a TrendyPicker page shell and cards are
+needed, then applies the design through the separate `css/trendypicker-profile.css` file. Prototype
+payment cards, sample addresses, and sample member values are intentionally excluded.
 
 ## Responsive dashboard behavior
 
 - Desktop above 1120px keeps the Firstmall LNB, compact invite card, wishlist, recently viewed,
   and Real Trend dashboard cards.
 - Tablet and mobile at 1120px and below replace the desktop LNB and product previews with My
-  Activity, Service Hub, a full-width invite card, and a logout action.
-- Mobile at 720px and below stacks the profile progress and account stats and changes Service Hub
+  Activity, Service Hub (including Log Out), and a full-width invite card.
+- Mobile at 760px and below stacks the profile progress and account stats and changes Service Hub
   to two columns.
-- The desktop newsletter uses `js/bridgeon-mypage.js` to apply the same intersection-based soft
-  reveal timing as the static BridgeOn prototype.
-- Wishlist and saved-post counts use Firstmall data. The dashboard does not expose a verified
-  member review-count variable, so the mobile My Reviews card uses a `View` action instead of a
-  fabricated number.
+- The Service Hub Log Out item opens a confirmation modal; its confirm button uses Firstmall's
+  `/login_process/logout` route, while Cancel, the close button, the backdrop, and Escape close it.
+- The profile card starts with a plain `#fff8ff` avatar; no sample face, icon, or sample image
+  source is rendered. Edit Profile opens the dashboard photo modal instead of leaving for
+  `/mypage/myinfo`; Save submits
+  `membericonFile` to Firstmall's existing `../member_process/membericonsave` handler through
+  `actionFrame`, then displays the uploaded image returned by Firstmall.
+- `js/trendypicker-mypage.js` starts the dashboard's soft entrance sequence as soon as the page is
+  rendered; it does not wait for individual cards to enter the viewport.
+- Wishlist and saved-post counts use Firstmall data. The mobile My Reviews count is read from the
+  member's `/mypage/mygdreview_catalog` summary after the dashboard loads.
+- Append `?trendypicker_order_preview=1` to `/mypage/dashboard` to display the QA-only sample order
+  card. Without that exact query value, the dashboard continues to show only the real `{orders}`
+  collection or its empty state.
+- Dashboard order progress maps Firstmall's order step to four customer-facing stages: Payment
+  Pending/Confirmed, Preparing, Shipped, and Delivered. The current stage and completed connector
+  line are synchronized from each order's actual `step` value.
+- Track Order is available after shipping starts when Firstmall supplies a tracking number. It
+  opens the TrendyPicker tracking dialog first; View Tracking Detail then opens UPS tracking for
+  `quick` shipments or submits the actual number to Korea Post EMS for `delivery` shipments.
+- The tracking dialog keeps the prototype's order, product, progress, carrier, tracking-number,
+  estimated-arrival, and shipping-address information structure. It reads the real shipping
+  address from `/mypage/order_view?no=...`; fields Firstmall does not provide, such as a standard
+  estimated-arrival date, display `Not provided` instead of sample data.
+- Inside the tracking dialog, Firstmall's shipping steps are grouped into Order Placed, Shipped,
+  Out for Delivery, and Delivered. Steps 50-55 map to Shipped, 60-70 map to Out for Delivery, and
+  step 75 maps to Delivered.
 
 ## Corrected routes
 
@@ -75,20 +107,97 @@ untouched.
 - Reviews: `/mypage/mygdreview_catalog`
 - Logout: `/login_process/logout`
 
+## Profile page behavior
+
+- `/mypage/myinfo` now uses the same account sidebar and responsive page spacing as the dashboard.
+- On desktop, every My Page content container starts on the dashboard card line. Wider account
+  pages keep that left edge and use any additional width only on the right, so changing one page's
+  form width cannot recenter or shift the other account pages.
+- The desktop My Page shell uses a 36px top inset. The tablet and mobile inset remains controlled
+  by the existing 1120px responsive rule and is not changed by the desktop adjustment.
+- The first profile card follows the source design's two-part structure: the actual member name,
+  grade, and uploaded member icon appear in the left identity panel. Only First Name, Last Name,
+  Country, Phone Number, Email, and Birthday are moved into the personal-information grid on the
+  right in that order. ID, password, address, gender, referral, and other enabled fields remain editable in the
+  following Account & Security card. On mobile the identity panel stacks above the form.
+- Firstmall's default member form has no standard Country field. If the active member configuration
+  supplies a Country or Nation custom field it is moved into the first card; otherwise the card
+  shows a non-editable `Not provided` value instead of saving fabricated account data.
+- The avatar edit button is always rendered instead of depending on `joinform.user_icon`. It opens
+  a dedicated `membericonFile` picker and submits through Firstmall's existing `membericonsave`
+  handler; a successful response updates the visible profile preview.
+- First Name and Last Name remove the original skin's existing-member `readonly` attribute on this
+  page, while retaining the native field names used by `myinfo_modify`.
+- Birthday uses the source design's `profile-birthday-panel`; the selected `YYYY-MM-DD` value is
+  written back to Firstmall's native `birthday` input before the member form is submitted. When
+  the editable value is cleared, the calendar opens on today's date. Its month and year controls
+  use the same `realtrend-select-menu` presentation as Country.
+- Phone Number is presented as one calling-code selector and one readable phone input. Its number
+  is synchronized back to Firstmall's original three `cellphone[]` or `phone[]` controls before
+  submission. The selected calling code is submitted separately as `country_calling_code`.
+- Email is presented as one email input and synchronized back to Firstmall's original local-part
+  and domain controls so the existing member update and validation handlers continue to work.
+- Existing personal-field values clear once when the member first focuses each input. Newly entered
+  values are not cleared on later clicks.
+- Country uses the source design's `profile-field .realtrend-select-menu`. When Firstmall supplies
+  a configured Country/Nation field, the selector updates that native field. The generated fallback
+  selector can display and submit `country`, but persistent storage still requires a matching
+  member field to be configured in Firstmall.
+- The actual Firstmall member form is still rendered by `{# form_member}` and submits to
+  `../member_process/myinfo_modify`; field visibility and required rules therefore remain controlled
+  by Firstmall administration settings.
+- The Login & Security card moves Firstmall's actual `old_password` and `new_password` controls
+  into the source design. Confirm Password is a client-side equality check; the existing
+  `myinfo_modify` handler remains responsible for changing the password.
+- The Default Shipping Address card reads the signed-in member's real default entry from
+  `/mypage/delivery_address?tab=1`. Address creation, editing, deletion, and default selection stay
+  on Firstmall's Address Book page instead of duplicating its private handlers.
+- Preferences uses the actual `mailing` and `sms` checkboxes supplied by `{# form_member}`.
+  Transactional order updates remain always on because Firstmall does not expose them as an
+  optional member preference. The shared Save Changes button submits these values through
+  `myinfo_modify`.
+- The downloaded skin contains no saved-card or PayPal account-management controller. Its only
+  “Card Profiles” reference is a commented menu label, so no Payment Method card is rendered and
+  no sample payment data is introduced.
+- Password, email, phone verification, marketing consent, SNS connections, and the member icon
+  continue to use the original Firstmall handlers and dialogs where those controls are available.
+- Social providers enabled in Firstmall's `joinform.use_sns` data are rendered as TrendyPicker account
+  cards. Connect proxies to Firstmall's existing Google, Wechat, Weibo, Facebook, or other enabled
+  provider control; Manage opens the original linked-account disconnection dialog. Disabled
+  providers are not fabricated.
+- `css/trendypicker-profile.css` scopes the new card, form-control, save-button, and close-account
+  styling to this page. It does not modify `common.css`, `user.css`, or the shared
+  `member/register_form.html`.
+- Desktop uses a two-column member-field layout where the generated fields allow it. Tablet and
+  mobile hide the sidebar and collapse the generated form to one column on the `#faf7fc`
+  page background.
+
 ## First test checklist
 
 1. Duplicate the current skin in Firstmall.
-2. Upload the two files to the duplicate skin.
+2. Upload the dashboard and profile HTML files, both TrendyPicker CSS files,
+   `trendypicker-mypage.js`, `trendypicker-profile.js`, `trendypicker-profile-birthday.js`, and the
+   `images/mypage` assets to their matching
+   paths in the duplicate skin.
 3. Preview the duplicate skin while signed in.
 4. Verify member name, grade, points, coupon count, and wishlist count.
 5. Verify that an account without orders shows the empty state and an account with orders shows
    its latest real order.
-6. Open an order detail, wishlist, profile, coupon, and logout link.
+6. Open Edit Profile, choose an image, save it, and reload the dashboard to verify that Firstmall
+   retained it. For a shipped order, also verify that View Tracking Detail opens the correct
+   carrier with the same tracking number.
 7. Check desktop and a mobile width around 375px.
-8. Only after these checks, decide whether to make the work skin active.
+8. Open `/mypage/myinfo`; verify every enabled member field, Save Changes, password update, phone
+   verification, SNS connection controls, member-icon upload, and Close Account.
+9. Verify that every SNS provider enabled in Firstmall shows the correct Connected/Not connected
+   state, and test both Connect and Manage with a non-production account.
+10. Confirm that validation errors stay inside the profile card and that no field is clipped at
+   desktop, tablet, or mobile widths.
+11. Only after these checks, decide whether to make the work skin active.
 
 ## Known scope
 
-This first integration covers the My Page dashboard only. Product wishlist mutation, review
-writing, profile editing forms, order cancellation/return actions, and other commerce behaviors
+This integration covers the My Page dashboard, its profile-photo upload, and the existing Firstmall
+member-information form at `/mypage/myinfo`. Product wishlist mutation, review writing, saved
+addresses/payment management, order cancellation/return actions, and other commerce behaviors
 continue to use their existing Firstmall pages.

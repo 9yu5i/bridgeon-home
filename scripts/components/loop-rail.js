@@ -333,7 +333,7 @@ const initLoopRail = ({ railId, autoLoop = true, autoStartOnLoad = false }) => {
     if (isLoopDisabled()) resetToOriginalOrder();
   });
 
-  rail.addEventListener("bridgeon:railfilterchange", () => {
+  rail.addEventListener("trendypicker:railfilterchange", () => {
     rail.querySelectorAll(".is-loop-clone").forEach((clone) => clone.remove());
     originalCards = Array.from(rail.children).filter(
       (card) => !card.classList.contains("is-loop-clone")

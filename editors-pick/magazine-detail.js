@@ -13,7 +13,7 @@
       breadcrumb: "Beauty Guide",
       title: "Better Layering For Summer: Sunscreen Routine",
       subtitle: "How editors keep a light, comfortable skincare routine while protecting glow on humid days.",
-      author: "BridgeOn Editorial",
+      author: "TrendyPicker Editorial",
       editor: "Editor Nara",
       date: "2026-07-06",
       displayDate: "Jul 6, 2026",
@@ -56,7 +56,7 @@
       breadcrumb: "Beauty",
       title: "5 Korean Sunscreens You Should Try",
       subtitle: "A practical editor list for comfortable daily SPF, from watery gels to soft matte finishes.",
-      author: "BridgeOn Beauty Team",
+      author: "TrendyPicker Beauty Team",
       editor: "Editor Nara",
       date: "2026-07-21",
       displayDate: "Jul 21, 2026",
@@ -98,7 +98,7 @@
       breadcrumb: "Editor's Cart",
       title: "What Is Worth Buying This Month? Editor's Cart",
       subtitle: "The textures, minis, and useful beauty updates our editors would actually add to cart.",
-      author: "BridgeOn Editors",
+      author: "TrendyPicker Editors",
       editor: "Editor Mila",
       date: "2026-07-08",
       displayDate: "Jul 8, 2026",
@@ -139,7 +139,7 @@
       breadcrumb: "K-Food",
       title: "Korean Summer Snacks You Need To Try",
       subtitle: "Crisp, sweet, and cooling snack picks that make hot afternoons feel easier.",
-      author: "BridgeOn Food Desk",
+      author: "TrendyPicker Food Desk",
       editor: "Editor Jules",
       date: "2026-07-05",
       displayDate: "Jul 5, 2026",
@@ -516,7 +516,7 @@
     return formatMagazineCategoryLabel(article.eyebrow) || "MAGAZINE";
   };
 
-  document.title = `${currentArticle.title} | BridgeOn Magazine`;
+  document.title = `${currentArticle.title} | TrendyPicker Magazine`;
   setText(".magazine-breadcrumb span:last-child", currentArticle.breadcrumb);
   setText(".magazine-detail-hero-copy > p", getArticleCategory(currentArticle));
   setText("#magazine-detail-title", currentArticle.title);
@@ -529,7 +529,7 @@
   }
 
   setText(".magazine-article-head p", currentArticle.author);
-  setText(".magazine-article-editor", currentArticle.editor || currentArticle.author || "BridgeOn Editor");
+  setText(".magazine-article-editor", currentArticle.editor || currentArticle.author || "TrendyPicker Editor");
 
   const dateNode = document.querySelector(".magazine-article-head time");
   if (dateNode) {

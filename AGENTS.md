@@ -1,11 +1,11 @@
-# BridgeOn Agent Notes
+# TrendyPicker Agent Notes
 
 This file is the first stop for any human or AI agent working on this project.
 Keep it current when project structure, ownership, or validation rules change.
 
 ## Project Goal
 
-BridgeOn is a static responsive ecommerce frontend prototype. The current priority is to preserve the visual result while making the codebase easier to maintain.
+TrendyPicker is a static responsive ecommerce frontend prototype. The current priority is to preserve the visual result while making the codebase easier to maintain.
 
 ## Project Context Folder
 
@@ -67,7 +67,7 @@ The active extraction plan is documented in `docs/structure-plan.md`.
 
 Current component scripts:
 
-- `script.js`: page transitions and shared BridgeOn URL helpers only.
+- `script.js`: page transitions and shared TrendyPicker URL helpers only.
 - `scripts/components/bootstrap.js`: shared presentation component loading.
 - `scripts/prototype/cart-store.js`: static-prototype cart storage and badge state; replace during Firstmall integration.
 - `scripts/prototype/wishlist-store.js`: static-prototype wishlist storage and UI state; replace during Firstmall integration.
@@ -104,6 +104,8 @@ Firstmall-replaceable behavior under `scripts/prototype/`.
 
 ## Design Rules
 
+- The site and product brand is `TrendyPicker`. Do not reintroduce the legacy product name in
+  visible copy, code identifiers, storage keys, query parameters, documentation, or filenames.
 - Maintain Pretendard as the site font.
 - Use existing color tokens, especially `--purple`, before introducing new colors.
 - Avoid layout that only works at one fixed width.

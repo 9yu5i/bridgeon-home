@@ -1,6 +1,6 @@
 (() => {
   const navigateWithPageTransition =
-    window.BridgeOn?.navigateWithPageTransition ||
+    window.TrendyPicker?.navigateWithPageTransition ||
     ((href) => {
       window.location.href = href;
     });

@@ -1,6 +1,6 @@
 (() => {
-  window.BridgeOn = window.BridgeOn || {};
-  window.BridgeOn.helpTopics = {
+  window.TrendyPicker = window.TrendyPicker || {};
+  window.TrendyPicker.helpTopics = {
     notice: {
       category: "Customer Service",
       title: "Notice",
@@ -279,7 +279,7 @@
                   <span class="help-faq-category">Third Party Sign In</span>
                   <span class="help-faq-question">Can I sign in with Google or Apple?</span>
                 </summary>
-                <p>When third-party sign-in is enabled, choose the provider on the Sign in page and connect it to your BridgeOn account.</p>
+                <p>When third-party sign-in is enabled, choose the provider on the Sign in page and connect it to your TrendyPicker account.</p>
               </details>
   
               <details class="help-faq-item" data-category="Product Information" data-title="Where can I ask about ingredients or options?">
@@ -303,7 +303,7 @@
                   <span class="help-faq-category">About Payment</span>
                   <span class="help-faq-question">Is my payment information secure?</span>
                 </summary>
-                <p>Checkout uses secure payment processing. Card details are handled by the payment provider and are not stored as plain text on BridgeOn.</p>
+                <p>Checkout uses secure payment processing. Card details are handled by the payment provider and are not stored as plain text on TrendyPicker.</p>
               </details>
   
               <details class="help-faq-item" data-category="Promotions" data-title="How do coupons work?">
@@ -347,7 +347,7 @@
     qna: {
       category: "Customer Service",
       title: "Q&A",
-      summary: "Submit order, product, option, ingredient, shipping, and account questions inside BridgeOn.",
+      summary: "Submit order, product, option, ingredient, shipping, and account questions inside TrendyPicker.",
       meta: "Product and order support",
       body: `
         <section class="help-topic-panel">
@@ -395,7 +395,7 @@
     guide: {
       category: "Customer Service",
       title: "Guide",
-      summary: "Learn how membership, ordering, payment, purchase benefits, shipping, and refunds work on BridgeOn.",
+      summary: "Learn how membership, ordering, payment, purchase benefits, shipping, and refunds work on TrendyPicker.",
       meta: "Shopping guide",
       body: `
         <section class="help-topic-panel">
@@ -422,7 +422,7 @@
         </section>
         <section class="help-topic-panel">
           <h2>Additional Information</h2>
-          <p>If you have any other questions, please feel free to contact us through the <a href="./help-topic.html?topic=qna">Q&amp;A board</a> or email us at <a href="mailto:tp.svc@bridgeon.com">tp.svc@bridgeon.com</a>.</p>
+          <p>If you have any other questions, please feel free to contact us through the <a href="./help-topic.html?topic=qna">Q&amp;A board</a> or email us at <a href="mailto:tp.svc@trendypicker.com">tp.svc@trendypicker.com</a>.</p>
           <p>We will be happy to assist you with sincere and attentive support.</p>
         </section>
       `
@@ -485,9 +485,9 @@
           <ol>
             <li>Submit a request via My Account &gt; Refund</li>
             <li>Send your return package to our warehouse once approved</li>
-            <li>Provide the return tracking number and delivery receipt (Return fees to Bridge on warehouse due to seller fault will be refunded in Bridge on points.)</li>
+            <li>Provide the return tracking number and delivery receipt (Return fees to TrendyPicker warehouse due to seller fault will be refunded in TrendyPicker points.)</li>
           </ol>
-          <p>Refunds can be issued to your original payment method (full refund only) or as Bridge on points (for partial cancellations).</p>
+          <p>Refunds can be issued to your original payment method (full refund only) or as TrendyPicker points (for partial cancellations).</p>
           <p>To cancel your refund request, please contact us via email.</p>
         </section>
         <section class="help-topic-panel">
@@ -606,8 +606,8 @@
         <section class="help-topic-panel" id="terms-introduction">
           <h2>1. Introduction &amp; Definitions</h2>
           <p><strong>Effective Date:</strong> 15-MAY-2023</p>
-          <p>These Terms of Service ("Terms") govern your access to and use of our website, mobile app, and related services (collectively, the "Services") provided by Bridge on (“we,” “us,” or “our”).</p>
-          <p>By using our Services, you agree to be bound by these Terms. If you do not agree, Bridge on services will be restricted.</p>
+          <p>These Terms of Service ("Terms") govern your access to and use of our website, mobile app, and related services (collectively, the "Services") provided by TrendyPicker (“we,” “us,” or “our”).</p>
+          <p>By using our Services, you agree to be bound by these Terms. If you do not agree, TrendyPicker services will be restricted.</p>
           <h3>Definitions</h3>
           <ul>
             <li>“User,” “you,” or “your” refers to any person accessing or using the Services.</li>
@@ -628,7 +628,7 @@
   
         <section class="help-topic-panel" id="terms-services">
           <h2>3. Services Provided</h2>
-          <p>Bridge on is a multi-functional platform that provides the following services through its website and mobile application:</p>
+          <p>TrendyPicker is a multi-functional platform that provides the following services through its website and mobile application:</p>
           <h3>1) E-commerce Services</h3>
           <ul>
             <li>Online display, browsing, ordering, and purchasing of physical and digital products</li>
@@ -652,7 +652,7 @@
           </ul>
           <h3>5) Social Media Integration</h3>
           <ul>
-            <li>Access to Bridge on's official social media content via embedded feeds and direct links (Instagram, Facebook, YouTube, X, Thread etc.)</li>
+            <li>Access to TrendyPicker's official social media content via embedded feeds and direct links (Instagram, Facebook, YouTube, X, Thread etc.)</li>
             <li>Optional login and account integration through social media platforms</li>
           </ul>
           <p>We reserve the right to modify, suspend, or terminate any portion of the Services at any time, including but not limited to features, content, or availability.</p>
@@ -691,7 +691,7 @@
           <p>You may delete your account at any time by contacting customer support or using the account settings page.</p>
           <p>Please note that some information may be retained in accordance with our <a href="./help-topic.html?topic=privacy">Privacy Policy</a> and applicable laws.</p>
           <p>Inactive accounts may be deactivated or deleted after an extended period of inactivity, subject to prior notice and in accordance with applicable laws.</p>
-          <p>Your account is for personal, non-commercial use only, unless otherwise authorized in writing by Bridge on.</p>
+          <p>Your account is for personal, non-commercial use only, unless otherwise authorized in writing by TrendyPicker.</p>
         </section>
   
         <section class="help-topic-panel" id="terms-payments">
@@ -700,11 +700,11 @@
           <p>You are responsible for any customs duties, VAT, or local taxes imposed by your country’s customs authorities upon delivery.</p>
           <h3>1) Payment Methods</h3>
           <p>We accept secure payments through credit/debit cards, PayPal, and other methods displayed at checkout.</p>
-          <p>All payments are processed by certified third-party payment providers. Bridge on does not store your full credit card or payment details.</p>
+          <p>All payments are processed by certified third-party payment providers. TrendyPicker does not store your full credit card or payment details.</p>
           <h3>2) Currency and Fees</h3>
           <p>All orders are processed in USD or your selected currency.</p>
           <p>If your local currency is different, your card issuer or payment provider may apply currency conversion rates or transaction fees.</p>
-          <p>Bridge on is not responsible for these additional charges.</p>
+          <p>TrendyPicker is not responsible for these additional charges.</p>
           <h3>3) Order Confirmation</h3>
           <p>Once your payment is complete, you will receive a confirmation email.</p>
           <p>Orders will not be shipped until payment is successfully received.</p>
@@ -714,7 +714,7 @@
           <p>Please check your local customs policies before placing an order.</p>
           <h3>5) Refunds and Cancellations</h3>
           <p>Please refer to our <a href="#terms-refund">Refund Policy</a> and <a href="./help-topic.html?topic=returns">Returns &amp; Exchanges</a> page for details on returns, refunds, and cancellations.</p>
-          <p>Bridge on reserves the right to cancel orders suspected of fraud, policy violations, or pricing errors.</p>
+          <p>TrendyPicker reserves the right to cancel orders suspected of fraud, policy violations, or pricing errors.</p>
         </section>
   
         <section class="help-topic-panel" id="terms-refund">
@@ -724,15 +724,15 @@
           <h3>1. Change of Mind, Order Mistakes, or Incorrect Address</h3>
           <p>If you change your mind, made an error during ordering, or provided an incorrect shipping address, you may request a refund.</p>
           <ul>
-            <li>Customers must return the item (in part or in full) to the Bridge on warehouse.</li>
+            <li>Customers must return the item (in part or in full) to the TrendyPicker warehouse.</li>
             <li>Return shipping fees are the customer’s responsibility.</li>
-            <li>Only the product price will be refunded via Bridge on points. Initial shipping fees, including those offered as part of a free shipping promotion, are non-refundable.</li>
+            <li>Only the product price will be refunded via TrendyPicker points. Initial shipping fees, including those offered as part of a free shipping promotion, are non-refundable.</li>
           </ul>
           <h3>2. Defective, Missing, or Incorrect Items</h3>
           <p>If your item is defective, incorrectly delivered or missing in part or in full:</p>
           <ul>
             <li>Items that must be returned, send them to our warehouse and provide your return tracking number and delivery receipt.</li>
-            <li>Return shipping fees will be reimbursed in Bridge on points. (Shipping fee to Bridge on warehouse)</li>
+            <li>Return shipping fees will be reimbursed in TrendyPicker points. (Shipping fee to TrendyPicker warehouse)</li>
             <li>The item fee will be reimbursed in the original payment method.</li>
           </ul>
           <h3>3. Broken or Lost Items During Shipping</h3>
@@ -740,7 +740,7 @@
           <p>Since local deliveries are handled by local carriers, customers must actively cooperate with their investigation process.</p>
           <p>Investigations take approximately 21 business days but may vary depending on local carrier policies.</p>
           <p>If the carrier contacts customers via call or email, your prompt response is required. If no response is received, the investigation may not be processed.</p>
-          <p><strong>1) Broken Items:</strong> The item’s value will be reimbursed in Bridge on points.</p>
+          <p><strong>1) Broken Items:</strong> The item’s value will be reimbursed in TrendyPicker points.</p>
           <p><strong>2) Lost Items:</strong> The item’s value and delivery fee (only for paid shipping options) will be refunded to your original payment method.</p>
           <p><strong>Note:</strong> Free shipping is not eligible for delivery fee reimbursement.</p>
           <h3>4. Customs Inspection</h3>
@@ -790,15 +790,15 @@
           <ol>
             <li>Submit a request via My Account &gt; Refund</li>
             <li>Send your return package to our warehouse once approved</li>
-            <li>Provide the return tracking number and delivery receipt (Return fees to Bridge on warehouse due to seller fault will be refunded in Bridge on points.)</li>
+            <li>Provide the return tracking number and delivery receipt (Return fees to TrendyPicker warehouse due to seller fault will be refunded in TrendyPicker points.)</li>
           </ol>
-          <p>Refunds can be issued to your original payment method (full refund only) or as Bridge on points (for partial cancellations).</p>
+          <p>Refunds can be issued to your original payment method (full refund only) or as TrendyPicker points (for partial cancellations).</p>
           <p>To cancel your refund request, please contact us via email.</p>
         </section>
   
         <section class="help-topic-panel" id="terms-responsibilities">
           <h2>7. User Responsibilities</h2>
-          <p>By using Bridge on’s Services, you agree to use the platform in a lawful, respectful, and responsible manner.</p>
+          <p>By using TrendyPicker’s Services, you agree to use the platform in a lawful, respectful, and responsible manner.</p>
           <p>You are solely responsible for your conduct while using the Services, including any content you submit, post, or share.</p>
           <h3>1) Prohibited Activities</h3>
           <p>You agree <strong>not to engage in any of the following</strong>:</p>
@@ -819,7 +819,7 @@
           <ul>
             <li>Your contributions must be honest, original, and respectful</li>
             <li>You must not post promotional or spam content</li>
-            <li>Bridge on reserves the right to remove any content that violates our policies or is deemed inappropriate</li>
+            <li>TrendyPicker reserves the right to remove any content that violates our policies or is deemed inappropriate</li>
             <li>We reserve the right to hide, moderate, or delete any content that is false, misleading, or harmful to our community.</li>
             <li>Participation in our influencer program must follow additional terms and may be suspended for dishonest engagement or abuse.</li>
           </ul>
@@ -827,35 +827,35 @@
           <p>You must use your account solely for personal and lawful purposes.</p>
           <p>You may not share your account credentials or allow others to use your account.</p>
           <p>You agree not to attempt to reverse‑engineer, copy, or exploit any portion of the platform.</p>
-          <p>Bridge on reserves the right to investigate and take action, including suspension or termination of accounts that violate these Terms or applicable laws.</p>
+          <p>TrendyPicker reserves the right to investigate and take action, including suspension or termination of accounts that violate these Terms or applicable laws.</p>
         </section>
   
         <section class="help-topic-panel" id="terms-ip">
           <h2>8. Intellectual Property</h2>
-          <p>All content made available through Bridge on's Services — including but not limited to product images, graphics, logos, icons, text, videos, website layout, and digital materials — is the exclusive property of Bridge on or its licensors, partners, or content creators, and is protected by international copyright, trademark, and other intellectual property laws.</p>
+          <p>All content made available through TrendyPicker's Services — including but not limited to product images, graphics, logos, icons, text, videos, website layout, and digital materials — is the exclusive property of TrendyPicker or its licensors, partners, or content creators, and is protected by international copyright, trademark, and other intellectual property laws.</p>
           <p>You may not reproduce, distribute, display, publish, modify, or create derivative works from any part of the Services without our prior written consent.</p>
           <h3>1) User-Generated Content</h3>
-          <p>By submitting or posting content (such as product reviews, comments, photos, or other materials) on Bridge on, you grant us a non-exclusive, royalty-free, worldwide, perpetual license to use, display, reproduce, modify, translate, and distribute such content in connection with our Services and marketing.</p>
+          <p>By submitting or posting content (such as product reviews, comments, photos, or other materials) on TrendyPicker, you grant us a non-exclusive, royalty-free, worldwide, perpetual license to use, display, reproduce, modify, translate, and distribute such content in connection with our Services and marketing.</p>
           <p>You represent and warrant that:</p>
           <ul>
             <li>You own the rights to your submitted content or have permission to use it</li>
             <li>Your content does not infringe any third-party rights or applicable laws</li>
-            <li>You grant Bridge on the right to use it without liability or obligation</li>
+            <li>You grant TrendyPicker the right to use it without liability or obligation</li>
           </ul>
           <p>We reserve the right to remove or restrict access to any user content that violates these Terms or applicable laws, or for any reason at our sole discretion.</p>
           <h3>2) Trademarks</h3>
-          <p>“Bridge on” and all related names, logos, product and service names, designs, and slogans are trademarks of Bridge on or its affiliates.</p>
+          <p>“TrendyPicker” and all related names, logos, product and service names, designs, and slogans are trademarks of TrendyPicker or its affiliates.</p>
           <p>You must not use such marks without our prior written permission.</p>
           <p>All other trademarks, service marks, and logos used in the Services are the property of their respective owners.</p>
           <p>Content shared from third-party platforms (e.g., Instagram, YouTube) may remain the property of those platforms or original creators.</p>
-          <p>By tagging or mentioning Bridge on, users grant us permission to repost or feature their content with proper attribution.</p>
+          <p>By tagging or mentioning TrendyPicker, users grant us permission to repost or feature their content with proper attribution.</p>
           <h3>3) Copyright Infringement – DMCA Notice (for U.S. users)</h3>
           <p>We respect the intellectual property rights of others and expect our users to do the same.</p>
           <p>If you believe that content posted on our Services infringes your copyright, you may submit a written notification under the Digital Millennium Copyright Act (DMCA) to our designated copyright agent:</p>
           <p><strong>Designated Agent:</strong></p>
           <ul>
-            <li>Bridge on</li>
-            <li>Email: <a href="mailto:tp.legal@bridgeon.com">tp.legal@bridgeon.com</a></li>
+            <li>TrendyPicker</li>
+            <li>Email: <a href="mailto:tp.legal@trendypicker.com">tp.legal@trendypicker.com</a></li>
             <li>Address: 26, Beotkkot-ro 24-gil, Geumcheon-gu, Seoul, Republic of Korea</li>
             <li>Subject line: DMCA Notice – [Your Name]</li>
           </ul>
@@ -868,7 +868,7 @@
             <li>A statement under penalty of perjury that the information is accurate and you are the copyright owner (or authorized to act on their behalf)</li>
             <li>Your physical or electronic signature</li>
           </ol>
-          <p>Bridge on may remove or disable access to the allegedly infringing content upon receipt of a valid DMCA notice.</p>
+          <p>TrendyPicker may remove or disable access to the allegedly infringing content upon receipt of a valid DMCA notice.</p>
           <p>We may also notify the user who posted the content and provide them with an opportunity to submit a counter-notice.</p>
         </section>
   
@@ -878,7 +878,7 @@
           <p>You may terminate your account and stop using the Services at any time by contacting our customer support team or using the account settings page.</p>
           <p>Please note that termination of your account does not automatically entitle you to a refund.</p>
           <p>Some data associated with your account may be retained in accordance with our <a href="./help-topic.html?topic=privacy">Privacy Policy</a> and applicable laws.</p>
-          <h3>2) By Bridge on</h3>
+          <h3>2) By TrendyPicker</h3>
           <p>We reserve the right to suspend or terminate your account, access, or use of the Services at our sole discretion, with or without notice, if:</p>
           <ul>
             <li>You breach these Terms or any applicable laws</li>
@@ -900,7 +900,7 @@
         <section class="help-topic-panel" id="terms-liability">
           <h2>10. Disclaimers and Limitation of Liability</h2>
           <h3>1) Service Disclaimer</h3>
-          <p>Bridge on provides its Services on an “as is” and “as available” basis.</p>
+          <p>TrendyPicker provides its Services on an “as is” and “as available” basis.</p>
           <p>We make no warranties, express or implied, regarding the accuracy, completeness, reliability, availability, or suitability of the Services, including product listings, content, and third-party links.</p>
           <p>We do not guarantee that:</p>
           <ul>
@@ -913,7 +913,7 @@
           <p>We are not responsible for the content, accuracy, or availability of external websites, social media platforms, or user-submitted content linked or displayed on our Services.</p>
           <p>Any reliance on such content is at your own discretion.</p>
           <h3>3) Limitation of Liability</h3>
-          <p>To the fullest extent permitted by law, Bridge on and its affiliates, partners, and employees shall not be liable for any:</p>
+          <p>To the fullest extent permitted by law, TrendyPicker and its affiliates, partners, and employees shall not be liable for any:</p>
           <ul>
             <li>Indirect, incidental, special, or consequential damages</li>
             <li>Loss of profits, data, goodwill, or other intangible losses</li>
@@ -934,9 +934,9 @@
           <p>If you reside in a jurisdiction that does not recognize such a choice of law or forum (e.g., certain EU countries), you may have additional legal rights under your local consumer protection laws.</p>
           <h3>2) Good Faith Resolution</h3>
           <p>Before initiating formal legal proceedings, we encourage you to contact our customer support team to attempt to resolve the issue amicably.</p>
-          <p>You can reach us at <a href="mailto:tp.svc@bridgeon.com">tp.svc@bridgeon.com</a>.</p>
+          <p>You can reach us at <a href="mailto:tp.svc@trendypicker.com">tp.svc@trendypicker.com</a>.</p>
           <h3>3) Class Action Waiver (for U.S. residents)</h3>
-          <p>To the extent permitted by applicable law, you agree that any disputes with Bridge on will be resolved on an individual basis and not as part of a class or representative action.</p>
+          <p>To the extent permitted by applicable law, you agree that any disputes with TrendyPicker will be resolved on an individual basis and not as part of a class or representative action.</p>
           <h3>4) Geographic Availability &amp; Import Responsibility</h3>
           <p>Our Services and products may not be available in all countries or regions.</p>
           <p>Availability depends on a variety of factors, including local laws, shipping restrictions, and customs policies.</p>
@@ -957,9 +957,9 @@
         <section class="help-topic-panel" id="terms-contact">
           <h2>Contact Information</h2>
           <p>If you have any questions, concerns, or requests regarding these Terms of Use or our Services, please contact us:</p>
-          <p><strong>Bridge on</strong></p>
+          <p><strong>TrendyPicker</strong></p>
           <ul>
-            <li>Email: <a href="mailto:tp.svc@bridgeon.com">tp.svc@bridgeon.com</a></li>
+            <li>Email: <a href="mailto:tp.svc@trendypicker.com">tp.svc@trendypicker.com</a></li>
             <li>Phone: <a href="tel:+19497347391">+1-949-734-7391</a></li>
             <li>Address: 26, Beotkkot-ro 24-gil, Geumcheon-gu, Seoul, Republic of Korea</li>
             <li>Business Hours: Monday to Friday, 10:00 AM – 6:00 PM (KST)</li>
@@ -972,7 +972,7 @@
     privacy: {
       category: "Policies",
       title: "Privacy & Cookie Policy",
-      summary: "How Bridge on collects, uses, shares, and protects personal information, and how cookies and privacy rights work under GDPR, CCPA, and PIPA.",
+      summary: "How TrendyPicker collects, uses, shares, and protects personal information, and how cookies and privacy rights work under GDPR, CCPA, and PIPA.",
       meta: "Last updated 17-JUN-2025",
       body: `
         <section class="help-topic-panel" id="privacy-collect">
@@ -993,7 +993,7 @@
   
           <h3>B. Information We Collect Automatically</h3>
           <p>When you visit our website or use our services, we automatically collect:</p>
-          <p>Bridge on receives and stores certain types of information when customers interact with us. Our purpose is to ensure the proper functionality of the website, analyze website usage, and support website analytics and marketing campaigns. Some examples include:</p>
+          <p>TrendyPicker receives and stores certain types of information when customers interact with us. Our purpose is to ensure the proper functionality of the website, analyze website usage, and support website analytics and marketing campaigns. Some examples include:</p>
   
           <h3>Device Information</h3>
           <p>We may collect additional technical information, including your IP address, device operating system, browser type, and unique device identifiers (such as UDID and serial number). We may also collect mobile network information, including carrier details and phone number, referral website addresses (if applicable), and your navigation path through our website and mobile app. We use this information to improve our products and services, administer our website and mobile app, and diagnose technical issues. Additionally, your IP address may be used to gather broad demographic insights that do not personally identify you.</p>
@@ -1052,8 +1052,8 @@
           <p>If you are a California resident, you have the right to opt out of the sale or sharing of your personal information for targeted advertising. To exercise this right, please contact us as described in the <a href="#privacy-contact">How to Contact Us</a> section.</p>
   
           <h3>5) Sharing Personal Information</h3>
-          <p>Except as described in this privacy policy, Bridge on will not share your personal information with third parties unless you have consented to the disclosure or under the following limited circumstances.</p>
-          <p>We do not sell personal information as defined under the California Consumer Privacy Act (CCPA). However, we may share information with service providers for operational and marketing purposes. California residents may opt out of such sharing by contacting us at <a href="mailto:tp.legal@bridgeon.com">tp.legal@bridgeon.com</a>.</p>
+          <p>Except as described in this privacy policy, TrendyPicker will not share your personal information with third parties unless you have consented to the disclosure or under the following limited circumstances.</p>
+          <p>We do not sell personal information as defined under the California Consumer Privacy Act (CCPA). However, we may share information with service providers for operational and marketing purposes. California residents may opt out of such sharing by contacting us at <a href="mailto:tp.legal@trendypicker.com">tp.legal@trendypicker.com</a>.</p>
           <p>All service providers are contractually obligated to process personal information only in accordance with our instructions and to implement appropriate security measures.</p>
   
           <h3>6) Within Our Corporate Group</h3>
@@ -1071,16 +1071,16 @@
           <p>These vendors are contractually restricted from using your data beyond the agreed scope.</p>
           <p>Examples are shipping vendors, billing and refund vendors, payment card processors, promoters and administrators of sweepstakes, contests, giveaways and promotions, and companies that help us improve our product and service offerings and our websites.</p>
           <p>These companies may need information about you in order to perform their functions. These companies are not authorised to use the information we share with them for any other purpose.</p>
-          <p>Bridge on and certain third-party service providers may share tracking-related information, such as your IP address. Additionally, Bridge on may provide order-related information to referral websites (and their referral networks) solely for the purpose of calculating commissions.</p>
+          <p>TrendyPicker and certain third-party service providers may share tracking-related information, such as your IP address. Additionally, TrendyPicker may provide order-related information to referral websites (and their referral networks) solely for the purpose of calculating commissions.</p>
   
           <h3>9) Aggregate or De-identified Data</h3>
           <p>We may share anonymized or aggregated data that does not identify any individual.</p>
-          <p>Bridge on may provide aggregate statistics about our customers, sales, traffic patterns, and related website information to third parties, but these statistics will not include any personally identifying information.</p>
+          <p>TrendyPicker may provide aggregate statistics about our customers, sales, traffic patterns, and related website information to third parties, but these statistics will not include any personally identifying information.</p>
   
           <h3>10) Third-party Links and Plugins</h3>
-          <p>Our website may include links, login interfaces, or embedded content from third-party websites and platforms (collectively referred to as "Links"). These may include plugins or framed content that visually appears within the Bridge on site but is hosted by external services.</p>
+          <p>Our website may include links, login interfaces, or embedded content from third-party websites and platforms (collectively referred to as "Links"). These may include plugins or framed content that visually appears within the TrendyPicker site but is hosted by external services.</p>
           <p>When you interact with these Links — such as by clicking, logging in, or submitting information — the third parties may receive information about you. This could include your profile information, privacy settings, or usage data, depending on your interaction and account settings with that service.</p>
-          <p>Bridge on may also gain limited access to public information from your third-party accounts when you engage with certain embedded features.</p>
+          <p>TrendyPicker may also gain limited access to public information from your third-party accounts when you engage with certain embedded features.</p>
           <p>We are not responsible for the privacy practices, content, or data handling of these third-party services.</p>
           <p>We strongly recommend reviewing their privacy policies before sharing any personal information.</p>
   
@@ -1092,7 +1092,7 @@
           <h2>3. Legal Basis for Processing</h2>
   
           <h3>1) Under the GDPR</h3>
-          <p>Bridge on processes personal data legally, fairly, and transparently in accordance with the GDPR. Our processing is based on one or more of the following legal bases:</p>
+          <p>TrendyPicker processes personal data legally, fairly, and transparently in accordance with the GDPR. Our processing is based on one or more of the following legal bases:</p>
           <ul>
             <li><strong>Performance of a Contract (Art. 6(1)(b))</strong> – for order processing, customer support, and account management</li>
             <li><strong>Legal Obligation (Art. 6(1)(c))</strong> – to comply with tax, accounting, or other regulatory requirements</li>
@@ -1103,7 +1103,7 @@
           <p>We also follow the principles of purpose limitation and data minimization: we only collect what is necessary for specified, legitimate purposes. (See: <a href="#privacy-collect">Collect Personal Information</a> and <a href="#privacy-use">Use of Personal Information</a>)</p>
   
           <h3>2) Under the CCPA</h3>
-          <p>Bridge on processes personal information in line with the transparency and disclosure obligations under the CCPA. We do not sell personal information as defined under the CCPA. California residents have the right to:</p>
+          <p>TrendyPicker processes personal information in line with the transparency and disclosure obligations under the CCPA. We do not sell personal information as defined under the CCPA. California residents have the right to:</p>
           <ul>
             <li>Know what personal data is collected</li>
             <li>Request access to their data</li>
@@ -1114,8 +1114,8 @@
   
           <h3>3) Data Security</h3>
           <p>When you place orders or access your account, your information is transmitted over a secure server using Secure Socket Layer (SSL) encryption. We implement appropriate technical and organizational measures to protect your personal information.</p>
-          <p><strong>Note:</strong> Bridge on cannot guarantee the security of data transmitted over the internet. We are not responsible for unauthorized access gained through illegal means such as hacking.</p>
-          <p>If you receive a suspicious email requesting your personal information, do not respond. Bridge on will never ask for your password, credit card details, or other sensitive information via email.</p>
+          <p><strong>Note:</strong> TrendyPicker cannot guarantee the security of data transmitted over the internet. We are not responsible for unauthorized access gained through illegal means such as hacking.</p>
+          <p>If you receive a suspicious email requesting your personal information, do not respond. TrendyPicker will never ask for your password, credit card details, or other sensitive information via email.</p>
   
           <h3>4) Data Accuracy and Retention</h3>
           <p>We take all reasonable steps to ensure that the personal information we process is accurate and up to date. If you believe any information we hold about you is incorrect or incomplete, you may request that it be corrected.</p>
@@ -1156,7 +1156,7 @@
           <h3>How to Exercise Your Rights</h3>
           <p>You can contact us anytime to exercise your rights.</p>
           <ul>
-            <li>Email: <a href="mailto:tp.legal@bridgeon.com">tp.legal@bridgeon.com</a></li>
+            <li>Email: <a href="mailto:tp.legal@trendypicker.com">tp.legal@trendypicker.com</a></li>
             <li>Phone: <a href="tel:+19497347391">+1-949-734-7391</a> (World Customer Support Center)</li>
             <li>Address: 26, Beotkkot-ro 24-gil, Geumcheon-gu, Seoul, Republic of Korea</li>
           </ul>
@@ -1183,7 +1183,7 @@
           <h3>How to Exercise Your Rights</h3>
           <p>To request access, deletion, or opt out of data sharing, please contact us:</p>
           <ul>
-            <li>Email: <a href="mailto:tp.legal@bridgeon.com">tp.legal@bridgeon.com</a></li>
+            <li>Email: <a href="mailto:tp.legal@trendypicker.com">tp.legal@trendypicker.com</a></li>
             <li>Phone: <a href="tel:+19497347391">+1-949-734-7391</a> (World Customer Support Center)</li>
             <li>Address: 26, Beotkkot-ro 24-gil, Geumcheon-gu, Seoul, Republic of Korea</li>
           </ul>
@@ -1199,8 +1199,8 @@
   
           <h3>Data Security</h3>
           <p>We take the security of your personal information seriously. When you place orders or access your account, your information is transmitted using Secure Socket Layer (SSL) encryption. We also implement appropriate technical and organizational measures to protect your data from unauthorized access, disclosure, alteration, or destruction.</p>
-          <p><strong>Note:</strong> While we take all reasonable measures, no method of transmission over the internet is 100% secure. Bridge on is not responsible for unauthorized access caused by hacking or other illegal activities.</p>
-          <p>If you receive a suspicious email requesting your personal data, do not respond. Bridge on will never ask for your password or payment information via email.</p>
+          <p><strong>Note:</strong> While we take all reasonable measures, no method of transmission over the internet is 100% secure. TrendyPicker is not responsible for unauthorized access caused by hacking or other illegal activities.</p>
+          <p>If you receive a suspicious email requesting your personal data, do not respond. TrendyPicker will never ask for your password or payment information via email.</p>
   
           <h3>Data Accuracy</h3>
           <p>We take reasonable steps to ensure that the personal data we process is accurate and up to date. You may request correction of your personal information at any time.</p>
@@ -1212,14 +1212,14 @@
   
         <section class="help-topic-panel" id="privacy-children">
           <h2>5. Children’s Privacy</h2>
-          <p>Bridge on values the safety and privacy of children. Our website is not intended for children under the age of 13, and we do not knowingly collect personal information from them.</p>
+          <p>TrendyPicker values the safety and privacy of children. Our website is not intended for children under the age of 13, and we do not knowingly collect personal information from them.</p>
           <p>If we become aware that we have collected personal data from a child under 13, we will take immediate steps to delete such information unless required by law to retain it for child protection or legal obligations.</p>
           <p>If you believe we may have collected information from a child under 13, please contact our customer support team.</p>
         </section>
   
         <section class="help-topic-panel" id="privacy-cookies">
           <h2>6. Cookies</h2>
-          <p>Bridge on uses cookies and similar technologies to enhance your browsing experience, improve site performance, and provide personalized content and advertisements.</p>
+          <p>TrendyPicker uses cookies and similar technologies to enhance your browsing experience, improve site performance, and provide personalized content and advertisements.</p>
           <p>Cookies are small text files that are stored by your browser on your device. They help us remember your preferences and provide features such as your shopping bag, saved shipping/billing information, and login details.</p>
           <p>If you are located in the European Economic Area (EEA), you will be presented with a cookie banner requesting your consent to the use of non-essential cookies (e.g., marketing or analytics cookies). You may manage your cookie preferences at any time through the cookie settings on our website.</p>
   
@@ -1251,7 +1251,7 @@
           <p>See our <a href="#privacy-security">Data Retention</a> section.</p>
   
           <h3>Phishing Warning</h3>
-          <p>“Phishing” refers to fraudulent attempts to obtain personal information by pretending to be a legitimate company. If you receive an email claiming to be from Bridge on requesting your password, credit card details, or other sensitive information, <strong>do not respond</strong>. We will never ask for such information via email.</p>
+          <p>“Phishing” refers to fraudulent attempts to obtain personal information by pretending to be a legitimate company. If you receive an email claiming to be from TrendyPicker requesting your password, credit card details, or other sensitive information, <strong>do not respond</strong>. We will never ask for such information via email.</p>
   
           <h3>Data Retention</h3>
           <p>We retain your personal information only for as long as necessary to fulfill the purposes for which it was collected. Where applicable laws require longer retention periods (e.g., for legal, regulatory, or tax reasons), we will retain the data accordingly. Once no longer needed, your information will be securely deleted or anonymized.</p>
@@ -1269,7 +1269,7 @@
         <section class="help-topic-panel" id="privacy-contact">
           <h2>How to Contact Us</h2>
           <ul>
-            <li>Email: <a href="mailto:tp.legal@bridgeon.com">tp.legal@bridgeon.com</a></li>
+            <li>Email: <a href="mailto:tp.legal@trendypicker.com">tp.legal@trendypicker.com</a></li>
             <li>Phone: <a href="tel:+19497347391">+1-949-734-7391</a> (World Customer Support Center)</li>
             <li>Address: 26, Beotkkot-ro 24-gil, Geumcheon-gu, Seoul, Republic of Korea</li>
           </ul>

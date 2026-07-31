@@ -1,10 +1,10 @@
 (() => {
 
-  const navigateWithPageTransition = window.BridgeOn?.navigateWithPageTransition || ((href) => {
+  const navigateWithPageTransition = window.TrendyPicker?.navigateWithPageTransition || ((href) => {
     window.location.href = href;
   });
   const PRODUCT_DETAIL_URL =
-    window.BridgeOn?.productDetailUrl ||
+    window.TrendyPicker?.productDetailUrl ||
     new URL("../../../product-detail/product-detail.html", document.currentScript?.src || window.location.href).href;
 
   const feed = document.getElementById("realtrend-feed");
@@ -55,9 +55,9 @@
 
   const applyProductWishState = (productCard, slide) => {
 
-    if (window.BridgeOn?.wishlist?.syncButtons) {
+    if (window.TrendyPicker?.wishlist?.syncButtons) {
 
-      window.BridgeOn.wishlist.syncButtons(productCard);
+      window.TrendyPicker.wishlist.syncButtons(productCard);
 
       return;
 
@@ -107,18 +107,18 @@
       card.querySelector(".realtrend-price strong")?.textContent?.trim() ||
       "US$22.00";
     const basePrice =
-      window.BridgeOn?.cart?.parsePrice?.(basePriceText) ||
+      window.TrendyPicker?.cart?.parsePrice?.(basePriceText) ||
       Number.parseFloat(String(basePriceText).replace(/[^\d.]/g, "")) ||
       0;
     const bundleTiers =
-      window.BridgeOn?.cart?.defaultBundleTiers ||
+      window.TrendyPicker?.cart?.defaultBundleTiers ||
       [
         { qty: 2, discount: 5 },
         { qty: 3, discount: 10 },
         { qty: 4, discount: 15 },
       ];
     const activeBundle =
-      window.BridgeOn?.cart?.getActiveBundleTier?.(bundleTiers, quantity) ||
+      window.TrendyPicker?.cart?.getActiveBundleTier?.(bundleTiers, quantity) ||
       bundleTiers.reduce((active, tier) => (quantity >= tier.qty ? tier : active), null);
     const unitPrice = activeBundle ? basePrice * (1 - activeBundle.discount / 100) : basePrice;
     const priceStrong = card.querySelector(".realtrend-price strong");
@@ -134,7 +134,7 @@
 
     if (priceStrong) {
       priceStrong.textContent =
-        window.BridgeOn?.cart?.formatPrice?.(unitPrice) || `US$${Number(unitPrice || 0).toFixed(2)}`;
+        window.TrendyPicker?.cart?.formatPrice?.(unitPrice) || `US$${Number(unitPrice || 0).toFixed(2)}`;
     }
 
     if (bundleMark) {
@@ -1010,7 +1010,7 @@
 
       document.querySelector(".realtrend-product-name")?.textContent?.trim() ||
 
-      "BridgeOn Real Trend"
+      "TrendyPicker Real Trend"
 
     );
 
@@ -1224,11 +1224,11 @@
 
         const name =
 
-          shareDialog.querySelector("[data-deal-share-name]")?.textContent || "BridgeOn Real Trend";
+          shareDialog.querySelector("[data-deal-share-name]")?.textContent || "TrendyPicker Real Trend";
 
         const url = input?.value || window.location.href;
 
-        const shareText = `Check out ${name} on BridgeOn`;
+        const shareText = `Check out ${name} on TrendyPicker`;
 
         const encodedUrl = encodeURIComponent(url);
 
@@ -1428,7 +1428,7 @@
 
   });
 
-  window.BridgeOn?.savedPosts?.syncButtons?.(document);
+  window.TrendyPicker?.savedPosts?.syncButtons?.(document);
 
 
 
@@ -1574,7 +1574,7 @@
 
       buildMenu();
 
-      window.BridgeOn?.wishlist?.syncButtons?.(productCard);
+      window.TrendyPicker?.wishlist?.syncButtons?.(productCard);
 
       closeMenu();
 
@@ -1876,7 +1876,7 @@
       "US$22.00";
     const quantity = Number(productCard?.querySelector(".realtrend-qty output")?.textContent || 1) || 1;
     const bundleTiers =
-      window.BridgeOn?.cart?.defaultBundleTiers ||
+      window.TrendyPicker?.cart?.defaultBundleTiers ||
       [
         { qty: 2, discount: 5 },
         { qty: 3, discount: 10 },
@@ -1884,7 +1884,7 @@
       ];
 
     return {
-      brand: brandEl?.textContent?.trim() || "BridgeOn",
+      brand: brandEl?.textContent?.trim() || "TrendyPicker",
       name: productNameEl?.textContent?.trim() || "Product",
       option: productSelect?.selectedOptions?.[0]?.textContent?.trim() || "",
       optionChoices: Array.from(productSelect?.options || [])
@@ -2072,7 +2072,7 @@
 
       }
 
-      window.BridgeOn?.cart?.add(getRealtrendCartPayload());
+      window.TrendyPicker?.cart?.add(getRealtrendCartPayload());
 
       showCartToast(button);
 
