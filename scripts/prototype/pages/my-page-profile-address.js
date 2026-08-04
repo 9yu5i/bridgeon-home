@@ -226,54 +226,46 @@
     const updateDefaultAddress = (selectedCard) => {
       document.querySelectorAll("[data-profile-address-card]").forEach((card) => {
         const isDefault = card === selectedCard;
-        const mark = card.querySelector("mark");
         const button = card.querySelector("[data-profile-set-default-address]");
-        if (mark) {
-          mark.textContent = "Default";
-          mark.hidden = !isDefault;
-        }
+        card.classList.toggle("is-default", isDefault);
         if (button) {
           button.textContent = isDefault ? "Default" : "Set Default";
           button.disabled = isDefault;
         }
       });
     };
-  
+
     const createAddressCard = (data) => {
       const card = document.createElement("article");
       card.className = "profile-address-card";
       card.dataset.profileAddressCard = "";
-  
+
       const info = document.createElement("div");
       info.appendChild(document.createElement("strong"));
       info.appendChild(document.createElement("p"));
       info.appendChild(document.createElement("small"));
-  
-      const mark = document.createElement("mark");
-      mark.textContent = "Default";
-      mark.hidden = true;
-  
+
       const editButton = document.createElement("button");
       editButton.type = "button";
       editButton.dataset.profileEditAddress = "";
       editButton.textContent = "Edit";
-  
+
       const defaultButton = document.createElement("button");
       defaultButton.type = "button";
       defaultButton.dataset.profileSetDefaultAddress = "";
       defaultButton.textContent = "Set Default";
-  
+
       const deleteButton = document.createElement("button");
       deleteButton.type = "button";
       deleteButton.className = "profile-address-delete";
       deleteButton.dataset.profileDeleteAddress = "";
       deleteButton.textContent = "Delete";
-  
+
       const actions = document.createElement("div");
       actions.className = "profile-address-actions";
       actions.append(editButton, defaultButton, deleteButton);
-  
-      card.append(info, mark, actions);
+
+      card.append(info, actions);
       setAddressCardContent(card, data);
       return card;
     };

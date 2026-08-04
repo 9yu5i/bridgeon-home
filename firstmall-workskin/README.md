@@ -7,37 +7,71 @@ Firstmall original.
 
 ```text
 firstmall-workskin/
+├─ app/
+│  └─ javascript/
+│     └─ js/
+│        ├─ trendypicker-mypage.js
+│        ├─ trendypicker-orders.js
+│        ├─ trendypicker-profile.js
+│        └─ trendypicker-profile-birthday.js
 ├─ css/
-│  ├─ trendypicker-mypage.css
-│  └─ trendypicker-profile.css
+│  └─ redesign/
+│     ├─ trendypicker-mypage.css
+│     ├─ trendypicker-profile.css
+│     └─ trendypicker-orders.css
 ├─ images/
 │  └─ mypage/
 │     └─ *.png
-├─ js/
-│  ├─ trendypicker-mypage.js
-│  ├─ trendypicker-profile.js
-│  └─ trendypicker-profile-birthday.js
 └─ mypage/
    ├─ dashboard.html
-   └─ myinfo.html
+   ├─ myinfo.html
+   └─ order_catalog.html
 ```
 
 ## Upload targets
 
-Upload each file to the matching path inside a **copied/test skin**:
+Upload the CSS, images, and HTML to a **copied/test skin**. Upload the JavaScript files to
+Firstmall's shared application JavaScript directory:
 
 ```text
-[test skin]/css/trendypicker-mypage.css
-[test skin]/css/trendypicker-profile.css
+[test skin]/css/redesign/trendypicker-mypage.css
+[test skin]/css/redesign/trendypicker-profile.css
+[test skin]/css/redesign/trendypicker-orders.css
 [test skin]/images/mypage/*.png
-[test skin]/js/trendypicker-mypage.js
-[test skin]/js/trendypicker-profile.js
-[test skin]/js/trendypicker-profile-birthday.js
 [test skin]/mypage/dashboard.html
 [test skin]/mypage/myinfo.html
+[test skin]/mypage/order_catalog.html
+/app/javascript/js/trendypicker-mypage.js
+/app/javascript/js/trendypicker-orders.js
+/app/javascript/js/trendypicker-profile.js
+/app/javascript/js/trendypicker-profile-birthday.js
 ```
 
 Do not upload to the active production skin first.
+
+`mypage/order_catalog.html` keeps Firstmall's real `record`, `items`, and `options` collections,
+the native date search, order detail, cancellation, refund, exchange/return inquiry, review, and
+carrier-tracking actions. `css/redesign/trendypicker-orders.css` only changes the presentation and
+responsive layout. `app/javascript/js/trendypicker-orders.js` styles the native Firstmall date
+filter, filters the rendered order cards by status, and searches order numbers and product names on
+the currently loaded result page. It also opens Order Details in a responsive modal, renders every
+item already supplied by the order catalog immediately, and reuses one cached request to the native
+order-detail page for payment and shipping metadata. The EMS helper passes the order's actual
+`custom_tracking_number`; it does not substitute a sample tracking number.
+
+For visual QA with an account that has no orders, open
+`/mypage/order_catalog?trendypicker_order_preview=1`. The query creates one isolated shipped-order
+preview in the browser; the normal `/mypage/order_catalog` route continues to show only Firstmall's
+real order collection.
+
+The order page uses one status-filter row instead of the original secondary Order History,
+Cancellations, and Returns navigation. Each rendered Firstmall order is classified from its numeric
+step and status label into All Orders, Payment Confirmed, Shipped, Delivered, and Cancel/Refund.
+When Cancel/Refund is first selected, the script reads the signed-in member's native
+`/mypage/refund_catalog` and `/mypage/return_catalog` results and merges those records into the
+current card list. Korean cancellation, refund, return, and exchange labels are included in that
+mapping. The regular cards continue to render the native `record`, `items`, and `options`
+order-history data and retain Firstmall's paging output.
 
 ## Variables preserved from the active Firstmall skin
 
@@ -46,7 +80,7 @@ Do not upload to the active production skin first.
 - `{=number_format(showMypageTop('emoney'))}`: the current balance shown as Points by this
   skin's existing `/mypage/emoney` account page
 - The coupon stat keeps `{=number_format(member.coupon_count)}` as a server fallback, then
-  `js/trendypicker-mypage.js` reads the signed-in account's owned-coupon count from `/mypage/coupon?tab=1`.
+  `app/javascript/js/trendypicker-mypage.js` reads the signed-in account's owned-coupon count from `/mypage/coupon?tab=1`.
 - `{wishlist_count}` and `{wishlist_list}`: wishlist count and products
 - `{orders}`: actual recent order collection
 - `{recently_viewed_list}`: actual recently viewed products
@@ -59,7 +93,7 @@ uses Firstmall's real `{orders}` collection and shows an empty state when that c
 The profile connection also preserves Firstmall's existing `{# form_member}` include, update
 endpoint, validation, phone verification, SNS account handling, and member-icon upload handler.
 It changes the existing `mypage/myinfo.html` markup only where a TrendyPicker page shell and cards are
-needed, then applies the design through the separate `css/trendypicker-profile.css` file. Prototype
+needed, then applies the design through the separate `css/redesign/trendypicker-profile.css` file. Prototype
 payment cards, sample addresses, and sample member values are intentionally excluded.
 
 ## Responsive dashboard behavior
@@ -77,7 +111,7 @@ payment cards, sample addresses, and sample member values are intentionally excl
   `/mypage/myinfo`; Save submits
   `membericonFile` to Firstmall's existing `../member_process/membericonsave` handler through
   `actionFrame`, then displays the uploaded image returned by Firstmall.
-- `js/trendypicker-mypage.js` starts the dashboard's soft entrance sequence as soon as the page is
+- `app/javascript/js/trendypicker-mypage.js` starts the dashboard's soft entrance sequence as soon as the page is
   rendered; it does not wait for individual cards to enter the viewport.
 - Wishlist and saved-post counts use Firstmall data. The mobile My Reviews count is read from the
   member's `/mypage/mygdreview_catalog` summary after the dashboard loads.
@@ -115,8 +149,15 @@ payment cards, sample addresses, and sample member values are intentionally excl
   form width cannot recenter or shift the other account pages.
 - The desktop My Page shell uses a 36px top inset. The tablet and mobile inset remains controlled
   by the existing 1120px responsive rule and is not changed by the desktop adjustment.
-- The first profile card follows the source design's two-part structure: the actual member name,
-  grade, and uploaded member icon appear in the left identity panel. Only First Name, Last Name,
+- Dashboard and account subpage content use the same 909px desktop content width. Account links
+  use the source design's 320ms cross-document fade transition, with a non-native fallback, and
+  respect reduced-motion preferences.
+- The purple gradient belongs to the dashboard only. Profile and orders replace it with a white
+  canvas. Their desktop headings and the shared account sidebar use the same 60px start line.
+- Dashboard and account subpage content use the same 909px desktop content width. Account links
+  use the shared 320ms page fade transition and respect reduced-motion preferences.
+- The first profile card follows the source design's two-part structure: the actual member name
+  and uploaded member icon appear in the left identity panel. Only First Name, Last Name,
   Country, Phone Number, Email, and Birthday are moved into the personal-information grid on the
   right in that order. ID, password, address, gender, referral, and other enabled fields remain editable in the
   following Account & Security card. On mobile the identity panel stacks above the form.
@@ -165,7 +206,7 @@ payment cards, sample addresses, and sample member values are intentionally excl
   cards. Connect proxies to Firstmall's existing Google, Wechat, Weibo, Facebook, or other enabled
   provider control; Manage opens the original linked-account disconnection dialog. Disabled
   providers are not fabricated.
-- `css/trendypicker-profile.css` scopes the new card, form-control, save-button, and close-account
+- `css/redesign/trendypicker-profile.css` scopes the new card, form-control, save-button, and close-account
   styling to this page. It does not modify `common.css`, `user.css`, or the shared
   `member/register_form.html`.
 - Desktop uses a two-column member-field layout where the generated fields allow it. Tablet and
@@ -175,10 +216,10 @@ payment cards, sample addresses, and sample member values are intentionally excl
 ## First test checklist
 
 1. Duplicate the current skin in Firstmall.
-2. Upload the dashboard and profile HTML files, both TrendyPicker CSS files,
-   `trendypicker-mypage.js`, `trendypicker-profile.js`, `trendypicker-profile-birthday.js`, and the
-   `images/mypage` assets to their matching
-   paths in the duplicate skin.
+2. Upload the dashboard and profile HTML files, both TrendyPicker CSS files, and the
+   `images/mypage` assets to their matching paths in the duplicate skin. Upload
+   `trendypicker-mypage.js`, `trendypicker-profile.js`, and
+   `trendypicker-profile-birthday.js` to `/app/javascript/js/`.
 3. Preview the duplicate skin while signed in.
 4. Verify member name, grade, points, coupon count, and wishlist count.
 5. Verify that an account without orders shows the empty state and an account with orders shows

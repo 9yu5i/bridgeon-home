@@ -5,15 +5,41 @@ import { fileURLToPath } from "node:url";
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const workskinRoot = resolve(root, "firstmall-workskin");
 const requiredFiles = [
-  "css/trendypicker-mypage.css",
-  "css/trendypicker-profile.css",
-  "js/trendypicker-mypage.js",
-  "js/trendypicker-profile.js",
-  "js/trendypicker-profile-birthday.js",
+  "css/redesign/trendypicker-mypage.css",
+  "css/redesign/trendypicker-profile.css",
+  "css/redesign/trendypicker-orders.css",
+  "app/javascript/js/trendypicker-mypage.js",
+  "app/javascript/js/trendypicker-orders.js",
+  "app/javascript/js/trendypicker-profile.js",
+  "app/javascript/js/trendypicker-profile-birthday.js",
   "mypage/dashboard.html",
   "mypage/myinfo.html",
+  "mypage/order_catalog.html",
   "README.md",
 ];
+
+const requiredOrdersTokens = [
+  "/data/skin/{skin}/css/redesign/trendypicker-orders.css",
+  'class="subpage_wrap bo-mypage-shell bo-orders-shell"',
+  'class="subpage_container bo-mypage bo-orders-page"',
+  '<!--{ @ record }-->',
+  '<!--{@.items}-->',
+  '<!--{@..options}-->',
+  'order_view?no={.order_seq}',
+  "viewImg(..goods_seq, 'thumbCart')",
+  "order_cancel('{.order_seq}')",
+  "order_refund('{.order_seq}')",
+  "order_qna('{.order_seq}')",
+  "{.custom_tracking_number}",
+  "orders-controls",
+  "orders-filter-tabs",
+  "data-orders-search",
+  "data-order-step",
+  "/app/javascript/js/trendypicker-mypage.js",
+  "/app/javascript/js/trendypicker-orders.js",
+];
+
+const forbiddenOrdersTokens = ["board_category2", 'class="order_tab"'];
 
 const requiredDashboardTokens = [
   "{member.name}",
@@ -81,6 +107,11 @@ const forbiddenCssTokens = [
 
 const requiredCssPatterns = [
   {
+    label: "desktop My Page keeps the purple gradient backdrop",
+    pattern:
+      /\.bo-mypage-shell::before\s*\{[^}]*height:\s*568px;[^}]*radial-gradient\([^}]*linear-gradient\(108deg,\s*#0b0326\s*0%,\s*#29106a\s*47%,\s*#ad42ea\s*100%\);/s,
+  },
+  {
     label: "profile avatar fallback uses a plain background",
     pattern:
       /\.bo-profile__avatar\s+i\s*\{[^}]*inset:\s*0;[^}]*background:\s*#fff8ff;/s,
@@ -88,17 +119,17 @@ const requiredCssPatterns = [
   {
     label: "order empty-state cancel icon",
     pattern:
-      /\.bo-order-empty\s*>\s*span\s*\{[^}]*background:\s*url\("\.\.\/images\/mypage\/cancel\.png"\)\s*center\s*\/\s*contain\s*no-repeat;/s,
+      /\.bo-order-empty\s*>\s*span\s*\{[^}]*background:\s*url\("\.\.\/\.\.\/images\/mypage\/cancel\.png"\)\s*center\s*\/\s*contain\s*no-repeat;/s,
   },
   {
     label: "saved-post mobile icon size",
     pattern:
-      /\.bo-mobile-activity__grid\s+a:nth-child\(3\)\s+\.bo-mobile-icon\s*\{[^}]*background-image:\s*url\("\.\.\/images\/mypage\/saved\.png"\);[^}]*background-size:\s*38%\s+auto;/s,
+      /\.bo-mobile-activity__grid\s+a:nth-child\(3\)\s+\.bo-mobile-icon\s*\{[^}]*background-image:\s*url\("\.\.\/\.\.\/images\/mypage\/saved\.png"\);[^}]*background-size:\s*38%\s+auto;/s,
   },
   {
     label: "mobile logout icon",
     pattern:
-      /\.bo-mobile-service__grid\s+a:nth-child\(6\)\s+\.bo-mobile-icon\s*\{[^}]*background-image:\s*url\("\.\.\/images\/mypage\/logout\.png"\);/s,
+      /\.bo-mobile-service__grid\s+a:nth-child\(6\)\s+\.bo-mobile-icon\s*\{[^}]*background-image:\s*url\("\.\.\/\.\.\/images\/mypage\/logout\.png"\);/s,
   },
   {
     label: "order timeline icon line mask",
@@ -138,16 +169,30 @@ const requiredCssPatterns = [
   {
     label: "desktop dashboard grid and profile sizing",
     pattern:
-      /\.bo-mypage-shell\s*\{[^}]*grid-template-columns:\s*clamp\(180px,\s*17vw,\s*205px\)\s+minmax\(0,\s*900px\);[^}]*padding:\s*36px\s+clamp\(20px,\s*3vw,\s*40px\)\s+86px;[\s\S]*?\.bo-profile\s*\{[^}]*min-height:\s*clamp\(208px,\s*17\.5vw,\s*232px\);/s,
+      /\.bo-mypage-shell\s*\{[^}]*--bo-account-content-width:\s*909px;[^}]*grid-template-columns:\s*clamp\(180px,\s*17vw,\s*205px\)\s+minmax\(0,\s*var\(--bo-account-content-width\)\);[^}]*padding:\s*36px\s+clamp\(20px,\s*3vw,\s*40px\)\s+86px;[\s\S]*?\.bo-profile\s*\{[^}]*min-height:\s*clamp\(208px,\s*17\.5vw,\s*232px\);/s,
   },
   {
     label: "all desktop My Page content shares the dashboard start line",
     pattern:
       /@media\s*\(min-width:\s*1121px\)\s*\{\s*\.bo-mypage-shell\s*>\s*\.subpage_container\.bo-mypage\s*\{[^}]*grid-column:\s*2;[^}]*justify-self:\s*start;/s,
   },
+  {
+    label: "all desktop My Page sidebars share one common baseline",
+    pattern:
+      /\.bo-mypage-shell\s*>\s*\.bo-account-side\s*\{[^}]*margin-top:\s*60px\s*!important;/s,
+  },
+  {
+    label: "My Page prefers native cross-document transitions",
+    pattern:
+      /@view-transition\s*\{[^}]*navigation:\s*auto;[\s\S]*?::view-transition-old\(root\)[\s\S]*?::view-transition-new\(root\)/s,
+  },
 ];
 
 const requiredJsTokens = [
+  "trendypicker-page-transition",
+  '"PageRevealEvent" in window',
+  "is-page-leaving",
+  "is-page-entering",
   "[data-mypage-avatar-open]",
   "[data-mypage-avatar-input]",
   "[data-mypage-avatar-remove]",
@@ -174,7 +219,6 @@ const requiredProfileTokens = [
   'class="subpage_container myinfo_wrap bo-mypage bo-profile-page"',
   'action="{=sslAction(\'../member_process/myinfo_modify\')}"',
   "{# form_member}",
-  "Account settings",
   "bo-profile-identity",
   "bo-profile-avatar-panel",
   "profile-avatar-edit",
@@ -186,17 +230,23 @@ const requiredProfileTokens = [
   "data-bo-password-fields",
   "Login &amp; Security",
   "Default Shipping Address",
+  "data:image/png;base64,iVBORw0KGgo",
   "/mypage/delivery_address?tab=1",
   "data-bo-default-address",
+  "profile-address-dialog",
+  "profile-address-modal",
+  "profile-address-native-frame",
+  "data-bo-address-modal-open",
+  "data-bo-address-modal-close",
   "data-bo-preferences",
   "Preferences",
   "Save Changes",
   "data-bo-profile-avatar-edit",
   "data-bo-profile-avatar-image",
   "{member.name}",
-  "{member.current_level.group_name}",
   "{user_icon_file}",
   "Connected Accounts",
+  ".key_ == 'twitter'}-->Twitter",
   "joinform.use_sns",
   "sns_joined_list",
   "sns-login-button-mbconnect-direct",
@@ -212,9 +262,9 @@ const requiredProfileTokens = [
   "membericonFile",
   "../member_process/membericonsave",
   "mypage-logout-modal",
-  "../js/trendypicker-mypage.js",
-  "../js/trendypicker-profile.js",
-  "../js/trendypicker-profile-birthday.js",
+  "/app/javascript/js/trendypicker-mypage.js",
+  "/app/javascript/js/trendypicker-profile.js",
+  "/app/javascript/js/trendypicker-profile-birthday.js",
 ];
 
 const forbiddenProfileTokens = [
@@ -231,9 +281,9 @@ const forbiddenProfileTokens = [
 
 const requiredProfileCssPatterns = [
   {
-    label: "profile page uses the neutral responsive page background",
+    label: "profile page replaces the dashboard gradient with a white canvas",
     pattern:
-      /\.bo-profile-shell\s*\{[^}]*background:\s*#faf7fc;[\s\S]*?\.bo-profile-shell::before\s*\{[^}]*background:\s*#faf7fc;/s,
+      /\.bo-profile-shell\s*\{[^}]*background:\s*#fff;[\s\S]*?\.bo-profile-shell::before\s*\{[^}]*height:\s*100%;[^}]*background:\s*#fff;/s,
   },
   {
     label: "native Firstmall member fields use a responsive grid",
@@ -256,30 +306,66 @@ const requiredProfileCssPatterns = [
       /\.bo-profile-native-fields\s+input:not\(\[type="checkbox"\]\):not\(\[type="radio"\]\):focus,[\s\S]*?box-shadow:\s*0\s+0\s+0\s+3px\s+rgba\(123,\s*45,\s*226,\s*0\.12\);/s,
   },
   {
-    label: "profile content collapses to one column on mobile",
+    label: "profile content collapses to one column on tablet and mobile",
     pattern:
-      /@media\s*\(max-width:\s*760px\)[\s\S]*?\.bo-profile-native-fields\s+\.resp_join_table\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/s,
+      /@media\s*\(max-width:\s*1120px\)[\s\S]*?\.bo-profile-native-fields\s+\.resp_join_table\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/s,
   },
   {
-    label: "wider profile content grows right from the shared dashboard start line",
+    label: "profile content uses the shared 909px account width",
     pattern:
-      /@media\s*\(min-width:\s*1121px\)\s*\{\s*\.bo-profile-page\s*\{[^}]*width:\s*calc\(100%\s*\+\s*clamp\(0px,\s*calc\(100vw\s*-\s*1220px\),\s*120px\)\);/s,
+      /\.bo-profile-page\s*\{[^}]*width:\s*min\(100%,\s*var\(--bo-account-content-width,\s*909px\)\);[^}]*max-width:\s*var\(--bo-account-content-width,\s*909px\);/s,
   },
   {
-    label: "desktop profile sidebar aligns with the profile heading",
+    label: "desktop profile selects match compact native field height",
     pattern:
-      /\.bo-profile-shell\s+\.bo-account-side\s*\{[^}]*margin-top:\s*28px;/s,
+      /@media\s*\(min-width:\s*1121px\)[\s\S]*?\.bo-profile-form\s+\.profile-field\s+\.realtrend-select-trigger\s*\{[^}]*height:\s*44px;/s,
   },
   {
-    label: "profile select trigger has no arrow and keeps its value left aligned",
+    label: "desktop profile content aligns to the shared account card baseline",
     pattern:
-      /\.profile-field\s+\.realtrend-select-wrap::after\s*\{[^}]*content:\s*none;[\s\S]*?\.profile-field\s+\.realtrend-select-trigger\s*\{[^}]*justify-content:\s*flex-start;[\s\S]*?\.profile-field\s+\.realtrend-select-value\s*\{[^}]*text-align:\s*left;/s,
+      /@media\s*\(min-width:\s*1121px\)[\s\S]*?\.bo-profile-shell\s+\.subpage_container\.bo-mypage\.bo-profile-page\s*\{[^}]*padding-top:\s*60px;/s,
+  },
+  {
+    label: "profile select trigger shows an arrow and keeps its value left aligned",
+    pattern:
+      /\.profile-field\s+\.realtrend-select-wrap::after\s*\{[^}]*content:\s*""\s*!important;[^}]*border-right:\s*1\.5px\s+solid\s+#111;[\s\S]*?\.profile-field\s+\.realtrend-select-trigger\s*\{[^}]*justify-content:\s*flex-start;[\s\S]*?\.profile-field\s+\.realtrend-select-value\s*\{[^}]*text-align:\s*left;/s,
   },
   {
     label: "profile password, address, and preference cards are styled",
     pattern:
-      /\.bo-profile-security-note\s*\{[^}]*grid-template-columns:\s*34px\s+minmax\(0,\s*1fr\)\s+auto;[\s\S]*?\.bo-profile-address__card\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s+auto\s+auto;[\s\S]*?\.bo-profile-preferences__list\s*\{[^}]*display:\s*grid;/s,
+      /\.bo-profile-security-note\s*\{[^}]*grid-template-columns:\s*34px\s+minmax\(0,\s*1fr\)\s+auto;[\s\S]*?\.bo-profile-address__card\s*\{[^}]*grid-template-columns:\s*22px\s+minmax\(0,\s*1fr\)\s+auto;[\s\S]*?\.bo-profile-preferences__list\s*\{[^}]*display:\s*grid;/s,
   },
+  {
+    label: "profile security note uses the approved lock image",
+    pattern:
+      /\.bo-profile-security-note\s*>\s*span\s*>\s*img\s*\{[^}]*display:\s*block\s*!important;[^}]*width:\s*18px\s*!important;/s,
+  },
+  {
+    label: "default address card is marked by its own background, not a separate badge",
+    pattern: /\.bo-profile-address__card\.is-default\s*\{[^}]*background:/s,
+  },
+  {
+    label: "address delete button keeps its pink default state",
+    pattern:
+      /\.bo-profile-address__actions\s+\.bo-profile-address__delete\s*\{[^}]*border-color:\s*#f0d8e3;[^}]*color:\s*#d63d75;/s,
+  },
+  {
+    label: "profile address modal follows the source responsive dialog shell",
+    pattern:
+      /\.profile-address-dialog\s*\{[^}]*place-items:\s*center;[\s\S]*?\.profile-address-modal\s*\{[^}]*width:\s*min\(680px,\s*calc\(100vw\s*-\s*48px\)\);[^}]*overflow:\s*hidden;[^}]*border-radius:\s*18px;/s,
+  },
+];
+
+const requiredOrdersJsTokens = [
+  ".bo-order-card",
+  "[data-orders-search]",
+  "[data-orders-filter]",
+  "dataset.orderStep",
+  "dataset.orderState",
+  'select[name="sc_date"]',
+  "orders-select-control realtrend-select-wrap",
+  "trendypicker_order_preview",
+  "dataset.ordersPreview",
 ];
 
 let failed = false;
@@ -293,6 +379,43 @@ for (const relativePath of requiredFiles) {
 
 const dashboardPath = resolve(workskinRoot, "mypage/dashboard.html");
 const profilePath = resolve(workskinRoot, "mypage/myinfo.html");
+const ordersPath = resolve(workskinRoot, "mypage/order_catalog.html");
+
+if (existsSync(ordersPath)) {
+  const orders = readFileSync(ordersPath, "utf8");
+
+  for (const token of requiredOrdersTokens) {
+    if (orders.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed orders token: ${token}`);
+  }
+
+  for (const token of forbiddenOrdersTokens) {
+    if (!orders.includes(token)) continue;
+    failed = true;
+    console.error(`Stale orders navigation token: ${token}`);
+  }
+
+  if (orders.includes("custom_tracking_number = 'EE123456789KR'")) {
+    failed = true;
+    console.error("Orders page must not replace the live EMS tracking number with sample data");
+  }
+}
+
+const ordersJsPath = resolve(
+  workskinRoot,
+  "app/javascript/js/trendypicker-orders.js",
+);
+
+if (existsSync(ordersJsPath)) {
+  const script = readFileSync(ordersJsPath, "utf8");
+
+  for (const token of requiredOrdersJsTokens) {
+    if (script.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed orders JS token: ${token}`);
+  }
+}
 
 if (existsSync(dashboardPath)) {
   const dashboard = readFileSync(dashboardPath, "utf8");
@@ -365,7 +488,7 @@ if (existsSync(profilePath)) {
   }
 }
 
-const cssPath = resolve(workskinRoot, "css/trendypicker-mypage.css");
+const cssPath = resolve(workskinRoot, "css/redesign/trendypicker-mypage.css");
 
 if (existsSync(cssPath)) {
   const css = readFileSync(cssPath, "utf8");
@@ -383,10 +506,15 @@ if (existsSync(cssPath)) {
   }
 }
 
-const profileCssPath = resolve(workskinRoot, "css/trendypicker-profile.css");
+const profileCssPath = resolve(workskinRoot, "css/redesign/trendypicker-profile.css");
 
 if (existsSync(profileCssPath)) {
   const css = readFileSync(profileCssPath, "utf8");
+
+  if (/\.bo-profile-shell\s+\.bo-account-side\s*\{/.test(css)) {
+    failed = true;
+    console.error("Profile CSS must not override the shared My Page sidebar position");
+  }
 
   for (const { label, pattern } of requiredProfileCssPatterns) {
     if (pattern.test(css)) continue;
@@ -395,7 +523,30 @@ if (existsSync(profileCssPath)) {
   }
 }
 
-const profileJsPath = resolve(workskinRoot, "js/trendypicker-profile.js");
+const ordersCssPath = resolve(workskinRoot, "css/redesign/trendypicker-orders.css");
+
+if (existsSync(ordersCssPath)) {
+  const css = readFileSync(ordersCssPath, "utf8");
+
+  if (/\.bo-orders-shell\s+\.bo-account-side\s*\{/.test(css)) {
+    failed = true;
+    console.error("Orders CSS must not override the shared My Page sidebar position");
+  }
+
+  if (
+    !/@media\s*\(min-width:\s*1121px\)[\s\S]*?\.bo-orders-shell\s+\.subpage_container\.bo-orders-page\s*\{[^}]*padding-top:\s*60px;/s.test(
+      css,
+    )
+  ) {
+    failed = true;
+    console.error("Orders content must align to the shared 60px account card baseline");
+  }
+}
+
+const profileJsPath = resolve(
+  workskinRoot,
+  "app/javascript/js/trendypicker-profile.js",
+);
 
 if (existsSync(profileJsPath)) {
   const script = readFileSync(profileJsPath, "utf8");
@@ -405,6 +556,7 @@ if (existsSync(profileJsPath)) {
     "[data-bo-personal-fields] .resp_join_table",
     "[data-bo-password-fields] .resp_join_table",
     "movePersonalField(",
+    "syncProfileName();",
     '"First Name"',
     '"Last Name"',
     '"Phone Number"',
@@ -433,6 +585,34 @@ if (existsSync(profileJsPath)) {
     'input[name="sms"]',
     'fetch("/mypage/delivery_address?tab=1"',
     "hydrateDefaultAddress",
+    "launchNativeAddressEditor",
+    "nativeAddressModalStyles",
+    "simplifyNativeAddressForm",
+    "bo-profile-address__default-radio",
+    "setDefaultAddress",
+    'nativeModal.dataset.addressSubmitIntent = "save"',
+    'nativeModal.dataset.addressSubmitIntent = "default"',
+    'const isSilentDefaultUpdate = pendingAddressOperation === "set-default"',
+    "defaultInput.checked = shouldSetDefault",
+    'defaultInput.removeAttribute("checked")',
+    'classList.add("is-default-updating")',
+    'classList.contains("is-default-updating")',
+    'pendingAddressOperation = "set-default"',
+    "trendypicker-address-footer",
+    "defaultButton.dataset.trendypickerSubmitBound",
+    "if (!validateNativeAddressForm(nativeModal)) return",
+    "defaultInput.checked = true",
+    "addressFrameNeedsReload",
+    "completeAddressSave",
+    "hideAddressModal",
+    "trendypicker_reload=",
+    'setLabel("address_description", "Address Name")',
+    'setLabel("recipient_user_first_name", "Recipient First Name")',
+    'setLabel("international_country_input", "Country / Region")',
+    'setLabel("international_postcode", "ZIP / Postal Code")',
+    "/^global$/i",
+    'frameDocument.querySelector(".addAddress")',
+    'frameDocument.querySelectorAll(".updateaddress")',
     "profileImageForm.submit()",
     'document.getElementById("membericonUpdate")?.click()',
     "window.membericonDisplay",
@@ -452,7 +632,7 @@ if (existsSync(profileJsPath)) {
 
 const profileBirthdayJsPath = resolve(
   workskinRoot,
-  "js/trendypicker-profile-birthday.js",
+  "app/javascript/js/trendypicker-profile-birthday.js",
 );
 
 if (existsSync(profileBirthdayJsPath)) {
@@ -476,7 +656,7 @@ if (existsSync(profileBirthdayJsPath)) {
   }
 }
 
-const jsPath = resolve(workskinRoot, "js/trendypicker-mypage.js");
+const jsPath = resolve(workskinRoot, "app/javascript/js/trendypicker-mypage.js");
 
 if (existsSync(jsPath)) {
   const script = readFileSync(jsPath, "utf8");

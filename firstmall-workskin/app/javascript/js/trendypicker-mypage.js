@@ -1,4 +1,179 @@
 (() => {
+  const pageTransitionKey = "trendypicker-page-transition";
+  const scrollTopOnNavigationKey = "trendypicker-scroll-top";
+  const pageTransitionDuration = 320;
+
+  const shouldAnimatePageTransition = () =>
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const hasNativeCrossDocumentTransitions = () => "PageRevealEvent" in window;
+
+  const resolveSameOriginUrl = (href) => {
+    try {
+      const url = new URL(href, window.location.href);
+      return url.origin === window.location.origin ? url : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const isHashOnlyNavigation = (url) =>
+    url.pathname === window.location.pathname &&
+    url.search === window.location.search &&
+    Boolean(url.hash);
+
+  const markScrollTopOnNextPage = (url) => {
+    try {
+      sessionStorage.setItem(scrollTopOnNavigationKey, url.href);
+    } catch {
+      // Continue without scroll restoration when storage is unavailable.
+    }
+  };
+
+  const forceScrollToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
+
+  const consumeScrollTopOnLoad = () => {
+    let requestedUrl = "";
+
+    try {
+      requestedUrl = sessionStorage.getItem(scrollTopOnNavigationKey) || "";
+    } catch {
+      return false;
+    }
+
+    const currentUrl = new URL(window.location.href);
+    currentUrl.hash = "";
+    const targetUrl = requestedUrl ? resolveSameOriginUrl(requestedUrl) : null;
+    if (targetUrl) targetUrl.hash = "";
+
+    if (!(requestedUrl === "1" || targetUrl?.href === currentUrl.href)) return false;
+
+    try {
+      sessionStorage.removeItem(scrollTopOnNavigationKey);
+    } catch {
+      // Continue when storage is unavailable.
+    }
+
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+      window.addEventListener(
+        "pagehide",
+        () => {
+          history.scrollRestoration = "auto";
+        },
+        { once: true },
+      );
+    }
+
+    forceScrollToTop();
+    window.requestAnimationFrame(() => {
+      forceScrollToTop();
+      window.requestAnimationFrame(forceScrollToTop);
+    });
+
+    if (document.readyState === "complete") {
+      window.setTimeout(forceScrollToTop, 0);
+    } else {
+      window.addEventListener("load", forceScrollToTop, { once: true });
+    }
+
+    return true;
+  };
+
+  const navigateWithPageTransition = (href) => {
+    const url = resolveSameOriginUrl(href);
+    if (!url || isHashOnlyNavigation(url)) {
+      window.location.href = href;
+      return;
+    }
+
+    markScrollTopOnNextPage(url);
+
+    if (!shouldAnimatePageTransition() || hasNativeCrossDocumentTransitions()) {
+      window.location.href = url.href;
+      return;
+    }
+
+    try {
+      sessionStorage.setItem(pageTransitionKey, "1");
+    } catch {
+      window.location.href = url.href;
+      return;
+    }
+
+    document.documentElement.classList.add("is-page-leaving");
+    window.setTimeout(() => {
+      window.location.href = url.href;
+    }, pageTransitionDuration);
+  };
+
+  const isForwardPageLink = (link, event) => {
+    if (!link || link.target === "_blank" || link.hasAttribute("download")) return false;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
+
+    const href = link.getAttribute("href");
+    if (!href || href.startsWith("#") || href.startsWith("javascript:")) return false;
+    if (href.startsWith("mailto:") || href.startsWith("tel:")) return false;
+
+    const url = resolveSameOriginUrl(href);
+    return Boolean(url && !isHashOnlyNavigation(url));
+  };
+
+  const initPageTransitions = () => {
+    document.addEventListener(
+      "click",
+      (event) => {
+        const link = event.target.closest("a[href]");
+        if (!isForwardPageLink(link, event)) return;
+        markScrollTopOnNextPage(resolveSameOriginUrl(link.getAttribute("href")));
+      },
+      true,
+    );
+
+    if (!shouldAnimatePageTransition()) return;
+
+    if (!hasNativeCrossDocumentTransitions()) {
+      try {
+        if (sessionStorage.getItem(pageTransitionKey)) {
+          sessionStorage.removeItem(pageTransitionKey);
+          document.documentElement.classList.add("is-page-entering");
+          window.setTimeout(() => {
+            document.documentElement.classList.remove("is-page-entering");
+          }, pageTransitionDuration);
+        }
+      } catch {
+        // Continue without the entrance animation when storage is unavailable.
+      }
+
+      document.addEventListener("click", (event) => {
+        const link = event.target.closest("a[href]");
+        if (!isForwardPageLink(link, event) || event.defaultPrevented) return;
+
+        event.preventDefault();
+        navigateWithPageTransition(resolveSameOriginUrl(link.getAttribute("href")).href);
+      });
+    }
+
+    window.addEventListener("pageshow", (event) => {
+      if (!event.persisted) return;
+      document.documentElement.classList.remove("is-page-leaving", "is-page-entering");
+      document.body.style.opacity = "";
+    });
+  };
+
+  window.addEventListener("pageshow", () => {
+    if (consumeScrollTopOnLoad()) {
+      window.requestAnimationFrame(forceScrollToTop);
+    }
+  });
+
+  consumeScrollTopOnLoad();
+  initPageTransitions();
+
   const canFetchHtml = typeof window.fetch === "function" && typeof window.DOMParser === "function";
 
   const fetchHtmlDocument = async (url) => {

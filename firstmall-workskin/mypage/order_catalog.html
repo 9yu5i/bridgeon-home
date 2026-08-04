@@ -1,0 +1,464 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 주문/배송 내역 @@
+- 파일위치 : [스킨폴더]/mypage/order_catalog.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-orders.css?v=20260804-4" />
+
+<div class="subpage_wrap bo-mypage-shell bo-orders-shell">
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a class="on" href="/mypage/order_catalog" aria-current="page">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/main/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a href="/service/cs">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+
+	<!-- +++++ mypage contents ++++ -->
+	<main class="subpage_container bo-mypage bo-orders-page" aria-labelledby="bo-orders-title">
+		<!-- 전체 메뉴 -->
+		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
+
+		<!-- 타이틀 -->
+		<div class="title_container bo-orders-head">
+			<h2 id="bo-orders-title"><span designElement="text">Orders</span></h2>
+			<p>View your order history, delivery progress, and available actions.</p>
+		</div>
+		<div class="mypage_greeting hide">
+			전체 <span class="pointnum">{page.totalcount}</span>건
+		</div>
+
+		<form name="orderSearchForm" id="orderSearchForm" method="get" action="order_catalog">
+		<input type="hidden" name="step_type" value="{_GET.step_type}" />
+		<div class="orders-controls">
+			<label class="orders-search">
+				<span class="orders-sr-only">Search by order number or item</span>
+				<input type="search" data-orders-search placeholder="Search by order number or item" autocomplete="off" />
+				<button type="button" data-orders-search-submit aria-label="Search orders"></button>
+			</label>
+			<div class="orders-select-row" data-orders-date-control></div>
+		</div>
+		<div class="orders-filter-tabs" role="list" aria-label="Order status filters">
+			<button class="is-active" type="button" data-orders-filter="all">All Orders</button>
+			<button type="button" data-orders-filter="payment-confirmed">Payment Confirmed</button>
+			<button type="button" data-orders-filter="shipped">Shipped</button>
+			<button type="button" data-orders-filter="delivered">Delivered</button>
+			<button type="button" data-orders-filter="cancel-refund">Cancel/Refund</button>
+		</div>
+		<ul class="myorder_sort">
+			<li class="list3">
+				<span class="td">
+					<select name="sc_date">
+					<!--{ ? aParams.sc_date == 0 }-->
+						<option value="0" selected>All</option>
+					<!--{ : }-->
+						<option value="0">All</option>
+					<!--{ / }-->
+					<!--{ ? aParams.sc_date == 1 }-->
+						<option value="1" selected>1 Week</option>
+					<!--{ : }-->
+						<option value="1">1 Week</option>
+					<!--{ / }-->
+					<!--{ ? aParams.sc_date == 2 }-->
+						<option value="2" selected>2 Week</option>
+					<!--{ : }-->
+						<option value="2">2 Week</option>
+					<!--{ / }-->
+					<!--{ ? aParams.sc_date == 3 }-->
+						<option value="3" selected>3 Week</option>
+					<!--{ : }-->
+						<option value="3">3 Week</option>
+					<!--{ / }-->
+					<!--{ ? aParams.sc_date == 4 }-->
+						<option value="4" selected>1 Month</option>
+					<!--{ : }-->
+						<option value="4">1 Month</option>
+					<!--{ / }-->
+					<!--{ ? aParams.sc_date == 8 }-->
+						<option value="8" selected>2 Month</option>
+					<!--{ : }-->
+						<option value="8">2 Month</option>
+					<!--{ / }-->
+					<!--{ ? aParams.sc_date == 12 }-->
+						<option value="12" selected>3 Month</option>
+					<!--{ : }-->
+						<option value="12">3 Month</option>
+					<!--{ / }-->
+					<!--{ ? aParams.sc_date == 'direct' }-->
+						<option value="direct" selected>Direct</option>
+					<!--{ : }-->
+						<option value="direct">Direct</option>
+					<!--{ / }-->						
+					</select>
+				</span>
+				<!--{ ? aParams.sc_date != 'direct' }-->
+				<span id="directArea" class="direct_area Hide">
+				<!--{ : }-->
+				<span id="directArea" class="direct_area">					
+				<!--{ / }-->
+					<input type="text" name="sc_sdate" size="10" value="{aParams.sc_sdate}" class="sc-datepicker" readonly /> ~
+					<input type="text" name="sc_edate" size="10" value="{aParams.sc_edate}" class="sc-datepicker" readonly />
+					<button type="submit" class="btn_resp size_b color2">Search</button>
+				</span>
+			</li>
+		</ul>
+		</form>
+
+		<!--{ ? page.totalcount==0 }-->
+		<div class="no_data_area2" data-orders-native-empty>
+			No records found.
+		</div>
+		<!--{ : }-->
+        <div class="order_list">
+            <ul>
+                <!--{ @ record }-->
+			    <li class="bo-order-card" data-order-step="{.step}" data-order-state="{.mstep}" data-order-payment="{.payment}" data-order-details-url="order_view?no={.order_seq}">
+                    <div class="menu">
+                        <div class="order_num">
+                            <h4><a href="order_view?no={.order_seq}">Order {.order_seq}</a></h4>
+                            <span>{=date('Y.m.d',strtotime(.regist_date))} | {.mstep}</span>
+                        </div>
+                        <div class="order_act">
+                            <span><a href="order_view?no={.order_seq}">Order Details &gt; </a></span>
+                            <!--{ ? .step == 70 || .step == 75}-->
+                                <a href="/mypage/mygdreview_write" class="btn_resp size_b color2">Write a Review</a>
+                            <!--{ : }-->
+                                <a href="javascript:void(0);" class="btn_resp size_b review_btn_disabled" title="You can only review a product after it has been delivered.">Write a Review</a>
+                            <!--{ / }-->
+                        </div>
+                    </div>
+                    <div class="shipping">
+                        <ul class="product">
+                            <!--{@.items}-->
+                            <!--{@..options}-->
+                            <li>
+                                <ul class="oc_item_info_detail">
+                                    <li class="img_link" {? ..goods_type != 'gift'}style="cursor:pointer" title="상품 상세" onclick="location.href='../goods/view?no={..goods_seq}';"{/}>
+                                        <img src="{=viewImg(..goods_seq, 'thumbCart')}" class="goods_thumb" onerror="this.src='../images/common/noimage_list.gif'" alt="" />
+                                    </li>
+                                    <li class="detail_spec">
+                                        <!--{? ..eventEnd }-->
+                                        <div class="oc_event_area">
+                                            <span class="soloEventTd{...item_option_seq}">
+                                                <img src="../images/common/icon_clock.gif" class="img_clock" alt=""> 남은시간
+                                                <span class="time_area">
+                                                    <span id="soloday{...item_option_seq}">0</span>일
+                                                    <span id="solohour{...item_option_seq}">00</span>:
+                                                    <span id="solomin{...item_option_seq}">00</span>:
+                                                    <span id="solosecond{...item_option_seq}">00</span>
+                                                </span>
+                                            </span>
+                                            <script>
+                                            $(function() {
+                                                timeInterval{...item_option_seq} = setInterval(function(){
+                                                    var time{...item_option_seq} = showClockTime('text', '{..eventEnd.year}', '{..eventEnd.month}', '{..eventEnd.day}', '{..eventEnd.hour}', '{..eventEnd.min}', '{..eventEnd.second}', 'soloday{...item_option_seq}', 'solohour{...item_option_seq}', 'solomin{...item_option_seq}', 'solosecond{...item_option_seq}', '{...item_option_seq}');
+                                                    if(time{...item_option_seq} == 0){
+                                                        clearInterval(timeInterval{...item_option_seq});
+                                                        $("..soloEventTd{...item_option_seq}").html("단독 이벤트 종료");
+                                                    }
+                                                },1000);
+                                            });
+                                            </script>
+                                        </div>
+                                        <!--{/}-->
+
+                                        {? ..goods_type == 'gift'}<img src="../images/common/icon_gift.gif" alt="사은품" vspace=3 />{/}
+                                        {? ...cancel_type == '1' }<span class="order-item-cancel-type">[청약철회불가]</span>{/}
+
+                                        {? ..r_brand_name}<div class="brand_name">{..r_brand_name}</div>{/}
+                                        <div class="goods_name">{..goods_name}</div>
+                                        <div class="goods_price">{=get_currency_price(...price,2)}</div>
+
+                                        <!--{ ? ..adult_goods == 'Y' || ..option_international_shipping_status == 'y' || ..cancel_type == '1' || ..tax == 'exempt' }-->
+                                        <div class="goods_type">
+                                            <!--{ ? ..adult_goods == 'Y' }-->
+                                            <img src="../images/common/auth_img.png" class="icon1" alt="성인" height="17" />
+                                            <!--{ / }-->
+                                            <!--{ ? ..option_international_shipping_status == 'y' }-->
+                                            <img src="../images/common/plane.png" class="icon1" alt="해외배송상품" height="16" />
+                                            <!--{ / }-->
+                                            <!--{ ? ..cancel_type == '1' }-->
+                                            <img src="../images/common/nocancellation.gif" class="icon1" alt="청약철회"  />
+                                            <!--{ / }-->
+                                            <!--{ ? ..tax == 'exempt' }-->
+                                            <img src="../images/common/taxfree.gif" class="icon1" alt="비과세" />
+                                            <!--{ / }-->
+                                        </div>
+                                        <!--{ / }-->
+
+                                        <div class="oc_res_block">
+                                            <!--{ ? ...option1 != '' }-->
+                                            <ul class="goods_options">
+                                                <!--{ ? ...option1 != '' }-->
+                                                <li>{ ? ...title1 != '' }<span class="xtle">{ ...title1 }</span>{ / } { ...option1 }</li>
+                                                <!--{ / }-->
+                                                <!--{ ? ...option2 != '' }-->
+                                                <li>{ ? ...title2 != '' }<span class="xtle">{ ...title2 }</span>{ / } { ...option2 }</li>
+                                                <!--{ / }-->
+                                                <!--{ ? ...option3 != '' }-->
+                                                <li>{ ? ...title3 != '' }<span class="xtle">{ ...title3 }</span>{ / } { ...option3 }</li>
+                                                <!--{ / }-->
+                                                <!--{ ? ...option4 != '' }-->
+                                                <li>{ ? ...title4 != '' }<span class="xtle">{ ...title4 }</span>{ / } { ...option4 }</li>
+                                                <!--{ / }-->
+                                                <!--{ ? ...option5 != '' }-->
+                                                <li>{ ? ...title5 != '' }<span class="xtle">{ ...title5 }</span>{ / } { ...option5 }</li>
+                                                <!--{ / }-->
+                                            </ul>
+                                            <!--{ / }-->
+
+                                            {? ..goods_type != 'gift'}
+                                            <div class="goods_quantity pointcolor">
+                                                <span class="xtle">QUANTITY</span> <strong class="num">{=number_format(...ea)}</strong>
+                                            </div>
+                                            { / }
+                                        </div>
+
+                                        <!--{ ? ...inputs }-->
+                                        <ul class="goods_inputs">
+                                            <!--{ @ ...inputs }-->
+                                            <li>
+                                                <!--{ ? ....value }-->
+                                                    <!--{?....title}--><span class="xtle v2">{....title}</span><!--{ / }-->
+                                                    <!--{?....type=='file'}-->
+                                                    <a href="/mypage_process/filedown?file={....value}" target="actionFrame"><img src="/mypage_process/filedown?file={....value}" class="input_img" title="크게 보기" /></a>
+                                                    <!--{:}-->
+                                                    {....value}
+                                                    <!--{ / }-->
+                                                <!--{ / }-->
+                                            </li>
+                                            <!--{ / }-->
+                                        </ul>
+                                        <!--{ / }-->
+
+                                        <!--{?...suboptions}-->
+                                        <ul class="goods_suboptions">
+                                            <!--{@(...suboptions)}-->
+                                            <li>{ ? ....title }<span class="xtle v3">{ ....title }</span>{ / } { ....suboption } - {=number_format(....ea)}개</li>
+                                            <!--{ / }-->
+                                        </ul>
+                                        <!--{ / }-->
+                                    </li>
+                                </ul>
+                            </li>
+                            <!--{ / }-->
+                            <!--{ / }-->
+                        </ul>
+                        <div class="price">
+                            <!-- 금액 -->
+                            {? .gift_cnt==.opt_cnt }
+                            <div>마일리지 교환</div>
+                            <b>{=get_currency_price(.emoney,2)}</b>
+                            {:}
+                            <b class="pointcolor">{=get_currency_price(.settleprice,2)}</b>
+                            { / }
+                            <!-- //금액 -->                        
+                        </div>
+                        <div class="status">
+                            <span>{.mstep}</span>
+                            <!--{ ? .payment != 'pos_pay' }-->
+                                <!--{ ? .step == 15 }-->
+                                    <button type="button" class="btn_resp size_a color5 order_btn" onclick="order_cancel('{.order_seq}');">Cancel Order</button>
+                                <!--{ : .refund_able_ea && ( .step == 25 ) }-->
+                                    <!-- sjg : refund_able_ea 값이 넘어오지 않음 -->
+                                    <button type="button" class="btn_resp size_a color5 order_btn" onclick="order_refund('{.order_seq}');">Cancel Payment</button>
+                                <!--{ : .refund_able_ea && ( .step == 26 || .step == 35 || .step == 43 || .step == 45 || .step == 55 || .step == 65 || .step == 75 ) }-->
+                                    <button type="button" class="btn_resp size_a color5 order_btn" onclick="order_qna('{.order_seq}');">Exchange/Return Inquiry</button>
+                                <!--{ / }-->
+                            <!--{ / }-->
+                            <!--{ ? .step > 45  && .step <= 75 }-->
+                                <!--{ ? .goods_kind.goods }-->
+                                    <!--{ ? .payment != 'pos_pay' }-->
+										<!--{ ? .shipping_method == 'quick' }-->
+										<a class="btn_resp size_a orderexportsbtn order_btn" href="https://www.ups.com/track?tracknum={.custom_tracking_number}&loc=en_US&requester=QUIC/trackdetails" target="_blank">Track Package</a>
+										<!--{ : .shipping_method == 'delivery' }-->
+										<a class="btn_resp size_a orderexportsbtn order_btn" onclick="emsTrackPost('{.custom_tracking_number}');">Track Package</a>
+										<!--{ / }-->
+										<!-- <button type="button" class="btn_resp size_a color5 orderexportsbtn order_btn" onclick="export_list('{.order_seq}', 'goods');">Track Package</button> -->
+                                    <!--{ / }-->
+                                    {? .buy_confirm_use }<button type="button" class="btn_resp size_a color5 orderexportsbtn order_btn" onclick="export_list('{.order_seq}', 'goods');">Purchase Confirmation</button>{/}
+                                <!--{ / }-->
+                                    <!--{ ? .goods_kind.coupon && .step < 75  }-->
+                                    <button type="button" class="btn_resp size_a color5 order_btn" onclick="export_list('{.order_seq}', 'coupon');">Ticket Use</button>
+                                    <!--{ / }-->
+                            <!--{ / }-->
+                        
+                        </div>
+                    </div>
+                </li>
+            <!--{ / }-->
+            </ul>
+        </div>
+		{#paging}
+		<!--{ / }-->
+
+	</main>
+	<!-- +++++ //mypage contents ++++ -->
+</div>
+<!-- 2026-05-06 hwlee : EMS 배송추적을 위한 POST요청 -->
+<div class="orders-detail-modal" data-orders-detail-modal hidden aria-hidden="true">
+	<button type="button" class="orders-detail-backdrop" data-orders-detail-close aria-label="Close order details"></button>
+	<section class="orders-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="orders-detail-title" tabindex="-1">
+		<header class="orders-detail-head">
+			<div>
+				<small>Order Details</small>
+				<h2 id="orders-detail-title" data-orders-detail-number>Order</h2>
+			</div>
+			<button type="button" class="orders-detail-close" data-orders-detail-close aria-label="Close order details">×</button>
+		</header>
+		<div class="orders-detail-summary">
+			<p><span>Order Time</span><strong data-orders-detail-time>—</strong></p>
+			<p><span>Status</span><strong data-orders-detail-status>—</strong></p>
+			<p><span>Total</span><strong data-orders-detail-total>—</strong></p>
+		</div>
+		<section class="orders-detail-section" aria-labelledby="orders-detail-items-title">
+			<h3 id="orders-detail-items-title">Ordered Items</h3>
+			<div class="orders-detail-items" data-orders-detail-items>
+				<p class="orders-detail-loading">Loading order details...</p>
+			</div>
+		</section>
+		<div class="orders-detail-info-grid">
+			<section class="orders-detail-section">
+				<h3>Payment Information</h3>
+				<dl>
+					<div><dt>Payment Method</dt><dd data-orders-detail-payment>—</dd></div>
+					<div><dt>Payment Date</dt><dd data-orders-detail-payment-date>—</dd></div>
+				</dl>
+			</section>
+			<section class="orders-detail-section">
+				<h3>Shipping Address</h3>
+				<dl>
+					<div><dt>Recipient</dt><dd data-orders-detail-recipient>—</dd></div>
+					<div><dt>Address</dt><dd data-orders-detail-address>—</dd></div>
+				</dl>
+			</section>
+		</div>
+	</section>
+</div>
+
+<form id="epostForm" method="post" target="_blank"
+	  action="https://trace.epost.go.kr/xtts/servlet/kpl.tts.common.svl.SttSVL">
+	<input type="hidden" name="target_command" value="kpl.tts.tt.epost.cmd.RetrieveEmsTraceEngCmd">
+	<input type="hidden" name="JspURI" value="/xtts/tt/epost/ems/EmsSearchResultEng.jsp">
+	<input type="hidden" name="POST_CODE" value="" id="POST_CODE">
+</form>
+
+
+<script type="text/javascript" src="../common/mypage_ui.js"></script><!-- mypage ui 공통 -->
+
+<script type="text/javascript">
+	// 2026-05-06 hwlee : EMS 배송추적을 위한 POST요청
+	function emsTrackPost(custom_tracking_number){
+		if (custom_tracking_number) {
+			$("#POST_CODE").val(custom_tracking_number);
+			document.getElementById('epostForm').submit();
+		}
+	}
+
+	$(document).ready(function(){
+		$("select[name='sc_date']").bind('change', function(){
+			if ($(this).val() == 'direct') {
+				$('#directArea').removeClass('Hide');
+			} else {
+				$("form#orderSearchForm input[name='sc_sdate']").val("");
+				$("form#orderSearchForm input[name='sc_edate']").val("");
+				$('form#orderSearchForm').submit();
+			}
+		});
+
+		// 기간 검색 시작일 datepicker 적용 ( 시작일 선택 시 종료일 제한을 추가한다. )
+		$("input[name='sc_sdate']").datepicker({
+			showAnim:'slideDown',
+			dateFormat : 'yy-mm-dd',
+			timeFormat: 'hh:mm:ss',
+			dayNamesMin : ['일', '월', '화', '수', '목', '금', '토'],
+			monthNamesShort : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+			showMonthAfterYear : true,
+			changeYear : true,
+			changeMonth : true,
+			closeText : '닫기',
+			currentText : '오늘',
+			yearRange : '1900:c+10',
+			onSelect:function(selectedDate){
+				// 종료일 제한
+				var maxMonth	= 6;
+				var tmpDt		= new Date(selectedDate);
+				tmpDt.setMonth(tmpDt.getMonth() + 1);
+				var maxY		= tmpDt.getFullYear();
+				var maxM		= ((tmpDt.getMonth() + maxMonth) > 8) ? (tmpDt.getMonth() + maxMonth) : '0' + (tmpDt.getMonth() + maxMonth);
+				var maxD		= (tmpDt.getDate() > 9) ? tmpDt.getDate() : '0' + tmpDt.getDate();
+				var maxDt		= maxY + '-' + maxM + '-' + maxD;
+				$("input[name='sc_edate']").datepicker('option',{'minDate':selectedDate,'maxDate':maxDt});
+			}
+		});
+		// 기간 검색 종료일 datepicker 적용 ( 종료일 선택 시 시작일 제한을 추가하고 submit )
+		$("input[name='sc_edate']").datepicker({
+			showAnim:'slideDown',
+			dateFormat : 'yy-mm-dd',
+			timeFormat: 'hh:mm:ss',
+			dayNamesMin : ['일', '월', '화', '수', '목', '금', '토'],
+			monthNamesShort : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+			showMonthAfterYear : true,
+			changeYear : true,
+			changeMonth : true,
+			closeText : '닫기',
+			currentText : '오늘',
+			yearRange : '1900:c+10',
+			onClose:function(selectedDate){
+				$("input[name='sc_sdate']").datepicker('option',{'maxDate':selectedDate});
+				$('form#orderSearchForm').submit();
+			}
+		});
+
+		$('.new-datepicker').click(function(){
+			$("input[name='sc_sdate']").datepicker();
+		});
+
+	});
+
+	// 상품평
+	function goods_review_write(goodsseq, order_seq){
+		if(goodsseq){
+			document.location.href	= 'mygdreview_write?goods_seq=' + goodsseq + '&order_seq=' + order_seq;
+		}
+	}
+	// 주문 무효처리
+	function order_cancel(order_seq){
+		if(confirm('Your order will be cancelled.')){
+			actionFrame.location.href	= '../mypage_process/cancel?order_seq=' + order_seq;
+		}
+	}
+
+	// 결제취소 신청
+	function order_refund(order_seq){
+		document.location.href	= 'order_refund?order_seq=' + order_seq + '&use_layout=1';
+	}
+
+	// 결제취소 Q&A
+	function order_qna(order_seq) {
+		document.location.href = '../board/write?id=goods_qna&order_seq=' + order_seq;
+	}
+
+	// 배송조회 및 쿠폰사용
+	function export_list(order_seq, type){
+		document.location.href	= 'export_list?seq=' + order_seq + '&type=' + type;
+	}
+</script>
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-orders.js?v=20260804-6"></script>

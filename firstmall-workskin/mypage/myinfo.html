@@ -6,8 +6,8 @@
 {is_file_facebook_tag}
 {is_file_kakao_tag}
 
-<link rel="stylesheet" href="../css/trendypicker-mypage.css" />
-<link rel="stylesheet" href="../css/trendypicker-profile.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-profile.css" />
 
 <div class="subpage_wrap bo-mypage-shell bo-profile-shell">
 	<aside class="bo-account-side">
@@ -52,7 +52,6 @@
 					<h2 id="bo-personal-info-title">Personal Information</h2>
 					<p>Keep your profile information up to date.</p>
 				</div>
-				<span>Account settings</span>
 			</header>
 
 			<div class="bo-profile-identity">
@@ -67,7 +66,6 @@
 						<button type="button" class="bo-profile-avatar-edit profile-avatar-edit" data-bo-profile-avatar-edit aria-label="Edit profile photo"></button>
 					</div>
 					<strong>{member.name}</strong>
-					<small>{member.current_level.group_name} member</small>
 				</aside>
 
 				<!-- ------- 회원가입 입력폼. 파일위치 : [스킨폴더]/member/register_form.html ------- -->
@@ -89,7 +87,7 @@
 				<div class="resp_join_table"></div>
 			</div>
 			<div class="bo-profile-security-note">
-				<span aria-hidden="true"></span>
+				<span aria-hidden="true"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAUCAYAAACAl21KAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAAXtJREFUeAGtVE1OwlAQnu8JSOJCXKoxoScQL0DqCeQIeAK6M4FFywITVuIJjDeAE9B4AbiBTYS4xQUGU8o4r0BiSqlW+JKX95P3vpn5ZuaBYmCbr4U5ZSxm3ICopM+YaAhQZ0p+r+Mak+gbbJK8F+e86MvTIsXDy8C/brqG9/NQRW+tScQDb6EOzCn8Ez0YdMsE/VgMZfuJHtXNURVMTyEhfKMdsXon3mY5GIiRAgGVlnvei/VIWC/1LJa7URKNtnvqMdANN8yVhNBQWBLyhpi/QdGeEGrUMEeWhFMDb83UNngEfm65Fw4a5ptDDJt2gOjmZMCosd6wsu5fzh7TEDTKoweJyZJILBWmUhMdYEhpoXid/kIm6V7YKpwb6IKQoryKa401EolmlBdLQVGvj9ThsUxbifaW/r0RJYaWp9nEp5ynNfpcfH38m6i5FNegP0BhJaAKggqlBkqrxQR1c2xLQTm0A+QndcJeq5fHtlRoFZSu18KPjtHRHfENKZuTNFjEzd8AAAAASUVORK5CYII=" alt="" /></span>
 				<p>Use 8-20 characters and combine at least two types of letters, numbers, or special characters.</p>
 				<button type="submit" class="bo-profile-action" data-bo-change-password>Change Password</button>
 			</div>
@@ -101,7 +99,7 @@
 					<h2 id="bo-default-address-title">Default Shipping Address</h2>
 					<p>This address is used first during checkout.</p>
 				</div>
-				<a class="bo-profile-outline-action" href="/mypage/delivery_address?tab=1">Manage Addresses</a>
+				<a class="bo-profile-outline-action" href="/mypage/delivery_address?tab=1" data-bo-address-modal-open>Manage Addresses</a>
 			</header>
 			<div class="bo-profile-address__state" data-bo-default-address aria-live="polite">
 				<div class="bo-profile-address__loading">Loading your default address...</div>
@@ -137,7 +135,7 @@
 						aria-hidden="true"
 					/>
 					<span class="bo-profile-sns__copy">
-						<strong>{=.nm}</strong>
+						<strong><!--{? .key_ == 'twitter'}-->Twitter<!--{:}-->{=.nm}<!--{/}--></strong>
 						<!--{? in_array(.key_, sns_joined_list)}-->
 						<small>Connected</small>
 						<!--{:}-->
@@ -184,6 +182,36 @@
 		</section>
 	</main>
 </div>
+
+<div class="profile-address-dialog" data-bo-address-modal-layer hidden aria-hidden="true">
+	<button
+		type="button"
+		class="profile-address-backdrop"
+		data-bo-address-modal-close
+		aria-label="Close address book"
+	></button>
+	<section
+		class="profile-address-modal"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="profile-address-dialog-title"
+		tabindex="-1"
+	>
+		<button type="button" class="profile-address-close" data-bo-address-modal-close aria-label="Close">&times;</button>
+		<header class="profile-address-dialog-head">
+			<h2 id="profile-address-dialog-title">Shipping Address</h2>
+			<p>Add or edit the address used during checkout.</p>
+		</header>
+		<div class="profile-address-native-host">
+			<iframe
+				class="profile-address-native-frame"
+				data-bo-address-modal-frame
+				title="Shipping Address Form"
+			></iframe>
+		</div>
+	</section>
+</div>
+
 <script type="text/javascript" src="../common/mypage_ui.js"></script><!-- mypage ui 공통 -->
 
 <!-- sns 계정 연결 해제 -->
@@ -604,6 +632,6 @@ var apple_authurl	= '{apple_authurl}';
 	</section>
 </div>
 
-<script src="../js/trendypicker-mypage.js"></script>
-<script src="../js/trendypicker-profile.js"></script>
-<script src="../js/trendypicker-profile-birthday.js"></script>
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-profile.js"></script>
+<script src="/app/javascript/js/trendypicker-profile-birthday.js"></script>

@@ -60,5 +60,6 @@ git diff --check
 - Put TrendyPicker styles in new, page- or component-scoped CSS files and link them from the owning
   HTML.
 - Do not add TrendyPicker rules to Firstmall's large `css/common.css` or `css/user.css`.
-- Keep upload candidates under `firstmall-workskin/` using the same relative paths as the target
-  skin.
+- Keep upload candidates under `firstmall-workskin/`. Mirror skin-owned HTML, CSS, and images by
+  their skin-relative paths, and mirror shared JavaScript under `app/javascript/js/` for upload to
+  Firstmall's application directory.

@@ -15,7 +15,9 @@ display codes, forms, and server-provided values.
 `firstmall-workskin/` currently provides:
 
 - `mypage/dashboard.html`: active dashboard route using live-confirmed member and collection data
-- `css/trendypicker-mypage.css`: scoped responsive dashboard styles
+- `css/redesign/trendypicker-mypage.css`: scoped responsive dashboard styles
+- `app/javascript/js/trendypicker-mypage.js`: shared dashboard interactions uploaded to
+  Firstmall's application JavaScript directory
 - `README.md`: upload targets and signed-in test checklist
 
 The downloaded Firstmall skin remains unchanged. Signed-in checks confirmed that the custom

@@ -109,10 +109,15 @@ member, order, coupon, point, review, inquiry, and payment data.
 
 The first isolated work-skin package lives in `firstmall-workskin/`. It currently contains the
 active My Page dashboard template, the native `mypage/myinfo.html` profile form integration,
-their scoped styles and shared account script, and upload/testing instructions. The profile page
+the native `mypage/order_catalog.html` order-history integration,
+their scoped styles under `css/redesign/`, shared account scripts mirrored under
+`app/javascript/js/`, and upload/testing instructions. The profile page
 keeps `{# form_member}` and Firstmall's original member handlers; the static prototype's payment
 and address samples are not part of the work skin. Existing Firstmall header, footer, index, and
 other account subpages remain untouched.
+The shared account shell owns a 909px desktop content column and the My Page cross-page fade.
+The order work-skin script also provides a query-gated visual fixture at
+`/mypage/order_catalog?trendypicker_order_preview=1`; the normal route never injects sample orders.
 Server-runtime Firstmall HTML is validated separately by
 `tools/check-firstmall-workskin.mjs`.
 

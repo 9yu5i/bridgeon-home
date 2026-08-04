@@ -19,10 +19,11 @@
   --bo-line: #e7e0f1;
   --bo-card: #f9f8ff;
   --bo-card-shadow: 0 10px 24px rgba(33, 17, 65, 0.09);
+  --bo-account-content-width: 909px;
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: clamp(180px, 17vw, 205px) minmax(0, 900px);
+  grid-template-columns: clamp(180px, 17vw, 205px) minmax(0, var(--bo-account-content-width));
   align-items: start;
   justify-content: center;
   gap: clamp(24px, 3vw, 36px);
@@ -36,6 +37,54 @@
 html:has(.bo-mypage-shell),
 body:has(.bo-mypage-shell) {
   overflow-x: hidden;
+  background: #fff;
+}
+
+body:has(.bo-mypage-shell) #layout_wrap,
+body:has(.bo-mypage-shell) #layout_body {
+  background: #fff;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+@keyframes page-transition-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-transition-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 0.32s ease both page-transition-out;
+}
+
+::view-transition-new(root) {
+  animation: 0.32s ease both page-transition-in;
+}
+
+html.is-page-leaving body {
+  opacity: 0;
+  transition: opacity 0.32s ease;
+}
+
+html.is-page-entering body {
+  opacity: 0;
+  animation: page-transition-in 0.32s ease both;
 }
 
 .bo-mypage-shell::before {
@@ -52,13 +101,13 @@ body:has(.bo-mypage-shell) {
     linear-gradient(108deg, #0b0326 0%, #29106a 47%, #ad42ea 100%);
 }
 
-.bo-account-side {
+.bo-mypage-shell > .bo-account-side {
   position: relative;
   z-index: 2;
   display: grid;
   gap: 14px;
   min-width: 0;
-  margin-top: 60px;
+  margin-top: 60px !important;
 }
 
 .bo-mypage-shell #mypageLnbBasic {
@@ -129,47 +178,47 @@ body:has(.bo-mypage-shell) {
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(1) a::before {
-  background-image: url("../images/mypage/dashboard.png");
+  background-image: url("../../images/mypage/dashboard.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(2) a::before {
-  background-image: url("../images/mypage/profile.png");
+  background-image: url("../../images/mypage/profile.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(3) a::before {
-  background-image: url("../images/mypage/orders.png");
+  background-image: url("../../images/mypage/orders.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(4) a::before {
-  background-image: url("../images/mypage/review.png");
+  background-image: url("../../images/mypage/review.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(5) a::before {
-  background-image: url("../images/mypage/wishllist.png");
+  background-image: url("../../images/mypage/wishllist.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(6) a::before {
-  background-image: url("../images/mypage/coupons.png");
+  background-image: url("../../images/mypage/coupons.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(7) a::before {
-  background-image: url("../images/mypage/saved.png");
+  background-image: url("../../images/mypage/saved.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(8) a::before {
-  background-image: url("../images/mypage/membership.png");
+  background-image: url("../../images/mypage/membership.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(9) a::before {
-  background-image: url("../images/mypage/points.png");
+  background-image: url("../../images/mypage/points.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(10) a::before {
-  background-image: url("../images/mypage/help.png");
+  background-image: url("../../images/mypage/help.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(11) a::before {
-  background-image: url("../images/mypage/logout.png");
+  background-image: url("../../images/mypage/logout.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub a:hover,
@@ -192,57 +241,57 @@ body:has(.bo-mypage-shell) {
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(1) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(1) a:focus-visible::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(1) a.on::before {
-  background-image: url("../images/mypage/dashboard_hover.png");
+  background-image: url("../../images/mypage/dashboard_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(2) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(2) a:focus-visible::before {
-  background-image: url("../images/mypage/profile_hover.png");
+  background-image: url("../../images/mypage/profile_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(3) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(3) a:focus-visible::before {
-  background-image: url("../images/mypage/orders_hover.png");
+  background-image: url("../../images/mypage/orders_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(4) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(4) a:focus-visible::before {
-  background-image: url("../images/mypage/review_hover.png");
+  background-image: url("../../images/mypage/review_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(5) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(5) a:focus-visible::before {
-  background-image: url("../images/mypage/wishllist_hover.png");
+  background-image: url("../../images/mypage/wishllist_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(6) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(6) a:focus-visible::before {
-  background-image: url("../images/mypage/coupons_hover.png");
+  background-image: url("../../images/mypage/coupons_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(7) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(7) a:focus-visible::before {
-  background-image: url("../images/mypage/saved_hover.png");
+  background-image: url("../../images/mypage/saved_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(8) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(8) a:focus-visible::before {
-  background-image: url("../images/mypage/membership_hover.png");
+  background-image: url("../../images/mypage/membership_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(9) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(9) a:focus-visible::before {
-  background-image: url("../images/mypage/points_hover.png");
+  background-image: url("../../images/mypage/points_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(10) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(10) a:focus-visible::before {
-  background-image: url("../images/mypage/help_hover.png");
+  background-image: url("../../images/mypage/help_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(11) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(11) a:focus-visible::before {
-  background-image: url("../images/mypage/logout_hover.png");
+  background-image: url("../../images/mypage/logout_hover.png");
 }
 
 .bo-invite {
@@ -419,7 +468,7 @@ body:has(.bo-mypage-shell) {
   flex: 0 0 14px;
   width: 14px;
   height: 14px;
-  background: url("../images/mypage/edit.png") center / contain no-repeat;
+  background: url("../../images/mypage/edit.png") center / contain no-repeat;
 }
 
 .bo-mypage button.bo-profile__edit:hover,
@@ -615,19 +664,19 @@ body:has(.bo-mypage-shell) {
 .bo-profile__stats a:nth-child(1) .bo-profile__stat-icon {
   color: transparent;
   background:
-    url("../images/mypage/points_white.png") center / 19px no-repeat,
+    url("../../images/mypage/points_white.png") center / 19px no-repeat,
     linear-gradient(145deg, #dfbdff, #7740e8);
 }
 
 .bo-profile__stats a:nth-child(2) .bo-profile__stat-icon {
   background:
-    url("../images/mypage/coupons_white.png") center / 19px no-repeat,
+    url("../../images/mypage/coupons_white.png") center / 19px no-repeat,
     linear-gradient(145deg, #dfbdff, #7740e8);
 }
 
 .bo-profile__stats a:nth-child(3) .bo-profile__stat-icon {
   background:
-    url("../images/mypage/wishllist_white.png") center / 19px no-repeat,
+    url("../../images/mypage/wishllist_white.png") center / 19px no-repeat,
     linear-gradient(145deg, #dfbdff, #7740e8);
 }
 
@@ -891,19 +940,19 @@ body:has(.bo-mypage-shell) {
 }
 
 .bo-live-order__timeline span:nth-child(1) i::before {
-  background-image: url("../images/mypage/pending.png");
+  background-image: url("../../images/mypage/pending.png");
 }
 
 .bo-live-order__timeline span:nth-child(2) i::before {
-  background-image: url("../images/mypage/preparing.png");
+  background-image: url("../../images/mypage/preparing.png");
 }
 
 .bo-live-order__timeline span:nth-child(3) i::before {
-  background-image: url("../images/mypage/shipped.png");
+  background-image: url("../../images/mypage/shipped.png");
 }
 
 .bo-live-order__timeline span:nth-child(4) i::before {
-  background-image: url("../images/mypage/delivered.png");
+  background-image: url("../../images/mypage/delivered.png");
 }
 
 .bo-live-order__timeline span i,
@@ -1341,7 +1390,7 @@ body.is-orders-modal-open {
   border: 0;
   border-radius: 0;
   color: transparent;
-  background: url("../images/mypage/cancel.png") center / contain no-repeat;
+  background: url("../../images/mypage/cancel.png") center / contain no-repeat;
   font-size: 0;
 }
 
@@ -1540,14 +1589,14 @@ body.is-orders-modal-open {
 .bo-product__cart {
   color: #fff !important;
   background:
-    url("../images/mypage/cart.png") center / 16px no-repeat,
+    url("../../images/mypage/cart.png") center / 16px no-repeat,
     var(--bo-purple);
 }
 
 .bo-product__cart:hover,
 .bo-product__cart:focus-visible {
   background:
-    url("../images/mypage/cart.png") center / 16px no-repeat,
+    url("../../images/mypage/cart.png") center / 16px no-repeat,
     #31136c;
 }
 
@@ -1626,7 +1675,7 @@ body.is-orders-modal-open {
   width: 28px;
   height: 28px;
   color: var(--bo-purple);
-  background: url("../images/mypage/saved_hover.png") center / 14px 19px no-repeat;
+  background: url("../../images/mypage/saved_hover.png") center / 14px 19px no-repeat;
 }
 
 .bo-reel-stats strong {
@@ -1683,6 +1732,21 @@ body.is-orders-modal-open {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  html.is-page-leaving body {
+    opacity: 1;
+    transition: none;
+  }
+
+  html.is-page-entering body {
+    opacity: 1;
+    animation: none;
+  }
+
   .bo-page-reveal,
   .bo-scroll-reveal {
     opacity: 1;
@@ -1855,7 +1919,7 @@ body.is-mypage-avatar-open {
 .mypage-avatar-preview i {
   position: absolute;
   inset: 28%;
-  background: url("../images/mypage/profile.png") center / contain no-repeat;
+  background: url("../../images/mypage/profile.png") center / contain no-repeat;
 }
 
 .mypage-avatar-preview-photo {
@@ -2038,7 +2102,7 @@ body.is-mypage-logout-open {
   content: "";
   width: 28px;
   height: 28px;
-  background: url("../images/mypage/logout_hover.png") center / contain no-repeat;
+  background: url("../../images/mypage/logout_hover.png") center / contain no-repeat;
 }
 
 .mypage-logout-modal h2 {
@@ -2103,7 +2167,7 @@ body.is-mypage-logout-open {
   body:has(.bo-mypage-shell),
   body:has(.bo-mypage-shell) #layout_wrap,
   body:has(.bo-mypage-shell) #layout_body {
-    background: #faf7fc;
+    background: #fff;
   }
 
   .bo-mypage-shell {
@@ -2287,85 +2351,85 @@ body.is-mypage-logout-open {
   }
 
   .bo-mobile-activity__grid a:nth-child(1) .bo-mobile-icon {
-    background-image: url("../images/mypage/review.png");
+    background-image: url("../../images/mypage/review.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(2) .bo-mobile-icon {
-    background-image: url("../images/mypage/wishllist.png");
+    background-image: url("../../images/mypage/wishllist.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(3) .bo-mobile-icon {
-    background-image: url("../images/mypage/saved.png");
+    background-image: url("../../images/mypage/saved.png");
     background-size: 38% auto;
   }
 
   .bo-mobile-service__grid a:nth-child(1) .bo-mobile-icon {
-    background-image: url("../images/mypage/profile.png");
+    background-image: url("../../images/mypage/profile.png");
   }
 
   .bo-mobile-service__grid a:nth-child(2) .bo-mobile-icon {
-    background-image: url("../images/mypage/coupons.png");
+    background-image: url("../../images/mypage/coupons.png");
   }
 
   .bo-mobile-service__grid a:nth-child(3) .bo-mobile-icon {
-    background-image: url("../images/mypage/points.png");
+    background-image: url("../../images/mypage/points.png");
   }
 
   .bo-mobile-service__grid a:nth-child(4) .bo-mobile-icon {
-    background-image: url("../images/mypage/membership.png");
+    background-image: url("../../images/mypage/membership.png");
   }
 
   .bo-mobile-service__grid a:nth-child(5) .bo-mobile-icon {
-    background-image: url("../images/mypage/help.png");
+    background-image: url("../../images/mypage/help.png");
   }
 
   .bo-mobile-service__grid a:nth-child(6) .bo-mobile-icon {
-    background-image: url("../images/mypage/logout.png");
+    background-image: url("../../images/mypage/logout.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(1):hover .bo-mobile-icon,
   .bo-mobile-activity__grid a:nth-child(1):focus-visible .bo-mobile-icon {
-    background-image: url("../images/mypage/review_hover.png");
+    background-image: url("../../images/mypage/review_hover.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(2):hover .bo-mobile-icon,
   .bo-mobile-activity__grid a:nth-child(2):focus-visible .bo-mobile-icon {
-    background-image: url("../images/mypage/wishllist_hover.png");
+    background-image: url("../../images/mypage/wishllist_hover.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(3):hover .bo-mobile-icon,
   .bo-mobile-activity__grid a:nth-child(3):focus-visible .bo-mobile-icon {
-    background-image: url("../images/mypage/saved_hover.png");
+    background-image: url("../../images/mypage/saved_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(1):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(1):focus-visible .bo-mobile-icon {
-    background-image: url("../images/mypage/profile_hover.png");
+    background-image: url("../../images/mypage/profile_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(2):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(2):focus-visible .bo-mobile-icon {
-    background-image: url("../images/mypage/coupons_hover.png");
+    background-image: url("../../images/mypage/coupons_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(3):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(3):focus-visible .bo-mobile-icon {
-    background-image: url("../images/mypage/points_hover.png");
+    background-image: url("../../images/mypage/points_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(4):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(4):focus-visible .bo-mobile-icon {
-    background-image: url("../images/mypage/membership_hover.png");
+    background-image: url("../../images/mypage/membership_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(5):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(5):focus-visible .bo-mobile-icon {
-    background-image: url("../images/mypage/help_hover.png");
+    background-image: url("../../images/mypage/help_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(6):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(6):focus-visible .bo-mobile-icon {
-    background-image: url("../images/mypage/logout_hover.png");
+    background-image: url("../../images/mypage/logout_hover.png");
   }
 
   .bo-mobile-activity__grid strong {
@@ -2531,7 +2595,7 @@ body.is-mypage-logout-open {
   .bo-mypage button.bo-profile__edit::after {
     width: 13px;
     height: 13px;
-    background-image: url("../images/mypage/edit_black.png");
+    background-image: url("../../images/mypage/edit_black.png");
   }
 
   .bo-profile__welcome {

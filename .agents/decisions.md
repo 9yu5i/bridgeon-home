@@ -1,5 +1,29 @@
 # TrendyPicker Decisions
 
+## 2026-08-04: Connect Orders Through Firstmall's Native Order Catalog
+
+Decision:
+
+- Use the active skin's `mypage/order_catalog.html` and its `record`, `items`, and `options`
+  collections as the order-history source of truth.
+- Preserve Firstmall's date filtering, order detail, cancellation, refund, exchange/return
+  inquiry, review, purchase confirmation, coupon-use, and carrier-tracking actions.
+- Open the summary card's Order Details action in a responsive modal. Render the catalog's complete
+  item collection immediately, then read payment and shipping metadata from Firstmall's native
+  order-detail page through one cached same-origin request.
+- Add the responsive TrendyPicker presentation in
+  `css/redesign/trendypicker-orders.css` without loading prototype order data or scripts.
+- Remove the unused duplicate hidden order table and the inactive selectbox plugin from the work
+  skin copy.
+- Pass the live EMS `custom_tracking_number` through unchanged instead of substituting a sample
+  tracking number.
+
+Why:
+
+- Order and delivery actions must remain controlled by Firstmall's authenticated commerce flow.
+- The original template already exposes the required order and item data; a scoped visual layer
+  is safer than rebuilding those actions in browser-only JavaScript.
+
 ## 2026-07-31: Reuse Firstmall Member Icon Upload On The Dashboard
 
 Decision:
@@ -45,6 +69,8 @@ Decision:
 - Modify existing entry and module HTML files in place within the work-skin package.
 - Preserve Firstmall's modular template structure for complex pages such as goods view.
 - Add new scoped TrendyPicker CSS files and link them from the modified HTML.
+- Store work-skin CSS under the active skin's `css/redesign/` directory and shared account
+  JavaScript under Firstmall's `/app/javascript/js/` directory.
 - Do not mix TrendyPicker rules into Firstmall `css/common.css` or `css/user.css`.
 
 Why:
@@ -267,7 +293,7 @@ Decision:
 - Use the active skin's `mypage/myinfo.html` and `{# form_member}` include as the functional source
   of truth.
 - Add TrendyPicker layout wrappers to that template and keep its visual rules in the separate
-  `firstmall-workskin/css/trendypicker-profile.css`.
+  `firstmall-workskin/css/redesign/trendypicker-profile.css`.
 - Preserve Firstmall's member-update, validation, password, phone verification, SNS, member-icon,
   and withdrawal handlers.
 - Render only SNS providers supplied by Firstmall and proxy the TrendyPicker Connect/Manage controls
