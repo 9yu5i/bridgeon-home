@@ -4,15 +4,15 @@
 - Data source: variables confirmed on the active dashboard page
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css?v=20260805-5" />
 
-<div class="subpage_wrap bo-mypage-shell">
+<div class="subpage_wrap bo-mypage-shell bo-dashboard-shell">
 	<aside class="bo-account-side">
 		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
 			<ul class="lnb_sub">
 				<li><a class="on" href="/mypage/dashboard">My Dashboard</a></li>
 				<li><a href="/mypage/myinfo">Profile</a></li>
-				<li><a href="/mypage/order_catalog">Orders</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
 				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
 				<li><a href="/mypage/wish">Wishlist</a></li>
 				<li><a href="/mypage/coupon">Coupons</a></li>
@@ -93,59 +93,12 @@
 		<section class="bo-card bo-orders mypage-orders" aria-labelledby="bo-dashboard-orders">
 			<header class="bo-card__head">
 				<h2 id="bo-dashboard-orders">My Orders</h2>
-				<a href="/mypage/order_catalog">
+				<a href="/mypage/order_catalog?sc_date=0">
 					<span class="bo-track-all-desktop">Track all orders</span>
 					<span class="bo-track-all-mobile">Track all</span>
 					<span aria-hidden="true">→</span>
 				</a>
 			</header>
-
-			<div class="bo-live-orders bo-live-orders--preview" data-trendypicker-order-preview hidden>
-				<article
-					class="bo-live-order mypage-order-preview"
-					aria-label="Order preview"
-					data-order-seq="BR1234567890"
-					data-order-date="May 24, 2025"
-					data-order-status="Shipped"
-					data-order-step="55"
-					data-order-price="US$18.40"
-					data-order-shipping-method="quick"
-					data-order-tracking-number="1Z999AA10123456784"
-					data-order-estimated-arrival="May 28 - May 30"
-					data-order-shipping-address="Name, 123 Sample St., United States 90007"
-				>
-					<div class="bo-live-order__products">
-						<a class="bo-live-order__product" href="/mypage/order_catalog">
-							<span class="bo-live-order__image bo-live-order__image--preview">
-								<em>+2 items</em>
-							</span>
-							<span class="bo-live-order__copy">
-								<mark>Shipped</mark>
-								<strong>PDRN Pink Peptide Serum 50ml</strong>
-								<small>Order #BR1234567890</small>
-							</span>
-						</a>
-					</div>
-
-					<div class="bo-live-order__timeline" aria-label="Order status">
-						<span class="is-complete"><i aria-hidden="true"></i><small>Payment Confirmed</small></span>
-						<span class="is-complete"><i aria-hidden="true"></i><small>Preparing</small></span>
-						<span class="is-current"><i aria-hidden="true"></i><small>Shipped</small></span>
-						<span><i aria-hidden="true"></i><small>Delivered</small></span>
-					</div>
-
-					<footer class="bo-live-order__foot">
-						<p>
-							<small>Estimated delivery</small>
-							<strong>May 28 - May 30</strong>
-						</p>
-						<span class="bo-live-order__actions">
-							<a href="/mypage/order_catalog" data-bo-track-order>Track order</a>
-							<a href="/mypage/order_catalog">Order details</a>
-						</span>
-					</footer>
-				</article>
-			</div>
 
 			<!--{ ? orders }-->
 			<div class="bo-live-orders" data-trendypicker-live-orders>
@@ -535,4 +488,4 @@
 </div>
 
 <script src="/data/skin/{skin}/common/mypage_ui.js"></script>
-<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-mypage.js?v=20260805-3"></script>

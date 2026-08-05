@@ -1,0 +1,125 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 공지사항 List @@
+- 파일위치 : [스킨폴더]/board/notice/default01/index.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--{? viewlist != 'view' }-->
+<form name="boardsearch" id="boardsearch">
+	<input type="hidden" name="id" value="{_GET.id}">
+	<input type="hidden" name="popup" value="{_GET.popup}">
+	<input type="hidden" name="iframe" value="{_GET.iframe}">
+	<input type="hidden" name="goods_seq" value="{_GET.goods_seq}">
+	<input type="hidden" name="perpage" id="perpage" value="{_GET.perpage}">
+	<input type="hidden" name="page" id="page" value="{_GET.page}">
+	<input type="hidden" name="category" id="category" value="{_GET.category}">
+
+	<ul class="bbs_top_wrap">
+		<li class="left">
+			<!--{? categorylist}-->
+			<select name="category" id="searchcategory">
+				<option value="" selected="selected">- ALL -</option>
+				<!--{@ categorylist}-->
+				<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{.value_}</option>
+				<!--{/}-->
+			</select>
+			<!--{ / }-->
+		</li>
+		<li class="right2">
+			<span class="searchform">
+				<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title, Content" placeholder="Search" />
+				<button type="submit" class="btn_resp size_b color2">Search</button>
+				<button type="button" class="btn_resp size_b" onclick="document.location.href='{boardurl->resets}'">Clear</button>
+			</span>
+		</li>
+	</ul>
+</form>
+<p class="help-board-count">
+	Total {=number_format(sc.totalcount)} (Page {? sc.total_page== 0 }0{:}{=((sc.page/sc.perpage)+1)}{/}/{=number_format(sc.total_page)})
+</p>
+<!--{ / }-->
+
+{ ? noticeloop || loop }
+	<div class="res_table normal">
+		<ul class="thead help-board-head">
+			<li>Category</li>
+			<li>Subject</li>
+			<li>Date</li>
+		</ul>
+	{? noticeloop }
+		{@ noticeloop }
+		<ul class="tbody notice">
+			{? strstr(manager.list_show,'[num]') }<li class="num"><span class="mtitle" designElement="text">Notice</span> {.number}</li>{/}
+			{? strstr(manager.list_show,'[subject]') }<li>{=preg_replace("/[\[\]]/","",.category)}</li>{/}
+			{? strstr(manager.list_show,'[subject]') }
+			<li class="subject">
+				<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}"  viewtype="{manager.viewtype}"  pagetype="{pagetype}"  board_seq="{.seq}" board_id="{_GET.id}">
+					{.iconmobile}{.blank} {.subjectcut} 
+					{? .comment>0 }<span class="comment">({=number_format(.comment)})</span>{/}
+					{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
+				</span>
+			</li>
+			{/}
+			{? strstr(manager.list_show,'[writer]') }<li class="Hide">{.name}</li>{/}
+			{? strstr(manager.list_show,'[date]') }<li class="date">{=date('Y.m.d',strtotime(.date))}</li>{/}
+			{? strstr(manager.list_show,'[hit]') }<li class="mo_hide"><span class="mtitle" designElement="text">Views:</span> {.hit}</li>{/}
+			{? strstr(manager.list_show,'[score]') && manager.auth_recommend_use == 'Y' }<li><span class="mtitle">{manager.scoretitle}:</span> {.recommendlay}</li>{/}
+		</ul>
+		{/}
+	{/}
+	{? loop }
+		{@ loop }
+		<ul class="tbody">
+			{? strstr(manager.list_show,'[num]') }<li class="mo_hide"><span class="mtitle" designElement="text">Num:</span> {.number}</li>{/}
+			{? strstr(manager.list_show,'[subject]') }<li>{=preg_replace("/[\[\]]/","",.category)}</li>{/}
+			{? strstr(manager.list_show,'[subject]') }
+			<li class="subject" style="width:50%;">
+				<span class="hand boad_view_btn{.isperm_read} hide" viewlink="{boardurl->view}{.seq}"  viewtype="{manager.viewtype}"  pagetype="{pagetype}"  board_seq="{.seq}" board_id="{_GET.id}">
+					{.iconmobile}{.blank} {.subjectcut} 
+					{? .comment>0 }<span class="comment">({=number_format(.comment)})</span>{/}
+					{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
+				</span>
+                <span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}"  viewtype="{manager.viewtype}"  pagetype="{pagetype}"  board_seq="{.seq}" board_id="{_GET.id}">{.subject_real}</span>
+			</li>
+			{/}
+			{? strstr(manager.list_show,'[writer]') }<li class="Hide">{.name}</li>{/}
+			{? strstr(manager.list_show,'[date]') }<li class="date">{=date('Y.m.d',strtotime(.date))}</li>{/}
+			{? strstr(manager.list_show,'[hit]') }<li class="mo_hide"><span class="mtitle" designElement="text">Views:</span> {.hit}</li>{/}
+			{? strstr(manager.list_show,'[score]') && manager.auth_recommend_use == 'Y' }<li><span class="mtitle">{manager.scoretitle}:</span> {.recommendlay}</li>{/}
+		</ul>
+		{/}
+	{/}
+	</div>
+{ : }
+	<div class="no_data_area2">
+		No notices match your search.
+	</div>
+{ / }
+
+{? pagin }
+<div id="pagingDisplay" class="paging_navigation">{pagin}</div>
+{/}
+
+<ul class="bbs_bottom_wrap hide">
+	<li class="right">
+		<button type="button" name="boad_write_btn{manager.isperm_write}" id="goods_boad_write_btn{manager.isperm_write}"  board_id="{boardid}" fileperm_read="{manager.fileperm_write}" class="btn_resp size_b color2 hidden" />{manager.name} 쓰기</button>
+	</li>
+</ul>
+
+
+
+<div id="BoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3>비밀번호 확인</h3>
+		<div>게시글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
+		<input type="hidden" name="seq" id="pwck_seq" value="" />
+		<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="pwck_pw" class="input" />
+			<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+			<input type="button" value=" 취소 " class="btngray" onclick="$('#BoardPwCk').dialog('close');" />
+		</div>
+	</form>
+</div>
+<!-- //비밀번호 확인 -->

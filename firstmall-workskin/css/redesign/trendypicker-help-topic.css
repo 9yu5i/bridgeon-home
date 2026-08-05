@@ -1,0 +1,949 @@
+/* TrendyPicker Help Topic / Customer Service shell
+   Source pattern: my-page/help-center.css (.help-topic-shell) */
+
+.bo-help-topic-page,
+.bo-help-board-page,
+.bo-help-qna-page,
+.help-topic-shell {
+  --help-purple: #7b3fe4;
+  --help-deep: #31136c;
+  --help-ink: #16121f;
+  --help-muted: #6f687d;
+  --help-soft: #f7f1ff;
+  --help-panel: #fbf8ff;
+  --help-line: #e7def3;
+}
+
+/* ——— Account shell host ——— */
+.bo-help-topic-page.bo-mypage-shell,
+.bo-help-board-page.bo-mypage-shell,
+.bo-help-qna-page.bo-mypage-shell {
+  background: #fff;
+}
+
+.bo-help-topic-page .bo-help-topic-container,
+.bo-help-board-page .bo-help-topic-container,
+.bo-help-qna-page .bo-help-topic-container {
+  float: none;
+  width: min(100%, 980px) !important;
+  max-width: 980px !important;
+  margin: 0;
+  padding: 0 0 76px;
+  box-sizing: border-box;
+}
+
+.bo-help-topic-page .btn_sub_all,
+.bo-help-board-page .btn_sub_all,
+.bo-help-qna-page .btn_sub_all {
+  display: none !important;
+}
+
+.bo-help-topic-page .title_container,
+.bo-help-board-page .title_container,
+.bo-help-qna-page .title_container {
+  display: none !important;
+}
+
+/* ——— Prototype shell ——— */
+.help-topic-shell {
+  display: grid;
+  gap: 26px;
+  padding: 34px;
+  border: 1px solid rgba(123, 63, 228, 0.12);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(49, 19, 108, 0.08);
+  box-sizing: border-box;
+}
+
+.help-topic-breadcrumb,
+.help-topic-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.help-topic-breadcrumb {
+  color: #867d96;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.help-topic-breadcrumb a {
+  color: var(--help-purple);
+  text-decoration: none;
+}
+
+.help-topic-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.help-topic-head {
+  display: grid;
+  gap: 12px;
+}
+
+.help-topic-kicker,
+.help-topic-meta span,
+.help-topic-nav strong {
+  color: var(--help-purple);
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.help-topic-head h1,
+.help-topic-head p,
+.help-topic-panel h2,
+.help-topic-panel h3,
+.help-topic-panel p,
+.help-topic-panel ul,
+.help-topic-panel ol,
+.help-topic-panel li,
+.help-topic-nav strong {
+  margin: 0;
+}
+
+.help-topic-head h1,
+.help-topic-head h1 span {
+  color: var(--help-ink);
+  font-size: clamp(34px, 4vw, 54px);
+  line-height: 1;
+  font-weight: 950;
+}
+
+.help-topic-head p {
+  max-width: 760px;
+  color: var(--help-muted);
+  font-size: 16px;
+  line-height: 1.56;
+}
+
+.help-topic-layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.help-topic-nav {
+  position: sticky;
+  top: 96px;
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--help-line);
+  border-radius: 16px;
+  background: #fbf8ff;
+  box-sizing: border-box;
+}
+
+.help-topic-nav a {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #2d2639;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.help-topic-nav a:hover,
+.help-topic-nav a.is-active {
+  color: var(--help-purple);
+  background: #eadfff;
+}
+
+.help-topic-body,
+.help-topic-body.bo-help-topic-body {
+  display: grid;
+  gap: 18px;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--help-muted);
+  font-size: 15px;
+  line-height: 1.62;
+}
+
+.help-topic-panel {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--help-line);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 98% 0%, rgba(234, 223, 255, 0.5), transparent 28%),
+    #fff;
+  scroll-margin-top: 110px;
+}
+
+.help-topic-panel h2,
+.help-topic-panel h2 span,
+.help-topic-body h3.title1,
+.help-topic-body h3.title1 span {
+  margin: 0;
+  color: var(--help-ink);
+  font-size: 24px;
+  line-height: 1.18;
+  font-weight: 900;
+}
+
+.help-topic-panel h3,
+.help-topic-panel h3 span,
+.help-topic-body h3.title2,
+.help-topic-body h3.title2 span,
+.help-topic-body h3.title3,
+.help-topic-body h3.title3 span {
+  margin: 0;
+  color: var(--help-ink);
+  font-size: 17px;
+  line-height: 1.3;
+  font-weight: 850;
+}
+
+.help-topic-panel p,
+.help-topic-panel li,
+.help-topic-body p,
+.help-topic-body li {
+  color: var(--help-muted);
+  font-size: 15px;
+  line-height: 1.62;
+  font-weight: 600;
+}
+
+.help-topic-panel p + p,
+.help-topic-body p + p {
+  margin-top: 12px;
+}
+
+.help-topic-panel p + ul,
+.help-topic-panel p + ol,
+.help-topic-body p + ul,
+.help-topic-body p + ol {
+  margin-top: 12px;
+}
+
+.help-topic-panel ul,
+.help-topic-panel ol {
+  display: grid;
+  gap: 8px;
+  padding-left: 20px;
+}
+
+.help-topic-panel strong,
+.help-topic-body strong {
+  color: var(--help-ink);
+  font-weight: 800;
+}
+
+.help-topic-panel a,
+.help-topic-body a {
+  color: var(--help-purple);
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.help-topic-panel a:hover,
+.help-topic-body a:hover {
+  text-decoration: underline;
+}
+
+.help-topic-body .service_section,
+.help-topic-body.service_section {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.help-topic-body .service_section > h3,
+.help-topic-body.service_section > h3 {
+  margin: 0;
+}
+
+.help-topic-body .service_section > h3 + p,
+.help-topic-body.service_section > h3 + p {
+  margin-top: -6px;
+}
+
+/* Stack consecutive heading+content into panel-like blocks */
+.help-topic-body.service_section > h3,
+.help-topic-body .service_section > h3 {
+  padding: 24px 24px 0;
+  border: 1px solid var(--help-line);
+  border-bottom: 0;
+  border-radius: 16px 16px 0 0;
+  background:
+    radial-gradient(circle at 98% 0%, rgba(234, 223, 255, 0.5), transparent 28%),
+    #fff;
+}
+
+.help-topic-body.service_section > h3 + p,
+.help-topic-body.service_section > h3 + p + p,
+.help-topic-body .service_section > h3 + p,
+.help-topic-body .service_section > h3 + p + p {
+  margin: 0;
+  padding: 12px 24px 24px;
+  border: 1px solid var(--help-line);
+  border-top: 0;
+  border-radius: 0 0 16px 16px;
+  background: #fff;
+}
+
+.help-topic-body.service_section > h3 + p + p,
+.help-topic-body .service_section > h3 + p + p {
+  margin-top: -18px;
+  padding-top: 0;
+}
+
+.help-topic-body.service_section > h3 + p + h3,
+.help-topic-body .service_section > h3 + p + h3 {
+  margin-top: 0;
+}
+
+/* ——— Board list mapped to help-board look ——— */
+.help-topic-shell #bbslist,
+.help-topic-shell #boardlayout {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.help-topic-shell #bbslist > style {
+  display: none;
+}
+
+.help-topic-shell .bbs_top_wrap,
+.help-topic-shell #boardsearch .bbs_top_wrap {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  float: none;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.help-topic-shell .bbs_top_wrap > li,
+.help-topic-shell #boardsearch .bbs_top_wrap > li {
+  float: none !important;
+  width: auto !important;
+  margin: 0;
+  padding: 0;
+}
+
+.help-topic-shell .bbs_top_wrap .left {
+  flex: 1 1 180px;
+  max-width: 280px;
+}
+
+.help-topic-shell .bbs_top_wrap .right2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.help-topic-shell .bbs_top_wrap .searchform {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.help-topic-shell .bbs_top_wrap select,
+.help-topic-shell .bbs_top_wrap input[type="text"],
+.help-topic-shell .bbs_top_wrap .res_bbs_search_input,
+.help-topic-shell .bbs_top_wrap .btn_resp {
+  min-height: 40px;
+  height: 40px;
+  margin: 0;
+  border: 1px solid var(--help-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--help-ink);
+  font: inherit;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.help-topic-shell .bbs_top_wrap select {
+  width: 100%;
+  padding: 0 12px;
+}
+
+.help-topic-shell .bbs_top_wrap input[type="text"],
+.help-topic-shell .bbs_top_wrap .res_bbs_search_input {
+  width: min(220px, 100%);
+  padding: 0 12px;
+}
+
+.help-topic-shell .bbs_top_wrap .btn_resp {
+  padding: 0 14px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.help-topic-shell .bbs_top_wrap .btn_resp.color2,
+.help-topic-shell .bbs_top_wrap button[type="submit"] {
+  border-color: var(--help-purple);
+  color: #fff;
+  background: var(--help-purple);
+}
+
+.help-topic-shell .bbs_top_wrap .btn_resp:not(.color2) {
+  color: var(--help-ink);
+  background: #fff;
+}
+
+.help-topic-shell .help-board-count,
+.help-topic-shell .article_info {
+  display: block !important;
+  margin: 0;
+  color: var(--help-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.help-topic-shell .res_table,
+.help-topic-shell .res_table.normal {
+  display: block;
+  overflow: visible;
+  border: 0;
+  border-top: 2px solid var(--help-ink);
+  border-bottom: 1px solid var(--help-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.help-topic-shell .res_table .thead,
+.help-topic-shell .help-board-head {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 110px;
+  gap: 16px;
+  align-items: center;
+  min-height: 56px;
+  margin: 0;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--help-line);
+  color: #867d96;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  list-style: none;
+}
+
+.help-topic-shell .res_table .thead li,
+.help-topic-shell .help-board-head li {
+  width: auto !important;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.help-topic-shell .res_table .tbody {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 110px;
+  gap: 16px;
+  align-items: center;
+  min-height: 56px;
+  margin: 0;
+  padding: 14px 4px;
+  border: 0;
+  border-bottom: 1px solid #efeaf6;
+  background: transparent;
+  list-style: none;
+  transition: background-color 0.2s ease;
+}
+
+.help-topic-shell .res_table .tbody:last-child {
+  border-bottom: 0;
+}
+
+.help-topic-shell .res_table .tbody:hover {
+  background: #fbf8ff;
+}
+
+.help-topic-shell .res_table .tbody > li {
+  width: auto !important;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--help-muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.help-topic-shell .res_table .tbody > li.subject {
+  color: var(--help-ink);
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.help-topic-shell .res_table .tbody > li.date,
+.help-topic-shell .res_table .tbody > li:last-child {
+  color: var(--help-muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.help-topic-shell .res_table .tbody > li.num,
+.help-topic-shell .res_table .tbody > li.Hide,
+.help-topic-shell .res_table .tbody > li.mo_hide,
+.help-topic-shell .res_table .tbody .hand.hide {
+  display: none !important;
+}
+
+.help-topic-shell .res_table .tbody .hand,
+.help-topic-shell .res_table .tbody .hand a {
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.help-topic-shell .res_table .tbody:hover .subject,
+.help-topic-shell .res_table .tbody:hover .hand {
+  color: var(--help-purple);
+}
+
+.help-topic-shell .no_data_area2 {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  border-top: 1px solid var(--help-line);
+  border-bottom: 1px solid var(--help-line);
+  color: var(--help-muted);
+  background: transparent;
+  font-size: 14px;
+}
+
+.help-topic-shell .paging_navigation {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+
+.help-topic-shell .paging_navigation a,
+.help-topic-shell .paging_navigation span,
+.help-topic-shell .paging_navigation strong {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 999px;
+  color: var(--help-muted);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.help-topic-shell .paging_navigation strong,
+.help-topic-shell .paging_navigation .on,
+.help-topic-shell .paging_navigation a.on {
+  color: #fff;
+  background: var(--help-purple);
+}
+
+.help-topic-shell .bbs_bottom_wrap {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.help-topic-shell .bbs_bottom_wrap .btn_resp.color2 {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--help-purple);
+  font-weight: 850;
+}
+
+/* Q&A list: Status | Topic | Subject | Date */
+.bo-help-qna-page .help-topic-shell .res_table .thead,
+.bo-help-qna-page .help-topic-shell .help-board-head,
+.bo-help-qna-page .help-topic-shell .res_table .tbody {
+  grid-template-columns: 100px 120px minmax(0, 1fr) 110px;
+}
+
+.bo-help-qna-page .help-topic-shell .res_table .tbody > li.date {
+  text-align: right;
+}
+
+/* FAQ category chips + accordion */
+.help-topic-shell .board_cate_slide,
+.help-topic-shell .board_category2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.help-topic-shell .board_category2 a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--help-line);
+  border-radius: 999px;
+  color: #2d2639;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.help-topic-shell .board_category2 li.on a,
+.help-topic-shell .board_category2 a:hover {
+  border-color: #eadfff;
+  color: var(--help-purple);
+  background: #eadfff;
+}
+
+.help-topic-shell .faq_new {
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--help-ink);
+  list-style: none;
+}
+
+.help-topic-shell .faq_new > li {
+  border-bottom: 1px solid #efeaf6;
+}
+
+.help-topic-shell .faq_new .question {
+  padding: 16px 4px;
+  cursor: pointer;
+}
+
+.help-topic-shell .faq_new .question .subject {
+  margin: 0;
+  color: var(--help-ink);
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.help-topic-shell .faq_new .question .add_info {
+  display: none;
+}
+
+.help-topic-shell .faq_new .answer {
+  padding: 0 4px 18px;
+  color: var(--help-muted);
+  font-size: 14px;
+  line-height: 1.62;
+}
+
+.help-topic-shell .faq_new .answer.hide {
+  display: none;
+}
+
+/* ——— Legacy purple hero (About / Policies not yet shelled) ——— */
+.bo-help-topic-head,
+.visual_title.bo-help-topic-head + .bo-help-topic-body,
+.bo-help-topic-page > .bo-help-topic-body:not(.help-topic-body) {
+  width: min(909px, calc(100% - 48px));
+  max-width: 909px;
+  box-sizing: border-box;
+  margin-inline: auto;
+}
+
+.bo-help-topic-head {
+  position: relative;
+  min-height: 0;
+  margin-top: 60px;
+  padding: 28px 32px;
+  overflow: hidden;
+  border: 1px solid rgba(123, 63, 228, 0.12);
+  border-radius: 18px 18px 0 0;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(255, 216, 244, 0.68), transparent 34%),
+    linear-gradient(135deg, #25105c 0%, #7b3fe4 58%, #c283ff 100%);
+  box-shadow: 0 12px 30px rgba(49, 19, 108, 0.08);
+}
+
+.bo-help-topic-head .img_area {
+  display: none;
+}
+
+.bo-help-topic-head .visual_gon,
+.bo-help-topic-head .title_inner_a {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  text-align: left;
+}
+
+.bo-help-topic-head .title_inner_a li {
+  margin: 0;
+  padding: 0;
+}
+
+.bo-help-topic-head .descr {
+  margin: 0 0 7px;
+  color: #eadfff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.bo-help-topic-head h2,
+.bo-help-topic-head h2 span {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(30px, 3vw, 42px);
+  line-height: 1.1;
+  font-weight: 900;
+}
+
+.visual_title.bo-help-topic-head + .bo-help-topic-body,
+.bo-help-topic-page > .service_section.bo-help-topic-body {
+  margin-top: 0;
+  margin-bottom: 76px;
+  padding: 34px 36px 44px;
+  border: 1px solid var(--help-line);
+  border-top: 0;
+  border-radius: 0 0 18px 18px;
+  color: var(--help-muted);
+  background: var(--help-panel);
+  box-shadow: 0 16px 34px rgba(49, 19, 108, 0.08);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title1,
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title2,
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title3,
+.bo-help-topic-page > .service_section.bo-help-topic-body h3.title1,
+.bo-help-topic-page > .service_section.bo-help-topic-body h3.title2,
+.bo-help-topic-page > .service_section.bo-help-topic-body h3.title3 {
+  margin: 32px 0 10px;
+  padding: 0;
+  border: 0;
+  color: var(--help-ink);
+  background: transparent;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title1:first-child,
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title2:first-child,
+.bo-help-topic-page > .service_section.bo-help-topic-body h3.title1:first-child,
+.bo-help-topic-page > .service_section.bo-help-topic-body h3.title2:first-child {
+  margin-top: 0;
+}
+
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title1,
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title1 span,
+.bo-help-topic-page > .service_section.bo-help-topic-body h3.title1,
+.bo-help-topic-page > .service_section.bo-help-topic-body h3.title1 span {
+  font-size: 22px;
+}
+
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title2,
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title2 span,
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title3,
+.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title3 span,
+.bo-help-topic-page > .service_section.bo-help-topic-body h3.title2,
+.bo-help-topic-page > .service_section.bo-help-topic-body h3.title2 span {
+  font-size: 17px;
+}
+
+.visual_title.bo-help-topic-head + .bo-help-topic-body p,
+.bo-help-topic-page > .service_section.bo-help-topic-body p {
+  margin: 0;
+}
+
+.visual_title.bo-help-topic-head + .bo-help-topic-body p + p,
+.bo-help-topic-page > .service_section.bo-help-topic-body p + p {
+  margin-top: 12px;
+}
+
+.visual_title.bo-help-topic-head + .bo-help-topic-body a,
+.bo-help-topic-page > .service_section.bo-help-topic-body a {
+  color: var(--help-purple);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ——— Responsive ——— */
+@media (max-width: 1120px) {
+  .bo-help-topic-page .bo-help-topic-container,
+  .bo-help-board-page .bo-help-topic-container,
+  .bo-help-qna-page .bo-help-topic-container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-bottom: 48px;
+  }
+
+  .help-topic-shell {
+    padding: 28px;
+  }
+
+  .help-topic-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .help-topic-nav {
+    position: static;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 12px;
+    scrollbar-width: none;
+  }
+
+  .help-topic-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .help-topic-nav strong {
+    display: none;
+  }
+
+  .help-topic-nav a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .bo-help-topic-head,
+  .visual_title.bo-help-topic-head + .bo-help-topic-body,
+  .bo-help-topic-page > .service_section.bo-help-topic-body {
+    width: calc(100% - 44px);
+  }
+
+  .bo-help-topic-head {
+    margin-top: 30px;
+  }
+
+  .visual_title.bo-help-topic-head + .bo-help-topic-body,
+  .bo-help-topic-page > .service_section.bo-help-topic-body {
+    margin-bottom: 48px;
+  }
+}
+
+@media (max-width: 760px) {
+  .help-topic-shell {
+    gap: 22px;
+    padding: 22px;
+    border-radius: 16px;
+  }
+
+  .help-topic-head h1,
+  .help-topic-head h1 span {
+    font-size: 32px;
+  }
+
+  .help-topic-head p,
+  .help-topic-panel p,
+  .help-topic-panel li,
+  .help-topic-body p,
+  .help-topic-body li {
+    font-size: 14px;
+  }
+
+  .help-topic-panel {
+    padding: 18px;
+  }
+
+  .help-topic-panel h2,
+  .help-topic-panel h2 span,
+  .help-topic-body h3.title1,
+  .help-topic-body h3.title1 span {
+    font-size: 21px;
+  }
+
+  .help-topic-shell .bbs_top_wrap,
+  .help-topic-shell #boardsearch .bbs_top_wrap {
+    justify-content: stretch;
+  }
+
+  .help-topic-shell .bbs_top_wrap .left,
+  .help-topic-shell .bbs_top_wrap .right2,
+  .help-topic-shell .bbs_top_wrap .searchform {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+
+  .help-topic-shell .bbs_top_wrap input[type="text"],
+  .help-topic-shell .bbs_top_wrap .res_bbs_search_input,
+  .help-topic-shell .bbs_top_wrap .btn_resp {
+    width: 100%;
+  }
+
+  .help-topic-shell .res_table .thead,
+  .help-topic-shell .help-board-head {
+    display: none;
+  }
+
+  .help-topic-shell .res_table .tbody {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+    padding: 16px 2px;
+  }
+
+  .help-topic-shell .res_table .tbody > li:first-child {
+    grid-column: 1 / -1;
+    font-size: 12px;
+  }
+
+  .help-topic-shell .res_table .tbody > li.subject {
+    font-size: 14px;
+  }
+
+  .bo-help-topic-head {
+    width: calc(100% - 32px);
+    padding: 22px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .bo-help-topic-head h2,
+  .bo-help-topic-head h2 span {
+    font-size: 30px;
+  }
+
+  .visual_title.bo-help-topic-head + .bo-help-topic-body,
+  .bo-help-topic-page > .service_section.bo-help-topic-body {
+    width: calc(100% - 32px);
+    padding: 24px 20px 32px;
+    border-radius: 0 0 16px 16px;
+    font-size: 14px;
+  }
+}

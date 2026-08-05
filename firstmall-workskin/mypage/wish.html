@@ -1,0 +1,253 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 위시리스트 @@
+- 파일위치 : [스킨폴더]/mypage/wish.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-wishlist.css" />
+
+<style type="text/css">
+@media only screen and (max-width:1023px) {
+    .subpage_wrap .subpage_container { padding-bottom:0 !important;}
+    .subpage_wrap .subpage_container .title_container {display:block;padding-top:10px;}
+    .search_nav {display:none;}
+}
+.item_img_area>a>img { aspect-ratio: 1 / 1; object-fit: cover; object-position: center; }
+.addToCartBtn { left: 84%; }
+</style>
+
+<div class="subpage_wrap bo-mypage-shell bo-wishlist-shell">
+
+	<!-- +++++ mypage LNB ++++ -->
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a class="on" href="/mypage/wish" aria-current="page">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/main/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a href="/service/cs">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+	<!-- +++++ //mypage LNB ++++ -->
+
+	<!-- +++++ mypage contents ++++ -->
+	<div class="subpage_container bo-mypage bo-wishlist-page">
+		<!-- 전체 메뉴 -->
+		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
+
+		<!-- 타이틀 + 카테고리 탭 -->
+		<div class="title_container bo-wishlist-head">
+			<h2><span designElement="text">Wishlist</span></h2>
+			<p class="bo-wishlist-subtitle">Products you liked are saved here for quick shopping.</p>
+			<!--{ ? record }-->
+			<div class="bo-wishlist-tabs" role="list" aria-label="Wishlist categories">
+				<button class="is-active" type="button" data-wish-filter="all" aria-pressed="true">All</button>
+				<button type="button" data-wish-filter="beauty" aria-pressed="false">Beauty</button>
+				<button type="button" data-wish-filter="k-food" aria-pressed="false">K-Food</button>
+				<button type="button" data-wish-filter="lifestyle" aria-pressed="false">Lifestyle</button>
+				<button type="button" data-wish-filter="k-pop" aria-pressed="false">K-pop</button>
+				<button type="button" data-wish-filter="k-traditional" aria-pressed="false">K-Traditional</button>
+			</div>
+			<span class="filter_count bo-wishlist-count">{=number_format(count(record))} Items</span>
+			<!--{ / }-->
+		</div>
+
+		<!--{/*#*/ common_mycart_top}-->
+
+		<form name="wish_form" id="wish_form" method="post">
+		<!--{ ? record }-->
+			<div class="wish_allselect_area hide">
+				<label class="checkbox_allselect"><input type="checkbox" class="btn_select_all" /> <span class="txt">전체선택</span></label>
+				<button type="button" class="btn_resp btn_select_del">선택삭제</button>
+			</div>
+            <a class="category_filter_mo hide"><img src="../images/icon/icon-filter.png" alt=""></a>
+            <select name="sorting" class="filter_select hide" id="catalog_filter">
+                <option {?sorting == "new"} selected{/} value="new">New</option>
+                <option {?sorting == "sale"} selected{/} value="sale">Sale</option>
+                <option {?sorting == "ranking"} selected{/} value="ranking">Ranking</option>
+                <option {?sorting == "low_price"} selected{/} value="low_price">Low Price</option>
+                <option {?sorting == "high_price"} selected{/} value="high_price">High Price</option>
+                <option {?sorting == "review"} selected{/} value="review">Review</option>
+            </select>
+            <div class="catalog_mo hide">
+                <div class="catalog_filter"></div>
+            </div>
+
+			<div class="bo-wishlist-list-wrap">
+				<ul id="wishList" class="wish_list bo-wishlist-grid">
+					<!--{ @ record }-->
+					<li class="goods_list_style5 bo-wish-card" data-wish-category="" data-goods-seq="{.goods_seq}">
+						<span class="bo-wish-card__category-seed" hidden>
+							<!--{ ? .category_title }-->{.category_title}<!--{ : .category }-->{.category}<!--{ / }-->
+						</span>
+						<div class="item_img_area bo-wish-card__media">
+							<a href="../goods/view?no={.goods_seq}">{.image_html}</a>
+							<div class="addToCartBtn bo-wish-card__cart">
+								<a class="addToCartBtnArea" href="javascript:void(0)" onclick="displayAddToCartQuickview(this, {= .goods_seq})">
+									<img src="/data/skin/{skin}/images/icon/icon-add-to-cart.png" onerror="" class="addToCartIcon" alt="Add To Cart Icon" title="Add To Cart" />
+									<img src="/data/skin/{skin}/images/icon/icon-added-to-cart.png" onerror="" class="addToCartIcon hide" alt="Product is Added to Cart" title="Product is Added to Cart" />
+								</a>
+							</div>
+						</div>
+						<ul class="item_info_area bo-wish-card__body">
+							<li class="goods_name_area bo-wish-card__name">
+								<small
+									class="bo-wish-card__brand"
+									data-brand-code="{.brand_code}"
+									data-brand="{.brand}"
+								><!--{ ? .brand_title }-->{.brand_title}<!--{ : .brand_name }-->{.brand_name}<!--{ / }--></small>
+								<label><input type="checkbox" name="wish_seq[]" value="{.wish_seq}" class="hide" /> {.goods_name}</label>
+							</li>
+							<li class="goods_price_area bo-wish-card__price">
+                                <span class="sale_price">
+                                <!--{ ? .sale_price >= 0 }-->
+                                    {=get_currency_price(.sale_price, 2, '', '<b class="num">_str_price_</b>')}
+                                <!--{ : }-->
+                                    {=get_currency_price(.price, 2, '', '<b class="num">_str_price_</b>')}
+                                <!--{ / }-->
+                                </span>
+                                <!--{ ? .consumer_price > .sale_price }-->
+                                <span class="consumer_price">
+                                    {=get_currency_price(.consumer_price, 2, '', '<span class="num">_str_price_</span>')}
+                                </span>
+                                <!--{ : }-->
+                                <span class="consumer_price" aria-hidden="true"></span>
+                                <!--{ / }-->
+                                <!--{ ? .sale_per > 0 }-->
+                                <span class="discount_rate hide">
+                                    <b class="num">{.sale_per}</b>%
+                                </span>
+                                <!--{ : }-->
+                                <!--{ ? .consumer_price > 0 }-->
+                                <span class="discount_rate hide">
+                                    <b class="num">{=round((.consumer_price - .sale_price) / .consumer_price *100)}</b>%
+                                </span>
+                                <!--{ / }-->
+                                <!--{ / }-->
+							</li>
+							<!--{ ? .reserve || ( isplusfreenot && isplusfreenot.ispoint ) }-->
+							<li class="wish_point hide">
+								<!--{ ? .reserve }-->
+								{=get_currency_price(.reserve,2)} 적립
+								<!--{ / }-->
+								<!--{ ? isplusfreenot && isplusfreenot.ispoint  }-->
+								/ {=number_format(.point)}P 적립
+								<!--{ / }-->
+							</li>
+							<!--{ / }-->
+							<li class="wish_btns bo-wish-card__actions">
+								<button type="button" name="cart" id="wishcart_{.wish_seq}" class="btn_resp size_a color2 wishcart bo-wish-card__cart-btn" aria-label="Add to cart"></button>
+								<button type="button" class="btn_resp btn_gray_under btn_thisitem_del bo-wish-card__wish-btn is-active" value="{.wish_seq}" aria-label="Remove from wishlist"></button>
+							</li>
+						</ul>
+					</li>
+					<!--{ / }-->
+				</ul>
+			</div>
+
+			<div class="paging_navigation bo-wishlist-pagination">
+				<!--{ ? page.prev }-->
+				<a href="wish?page={page.prev}&amp;{page.querystring}"><span class="prev" />Prev</span></a>
+				<!--{ / }-->
+				<!--{ @ page.page }-->
+					<!--{ ? page.nowpage ==  .value_ }-->
+					<a class="on red">{.value_ }</a>&nbsp;
+					<!--{ : }-->
+					<a href="wish?page={.value_}&amp;{page.querystring}">{.value_ }</a>&nbsp;
+					<!--{ / }-->
+				<!--{ / }-->
+				<!--{ ? page.next }-->
+				<a href="wish?page={page.next}&amp;{page.querystring}"><span class="next " />Next</span></a>
+				<!--{ / }-->
+			</div>
+		<!--{ : }-->
+			<div class="no_data_area2 Mt20 bo-wishlist-empty">
+				Your wishlist is empty.
+			</div>
+		<!--{ / }-->
+		</form>
+
+		<div id="cart_dialog" class="resp_layer_pop hide">
+			<h4 class="title">Add to Cart</h4>
+			<div class="y_scroll_auto v2">
+			</div>
+			<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+		</div>
+
+	</div>
+	<!-- +++++ //mypage contents ++++ -->
+
+</div>
+<script type="text/javascript" src="../common/mypage_ui.js"></script><!-- mypage ui 공통 -->
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+		// Normalize wishlist card thumbnails to background images.
+		$(".bo-wish-card__media").each(function() {
+			var $media = $(this);
+			var $img = $media.find("img").first();
+			if (!$img.length || !$img.attr("src")) return;
+			$media.css({
+				"background-image": "url('" + $img.attr("src") + "')"
+			});
+			$img.css({ opacity: 0, position: "absolute", inset: 0 }).attr("aria-hidden", "true");
+		});
+
+		// Select all
+		$("form#wish_form .btn_select_all").change(function() {
+			if($(this).is(":checked")) {
+				$("input[name='wish_seq[]']").attr("checked",true);
+				$("input[name='wish_seq[]']").closest('.ez-checkbox').addClass('ez-checkbox-on');
+			} else {
+				$("input[name='wish_seq[]']").attr("checked",false);
+				$("input[name='wish_seq[]']").closest('.ez-checkbox').removeClass('ez-checkbox-on');
+			}
+		});
+
+		// Delete selected
+		$("form#wish_form button.btn_select_del").bind("click",function(){
+			$("form#wish_form").attr("action","wish_del");
+			$("form#wish_form").attr("target","actionFrame");
+			$("form#wish_form")[0].submit();
+		});
+
+		// Delete current item
+		$("form#wish_form button.btn_thisitem_del").bind("click",function(){
+			var selected_order = $(this).val();
+			$("input[name='wish_seq[]']").removeAttr("checked");
+			$("input[name='wish_seq[]'][value='"+selected_order+"']").attr("checked", true);
+
+			$("form#wish_form").attr("action","wish_del");
+			$("form#wish_form").attr("target","actionFrame");
+			$("form#wish_form")[0].submit();
+		});
+
+		// Add to cart
+		$("button[name='cart']").bind("click",function() {
+			var seq = $(this).attr('id');
+			seq = seq.replace("wishcart_","");
+			var url = "wish2cart?no="+seq;
+			$.get(url, function(data) {
+				$("#cart_dialog .y_scroll_auto").html(data);
+				showCenterLayer('#cart_dialog');
+			});
+		});
+
+	});
+</script>
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-wishlist.js"></script>

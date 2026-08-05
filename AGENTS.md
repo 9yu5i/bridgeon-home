@@ -102,6 +102,24 @@ Firstmall-replaceable behavior under `scripts/prototype/`.
 - Every HTML script tag that loads `scripts/prototype/` must include `data-prototype`.
 - If a stylesheet or script is shared by many pages, confirm every page path before changing relative URLs.
 
+## Firstmall Integration Rules
+
+When working on the live Firstmall skin or `firstmall-workskin/`:
+
+- Treat the public URL as the primary clue to the template path. Example:
+  `https://trendy-picker.co.kr/goods/view?no=92915` maps to
+  `/data/skin/[skin]/goods/view.html`.
+- Complex pages load multiple smaller HTML modules into one entry template. Inspect the entry
+  file and every included module before editing; do not collapse a multi-module page into one
+  large HTML file.
+- **HTML:** edit the existing Firstmall skin templates/modules that own the page.
+- **CSS:** add new scoped redesign files (for example `css/redesign/trendypicker-*.css`) and link
+  them from the HTML. Do **not** mix TrendyPicker styles into Firstmall
+  `css/common.css` or `css/user.css`.
+- Keep upload candidates under `firstmall-workskin/`. Prefer
+  `node tools/check-firstmall-workskin.mjs` for work-skin validation.
+- Do not add CSS/JS `?v=` query strings on Firstmall skin links.
+
 ## Design Rules
 
 - The site and product brand is `TrendyPicker`. Do not reintroduce the legacy product name in

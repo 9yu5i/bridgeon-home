@@ -174,6 +174,22 @@
   consumeScrollTopOnLoad();
   initPageTransitions();
 
+  const normalizeOrderCatalogLinks = () => {
+    document.querySelectorAll('a[href*="order_catalog"]').forEach((link) => {
+      try {
+        const url = new URL(link.getAttribute("href"), window.location.href);
+        if (!/\/mypage\/order_catalog\/?$/.test(url.pathname)) return;
+        const scDate = url.searchParams.get("sc_date");
+        if (scDate !== null && scDate !== "") return;
+        url.searchParams.set("sc_date", "0");
+        link.setAttribute("href", `${url.pathname}${url.search}${url.hash}`);
+      } catch {
+        // Keep the original href when it cannot be normalized.
+      }
+    });
+  };
+  normalizeOrderCatalogLinks();
+
   const canFetchHtml = typeof window.fetch === "function" && typeof window.DOMParser === "function";
 
   const fetchHtmlDocument = async (url) => {
@@ -305,21 +321,6 @@
   hydrateCouponCount();
   hydrateReviewCount();
   hydrateWishlistBrands();
-
-  const orderPreview = document.querySelector("[data-trendypicker-order-preview]");
-  const isOrderPreview = new URLSearchParams(window.location.search).get(
-    "trendypicker_order_preview",
-  ) === "1";
-
-  if (orderPreview && isOrderPreview) {
-    document
-      .querySelectorAll("[data-trendypicker-live-orders], [data-trendypicker-order-empty]")
-      .forEach((element) => {
-        element.classList.add("is-trendypicker-preview-hidden");
-      });
-
-    orderPreview.hidden = false;
-  }
 
   const getOrderStage = (step) => {
     if (step >= 75) return 3;
@@ -532,6 +533,7 @@
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && !ordersModalLayer.hidden) closeOrdersModal();
     });
+
   }
 
   const avatarTrigger = document.querySelector("[data-mypage-avatar-open]");

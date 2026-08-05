@@ -1,0 +1,284 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 게시판 List 레이아웃 템플릿 @@
+- 파일위치 : [스킨폴더]/board/index.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!--{? manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' }-->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css" />
+<!--{/}-->
+<!--{? manager.id == 'magazine' }-->
+<style>
+@media only screen and (max-width:1023px) {
+    .subpage_wrap .subpage_container { padding-bottom:0 !important;}
+}
+</style>
+<!--{/}-->
+<!-- 본문내용 시작 -->
+<!-- <link type="text/css" rel="stylesheet" charset="utf-8" href="{skindir}/board.css" /> -->
+<script type="text/javascript">
+//<![CDATA[
+var board_id = '{_GET.id}';
+var boardlistsurl = '{boardurl->lists}';
+var boardwriteurl = '{boardurl->write}';
+var boardviewurl = '{boardurl->view}';
+var boardmodifyurl = '{boardurl->modify}';
+var boardreplyurl = '{boardurl->reply}';
+var boardrpermurl = '{boardurl->perm}';
+var gl_isuser = false;
+{ ? defined('__ISUSER__') }
+gl_isuser = '{=defined('__ISUSER__')}';
+{ / }
+var return_url = '{=urlencode(_SERVER.REQUEST_URI)}';
+
+var comment = '{comment}';
+var commentlay = '{commentlay}';
+var isperm_write = '{managerview.isperm_write}';
+//]]>
+</script>
+<script type="text/javascript" src="/app/javascript/js/board.js?v=7"  charset="utf-8"></script>
+{? commentskinjsuse && !viewlist }
+<script type="text/javascript" src="/app/javascript/js/board_mobile.js?v=1"  charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/js/board_comment_mobile.js?v=2"  charset="utf-8"></script>
+{/}
+<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js" ></script>
+<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js"  charset="utf-8"></script>
+
+<!--{? manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' }-->
+<div id="boardlayout" class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-board-page">
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/main/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a class="on" href="/service/cs" aria-current="page">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+
+	<main class="subpage_container bo-mypage bo-help-topic-container">
+		<article class="help-topic-shell">
+			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
+				<a href="/service/cs">Help Center</a>
+				<span aria-hidden="true">&gt;</span>
+				<!--{? manager.id == 'mbqna'}-->
+				<span>About Us</span>
+				<!--{:}-->
+				<span>Customer Service</span>
+				<!--{/}-->
+			</nav>
+
+			<header class="help-topic-head">
+				<!--{? manager.id == 'mbqna'}-->
+				<span class="help-topic-kicker">About Us</span>
+				<h1><span designElement="text">Contact Us</span></h1>
+				<p>Send order, product, account, and policy questions to the TrendyPicker support team.</p>
+				<div class="help-topic-meta"><span>Customer inquiry</span></div>
+				<!--{: manager.id == 'faq'}-->
+				<span class="help-topic-kicker">Customer Service</span>
+				<h1><span designElement="text">FAQ</span></h1>
+				<p>Quick answers for orders, payment, shipping, account, coupons, membership, returns, and product questions.</p>
+				<div class="help-topic-meta"><span>Searchable FAQ</span></div>
+				<!--{:}-->
+				<span class="help-topic-kicker">Customer Service</span>
+				<h1><span designElement="text">Notice</span></h1>
+				<p>Important service updates, promotion notices, shopping announcements, and delivery alerts are collected here.</p>
+				<div class="help-topic-meta"><span>Board</span></div>
+				<!--{/}-->
+			</header>
+
+			<div class="help-topic-layout">
+				<nav class="help-topic-nav" aria-label="Help topics">
+					<strong>Topics</strong>
+					<a href="/board/?id=notice" {? manager.id == 'notice'}class="is-active" aria-current="page"{/}>Notice</a>
+					<a href="/board/?id=faq" {? manager.id == 'faq'}class="is-active" aria-current="page"{/}>FAQ</a>
+					<a href="/mypage/myqna_catalog">Q&amp;A</a>
+					<a href="/service/guide">Guide</a>
+					<a href="/service/cancellation">Returns &amp; Exchanges</a>
+					<a href="/service/company">About Us</a>
+					<a href="/board/?id=mbqna" {? manager.id == 'mbqna'}class="is-active" aria-current="page"{/}>Contact Us</a>
+					<a href="/service/agreement">Terms of Use</a>
+					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
+				</nav>
+
+				<div class="help-topic-body">
+					<div id="bbslist">
+						{#skin}
+					</div>
+				</div>
+			</div>
+		</article>
+	</main>
+</div>
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<!--{:}-->
+<div id="boardlayout">
+	<div class="subpage_wrap">
+		{? !_GET.iframe }
+		<div id="subpageLNB" class="subpage_lnb">
+			{#board_lnb}
+		</div>
+		{/}
+
+		<div class="subpage_container">
+		{? !_GET.iframe }
+			<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)"><span designElement="text">MENU</span></a>
+
+            <!--{? manager.id == 'magazine'}-->
+            <div class="ajaxLineMap search_nav">
+                <a class="navi_home" href="/main">HOME</a>
+                <span class="navi_linemap"><a href="#">&nbsp;MAGAZINE&nbsp;</a></span>
+                <span class="navi_linemap"><a href="#">&nbsp;{=ca.name}&nbsp;</a></span>
+            </div>
+            <!--{/}-->
+			<div class="title_container">
+				<h3>{manager.name}</h3>
+			</div>
+            <!--{? manager.id == 'magazine' && categorylist}-->
+            <div class="category_event bd">
+                <ul class="board_category magazine_menu">
+                    <li><a href="/main/magazine">HOME</a></li>
+                    <!--{@ categorylist}-->
+                    <li {? _GET.category == .value_} class="on"{/}><a href="/board/?id=magazine&category={=str_replace('&','%26',.value_)}">{.value_}</a></li>
+                    <!--{/}-->
+                </ul>
+            </div>
+            <!--{/}-->
+		{/}
+
+			<div id="bbslist">
+				{#skin}
+			</div>
+
+		</div>
+	</div>
+	<script type="text/javascript" src="../common/cscenter_ui.js"></script>
+</div>
+<!--{/}-->
+
+<div class="board_mo_menu_bg"></div>
+
+<div id="CmtBoardPwCkNew" class="hide BoardPwCk">
+	<div class="msg">
+		<div>댓글/답글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="BoardPwcheckFormNew" id="CmtBoardPwcheckFormNew" method="post" >
+	<input type="hidden" name="modetype" id="cmtmodetype_new" value="" />
+	<input type="hidden" name="seq" id="cmt_pwck_seq_new" value="" />
+	<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq_new" value="" />
+	<input type="hidden" name="cmtparentseq" id="cmt_pwck_cmtreplyseq_new" value="" />
+	<input type="hidden" name="cmtreplyidx" id="cmt_pwck_cmtreplyidx_new" value="" />
+	<div class="ibox">
+		<input type="password" name="pw" id="cmt_pwck_pw_new" class="input" />
+		<input type="button" id="CmtBoardPwcheckBtnNew" value=" 확인 " class="hand round_btn" />
+		<input type="button" value=" 취소 " class="hand round_btn" onclick="$('#CmtBoardPwCkNew').dialog('close');" />
+	</div>
+	</form>
+</div>
+{? _GET.iframe }
+<script type="text/javascript">
+$(document).ready(function(){
+	$(document).resize(function(){
+		$('#'+board_id+'_frame',parent.document).height($('#boardlayout').height());
+	}).resize();
+});
+function iframeset(){
+	$('#'+board_id+'_frame',parent.document).height($('#boardlayout').height());
+}
+</script>
+{/}
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+    <!--{? manager.id != 'magazine' && manager.id != 'promotion' && manager.id != 'editors' && manager.id != 'notice' && manager.id != 'faq' && manager.id != 'mbqna'}-->
+    if($(window).width() < 1023 && $("#subpageLNB #boardLnbCommon").length > 0){
+        $("#bbslist").before($("#boardLnbCommon"));
+    }
+    $(window).resize(function(){
+        if($(window).width() < 1023 && $("#subpageLNB #boardLnbCommon").length > 0){
+            $("#bbslist").before($("#boardLnbCommon"));
+        } else if ($(window).width() > 1023 && $(".subpage_container #boardLnbCommon").length > 0){
+            $("#subpageLNB").prepend($("#boardLnbCommon"));
+        }
+    });
+    if($('.subpage_container .lnb_sub').length > 0){
+        $('.subpage_container .lnb_sub').after().on("click", function (event) {
+            $(".lnb_sub").toggleClass("on");
+            var top = $(".lnb_sub").offset().top + $(".lnb_sub").outerHeight();
+            $(".board_mo_menu_bg").css("top",top+"px");
+            $(".board_mo_menu_bg").toggle();
+        });
+    }
+    <!--{/}-->
+    <!--{? manager.id == 'magazine' }-->
+    if ( window.innerWidth < 1024 && $(".category_event").length > 0 ) {
+        $('.category_event ul > li').addClass('swiper-slide');
+        slideshowSwiper = new Swiper('.category_event', {
+            wrapperClass: 'board_category',
+            slidesPerView: 'auto'
+        });
+    }
+    <!--{/}-->
+    $('.boad_view_btn').live('click', function() {
+        event.preventDefault();
+        var viewlink = $(this).attr('viewlink');
+        var board_seq = $(this).attr('board_seq');
+        var viewtype = $(this).attr('viewtype');
+        var pagetype = $(this).attr('pagetype');
+        if(viewtype == 'layer' && (pagetype == 'goods' || pagetype == 'mypage') ){
+            boardviewtype(viewlink,board_seq,viewtype);
+        }else{
+            if ( self !== top ) {
+                window.parent.location.href=viewlink.replace("&iframe=1", "").replace("&popup=1", "");
+            } else {
+                document.location.href=viewlink;
+            }
+
+        }
+    });
+});
+
+function getAuthLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et361'),'450','140');
+	{:}
+		var request_uri = "{_SERVER.REQUEST_URI}";
+		if ( "{_GET.iframe}" && "{_GET.gdviewer}") request_uri = "/goods/view?no={_GET.goods_seq}";
+		openDialogConfirm(getAlert('et362'),'400','155',function(){top.location.href="/member/login?return_url="+encodeURIComponent(request_uri);},function(){});
+	{/}
+}
+
+function getLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et363'),'450','140');
+	{:}
+		var request_uri = "{_SERVER.REQUEST_URI}";
+		if ( "{_GET.iframe}" && "{_GET.gdviewer}") request_uri = "/goods/view?no={_GET.goods_seq}";
+		openDialogConfirm(getAlert('et362'),'400','155',function(){top.location.href="/member/login?return_url="+encodeURIComponent(request_uri);},function(){});
+	{/}
+}
+
+function getMbLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et364'),'400','140');
+	{:}
+		var request_uri = "{_SERVER.REQUEST_URI}";
+		if ( "{_GET.iframe}" && "{_GET.gdviewer}") request_uri = "/goods/view?no={_GET.goods_seq}";
+		openDialogConfirm(getAlert('et362'),'400','155',function(){top.location.href="/member/login?return_url="+encodeURIComponent(request_uri);},function(){});
+	{/}
+}
+</script>
+<!-- ++++++++++++++++++++++++++++++++++ 게시판 List 레이아웃 템플릿 :: END ++++++++++++++++++++++++++++++++++ -->

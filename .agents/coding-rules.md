@@ -52,14 +52,21 @@ git diff --check
 ## Firstmall Work-Skin Rules
 
 - Treat the public URL as the primary route-to-template clue. For example,
-  `/goods/view?no=...` maps to `[skin]/goods/view.html`.
-- Inspect the entry template and every loaded module before changing a complex page.
-- Preserve Firstmall's existing template/module split instead of consolidating a complex page into
-  one large HTML file.
-- Modify the existing Firstmall HTML files that own the page or module.
-- Put TrendyPicker styles in new, page- or component-scoped CSS files and link them from the owning
-  HTML.
-- Do not add TrendyPicker rules to Firstmall's large `css/common.css` or `css/user.css`.
+  `https://trendy-picker.co.kr/goods/view?no=92915` maps to
+  `/data/skin/[skin]/goods/view.html` (and likewise `/mypage/wish` → `mypage/wish.html`).
+- Inspect the entry template and every loaded module before changing a complex page such as
+  product view. Prefer editing the owning module over consolidating everything into one HTML file.
+- Preserve Firstmall's existing template/module split. Do not rewrite a multi-module page into a
+  single large HTML file just to make redesign easier.
+- **HTML:** modify the existing Firstmall HTML files that own the page or module.
+- **CSS:** add new page- or component-scoped redesign files (for example
+  `css/redesign/trendypicker-orders.css`, `trendypicker-wishlist.css`) and link them from the
+  owning HTML. Do not mix redesign rules into Firstmall's large `css/common.css` or `css/user.css`.
+- **JS:** add redesign-specific behavior in focused `trendypicker-*.js` files under
+  `/app/javascript/js/` when needed, instead of expanding legacy Firstmall scripts.
+- Do not add CSS/JS `?v=` query strings on Firstmall skin links.
 - Keep upload candidates under `firstmall-workskin/`. Mirror skin-owned HTML, CSS, and images by
   their skin-relative paths, and mirror shared JavaScript under `app/javascript/js/` for upload to
   Firstmall's application directory.
+- Validate with `node tools/check-firstmall-workskin.mjs` (prefer this over full `npm run check`
+  when only the work-skin changed).

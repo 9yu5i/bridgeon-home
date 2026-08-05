@@ -116,8 +116,16 @@ keeps `{# form_member}` and Firstmall's original member handlers; the static pro
 and address samples are not part of the work skin. Existing Firstmall header, footer, index, and
 other account subpages remain untouched.
 The shared account shell owns a 909px desktop content column and the My Page cross-page fade.
-The order work-skin script also provides a query-gated visual fixture at
-`/mypage/order_catalog?trendypicker_order_preview=1`; the normal route never injects sample orders.
+The production order work-skin has no query-gated visual fixture. The order catalog and dashboard
+render only Firstmall's live collections or their native empty states.
+
+The Firstmall Help Center route is `/service/cs`, owned by `firstmall-workskin/service/cs.html`.
+Its hero and directory mirror `my-page/help-center.html`, its presentation lives in
+`css/redesign/trendypicker-help.css`, and its links resolve to Firstmall's native notice, FAQ,
+inquiry, guide, policy, and company routes. The directory needs no page-specific JavaScript.
+The linked service templates, the customer-service modes of `board/index.html`, and
+`mypage/myqna_catalog.html` share `css/redesign/trendypicker-help-topic.css`. This layer changes
+presentation only and preserves native board collections, inquiry actions, and policy content.
 Server-runtime Firstmall HTML is validated separately by
 `tools/check-firstmall-workskin.mjs`.
 

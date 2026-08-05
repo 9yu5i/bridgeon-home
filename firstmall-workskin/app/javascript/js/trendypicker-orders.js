@@ -2,85 +2,29 @@
   const page = document.querySelector(".bo-orders-page");
   if (!page) return;
 
-  const normalize = (value) =>
-    String(value || "")
-      .toLocaleLowerCase()
-      .replace(/\s+/g, " ")
-      .trim();
-
-  const isPreview =
-    new URLSearchParams(window.location.search).get("trendypicker_order_preview") === "1";
-
-  const initialOrderParams = new URLSearchParams(window.location.search);
-  if (!initialOrderParams.has("sc_date")) {
+  // Firstmall defaults to a limited period when sc_date is missing/empty.
+  // Dashboard links already pass sc_date=0; native LNB / other pages often do not.
+  const orderParams = new URLSearchParams(window.location.search);
+  const scDate = orderParams.get("sc_date");
+  if (scDate === null || scDate === "") {
     const allOrdersUrl = new URL(window.location.href);
     allOrdersUrl.searchParams.set("sc_date", "0");
     window.location.replace(allOrdersUrl.href);
     return;
   }
 
-  const createPreviewOrderList = () => {
-    if (!isPreview) return null;
+  const normalize = (value) =>
+    String(value || "")
+      .toLocaleLowerCase()
+      .replace(/\s+/g, " ")
+      .trim();
 
-    page.querySelectorAll(".order_list, .no_data_area2").forEach((element) => {
-      element.hidden = true;
-      element.classList.add("is-hidden");
-    });
-
-    const colors = ["#ffd9df", "#c4a0f0", "#9ed8f3", "#9a7a7e"];
-    const thumbnails = colors
-      .map(
-        (color, index) => `
-          <li>
-            <ul class="oc_item_info_detail">
-              <li class="img_link">
-                <span class="goods_thumb orders-preview-thumb" style="background:${color}"></span>
-              </li>
-              <li class="detail_spec">
-                <div class="brand_name">TrendyPicker</div>
-                <div class="goods_name">Preview item ${index + 1}</div>
-                <div class="goods_quantity"><strong class="num">${index === 3 ? 3 : 1}</strong></div>
-              </li>
-            </ul>
-          </li>`,
-      )
-      .join("");
-
-    const list = document.createElement("div");
-    list.className = "order_list orders-preview-list";
-    list.dataset.ordersPreview = "";
-    list.innerHTML = `
-      <ul>
-        <li class="bo-order-card" data-order-step="70" data-order-state="Delivered" data-order-payment="card">
-          <div class="menu">
-            <div class="order_num">
-              <h4><a href="javascript:void(0)">Order TP20260804001</a></h4>
-              <span>2026.08.04 | Delivered</span>
-            </div>
-            <div class="order_act">
-              <span><a href="javascript:void(0)">Order Details &gt;</a></span>
-              <a href="javascript:void(0)" class="btn_resp size_b color2">Write a Review</a>
-            </div>
-          </div>
-          <div class="shipping">
-            <ul class="product">${thumbnails}</ul>
-            <div class="price"><b>US$68.00</b></div>
-            <div class="status">
-              <span>Delivered</span>
-              <a class="order_btn orderexportsbtn" href="javascript:void(0)">Track Package</a>
-            </div>
-          </div>
-        </li>
-      </ul>`;
-
-    page.querySelector("#orderSearchForm")?.insertAdjacentElement("afterend", list);
-    return list;
-  };
-
-  const activeOrderList = createPreviewOrderList() || page.querySelector(".order_list");
+  const activeOrderList = page.querySelector(".order_list");
   const cards = Array.from(activeOrderList?.querySelectorAll(".bo-order-card") || []);
 
   const getStatus = (card) => {
+    if (card.dataset.orderStatus) return card.dataset.orderStatus;
+
     const state = normalize(card.dataset.orderState);
     const step = Number(card.dataset.orderStep || 0);
 
@@ -110,7 +54,7 @@
       paypal: "PayPal",
       pos_pay: "POS Payment",
     };
-    return labels[key] || value || "View order details";
+    return labels[key] || value || "—";
   };
 
   const makeAction = (source, className = "") => {
@@ -167,7 +111,7 @@
 
     const thumbs = document.createElement("div");
     thumbs.className = "orders-thumbs";
-    products.slice(0, 4).forEach((product, index) => {
+    products.slice(0, 3).forEach((product, index) => {
       const sourceImage = product.querySelector(".goods_thumb");
       const sourceLink = product.querySelector(".img_link");
       const thumb = document.createElement(sourceLink?.hasAttribute("onclick") ? "button" : "span");
@@ -177,9 +121,9 @@
       }
       thumb.className = "orders-thumb";
       if (sourceImage) thumb.append(sourceImage.cloneNode(true));
-      if (index === 3 && totalItems > 4) {
+      if (index === 2 && totalItems >= 4) {
         const more = document.createElement("em");
-        more.textContent = `+${totalItems - 4}`;
+        more.textContent = `+${totalItems - 3}`;
         thumb.append(more);
       }
       thumbs.append(thumb);
@@ -194,7 +138,26 @@
     const address = document.createElement("div");
     address.className = "orders-address";
     address.dataset.orderShippingAddress = "";
-    address.innerHTML = "<span>Shipping Address</span><b>View order details</b>";
+    const recipient = String(card.dataset.orderRecipient || "").replace(/\s+/g, " ").trim();
+    const zipcode = String(card.dataset.orderZipcode || "").replace(/\s+/g, " ").trim();
+    const rawAddress = String(card.dataset.orderAddress || "").replace(/\s+/g, " ").trim();
+    const embeddedAddress = [recipient, zipcode ? `[${zipcode}] ${rawAddress}`.trim() : rawAddress]
+      .filter(Boolean)
+      .join(", ");
+    const addressValue = document.createElement("b");
+    if (embeddedAddress) {
+      const addressLines = formatShippingAddressLines(recipient, embeddedAddress);
+      addressLines.forEach((line, index) => {
+        if (index > 0) addressValue.append(document.createElement("br"));
+        addressValue.append(document.createTextNode(line));
+      });
+      card.dataset.orderAddressReady = "true";
+    } else {
+      addressValue.textContent = "Loading...";
+    }
+    const addressLabel = document.createElement("span");
+    addressLabel.textContent = "Shipping Address";
+    address.append(addressLabel, addressValue);
 
     const reviewSource = menu.querySelector(".order_act > .btn_resp");
     const trackingSource = Array.from(shipping.querySelectorAll(".status .order_btn")).find(
@@ -213,6 +176,9 @@
       if (/track/.test(label)) return;
       if (tracking && /inquiry|exchange|return|q&a|문의|교환|반품/.test(label)) return;
       const action = makeAction(source);
+      if (action && /inquiry|exchange|return|q&a/.test(label)) {
+        action.textContent = "Inquiry";
+      }
       if (action) actions.append(action);
     });
 
@@ -270,6 +236,13 @@
       if (mobileTracking) item.append(mobileTracking);
       mobileItems.append(item);
     });
+
+    if (details) {
+      const mobileDetails = details.cloneNode(true);
+      mobileDetails.className = "order-details-link orders-mobile-detail-link";
+      mobileDetails.textContent = "Order Details >";
+      mobileItems.append(mobileDetails);
+    }
 
     body.append(thumbs, meta, address, actions, mobileItems);
     summary.append(head, body);
@@ -357,7 +330,8 @@
       details.textContent = "Order Details >";
       aside.append(details);
     }
-    head.append(heading, mark, aside);
+    head.append(heading, mark);
+    if (aside.childElementCount) head.append(aside);
 
     const body = document.createElement("div");
     body.className = "orders-history-body";
@@ -380,6 +354,33 @@
     return card;
   };
 
+  const ensureOrderList = () => {
+    let listRoot = page.querySelector(".order_list");
+    if (!listRoot) {
+      listRoot = document.createElement("div");
+      listRoot.className = "order_list";
+      listRoot.dataset.ordersList = "";
+      const emptyNode = page.querySelector("[data-orders-native-empty]");
+      if (emptyNode) emptyNode.before(listRoot);
+      else page.append(listRoot);
+    }
+
+    let list = listRoot.querySelector(":scope > ul");
+    if (!list) {
+      list = document.createElement("ul");
+      listRoot.append(list);
+    }
+    return list;
+  };
+
+  const syncNativeEmptyState = () => {
+    const emptyNode = page.querySelector("[data-orders-native-empty]");
+    if (!emptyNode) return;
+    const hasVisibleCards = cards.some((card) => !card.hidden);
+    emptyNode.hidden = hasVisibleCards;
+    emptyNode.classList.toggle("is-hidden", hasVisibleCards);
+  };
+
   const loadCancelRefundHistory = () => {
     if (historyLoadRequest) return historyLoadRequest;
     historyLoadRequest = Promise.all(
@@ -388,8 +389,7 @@
         documents: await getHistoryDocuments(source),
       })),
     ).then((results) => {
-      const list = activeOrderList?.querySelector(":scope > ul");
-      if (!list) return;
+      const list = ensureOrderList();
       const seen = new Set();
       results.forEach(({ source, documents }) => {
         documents.forEach((documentPage) => {
@@ -403,15 +403,16 @@
           });
         });
       });
-      if (cards.length > 0 && nativeEmpty) {
-        nativeEmpty.hidden = true;
-        nativeEmpty.classList.add("is-hidden");
-      }
+      syncNativeEmptyState();
     }).finally(() => {
       historyLoaded = true;
     });
     return historyLoadRequest;
   };
+
+  // Default filters are All / All Orders — start history fetch immediately so
+  // cancel/refund rows appear with the rest of the order list on first paint.
+  const historyReady = loadCancelRefundHistory();
 
   const extractDetailValue = (detailPage, label, sectionTitle = "") => {
     const wanted = normalize(label);
@@ -494,29 +495,74 @@
     return detailRequests.get(url);
   };
 
+  const readDetailPageAddress = (detailPage) => {
+    if (!detailPage) return { recipient: "", shippingAddress: "" };
+
+    const textOfSelector = (selector) =>
+      Array.from(detailPage.querySelectorAll(selector))
+        .map((element) => element.textContent.replace(/\s+/g, " ").trim())
+        .find(Boolean) || "";
+
+    const recipient =
+      textOfSelector(".recipient_user_name") ||
+      extractDetailValue(detailPage, "Contact Name", "Shipping Information") ||
+      extractDetailValue(detailPage, "Recipient") ||
+      extractDetailValue(detailPage, "받는분");
+
+    const international = textOfSelector(".international_address");
+    const zipcode = textOfSelector(".recipient_zipcode");
+    const street = textOfSelector(".recipient_address_street");
+    const baseAddress = textOfSelector(".recipient_address");
+    const detail = textOfSelector(".recipient_address_detail");
+    const composed = [zipcode ? `[${zipcode}]` : "", street || baseAddress, detail]
+      .filter(Boolean)
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const shippingAddress =
+      international ||
+      composed ||
+      extractDetailValue(detailPage, "Shipping Address", "Shipping Information") ||
+      extractDetailValue(detailPage, "Address") ||
+      extractDetailValue(detailPage, "배송지") ||
+      extractDetailValue(detailPage, "주소");
+
+    return { recipient, shippingAddress };
+  };
+
+  const applyShippingAddress = (card, recipient, shippingAddress) => {
+    const target = card.querySelector("[data-order-shipping-address] b");
+    if (!target || !shippingAddress) return false;
+    const addressLines = formatShippingAddressLines(recipient, shippingAddress);
+    if (!addressLines.length) return false;
+    target.replaceChildren();
+    addressLines.forEach((line, index) => {
+      if (index > 0) target.append(document.createElement("br"));
+      target.append(document.createTextNode(line));
+    });
+    card.dataset.orderAddressReady = "true";
+    return true;
+  };
+
   const hydrateAddress = async (card) => {
+    if (card.dataset.orderAddressReady === "true") return;
     const url = card.dataset.orderDetailsUrl;
     const target = card.querySelector("[data-order-shipping-address] b");
     if (!url || !target) return;
 
     const detailPage = await getOrderDetailPage(url);
-    if (!detailPage) return;
-    const shippingAddress = extractDetailValue(
-      detailPage,
-      "Shipping Address",
-      "Shipping Information",
-    );
-    const recipient = extractDetailValue(detailPage, "Contact Name", "Shipping Information");
-    if (shippingAddress) {
-      const addressLines = formatShippingAddressLines(recipient, shippingAddress);
-      target.replaceChildren();
-      addressLines.forEach((line, index) => {
-        if (index > 0) target.append(document.createElement("br"));
-        target.append(document.createTextNode(line));
-      });
+    if (!detailPage || card.dataset.orderAddressReady === "true") return;
+    const { recipient, shippingAddress } = readDetailPageAddress(detailPage);
+    if (!applyShippingAddress(card, recipient, shippingAddress) && /^(Loading\.\.\.|View order details)$/i.test(target.textContent)) {
+      target.textContent = "Not provided";
     }
   };
 
+  // Warm address detail requests as early as possible, then paint cards.
+  cards.forEach((card) => {
+    if (card.dataset.orderDetailsUrl) getOrderDetailPage(card.dataset.orderDetailsUrl);
+  });
   cards.forEach(buildSummaryCard);
   cards.forEach(hydrateAddress);
 
@@ -531,6 +577,7 @@
   const detailPaymentDate = detailModal?.querySelector("[data-orders-detail-payment-date]");
   const detailRecipient = detailModal?.querySelector("[data-orders-detail-recipient]");
   const detailAddress = detailModal?.querySelector("[data-orders-detail-address]");
+  const detailPricing = detailModal?.querySelector("[data-orders-detail-pricing]");
   let detailTrigger = null;
   let detailCard = null;
 
@@ -539,7 +586,17 @@
 
   const readCardItems = (card) =>
     Array.from(card.querySelectorAll(":scope > .shipping .oc_item_info_detail")).map(
-      (product) => ({
+      (product) => {
+        const sourceLink = product.querySelector(".img_link");
+        const onclick = sourceLink?.getAttribute("onclick") || "";
+        const onclickUrl = onclick.match(/location\.href\s*=\s*['\"]([^'\"]+)/)?.[1] || "";
+        const productUrl =
+          sourceLink?.getAttribute("href") ||
+          (onclickUrl ? new URL(onclickUrl, window.location.href).href : "");
+        const brandElement = product.querySelector(".brand_name");
+        const brandCode = brandElement?.dataset.brandCode || "";
+
+        return {
         image:
           product.querySelector(".goods_thumb img")?.getAttribute("src") ||
           product.querySelector(".img_link img")?.getAttribute("src") ||
@@ -548,6 +605,8 @@
           product.querySelector(".goods_thumb img")?.getAttribute("alt") ||
           textOf(product, ".goods_name", "Ordered item"),
         brand: textOf(product, ".brand_name"),
+        brandUrl: brandCode ? `/goods/brand?code=${encodeURIComponent(brandCode)}` : "",
+        productUrl,
         name: textOf(product, ".goods_name", "Ordered item"),
         options: Array.from(product.querySelectorAll(".goods_options li, .goods_suboptions li"))
           .map((option) => option.textContent.replace(/\s+/g, " ").trim())
@@ -555,7 +614,8 @@
           .join(" · "),
         quantity: textOf(product, ".goods_quantity .num", "1"),
         price: textOf(product, ".goods_price"),
-      }),
+        };
+      },
     );
 
   const renderDetailItems = (items) => {
@@ -573,27 +633,40 @@
       const row = document.createElement("article");
       row.className = "orders-detail-item";
 
+      const media = document.createElement(item.productUrl ? "a" : "span");
+      media.className = "orders-detail-item__media";
+      if (item.productUrl) media.href = item.productUrl;
+
       if (item.image) {
         const image = document.createElement("img");
         image.src = item.image;
         image.alt = item.imageAlt;
-        row.append(image);
+        media.append(image);
       } else {
         const placeholder = document.createElement("span");
         placeholder.className = "orders-detail-item__placeholder";
         placeholder.setAttribute("aria-hidden", "true");
-        row.append(placeholder);
+        media.append(placeholder);
       }
+      row.append(media);
 
       const copy = document.createElement("div");
       copy.className = "orders-detail-item__copy";
-      const name = document.createElement("strong");
+      if (item.brand) {
+        const brand = document.createElement(item.brandUrl ? "a" : "small");
+        brand.className = "orders-detail-item__brand";
+        brand.textContent = item.brand;
+        if (item.brandUrl) brand.href = item.brandUrl;
+        copy.append(brand);
+      }
+      const name = document.createElement(item.productUrl ? "a" : "strong");
+      name.className = "orders-detail-item__name";
       name.textContent = item.name;
+      if (item.productUrl) name.href = item.productUrl;
       copy.append(name);
-      const description = [item.brand, item.options].filter(Boolean).join(" · ");
-      if (description) {
+      if (item.options) {
         const meta = document.createElement("small");
-        meta.textContent = description;
+        meta.textContent = item.options;
         copy.append(meta);
       }
 
@@ -611,6 +684,101 @@
 
   const setDetailText = (element, value) => {
     if (element) element.textContent = value || "—";
+  };
+
+  const getPricingLabel = (label) => {
+    const value = normalize(label).replace(/내역/g, "").trim();
+    if (/grand total|order total|최종.*결제|총.*결제/.test(value)) return "Order Total";
+    if (/shipping coupon|배송비쿠폰/.test(value)) return "Shipping Coupon";
+    if (/shipping code|배송비코드/.test(value)) return "Shipping Code Discount";
+    if (/promotion.*code|discount code|할인코드|코드할인/.test(value)) {
+      return "Promotion Code Discount";
+    }
+    if (/discount amount|total discount|할인금액|총 할인/.test(value)) return "Total Discount";
+    if (/event|이벤트/.test(value)) return "Event Promotion";
+    if (/multi|복수구매/.test(value)) return "Multi-buy Discount";
+    if (/member|등급/.test(value)) return "Member Discount";
+    if (/mobile|모바일/.test(value)) return "Mobile Discount";
+    if (/social|좋아요/.test(value)) return "Social Promotion";
+    if (/coupon|쿠폰/.test(value)) return "Coupon Discount";
+    if (/refer|유입경로/.test(value)) return "Referral Discount";
+    if (/enuri|에누리/.test(value)) return "Manual Discount";
+    if (/subtotal|상품.*합계|상품금액/.test(value)) return "Subtotal";
+    if (/shipping|배송비/.test(value)) return "Shipping";
+    if (/miledge|mileage|마일리지/.test(value)) return "Mileage Used";
+    if (/cash|예치금/.test(value)) return "Cash Used";
+    if (/tax|세금/.test(value)) return "Tax";
+    return "";
+  };
+
+  const extractPricingRows = (detailPage) => {
+    const summaryRows = [];
+    const discountRows = [];
+    const addRow = (target, rawLabel, rawValue) => {
+      const label = getPricingLabel(rawLabel);
+      const value = String(rawValue || "").replace(/\s+/g, " ").trim();
+      if (!label || !value) return;
+      if (target.some((row) => row.label === label && row.value === value)) return;
+      target.push({ label, value });
+    };
+
+    const summaryHeading = Array.from(detailPage.querySelectorAll("h3.title_container")).find(
+      (heading) => normalize(heading.textContent).includes("order summary"),
+    );
+    const summary = summaryHeading?.nextElementSibling;
+    summary?.querySelectorAll(":scope > ul").forEach((row) => {
+      addRow(summaryRows, row.querySelector(".th")?.textContent, row.querySelector(".td")?.textContent);
+    });
+
+    detailPage.querySelectorAll("#saleDetailList .table_row_a tr").forEach((row) => {
+      addRow(discountRows, row.querySelector("th")?.textContent, row.querySelector("td")?.textContent);
+    });
+
+    const discountIndex = summaryRows.findIndex((row) => row.label === "Total Discount");
+    if (discountIndex >= 0) summaryRows.splice(discountIndex + 1, 0, ...discountRows);
+    else {
+      const shippingIndex = summaryRows.findIndex((row) => row.label === "Shipping");
+      summaryRows.splice(shippingIndex >= 0 ? shippingIndex : summaryRows.length, 0, ...discountRows);
+    }
+    return summaryRows;
+  };
+
+  const renderDetailPricing = (rows, fallbackTotal = "") => {
+    if (!detailPricing) return;
+    const pricingRows = rows.length
+      ? [...rows]
+      : [{ label: "Order Total", value: fallbackTotal || "—" }];
+    if (!pricingRows.some((row) => row.label === "Tax")) {
+      const totalIndex = pricingRows.findIndex((row) => row.label === "Order Total");
+      const taxRow = { label: "Tax", value: "Not separately itemized", isMuted: true };
+      if (totalIndex >= 0) pricingRows.splice(totalIndex, 0, taxRow);
+      else pricingRows.push(taxRow);
+    }
+
+    detailPricing.replaceChildren();
+    pricingRows.forEach((row) => {
+      const line = document.createElement("div");
+      if (row.label === "Order Total") line.classList.add("is-total");
+      if (/discount|promotion|coupon|mileage|cash/i.test(row.label)) {
+        line.classList.add("is-discount");
+      }
+      if (row.label === "Shipping") line.classList.add("is-shipping");
+      if (row.label === "Tax") line.classList.add("is-tax");
+      const label = document.createElement("dt");
+      label.textContent = row.label;
+      const value = document.createElement("dd");
+      if (row.label === "Order Total") {
+        const usdValue = String(row.value || "").match(
+          /(?:US\$|\$)\s*[\d,.]+|[\d,.]+\s*USD/i,
+        );
+        value.textContent = usdValue ? usdValue[0].replace(/\s+/g, "") : row.value;
+      } else {
+        value.textContent = row.value;
+      }
+      if (row.isMuted) value.classList.add("is-muted");
+      line.append(label, value);
+      detailPricing.append(line);
+    });
   };
 
   const closeDetailModal = () => {
@@ -644,6 +812,7 @@
     setDetailText(detailRecipient, "—");
     setDetailText(detailAddress, shippingAddress);
     renderDetailItems(readCardItems(card));
+    renderDetailPricing([], orderTotal);
 
     detailModal.hidden = false;
     detailModal.setAttribute("aria-hidden", "false");
@@ -658,16 +827,7 @@
       "Payment Method",
       "Payment Information",
     );
-    const recipient = extractDetailValue(
-      detailPage,
-      "Contact Name",
-      "Shipping Information",
-    );
-    const address = extractDetailValue(
-      detailPage,
-      "Shipping Address",
-      "Shipping Information",
-    );
+    const { recipient, shippingAddress: address } = readDetailPageAddress(detailPage);
     const paymentHeading = Array.from(detailPage.querySelectorAll("h3.title_container")).find(
       (heading) => normalize(heading.textContent).includes("payment information"),
     );
@@ -681,6 +841,8 @@
     setDetailText(detailPaymentDate, paymentDate);
     setDetailText(detailRecipient, recipient);
     setDetailText(detailAddress, address || shippingAddress);
+    if (address) applyShippingAddress(card, recipient, address);
+    renderDetailPricing(extractPricingRows(detailPage), orderTotal);
     if (paymentDate) setDetailText(detailTime, paymentDate);
   };
 
@@ -698,9 +860,117 @@
     if (event.target.closest("[data-orders-detail-close]")) closeDetailModal();
   });
 
+  const trackModal = document.querySelector("[data-orders-page-track-modal]");
+  const trackDialog = trackModal?.querySelector(".orders-track-dialog");
+  const trackPrimary = trackModal?.querySelector("[data-orders-page-track-primary]");
+  let trackTrigger = null;
+  let nativeTrackAction = null;
+
+  const setTrackText = (selector, value) => {
+    const target = trackModal?.querySelector(selector);
+    if (target) target.textContent = value || "";
+  };
+
+  const getTrackStage = (step) => {
+    if (step >= 75) return 3;
+    if (step >= 60) return 2;
+    if (step >= 50) return 1;
+    return 0;
+  };
+
+  const closeTrackModal = () => {
+    if (!trackModal || trackModal.hidden) return;
+    trackModal.hidden = true;
+    trackModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-orders-modal-open");
+    nativeTrackAction = null;
+    trackTrigger?.focus();
+    trackTrigger = null;
+  };
+
+  const openTrackModal = (trigger) => {
+    const card = trigger.closest(".bo-order-card");
+    if (!card || !trackModal || !trackDialog) return;
+
+    const step = Number(card.dataset.orderStep || 0);
+    const stage = getTrackStage(step);
+    const shippingMethod = card.dataset.orderShippingMethod || "";
+    const trackingNumber = card.dataset.orderTrackingNumber || "";
+    const image = card.querySelector(":scope > .shipping .goods_thumb");
+
+    trackTrigger = trigger;
+    nativeTrackAction = card.querySelector(
+      ":scope > .shipping .status .orderexportsbtn:not(.orders-track-button)",
+    );
+    setTrackText(
+      "[data-orders-page-track-order]",
+      card.dataset.orderSeq ? `Order #${card.dataset.orderSeq}` : "Order",
+    );
+    setTrackText("[data-orders-page-track-date]", card.dataset.orderDate);
+    setTrackText("[data-orders-page-track-status]", card.dataset.orderState);
+    setTrackText("[data-orders-page-track-name]", textOf(card, ".goods_name", "Ordered item"));
+    setTrackText("[data-orders-page-track-price]", card.dataset.orderPrice);
+    setTrackText(
+      "[data-orders-page-track-carrier]",
+      shippingMethod === "quick" ? "UPS" : "Korea Post EMS",
+    );
+    setTrackText("[data-orders-page-track-number]", trackingNumber || "Not provided");
+    setTrackText(
+      "[data-orders-page-track-estimated]",
+      card.dataset.orderEstimatedArrival || "Not provided",
+    );
+    setTrackText(
+      "[data-orders-page-track-address]",
+      textOf(card, "[data-order-shipping-address] b", "Not provided"),
+    );
+
+    const thumb = trackModal.querySelector("[data-orders-page-track-thumb]");
+    if (thumb) {
+      const imageUrl = image?.currentSrc || image?.src || "";
+      thumb.style.backgroundImage = imageUrl ? `url(${JSON.stringify(imageUrl)})` : "";
+    }
+
+    trackModal.querySelectorAll("[data-orders-page-track-step]").forEach((item, index) => {
+      item.classList.toggle("is-complete", index < stage);
+      item.classList.toggle("is-active", index === stage);
+      const state = item.querySelector("em");
+      if (state) state.textContent = index < stage ? "Complete" : index === stage ? "Current" : "Pending";
+    });
+
+    trackModal.hidden = false;
+    trackModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("is-orders-modal-open");
+    window.requestAnimationFrame(() => trackDialog.focus({ preventScroll: true }));
+  };
+
+  page.addEventListener("click", (event) => {
+    const button = event.target.closest(".orders-track-button");
+    if (!button || !page.contains(button)) return;
+    event.preventDefault();
+    openTrackModal(button);
+  });
+
+  trackModal?.querySelectorAll("[data-orders-page-track-close]").forEach((button) => {
+    button.addEventListener("click", closeTrackModal);
+  });
+
+  trackPrimary?.addEventListener("click", () => {
+    if (!nativeTrackAction) return;
+    const href = nativeTrackAction.getAttribute("href") || "";
+    if (href && !href.toLowerCase().startsWith("javascript:")) {
+      window.open(new URL(href, window.location.href).href, "_blank", "noopener,noreferrer");
+      return;
+    }
+    nativeTrackAction.click();
+  });
+
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && detailModal && !detailModal.hidden) {
       closeDetailModal();
+      return;
+    }
+    if (event.key === "Escape" && trackModal && !trackModal.hidden) {
+      closeTrackModal();
       return;
     }
     if (event.key !== "Tab" || !detailDialog || detailModal?.hidden) return;
@@ -720,10 +990,7 @@
   });
 
   const nativeEmpty = page.querySelector("[data-orders-native-empty]");
-  if (nativeEmpty && cards.length > 0) {
-    nativeEmpty.hidden = true;
-    nativeEmpty.classList.add("is-hidden");
-  }
+  syncNativeEmptyState();
 
   const searchInput = page.querySelector("[data-orders-search]");
   const searchButton = page.querySelector("[data-orders-search-submit]");
@@ -738,7 +1005,7 @@
   emptyResult.className = "orders-filter-empty";
   emptyResult.textContent = "No matching orders found.";
   emptyResult.hidden = true;
-  activeOrderList?.append(emptyResult);
+  page.querySelector(".order_list")?.append(emptyResult);
 
   const applyFilters = () => {
     const query = normalize(searchInput?.value);
@@ -752,19 +1019,39 @@
       if (isVisible) visibleCount += 1;
     });
 
-    emptyResult.hidden = visibleCount > 0 || (cards.length === 0 && activeFilter === "all");
+    const waitingForHistory =
+      !historyLoaded && (activeFilter === "all" || activeFilter === "cancel-refund");
+
+    if (visibleCount > 0) {
+      emptyResult.hidden = true;
+      if (nativeEmpty) {
+        nativeEmpty.hidden = true;
+        nativeEmpty.classList.add("is-hidden");
+      }
+      return;
+    }
+
+    if (waitingForHistory) {
+      emptyResult.hidden = true;
+      if (nativeEmpty && cards.length === 0) {
+        nativeEmpty.hidden = false;
+        nativeEmpty.classList.remove("is-hidden");
+      }
+      return;
+    }
+
+    if (nativeEmpty) {
+      nativeEmpty.hidden = true;
+      nativeEmpty.classList.add("is-hidden");
+    }
+    emptyResult.hidden = false;
+    emptyResult.textContent =
+      activeFilter === "cancel-refund" && !historyLoaded
+        ? "Loading cancel and refund history..."
+        : "No matching orders found.";
   };
 
-  if (!isPreview) {
-    const loadHistoryInBackground = () => {
-      loadCancelRefundHistory().then(applyFilters);
-    };
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(loadHistoryInBackground, { timeout: 1500 });
-    } else {
-      window.setTimeout(loadHistoryInBackground, 0);
-    }
-  }
+  historyReady.then(applyFilters);
 
   filterTabs?.addEventListener("click", async (event) => {
     const button = event.target.closest("button[data-orders-filter]");

@@ -3,6 +3,16 @@
 This folder is an upload-ready **work-skin package**, not a replacement for the downloaded
 Firstmall original.
 
+## Redesign approach
+
+- **URL → HTML:** a page like `https://trendy-picker.co.kr/goods/view?no=92915` usually maps to
+  `[skin]/goods/view.html`. Complex pages may load additional smaller HTML modules into that
+  entry file; edit those modules instead of collapsing everything into one file.
+- **HTML:** edit the existing Firstmall skin templates copied into this package.
+- **CSS:** add new scoped files under `css/redesign/trendypicker-*.css` and link them from the HTML.
+  Do not mix redesign rules into Firstmall `css/common.css` or `css/user.css`.
+- **JS:** add redesign-specific scripts as `app/javascript/js/trendypicker-*.js` when needed.
+
 ## Included files
 
 ```text
@@ -12,22 +22,42 @@ firstmall-workskin/
 │     └─ js/
 │        ├─ trendypicker-mypage.js
 │        ├─ trendypicker-orders.js
+│        ├─ trendypicker-wishlist.js
 │        ├─ trendypicker-profile.js
 │        └─ trendypicker-profile-birthday.js
 ├─ css/
 │  └─ redesign/
 │     ├─ trendypicker-mypage.css
 │     ├─ trendypicker-profile.css
-│     └─ trendypicker-orders.css
+│     ├─ trendypicker-orders.css
+│     ├─ trendypicker-wishlist.css
+│     ├─ trendypicker-help.css
+│     └─ trendypicker-help-topic.css
 ├─ images/
 │  └─ mypage/
 │     └─ *.png
-└─ mypage/
-   ├─ dashboard.html
-   ├─ myinfo.html
-   └─ order_catalog.html
+├─ mypage/
+│  ├─ dashboard.html
+│  ├─ myinfo.html
+│  ├─ order_catalog.html
+│  ├─ wish.html
+│  ├─ mypage_lnb.html
+│  └─ myqna_catalog.html
+├─ board/
+│  ├─ index.html
+│  ├─ notice/default01/index.html
+│  └─ faq/_faq/index.html
+└─ service/
+   ├─ cs.html
+   ├─ guide.html
+   ├─ cancellation.html
+   ├─ company.html
+   ├─ agreement.html
+   └─ privacy.html
 ```
 
+Customer Service topic pages (Notice, FAQ, Q&A, Guide, Returns) use the My Page account
+sidebar plus the shared `.help-topic-shell` layout from the prototype Help Center detail page.
 ## Upload targets
 
 Upload the CSS, images, and HTML to a **copied/test skin**. Upload the JavaScript files to
@@ -37,17 +67,43 @@ Firstmall's shared application JavaScript directory:
 [test skin]/css/redesign/trendypicker-mypage.css
 [test skin]/css/redesign/trendypicker-profile.css
 [test skin]/css/redesign/trendypicker-orders.css
+[test skin]/css/redesign/trendypicker-wishlist.css
+[test skin]/css/redesign/trendypicker-help.css
+[test skin]/css/redesign/trendypicker-help-topic.css
 [test skin]/images/mypage/*.png
 [test skin]/mypage/dashboard.html
 [test skin]/mypage/myinfo.html
 [test skin]/mypage/order_catalog.html
+[test skin]/mypage/wish.html
+[test skin]/mypage/mypage_lnb.html
+[test skin]/mypage/myqna_catalog.html
+[test skin]/board/index.html
+[test skin]/board/notice/default01/index.html
+[test skin]/board/faq/_faq/index.html
+[test skin]/service/cs.html
+[test skin]/service/guide.html
+[test skin]/service/cancellation.html
+[test skin]/service/company.html
+[test skin]/service/agreement.html
+[test skin]/service/privacy.html
 /app/javascript/js/trendypicker-mypage.js
 /app/javascript/js/trendypicker-orders.js
+/app/javascript/js/trendypicker-wishlist.js
 /app/javascript/js/trendypicker-profile.js
 /app/javascript/js/trendypicker-profile-birthday.js
 ```
 
 Do not upload to the active production skin first.
+Do not add CSS/JS `?v=` query strings on Firstmall skin links; use a hard refresh after upload.
+
+`service/cs.html` maps the local `my-page/help-center.html` hero and directory design onto
+Firstmall's native customer-service routes. Its responsive presentation is isolated in
+`css/redesign/trendypicker-help.css`; the directory needs no extra page script.
+
+The linked Customer Service destinations (Notice, FAQ, Q&A, Guide, Returns) use the account
+sidebar plus `.help-topic-shell` (breadcrumb, topic title, Topics nav, native board/content body).
+About Us / Contact / Terms / Privacy still use the earlier Help Topic head treatment and can be
+shelled next. Shared presentation lives in `css/redesign/trendypicker-help-topic.css`.
 
 `mypage/order_catalog.html` keeps Firstmall's real `record`, `items`, and `options` collections,
 the native date search, order detail, cancellation, refund, exchange/return inquiry, review, and
@@ -59,15 +115,27 @@ item already supplied by the order catalog immediately, and reuses one cached re
 order-detail page for payment and shipping metadata. The EMS helper passes the order's actual
 `custom_tracking_number`; it does not substitute a sample tracking number.
 
-For visual QA with an account that has no orders, open
-`/mypage/order_catalog?trendypicker_order_preview=1`. The query creates one isolated shipped-order
-preview in the browser; the normal `/mypage/order_catalog` route continues to show only Firstmall's
-real order collection.
+Orders entry links should use `/mypage/order_catalog?sc_date=0`. When `sc_date` is missing or empty,
+`trendypicker-orders.js` replaces the URL with `sc_date=0` once so Firstmall returns the full period.
+`trendypicker-mypage.js` also rewrites any in-page Orders links that omit `sc_date`, and
+`mypage/mypage_lnb.html` points native LNB pages at the same All-period URL.
+
+Cancel/Refund history is fetched immediately on page load from `/mypage/refund_catalog` and
+`/mypage/return_catalog` and merged into the All Orders list.
+
+`mypage/wish.html` keeps Firstmall's real wishlist `record` collection, delete, and wish-to-cart
+actions. `css/redesign/trendypicker-wishlist.css` owns the Favorites presentation.
+`app/javascript/js/trendypicker-wishlist.js` powers category tabs, brand hydration, and
+client-side filtering. Upload `images/mypage/cart.png` and `images/mypage/wish_liked.png` with the
+wishlist CSS.
+
+The production work-skin does not inject query-based sample orders. Both `/mypage/order_catalog`
+and `/mypage/dashboard` render only Firstmall's real order collections or their native empty states.
 
 The order page uses one status-filter row instead of the original secondary Order History,
 Cancellations, and Returns navigation. Each rendered Firstmall order is classified from its numeric
 step and status label into All Orders, Payment Confirmed, Shipped, Delivered, and Cancel/Refund.
-When Cancel/Refund is first selected, the script reads the signed-in member's native
+When Cancel/Refund is selected or All Orders is active, the script reads the signed-in member's native
 `/mypage/refund_catalog` and `/mypage/return_catalog` results and merges those records into the
 current card list. Korean cancellation, refund, return, and exchange labels are included in that
 mapping. The regular cards continue to render the native `record`, `items`, and `options`
@@ -115,9 +183,8 @@ payment cards, sample addresses, and sample member values are intentionally excl
   rendered; it does not wait for individual cards to enter the viewport.
 - Wishlist and saved-post counts use Firstmall data. The mobile My Reviews count is read from the
   member's `/mypage/mygdreview_catalog` summary after the dashboard loads.
-- Append `?trendypicker_order_preview=1` to `/mypage/dashboard` to display the QA-only sample order
-  card. Without that exact query value, the dashboard continues to show only the real `{orders}`
-  collection or its empty state.
+- The dashboard contains no sample-order fixture. It displays only the real `{orders}` collection or
+  its empty state.
 - Dashboard order progress maps Firstmall's order step to four customer-facing stages: Payment
   Pending/Confirmed, Preparing, Shipped, and Delivered. The current stage and completed connector
   line are synchronized from each order's actual `step` value.

@@ -1,0 +1,250 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 나의 1:1 문의 List @@
+- 파일위치 : [스킨폴더]/mypage/myqna_catalog.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css" />
+
+<div class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-qna-page">
+
+	<!-- +++++ mypage LNB ++++ -->
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/main/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a class="on" href="/service/cs" aria-current="page">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+	<!-- +++++ //mypage LNB ++++ -->
+
+	<!-- +++++ mypage contents ++++ -->
+	<main class="subpage_container bo-mypage bo-help-topic-container">
+		<article class="help-topic-shell">
+			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
+				<a href="/service/cs">Help Center</a>
+				<span aria-hidden="true">&gt;</span>
+				<span>Customer Service</span>
+			</nav>
+
+			<header class="help-topic-head">
+				<span class="help-topic-kicker">Customer Service</span>
+				<h1><span designElement="text">Q&amp;A</span></h1>
+				<p>Submit order, product, option, ingredient, shipping, and account questions inside TrendyPicker.</p>
+				<div class="help-topic-meta"><span>Product and order support</span></div>
+			</header>
+
+			<div class="help-topic-layout">
+				<nav class="help-topic-nav" aria-label="Help topics">
+					<strong>Topics</strong>
+					<a href="/board/?id=notice">Notice</a>
+					<a href="/board/?id=faq">FAQ</a>
+					<a class="is-active" href="/mypage/myqna_catalog" aria-current="page">Q&amp;A</a>
+					<a href="/service/guide">Guide</a>
+					<a href="/service/cancellation">Returns &amp; Exchanges</a>
+					<a href="/service/company">About Us</a>
+					<a href="/board/?id=mbqna">Contact Us</a>
+					<a href="/service/agreement">Terms of Use</a>
+					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
+				</nav>
+
+				<div class="help-topic-body">
+					<div id="boardlayout">
+						<script type="text/javascript">
+							//<![CDATA[
+							var board_id = '{manager.id}';
+							var boardlistsurl = '{boardurl->lists}';
+							var boardwriteurl = '{boardurl->write}';
+							var boardviewurl = '{boardurl->view}';
+							var boardmodifyurl = '{boardurl->modify}';
+							//]]>
+						</script>
+						<script type="text/javascript" src="/app/javascript/js/board.js?v=20200513"></script>
+						<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js" ></script>
+						<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js"  charset="utf-8"></script>
+
+						<div id="bbslist">
+
+							<form name="boardsearch" id="boardsearch" >
+								<input type="hidden" name="id" value="{manager.id}" >
+								<input type="hidden" name="popup" value="{_GET.popup}" >
+								<input type="hidden" name="iframe" value="{_GET.iframe}" >
+								<input type="hidden" name="goods_seq" value="{_GET.goods_seq}" >
+								<input type="hidden" name="perpage" id="perpage" value="{_GET.perpage}" >
+								<input type="hidden" name="category" id="category" value="{_GET.category}" >
+								<input type="hidden" name="score" id="score" value="{_GET.score}" >
+
+								<ul class="bbs_top_wrap">
+									<li class="left">
+										<!--{? categorylist}-->
+										<select name="category" id="searchcategory">
+											<option value="" selected="selected" >All topics</option>
+											<!--{@ categorylist}-->
+											<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{.value_}</option>
+											<!--{/}-->
+										</select>
+										<!--{ / }-->
+									</li>
+									<li class="right2">
+										<span class="searchform">
+											<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title or content" placeholder="Search inquiries" />
+											<button type="submit" class="btn_resp size_b color2">Search</button>
+											<button type="button" class="btn_resp size_b" onclick="document.location.href='{boardurl->lists}'">Clear</button>
+										</span>
+									</li>
+								</ul>
+							</form>
+
+							<p class="help-board-count">
+								Total {=number_format(sc.totalcount)} (Page {? sc.total_page== 0 }0{:}{=((sc.page/sc.perpage)+1)}{/}/{=number_format(sc.total_page)})
+							</p>
+
+							{ ? noticeloop || loop }
+							<div class="res_table">
+								<ul class="thead help-board-head">
+									<li style="width:80px;">Status</li>
+									<li style="width:100px;">Topic</li>
+									<li>Subject</li>
+									<li style="width:130px;">Date</li>
+								</ul>
+								{? noticeloop }
+									{@ noticeloop }
+									<ul class="tbody notice {? .display == 1}gray{/}">
+										<li class="num"><span class="mtitle">Notice</span> {.number}</li>
+										<li class="mo_hide"><strong class="pointcolor">Notice</strong></li>
+										<li>{.category}</li>
+										<li class="subject">
+											<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}"  board_id="{manager.id}">
+												<a>
+													{.iconmobile}{.blank} {.subjectcut}
+													{? .comment >0 }<span class="comment">({=number_format(.comment)})</span>{/}
+													{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
+												</a>
+											</span>
+										</li>
+										<li class="date">{=str_replace("-",".",.date)}</li>
+										<li class="mo_hide"><span class="mtitle">Views:</span> {.hit}</li>
+									</ul>
+									{/}
+								{/}
+								{? loop }
+									{@ loop }
+									<ul class="tbody {? .display == 1}gray{/} {? .reply_state == 'complete'}complete{/}">
+										<li class="mo_hide"><span class="mtitle">No:</span> {.number}</li>
+										<li>{? .reply_state == 'standby'}<span class="reply_title">Pending</span>{: .reply_state == 'complete'}<span class="reply_title pointcolor2" >Answered</span>{/}</li>
+										<li>{.category}</li>
+										<li class="subject">
+											<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{manager.id}">
+												<a>
+													{.iconmobile}{.blank} {.subjectcut}
+													{? .comment >0 }<span class="comment">({=number_format(.comment)})</span>{/}
+													{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
+												</a>
+											</span>
+										</li>
+										<li class="date">{=str_replace("-",".",.date)}</li>
+										<li class="mo_hide"><span class="mtitle">Views:</span> {.hit}</li>
+									</ul>
+									{/}
+								{/}
+							</div>
+							{ : }
+							<div class="no_data_area2">
+								No inquiries have been submitted yet.
+							</div>
+							{ / }
+
+							{? pagin }
+							<div id="pagingDisplay" class="paging_navigation">{pagin}</div>
+							{/}
+
+							<ul class="bbs_bottom_wrap">
+								<li class="right">
+									<button type="button" name="boad_write_btn{manager.isperm_write}" id="boad_write_btn{manager.isperm_write}" board_id="{boardid}" fileperm_read="{manager.fileperm_write}" class="btn_resp size_b color2" />New inquiry</button>
+								</li>
+							</ul>
+
+							<div id="BoardPwCk" class="hide BoardPwCk">
+								<div class="msg">
+									<h3> 비밀번호 확인</h3>
+									<div>게시물 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+								</div>
+								<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame " >
+								<input type="hidden" name="seq" id="pwck_seq" value="" />
+								<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
+								<div class="ibox">
+									<input type="password" name="pw" id="pwck_pw" class="input" />
+									<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+									<input type="button" value=" 취소 " class="bbs_btn" onclick="$('#BoardPwCk').dialog('close');" />
+								</div>
+								</form>
+							</div>
+
+							<div id="CmtBoardPwCkNew" class="hide BoardPwCk">
+								<div class="msg">
+									<h3> 비밀번호 확인</h3>
+									<div>댓글/답글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+								</div>
+								<form name="BoardPwcheckFormNew" id="CmtBoardPwcheckFormNew" method="post" >
+								<input type="hidden" name="modetype" id="cmtmodetype_new" value="" />
+								<input type="hidden" name="seq" id="cmt_pwck_seq_new" value="" />
+								<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq_new" value="" />
+								<input type="hidden" name="cmtparentseq" id="cmt_pwck_cmtreplyseq_new" value="" />
+								<input type="hidden" name="cmtreplyidx" id="cmt_pwck_cmtreplyidx_new" value="" />
+								<div class="ibox">
+									<input type="password" name="pw" id="cmt_pwck_pw_new" class="input" />
+									<input type="button" id="CmtBoardPwcheckBtnNew" value=" 확인 " class="btnblue" />
+									<input type="button" value=" 취소 " class="btngray" onclick="$('#CmtBoardPwCkNew').dialog('close');" />
+								</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</article>
+	</main>
+	<!-- +++++ //mypage contents ++++ -->
+
+</div>
+
+<script type="text/javascript" src="../common/mypage_ui.js"></script>
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+
+<script type="text/javascript">
+$(function() {
+	var pagingTotalNum = $('#pagingDisplay a').length;
+	if ( pagingTotalNum < 2 ) {
+		$('#pagingDisplay').hide();
+	}
+});
+</script>
+
+
+{? _GET.iframe }
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(document).resize(function(){
+		  $('#'+board_id+'_frame',parent.document).height($('#boardlayout').height()+50);
+		 }).resize();
+	});
+	function iframeset(){
+		  $('#'+board_id+'_frame',parent.document).height($('#boardlayout').height()+50);
+	}
+</script>
+{/}

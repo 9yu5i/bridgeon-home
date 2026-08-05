@@ -1,0 +1,50 @@
+---
+description: Firstmall skin mapping and redesign rules — edit existing HTML, add new CSS files, never mix into common.css/user.css
+globs: firstmall-workskin/**/*
+alwaysApply: false
+---
+
+# Firstmall Skin Integration Rules
+
+## URL → Template Mapping
+
+The public page URL usually maps to the skin HTML path:
+
+- `https://…/goods/view?no=92915` → `[skin]/goods/view.html`
+- `https://…/mypage/wish` → `[skin]/mypage/wish.html`
+- `https://…/mypage/order_catalog` → `[skin]/mypage/order_catalog.html`
+
+Skin root example: `/data/skin/responsive_food_mealkit_gl/`.
+
+## Multi-File Pages
+
+Complex pages (especially product view) are composed of a main HTML file plus smaller included modules.
+Before changing a page:
+
+1. Open the entry template that matches the URL.
+2. Find every included/loaded module used by that page.
+3. Edit the owning module instead of dumping all markup into one file.
+
+Do **not** rewrite a multi-module Firstmall page into a single giant HTML file.
+
+## HTML vs CSS Ownership
+
+When linking TrendyPicker design into Firstmall:
+
+| Asset | Rule |
+|-------|------|
+| **HTML** | Edit the existing Firstmall skin HTML (and its modules). |
+| **CSS** | Add **new** scoped files (e.g. `css/redesign/trendypicker-*.css`) and link them from the HTML. |
+| **JS** | Prefer new focused files under `/app/javascript/js/trendypicker-*.js` when behavior is redesign-specific. |
+
+### Never do this
+
+- Do **not** add TrendyPicker redesign styles into Firstmall's large legacy files:
+  - `[skin]/css/common.css`
+  - `[skin]/css/user.css`
+- Do **not** mix redesign patches into those files; they are already too complex.
+- Do **not** use CSS/JS `?v=` query strings on Firstmall links (they have broken asset loading).
+
+## Work-Skin Package
+
+Keep upload-ready copies under `firstmall-workskin/`, mirroring skin-relative paths for HTML/CSS/images, and `app/javascript/js/` for shared application scripts.

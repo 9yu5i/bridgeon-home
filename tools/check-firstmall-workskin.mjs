@@ -8,13 +8,31 @@ const requiredFiles = [
   "css/redesign/trendypicker-mypage.css",
   "css/redesign/trendypicker-profile.css",
   "css/redesign/trendypicker-orders.css",
+  "css/redesign/trendypicker-wishlist.css",
+  "css/redesign/trendypicker-help.css",
+  "css/redesign/trendypicker-help-topic.css",
   "app/javascript/js/trendypicker-mypage.js",
   "app/javascript/js/trendypicker-orders.js",
+  "app/javascript/js/trendypicker-wishlist.js",
   "app/javascript/js/trendypicker-profile.js",
   "app/javascript/js/trendypicker-profile-birthday.js",
   "mypage/dashboard.html",
   "mypage/myinfo.html",
   "mypage/order_catalog.html",
+  "mypage/wish.html",
+  "mypage/mypage_lnb.html",
+  "mypage/myqna_catalog.html",
+  "board/index.html",
+  "board/notice/default01/index.html",
+  "board/faq/_faq/index.html",
+  "service/cs.html",
+  "service/guide.html",
+  "service/cancellation.html",
+  "service/company.html",
+  "service/agreement.html",
+  "service/privacy.html",
+  "images/mypage/cart.png",
+  "images/mypage/wish_liked.png",
   "README.md",
 ];
 
@@ -35,11 +53,33 @@ const requiredOrdersTokens = [
   "orders-filter-tabs",
   "data-orders-search",
   "data-order-step",
+  "order_catalog?sc_date=0",
   "/app/javascript/js/trendypicker-mypage.js",
   "/app/javascript/js/trendypicker-orders.js",
 ];
 
-const forbiddenOrdersTokens = ["board_category2", 'class="order_tab"'];
+const forbiddenOrdersTokens = ["board_category2", 'class="order_tab"', "?v="];
+
+const requiredWishlistTokens = [
+  "/data/skin/{skin}/css/redesign/trendypicker-wishlist.css",
+  'class="subpage_wrap bo-mypage-shell bo-wishlist-shell"',
+  'class="subpage_container bo-mypage bo-wishlist-page"',
+  "bo-wishlist-tabs",
+  'data-wish-filter="all"',
+  'data-wish-filter="beauty"',
+  "bo-wish-card",
+  "bo-wish-card__brand",
+  "bo-wish-card__cart-btn",
+  "bo-wish-card__wish-btn",
+  "bo-wish-card__category-seed",
+  '<!--{ @ record }-->',
+  "{.goods_seq}",
+  "{.wish_seq}",
+  "/app/javascript/js/trendypicker-mypage.js",
+  "/app/javascript/js/trendypicker-wishlist.js",
+];
+
+const forbiddenWishlistTokens = ["?v=", "장바구니 담기", "◀ 이전", "다음 ▶"];
 
 const requiredDashboardTokens = [
   "{member.name}",
@@ -65,9 +105,7 @@ const requiredDashboardTokens = [
   "../member_process/membericonsave",
   "mypage-logout-modal",
   "data-mypage-logout-confirm",
-  "data-trendypicker-order-preview",
   'class="bo-live-order mypage-order-preview"',
-  "<em>+2 items</em>",
   "Payment Pending",
   "Payment Confirmed",
   "Order Placed",
@@ -201,8 +239,6 @@ const requiredJsTokens = [
   '.bo-mobile-service__grid a[href*="/login_process/logout"]',
   "[data-mypage-logout-confirm]",
   "/login_process/logout",
-  "trendypicker_order_preview",
-  "is-trendypicker-preview-hidden",
   "getOrderStage",
   "getTrackingStage",
   "syncOrderTimeline",
@@ -211,6 +247,8 @@ const requiredJsTokens = [
   "[data-bo-track-order]",
   "https://www.ups.com/track",
   "data-orders-epost-number",
+  "normalizeOrderCatalogLinks",
+  'searchParams.set("sc_date", "0")',
 ];
 
 const requiredProfileTokens = [
@@ -333,7 +371,12 @@ const requiredProfileCssPatterns = [
   {
     label: "profile password, address, and preference cards are styled",
     pattern:
-      /\.bo-profile-security-note\s*\{[^}]*grid-template-columns:\s*34px\s+minmax\(0,\s*1fr\)\s+auto;[\s\S]*?\.bo-profile-address__card\s*\{[^}]*grid-template-columns:\s*22px\s+minmax\(0,\s*1fr\)\s+auto;[\s\S]*?\.bo-profile-preferences__list\s*\{[^}]*display:\s*grid;/s,
+      /\.bo-profile-security-note\s*\{[^}]*grid-template-columns:\s*34px\s+minmax\(0,\s*1fr\)\s+auto;[\s\S]*?\.bo-profile-address__card\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s+auto;[\s\S]*?\.bo-profile-preferences__list\s*\{[^}]*display:\s*grid;/s,
+  },
+  {
+    label: "desktop profile side menu can follow the measured Profile title offset",
+    pattern:
+      /@media\s*\(min-width:\s*1121px\)[\s\S]*?\.bo-profile-shell\s*>\s*\.bo-account-side\s*\{[^}]*margin-top:\s*var\(--bo-profile-side-offset,\s*60px\)\s*!important;/s,
   },
   {
     label: "profile security note uses the approved lock image",
@@ -364,8 +407,67 @@ const requiredOrdersJsTokens = [
   "dataset.orderState",
   'select[name="sc_date"]',
   "orders-select-control realtrend-select-wrap",
-  "trendypicker_order_preview",
-  "dataset.ordersPreview",
+  'searchParams.set("sc_date", "0")',
+  "loadCancelRefundHistory",
+  "/mypage/refund_catalog",
+  "/mypage/return_catalog",
+];
+
+const requiredWishlistJsTokens = [
+  ".bo-wishlist-page",
+  ".bo-wishlist-tabs",
+  "[data-wish-filter]",
+  ".bo-wish-card",
+  "dataset.wishCategory",
+  "bo-wish-card__category-seed",
+  "is-filtered-out",
+  "/goods/get_brand_list",
+  "FETCH_CONCURRENCY",
+];
+
+const requiredHelpTokens = [
+  "trendypicker-help.css",
+  'class="subpage_wrap bo-mypage-shell bo-help-shell"',
+  'class="subpage_container bo-mypage bo-help-page"',
+  "/board/?id=faq",
+  "/mypage/myqna_catalog",
+  "/service/guide",
+  "/service/cancellation",
+  'class="help-hero"',
+  'class="help-directory-card"',
+];
+
+const requiredHelpCssTokens = [
+  ".bo-help-shell",
+  ".help-hero",
+  ".help-directory-card",
+  ".help-directory-contact",
+];
+
+const requiredHelpTopicFiles = [
+  "service/guide.html",
+  "service/cancellation.html",
+  "service/company.html",
+  "service/agreement.html",
+  "service/privacy.html",
+];
+
+const requiredHelpTopicTokens = [
+  "trendypicker-help-topic.css",
+  "bo-help-topic-page",
+  "bo-help-topic-body",
+];
+
+const requiredCustomerServiceShellFiles = [
+  "service/guide.html",
+  "service/cancellation.html",
+];
+
+const requiredCustomerServiceShellTokens = [
+  "help-topic-shell",
+  "help-topic-nav",
+  "help-topic-layout",
+  "Customer Service",
 ];
 
 let failed = false;
@@ -380,6 +482,7 @@ for (const relativePath of requiredFiles) {
 const dashboardPath = resolve(workskinRoot, "mypage/dashboard.html");
 const profilePath = resolve(workskinRoot, "mypage/myinfo.html");
 const ordersPath = resolve(workskinRoot, "mypage/order_catalog.html");
+const helpPath = resolve(workskinRoot, "service/cs.html");
 
 if (existsSync(ordersPath)) {
   const orders = readFileSync(ordersPath, "utf8");
@@ -399,6 +502,148 @@ if (existsSync(ordersPath)) {
   if (orders.includes("custom_tracking_number = 'EE123456789KR'")) {
     failed = true;
     console.error("Orders page must not replace the live EMS tracking number with sample data");
+  }
+}
+
+const wishlistPath = resolve(workskinRoot, "mypage/wish.html");
+if (existsSync(wishlistPath)) {
+  const wishlist = readFileSync(wishlistPath, "utf8");
+
+  for (const token of requiredWishlistTokens) {
+    if (wishlist.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed wishlist token: ${token}`);
+  }
+
+  for (const token of forbiddenWishlistTokens) {
+    if (!wishlist.includes(token)) continue;
+    failed = true;
+    console.error(`Forbidden wishlist token: ${token}`);
+  }
+}
+
+const wishlistJsPath = resolve(
+  workskinRoot,
+  "app/javascript/js/trendypicker-wishlist.js",
+);
+
+if (existsSync(wishlistJsPath)) {
+  const script = readFileSync(wishlistJsPath, "utf8");
+
+  for (const token of requiredWishlistJsTokens) {
+    if (script.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed wishlist JS token: ${token}`);
+  }
+}
+
+const wishlistCssPath = resolve(
+  workskinRoot,
+  "css/redesign/trendypicker-wishlist.css",
+);
+
+if (existsSync(wishlistCssPath)) {
+  const stylesheet = readFileSync(wishlistCssPath, "utf8");
+  for (const token of [
+    ".bo-wishlist-tabs",
+    ".bo-wish-card__cart-btn",
+    ".bo-wish-card.is-filtered-out",
+    "images/mypage/cart.png",
+    "images/mypage/wish_liked.png",
+  ]) {
+    if (stylesheet.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed wishlist CSS token: ${token}`);
+  }
+}
+
+if (existsSync(helpPath)) {
+  const help = readFileSync(helpPath, "utf8");
+
+  for (const token of requiredHelpTokens) {
+    if (help.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Help Center token: ${token}`);
+  }
+}
+
+const helpCssPath = resolve(
+  workskinRoot,
+  "css/redesign/trendypicker-help.css",
+);
+
+if (existsSync(helpCssPath)) {
+  const stylesheet = readFileSync(helpCssPath, "utf8");
+
+  for (const token of requiredHelpCssTokens) {
+    if (stylesheet.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Help Center CSS token: ${token}`);
+  }
+}
+
+for (const relativePath of requiredHelpTopicFiles) {
+  const topicPath = resolve(workskinRoot, relativePath);
+  if (!existsSync(topicPath)) continue;
+  const topic = readFileSync(topicPath, "utf8");
+
+  for (const token of requiredHelpTopicTokens) {
+    if (topic.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Help Topic token in ${relativePath}: ${token}`);
+  }
+}
+
+for (const relativePath of requiredCustomerServiceShellFiles) {
+  const topicPath = resolve(workskinRoot, relativePath);
+  if (!existsSync(topicPath)) continue;
+  const topic = readFileSync(topicPath, "utf8");
+
+  for (const token of requiredCustomerServiceShellTokens) {
+    if (topic.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Customer Service shell token in ${relativePath}: ${token}`);
+  }
+}
+
+const boardPath = resolve(workskinRoot, "board/index.html");
+if (existsSync(boardPath)) {
+  const board = readFileSync(boardPath, "utf8");
+  for (const token of [
+    "trendypicker-help-topic.css",
+    "bo-help-board-page",
+    "bo-help-topic-container",
+    "help-topic-shell",
+    "help-topic-nav",
+  ]) {
+    if (board.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Help board token: ${token}`);
+  }
+}
+
+const noticeBoardPath = resolve(workskinRoot, "board/notice/default01/index.html");
+if (existsSync(noticeBoardPath)) {
+  const noticeBoard = readFileSync(noticeBoardPath, "utf8");
+  for (const token of ["help-board-count", "help-board-head", "Search", "Clear"]) {
+    if (noticeBoard.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Notice board token: ${token}`);
+  }
+}
+
+const qnaPath = resolve(workskinRoot, "mypage/myqna_catalog.html");
+if (existsSync(qnaPath)) {
+  const qna = readFileSync(qnaPath, "utf8");
+  for (const token of [
+    "trendypicker-help-topic.css",
+    "bo-help-qna-page",
+    "help-topic-shell",
+    "Search inquiries",
+  ]) {
+    if (qna.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Help Q&A token: ${token}`);
   }
 }
 
@@ -588,7 +833,10 @@ if (existsSync(profileJsPath)) {
     "launchNativeAddressEditor",
     "nativeAddressModalStyles",
     "simplifyNativeAddressForm",
-    "bo-profile-address__default-radio",
+    "primaryRow",
+    'card.className = "bo-profile-address__card is-default"',
+    "syncProfileSideAlignment",
+    "--bo-profile-side-offset",
     "setDefaultAddress",
     'nativeModal.dataset.addressSubmitIntent = "save"',
     'nativeModal.dataset.addressSubmitIntent = "default"',

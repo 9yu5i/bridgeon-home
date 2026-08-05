@@ -19,11 +19,10 @@
   --bo-line: #e7e0f1;
   --bo-card: #f9f8ff;
   --bo-card-shadow: 0 10px 24px rgba(33, 17, 65, 0.09);
-  --bo-account-content-width: 909px;
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: clamp(180px, 17vw, 205px) minmax(0, var(--bo-account-content-width));
+  grid-template-columns: clamp(180px, 17vw, 205px) minmax(0, 900px);
   align-items: start;
   justify-content: center;
   gap: clamp(24px, 3vw, 36px);
@@ -31,60 +30,12 @@
   max-width: none;
   min-height: 760px;
   margin: 0;
-  padding: 36px clamp(20px, 3vw, 40px) 86px;
+  padding: 48px clamp(20px, 3vw, 40px) 86px;
 }
 
 html:has(.bo-mypage-shell),
 body:has(.bo-mypage-shell) {
   overflow-x: hidden;
-  background: #fff;
-}
-
-body:has(.bo-mypage-shell) #layout_wrap,
-body:has(.bo-mypage-shell) #layout_body {
-  background: #fff;
-}
-
-@view-transition {
-  navigation: auto;
-}
-
-@keyframes page-transition-out {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes page-transition-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-::view-transition-old(root) {
-  animation: 0.32s ease both page-transition-out;
-}
-
-::view-transition-new(root) {
-  animation: 0.32s ease both page-transition-in;
-}
-
-html.is-page-leaving body {
-  opacity: 0;
-  transition: opacity 0.32s ease;
-}
-
-html.is-page-entering body {
-  opacity: 0;
-  animation: page-transition-in 0.32s ease both;
 }
 
 .bo-mypage-shell::before {
@@ -101,13 +52,13 @@ html.is-page-entering body {
     linear-gradient(108deg, #0b0326 0%, #29106a 47%, #ad42ea 100%);
 }
 
-.bo-mypage-shell > .bo-account-side {
+.bo-account-side {
   position: relative;
   z-index: 2;
   display: grid;
   gap: 14px;
   min-width: 0;
-  margin-top: 60px !important;
+  margin-top: 60px;
 }
 
 .bo-mypage-shell #mypageLnbBasic {
@@ -178,47 +129,47 @@ html.is-page-entering body {
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(1) a::before {
-  background-image: url("../../images/mypage/dashboard.png");
+  background-image: url("../images/mypage/dashboard.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(2) a::before {
-  background-image: url("../../images/mypage/profile.png");
+  background-image: url("../images/mypage/profile.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(3) a::before {
-  background-image: url("../../images/mypage/orders.png");
+  background-image: url("../images/mypage/orders.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(4) a::before {
-  background-image: url("../../images/mypage/review.png");
+  background-image: url("../images/mypage/review.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(5) a::before {
-  background-image: url("../../images/mypage/wishllist.png");
+  background-image: url("../images/mypage/wishllist.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(6) a::before {
-  background-image: url("../../images/mypage/coupons.png");
+  background-image: url("../images/mypage/coupons.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(7) a::before {
-  background-image: url("../../images/mypage/saved.png");
+  background-image: url("../images/mypage/saved.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(8) a::before {
-  background-image: url("../../images/mypage/membership.png");
+  background-image: url("../images/mypage/membership.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(9) a::before {
-  background-image: url("../../images/mypage/points.png");
+  background-image: url("../images/mypage/points.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(10) a::before {
-  background-image: url("../../images/mypage/help.png");
+  background-image: url("../images/mypage/help.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(11) a::before {
-  background-image: url("../../images/mypage/logout.png");
+  background-image: url("../images/mypage/logout.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub a:hover,
@@ -241,57 +192,57 @@ html.is-page-entering body {
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(1) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(1) a:focus-visible::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(1) a.on::before {
-  background-image: url("../../images/mypage/dashboard_hover.png");
+  background-image: url("../images/mypage/dashboard_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(2) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(2) a:focus-visible::before {
-  background-image: url("../../images/mypage/profile_hover.png");
+  background-image: url("../images/mypage/profile_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(3) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(3) a:focus-visible::before {
-  background-image: url("../../images/mypage/orders_hover.png");
+  background-image: url("../images/mypage/orders_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(4) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(4) a:focus-visible::before {
-  background-image: url("../../images/mypage/review_hover.png");
+  background-image: url("../images/mypage/review_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(5) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(5) a:focus-visible::before {
-  background-image: url("../../images/mypage/wishllist_hover.png");
+  background-image: url("../images/mypage/wishllist_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(6) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(6) a:focus-visible::before {
-  background-image: url("../../images/mypage/coupons_hover.png");
+  background-image: url("../images/mypage/coupons_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(7) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(7) a:focus-visible::before {
-  background-image: url("../../images/mypage/saved_hover.png");
+  background-image: url("../images/mypage/saved_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(8) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(8) a:focus-visible::before {
-  background-image: url("../../images/mypage/membership_hover.png");
+  background-image: url("../images/mypage/membership_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(9) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(9) a:focus-visible::before {
-  background-image: url("../../images/mypage/points_hover.png");
+  background-image: url("../images/mypage/points_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(10) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(10) a:focus-visible::before {
-  background-image: url("../../images/mypage/help_hover.png");
+  background-image: url("../images/mypage/help_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(11) a:hover::before,
 .bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(11) a:focus-visible::before {
-  background-image: url("../../images/mypage/logout_hover.png");
+  background-image: url("../images/mypage/logout_hover.png");
 }
 
 .bo-invite {
@@ -342,17 +293,6 @@ html.is-page-entering body {
   font-family: Pretendard, "Apple SD Gothic Neo", Arial, sans-serif;
 }
 
-@media (min-width: 1121px) {
-  .bo-mypage-shell > .subpage_container.bo-mypage {
-    grid-column: 2;
-    justify-self: start;
-  }
-
-  .bo-mypage-shell .subpage_container.bo-mypage {
-    padding-top: 60px;
-  }
-}
-
 .bo-mypage > *,
 .bo-profile > *,
 .bo-card > *,
@@ -378,7 +318,7 @@ html.is-page-entering body {
   min-height: clamp(208px, 17.5vw, 232px);
   overflow: hidden;
   padding: clamp(18px, 1.8vw, 24px);
-  border: 1px solid rgba(246, 227, 255, 0.86);
+  border: 2px solid rgba(246, 227, 255, 0.86);
   border-radius: 16px;
   color: #fff;
   background:
@@ -426,9 +366,13 @@ html.is-page-entering body {
 
 .bo-profile__avatar i {
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: #fff8ff;
+  inset: 22%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 33% 37%, #252025 0 5%, transparent 6%),
+    radial-gradient(circle at 65% 37%, #252025 0 5%, transparent 6%),
+    radial-gradient(circle at 50% 53%, #252025 0 6%, transparent 7%),
+    #cac2be;
 }
 
 .bo-profile__avatar img {
@@ -441,42 +385,31 @@ html.is-page-entering body {
   object-fit: cover;
 }
 
-.bo-mypage button.bo-profile__edit {
-  appearance: none;
+.bo-profile__edit {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  box-sizing: border-box;
   min-width: 96px;
   height: 31px;
-  margin: 0;
   padding: 0 13px;
   border: 1px solid rgba(255, 255, 255, 0.72);
   border-radius: 999px;
-  color: #fff !important;
   background: linear-gradient(135deg, rgba(82, 37, 158, 0.62), rgba(255, 255, 255, 0.12));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 10px 22px rgba(24, 5, 66, 0.18);
-  font-family: inherit;
   font-size: 11px;
-  line-height: 1;
   font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
   transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.bo-mypage button.bo-profile__edit::after {
+.bo-profile__edit::after {
   content: "";
-  display: block;
-  flex: 0 0 14px;
   width: 14px;
   height: 14px;
-  background: url("../../images/mypage/edit.png") center / contain no-repeat;
+  background: url("../images/mypage/edit.png") center / contain no-repeat;
 }
 
-.bo-mypage button.bo-profile__edit:hover,
-.bo-mypage button.bo-profile__edit:focus-visible,
+.bo-profile__edit:hover,
+.bo-profile__edit:focus-visible,
 .bo-profile__stats a:hover,
 .bo-profile__stats a:focus-visible {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(213, 157, 255, 0.24));
@@ -496,7 +429,7 @@ html.is-page-entering body {
 
 .bo-profile__welcome p {
   margin: 0;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 500;
 }
 
@@ -513,7 +446,7 @@ html.is-page-entering body {
   min-width: 0;
   margin: 0;
   overflow: hidden;
-  font-size: clamp(38px, 3.5vw, 40px);
+  font-size: clamp(38px, 3.5vw, 50px);
   line-height: 0.92;
   font-weight: 900;
   overflow-wrap: normal;
@@ -560,7 +493,7 @@ html.is-page-entering body {
   gap: 14px;
   margin: 0;
   color: rgba(255, 255, 255, 0.88);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .bo-profile__progress p span,
@@ -668,19 +601,19 @@ html.is-page-entering body {
 .bo-profile__stats a:nth-child(1) .bo-profile__stat-icon {
   color: transparent;
   background:
-    url("../../images/mypage/points_white.png") center / 19px no-repeat,
+    url("../images/mypage/points_white.png") center / 19px no-repeat,
     linear-gradient(145deg, #dfbdff, #7740e8);
 }
 
 .bo-profile__stats a:nth-child(2) .bo-profile__stat-icon {
   background:
-    url("../../images/mypage/coupons_white.png") center / 19px no-repeat,
+    url("../images/mypage/coupons_white.png") center / 19px no-repeat,
     linear-gradient(145deg, #dfbdff, #7740e8);
 }
 
 .bo-profile__stats a:nth-child(3) .bo-profile__stat-icon {
   background:
-    url("../../images/mypage/wishllist_white.png") center / 19px no-repeat,
+    url("../images/mypage/wishllist_white.png") center / 19px no-repeat,
     linear-gradient(145deg, #dfbdff, #7740e8);
 }
 
@@ -695,7 +628,7 @@ html.is-page-entering body {
 .bo-profile__stats small {
   max-width: 100%;
   overflow: hidden;
-  font-size: 12px;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -706,7 +639,7 @@ html.is-page-entering body {
 }
 
 .bo-card {
-  margin-top: 20px;
+  margin-top: 14px;
   padding: 22px;
   border: 1px solid rgba(45, 31, 74, 0.12);
   border-radius: 12px;
@@ -735,7 +668,7 @@ html.is-page-entering body {
   overflow: hidden;
   color: #1a1522;
   font-family: "Pretendard", "Apple SD Gothic Neo", Arial, sans-serif;
-  font-size: 22px;
+  font-size: 23px;
   line-height: 1;
   font-weight: 800;
   text-overflow: ellipsis;
@@ -756,6 +689,11 @@ html.is-page-entering body {
 
 .bo-live-orders {
   min-width: 0;
+}
+
+.bo-live-orders--preview[hidden],
+.is-bridgeon-preview-hidden {
+  display: none !important;
 }
 
 .bo-live-order {
@@ -794,6 +732,11 @@ html.is-page-entering body {
   border-radius: 12px;
   background: #d9f4ef;
   object-fit: cover;
+}
+
+.bo-live-order__image--preview {
+  border-radius: 12px;
+  background: linear-gradient(135deg, #d9f4ef 0%, #c7ebf8 100%);
 }
 
 .bo-live-order__image em {
@@ -934,19 +877,19 @@ html.is-page-entering body {
 }
 
 .bo-live-order__timeline span:nth-child(1) i::before {
-  background-image: url("../../images/mypage/pending.png");
+  background-image: url("../images/mypage/pending.png");
 }
 
 .bo-live-order__timeline span:nth-child(2) i::before {
-  background-image: url("../../images/mypage/preparing.png");
+  background-image: url("../images/mypage/preparing.png");
 }
 
 .bo-live-order__timeline span:nth-child(3) i::before {
-  background-image: url("../../images/mypage/shipped.png");
+  background-image: url("../images/mypage/shipped.png");
 }
 
 .bo-live-order__timeline span:nth-child(4) i::before {
-  background-image: url("../../images/mypage/delivered.png");
+  background-image: url("../images/mypage/delivered.png");
 }
 
 .bo-live-order__timeline span i,
@@ -987,16 +930,9 @@ html.is-page-entering body {
 .bo-live-order__timeline span:last-child small {
   right: auto;
   left: 50%;
+  width: 94px;
   text-align: center;
   transform: translateX(-50%);
-}
-
-.bo-live-order__timeline span:first-child small {
-  width: 72px;
-}
-
-.bo-live-order__timeline span:last-child small {
-  width: 94px;
 }
 
 .bo-live-order__foot {
@@ -1272,12 +1208,13 @@ body.is-orders-modal-open {
 .orders-track-steps li.is-complete b::after {
   content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 12px;
-  height: 10px;
-  background: url("../../images/mypage/check.png") center / contain no-repeat;
-  transform: translate(-50%, -50%);
+  top: 3px;
+  left: 5px;
+  width: 7px;
+  height: 11px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg);
 }
 
 .orders-track-steps li.is-active b::after {
@@ -1383,7 +1320,7 @@ body.is-orders-modal-open {
   border: 0;
   border-radius: 0;
   color: transparent;
-  background: url("../../images/mypage/cancel.png") center / contain no-repeat;
+  background: url("../images/mypage/cancel.png") center / contain no-repeat;
   font-size: 0;
 }
 
@@ -1582,14 +1519,14 @@ body.is-orders-modal-open {
 .bo-product__cart {
   color: #fff !important;
   background:
-    url("../../images/mypage/cart.png") center / 16px no-repeat,
+    url("../images/mypage/cart.png") center / 16px no-repeat,
     var(--bo-purple);
 }
 
 .bo-product__cart:hover,
 .bo-product__cart:focus-visible {
   background:
-    url("../../images/mypage/cart.png") center / 16px no-repeat,
+    url("../images/mypage/cart.png") center / 16px no-repeat,
     #31136c;
 }
 
@@ -1668,7 +1605,7 @@ body.is-orders-modal-open {
   width: 28px;
   height: 28px;
   color: var(--bo-purple);
-  background: url("../../images/mypage/saved_hover.png") center / 14px 19px no-repeat;
+  background: url("../images/mypage/saved_hover.png") center / 14px 19px no-repeat;
 }
 
 .bo-reel-stats strong {
@@ -1725,21 +1662,6 @@ body.is-orders-modal-open {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
-
-  html.is-page-leaving body {
-    opacity: 1;
-    transition: none;
-  }
-
-  html.is-page-entering body {
-    opacity: 1;
-    animation: none;
-  }
-
   .bo-page-reveal,
   .bo-scroll-reveal {
     opacity: 1;
@@ -1811,208 +1733,6 @@ body.is-orders-modal-open {
 .bo-newsletter button:hover,
 .bo-newsletter button:focus-visible {
   background: #31136c;
-}
-
-.mypage-avatar-dialog[hidden] {
-  display: none !important;
-}
-
-.mypage-avatar-dialog {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 12000;
-  display: grid;
-  place-items: center;
-  box-sizing: border-box;
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 24px;
-  font-family: Pretendard, "Apple SD Gothic Neo", Arial, sans-serif;
-}
-
-body.is-mypage-avatar-open {
-  overflow: hidden;
-}
-
-.mypage-avatar-backdrop {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: rgba(19, 12, 36, 0.42);
-  cursor: default;
-}
-
-.mypage-avatar-modal {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  justify-items: center;
-  gap: 16px;
-  box-sizing: border-box;
-  width: min(380px, calc(100vw - 48px));
-  margin: 0;
-  padding: 30px 26px 24px;
-  border: 0;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 22px 54px rgba(37, 26, 62, 0.18);
-}
-
-.mypage-avatar-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  color: #171320;
-  background: transparent;
-  font-size: 24px;
-  line-height: 1;
-  font-weight: 300;
-  cursor: pointer;
-}
-
-.mypage-avatar-close:hover,
-.mypage-avatar-close:focus-visible {
-  color: #fff;
-  background: var(--bo-purple, #7b3fe4);
-}
-
-.mypage-avatar-modal h2 {
-  justify-self: start;
-  margin: 0 32px 0 0;
-  color: #111;
-  font-size: 21px;
-  line-height: 1.2;
-  font-weight: 800;
-}
-
-.mypage-avatar-preview {
-  position: relative;
-  width: 122px;
-  height: 122px;
-  overflow: hidden;
-  border: 3px solid #f0e5ff;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(123, 63, 228, 0.18);
-}
-
-.mypage-avatar-preview i {
-  position: absolute;
-  inset: 28%;
-  background: url("../../images/mypage/profile.png") center / contain no-repeat;
-}
-
-.mypage-avatar-preview-photo {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.mypage-avatar-preview-photo[hidden] {
-  display: none;
-}
-
-.mypage-avatar-help {
-  margin: -4px 0 0;
-  color: #746d7f;
-  font-size: 13px;
-  line-height: 1.4;
-  text-align: center;
-}
-
-.mypage-avatar-upload {
-  display: grid;
-  place-items: center;
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 44px;
-  border: 1px solid #ded8e8;
-  border-radius: 999px;
-  color: #171320;
-  background: #f7f4fb;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.mypage-avatar-upload:hover,
-.mypage-avatar-upload:focus-within {
-  border-color: var(--bo-purple, #7b3fe4);
-  color: var(--bo-purple, #7b3fe4);
-}
-
-.mypage-avatar-upload input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-}
-
-.mypage-avatar-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  width: 100%;
-  margin-top: 2px;
-}
-
-.mypage-avatar-cancel,
-.mypage-avatar-save {
-  min-height: 42px;
-  margin: 0;
-  border-radius: 999px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.mypage-avatar-cancel {
-  border: 1px solid #ded8e8;
-  color: #171320;
-  background: #fff;
-}
-
-.mypage-avatar-cancel:hover,
-.mypage-avatar-cancel:focus-visible {
-  border-color: var(--bo-purple, #7b3fe4);
-  color: var(--bo-purple, #7b3fe4);
-}
-
-.mypage-avatar-save {
-  border: 0;
-  color: #fff;
-  background: var(--bo-purple, #7b3fe4);
-}
-
-.mypage-avatar-save:hover,
-.mypage-avatar-save:focus-visible {
-  background: #31136c;
-}
-
-.mypage-avatar-save:disabled {
-  color: #aaa2b5;
-  background: #ece8f1;
-  cursor: not-allowed;
 }
 
 .mypage-logout-dialog[hidden] {
@@ -2095,7 +1815,7 @@ body.is-mypage-logout-open {
   content: "";
   width: 28px;
   height: 28px;
-  background: url("../../images/mypage/logout_hover.png") center / contain no-repeat;
+  background: url("../images/mypage/logout_hover.png") center / contain no-repeat;
 }
 
 .mypage-logout-modal h2 {
@@ -2160,7 +1880,7 @@ body.is-mypage-logout-open {
   body:has(.bo-mypage-shell),
   body:has(.bo-mypage-shell) #layout_wrap,
   body:has(.bo-mypage-shell) #layout_body {
-    background: #fff;
+    background: #faf7fc;
   }
 
   .bo-mypage-shell {
@@ -2171,19 +1891,12 @@ body.is-mypage-logout-open {
     background: transparent;
   }
 
-  .bo-mypage-shell.bo-dashboard-shell {
-    padding-top: 30px;
-  }
-
   .bo-mypage-shell::before {
     display: none;
   }
 
-  .bo-mypage-shell > .bo-account-side,
-  .bo-mypage-shell #mypageLnbBasic,
-  .bo-mypage-shell #mypageLnbBasic .lnb_sub,
-  .bo-mypage-shell .bo-invite {
-    display: none !important;
+  .bo-account-side {
+    display: none;
   }
 
   .bo-mypage-shell .subpage_container.bo-mypage {
@@ -2351,85 +2064,85 @@ body.is-mypage-logout-open {
   }
 
   .bo-mobile-activity__grid a:nth-child(1) .bo-mobile-icon {
-    background-image: url("../../images/mypage/review.png");
+    background-image: url("../images/mypage/review.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(2) .bo-mobile-icon {
-    background-image: url("../../images/mypage/wishllist.png");
+    background-image: url("../images/mypage/wishllist.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(3) .bo-mobile-icon {
-    background-image: url("../../images/mypage/saved.png");
+    background-image: url("../images/mypage/saved.png");
     background-size: 38% auto;
   }
 
   .bo-mobile-service__grid a:nth-child(1) .bo-mobile-icon {
-    background-image: url("../../images/mypage/profile.png");
+    background-image: url("../images/mypage/profile.png");
   }
 
   .bo-mobile-service__grid a:nth-child(2) .bo-mobile-icon {
-    background-image: url("../../images/mypage/coupons.png");
+    background-image: url("../images/mypage/coupons.png");
   }
 
   .bo-mobile-service__grid a:nth-child(3) .bo-mobile-icon {
-    background-image: url("../../images/mypage/points.png");
+    background-image: url("../images/mypage/points.png");
   }
 
   .bo-mobile-service__grid a:nth-child(4) .bo-mobile-icon {
-    background-image: url("../../images/mypage/membership.png");
+    background-image: url("../images/mypage/membership.png");
   }
 
   .bo-mobile-service__grid a:nth-child(5) .bo-mobile-icon {
-    background-image: url("../../images/mypage/help.png");
+    background-image: url("../images/mypage/help.png");
   }
 
   .bo-mobile-service__grid a:nth-child(6) .bo-mobile-icon {
-    background-image: url("../../images/mypage/logout.png");
+    background-image: url("../images/mypage/logout.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(1):hover .bo-mobile-icon,
   .bo-mobile-activity__grid a:nth-child(1):focus-visible .bo-mobile-icon {
-    background-image: url("../../images/mypage/review_hover.png");
+    background-image: url("../images/mypage/review_hover.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(2):hover .bo-mobile-icon,
   .bo-mobile-activity__grid a:nth-child(2):focus-visible .bo-mobile-icon {
-    background-image: url("../../images/mypage/wishllist_hover.png");
+    background-image: url("../images/mypage/wishllist_hover.png");
   }
 
   .bo-mobile-activity__grid a:nth-child(3):hover .bo-mobile-icon,
   .bo-mobile-activity__grid a:nth-child(3):focus-visible .bo-mobile-icon {
-    background-image: url("../../images/mypage/saved_hover.png");
+    background-image: url("../images/mypage/saved_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(1):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(1):focus-visible .bo-mobile-icon {
-    background-image: url("../../images/mypage/profile_hover.png");
+    background-image: url("../images/mypage/profile_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(2):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(2):focus-visible .bo-mobile-icon {
-    background-image: url("../../images/mypage/coupons_hover.png");
+    background-image: url("../images/mypage/coupons_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(3):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(3):focus-visible .bo-mobile-icon {
-    background-image: url("../../images/mypage/points_hover.png");
+    background-image: url("../images/mypage/points_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(4):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(4):focus-visible .bo-mobile-icon {
-    background-image: url("../../images/mypage/membership_hover.png");
+    background-image: url("../images/mypage/membership_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(5):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(5):focus-visible .bo-mobile-icon {
-    background-image: url("../../images/mypage/help_hover.png");
+    background-image: url("../images/mypage/help_hover.png");
   }
 
   .bo-mobile-service__grid a:nth-child(6):hover .bo-mobile-icon,
   .bo-mobile-service__grid a:nth-child(6):focus-visible .bo-mobile-icon {
-    background-image: url("../../images/mypage/logout_hover.png");
+    background-image: url("../images/mypage/logout_hover.png");
   }
 
   .bo-mobile-activity__grid strong {
@@ -2546,10 +2259,6 @@ body.is-mypage-logout-open {
     padding-inline: clamp(8px, 2.5vw, 14px);
   }
 
-  .bo-mypage-shell.bo-dashboard-shell {
-    padding-top: 30px;
-  }
-
   .bo-profile {
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: auto auto auto;
@@ -2579,7 +2288,7 @@ body.is-mypage-logout-open {
     height: clamp(74px, 21vw, 82px);
   }
 
-  .bo-mypage button.bo-profile__edit {
+  .bo-mypage a.bo-profile__edit {
     position: absolute;
     right: -2px;
     bottom: -2px;
@@ -2596,10 +2305,10 @@ body.is-mypage-logout-open {
     font-size: 0;
   }
 
-  .bo-mypage button.bo-profile__edit::after {
+  .bo-profile__edit::after {
     width: 13px;
     height: 13px;
-    background-image: url("../../images/mypage/edit_black.png");
+    background-image: url("../images/mypage/edit_black.png");
   }
 
   .bo-profile__welcome {
@@ -2781,7 +2490,7 @@ body.is-mypage-logout-open {
 
   .bo-live-order__timeline {
     --bo-order-icon-size: 34px;
-    margin: 14px 0;
+    margin: 10px 0 14px;
   }
 
   .bo-live-order__timeline span {
@@ -2805,11 +2514,9 @@ body.is-mypage-logout-open {
   }
 
   .bo-live-order__foot p {
-    flex-direction: column;
     justify-content: center;
     gap: 6px;
     width: 100%;
-    text-align: center;
   }
 
   .bo-live-order__actions {
@@ -2822,7 +2529,7 @@ body.is-mypage-logout-open {
 
   .bo-live-order__actions a {
     min-width: 0;
-    min-height: 43px;
+    min-height: 38px;
   }
 
   .orders-modal-layer {
@@ -2834,7 +2541,7 @@ body.is-mypage-logout-open {
     width: 100%;
     max-height: calc(100dvh - 24px);
     padding: 22px 18px 18px;
-    border-radius: 22px;
+    border-radius: 38px;
   }
 
   .orders-track-head {

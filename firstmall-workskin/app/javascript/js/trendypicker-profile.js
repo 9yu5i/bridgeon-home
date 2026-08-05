@@ -752,77 +752,47 @@
         return;
       }
 
-      const cards = addressRows.map((row) => {
-        const isDefault = /primary/i.test(compactText(row.querySelector(".name")));
-        const addressSeq = row.querySelector(".updateaddress")?.getAttribute("seq") || "";
-        const card = document.createElement("article");
-        card.className = `bo-profile-address__card${isDefault ? " is-default" : ""}`;
+      const primaryRow = addressRows.find((row) =>
+        /primary/i.test(compactText(row.querySelector(".name"))),
+      );
+      if (!primaryRow) {
+        renderAddressEmpty(
+          "Set a Primary address in Address Book to use it as your default shipping address.",
+        );
+        return;
+      }
 
-        const radioLabel = document.createElement("label");
-        radioLabel.className = "bo-profile-address__default-radio";
-        radioLabel.title = "Set as default address";
-        const radio = document.createElement("input");
-        radio.type = "radio";
-        radio.name = "trendypicker_default_address";
-        radio.value = addressSeq;
-        radio.checked = isDefault;
-        radio.disabled = !addressSeq;
-        radio.setAttribute("aria-label", "Set as default address");
-        radio.addEventListener("change", () => {
-          if (!radio.checked || !addressSeq) return;
-          defaultAddressState.querySelectorAll(".bo-profile-address__card").forEach(
-            (addressCard) => addressCard.classList.toggle("is-default", addressCard === card),
-          );
-          setDefaultAddress(addressSeq, radio);
-        });
-        radioLabel.appendChild(radio);
+      const addressSeq =
+        primaryRow.querySelector(".updateaddress")?.getAttribute("seq") || "";
+      const card = document.createElement("article");
+      card.className = "bo-profile-address__card is-default";
 
-        const copy = document.createElement("span");
-        copy.className = "bo-profile-address__copy";
-        const name = document.createElement("strong");
-        name.textContent =
-          compactText(row.querySelector(".name")?.childNodes[0]) ||
-          compactText(row.querySelector(".name")) ||
-          "Saved address";
-        const address = document.createElement("span");
-        address.textContent =
-          compactText(row.querySelector(".address")) ||
-          "Address details are available in Address Book.";
-        const phone = document.createElement("small");
-        phone.textContent = compactText(row.querySelector(".tel"));
-        copy.append(name, address);
-        if (phone.textContent) copy.append(phone);
+      const copy = document.createElement("span");
+      copy.className = "bo-profile-address__copy";
+      const name = document.createElement("strong");
+      name.textContent =
+        compactText(primaryRow.querySelector(".name")?.childNodes[0]) ||
+        compactText(primaryRow.querySelector(".name")) ||
+        "Saved address";
+      const address = document.createElement("span");
+      address.textContent =
+        compactText(primaryRow.querySelector(".address")) ||
+        "Address details are available in Address Book.";
+      const phone = document.createElement("small");
+      phone.textContent = compactText(primaryRow.querySelector(".tel"));
+      copy.append(name, address);
+      if (phone.textContent) copy.append(phone);
 
-        const actions = document.createElement("span");
-        actions.className = "bo-profile-address__actions";
-        const editButton = document.createElement("button");
-        editButton.type = "button";
-        editButton.textContent = "Edit";
-        editButton.addEventListener("click", () => openAddressModal(addressSeq));
-        const deleteButton = document.createElement("button");
-        deleteButton.type = "button";
-        deleteButton.className = "bo-profile-address__delete";
-        deleteButton.textContent = "Delete";
-        deleteButton.disabled = !addressSeq;
-        deleteButton.addEventListener("click", () => {
-          if (!addressSeq) return;
-          const confirmed = window.confirm(
-            "Delete this shipping address? This cannot be undone.",
-          );
-          if (!confirmed) return;
-          const actionFrame = document.querySelector("iframe[name='actionFrame']");
-          if (!actionFrame) return;
-          deleteButton.disabled = true;
-          actionFrame.src =
-            "../mypage_process/delete_address?address_seq=" + encodeURIComponent(addressSeq) + "&popup=";
-          window.setTimeout(hydrateDefaultAddress, 600);
-        });
-        actions.append(editButton, deleteButton);
-        card.append(radioLabel, copy, actions);
-        return card;
-      });
+      const actions = document.createElement("span");
+      actions.className = "bo-profile-address__actions";
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.textContent = "Edit";
+      editButton.addEventListener("click", () => openAddressModal(addressSeq));
+      actions.append(editButton);
 
-      defaultAddressState.replaceChildren(...cards);
+      card.append(copy, actions);
+      defaultAddressState.replaceChildren(card);
     } catch (error) {
       renderAddressEmpty(
         "Open Address Book to view or update your default shipping address.",
@@ -1844,4 +1814,39 @@
       nativeConnectControl?.click();
     });
   });
+
+  const syncProfileSideAlignment = () => {
+    const shell = document.querySelector(".bo-profile-shell");
+    const side = shell?.querySelector(":scope > .bo-account-side");
+    const title = document.querySelector(".bo-profile-page__head h1");
+    if (!shell || !side || !title) return;
+
+    if (!window.matchMedia("(min-width: 1121px)").matches) {
+      shell.style.removeProperty("--bo-profile-side-offset");
+      return;
+    }
+
+    shell.style.removeProperty("--bo-profile-side-offset");
+    const delta = Math.round(
+      title.getBoundingClientRect().top - side.getBoundingClientRect().top,
+    );
+    if (!delta) return;
+
+    const currentOffset =
+      parseFloat(getComputedStyle(side).marginTop) || 60;
+    shell.style.setProperty(
+      "--bo-profile-side-offset",
+      `${Math.max(0, currentOffset + delta)}px`,
+    );
+  };
+
+  const queueProfileSideAlignment = () => {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(syncProfileSideAlignment);
+    });
+  };
+
+  queueProfileSideAlignment();
+  window.addEventListener("load", queueProfileSideAlignment);
+  window.addEventListener("resize", queueProfileSideAlignment);
 })();

@@ -1,5 +1,35 @@
 # TrendyPicker Decisions
 
+## 2026-08-05: Firstmall Redesign Uses Existing HTML + New CSS Files Only
+
+Decision:
+
+- Map Firstmall page URLs to skin templates by path (for example `/goods/view` →
+  `[skin]/goods/view.html`).
+- Keep complex pages as multi-module HTML instead of merging every include into one file.
+- Edit existing Firstmall HTML templates/modules for structure and markup.
+- Add TrendyPicker presentation in new scoped CSS files under `css/redesign/` and link them from
+  the HTML.
+- Do not add redesign styles to Firstmall `css/common.css` or `css/user.css`.
+
+Why:
+
+- The live skin already owns commerce markup, includes, and actions.
+- `common.css` and `user.css` are large and shared; mixing redesign there makes ownership and
+  uploads harder and increases regression risk.
+
+## 2026-08-05: Remove Production Order Fixtures and Connect the Native Help Center
+
+Decision:
+
+- The Firstmall dashboard and order catalog no longer accept query parameters that inject sample
+  orders. Production templates render only Firstmall order data or native empty states.
+- `/service/cs` mirrors the static Help Center hero and directory while linking each entry to
+  Firstmall's native notice, FAQ, inquiry, guide, policy, and company routes.
+- Help Center destinations share one scoped Help Topic stylesheet. Native Firstmall board and
+  service templates remain the data and action owners.
+- Static Help Center prototype content remains outside the Firstmall integration path.
+
 ## 2026-08-04: Connect Orders Through Firstmall's Native Order Catalog
 
 Decision:

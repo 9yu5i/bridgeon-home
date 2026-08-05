@@ -19,10 +19,13 @@
 }
 
 @media (min-width: 1121px) {
+  .bo-profile-shell > .bo-account-side {
+    margin-top: var(--bo-profile-side-offset, 60px) !important;
+  }
+
   .bo-profile-shell .subpage_container.bo-mypage.bo-profile-page {
     padding-top: 60px;
   }
-
 }
 
 .bo-profile-page__head h1,
@@ -876,7 +879,7 @@ body.is-profile-birthday-open {
 
 .bo-profile-address__card {
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 16px;
   padding: 18px;
@@ -885,24 +888,6 @@ body.is-profile-birthday-open {
 .bo-profile-address__state {
   display: grid;
   gap: 12px;
-}
-
-.bo-profile-address__default-radio {
-  display: grid;
-  place-items: center;
-  align-self: center;
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  cursor: pointer;
-}
-
-.bo-profile-address__default-radio input {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  accent-color: var(--profile-purple);
-  cursor: pointer;
 }
 
 .bo-profile-address__card.is-default {
@@ -1402,7 +1387,7 @@ label.bo-profile-preference {
   }
 
   .bo-profile-address__card {
-    grid-template-columns: 22px minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .bo-profile-address__actions {
