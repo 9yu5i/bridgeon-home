@@ -21,6 +21,7 @@ firstmall-workskin/
 │  └─ javascript/
 │     └─ js/
 │        ├─ trendypicker-mypage.js
+│        ├─ trendypicker-help-topic.js
 │        ├─ trendypicker-orders.js
 │        ├─ trendypicker-wishlist.js
 │        ├─ trendypicker-profile.js
@@ -47,6 +48,9 @@ firstmall-workskin/
 │  ├─ index.html
 │  ├─ notice/default01/index.html
 │  └─ faq/_faq/index.html
+├─ _modules/
+│  └─ common/
+│     └─ board_lnb.html
 └─ service/
    ├─ cs.html
    ├─ guide.html
@@ -80,6 +84,7 @@ Firstmall's shared application JavaScript directory:
 [test skin]/board/index.html
 [test skin]/board/notice/default01/index.html
 [test skin]/board/faq/_faq/index.html
+[test skin]/_modules/common/board_lnb.html
 [test skin]/service/cs.html
 [test skin]/service/guide.html
 [test skin]/service/cancellation.html
@@ -104,6 +109,8 @@ The linked Customer Service destinations (Notice, FAQ, Q&A, Guide, Returns) use 
 sidebar plus `.help-topic-shell` (breadcrumb, topic title, Topics nav, native board/content body).
 About Us / Contact / Terms / Privacy still use the earlier Help Topic head treatment and can be
 shelled next. Shared presentation lives in `css/redesign/trendypicker-help-topic.css`.
+`app/javascript/js/trendypicker-help-topic.js` keeps the Topics nav pinned while scrolling on
+desktop, because Firstmall layout overflow otherwise breaks native `position: sticky`.
 
 `mypage/order_catalog.html` keeps Firstmall's real `record`, `items`, and `options` collections,
 the native date search, order detail, cancellation, refund, exchange/return inquiry, review, and

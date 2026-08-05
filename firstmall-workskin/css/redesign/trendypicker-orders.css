@@ -16,10 +16,13 @@
   display: none !important;
 }
 
-.bo-orders-page {
+.bo-orders-shell .subpage_container.bo-orders-page {
+  width: 100%;
+  max-width: min(var(--bo-account-content-width, 1680px), 100%);
   box-sizing: border-box;
-  width: min(100%, var(--bo-account-content-width, 909px));
-  max-width: var(--bo-account-content-width, 909px);
+}
+
+.bo-orders-page {
   color: var(--orders-ink);
 }
 
@@ -33,9 +36,16 @@
   display: block !important;
   visibility: visible;
   opacity: 1;
-  margin: 0 0 32px;
+  margin: 0 0 14px;
   padding: 0;
   border: 0;
+}
+
+.bo-orders-shell .subpage_container .title_container.bo-orders-head {
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 0 14px !important;
+  padding: 0 !important;
 }
 
 .bo-orders-head h2,
@@ -58,7 +68,7 @@
 }
 
 .bo-orders-page #orderSearchForm {
-  margin: 0 0 14px;
+  margin: 0 0 8px;
 }
 
 .bo-orders-page .orders-controls {
@@ -66,7 +76,7 @@
   grid-template-columns: minmax(260px, 302px) minmax(0, 1fr);
   align-items: center;
   gap: 24px;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .bo-orders-page .orders-sr-only {
@@ -391,7 +401,7 @@
 
 .bo-orders-page .order_list > ul {
   display: grid;
-  gap: 8px;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1097,7 +1107,7 @@ body.is-orders-detail-open {
   .bo-orders-shell .subpage_container .title_container.bo-orders-head {
     height: auto !important;
     min-height: 0 !important;
-    margin: 0 0 22px !important;
+    margin: 0 0 10px !important;
     padding: 0 !important;
   }
 
@@ -1109,6 +1119,10 @@ body.is-orders-detail-open {
     grid-template-columns: minmax(0, 1fr);
     gap: 10px;
     margin-bottom: 0;
+  }
+
+  .bo-orders-page .order_list > ul {
+    gap: 4px;
   }
 
   .bo-orders-page .orders-search {
@@ -1345,7 +1359,7 @@ body.is-orders-detail-open {
 
 @media (max-width: 760px) {
   .bo-orders-shell {
-    padding-top: 42px;
+    padding-top: 30px;
   }
 
   .bo-orders-page {
@@ -1355,7 +1369,7 @@ body.is-orders-detail-open {
   }
 
   .bo-orders-shell .subpage_container .title_container.bo-orders-head {
-    margin-bottom: 22px !important;
+    margin-bottom: 10px !important;
     padding-inline: 4px;
   }
 
@@ -1446,7 +1460,7 @@ body.is-orders-detail-open {
   }
 
   .bo-orders-page .order_list > ul {
-    gap: 6px;
+    gap: 4px;
   }
 
   .bo-orders-page .order_list > ul > li {

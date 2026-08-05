@@ -13,23 +13,23 @@
 	<input type="hidden" name="page" id="page" value="{_GET.page}">
 	<input type="hidden" name="category" id="category" value="{_GET.category}">
 
-	<ul class="bbs_top_wrap">
-		<li class="left">
-			<!--{? categorylist}-->
-			<select name="category" id="searchcategory">
-				<option value="" selected="selected">- ALL -</option>
-				<!--{@ categorylist}-->
-				<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{.value_}</option>
-				<!--{/}-->
+	<ul class="bbs_top_wrap help-board-toolbar">
+		<li class="left help-board-filter listing-sort">
+			<select name="category" id="searchcategory" aria-label="Category">
+				<option value="" {? !_GET.category} selected="selected"{/}>- ALL -</option>
+				<option value="News & Announcements" {? _GET.category == 'News & Announcements'} selected="selected"{/}>News & Announcements</option>
+				<option value="Shopping & Ordering" {? _GET.category == 'Shopping & Ordering'} selected="selected"{/}>Shopping & Ordering</option>
+				<option value="Returns and Refunds" {? _GET.category == 'Returns and Refunds'} selected="selected"{/}>Returns and Refunds</option>
+				<option value="Promotion" {? _GET.category == 'Promotion'} selected="selected"{/}>Promotion</option>
+				<option value="Membership" {? _GET.category == 'Membership'} selected="selected"{/}>Membership</option>
 			</select>
-			<!--{ / }-->
 		</li>
-		<li class="right2">
-			<span class="searchform">
+		<li class="right2 help-board-actions">
+			<span class="help-board-search">
 				<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title, Content" placeholder="Search" />
-				<button type="submit" class="btn_resp size_b color2">Search</button>
-				<button type="button" class="btn_resp size_b" onclick="document.location.href='{boardurl->resets}'">Clear</button>
 			</span>
+			<button type="submit" class="btn_resp size_b color2">Search</button>
+			<button type="button" class="btn_resp size_b" onclick="document.location.href='{boardurl->resets}'">Clear</button>
 		</li>
 	</ul>
 </form>
@@ -39,7 +39,7 @@
 <!--{ / }-->
 
 { ? noticeloop || loop }
-	<div class="res_table normal">
+	<div class="res_table normal help-board-table">
 		<ul class="thead help-board-head">
 			<li>Category</li>
 			<li>Subject</li>
@@ -47,7 +47,7 @@
 		</ul>
 	{? noticeloop }
 		{@ noticeloop }
-		<ul class="tbody notice">
+		<ul class="tbody notice help-board-row">
 			{? strstr(manager.list_show,'[num]') }<li class="num"><span class="mtitle" designElement="text">Notice</span> {.number}</li>{/}
 			{? strstr(manager.list_show,'[subject]') }<li>{=preg_replace("/[\[\]]/","",.category)}</li>{/}
 			{? strstr(manager.list_show,'[subject]') }
@@ -68,7 +68,7 @@
 	{/}
 	{? loop }
 		{@ loop }
-		<ul class="tbody">
+		<ul class="tbody help-board-row">
 			{? strstr(manager.list_show,'[num]') }<li class="mo_hide"><span class="mtitle" designElement="text">Num:</span> {.number}</li>{/}
 			{? strstr(manager.list_show,'[subject]') }<li>{=preg_replace("/[\[\]]/","",.category)}</li>{/}
 			{? strstr(manager.list_show,'[subject]') }
@@ -90,7 +90,7 @@
 	{/}
 	</div>
 { : }
-	<div class="no_data_area2">
+	<div class="no_data_area2 help-board-empty">
 		No notices match your search.
 	</div>
 { / }

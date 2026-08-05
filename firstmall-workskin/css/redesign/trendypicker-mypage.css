@@ -19,19 +19,19 @@
   --bo-line: #e7e0f1;
   --bo-card: #f9f8ff;
   --bo-card-shadow: 0 10px 24px rgba(33, 17, 65, 0.09);
-  --bo-account-content-width: 909px;
+  --bo-account-content-width: 1680px;
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: clamp(180px, 17vw, 205px) minmax(0, var(--bo-account-content-width));
+  grid-template-columns: clamp(170px, 14vw, 196px) minmax(0, 1fr);
   align-items: start;
   justify-content: center;
-  gap: clamp(24px, 3vw, 36px);
+  gap: clamp(20px, 2.4vw, 32px);
   width: 100%;
   max-width: none;
   min-height: 760px;
   margin: 0;
-  padding: 36px clamp(20px, 3vw, 40px) 86px;
+  padding: 36px clamp(16px, 2vw, 28px) 86px;
 }
 
 html:has(.bo-mypage-shell),
@@ -115,14 +115,12 @@ html.is-page-entering body {
   width: 100%;
   min-width: 0;
   max-width: none;
-  overflow: hidden !important;
+  overflow: hidden;
   margin: 0;
   padding: 0;
   border: 1px solid rgba(45, 31, 74, 0.12);
-  border-radius: 8px !important;
-  clip-path: inset(0 round 8px);
+  border-radius: 8px;
   background: rgba(250, 248, 255, 0.94);
-  background-clip: padding-box;
   box-shadow: 0 7px 18px rgba(18, 13, 30, 0.16);
 }
 
@@ -345,7 +343,10 @@ html.is-page-entering body {
 @media (min-width: 1121px) {
   .bo-mypage-shell > .subpage_container.bo-mypage {
     grid-column: 2;
-    justify-self: start;
+    justify-self: stretch;
+    width: 100%;
+    max-width: min(var(--bo-account-content-width), 100%);
+    box-sizing: border-box;
   }
 
   .bo-mypage-shell .subpage_container.bo-mypage {
@@ -2542,7 +2543,7 @@ body.is-mypage-logout-open {
 
 @media (max-width: 760px) {
   .bo-mypage-shell {
-    padding-block: 18px 76px;
+    padding-block: 30px 76px;
     padding-inline: clamp(8px, 2.5vw, 14px);
   }
 

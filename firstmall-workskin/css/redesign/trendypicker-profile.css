@@ -13,8 +13,9 @@
 .bo-profile-page {
   display: grid;
   gap: 22px;
-  width: min(100%, var(--bo-account-content-width, 909px));
-  max-width: var(--bo-account-content-width, 909px);
+  width: 100%;
+  max-width: min(var(--bo-account-content-width, 1680px), 100%);
+  box-sizing: border-box;
   color: #15131c;
 }
 
@@ -1292,7 +1293,7 @@ label.bo-profile-preference {
 
   .bo-profile-danger {
     box-sizing: border-box;
-    width: min(100%, 909px);
+    width: min(100%, var(--bo-account-content-width, 1680px));
   }
 
   .bo-profile-save-row .bo-profile-save {
@@ -1462,6 +1463,10 @@ label.bo-profile-preference {
 }
 
 @media (max-width: 760px) {
+  .bo-profile-shell {
+    padding-top: 30px;
+  }
+
   .bo-profile-page .bo-profile-card {
     width: calc(100% + 8px);
     max-width: calc(100% + 8px);

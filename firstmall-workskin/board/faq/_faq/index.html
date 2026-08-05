@@ -2,11 +2,8 @@
 @@ FAQ List/View @@
 - 파일위치 : [스킨폴더]/board/faq/_faq/index.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<style>
-    .bbs_top_wrap>li {float:initial;}
-</style>
 <!--{? viewlist != 'view' }-->
-<form name="boardsearch" id="boardsearch">
+<form name="boardsearch" id="boardsearch" class="help-faq-toolbar">
 	<input type="hidden" name="id" value="{_GET.id}">
 	<input type="hidden" name="popup" value="{_GET.popup}">
 	<input type="hidden" name="iframe" value="{_GET.iframe}">
@@ -17,63 +14,62 @@
 	<input type="hidden" name="category" id="category" value="{_GET.category}">
 
 	<ul class="bbs_top_wrap">
-		<li class="left">
-            <div class="board_cate_slide">
-            <ul class="board_category2">
-                <li {? _GET.category == ""} class="on"{/}><a href="/board/?id=faq">All</a></li>
-                <!--{@ categorylist}-->
-                <li {? _GET.category == .value_} class="on"{/}><a href="/board/?id=faq&category={.value_}">{.value_}</a></li>
-                <!--{/}-->
-            </ul>
-            </div>
+		<li class="left help-faq-filter">
+			<!--{? categorylist}-->
+			<select name="category" id="searchcategory" aria-label="FAQ category">
+				<option value="" {? !_GET.category} selected="selected"{/}>All categories</option>
+				<!--{@ categorylist}-->
+				<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{.value_}</option>
+				<!--{/}-->
+			</select>
+			<!--{ / }-->
 		</li>
-		<li class="right2">
-			<span class="searchform">
-				<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title, Content" placeholder="Search" />
-				<button type="submit" class="btn_resp size_b color2">Search</button>
-				<button type="button" class="btn_resp size_b" onclick="document.location.href='{boardurl->resets}'">Clear</button>
+		<li class="right2 help-board-actions">
+			<span class="help-faq-search-field">
+				<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title, Content" placeholder="Search by keyword" />
 			</span>
+			<button type="submit" class="btn_resp size_b color2">Search</button>
 		</li>
 	</ul>
 </form>
-<p class="help-board-count">
-	Total {=number_format(sc.totalcount)} (Page {? sc.total_page== 0 }0{:}{=((sc.page/sc.perpage)+1)}{/}/{=number_format(sc.total_page)})
-</p>
 <!--{ / }-->
 
 {? loop }
-	<ul class="faq_new">
-		{@ loop }
-		<li>
-			<div class="question">
-                <p class="subject">{=preg_replace("/[\[\]]/","",.subject)} {.iconnew} {.iconhot} {.iconfile} {.iconhidden}<!--<span class="date" style="float:right;color:#717171">{=date('Y.m.d',strtotime(.date))}</span></p>-->
-				<p class="add_info">
-					<span class="hide">번호:  {.number}</span>
-					{? strstr(manager.list_show,'[writer]') }작성자: {.name}{/}
-					{? strstr(manager.list_show,'[date]') }등록일: {.date}{/}
-					{? strstr(manager.list_show,'[hit]') }조회수: {.hit}{/}
-				</p>
-			</div>
-			<div id="faqcontent_{.seq}" class="answer {? _GET.seq != .seq }hide{/}">
-				{? .filelist}
-				<ul class="filelist">
-					{@ .filelist}
-					<li>
-						<span class="realfilelist hand highlight-link" realfiledir="{..realfiledir}" realfilename="{..orignfile}" board_id="{.boardid}" filedown="../board_process?mode=board_file_down&board_id={.boardid}&realfiledir={..realfiledir}&realfilename={..orignfile}">
-							{..orignfile} <span class="gray_05">({..realsizefile})</span>
-							<button type="button"  class="btn_resp size_a">down</button>
-						</span>
-					</li>
+	<div class="help-faq-table">
+		<ul class="faq_new help-faq-list">
+			{@ loop }
+			<li class="help-faq-item {? _GET.seq == .seq }is-open{/}">
+				<div class="question" role="button" tabindex="0">
+					<span class="help-faq-category">{=preg_replace("/[\[\]]/","",.category)}</span>
+					<p class="subject help-faq-question">{=preg_replace("/[\[\]]/","",.subject)} {.iconnew} {.iconhot} {.iconfile} {.iconhidden}</p>
+					<p class="add_info">
+						<span class="hide">번호:  {.number}</span>
+						{? strstr(manager.list_show,'[writer]') }작성자: {.name}{/}
+						{? strstr(manager.list_show,'[date]') }등록일: {.date}{/}
+						{? strstr(manager.list_show,'[hit]') }조회수: {.hit}{/}
+					</p>
+				</div>
+				<div id="faqcontent_{.seq}" class="answer {? _GET.seq != .seq }hide{/}">
+					{? .filelist}
+					<ul class="filelist">
+						{@ .filelist}
+						<li>
+							<span class="realfilelist hand highlight-link" realfiledir="{..realfiledir}" realfilename="{..orignfile}" board_id="{.boardid}" filedown="../board_process?mode=board_file_down&board_id={.boardid}&realfiledir={..realfiledir}&realfilename={..orignfile}">
+								{..orignfile} <span class="gray_05">({..realsizefile})</span>
+								<button type="button"  class="btn_resp size_a">down</button>
+							</span>
+						</li>
+						{/}
+					</ul>
 					{/}
-				</ul>
-				{/}
-				{.contents}
-			</div>
-		</li>
-		{/}
-	</ul>
+					{.contents}
+				</div>
+			</li>
+			{/}
+		</ul>
+	</div>
 { : }
-	<div class="no_data_area2">
+	<div class="no_data_area2 help-faq-empty">
 		No FAQs match your search.
 	</div>
 { / }
@@ -82,9 +78,9 @@
 <div id="pagingDisplay" class="paging_navigation">{pagin}</div>
 {/}
 
-<div class="faq_search">
-    <input type="text" name="search_fake" id="search_fake" class="" value="{_GET.search_text}" title="Keyword" />
-    <button type="button" class="btn_resp color2" id="search_fake_btn">Search</button>
+<div class="faq_search hide">
+	<input type="text" name="search_fake" id="search_fake" class="" value="{_GET.search_text}" title="Keyword" />
+	<button type="button" class="btn_resp color2" id="search_fake_btn">Search</button>
 </div>
 
 <ul class="bbs_bottom_wrap hide">
@@ -109,16 +105,3 @@
 	</form>
 </div>
 <!-- //비밀번호 확인 -->
-<script type="text/javascript">
-	$(function() {
-        $('.board_category2 > li').addClass('swiper-slide');
-        var slideshowSwiper = new Swiper('.board_cate_slide', {
-            wrapperClass: 'board_category2',
-            slidesPerView: 'auto',
-        });
-        $("#search_fake_btn").click(function(){
-            $("#search_text").val($("#search_fake").val());
-            $("#boardsearch").submit();
-        });
-	});
-</script>

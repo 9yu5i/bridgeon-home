@@ -3,6 +3,7 @@
   --help-deep: #31136c;
   --help-muted: #6f687d;
   --help-soft: #f7f1ff;
+  --bo-account-content-width: 1680px;
   background: #fff;
 }
 
@@ -14,13 +15,13 @@
 .bo-help-page,
 .bo-help-content {
   display: grid;
-  gap: 24px;
+  gap: 20px;
   min-width: 0;
 }
 
 .bo-help-page {
-  width: min(909px, calc(100% - 48px)) !important;
-  max-width: 909px !important;
+  width: 100% !important;
+  max-width: min(1680px, 100%) !important;
   box-sizing: border-box;
 }
 
@@ -34,9 +35,9 @@
 .help-hero {
   display: flex;
   align-items: flex-end;
-  min-height: 218px;
+  min-height: 178px;
   box-sizing: border-box;
-  padding: 36px;
+  padding: 30px 40px;
   color: #fff;
   background:
     radial-gradient(circle at 84% 20%, rgba(255, 216, 244, 0.82), transparent 34%),
@@ -45,7 +46,7 @@
 
 .help-hero span {
   color: #eadfff;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 850;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -59,19 +60,19 @@
 }
 
 .help-hero h1 {
-  margin-top: 8px;
+  margin-top: 6px;
   color: #fff;
-  font-size: clamp(38px, 4vw, 58px);
+  font-size: clamp(36px, 3.5vw, 52px);
   line-height: 1;
   font-weight: 900;
 }
 
 .help-hero p {
-  max-width: 620px;
-  margin-top: 14px;
+  max-width: 920px;
+  margin-top: 15px;
   color: rgba(255, 255, 255, 0.88);
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.45;
 }
 
 .help-directory-card {
@@ -79,7 +80,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   align-items: stretch;
-  padding: 18px;
+  padding: 16px;
   background:
     radial-gradient(circle at 100% 0%, rgba(226, 214, 255, 0.55), transparent 36%),
     linear-gradient(180deg, #fbf8ff 0%, #fff 100%);
@@ -87,13 +88,13 @@
 
 .help-directory-group {
   display: grid;
-  gap: 6px;
+  gap: 5px;
   align-content: start;
   min-height: 100%;
   box-sizing: border-box;
-  padding: 18px 16px 14px;
+  padding: 16px 18px 14px;
   border: 1px solid rgba(123, 63, 228, 0.1);
-  border-radius: 16px;
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.92);
   box-shadow: 0 8px 22px rgba(49, 19, 108, 0.05);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
@@ -110,7 +111,7 @@
   align-items: center;
   width: fit-content;
   min-height: 26px;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   padding: 0 10px;
   border-radius: 999px;
   color: var(--help-purple);
@@ -144,7 +145,7 @@
   gap: 10px;
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 12px;
+  padding: 9px 12px;
   border-radius: 10px;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
@@ -207,6 +208,11 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+.help-directory-contact .help-directory-email:hover::after,
+.help-directory-contact .help-directory-email:focus-visible::after {
+  color: #fff;
+}
+
 .help-directory-contact small {
   padding: 0 4px;
   color: rgba(255, 255, 255, 0.78);
@@ -229,12 +235,12 @@
   }
 
   .bo-help-content {
-    gap: 22px;
+    gap: 18px;
   }
 
   .help-hero {
-    min-height: 184px;
-    padding: 28px;
+    min-height: 156px;
+    padding: 24px 28px;
   }
 
   .help-directory-card {
@@ -244,8 +250,12 @@
 }
 
 @media (max-width: 760px) {
+  .bo-help-shell {
+    padding-top: 30px;
+  }
+
   .bo-help-content {
-    gap: 18px;
+    gap: 16px;
   }
 
   .help-hero,
@@ -254,16 +264,16 @@
   }
 
   .help-hero {
-    min-height: 166px;
-    padding: 24px;
+    min-height: 142px;
+    padding: 20px 22px;
   }
 
   .help-hero h1 {
-    font-size: 38px;
+    font-size: 34px;
   }
 
   .help-hero p {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .help-directory-card {

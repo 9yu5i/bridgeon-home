@@ -12,6 +12,7 @@ const requiredFiles = [
   "css/redesign/trendypicker-help.css",
   "css/redesign/trendypicker-help-topic.css",
   "app/javascript/js/trendypicker-mypage.js",
+  "app/javascript/js/trendypicker-help-topic.js",
   "app/javascript/js/trendypicker-orders.js",
   "app/javascript/js/trendypicker-wishlist.js",
   "app/javascript/js/trendypicker-profile.js",
@@ -25,6 +26,7 @@ const requiredFiles = [
   "board/index.html",
   "board/notice/default01/index.html",
   "board/faq/_faq/index.html",
+  "_modules/common/board_lnb.html",
   "service/cs.html",
   "service/guide.html",
   "service/cancellation.html",
@@ -207,12 +209,12 @@ const requiredCssPatterns = [
   {
     label: "desktop dashboard grid and profile sizing",
     pattern:
-      /\.bo-mypage-shell\s*\{[^}]*--bo-account-content-width:\s*909px;[^}]*grid-template-columns:\s*clamp\(180px,\s*17vw,\s*205px\)\s+minmax\(0,\s*var\(--bo-account-content-width\)\);[^}]*padding:\s*36px\s+clamp\(20px,\s*3vw,\s*40px\)\s+86px;[\s\S]*?\.bo-profile\s*\{[^}]*min-height:\s*clamp\(208px,\s*17\.5vw,\s*232px\);/s,
+      /\.bo-mypage-shell\s*\{[^}]*--bo-account-content-width:\s*1680px;[^}]*grid-template-columns:\s*clamp\(170px,\s*14vw,\s*196px\)\s+minmax\(0,\s*1fr\);[^}]*padding:\s*36px\s+clamp\(16px,\s*2vw,\s*28px\)\s+86px;[\s\S]*?\.bo-profile\s*\{[^}]*min-height:\s*clamp\(208px,\s*17\.5vw,\s*232px\);/s,
   },
   {
     label: "all desktop My Page content shares the dashboard start line",
     pattern:
-      /@media\s*\(min-width:\s*1121px\)\s*\{\s*\.bo-mypage-shell\s*>\s*\.subpage_container\.bo-mypage\s*\{[^}]*grid-column:\s*2;[^}]*justify-self:\s*start;/s,
+      /@media\s*\(min-width:\s*1121px\)\s*\{\s*\.bo-mypage-shell\s*>\s*\.subpage_container\.bo-mypage\s*\{[^}]*grid-column:\s*2;[^}]*justify-self:\s*stretch;[^}]*max-width:\s*min\(var\(--bo-account-content-width\),\s*100%\);/s,
   },
   {
     label: "all desktop My Page sidebars share one common baseline",
@@ -349,9 +351,9 @@ const requiredProfileCssPatterns = [
       /@media\s*\(max-width:\s*1120px\)[\s\S]*?\.bo-profile-native-fields\s+\.resp_join_table\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\);/s,
   },
   {
-    label: "profile content uses the shared 909px account width",
+    label: "profile content uses the shared account content width",
     pattern:
-      /\.bo-profile-page\s*\{[^}]*width:\s*min\(100%,\s*var\(--bo-account-content-width,\s*909px\)\);[^}]*max-width:\s*var\(--bo-account-content-width,\s*909px\);/s,
+      /\.bo-profile-page\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*min\(var\(--bo-account-content-width,\s*1680px\),\s*100%\);/s,
   },
   {
     label: "desktop profile selects match compact native field height",
@@ -468,6 +470,7 @@ const requiredCustomerServiceShellTokens = [
   "help-topic-nav",
   "help-topic-layout",
   "Customer Service",
+  "trendypicker-help-topic.js",
 ];
 
 let failed = false;
@@ -611,6 +614,7 @@ if (existsSync(boardPath)) {
   const board = readFileSync(boardPath, "utf8");
   for (const token of [
     "trendypicker-help-topic.css",
+    "trendypicker-help-topic.js",
     "bo-help-board-page",
     "bo-help-topic-container",
     "help-topic-shell",
@@ -625,10 +629,27 @@ if (existsSync(boardPath)) {
 const noticeBoardPath = resolve(workskinRoot, "board/notice/default01/index.html");
 if (existsSync(noticeBoardPath)) {
   const noticeBoard = readFileSync(noticeBoardPath, "utf8");
-  for (const token of ["help-board-count", "help-board-head", "Search", "Clear"]) {
+  for (const token of ["help-board-count", "help-board-head", "help-board-toolbar", "help-board-table", "Search", "Clear"]) {
     if (noticeBoard.includes(token)) continue;
     failed = true;
     console.error(`Missing confirmed Notice board token: ${token}`);
+  }
+}
+
+const faqBoardPath = resolve(workskinRoot, "board/faq/_faq/index.html");
+if (existsSync(faqBoardPath)) {
+  const faqBoard = readFileSync(faqBoardPath, "utf8");
+  for (const token of [
+    "help-faq-toolbar",
+    "help-faq-table",
+    "help-faq-category",
+    "help-faq-question",
+    "All categories",
+    "Search by keyword",
+  ]) {
+    if (faqBoard.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed FAQ board token: ${token}`);
   }
 }
 
@@ -637,6 +658,7 @@ if (existsSync(qnaPath)) {
   const qna = readFileSync(qnaPath, "utf8");
   for (const token of [
     "trendypicker-help-topic.css",
+    "trendypicker-help-topic.js",
     "bo-help-qna-page",
     "help-topic-shell",
     "Search inquiries",

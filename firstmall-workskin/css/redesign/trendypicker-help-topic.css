@@ -18,18 +18,48 @@
 .bo-help-topic-page.bo-mypage-shell,
 .bo-help-board-page.bo-mypage-shell,
 .bo-help-qna-page.bo-mypage-shell {
+  --bo-account-content-width: 1680px;
   background: #fff;
+  overflow: visible;
+}
+
+.bo-help-topic-page.bo-mypage-shell::before,
+.bo-help-board-page.bo-mypage-shell::before,
+.bo-help-qna-page.bo-mypage-shell::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* overflow-x: hidden on ancestors breaks sticky; keep page scroll on the viewport */
+html:has(.bo-help-topic-page),
+body:has(.bo-help-topic-page),
+html:has(.bo-help-board-page),
+body:has(.bo-help-board-page),
+html:has(.bo-help-qna-page),
+body:has(.bo-help-qna-page) {
+  overflow-x: visible !important;
+  overflow-y: auto !important;
+}
+
+body:has(.bo-help-topic-page) #layout_wrap,
+body:has(.bo-help-topic-page) #layout_body,
+body:has(.bo-help-board-page) #layout_wrap,
+body:has(.bo-help-board-page) #layout_body,
+body:has(.bo-help-qna-page) #layout_wrap,
+body:has(.bo-help-qna-page) #layout_body {
+  overflow: visible !important;
 }
 
 .bo-help-topic-page .bo-help-topic-container,
 .bo-help-board-page .bo-help-topic-container,
 .bo-help-qna-page .bo-help-topic-container {
   float: none;
-  width: min(100%, 980px) !important;
-  max-width: 980px !important;
+  width: 100% !important;
+  max-width: min(1680px, 100%) !important;
   margin: 0;
   padding: 0 0 76px;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 .bo-help-topic-page .btn_sub_all,
@@ -47,13 +77,17 @@
 /* ——— Prototype shell ——— */
 .help-topic-shell {
   display: grid;
-  gap: 26px;
-  padding: 34px;
+  gap: 22px;
+  width: 100%;
+  max-width: none;
+  padding: 28px 32px;
   border: 1px solid rgba(123, 63, 228, 0.12);
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 12px 30px rgba(49, 19, 108, 0.08);
   box-sizing: border-box;
+  overflow: visible;
+  font-size: 13px;
 }
 
 .help-topic-breadcrumb,
@@ -66,7 +100,7 @@
 
 .help-topic-breadcrumb {
   color: #867d96;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -81,14 +115,14 @@
 
 .help-topic-head {
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
 .help-topic-kicker,
 .help-topic-meta span,
 .help-topic-nav strong {
   color: var(--help-purple);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 850;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -109,48 +143,65 @@
 .help-topic-head h1,
 .help-topic-head h1 span {
   color: var(--help-ink);
-  font-size: clamp(34px, 4vw, 54px);
-  line-height: 1;
+  font-size: clamp(34px, 4vw, 50px);
+  line-height: 1.02;
   font-weight: 950;
 }
 
 .help-topic-head p {
-  max-width: 760px;
+  max-width: 960px;
   color: var(--help-muted);
-  font-size: 16px;
-  line-height: 1.56;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .help-topic-layout {
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr);
-  gap: 28px;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 24px;
   align-items: start;
+  overflow: visible;
 }
 
 .help-topic-nav {
+  position: -webkit-sticky;
   position: sticky;
   top: 96px;
+  z-index: 30;
+  align-self: start;
   display: grid;
-  gap: 8px;
-  padding: 18px;
+  gap: 6px;
+  margin: 0;
+  padding: 14px;
   border: 1px solid var(--help-line);
-  border-radius: 16px;
+  border-radius: 14px;
   background: #fbf8ff;
   box-sizing: border-box;
+}
+
+.help-topic-nav.is-pinned {
+  margin: 0;
+  box-shadow: 0 12px 28px rgba(49, 19, 108, 0.12);
+}
+
+.help-topic-nav-placeholder {
+  display: block;
+  pointer-events: none;
 }
 
 .help-topic-nav a {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 12px;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
   color: #2d2639;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 750;
   line-height: 1.2;
   text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
   transition:
     color 0.2s ease,
     background 0.2s ease;
@@ -165,7 +216,7 @@
 .help-topic-body,
 .help-topic-body.bo-help-topic-body {
   display: grid;
-  gap: 18px;
+  gap: 16px;
   width: auto !important;
   max-width: none !important;
   margin: 0 !important;
@@ -175,16 +226,16 @@
   background: transparent !important;
   box-shadow: none !important;
   color: var(--help-muted);
-  font-size: 15px;
-  line-height: 1.62;
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .help-topic-panel {
   display: grid;
-  gap: 16px;
-  padding: 24px;
+  gap: 12px;
+  padding: 18px 20px;
   border: 1px solid var(--help-line);
-  border-radius: 16px;
+  border-radius: 14px;
   background:
     radial-gradient(circle at 98% 0%, rgba(234, 223, 255, 0.5), transparent 28%),
     #fff;
@@ -197,8 +248,8 @@
 .help-topic-body h3.title1 span {
   margin: 0;
   color: var(--help-ink);
-  font-size: 24px;
-  line-height: 1.18;
+  font-size: 16px;
+  line-height: 1.25;
   font-weight: 900;
 }
 
@@ -210,7 +261,7 @@
 .help-topic-body h3.title3 span {
   margin: 0;
   color: var(--help-ink);
-  font-size: 17px;
+  font-size: 14px;
   line-height: 1.3;
   font-weight: 850;
 }
@@ -220,8 +271,8 @@
 .help-topic-body p,
 .help-topic-body li {
   color: var(--help-muted);
-  font-size: 15px;
-  line-height: 1.62;
+  font-size: 13px;
+  line-height: 1.55;
   font-weight: 600;
 }
 
@@ -330,9 +381,11 @@
 }
 
 .help-topic-shell .bbs_top_wrap,
-.help-topic-shell #boardsearch .bbs_top_wrap {
+.help-topic-shell #boardsearch .bbs_top_wrap,
+.help-topic-shell .help-board-toolbar,
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap {
   display: flex !important;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-end;
   gap: 10px;
@@ -340,7 +393,22 @@
   width: auto;
   margin: 0;
   padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   list-style: none;
+}
+
+.help-topic-shell #boardsearch {
+  margin: 0;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap {
+  justify-content: flex-start;
 }
 
 .help-topic-shell .bbs_top_wrap > li,
@@ -351,86 +419,317 @@
   padding: 0;
 }
 
-.help-topic-shell .bbs_top_wrap .left {
-  flex: 1 1 180px;
+.help-topic-shell .bbs_top_wrap .left,
+.help-topic-shell .help-board-filter,
+.help-topic-shell .help-faq-filter {
+  position: relative;
+  z-index: 60;
+  flex: 0 1 240px;
   max-width: 280px;
+  min-width: 160px;
 }
 
-.help-topic-shell .bbs_top_wrap .right2 {
+.help-topic-shell .help-faq-filter {
+  flex: 0 1 240px;
+}
+
+/* Dissolve Firstmall .right2/.searchform group box so controls are separate */
+.help-topic-shell .bbs_top_wrap .right2,
+.help-topic-shell .bbs_top_wrap .help-board-actions,
+.help-topic-shell .bbs_top_wrap .searchform,
+.help-topic-shell .bbs_top_wrap .help-board-search,
+.help-topic-shell .bbs_top_wrap .help-faq-search-field {
+  display: contents !important;
+  float: none !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.help-topic-shell .bbs_top_wrap .right2::before,
+.help-topic-shell .bbs_top_wrap .right2::after,
+.help-topic-shell .bbs_top_wrap .help-board-actions::before,
+.help-topic-shell .bbs_top_wrap .help-board-actions::after,
+.help-topic-shell .bbs_top_wrap .searchform::before,
+.help-topic-shell .bbs_top_wrap .searchform::after,
+.help-topic-shell .bbs_top_wrap .help-board-search::before,
+.help-topic-shell .bbs_top_wrap .help-board-search::after,
+.help-topic-shell .bbs_top_wrap .help-faq-search-field::before,
+.help-topic-shell .bbs_top_wrap .help-faq-search-field::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Custom category dropdown (realtrend-select) */
+.help-topic-shell .help-board-filter .realtrend-select-wrap,
+.help-topic-shell .help-faq-filter .realtrend-select-wrap,
+.help-topic-shell .bbs_top_wrap .help-board-select {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-wrap.is-open,
+.help-topic-shell .help-faq-filter .realtrend-select-wrap.is-open,
+.help-topic-shell .bbs_top_wrap .help-board-select.is-open {
+  z-index: 80;
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-wrap::after,
+.help-topic-shell .help-faq-filter .realtrend-select-wrap::after,
+.help-topic-shell .bbs_top_wrap .help-board-select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 10px;
+  height: 10px;
+  border-right: 1.6px solid #6f687d;
+  border-bottom: 1.6px solid #6f687d;
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+  transition: transform 0.15s ease;
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-wrap.is-open::after,
+.help-topic-shell .help-faq-filter .realtrend-select-wrap.is-open::after,
+.help-topic-shell .bbs_top_wrap .help-board-select.is-open::after {
+  transform: translateY(-20%) rotate(225deg);
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-trigger,
+.help-topic-shell .help-faq-filter .realtrend-select-trigger,
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-trigger {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-}
-
-.help-topic-shell .bbs_top_wrap .searchform {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.help-topic-shell .bbs_top_wrap select,
-.help-topic-shell .bbs_top_wrap input[type="text"],
-.help-topic-shell .bbs_top_wrap .res_bbs_search_input,
-.help-topic-shell .bbs_top_wrap .btn_resp {
+  width: 100%;
   min-height: 40px;
   height: 40px;
   margin: 0;
-  border: 1px solid var(--help-line);
+  padding: 0 32px 0 12px;
+  border: 1px solid #ded8e8;
   border-radius: 10px;
+  color: #111;
   background: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+.help-topic-shell .help-faq-filter .realtrend-select-trigger {
+  min-height: 44px;
+  height: 44px;
+  font-size: 14px;
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-wrap.is-open .realtrend-select-trigger,
+.help-topic-shell .help-faq-filter .realtrend-select-wrap.is-open .realtrend-select-trigger,
+.help-topic-shell .bbs_top_wrap .help-board-select.is-open .realtrend-select-trigger {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-value,
+.help-topic-shell .help-faq-filter .realtrend-select-value,
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-menu,
+.help-topic-shell .help-faq-filter .realtrend-select-menu,
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu {
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 0;
+  right: 0;
+  z-index: 90;
+  display: none;
+  margin: 0;
+  padding: 10px 6px 6px;
+  list-style: none;
+  border: 1px solid #ded8e8;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-menu.is-open,
+.help-topic-shell .help-faq-filter .realtrend-select-menu.is-open,
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu.is-open,
+.help-topic-shell .help-board-filter .realtrend-select-wrap.is-open .realtrend-select-menu,
+.help-topic-shell .help-faq-filter .realtrend-select-wrap.is-open .realtrend-select-menu,
+.help-topic-shell .bbs_top_wrap .help-board-select.is-open .realtrend-select-menu {
+  display: block;
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-menu li,
+.help-topic-shell .help-faq-filter .realtrend-select-menu li,
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li {
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #16121f;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-menu li:hover,
+.help-topic-shell .help-board-filter .realtrend-select-menu li.is-selected,
+.help-topic-shell .help-faq-filter .realtrend-select-menu li:hover,
+.help-topic-shell .help-faq-filter .realtrend-select-menu li.is-selected,
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li:hover,
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li.is-selected {
+  color: var(--help-purple);
+  background: #f7f1ff;
+}
+
+.help-topic-shell .help-board-filter .realtrend-select-native,
+.help-topic-shell .help-faq-filter .realtrend-select-native,
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-native,
+.help-topic-shell .bbs_top_wrap select.realtrend-select-native {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  appearance: none !important;
+  pointer-events: none !important;
+}
+
+.help-topic-shell .bbs_top_wrap input[type="text"],
+.help-topic-shell .bbs_top_wrap .res_bbs_search_input,
+.help-topic-shell .bbs_top_wrap .btn_resp,
+.help-topic-shell .bbs_top_wrap button.btn_resp,
+.help-topic-shell .bbs_top_wrap > li > .btn_resp,
+.help-topic-shell .bbs_top_wrap .right2 > .btn_resp,
+.help-topic-shell .bbs_top_wrap .help-board-actions > .btn_resp {
+  min-height: 40px !important;
+  height: 40px !important;
+  margin: 0 !important;
+  border: 1px solid var(--help-line) !important;
+  border-radius: 10px !important;
+  background: #fff !important;
   color: var(--help-ink);
   font: inherit;
   font-size: 13px;
   box-sizing: border-box;
+  box-shadow: none !important;
+  outline: none !important;
+  float: none !important;
+  vertical-align: middle;
+  flex: 0 0 auto;
 }
 
-.help-topic-shell .bbs_top_wrap select {
-  width: 100%;
-  padding: 0 12px;
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap input[type="text"],
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap .res_bbs_search_input,
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap .btn_resp,
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap button.btn_resp {
+  min-height: 44px !important;
+  height: 44px !important;
+  border-color: #d7d0e0 !important;
+  font-size: 14px;
 }
 
 .help-topic-shell .bbs_top_wrap input[type="text"],
 .help-topic-shell .bbs_top_wrap .res_bbs_search_input {
+  display: block;
   width: min(220px, 100%);
-  padding: 0 12px;
+  max-width: 100%;
+  padding: 0 12px !important;
+  background: #fff !important;
 }
 
-.help-topic-shell .bbs_top_wrap .btn_resp {
-  padding: 0 14px;
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap input[type="text"],
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap .res_bbs_search_input {
+  width: min(320px, 100%);
+  min-width: 180px;
+  margin-left: auto !important;
+  padding: 0 14px !important;
+}
+
+.help-topic-shell .bbs_top_wrap .btn_resp,
+.help-topic-shell .bbs_top_wrap button.btn_resp,
+.help-topic-shell .bbs_top_wrap .right2 > .btn_resp,
+.help-topic-shell .bbs_top_wrap .help-board-actions > .btn_resp {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto !important;
+  padding: 0 14px !important;
   font-weight: 750;
   cursor: pointer;
+  border-left-width: 1px !important;
+  border-right-width: 1px !important;
+}
+
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap .btn_resp,
+.help-topic-shell .help-faq-toolbar .bbs_top_wrap button.btn_resp {
+  width: auto !important;
+  padding: 0 20px !important;
+  border: 0 !important;
+  font-weight: 800;
 }
 
 .help-topic-shell .bbs_top_wrap .btn_resp.color2,
-.help-topic-shell .bbs_top_wrap button[type="submit"] {
-  border-color: var(--help-purple);
-  color: #fff;
-  background: var(--help-purple);
+.help-topic-shell .bbs_top_wrap button[type="submit"],
+.help-topic-shell .bbs_top_wrap button.btn_resp.color2,
+.help-topic-shell .bbs_top_wrap .right2 > .btn_resp.color2,
+.help-topic-shell .bbs_top_wrap .help-board-actions > .btn_resp.color2 {
+  border-color: var(--help-purple) !important;
+  color: #fff !important;
+  background: var(--help-purple) !important;
 }
 
-.help-topic-shell .bbs_top_wrap .btn_resp:not(.color2) {
-  color: var(--help-ink);
-  background: #fff;
+.help-topic-shell .bbs_top_wrap .btn_resp:not(.color2),
+.help-topic-shell .bbs_top_wrap button.btn_resp:not(.color2),
+.help-topic-shell .bbs_top_wrap .right2 > .btn_resp:not(.color2),
+.help-topic-shell .bbs_top_wrap .help-board-actions > .btn_resp:not(.color2) {
+  color: var(--help-ink) !important;
+  background: #fff !important;
 }
 
 .help-topic-shell .help-board-count,
 .help-topic-shell .article_info {
   display: block !important;
-  margin: 0;
-  color: var(--help-muted);
+  margin: 0 0 14px;
+  color: #5f586c;
   font-size: 13px;
   font-weight: 700;
+  line-height: 1.4;
+}
+
+.help-topic-shell:has(.faq_new) .help-board-count,
+.bo-help-faq-page .help-topic-shell .help-board-count,
+.help-topic-shell .faq_search {
+  display: none !important;
 }
 
 .help-topic-shell .res_table,
-.help-topic-shell .res_table.normal {
+.help-topic-shell .res_table.normal,
+.help-topic-shell .help-board-table {
   display: block;
   overflow: visible;
   border: 0;
-  border-top: 2px solid var(--help-ink);
-  border-bottom: 1px solid var(--help-line);
+  border-top: 2px solid #2a2435;
+  border-bottom: 1px solid #e8e2ef;
   border-radius: 0;
   background: transparent;
 }
@@ -438,18 +737,18 @@
 .help-topic-shell .res_table .thead,
 .help-topic-shell .help-board-head {
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr) 110px;
+  grid-template-columns: minmax(140px, 20%) minmax(0, 1fr) 96px;
   gap: 16px;
   align-items: center;
-  min-height: 56px;
+  min-height: 40px;
   margin: 0;
-  padding: 14px 4px;
-  border-bottom: 1px solid var(--help-line);
+  padding: 10px 2px;
+  border-bottom: 1px solid #e8e2ef;
   color: #867d96;
   background: transparent;
-  font-size: 12px;
-  font-weight: 850;
-  letter-spacing: 0.02em;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   list-style: none;
 }
@@ -464,14 +763,20 @@
   text-align: left;
 }
 
-.help-topic-shell .res_table .tbody {
+.help-topic-shell .res_table .thead li:last-child,
+.help-topic-shell .help-board-head li:last-child {
+  text-align: right;
+}
+
+.help-topic-shell .res_table .tbody,
+.help-topic-shell .help-board-row {
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr) 110px;
+  grid-template-columns: minmax(140px, 20%) minmax(0, 1fr) 96px;
   gap: 16px;
   align-items: center;
-  min-height: 56px;
+  min-height: 48px;
   margin: 0;
-  padding: 14px 4px;
+  padding: 12px 2px;
   border: 0;
   border-bottom: 1px solid #efeaf6;
   background: transparent;
@@ -479,11 +784,13 @@
   transition: background-color 0.2s ease;
 }
 
-.help-topic-shell .res_table .tbody:last-child {
+.help-topic-shell .res_table .tbody:last-child,
+.help-topic-shell .help-board-row:last-child {
   border-bottom: 0;
 }
 
-.help-topic-shell .res_table .tbody:hover {
+.help-topic-shell .res_table .tbody:hover,
+.help-topic-shell .help-board-row:hover {
   background: #fbf8ff;
 }
 
@@ -492,24 +799,29 @@
   margin: 0;
   padding: 0;
   border: 0;
-  color: var(--help-muted);
+  color: #867d96;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 500;
+  line-height: 1.4;
   text-align: left;
+  overflow-wrap: break-word;
 }
 
 .help-topic-shell .res_table .tbody > li.subject {
-  color: var(--help-ink);
-  font-size: 15px;
+  color: #111;
+  font-size: 14px;
   font-weight: 750;
+  line-height: 1.4;
 }
 
 .help-topic-shell .res_table .tbody > li.date,
 .help-topic-shell .res_table .tbody > li:last-child {
-  color: var(--help-muted);
-  font-size: 13px;
-  font-weight: 700;
+  color: #867d96;
+  font-size: 12px;
+  font-weight: 500;
   text-align: right;
+  white-space: nowrap;
+  overflow-wrap: normal;
 }
 
 .help-topic-shell .res_table .tbody > li.num,
@@ -523,6 +835,9 @@
 .help-topic-shell .res_table .tbody .hand a {
   color: inherit;
   font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
   text-decoration: none;
   cursor: pointer;
 }
@@ -532,23 +847,27 @@
   color: var(--help-purple);
 }
 
-.help-topic-shell .no_data_area2 {
-  min-height: 160px;
-  display: grid;
-  place-items: center;
+.help-topic-shell .no_data_area2,
+.help-topic-shell .help-board-empty,
+.help-topic-shell .help-faq-empty {
+  min-height: 0;
+  display: block;
   margin: 0;
+  padding: 36px 12px;
   border-top: 1px solid var(--help-line);
   border-bottom: 1px solid var(--help-line);
   color: var(--help-muted);
   background: transparent;
   font-size: 14px;
+  text-align: center;
 }
 
 .help-topic-shell .paging_navigation {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin: 8px 0 0;
+  margin: 4px 0 0;
+  padding-top: 4px;
 }
 
 .help-topic-shell .paging_navigation a,
@@ -556,14 +875,14 @@
 .help-topic-shell .paging_navigation strong {
   display: inline-grid;
   place-items: center;
-  min-width: 34px;
-  height: 34px;
+  min-width: 32px;
+  height: 32px;
   padding: 0 8px;
   border-radius: 999px;
   color: var(--help-muted);
   background: transparent;
-  font-size: 14px;
-  font-weight: 750;
+  font-size: 13px;
+  font-weight: 800;
   text-decoration: none;
 }
 
@@ -593,67 +912,70 @@
 /* Q&A list: Status | Topic | Subject | Date */
 .bo-help-qna-page .help-topic-shell .res_table .thead,
 .bo-help-qna-page .help-topic-shell .help-board-head,
-.bo-help-qna-page .help-topic-shell .res_table .tbody {
-  grid-template-columns: 100px 120px minmax(0, 1fr) 110px;
+.bo-help-qna-page .help-topic-shell .res_table .tbody,
+.bo-help-qna-page .help-topic-shell .help-board-row {
+  grid-template-columns: 88px minmax(120px, 16%) minmax(0, 1fr) 96px;
+  gap: 14px;
 }
 
 .bo-help-qna-page .help-topic-shell .res_table .tbody > li.date {
   text-align: right;
 }
 
-/* FAQ category chips + accordion */
+/* FAQ mapped to help-faq look */
 .help-topic-shell .board_cate_slide,
 .help-topic-shell .board_category2 {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: none !important;
+}
+
+.help-topic-shell .help-faq-table {
+  border-top: 2px solid #cfc8d8;
+  border-bottom: 1px solid #e8e2ef;
+}
+
+.help-topic-shell .faq_new,
+.help-topic-shell .help-faq-list {
+  display: grid;
   margin: 0;
   padding: 0;
+  border: 0;
   list-style: none;
 }
 
-.help-topic-shell .board_category2 a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 36px;
-  padding: 0 14px;
-  border: 1px solid var(--help-line);
-  border-radius: 999px;
-  color: #2d2639;
-  background: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.help-topic-shell .board_category2 li.on a,
-.help-topic-shell .board_category2 a:hover {
-  border-color: #eadfff;
-  color: var(--help-purple);
-  background: #eadfff;
-}
-
-.help-topic-shell .faq_new {
-  margin: 0;
-  padding: 0;
-  border-top: 2px solid var(--help-ink);
-  list-style: none;
-}
-
-.help-topic-shell .faq_new > li {
+.help-topic-shell .faq_new > li,
+.help-topic-shell .help-faq-item {
   border-bottom: 1px solid #efeaf6;
 }
 
+.help-topic-shell .faq_new > li:last-child,
+.help-topic-shell .help-faq-item:last-child {
+  border-bottom: 0;
+}
+
 .help-topic-shell .faq_new .question {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  min-height: 62px;
+  margin: 0;
   padding: 16px 4px;
   cursor: pointer;
 }
 
-.help-topic-shell .faq_new .question .subject {
+.help-topic-shell .faq_new .help-faq-category {
+  color: var(--help-ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.help-topic-shell .faq_new .question .subject,
+.help-topic-shell .faq_new .help-faq-question {
   margin: 0;
   color: var(--help-ink);
   font-size: 15px;
-  font-weight: 750;
+  font-weight: 650;
+  line-height: 1.45;
 }
 
 .help-topic-shell .faq_new .question .add_info {
@@ -661,14 +983,28 @@
 }
 
 .help-topic-shell .faq_new .answer {
-  padding: 0 4px 18px;
+  margin: 0;
+  padding: 0 4px 18px 238px;
   color: var(--help-muted);
   font-size: 14px;
-  line-height: 1.62;
+  line-height: 1.6;
+  background: transparent;
 }
 
 .help-topic-shell .faq_new .answer.hide {
   display: none;
+}
+
+.help-topic-shell .faq_new > li.is-open .question,
+.help-topic-shell .faq_new > li:hover .help-faq-question,
+.help-topic-shell .faq_new .question:hover .help-faq-question {
+  color: var(--help-purple);
+}
+
+.help-topic-shell .faq_new .answer .filelist {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
 }
 
 /* ——— Legacy purple hero (About / Policies not yet shelled) ——— */
@@ -822,12 +1158,20 @@
   }
 
   .help-topic-nav {
-    position: static;
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    width: auto !important;
     display: flex;
     gap: 10px;
     overflow-x: auto;
     padding: 12px;
+    box-shadow: none;
     scrollbar-width: none;
+  }
+
+  .help-topic-nav-placeholder {
+    display: none !important;
   }
 
   .help-topic-nav::-webkit-scrollbar {
@@ -868,7 +1212,7 @@
 
   .help-topic-head h1,
   .help-topic-head h1 span {
-    font-size: 32px;
+    font-size: 34px;
   }
 
   .help-topic-head p,
@@ -876,36 +1220,44 @@
   .help-topic-panel li,
   .help-topic-body p,
   .help-topic-body li {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .help-topic-panel {
-    padding: 18px;
+    padding: 16px;
   }
 
   .help-topic-panel h2,
   .help-topic-panel h2 span,
   .help-topic-body h3.title1,
   .help-topic-body h3.title1 span {
-    font-size: 21px;
+    font-size: 17px;
   }
 
   .help-topic-shell .bbs_top_wrap,
-  .help-topic-shell #boardsearch .bbs_top_wrap {
+  .help-topic-shell #boardsearch .bbs_top_wrap,
+  .help-topic-shell .help-faq-toolbar .bbs_top_wrap {
+    flex-wrap: wrap;
     justify-content: stretch;
   }
 
   .help-topic-shell .bbs_top_wrap .left,
-  .help-topic-shell .bbs_top_wrap .right2,
-  .help-topic-shell .bbs_top_wrap .searchform {
+  .help-topic-shell .bbs_top_wrap .help-board-filter,
+  .help-topic-shell .bbs_top_wrap .help-faq-filter {
     flex: 1 1 100%;
     max-width: none;
+    min-width: 0;
+    margin-left: 0;
   }
 
   .help-topic-shell .bbs_top_wrap input[type="text"],
   .help-topic-shell .bbs_top_wrap .res_bbs_search_input,
-  .help-topic-shell .bbs_top_wrap .btn_resp {
-    width: 100%;
+  .help-topic-shell .bbs_top_wrap .btn_resp,
+  .help-topic-shell .bbs_top_wrap button.btn_resp,
+  .help-topic-shell .help-faq-toolbar .bbs_top_wrap .btn_resp {
+    width: 100% !important;
+    max-width: none;
+    margin-left: 0 !important;
   }
 
   .help-topic-shell .res_table .thead,
@@ -913,19 +1265,52 @@
     display: none;
   }
 
-  .help-topic-shell .res_table .tbody {
+  .help-topic-shell .res_table .tbody,
+  .help-topic-shell .help-board-row {
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 8px 12px;
-    padding: 16px 2px;
+    gap: 6px 10px;
+    min-height: 0;
+    padding: 12px 2px;
   }
 
   .help-topic-shell .res_table .tbody > li:first-child {
     grid-column: 1 / -1;
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .help-topic-shell .res_table .tbody > li.subject {
+    font-size: 13px;
+  }
+
+  .help-topic-shell .res_table .tbody > li.date,
+  .help-topic-shell .res_table .tbody > li:last-child {
+    font-size: 11px;
+  }
+
+  .help-topic-shell .faq_new .question {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    min-height: 0;
+    padding: 16px 2px;
+  }
+
+  .help-topic-shell .faq_new .help-faq-category {
+    color: var(--help-muted);
+    font-size: 12px;
+  }
+
+  .help-topic-shell .faq_new .question .subject,
+  .help-topic-shell .faq_new .help-faq-question {
     font-size: 14px;
+  }
+
+  .help-topic-shell .faq_new .answer {
+    padding: 0 2px 16px;
+  }
+
+  .help-topic-head h1,
+  .help-topic-head h1 span {
+    font-size: 34px;
   }
 
   .bo-help-topic-head {

@@ -2,7 +2,7 @@
 @@ 게시판 List 레이아웃 템플릿 @@
 - 파일위치 : [스킨폴더]/board/index.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!--{? manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' }-->
+<!--{? _GET.id == 'notice' || _GET.id == 'faq' || _GET.id == 'mbqna' || manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' }-->
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css" />
 <!--{/}-->
@@ -43,8 +43,8 @@ var isperm_write = '{managerview.isperm_write}';
 <script type="text/javascript" src="/app/javascript/jquery/jquery.form.js" ></script>
 <script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js"  charset="utf-8"></script>
 
-<!--{? manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' }-->
-<div id="boardlayout" class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-board-page">
+<!--{? _GET.id == 'notice' || _GET.id == 'faq' || _GET.id == 'mbqna' || manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' }-->
+<div id="boardlayout" class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-board-page{? _GET.id == 'faq' || manager.id == 'faq'} bo-help-faq-page{/}">
 	<aside class="bo-account-side">
 		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
 			<ul class="lnb_sub">
@@ -73,7 +73,7 @@ var isperm_write = '{managerview.isperm_write}';
 			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
 				<a href="/service/cs">Help Center</a>
 				<span aria-hidden="true">&gt;</span>
-				<!--{? manager.id == 'mbqna'}-->
+				<!--{? _GET.id == 'mbqna' || manager.id == 'mbqna'}-->
 				<span>About Us</span>
 				<!--{:}-->
 				<span>Customer Service</span>
@@ -81,12 +81,12 @@ var isperm_write = '{managerview.isperm_write}';
 			</nav>
 
 			<header class="help-topic-head">
-				<!--{? manager.id == 'mbqna'}-->
+				<!--{? _GET.id == 'mbqna' || manager.id == 'mbqna'}-->
 				<span class="help-topic-kicker">About Us</span>
 				<h1><span designElement="text">Contact Us</span></h1>
 				<p>Send order, product, account, and policy questions to the TrendyPicker support team.</p>
 				<div class="help-topic-meta"><span>Customer inquiry</span></div>
-				<!--{: manager.id == 'faq'}-->
+				<!--{: _GET.id == 'faq' || manager.id == 'faq'}-->
 				<span class="help-topic-kicker">Customer Service</span>
 				<h1><span designElement="text">FAQ</span></h1>
 				<p>Quick answers for orders, payment, shipping, account, coupons, membership, returns, and product questions.</p>
@@ -102,13 +102,13 @@ var isperm_write = '{managerview.isperm_write}';
 			<div class="help-topic-layout">
 				<nav class="help-topic-nav" aria-label="Help topics">
 					<strong>Topics</strong>
-					<a href="/board/?id=notice" {? manager.id == 'notice'}class="is-active" aria-current="page"{/}>Notice</a>
-					<a href="/board/?id=faq" {? manager.id == 'faq'}class="is-active" aria-current="page"{/}>FAQ</a>
+					<a href="/board/?id=notice" {? _GET.id == 'notice' || manager.id == 'notice'}class="is-active" aria-current="page"{/}>Notice</a>
+					<a href="/board/?id=faq" {? _GET.id == 'faq' || manager.id == 'faq'}class="is-active" aria-current="page"{/}>FAQ</a>
 					<a href="/mypage/myqna_catalog">Q&amp;A</a>
 					<a href="/service/guide">Guide</a>
 					<a href="/service/cancellation">Returns &amp; Exchanges</a>
 					<a href="/service/company">About Us</a>
-					<a href="/board/?id=mbqna" {? manager.id == 'mbqna'}class="is-active" aria-current="page"{/}>Contact Us</a>
+					<a href="/board/?id=mbqna" {? _GET.id == 'mbqna' || manager.id == 'mbqna'}class="is-active" aria-current="page"{/}>Contact Us</a>
 					<a href="/service/agreement">Terms of Use</a>
 					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
 				</nav>
@@ -123,6 +123,7 @@ var isperm_write = '{managerview.isperm_write}';
 	</main>
 </div>
 <script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js"></script>
 <!--{:}-->
 <div id="boardlayout">
 	<div class="subpage_wrap">
@@ -203,7 +204,7 @@ function iframeset(){
 
 <script type="text/javascript">
 $(document).ready(function(){
-    <!--{? manager.id != 'magazine' && manager.id != 'promotion' && manager.id != 'editors' && manager.id != 'notice' && manager.id != 'faq' && manager.id != 'mbqna'}-->
+    <!--{? manager.id != 'magazine' && manager.id != 'promotion' && manager.id != 'editors' && manager.id != 'notice' && manager.id != 'faq' && manager.id != 'mbqna' && _GET.id != 'notice' && _GET.id != 'faq' && _GET.id != 'mbqna'}-->
     if($(window).width() < 1023 && $("#subpageLNB #boardLnbCommon").length > 0){
         $("#bbslist").before($("#boardLnbCommon"));
     }

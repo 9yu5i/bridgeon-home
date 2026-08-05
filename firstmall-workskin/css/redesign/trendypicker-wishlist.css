@@ -40,6 +40,7 @@
   margin: 8px 0 0;
   color: var(--bo-muted);
   font-size: 15px;
+  font-weight: 600;
   line-height: 1.45;
   align-self: end;
 }
@@ -190,7 +191,7 @@
 .bo-wish-card__name {
   margin: 0;
   color: var(--bo-text);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.3;
   font-weight: 600;
 }
@@ -201,7 +202,7 @@
   margin: 0 0 4px;
   overflow: hidden;
   color: #6b6373;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1.3;
   text-overflow: ellipsis;
@@ -248,7 +249,7 @@
   display: block;
   min-height: calc(13px * 1.2);
   color: #ff2637;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.2;
   font-weight: 700;
 }
@@ -256,7 +257,7 @@
 .bo-wish-card__price .consumer_price {
   display: block;
   color: #8f86a0;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.2;
   font-weight: 500;
   text-decoration: line-through;
@@ -397,7 +398,7 @@
   }
 
   .bo-wishlist-head h2 {
-    font-size: 24px;
+    font-size: 28px;
   }
 
   .bo-wishlist-subtitle {
@@ -411,21 +412,24 @@
 }
 
 @media (max-width: 760px) {
-  .bo-wishlist-shell {
-    padding-top: 30px;
-  }
-
-  .bo-wishlist-shell .subpage_container.bo-mypage.bo-wishlist-page {
-    padding-top: 8px;
-  }
-
   .subpage_wrap .subpage_container .title_container.bo-wishlist-head {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "title"
+      "subtitle"
+      "count"
+      "tabs";
     margin-bottom: 12px;
     padding-top: 0 !important;
   }
 
   .bo-wishlist-subtitle {
-    font-size: 13px;
+    font-size: 14px;
+  }
+
+  .bo-wishlist-count {
+    justify-self: end;
+    margin-top: 10px;
   }
 
   .bo-wishlist-tabs {
