@@ -9,6 +9,7 @@ const requiredFiles = [
   "css/redesign/trendypicker-profile.css",
   "css/redesign/trendypicker-orders.css",
   "css/redesign/trendypicker-wishlist.css",
+  "css/redesign/trendypicker-reviews.css",
   "css/redesign/trendypicker-help.css",
   "css/redesign/trendypicker-help-topic.css",
   "app/javascript/js/trendypicker-mypage.js",
@@ -21,10 +22,13 @@ const requiredFiles = [
   "mypage/myinfo.html",
   "mypage/order_catalog.html",
   "mypage/wish.html",
+  "mypage/mygdreview_catalog.html",
   "mypage/mypage_lnb.html",
   "mypage/myqna_catalog.html",
   "board/index.html",
+  "board/view.html",
   "board/notice/default01/index.html",
+  "board/notice/default01/view.html",
   "board/faq/_faq/index.html",
   "_modules/common/board_lnb.html",
   "service/cs.html",
@@ -612,14 +616,7 @@ for (const relativePath of requiredCustomerServiceShellFiles) {
 const boardPath = resolve(workskinRoot, "board/index.html");
 if (existsSync(boardPath)) {
   const board = readFileSync(boardPath, "utf8");
-  for (const token of [
-    "trendypicker-help-topic.css",
-    "trendypicker-help-topic.js",
-    "bo-help-board-page",
-    "bo-help-topic-container",
-    "help-topic-shell",
-    "help-topic-nav",
-  ]) {
+  for (const token of ["{#skin}", "_GET.id == 'notice'"]) {
     if (board.includes(token)) continue;
     failed = true;
     console.error(`Missing confirmed Help board token: ${token}`);
@@ -629,10 +626,53 @@ if (existsSync(boardPath)) {
 const noticeBoardPath = resolve(workskinRoot, "board/notice/default01/index.html");
 if (existsSync(noticeBoardPath)) {
   const noticeBoard = readFileSync(noticeBoardPath, "utf8");
-  for (const token of ["help-board-count", "help-board-head", "help-board-toolbar", "help-board-table", "Search", "Clear"]) {
+  for (const token of [
+    "trendypicker-help-topic.css",
+    "help-topic-shell",
+    "bo-help-board-page",
+    "help-board-count",
+    "help-board-head",
+    "help-board-toolbar",
+    "help-board-table",
+    "Search",
+    "Clear",
+  ]) {
     if (noticeBoard.includes(token)) continue;
     failed = true;
     console.error(`Missing confirmed Notice board token: ${token}`);
+  }
+}
+
+const boardViewPath = resolve(workskinRoot, "board/view.html");
+if (existsSync(boardViewPath)) {
+  const boardView = readFileSync(boardViewPath, "utf8");
+  for (const token of ["{#skin}", "_GET.id == 'notice'"]) {
+    if (boardView.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Help board view token: ${token}`);
+  }
+}
+
+const noticeViewPath = resolve(workskinRoot, "board/notice/default01/view.html");
+if (existsSync(noticeViewPath)) {
+  const noticeView = readFileSync(noticeViewPath, "utf8");
+  for (const token of [
+    "help-topic-shell",
+    "help-board-article",
+    "help-board-view-meta",
+    "Category",
+    "Subject",
+    "Date",
+    "board_detail_contents",
+    "boardviewclose",
+    "Back to Notice",
+    "{contents}",
+    "{subject}",
+    "{seq}",
+  ]) {
+    if (noticeView.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Notice view token: ${token}`);
   }
 }
 
@@ -640,6 +680,8 @@ const faqBoardPath = resolve(workskinRoot, "board/faq/_faq/index.html");
 if (existsSync(faqBoardPath)) {
   const faqBoard = readFileSync(faqBoardPath, "utf8");
   for (const token of [
+    "trendypicker-help-topic.css",
+    "help-topic-shell",
     "help-faq-toolbar",
     "help-faq-table",
     "help-faq-category",

@@ -1,0 +1,263 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 공지사항 View @@
+- 파일위치 : [스킨폴더]/board/notice/default01/view.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-membership.css?v=20260806-9" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260806-23" />
+<script type="text/javascript">
+//<![CDATA[
+var board_id = '{_GET.id}';
+var boardlistsurl = '{boardurl->lists}';
+var boardwriteurl = '{boardurl->write}';
+var boardviewurl = '{boardurl->view}';
+var boardmodifyurl = '{boardurl->modify}';
+var boardreplyurl = '{boardurl->reply}';
+var boardrpermurl = '{boardurl->perm}';
+var gl_isuser = false;
+{ ? defined('__ISUSER__') }
+gl_isuser = '{=defined('__ISUSER__')}';
+{ / }
+var return_url = '{=urlencode(_SERVER.REQUEST_URI)}';
+var comment = '{comment}';
+var commentlay = '{commentlay}';
+var isperm_write = '{managerview.isperm_write}';
+//]]>
+</script>
+<script type="text/javascript" src="/app/javascript/js/board.js?v=7" charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js" charset="utf-8"></script>
+
+<div id="boardlayout" class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-board-page bo-help-board-view">
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/main/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a class="on" href="/service/cs" aria-current="page">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+
+	<main class="subpage_container bo-mypage bo-help-topic-container">
+		<article class="help-topic-shell">
+			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
+				<a href="/service/cs">Help Center</a>
+				<span aria-hidden="true">&gt;</span>
+				<a href="/board/?id=notice">Notice</a>
+			</nav>
+
+			<header class="help-topic-head">
+				<span class="help-topic-kicker">Customer Service</span>
+				<h1><span designElement="text">Notice</span></h1>
+				<p>Read the full announcement below, then return to the Notice list anytime.</p>
+				<div class="help-topic-meta"><span>Article</span></div>
+			</header>
+
+			<div class="help-topic-layout">
+				<nav class="help-topic-nav" aria-label="Help topics">
+					<strong>Topics</strong>
+					<a href="/board/?id=notice" class="is-active" aria-current="page">Notice</a>
+					<a href="/board/?id=faq">FAQ</a>
+					<a href="/mypage/myqna_catalog">Q&amp;A</a>
+					<a href="/service/guide">Guide</a>
+					<a href="/service/cancellation">Returns &amp; Exchanges</a>
+					<a href="/service/company">About Us</a>
+					<a href="/board/?id=mbqna">Contact Us</a>
+					<a href="/service/agreement">Terms of Use</a>
+					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
+				</nav>
+
+				<div class="help-topic-body">
+					<div id="bbsview">
+<form name="form1" id="form1" method="post" action="../board_process" target="actionFrame">
+	<input type="hidden" name="mode" id="mode" value="" />
+	<input type="hidden" name="board_id" id="board_id" value="{boardid}" />
+	<input type="hidden" name="reply" id="reply" value="" />
+	<input type="hidden" name="seq" id="board_seq" value="{seq}" />
+	<input type="hidden" name="popup" value="{_GET.popup}">
+	<input type="hidden" name="iframe" value="{_GET.iframe}">
+	<input type="hidden" name="goods_seq" value="{_GET.goods_seq}">
+
+	<article class="help-board-article">
+		<div class="res_table normal help-board-table help-board-view-meta">
+			<ul class="thead help-board-head">
+				<li>Category</li>
+				<li>Subject</li>
+				<li>Date</li>
+			</ul>
+			<ul class="tbody help-board-row is-current">
+				<li class="cat">
+					<!--{? _GET.seq == '257' || seq == '257'}-->Membership<!--{: _GET.seq == '324' || seq == '324'}-->Shopping &amp; Ordering<!--{/}-->
+				</li>
+				<li class="subject">
+					<span class="board_detail_title help-board-article-title">
+						{subject}
+						{iconimage}{iconfile}{iconnew}{iconhot}{iconhidden}
+					</span>
+				</li>
+				<li class="date">
+					{? r_date }{=date('Y.m.d',strtotime(r_date))}{:}{? date }{=date('Y.m.d',strtotime(date))}{/}{/}
+				</li>
+			</ul>
+		</div>
+
+		<table class="table_row_a Thc hide" data-responsive="yes" width="100%" cellpadding="0" cellspacing="0">
+			<colgroup><col class="size_b"><col><col class="size_b"><col></colgroup>
+			<tbody></tbody>
+		</table>
+
+		<!--{? _GET.seq == '257' || seq == '257'}-->
+		<section class="bo-membership-benefits help-notice-membership" aria-labelledby="bo-membership-benefits-title">
+			<header class="bo-membership-benefits-head">
+				<h2 id="bo-membership-benefits-title">Membership Mileage &amp; Coupon Benefits by Tier</h2>
+				<p>We offer benefits according to your membership tier.<br />Please check the conditions and validity period for each level below.</p>
+			</header>
+
+			<div class="bo-membership-board" aria-label="Membership tier benefits">
+				<div class="bo-membership-row-labels" aria-hidden="true">
+					<span><i></i><b>Eligibility</b><small>Tier condition</small></span>
+					<span><i></i><b>Points</b><small>Earn on every purchase</small></span>
+					<span><i></i><b>Coupon</b><small>Membership benefits</small></span>
+					<span><i></i><b>Minimum Purchase</b><small>For tier qualification</small></span>
+				</div>
+
+				<div class="bo-membership-tier-grid">
+					<article class="bo-membership-tier bo-membership-tier--explorer" data-bo-membership-tier="Silver">
+						<div class="bo-membership-tier-icon" aria-hidden="true"></div>
+						<h3>Silver</h3>
+						<div class="bo-membership-tier-rule"></div>
+						<dl>
+							<div><dt>Eligibility</dt><dd>Upon signing up</dd></div>
+							<div><dt>Points</dt><dd>1%</dd></div>
+							<div><dt>Coupon</dt><dd>$10 discount coupon<br />(one-time)</dd></div>
+							<div><dt>Minimum Purchase</dt><dd>None</dd></div>
+						</dl>
+					</article>
+
+					<article class="bo-membership-tier bo-membership-tier--insider" data-bo-membership-tier="Gold">
+						<div class="bo-membership-tier-icon" aria-hidden="true"></div>
+						<h3>Gold</h3>
+						<div class="bo-membership-tier-rule"></div>
+						<dl>
+							<div><dt>Eligibility</dt><dd>Total purchase<br />of $200 or more</dd></div>
+							<div><dt>Points</dt><dd>3%</dd></div>
+							<div><dt>Coupon</dt><dd>5% discount coupon<br />(Quarterly)</dd></div>
+							<div><dt>Minimum Purchase</dt><dd>Minimum $50<br />purchase</dd></div>
+						</dl>
+					</article>
+
+					<article class="bo-membership-tier bo-membership-tier--curator" data-bo-membership-tier="Black">
+						<div class="bo-membership-tier-icon" aria-hidden="true"></div>
+						<h3>Black</h3>
+						<div class="bo-membership-tier-rule"></div>
+						<dl>
+							<div><dt>Eligibility</dt><dd>Total purchase<br />of $500 or more</dd></div>
+							<div><dt>Points</dt><dd>5%</dd></div>
+							<div><dt>Coupon</dt><dd>10% discount coupon<br />(Quarterly)</dd></div>
+							<div><dt>Minimum Purchase</dt><dd>Minimum $80<br />purchase</dd></div>
+						</dl>
+					</article>
+
+					<article class="bo-membership-tier bo-membership-tier--elite" data-bo-membership-tier="Platinum">
+						<div class="bo-membership-tier-icon" aria-hidden="true"></div>
+						<h3>Platinum</h3>
+						<div class="bo-membership-tier-rule"></div>
+						<dl>
+							<div><dt>Eligibility</dt><dd>Total purchase<br />of $800 or more</dd></div>
+							<div><dt>Points</dt><dd>7%</dd></div>
+							<div><dt>Coupon</dt><dd>15% discount coupon<br />(Quarterly)</dd></div>
+							<div><dt>Minimum Purchase</dt><dd>Minimum $80<br />purchase</dd></div>
+						</dl>
+					</article>
+				</div>
+			</div>
+
+			<p class="bo-membership-validity">All memberships are valid for 1 year.</p>
+		</section>
+		<!--{:}-->
+		<div class="board_detail_contents help-board-article-body help-topic-panel">
+			{contents}
+		</div>
+		<!--{/}-->
+
+		<ul class="board_detail_btns help-board-article-actions">
+			<li class="left">
+				<button type="button" name="boardviewclose" class="btn_resp size_b color5">
+					<span designElement="text">Back to Notice</span>
+				</button>
+			</li>
+		</ul>
+	</article>
+</form>
+
+<div id="CmtBoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3>비밀번호 확인</h3>
+		<div>댓글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="BoardPwcheckForm" id="CmtBoardPwcheckForm" method="post">
+		<input type="hidden" name="seq" id="cmt_pwck_seq" value="" />
+		<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="cmt_pwck_pw" class="input" />
+			<input type="submit" id="CmtBoardPwcheckBtn" value=" 확인 " class="btnblue" />
+			<input type="button" value=" 취소 " class="btngray" onclick="$('#CmtBoardPwCk').dialog('close');" />
+		</div>
+	</form>
+</div>
+
+<div id="ModDelBoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3>비밀번호 확인</h3>
+		<div>게시글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="ModDelBoardPwcheckForm" id="ModDelBoardPwcheckForm" method="post" action="../board_process" target="actionFrame ">
+		<input type="hidden" name="modetype" id="modetype" value="" />
+		<input type="hidden" name="seq" id="moddel_pwck_seq" value="" />
+		<input type="hidden" name="returnurl" id="moddel_pwck_returnurl" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="moddel_pwck_pw" class="input" />
+			<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+			<input type="button" value=" 취소 " class="btngray" onclick="$('#ModDelBoardPwCk').dialog('close');" />
+		</div>
+	</form>
+</div>
+
+<div id="BoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3>비밀번호 확인</h3>
+		<div>게시글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
+		<input type="hidden" name="seq" id="pwck_seq" value="" />
+		<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="pwck_pw" class="input" />
+			<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+			<input type="button" value=" 취소 " class="btngray" onclick="$('#BoardPwCk').dialog('close');" />
+		</div>
+	</form>
+</div>
+					</div>
+				</div>
+			</div>
+		</article>
+	</main>
+</div>
+
+<script src="/app/javascript/js/trendypicker-mypage.js?v=20260806-1"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js?v=20260806-9"></script>

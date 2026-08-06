@@ -1,27 +1,70 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
-@@ 이용약관 @@
+@@ 이용약관 / Terms of Use @@
 - 파일위치 : [스킨폴더]/service/agreement.html
-- 상단 배너 이미지와 텍스트는 EYE-Design을 켜고 쉽게 수정하세요~
+- 본문 텍스트는 EYE-Design을 켜고 쉽게 수정하세요~
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260805-1" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260806-23" />
 
-<div class="visual_title bo-help-topic-page bo-help-topic-head">
-	<div class="img_area">
-		<img src="../images/design/bnr_agreement_main.jpg" alt="이용약관" />
-	</div>
-	<div class="visual_gon">
-		<ul class="title_inner_a">
-			<li>
-				<h2><span designElement="text">Terms of Use</span></h2>
-			</li>
-		</ul>
-	</div>
-</div>
+<div class="subpage_wrap bo-mypage-shell bo-help-topic-page">
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/mypage/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a class="on" href="/service/cs" aria-current="page">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
 
-<div class="service_section v3 bo-help-topic-body">
+	<main class="subpage_container bo-mypage bo-help-topic-container">
+		<article class="help-topic-shell">
+			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
+				<a href="/service/cs">Help Center</a>
+				<span aria-hidden="true">&gt;</span>
+				<span>Terms of Use</span>
+			</nav>
 
-	<h3 class="title1"><span designElement="text">1. Introduction & Definitions</span></h3>
+			<header class="help-topic-head">
+				<span class="help-topic-kicker">Customer Service</span>
+				<h1><span designElement="text">Terms of Use</span></h1>
+				<p designElement="text">Please read these Terms of Use carefully before using TrendyPicker.</p>
+				<div class="help-topic-meta"><span>Policy</span></div>
+			</header>
+
+			<div class="help-topic-layout">
+				<nav class="help-topic-nav" aria-label="Help topics">
+					<strong>Topics</strong>
+					<a href="/board/?id=notice">Notice</a>
+					<a href="/board/?id=faq">FAQ</a>
+					<a href="/mypage/myqna_catalog">Q&amp;A</a>
+					<a href="/service/guide">Guide</a>
+					<a href="/service/cancellation">Returns &amp; Exchanges</a>
+					<a href="/service/company">About Us</a>
+					<a href="/board/?id=mbqna">Contact Us</a>
+					<a class="is-active" href="/service/agreement" aria-current="page">Terms of Use</a>
+					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
+				</nav>
+
+				<div class="help-topic-body bo-help-topic-body">
+
+	
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">1. Introduction & Definitions</span></h3>
 	<p designElement="text">We collect the following types of personal information to provide our services:<br><br>
 Effective Date: [15-MAY-2023]<br>
 These Terms of Service ("Terms") govern your access to and use of our website, mobile app, and related services (collectively, the "Services") provided by {config_basic.shopName} (“we,” “us,” or “our”).<br>
@@ -31,8 +74,10 @@ By using our Services, you agree to be bound by these Terms. If you do not agree
 “Content” refers to text, images, graphics, and other materials provided through the Services.<br>
 “Account” means a registered user profile for accessing certain features.<br>
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">2. Acceptance of Terms</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">2. Acceptance of Terms</span></h3>
 	<p designElement="text">By accessing or using our Services, you agree to be bound by these Terms of Service and our Privacy Policy.<br>
 If you do not agree to these Terms, you may not access or use our Services.<br><br>
 <strong>Compliance with Data Protection Laws (GDPR & Others <span>&#105;&#110;&#099;&#108;&#117;&#100;&#101;</span> CCPA)</strong><br>
@@ -41,8 +86,10 @@ All personal data collected or processed through our Services is handled in acco
 We also comply with the California Consumer Privacy Act (CCPA), and offer California residents additional rights regarding their personal information. Please refer to our [Privacy Policy] for more details.<br>
 
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">3. Services Provided</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">3. Services Provided</span></h3>
 	<p designElement="text">{config_basic.shopName} is a multi-functional platform that provides the following services through its website and mobile application:<br>
 </p>
 
@@ -73,8 +120,10 @@ We also comply with the California Consumer Privacy Act (CCPA), and offer Califo
 We reserve the right to modify, suspend, or terminate any portion of the Services at any time, including but not limited to features, content, or availability.<br>
 Certain features may <span>&#114;&#101;&#113;&#117;&#105;&#114;&#101;</span> account registration. Some services may be subject to additional guidelines, terms, or eligibility <span>&#114;&#101;&#113;&#117;&#105;&#114;&#101;</span>ments, which will be provided as needed.<br>
 </p>
-							
-	<h3 class="title1"><span designElement="text">4. User Account</span></h3>
+					</section>
+
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">4. User Account</span></h3>
 	<p designElement="text">To access certain features of our Services — such as placing orders, writing reviews, or participating in community discussions — you may be <span>&#114;&#101;&#113;&#117;&#105;&#114;&#101;</span>d to create a user account.<br><br>
 By creating an account, you consent to the collection and processing of your personal data as described in our [Privacy Policy].<br>
 </p>
@@ -113,8 +162,10 @@ Please note that some information may be retained in accordance with our [Privac
 Inactive accounts may be deactivated or deleted after an extended period of inactivity, subject to prior notice and in accordance with applicable laws.<br>
 Your account is for personal, non-commercial use only, unless otherwise authorized in writing by {config_basic.shopName}.<br>
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">5. Payments and Billing</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">5. Payments and Billing</span></h3>
 	<p designElement="text">All prices are displayed in USD. and are exclusive of any applicable duties, taxes, or import fees.<br>
 You are responsible for any customs duties, VAT, or local taxes imposed by your country’s customs authorities upon delivery.<br>
 </p>
@@ -145,8 +196,10 @@ Please check your local customs policies before placing an order.<br>
 	<p designElement="text">Please refer to our [see below for details] for details on returns, refunds, and cancellations.<br>
 {config_basic.shopName} reserves the right to cancel orders suspected of fraud, policy violations, or pricing errors.<br>
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">6. Refund Policy</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">6. Refund Policy</span></h3>
 	<p designElement="text">Once an order is placed, cancellations are not permitted. Please review all product details carefully before confirming your order.<br>
 </p>
 	<p designElement="text">In addition, We do not offer exchange services at this time.<br>
@@ -246,8 +299,10 @@ Please review all product details carefully before confirming your order.<br>
 Refunds can be issued to your original payment method (full refund only) or as {config_basic.shopName} points (for partial cancellations).<br><br>
 To cancel your refund request, please contact us via email.<br>
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">7. User Responsibilities</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">7. User Responsibilities</span></h3>
 	<p designElement="text">By using {config_basic.shopName}’s Services, you agree to use the platform in a lawful, respectful, and responsible manner.<br>
 You are solely responsible for your conduct while using the Services, including any content you submit, post, or share.<br>
 </p>
@@ -281,8 +336,10 @@ You may not share your account credentials or allow others to use your account.<
 You agree not to attempt to reverse&#8209;engineer, cop&#121;, or expl&#111;it any portion of the platform.<br><br>
 {config_basic.shopName} reserves the right to investigate and take action, including suspension or termination of accounts that violate these Terms or applicable laws.<br>
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">8. Intellectual Property</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">8. Intellectual Property</span></h3>
 	<p designElement="text">All content made available through {config_basic.shopName}'s Services — including but not limited to product images, graphics, logos, icons, text, videos, website layout, and digital materials — is the exclusive property of {config_basic.shopName} or its licensors, partners, or content creators, and is protected by international copyright, trademark, and other intellectual property laws.<br><br>
 You may not reproduce, distribute, display, publish, modify, or create derivative works from any part of the Services without our prior written consent.<br>
 </p>
@@ -322,8 +379,10 @@ Your notice must <span>&#105;&#110;&#099;&#108;&#117;&#100;&#101;</span>:<br>
 {config_basic.shopName} may remove or disable access to the allegedly infringing content upon receipt of a valid DMCA notice.<br>
 We may also notify the user who posted the content and provide them with an opportunity to submit a counter-notice.<br>
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">9. Termination</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">9. Termination</span></h3>
 	<h3 class="title2"><span designElement="text">1) By User</span></h3>
 	<p designElement="text">You may terminate your account and stop using the Services at any time by contacting our customer support team or using the account settings page.<br><br>
 ※Please note that termination of your account does not automatically entitle you to a refund.<br>
@@ -346,8 +405,10 @@ Some data associated with your account may be retained in accordance with our [P
 We are not liable to you or any third party for any termination of your access to the Services.<br>
 Inactive accounts may be suspended or deleted after 12 months of inactivity, in accordance with applicable data protection laws.<br>
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">10. Disclaimers and Limitation of Liability</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">10. Disclaimers and Limitation of Liability</span></h3>
 	<h3 class="title2"><span designElement="text">1) Service Disclaimer</span></h3>
 	<p designElement="text">{config_basic.shopName} provides its Services on an “as is” and “as available” basis.<br> 
 We make no warranties, express or implied, regarding the accuracy, completeness, reliability, availability, or suitability of the Services, including product listings, content, and third-party links.<br><br>
@@ -373,8 +434,10 @@ Some jurisdictions do not allow the exclusion of certain warranties or limitatio
 We are not responsible for any delays, losses, or customs-related issues occurring during international shipping, including taxes, duties, or clearance delays.<br>
 We shall not be held liable for any failure or delay in the performance of our obligations caused by circumstances beyond our reasonable control (e.g., natural disasters, war, pandemic, government action, etc.).<br>
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">11. Governing Law &amp; Dispute Resolution</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">11. Governing Law &amp; Dispute Resolution</span></h3>
 	<p designElement="text">These Terms and your use of the Services shall be governed by and interpreted in accordance with the laws of the Republic of Korea, without regard to its conflict of law principles.<br>
 </p>
 
@@ -400,8 +463,10 @@ By placing an order, you confirm that you are importing the products for persona
 We may limit access to our Services or products in certain regions, at our discretion, and do not guarantee legal availability or resale authorization in all jurisdictions.<br><br>
 This does not limit your rights under local consumer protection laws.<br>
 </p>
+					</section>
 
-	<h3 class="title1"><span designElement="text">12. Changes to These Terms</span></h3>
+					<section class="help-topic-panel">
+					<h3 class="title1"><span designElement="text">12. Changes to These Terms</span></h3>
 	<p designElement="text">We may update these Terms of Use from time to time to reflect changes in our Services, business practices, or legal <span>&#114;&#101;&#113;&#117;&#105;&#114;&#101;</span>ments.<br>
 When we make significant changes, we will notify users through our website or by email (if applicable).<br><br>
 Unless otherwise specified, changes will become effective immediately upon posting.<br>
@@ -417,8 +482,16 @@ Business Hours: Monday to Friday, 10:00 AM – 6:00 PM (KST)<br><br>
 We will respond to all inquiries within a reasonable time, typically within 3 to 7 business days.<br><br>
 These Terms were last updated on 17-JUN-2025<br>
 </p>
+					</section>
 
+				</div>
+			</div>
+		</article>
+	</main>
 </div>
+
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js"></script>
 
 <!--
 <div class="Pt60">

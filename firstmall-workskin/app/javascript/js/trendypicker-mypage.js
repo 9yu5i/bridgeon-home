@@ -174,6 +174,49 @@
   consumeScrollTopOnLoad();
   initPageTransitions();
 
+  const initDashboardReveal = () => {
+    const revealTargets = Array.from(
+      new Set(
+        [
+          document.querySelector(".bo-account-side"),
+          document.querySelector(".bo-profile"),
+          ...document.querySelectorAll(
+            ".bo-mypage > .bo-card, .bo-bottom-grid .bo-card, .bo-mobile-card, .bo-mobile-invite",
+          ),
+          document.querySelector(".bo-newsletter.bo-scroll-reveal"),
+        ].filter(Boolean),
+      ),
+    );
+
+    if (!revealTargets.length) return;
+
+    revealTargets.forEach((target, index) => {
+      if (!target.classList.contains("bo-scroll-reveal")) {
+        target.classList.add("bo-page-reveal");
+      }
+      target.style.setProperty("--bo-reveal-delay", `${Math.min(index, 3) * 0.06}s`);
+    });
+
+    const showRevealTarget = (target) => target.classList.add("is-inview");
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      revealTargets.forEach(showRevealTarget);
+      return;
+    }
+
+    const revealAll = () => revealTargets.forEach(showRevealTarget);
+
+    // Paint opacity:0 first, then animate in on the next frames.
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(revealAll);
+    });
+
+    // Failsafe: never leave dashboard cards stuck invisible.
+    window.setTimeout(revealAll, 900);
+  };
+
+  initDashboardReveal();
+
   const normalizeOrderCatalogLinks = () => {
     document.querySelectorAll('a[href*="order_catalog"]').forEach((link) => {
       try {
@@ -230,7 +273,7 @@
 
       const summary = page.querySelector(".article_info")?.textContent || "";
       const summaryCount = summary.match(/(?:총|total)\s*([\d,]+)/i)?.[1];
-      const visibleCount = page.querySelectorAll(".review_table > li").length;
+      const visibleCount = page.querySelectorAll(".bo-review-card, .review_table > li").length;
 
       reviewCount.textContent = summaryCount || String(visibleCount);
     } catch {
@@ -660,6 +703,171 @@
     });
   }
 
+  const enhanceReviewsSelect = (nativeSelect) => {
+    if (!nativeSelect || nativeSelect.dataset.reviewsSelectReady === "1") return;
+
+    nativeSelect.dataset.reviewsSelectReady = "1";
+    nativeSelect.classList.add("bo-reviews-select-native");
+    nativeSelect.tabIndex = -1;
+    nativeSelect.setAttribute("aria-hidden", "true");
+
+    const wrap = document.createElement("span");
+    wrap.className = "bo-reviews-select-wrap";
+
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "bo-reviews-select-trigger";
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-label", nativeSelect.getAttribute("aria-label") || "Filter");
+
+    const value = document.createElement("span");
+    value.className = "bo-reviews-select-value";
+
+    const menu = document.createElement("ul");
+    menu.className = "bo-reviews-select-menu";
+    menu.setAttribute("role", "listbox");
+
+    const closeMenu = () => {
+      wrap.classList.remove("is-open");
+      trigger.setAttribute("aria-expanded", "false");
+    };
+
+    const syncSelection = () => {
+      const selectedOption = nativeSelect.options[nativeSelect.selectedIndex];
+      value.textContent = selectedOption?.textContent || "";
+      menu.querySelectorAll("li").forEach((item) => {
+        const selected = item.dataset.value === nativeSelect.value;
+        item.classList.toggle("is-selected", selected);
+        item.setAttribute("aria-selected", String(selected));
+      });
+    };
+
+    Array.from(nativeSelect.options).forEach((option) => {
+      const item = document.createElement("li");
+      item.textContent = option.textContent;
+      item.dataset.value = option.value;
+      item.setAttribute("role", "option");
+      item.addEventListener("click", () => {
+        nativeSelect.value = option.value;
+        nativeSelect.dispatchEvent(new Event("change", { bubbles: true }));
+        syncSelection();
+        closeMenu();
+        trigger.focus();
+      });
+      menu.append(item);
+    });
+
+    trigger.append(value);
+    wrap.append(trigger, menu);
+    nativeSelect.parentNode.insertBefore(wrap, nativeSelect);
+    wrap.append(nativeSelect);
+
+    trigger.addEventListener("click", () => {
+      const shouldOpen = !wrap.classList.contains("is-open");
+      document.querySelectorAll(".bo-reviews-select-wrap.is-open").forEach((openWrap) => {
+        if (openWrap === wrap) return;
+        openWrap.classList.remove("is-open");
+        openWrap.querySelector(".bo-reviews-select-trigger")?.setAttribute("aria-expanded", "false");
+      });
+      wrap.classList.toggle("is-open", shouldOpen);
+      trigger.setAttribute("aria-expanded", String(shouldOpen));
+    });
+
+    document.addEventListener("pointerdown", (event) => {
+      if (!wrap.contains(event.target)) closeMenu();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && wrap.classList.contains("is-open")) {
+        closeMenu();
+        trigger.focus();
+      }
+    });
+
+    syncSelection();
+  };
+
+  document.querySelectorAll(".bo-reviews-controls-selects .bo-reviews-select").forEach(enhanceReviewsSelect);
+
+  const reviewEditLayer = document.querySelector("[data-review-edit-layer]");
+
+  if (reviewEditLayer) {
+    const reviewEditTitle = reviewEditLayer.querySelector("[data-review-edit-heading]");
+    const reviewEditCopy = reviewEditLayer.querySelector("[data-review-edit-copy]");
+    const reviewEditThumb = reviewEditLayer.querySelector("[data-review-edit-thumb]");
+    const reviewEditBrand = reviewEditLayer.querySelector("[data-review-edit-brand]");
+    const reviewEditName = reviewEditLayer.querySelector("[data-review-edit-name]");
+    const reviewEditPrice = reviewEditLayer.querySelector("[data-review-edit-price]");
+    const reviewEditSave = reviewEditLayer.querySelector("[data-review-edit-save]");
+    const ratingButtons = [...reviewEditLayer.querySelectorAll("[data-review-edit-rating]")];
+    let activeReviewCard = null;
+    let activeReviewTrigger = null;
+    let activeRating = 5;
+
+    const setReviewRating = (rating) => {
+      activeRating = Math.max(1, Math.min(5, Number(rating) || 5));
+      ratingButtons.forEach((button) => {
+        button.classList.toggle("is-active", Number(button.dataset.reviewEditRating) <= activeRating);
+      });
+    };
+
+    const closeReviewEditor = () => {
+      reviewEditLayer.hidden = true;
+      reviewEditLayer.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("is-review-edit-open");
+      activeReviewTrigger?.focus();
+    };
+
+    document.querySelectorAll("[data-review-edit-open]").forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const card = trigger.closest(".bo-review-card");
+        if (!card) return;
+
+        activeReviewCard = card;
+        activeReviewTrigger = trigger;
+        reviewEditThumb.src = card.querySelector(".bo-review-thumb img")?.src || "";
+        reviewEditBrand.textContent = card.querySelector(".bo-review-sample-brand")?.textContent || "";
+        reviewEditName.textContent = card.querySelector(".bo-review-product-copy h2")?.textContent || "";
+        reviewEditPrice.textContent = card.querySelector(".bo-review-sample-price")?.textContent || "";
+        reviewEditTitle.value = card.querySelector(".bo-review-copy h3")?.textContent || "";
+        reviewEditCopy.value = card.querySelector(".bo-review-copy p")?.textContent || "";
+        setReviewRating(Math.round(Number(card.querySelector(".bo-review-score-num")?.textContent) || 5));
+
+        reviewEditLayer.hidden = false;
+        reviewEditLayer.setAttribute("aria-hidden", "false");
+        document.body.classList.add("is-review-edit-open");
+        reviewEditTitle.focus();
+      });
+    });
+
+    ratingButtons.forEach((button) => {
+      button.addEventListener("click", () => setReviewRating(button.dataset.reviewEditRating));
+    });
+
+    reviewEditLayer.querySelectorAll("[data-review-edit-close]").forEach((button) => {
+      button.addEventListener("click", closeReviewEditor);
+    });
+
+    reviewEditSave?.addEventListener("click", () => {
+      if (!activeReviewCard) return;
+
+      const heading = activeReviewCard.querySelector(".bo-review-copy h3");
+      const copy = activeReviewCard.querySelector(".bo-review-copy p");
+      const score = activeReviewCard.querySelector(".bo-review-score-num");
+      const starFill = activeReviewCard.querySelector(".bo-review-stars b");
+
+      if (heading) heading.textContent = reviewEditTitle.value.trim() || "My review";
+      if (copy) copy.textContent = reviewEditCopy.value.trim();
+      if (score) score.textContent = activeRating.toFixed(1);
+      if (starFill) starFill.style.width = `${(activeRating / 5) * 100}%`;
+      closeReviewEditor();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !reviewEditLayer.hidden) closeReviewEditor();
+    });
+  }
+
   const logoutTriggers = [
     ...document.querySelectorAll(
       '#mypageLnbBasic .lnb_sub a[href*="/login_process/logout"], .bo-mobile-service__grid a[href*="/login_process/logout"]',
@@ -703,33 +911,4 @@
       if (event.key === "Escape" && !logoutDialog.hidden) closeLogoutDialog();
     });
   }
-
-  const revealTargets = Array.from(
-    new Set([
-      document.querySelector(".bo-account-side"),
-      document.querySelector(".bo-profile"),
-      ...document.querySelectorAll(
-        ".bo-mypage > .bo-card, .bo-bottom-grid .bo-card, .bo-mobile-card, .bo-mobile-invite",
-      ),
-      document.querySelector(".bo-newsletter.bo-scroll-reveal"),
-    ].filter(Boolean)),
-  );
-
-  revealTargets.forEach((target, index) => {
-    if (!target.classList.contains("bo-scroll-reveal")) {
-      target.classList.add("bo-page-reveal");
-    }
-    target.style.setProperty("--bo-reveal-delay", `${Math.min(index, 3) * 0.06}s`);
-  });
-
-  const showRevealTarget = (target) => target.classList.add("is-inview");
-
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    revealTargets.forEach(showRevealTarget);
-    return;
-  }
-
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => revealTargets.forEach(showRevealTarget));
-  });
 })();

@@ -48,6 +48,10 @@
       item.setAttribute("role", "option");
       item.addEventListener("click", () => {
         nativeSelect.value = option.value;
+        const hiddenCategory = document.getElementById("category");
+        if (hiddenCategory && nativeSelect.name === "category") {
+          hiddenCategory.value = option.value;
+        }
         nativeSelect.dispatchEvent(new Event("change", { bubbles: true }));
         syncSelection();
         closeMenu();
@@ -88,116 +92,76 @@
   };
 
   document
-    .querySelectorAll(".help-topic-shell .bbs_top_wrap select, .help-topic-shell .help-board-filter select, .help-topic-shell .help-faq-filter select")
+    .querySelectorAll(
+      ".help-topic-shell .bbs_top_wrap select, .help-topic-shell .help-board-filter select, .help-topic-shell .help-faq-filter select"
+    )
     .forEach(enhanceBoardSelect);
 
-  const nav = document.querySelector(".help-topic-nav");
-  const layout = document.querySelector(".help-topic-layout");
-  if (!nav || !layout) return;
-
-  const mq = window.matchMedia("(min-width: 1121px)");
-  const TOP = 96;
-  let placeholder = null;
-  let pinned = false;
-  let frame = 0;
-
-  const getScrollParent = (node) => {
-    let parent = node.parentElement;
-    while (parent && parent !== document.documentElement) {
-      const style = window.getComputedStyle(parent);
-      const overflowY = style.overflowY;
-      if (
-        (overflowY === "auto" || overflowY === "scroll" || overflowY === "overlay") &&
-        parent.scrollHeight > parent.clientHeight + 1
-      ) {
-        return parent;
-      }
-      parent = parent.parentElement;
+  document.querySelectorAll(".help-board-view-meta .cat").forEach((el) => {
+    const text = (el.textContent || "").trim();
+    if (!text || text === "Array" || text.includes("is_array") || text.includes("preg_replace")) {
+      el.textContent = "";
     }
-    return window;
-  };
+  });
 
-  const scrollParent = getScrollParent(layout);
+  document.querySelectorAll(".help-board-article-body p, .board_detail_contents p").forEach((p) => {
+    if (p.querySelector("img, video, iframe, table")) return;
+    const text = (p.textContent || "").replace(/\u00a0/g, " ").trim();
+    const onlyBreak = p.childElementCount === 1 && p.firstElementChild?.tagName === "BR";
+    if (!text || onlyBreak) {
+      p.remove();
+    }
+  });
 
-  const unpin = () => {
-    if (!pinned) return;
-    pinned = false;
+  function isHeavyWeightEl(el) {
+    if (!el) return false;
+    const tag = el.tagName;
+    const text = (el.textContent || "").replace(/\u00a0/g, " ").trim();
+    if ((tag === "B" || tag === "STRONG") && text) return true;
+    const style = el.getAttribute("style") || "";
+    return /font-weight\s*:\s*(bold|[6-9]00|1?000)\b/i.test(style) && !!text;
+  }
+
+  document.querySelectorAll(".help-board-article-body p, .board_detail_contents p").forEach((p) => {
+    if (p.querySelector("img, video, iframe, table, a")) return;
+    const text = (p.textContent || "").replace(/\u00a0/g, " ").trim();
+    if (!text || text.length >= 80) return;
+    const heavies = [...p.querySelectorAll("b, strong, span, font")].filter(isHeavyWeightEl);
+    if (!heavies.length) return;
+    const heavyText = heavies
+      .map((el) => (el.textContent || "").replace(/\u00a0/g, " ").trim())
+      .filter(Boolean)
+      .sort((a, b) => b.length - a.length)[0];
+    if (heavyText === text || heavyText.length >= text.length * 0.9) {
+      p.classList.add("help-article-heading");
+    }
+  });
+
+  document.querySelectorAll(".help-board-article-body p.help-article-heading, .board_detail_contents p.help-article-heading").forEach((p) => {
+    const prev = p.previousElementSibling;
+    if (
+      prev &&
+      (prev.classList.contains("help-article-heading") ||
+        prev.classList.contains("help-article-subheading"))
+    ) {
+      p.classList.remove("help-article-heading");
+      p.classList.add("help-article-subheading");
+    }
+  });
+
+  document.querySelectorAll(".faq_new .question .subject .cat, .faq_new .help-faq-question .cat").forEach((cat) => {
+    cat.remove();
+  });
+
+  /* Topics nav uses CSS position:sticky. Avoid JS fixed pinning — it fights
+     scroll at the bottom of long notice/FAQ articles and causes jump/errors. */
+  document.querySelectorAll(".help-topic-nav.is-pinned").forEach((nav) => {
     nav.classList.remove("is-pinned");
     nav.style.position = "";
     nav.style.top = "";
     nav.style.left = "";
     nav.style.width = "";
     nav.style.zIndex = "";
-    if (placeholder) {
-      placeholder.remove();
-      placeholder = null;
-    }
-  };
-
-  const ensurePlaceholder = () => {
-    if (placeholder) return;
-    placeholder = document.createElement("div");
-    placeholder.className = "help-topic-nav-placeholder";
-    placeholder.setAttribute("aria-hidden", "true");
-    placeholder.style.width = `${nav.offsetWidth}px`;
-    placeholder.style.height = `${nav.offsetHeight}px`;
-    placeholder.style.flex = "0 0 auto";
-    nav.parentNode.insertBefore(placeholder, nav);
-  };
-
-  const update = () => {
-    frame = 0;
-    if (!mq.matches) {
-      unpin();
-      return;
-    }
-
-    const layoutRect = layout.getBoundingClientRect();
-    const navHeight = pinned && placeholder ? placeholder.offsetHeight : nav.offsetHeight;
-    const navWidth = pinned && placeholder ? placeholder.offsetWidth : nav.offsetWidth;
-    const start = layoutRect.top;
-    const stop = layoutRect.bottom - navHeight;
-    const pinTop = Math.min(TOP, Math.max(0, stop));
-
-    if (start > TOP || stop <= 0) {
-      unpin();
-      return;
-    }
-
-    ensurePlaceholder();
-    const left = placeholder.getBoundingClientRect().left;
-    pinned = true;
-    nav.classList.add("is-pinned");
-    nav.style.position = "fixed";
-    nav.style.top = `${pinTop}px`;
-    nav.style.left = `${left}px`;
-    nav.style.width = `${navWidth}px`;
-    nav.style.zIndex = "40";
-  };
-
-  const schedule = () => {
-    if (frame) return;
-    frame = window.requestAnimationFrame(update);
-  };
-
-  const onMqChange = () => {
-    unpin();
-    schedule();
-  };
-
-  if (typeof mq.addEventListener === "function") {
-    mq.addEventListener("change", onMqChange);
-  } else if (typeof mq.addListener === "function") {
-    mq.addListener(onMqChange);
-  }
-
-  window.addEventListener("resize", schedule, { passive: true });
-  if (scrollParent === window) {
-    window.addEventListener("scroll", schedule, { passive: true });
-  } else {
-    scrollParent.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("scroll", schedule, { passive: true });
-  }
-
-  schedule();
+  });
+  document.querySelectorAll(".help-topic-nav-placeholder").forEach((node) => node.remove());
 })();

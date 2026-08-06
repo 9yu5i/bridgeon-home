@@ -1,0 +1,11 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ TrendyPicker Membership / redirect stub
+- The real Membership page now lives at /mypage/membership.html because
+  {member.*} fields only populate in the member-authenticated /mypage/
+  route, not under /main/ (the original skin's /main/membership.html is
+  a static banner with no member data at all).
+- This file only exists so the top GNB link (which still points to
+  /main/membership.html) doesn't 404. It immediately forwards visitors
+  to /mypage/membership.
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<script>location.replace('/mypage/membership');</script>

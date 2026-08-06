@@ -1,0 +1,272 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 나의 상품 후기 List / TrendyPicker
+- 파일위치 : [스킨폴더]/mypage/mygdreview_catalog.html
+- 가격/여러장 사진/기간 필터는 원본 후기 게시판 loop 필드에 존재하지 않아 넣지 않음
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-reviews.css?v=20260806-2" />
+
+<div class="subpage_wrap bo-mypage-shell bo-reviews-shell">
+
+	<!-- +++++ mypage LNB ++++ -->
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a class="on" href="/mypage/mygdreview_catalog" aria-current="page">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/mypage/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a href="/service/cs">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+	<!-- +++++ //mypage LNB ++++ -->
+
+	<!-- +++++ mypage contents ++++ -->
+	<main class="subpage_container bo-mypage bo-reviews-page">
+		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
+
+		<div class="title_container bo-reviews-head">
+			<h1><span designElement="text">My Reviews</span></h1>
+			<button
+				type="button"
+				name="boad_write_btn{manager.isperm_write}"
+				id="boad_write_btn{manager.isperm_write}"
+				board_id="{boardid}"
+				fileperm_read="{manager.fileperm_write}"
+				class="btn_resp size_b color2 bo-reviews-write"
+			>Write</button>
+		</div>
+
+		<div id="boardlayout">
+			<script type="text/javascript">
+				//<![CDATA[
+				var board_id = '{manager.id}';
+				var boardlistsurl = '{boardurl->lists}';
+				var boardwriteurl = '{boardurl->write}';
+				var boardviewurl = '{boardurl->view}';
+				var boardmodifyurl = '{boardurl->modify}';
+				//]]>
+			</script>
+			<script type="text/javascript" src="/app/javascript/js/board.js?v=20200513"></script>
+			<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js"></script>
+			<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js" charset="utf-8"></script>
+
+			<div id="bbslist">
+				<form name="boardsearch" id="boardsearch" class="bo-reviews-controls">
+					<input type="hidden" name="id" value="{manager.id}" />
+					<input type="hidden" name="popup" value="{_GET.popup}" />
+					<input type="hidden" name="iframe" value="{_GET.iframe}" />
+					<input type="hidden" name="goods_seq" value="{_GET.goods_seq}" />
+					<input type="hidden" name="perpage" id="perpage" value="{_GET.perpage}" />
+					<input type="hidden" name="score" id="score" value="{_GET.score}" />
+
+					<label class="bo-reviews-search">
+						<span class="sr-only">Search by product name</span>
+						<input type="text" name="search_text" id="search_text" value="{_GET.search_text}" title="Search by product name" placeholder="Search by product name" class="res_bbs_search_input" />
+						<button type="submit" aria-label="Search"></button>
+					</label>
+
+					<div class="bo-reviews-controls-selects">
+						<!--{? categorylist}-->
+						<select name="category" id="searchcategory" class="bo-reviews-select" aria-label="Product category">
+							<option value="" {? !_GET.category} selected="selected"{/}>All Products</option>
+							<!--{@ categorylist}-->
+							<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{.value_}</option>
+							<!--{/}-->
+						</select>
+						<!--{:}-->
+						<select name="category" id="searchcategory" class="bo-reviews-select" aria-label="Product category">
+							<option value="" selected="selected">All Products</option>
+						</select>
+						<!--{/}-->
+						<select class="bo-reviews-select bo-reviews-period" aria-label="Review period">
+							<option selected="selected">Last 6 Months</option>
+							<option>Last 3 Months</option>
+							<option>Last 12 Months</option>
+						</select>
+					</div>
+				</form>
+
+				<!--{ ? loop }-->
+				<section class="bo-reviews-list" aria-label="My review list">
+					<!--{ @ loop }-->
+					<article class="bo-review-card">
+						<div class="bo-review-product">
+							<span class="boad_view_btn{.isperm_read} bo-review-thumb" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{_GET.id}">
+								<img src="{.goodsInfo.image}" onerror="this.src='/data/icon/error/noimage_list.gif'" alt="" />
+							</span>
+							<div class="bo-review-product-copy">
+								<h2>{.goodsInfo.goods_name}</h2>
+								<span class="boad_view_btn{.isperm_read} bo-review-view-link" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{_GET.id}">View Product &gt;</span>
+							</div>
+						</div>
+						<div class="bo-review-main">
+							<div class="bo-review-main-top">
+								<div class="bo-review-score">
+									<p class="star bo-review-stars"><b style="width:{.score/5*100}%"></b></p>
+									<b class="bo-review-score-num">{.score}</b>
+								</div>
+								<!--{? .filelist}-->
+								<div class="bo-review-gallery" aria-label="Review photos">
+									<img src="{.filelist.realfileurl}" alt="" />
+								</div>
+								<!--{/}-->
+							</div>
+							<div class="bo-review-copy">
+								<h3>{.subject}</h3>
+								<p>{=strip_tags(.contents)}</p>
+							</div>
+							<div class="bo-review-actions">
+								<time>{=date('Y.m.d',strtotime(.date))}</time>
+								<span class="boad_view_btn{.isperm_read} bo-review-edit-btn" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{_GET.id}">View / Edit</span>
+							</div>
+						</div>
+					</article>
+					<!--{ / }-->
+				</section>
+				<!--{ : }-->
+				<div class="bo-reviews-sample-head">
+					<p>You haven't written any reviews yet.</p>
+					<span>Sample preview</span>
+				</div>
+				<section class="bo-reviews-list bo-reviews-list--sample" aria-label="Sample review preview">
+					<article class="bo-review-card bo-review-card--sample">
+						<div class="bo-review-product">
+							<a class="bo-review-thumb" href="/goods/view?no=94885" aria-label="View AXIS-Y Triple PDRN Gel Toner">
+								<img src="https://d1l1qu21r0179n.cloudfront.net/crawl/yesstyle/1137092091/main.jpg" alt="AXIS-Y Triple PDRN Gel Toner 270ml" />
+							</a>
+							<div class="bo-review-product-copy">
+								<p class="bo-review-sample-brand">AXIS-Y</p>
+								<h2>Triple PDRN Gel Toner 270ml</h2>
+								<strong class="bo-review-sample-price">US$25.00</strong>
+								<a class="bo-review-view-link" href="/goods/view?no=94885">View Product &gt;</a>
+							</div>
+						</div>
+						<div class="bo-review-main">
+							<div class="bo-review-main-top">
+								<div class="bo-review-score">
+									<p class="bo-review-stars"><b style="width:100%"></b></p>
+									<b class="bo-review-score-num">5.0</b>
+								</div>
+								<div class="bo-review-gallery" aria-hidden="true">
+									<img class="bo-review-sample-photo" src="/data/board/goods_review/83e456255696b6ba2c6b613625f662aa0054104.jpg" alt="" />
+									<img class="bo-review-sample-photo" src="/data/board/goods_review/85a253b047fa23eeb3daf56a5a4672ca0213244.jpg" alt="" />
+									<img class="bo-review-sample-photo" src="/data/board/goods_review/48723a30e17ea128b00427f6ff72e0620213244.jpg" alt="" />
+								</div>
+							</div>
+							<div class="bo-review-copy">
+								<h3>Great for sensitive skin!</h3>
+								<p>It feels lightweight and soothing, absorbs quickly, and keeps my skin comfortable throughout the day.</p>
+							</div>
+							<div class="bo-review-actions">
+								<time>May 6, 2025</time>
+								<button type="button" class="bo-review-edit-btn" data-review-edit-open>Edit Review</button>
+							</div>
+						</div>
+					</article>
+
+					<article class="bo-review-card bo-review-card--sample">
+						<div class="bo-review-product">
+							<a class="bo-review-thumb" href="/goods/view?no=97623" aria-label="View Dr. Althea 345 Relief Cream">
+								<img src="https://d1l1qu21r0179n.cloudfront.net/crawl/yesstyle/1124698946/main.jpg" alt="Dr. Althea 345 Relief Cream 50ml" />
+							</a>
+							<div class="bo-review-product-copy">
+								<p class="bo-review-sample-brand">Dr. Althea</p>
+								<h2>345 Relief Cream 50ml</h2>
+								<strong class="bo-review-sample-price">US$27.00</strong>
+								<a class="bo-review-view-link" href="/goods/view?no=97623">View Product &gt;</a>
+							</div>
+						</div>
+						<div class="bo-review-main">
+							<div class="bo-review-main-top">
+								<div class="bo-review-score">
+									<p class="bo-review-stars"><b style="width:96%"></b></p>
+									<b class="bo-review-score-num">4.8</b>
+								</div>
+								<div class="bo-review-gallery" aria-hidden="true">
+									<img class="bo-review-sample-photo" src="/data/board/goods_review/07c0c64db0b2cc0384316af1cb170a590159404.jpeg" alt="" />
+									<img class="bo-review-sample-photo" src="/data/board/goods_review/b5e1f45f4962a15473a24002b26c144c2326010.jpg" alt="" />
+								</div>
+							</div>
+							<div class="bo-review-copy">
+								<h3>Calming and refreshing</h3>
+								<p>This toner layers well without stickiness and helps calm visible redness after cleansing.</p>
+							</div>
+							<div class="bo-review-actions">
+								<time>April 22, 2025</time>
+								<button type="button" class="bo-review-edit-btn" data-review-edit-open>Edit Review</button>
+							</div>
+						</div>
+					</article>
+				</section>
+				<!--{ / }-->
+
+				<!--{? pagin}-->
+				<div id="pagingDisplay" class="paging_navigation bo-reviews-pagination">{pagin}</div>
+				<!--{/}-->
+			</div>
+		</div>
+	</main>
+	<!-- +++++ //mypage contents ++++ -->
+
+</div>
+
+<div class="review-edit-layer" data-review-edit-layer hidden aria-hidden="true">
+	<button type="button" class="review-edit-backdrop" data-review-edit-close aria-label="Close review editor"></button>
+	<section class="review-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="review-edit-title">
+		<button type="button" class="review-edit-close" data-review-edit-close aria-label="Close review editor">&times;</button>
+		<p class="review-edit-eyebrow">Edit Review</p>
+		<h2 id="review-edit-title">Update your review</h2>
+		<div class="review-edit-product">
+			<img data-review-edit-thumb alt="" />
+			<div>
+				<p data-review-edit-brand></p>
+				<strong data-review-edit-name></strong>
+				<small data-review-edit-price></small>
+			</div>
+		</div>
+		<div class="review-edit-rating" aria-label="Review rating">
+			<button type="button" data-review-edit-rating="1" aria-label="1 star">&#9733;</button>
+			<button type="button" data-review-edit-rating="2" aria-label="2 stars">&#9733;</button>
+			<button type="button" data-review-edit-rating="3" aria-label="3 stars">&#9733;</button>
+			<button type="button" data-review-edit-rating="4" aria-label="4 stars">&#9733;</button>
+			<button type="button" data-review-edit-rating="5" aria-label="5 stars">&#9733;</button>
+		</div>
+		<label class="review-edit-field">
+			<span>Review Title</span>
+			<input type="text" data-review-edit-heading />
+		</label>
+		<label class="review-edit-field">
+			<span>Your Review</span>
+			<textarea rows="5" data-review-edit-copy></textarea>
+		</label>
+		<div class="review-edit-actions">
+			<button type="button" class="review-edit-secondary" data-review-edit-close>Cancel</button>
+			<button type="button" class="review-edit-primary" data-review-edit-save>Save Review</button>
+		</div>
+	</section>
+</div>
+
+<script type="text/javascript" src="../common/mypage_ui.js"></script>
+<script type="text/javascript">
+$(function() {
+	var pagingTotalNum = $('#pagingDisplay a').length;
+	if ( pagingTotalNum < 2 ) {
+		$('#pagingDisplay').hide();
+	}
+});
+</script>
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>

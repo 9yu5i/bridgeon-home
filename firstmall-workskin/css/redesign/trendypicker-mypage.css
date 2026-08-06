@@ -1712,11 +1712,12 @@ body.is-orders-modal-open {
 .bo-page-reveal,
 .bo-scroll-reveal {
   opacity: 0;
-  transform: translateY(32px);
+  transform: translateY(28px);
   transition:
     opacity 0.82s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.82s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--bo-reveal-delay, 0s);
+  will-change: opacity, transform;
 }
 
 .bo-page-reveal.is-inview,

@@ -4,7 +4,7 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260806-23" />
 
 <div class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-qna-page">
 
@@ -19,7 +19,7 @@
 				<li><a href="/mypage/wish">Wishlist</a></li>
 				<li><a href="/mypage/coupon">Coupons</a></li>
 				<li><a href="/mypage/myshortform">Saved posts</a></li>
-				<li><a href="/main/membership">Membership</a></li>
+				<li><a href="/mypage/membership">Membership</a></li>
 				<li><a href="/mypage/emoney">Points</a></li>
 				<li><a class="on" href="/service/cs" aria-current="page">Help Center</a></li>
 				<li><a href="/login_process/logout">Log Out</a></li>
@@ -89,22 +89,28 @@
 								<input type="hidden" name="category" id="category" value="{_GET.category}" >
 								<input type="hidden" name="score" id="score" value="{_GET.score}" >
 
-								<ul class="bbs_top_wrap">
-									<li class="left">
+								<ul class="bbs_top_wrap help-board-toolbar">
+									<li class="help-board-filter listing-sort">
 										<!--{? categorylist}-->
-										<select name="category" id="searchcategory">
-											<option value="" selected="selected" >All topics</option>
+										<select name="category" id="searchcategory" aria-label="Topic">
+											<option value="" {? !_GET.category} selected="selected"{/}>All topics</option>
 											<!--{@ categorylist}-->
 											<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{.value_}</option>
 											<!--{/}-->
 										</select>
-										<!--{ / }-->
+										<!--{:}-->
+										<select name="category" id="searchcategory" aria-label="Topic">
+											<option value="" selected="selected">All topics</option>
+										</select>
+										<!--{/}-->
 									</li>
-									<li class="right2 help-board-actions">
-										<span class="help-board-search">
-											<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title or content" placeholder="Search inquiries" />
-										</span>
+									<li class="help-board-search">
+										<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title or content" placeholder="Search inquiries" />
+									</li>
+									<li class="help-board-action">
 										<button type="submit" class="btn_resp size_b color2">Search</button>
+									</li>
+									<li class="help-board-action">
 										<button type="button" class="btn_resp size_b" onclick="document.location.href='{boardurl->lists}'">Clear</button>
 									</li>
 								</ul>

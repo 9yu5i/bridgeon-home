@@ -2,7 +2,86 @@
 @@ 공지사항 List @@
 - 파일위치 : [스킨폴더]/board/notice/default01/index.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260806-23" />
+<script type="text/javascript">
+//<![CDATA[
+var board_id = '{_GET.id}';
+var boardlistsurl = '{boardurl->lists}';
+var boardwriteurl = '{boardurl->write}';
+var boardviewurl = '{boardurl->view}';
+var boardmodifyurl = '{boardurl->modify}';
+var boardreplyurl = '{boardurl->reply}';
+var boardrpermurl = '{boardurl->perm}';
+var gl_isuser = false;
+{ ? defined('__ISUSER__') }
+gl_isuser = '{=defined('__ISUSER__')}';
+{ / }
+var return_url = '{=urlencode(_SERVER.REQUEST_URI)}';
+var comment = '{comment}';
+var commentlay = '{commentlay}';
+var isperm_write = '{managerview.isperm_write}';
+//]]>
+</script>
+<script type="text/javascript" src="/app/javascript/js/board.js?v=7" charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js" charset="utf-8"></script>
 
+<div id="boardlayout" class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-board-page">
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/main/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a class="on" href="/service/cs" aria-current="page">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+
+	<main class="subpage_container bo-mypage bo-help-topic-container">
+		<article class="help-topic-shell">
+			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
+				<a href="/service/cs">Help Center</a>
+				<span aria-hidden="true">&gt;</span>
+				<span>Customer Service</span>
+			</nav>
+
+			<header class="help-topic-head">
+				<span class="help-topic-kicker">Customer Service</span>
+				<h1><span designElement="text">Notice</span></h1>
+				<p>Important service updates, promotion notices, shopping announcements, and delivery alerts are collected here.</p>
+				<div class="help-topic-meta"><span>Board</span></div>
+			</header>
+
+			<div class="help-topic-layout">
+				<nav class="help-topic-nav" aria-label="Help topics">
+					<strong>Topics</strong>
+					<a href="/board/?id=notice" class="is-active" aria-current="page">Notice</a>
+					<a href="/board/?id=faq">FAQ</a>
+					<a href="/mypage/myqna_catalog">Q&amp;A</a>
+					<a href="/service/guide">Guide</a>
+					<a href="/service/cancellation">Returns &amp; Exchanges</a>
+					<a href="/service/company">About Us</a>
+					<a href="/board/?id=mbqna">Contact Us</a>
+					<a href="/service/agreement">Terms of Use</a>
+					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
+				</nav>
+
+				<div class="help-topic-body">
+					<div id="bbslist">
 <!--{? viewlist != 'view' }-->
 <form name="boardsearch" id="boardsearch">
 	<input type="hidden" name="id" value="{_GET.id}">
@@ -14,7 +93,7 @@
 	<input type="hidden" name="category" id="category" value="{_GET.category}">
 
 	<ul class="bbs_top_wrap help-board-toolbar">
-		<li class="left help-board-filter listing-sort">
+		<li class="help-board-filter listing-sort">
 			<select name="category" id="searchcategory" aria-label="Category">
 				<option value="" {? !_GET.category} selected="selected"{/}>- ALL -</option>
 				<option value="News & Announcements" {? _GET.category == 'News & Announcements'} selected="selected"{/}>News & Announcements</option>
@@ -24,11 +103,13 @@
 				<option value="Membership" {? _GET.category == 'Membership'} selected="selected"{/}>Membership</option>
 			</select>
 		</li>
-		<li class="right2 help-board-actions">
-			<span class="help-board-search">
-				<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title, Content" placeholder="Search" />
-			</span>
+		<li class="help-board-search">
+			<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title, Content" placeholder="Search" />
+		</li>
+		<li class="help-board-action">
 			<button type="submit" class="btn_resp size_b color2">Search</button>
+		</li>
+		<li class="help-board-action">
 			<button type="button" class="btn_resp size_b" onclick="document.location.href='{boardurl->resets}'">Clear</button>
 		</li>
 	</ul>
@@ -49,11 +130,11 @@
 		{@ noticeloop }
 		<ul class="tbody notice help-board-row">
 			{? strstr(manager.list_show,'[num]') }<li class="num"><span class="mtitle" designElement="text">Notice</span> {.number}</li>{/}
-			{? strstr(manager.list_show,'[subject]') }<li>{=preg_replace("/[\[\]]/","",.category)}</li>{/}
+			{? strstr(manager.list_show,'[subject]') }<li class="cat">{=preg_replace("/[\[\]]/","",.category)}</li>{/}
 			{? strstr(manager.list_show,'[subject]') }
 			<li class="subject">
 				<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}"  viewtype="{manager.viewtype}"  pagetype="{pagetype}"  board_seq="{.seq}" board_id="{_GET.id}">
-					{.iconmobile}{.blank} {.subjectcut} 
+					{.iconmobile}{.blank} {.subjectcut}
 					{? .comment>0 }<span class="comment">({=number_format(.comment)})</span>{/}
 					{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
 				</span>
@@ -70,15 +151,15 @@
 		{@ loop }
 		<ul class="tbody help-board-row">
 			{? strstr(manager.list_show,'[num]') }<li class="mo_hide"><span class="mtitle" designElement="text">Num:</span> {.number}</li>{/}
-			{? strstr(manager.list_show,'[subject]') }<li>{=preg_replace("/[\[\]]/","",.category)}</li>{/}
+			{? strstr(manager.list_show,'[subject]') }<li class="cat">{=preg_replace("/[\[\]]/","",.category)}</li>{/}
 			{? strstr(manager.list_show,'[subject]') }
 			<li class="subject" style="width:50%;">
 				<span class="hand boad_view_btn{.isperm_read} hide" viewlink="{boardurl->view}{.seq}"  viewtype="{manager.viewtype}"  pagetype="{pagetype}"  board_seq="{.seq}" board_id="{_GET.id}">
-					{.iconmobile}{.blank} {.subjectcut} 
+					{.iconmobile}{.blank} {.subjectcut}
 					{? .comment>0 }<span class="comment">({=number_format(.comment)})</span>{/}
 					{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
 				</span>
-                <span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}"  viewtype="{manager.viewtype}"  pagetype="{pagetype}"  board_seq="{.seq}" board_id="{_GET.id}">{.subject_real}</span>
+				<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}"  viewtype="{manager.viewtype}"  pagetype="{pagetype}"  board_seq="{.seq}" board_id="{_GET.id}">{.subject_real}</span>
 			</li>
 			{/}
 			{? strstr(manager.list_show,'[writer]') }<li class="Hide">{.name}</li>{/}
@@ -105,8 +186,6 @@
 	</li>
 </ul>
 
-
-
 <div id="BoardPwCk" class="hide BoardPwCk">
 	<div class="msg">
 		<h3>비밀번호 확인</h3>
@@ -122,4 +201,32 @@
 		</div>
 	</form>
 </div>
-<!-- //비밀번호 확인 -->
+					</div>
+				</div>
+			</div>
+		</article>
+	</main>
+</div>
+
+<script src="/app/javascript/js/trendypicker-mypage.js?v=20260806-1"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js?v=20260806-9"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.boad_view_btn').live('click', function(event) {
+		event.preventDefault();
+		var viewlink = $(this).attr('viewlink');
+		var board_seq = $(this).attr('board_seq');
+		var viewtype = $(this).attr('viewtype');
+		var pagetype = $(this).attr('pagetype');
+		if(viewtype == 'layer' && (pagetype == 'goods' || pagetype == 'mypage') ){
+			boardviewtype(viewlink,board_seq,viewtype);
+		}else{
+			if ( self !== top ) {
+				window.parent.location.href=viewlink.replace("&iframe=1", "").replace("&popup=1", "");
+			} else {
+				document.location.href=viewlink;
+			}
+		}
+	});
+});
+</script>
