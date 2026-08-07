@@ -3,10 +3,15 @@
 - 파일위치 : [스킨폴더]/board/index.html
 - Notice/FAQ/Contact Us 셸은 각 게시판 skin(index.html)에 포함
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!--{? _GET.id == 'notice' || _GET.id == 'faq' || _GET.id == 'mbqna' || manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' }-->
+<!--{? _GET.id == 'mbqna' || manager.id == 'mbqna' }-->
+<script>
+window.location.replace('/service/company?topic=contact');
+</script>
+<!--{: _GET.id == 'notice' || _GET.id == 'faq' || manager.id == 'notice' || manager.id == 'faq' }-->
 {#skin}
 <!--{:}-->
 <!--{? manager.id == 'magazine' }-->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css" />
 <style>
 @media only screen and (max-width:1023px) {
     .subpage_wrap .subpage_container { padding-bottom:0 !important;}
@@ -54,17 +59,14 @@ var isperm_write = '{managerview.isperm_write}';
 		{? !_GET.iframe }
 			<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)"><span designElement="text">MENU</span></a>
 
-            <!--{? manager.id == 'magazine'}-->
-            <div class="ajaxLineMap search_nav">
-                <a class="navi_home" href="/main">HOME</a>
-                <span class="navi_linemap"><a href="#">&nbsp;MAGAZINE&nbsp;</a></span>
-                <span class="navi_linemap"><a href="#">&nbsp;{=ca.name}&nbsp;</a></span>
-            </div>
-            <!--{/}-->
+            <!--{? manager.id == 'magazine' && !_GET.iframe}-->
+            <!-- magazine chrome is rendered inside board/magazine/gallery01/index.html -->
+            <!--{: manager.id != 'magazine'}-->
 			<div class="title_container">
 				<h3>{manager.name}</h3>
 			</div>
-            <!--{? manager.id == 'magazine' && categorylist}-->
+            <!--{/}-->
+            <!--{? manager.id == 'magazine' && false}-->
             <div class="category_event bd">
                 <ul class="board_category magazine_menu">
                     <li><a href="/main/magazine">HOME</a></li>

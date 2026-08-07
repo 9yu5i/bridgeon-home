@@ -122,7 +122,7 @@
                         <div class="order_act">
                             <span><a href="order_view?no={.order_seq}">Order Details &gt; </a></span>
                             <!--{ ? .step == 70 || .step == 75}-->
-                                <a href="/mypage/mygdreview_write" class="btn_resp size_b color2">Write a Review</a>
+                                <a href="/mypage/mygdreview_write" class="btn_resp size_b color2" data-review-write-open>Write a Review</a>
                             <!--{ : }-->
                                 <a href="javascript:void(0);" class="btn_resp size_b review_btn_disabled" title="You can only review a product after it has been delivered.">Write a Review</a>
                             <!--{ / }-->
@@ -351,7 +351,45 @@
 
 <div class="orders-modal-layer" data-orders-page-track-modal hidden aria-hidden="true">
 	<button type="button" class="orders-modal-backdrop" data-orders-page-track-close aria-label="Close order tracking"></button>
-	<section class="orders-dialog orders-track-dialog" role="dialog" aria-modal="true" aria-labelledby="orders-page-track-title" tabindex="-1">
+	<section class="orders-dialog orders-review-dialog" data-orders-dialog="review" role="dialog" aria-modal="true" aria-labelledby="orders-review-title" tabindex="-1" hidden>
+		<p class="orders-dialog-eyebrow">Write A Review</p>
+		<h2 id="orders-review-title">How was this item?</h2>
+		<div class="orders-dialog-product">
+			<span class="orders-dialog-thumb" data-orders-review-thumb aria-hidden="true"></span>
+			<div>
+				<p data-orders-review-brand>TrendyPicker</p>
+				<strong data-orders-review-name>Selected items</strong>
+				<small data-orders-review-price></small>
+			</div>
+		</div>
+		<div class="orders-review-rating" aria-label="Review rating">
+			<button type="button" data-orders-review-rating="1" aria-label="1 star">&#9733;</button>
+			<button type="button" data-orders-review-rating="2" aria-label="2 stars">&#9733;</button>
+			<button type="button" data-orders-review-rating="3" aria-label="3 stars">&#9733;</button>
+			<button type="button" data-orders-review-rating="4" aria-label="4 stars">&#9733;</button>
+			<button type="button" data-orders-review-rating="5" aria-label="5 stars">&#9733;</button>
+		</div>
+		<label class="orders-review-field">
+			<span>Review Title</span>
+			<input type="text" placeholder="Share the highlight in one sentence" data-orders-review-title required />
+		</label>
+		<label class="orders-review-field">
+			<span>Your Review</span>
+			<textarea rows="5" placeholder="Tell us about texture, color, delivery, or anything useful." data-orders-review-copy required></textarea>
+		</label>
+		<div class="orders-review-upload">
+			<button type="button" data-orders-review-upload>+ Add Photos</button>
+			<span data-orders-review-upload-status>Up to 5 photos</span>
+			<input class="orders-review-file-input" type="file" accept="image/*" multiple data-orders-review-files />
+		</div>
+		<div class="orders-review-preview" data-orders-review-preview aria-live="polite"></div>
+		<p class="orders-review-error" data-orders-review-error role="alert" hidden></p>
+		<div class="orders-dialog-actions">
+			<button type="button" class="orders-dialog-secondary" data-orders-page-track-close>Cancel</button>
+			<button type="button" class="orders-dialog-primary" data-orders-review-submit>Submit Review</button>
+		</div>
+	</section>
+	<section class="orders-dialog orders-track-dialog" data-orders-dialog="track" role="dialog" aria-modal="true" aria-labelledby="orders-page-track-title" tabindex="-1" hidden>
 		<p class="orders-dialog-eyebrow">Track Order</p>
 		<div class="orders-track-head">
 			<div>
@@ -486,7 +524,7 @@
 
 	// 결제취소 Q&A
 	function order_qna(order_seq) {
-		document.location.href = '../board/write?id=goods_qna&order_seq=' + order_seq;
+		document.location.href = 'myqna_write?order_seq=' + order_seq;
 	}
 
 	// 배송조회 및 쿠폰사용

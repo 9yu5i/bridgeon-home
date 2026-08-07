@@ -1,10 +1,10 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
-@@ 공지사항 View @@
-- 파일위치 : [스킨폴더]/board/notice/default01/view.html
+@@ 공�??�항 View @@
+- ?�일?�치 : [?�킨?�더]/board/notice/default01/view.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-membership.css?v=20260806-9" />
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260806-23" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260807-51" />
 <script type="text/javascript">
 //<![CDATA[
 var board_id = '{_GET.id}';
@@ -76,7 +76,7 @@ var isperm_write = '{managerview.isperm_write}';
 					<a href="/service/guide">Guide</a>
 					<a href="/service/cancellation">Returns &amp; Exchanges</a>
 					<a href="/service/company">About Us</a>
-					<a href="/board/?id=mbqna">Contact Us</a>
+					<a href="/service/company?topic=contact">Contact Us</a>
 					<a href="/service/agreement">Terms of Use</a>
 					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
 				</nav>
@@ -206,15 +206,15 @@ var isperm_write = '{managerview.isperm_write}';
 
 <div id="CmtBoardPwCk" class="hide BoardPwCk">
 	<div class="msg">
-		<h3>비밀번호 확인</h3>
-		<div>댓글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+		<h3>비�?번호 ?�인</h3>
+		<div>?��? ?�록?�에 ?�력?�던 비�?번호�??�력??주세??</div>
 	</div>
 	<form name="BoardPwcheckForm" id="CmtBoardPwcheckForm" method="post">
 		<input type="hidden" name="seq" id="cmt_pwck_seq" value="" />
 		<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq" value="" />
 		<div class="ibox">
 			<input type="password" name="pw" id="cmt_pwck_pw" class="input" />
-			<input type="submit" id="CmtBoardPwcheckBtn" value=" 확인 " class="btnblue" />
+			<input type="submit" id="CmtBoardPwcheckBtn" value=" ?�인 " class="btnblue" />
 			<input type="button" value=" 취소 " class="btngray" onclick="$('#CmtBoardPwCk').dialog('close');" />
 		</div>
 	</form>
@@ -222,8 +222,8 @@ var isperm_write = '{managerview.isperm_write}';
 
 <div id="ModDelBoardPwCk" class="hide BoardPwCk">
 	<div class="msg">
-		<h3>비밀번호 확인</h3>
-		<div>게시글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+		<h3>비�?번호 ?�인</h3>
+		<div>게시글 ?�록?�에 ?�력?�던 비�?번호�??�력??주세??</div>
 	</div>
 	<form name="ModDelBoardPwcheckForm" id="ModDelBoardPwcheckForm" method="post" action="../board_process" target="actionFrame ">
 		<input type="hidden" name="modetype" id="modetype" value="" />
@@ -231,7 +231,7 @@ var isperm_write = '{managerview.isperm_write}';
 		<input type="hidden" name="returnurl" id="moddel_pwck_returnurl" value="" />
 		<div class="ibox">
 			<input type="password" name="pw" id="moddel_pwck_pw" class="input" />
-			<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+			<input type="submit" id="BoardPwcheckBtn" value=" ?�인 " class="btnblue" />
 			<input type="button" value=" 취소 " class="btngray" onclick="$('#ModDelBoardPwCk').dialog('close');" />
 		</div>
 	</form>
@@ -239,15 +239,15 @@ var isperm_write = '{managerview.isperm_write}';
 
 <div id="BoardPwCk" class="hide BoardPwCk">
 	<div class="msg">
-		<h3>비밀번호 확인</h3>
-		<div>게시글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+		<h3>비�?번호 ?�인</h3>
+		<div>게시글 ?�록?�에 ?�력?�던 비�?번호�??�력??주세??</div>
 	</div>
 	<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
 		<input type="hidden" name="seq" id="pwck_seq" value="" />
 		<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
 		<div class="ibox">
 			<input type="password" name="pw" id="pwck_pw" class="input" />
-			<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+			<input type="submit" id="BoardPwcheckBtn" value=" ?�인 " class="btnblue" />
 			<input type="button" value=" 취소 " class="btngray" onclick="$('#BoardPwCk').dialog('close');" />
 		</div>
 	</form>
@@ -260,4 +260,4 @@ var isperm_write = '{managerview.isperm_write}';
 </div>
 
 <script src="/app/javascript/js/trendypicker-mypage.js?v=20260806-1"></script>
-<script src="/app/javascript/js/trendypicker-help-topic.js?v=20260806-9"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js?v=20260806-15"></script>

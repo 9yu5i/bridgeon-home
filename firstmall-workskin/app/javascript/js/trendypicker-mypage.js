@@ -789,6 +789,103 @@
 
   document.querySelectorAll(".bo-reviews-controls-selects .bo-reviews-select").forEach(enhanceReviewsSelect);
 
+  const reviewCategorySelect = document.querySelector("#searchcategory[name='review_category']");
+  const reviewPeriodSelect = document.querySelector(".bo-reviews-period");
+  const reviewCards = [...document.querySelectorAll(".bo-reviews-list .bo-review-card")];
+
+  if (reviewCategorySelect && reviewCards.length) {
+    let reviewCategoriesReady = false;
+
+    const matchReviewCategory = (value) => {
+      const text = String(value || "").toLowerCase();
+      if (/k-?\s*traditional|전통|hanbok|heritage|tea\s*ceremony/.test(text)) return "k-traditional";
+      if (/k-?\s*pop|케이\s*팝|idol|photocard|album|merchandise|응원봉/.test(text)) return "k-pop";
+      if (/k-?\s*food|식품|\bfood\b|snack|ramen|grocery|sauce|김치|라면|간식/.test(text)) return "k-food";
+      if (/lifestyle|라이프|home\s*living|\bliving\b|home\s*decor|stationery|kitchen|생활/.test(text)) {
+        return "lifestyle";
+      }
+      if (
+        /k-?\s*beauty|\bbeauty\b|뷰티|skincare|skin\s*care|cosmetic|makeup|serum|ampoule|toner|cream|cleanser|sunscreen|hair\s*care|body\s*care|fragrance/.test(
+          text,
+        )
+      ) {
+        return "beauty";
+      }
+      return "";
+    };
+
+    const selectedReviewCategory = () => matchReviewCategory(reviewCategorySelect.value);
+
+    const applyReviewFilters = () => {
+      const selectedCategory = selectedReviewCategory();
+      const selectedMonths = Number(reviewPeriodSelect?.value || 0);
+      const cutoffDate = new Date();
+      if (selectedMonths) cutoffDate.setMonth(cutoffDate.getMonth() - selectedMonths);
+
+      reviewCards.forEach((card) => {
+        const cardCategory = card.dataset.reviewCategory || "";
+        const categoryMismatch = Boolean(
+          selectedCategory && (reviewCategoriesReady || cardCategory) && cardCategory !== selectedCategory,
+        );
+        const reviewDate = new Date((card.querySelector("time")?.textContent || "").replace(/\./g, "-"));
+        const periodMismatch = Boolean(
+          selectedMonths && !Number.isNaN(reviewDate.getTime()) && reviewDate < cutoffDate,
+        );
+        card.hidden = categoryMismatch || periodMismatch;
+      });
+    };
+
+    const readReviewCategoryFromProduct = async (card) => {
+      if (card.dataset.reviewCategory) return;
+      const productText = card.querySelector(".bo-review-product-copy")?.textContent || "";
+      const productLink = card.querySelector('.bo-review-thumb[href*="/goods/view"]')?.href;
+
+      if (productLink) {
+        try {
+          const response = await fetch(productLink, {
+            credentials: "same-origin",
+            headers: { Accept: "text/html" },
+          });
+          if (response.ok) {
+            const productDocument = new DOMParser().parseFromString(await response.text(), "text/html");
+            const crumbs = [
+              ...productDocument.querySelectorAll(
+                ".navi_linemap a, .navi_linemap2 a, .navi_linemap2 .selected_cate, .structure_nav a, .goods_category a, .category_path a, .breadcrumb a, .location a, .goods_nav a, .linemap_area a",
+              ),
+            ]
+              .map((element) => element.textContent.trim())
+              .filter(Boolean);
+            const pageCategory = matchReviewCategory(crumbs.join(" > "));
+            if (pageCategory) {
+              card.dataset.reviewCategory = pageCategory;
+              return;
+            }
+          }
+        } catch {
+          // Fall back to the product name when the product page cannot be read.
+        }
+      }
+
+      card.dataset.reviewCategory = matchReviewCategory(productText);
+    };
+
+    reviewCategorySelect.addEventListener("change", () => {
+      const url = new URL(window.location.href);
+      if (reviewCategorySelect.value) url.searchParams.set("review_category", reviewCategorySelect.value);
+      else url.searchParams.delete("review_category");
+      window.history.replaceState({}, "", url);
+      applyReviewFilters();
+    });
+
+    reviewPeriodSelect?.addEventListener("change", applyReviewFilters);
+
+    applyReviewFilters();
+    Promise.all(reviewCards.map(readReviewCategoryFromProduct)).then(() => {
+      reviewCategoriesReady = true;
+      applyReviewFilters();
+    });
+  }
+
   const reviewEditLayer = document.querySelector("[data-review-edit-layer]");
 
   if (reviewEditLayer) {
@@ -799,15 +896,22 @@
     const reviewEditName = reviewEditLayer.querySelector("[data-review-edit-name]");
     const reviewEditPrice = reviewEditLayer.querySelector("[data-review-edit-price]");
     const reviewEditSave = reviewEditLayer.querySelector("[data-review-edit-save]");
+    const reviewEditUpload = reviewEditLayer.querySelector("[data-review-edit-upload]");
+    const reviewEditFiles = reviewEditLayer.querySelector("[data-review-edit-files]");
+    const reviewEditPreview = reviewEditLayer.querySelector("[data-review-edit-preview]");
+    const reviewEditUploadStatus = reviewEditLayer.querySelector("[data-review-edit-upload-status]");
     const ratingButtons = [...reviewEditLayer.querySelectorAll("[data-review-edit-rating]")];
     let activeReviewCard = null;
     let activeReviewTrigger = null;
     let activeRating = 5;
+    let reviewPhotos = [];
 
     const setReviewRating = (rating) => {
       activeRating = Math.max(1, Math.min(5, Number(rating) || 5));
       ratingButtons.forEach((button) => {
-        button.classList.toggle("is-active", Number(button.dataset.reviewEditRating) <= activeRating);
+        const isActive = Number(button.dataset.reviewEditRating) <= activeRating;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
       });
     };
 
@@ -818,30 +922,79 @@
       activeReviewTrigger?.focus();
     };
 
-    document.querySelectorAll("[data-review-edit-open]").forEach((trigger) => {
-      trigger.addEventListener("click", () => {
-        const card = trigger.closest(".bo-review-card");
-        if (!card) return;
+    const renderReviewPhotoPreview = () => {
+      if (!reviewEditPreview) return;
+      reviewEditPreview.replaceChildren();
 
-        activeReviewCard = card;
-        activeReviewTrigger = trigger;
-        reviewEditThumb.src = card.querySelector(".bo-review-thumb img")?.src || "";
-        reviewEditBrand.textContent = card.querySelector(".bo-review-sample-brand")?.textContent || "";
-        reviewEditName.textContent = card.querySelector(".bo-review-product-copy h2")?.textContent || "";
-        reviewEditPrice.textContent = card.querySelector(".bo-review-sample-price")?.textContent || "";
-        reviewEditTitle.value = card.querySelector(".bo-review-copy h3")?.textContent || "";
-        reviewEditCopy.value = card.querySelector(".bo-review-copy p")?.textContent || "";
-        setReviewRating(Math.round(Number(card.querySelector(".bo-review-score-num")?.textContent) || 5));
+      reviewPhotos.forEach((photo, index) => {
+        const item = document.createElement("span");
+        item.className = "review-edit-preview-item";
 
-        reviewEditLayer.hidden = false;
-        reviewEditLayer.setAttribute("aria-hidden", "false");
-        document.body.classList.add("is-review-edit-open");
-        reviewEditTitle.focus();
+        const image = document.createElement("img");
+        image.src = photo.src;
+        image.alt = "";
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "review-edit-photo-remove";
+        remove.setAttribute("aria-label", `Remove photo ${index + 1}`);
+        remove.textContent = "×";
+        remove.addEventListener("click", () => {
+          if (photo.isObjectUrl) URL.revokeObjectURL(photo.src);
+          reviewPhotos.splice(index, 1);
+          renderReviewPhotoPreview();
+        });
+
+        item.append(image, remove);
+        reviewEditPreview.append(item);
       });
+
+      if (reviewEditUploadStatus) {
+        reviewEditUploadStatus.textContent = `${reviewPhotos.length}/5 photos`;
+      }
+    };
+
+    document.addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-review-edit-open]");
+      if (!trigger) return;
+      const card = trigger.closest(".bo-review-card");
+      if (!card) return;
+
+      event.preventDefault();
+      activeReviewCard = card;
+      activeReviewTrigger = trigger;
+      reviewEditThumb.src = card.querySelector(".bo-review-thumb img")?.src || "";
+      reviewEditBrand.textContent = "";
+      reviewEditName.textContent = card.querySelector(".bo-review-product-copy h2")?.textContent || "";
+      reviewEditPrice.textContent = "";
+      reviewEditTitle.value = card.querySelector(".bo-review-copy h3")?.textContent || "";
+      reviewEditCopy.value = card.querySelector(".bo-review-copy p")?.textContent || "";
+      setReviewRating(Math.round(Number(card.querySelector(".bo-review-score-num")?.textContent) || 5));
+      reviewPhotos = [...card.querySelectorAll(".bo-review-gallery img")]
+        .slice(0, 5)
+        .map((image) => ({ src: image.src, isObjectUrl: false }));
+      if (reviewEditFiles) reviewEditFiles.value = "";
+      renderReviewPhotoPreview();
+
+      reviewEditLayer.hidden = false;
+      reviewEditLayer.setAttribute("aria-hidden", "false");
+      document.body.classList.add("is-review-edit-open");
+      reviewEditTitle.focus();
     });
 
     ratingButtons.forEach((button) => {
       button.addEventListener("click", () => setReviewRating(button.dataset.reviewEditRating));
+    });
+
+    reviewEditUpload?.addEventListener("click", () => reviewEditFiles?.click());
+
+    reviewEditFiles?.addEventListener("change", () => {
+      const availableSlots = Math.max(0, 5 - reviewPhotos.length);
+      [...reviewEditFiles.files].slice(0, availableSlots).forEach((file) => {
+        reviewPhotos.push({ src: URL.createObjectURL(file), isObjectUrl: true });
+      });
+      reviewEditFiles.value = "";
+      renderReviewPhotoPreview();
     });
 
     reviewEditLayer.querySelectorAll("[data-review-edit-close]").forEach((button) => {
@@ -855,11 +1008,21 @@
       const copy = activeReviewCard.querySelector(".bo-review-copy p");
       const score = activeReviewCard.querySelector(".bo-review-score-num");
       const starFill = activeReviewCard.querySelector(".bo-review-stars b");
+      const gallery = activeReviewCard.querySelector(".bo-review-gallery");
 
       if (heading) heading.textContent = reviewEditTitle.value.trim() || "My review";
       if (copy) copy.textContent = reviewEditCopy.value.trim();
       if (score) score.textContent = activeRating.toFixed(1);
       if (starFill) starFill.style.width = `${(activeRating / 5) * 100}%`;
+      if (gallery) {
+        gallery.replaceChildren();
+        reviewPhotos.forEach((photo) => {
+          const image = document.createElement("img");
+          image.src = photo.src;
+          image.alt = "";
+          gallery.append(image);
+        });
+      }
       closeReviewEditor();
     });
 

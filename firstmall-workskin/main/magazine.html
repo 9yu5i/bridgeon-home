@@ -1,0 +1,67 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ T.P Magazine HOME / TrendyPicker
+- Path: [skin]/main/magazine.html
+- URL: /main/magazine
+- Content loads from /board/?id=magazine&iframe=1
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css" />
+<style>
+body.is-magazine-page,
+body.is-magazine-page #layout_wrap,
+body.is-magazine-page #layout_body {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	padding-left: 0;
+	padding-right: 0;
+	background: #202020;
+	overflow-x: clip;
+	overflow-y: auto;
+}
+</style>
+
+<main class="magazine-main">
+	<section class="magazine-hero" aria-labelledby="magazine-title">
+		<div class="magazine-hero-copy">
+			<p>TrendyPicker Editorial</p>
+			<h1 id="magazine-title">T.P Magazine</h1>
+			<span>Trend stories, shopping guides, and editor notes from Korea.</span>
+		</div>
+	</section>
+
+	<section class="magazine-shell" aria-label="Magazine posts">
+		<nav class="magazine-breadcrumb" aria-label="Breadcrumb">
+			<a href="/main">Home</a>
+			<span aria-hidden="true">&gt;</span>
+			<span>T.P Magazine</span>
+		</nav>
+
+		<!--{? categorylist}-->
+		<nav class="magazine-topic-tabs" aria-label="Magazine categories">
+			<a class="is-active" href="/main/magazine">Home</a>
+			<!--{@ categorylist}-->
+			<a href="/board/?id=magazine&amp;category={=str_replace('&','%26',.value_)}">{.value_}</a>
+			<!--{/}-->
+		</nav>
+		<!--{/}-->
+
+		<iframe
+			name="magazine_home_frame"
+			id="magazine_home_frame"
+			class="magazine-frame"
+			src="/board/?id=magazine&amp;iframe=1"
+			width="100%"
+			height="600"
+			frameborder="0"
+			scrolling="no"
+			allowTransparency="true"
+			title="T.P Magazine posts"
+		></iframe>
+	</section>
+</main>
+
+<script src="/app/javascript/js/trendypicker-magazine.js"></script>
+<script>
+document.body.className += (document.body.className ? " " : "") + "is-magazine-page";
+</script>

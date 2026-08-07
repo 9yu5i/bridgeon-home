@@ -1,0 +1,227 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Coupon details (My Page > Coupons > Details layer)
+- Path: [skin]/coupon/coupongoodsreviewer.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<style>
+.ui-dialog[aria-labelledby='ui-dialog-title-coupongoodsreviewerpopup'] { z-index:10100 !important; }
+.coupongoodsrevieweryes img.goodsThumbView { width:76px; height:76px; margin-right:10px; }
+.coupongoodsrevieweryes .issueGoods { padding:5px; border-top:1px #ddd solid; border-bottom:1px #ddd solid; }
+.coupongoodsrevieweryes .issueGoods td { padding-left:0 !important; }
+.coupongoodsrevieweryes .issueGoods .name { font-size:15px; }
+.bo-coupon-detail-table { width:100%; border-collapse:collapse; }
+.bo-coupon-detail-table th,
+.bo-coupon-detail-table td { padding:12px 0; border-bottom:1px solid #eee8f5; vertical-align:top; text-align:left; }
+.bo-coupon-detail-table th { width:110px; color:#6f6879; font-size:13px; font-weight:700; }
+.bo-coupon-detail-table td { color:#211b2c; font-size:14px; font-weight:500; line-height:1.45; }
+.bo-coupon-detail-table th p { margin:0; }
+.bo-coupon-detail-table ul { margin:0; padding:0; list-style:none; }
+.bo-coupon-detail-table li { margin:0 0 6px; }
+</style>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	help_tooltip();
+});
+</script>
+
+<div>
+	<table class="table_row_a bo-coupon-detail-table">
+	<colgroup>
+	<col width="110" /><col />
+	</colgroup>
+	<tbody>
+	<tr>
+		<th><p>Coupon name</p></th>
+		<td>{coupons.coupon_name}</td>
+	</tr>
+	<tr>
+		<th><p>Benefit</p></th>
+		<td>
+			{? coupons.use_type =='offline' }
+				{coupons.benefit}
+			{:}
+				{? coupons.type =='offline_emoney' }
+					Credit {=get_currency_price(coupons.offline_emoney,2)} points
+				{:}
+					{? coupons.type=='shipping' || strstr(coupons.type,'_shipping') }
+						{? coupons.shipping_type == 'free' }
+							Free standard shipping (max {=get_currency_price(coupons.max_percent_shipping_sale,2)})
+						{: coupons.shipping_type == 'won' }
+							{=get_currency_price(coupons.won_shipping_sale,2)} off standard shipping
+						{/}
+					{:}
+						{? coupons.sale_type == 'percent' }
+							{coupons.percent_goods_sale}% off (max discount {=get_currency_price(coupons.max_percent_goods_sale,2)})
+						{: }
+							{=get_currency_price(coupons.won_goods_sale,2)} off
+						{/}
+					{/}
+				{/}
+			{/}
+
+			{? coupons.duplication_use == 1 }
+				{? coupons.type =='shipping' || coupons.type =='mobile' || coupons.type =='download' }
+					<div>Stackable download and discount</div>
+				{:}
+					<div>Stackable discount</div>
+				{/}
+			{/}
+		</td>
+	</tr>
+
+	{? !(coupons.type =='offline_emoney' || coupons.type =='point') }
+	<tr>
+		<th><p>Validity</p></th>
+		<td>
+		{? coupons.coupondown }
+			{coupons.issue_startdate} ~ {coupons.issue_enddate} ({? coupons.issuedaylimituse }{=number_format(coupons.issuedaylimit)} days left{:}{=number_format(coupons.issuedaylimit)} days past{/})
+		{:}
+			{? coupons.issue_priod_type == 'day' }
+				Valid for {=number_format(coupons.after_issue_day)} days from issue date
+			{: coupons.issue_priod_type == 'months' }
+				Valid until the end of the issue month
+			{: coupons.issue_priod_type == 'date' }
+				{coupons.issue_startdate} ~ {coupons.issue_enddate}
+				<br/>({? coupons.issuedaylimituse }{=number_format(coupons.issuedaylimit)} days left{:}{=number_format(coupons.issuedaylimit)} days past{/})
+			{/}
+		{/}
+		</td>
+	</tr>
+	{/}
+
+	<tr>
+		<td colspan="2">
+			<div>
+				{? coupons.use_type =='offline' }
+					<ul>
+					{? coupons.limit_txt }<li>√ {coupons.limit_txt}</li>{/}
+						<li>√
+						{? coupons.sale_agent == 'm' }
+							{? coupons.use_type == 'offline'}Downloadable on mobile/tablet only
+							{:}Usable on mobile/tablet only{/}
+						{: coupons.sale_agent == 'app' } Usable in the shopping app only
+						{:}Usable on all devices
+						{/}
+						</li>
+					</ul>
+				{:}
+					<ul>
+						<!--{ ? checkO2OService }-->
+						<li>
+							√
+							<!--{? coupons.sale_store == 'all'}-->
+								Usable online and offline
+							<!--{: coupons.sale_store == 'on'}-->
+								Usable online only
+							<!--{: coupons.sale_store == 'off'}-->
+								Usable offline only
+								<!--{ ? salestoreitemloop }-->
+									<!--{ @ salestoreitemloop }-->
+										<!--{ ? coupons.sale_store == 'off' && in_array(.o2o_store_seq, coupons.sale_store_item_arr) }-->
+											<br/>&nbsp;&nbsp;&nbsp;- <span class="left"><!--{ = .pos_name }--></span>
+										<!--{ / }-->
+									<!--{ /}-->
+								<!--{ /}-->
+							<!--{ / }-->
+						</li>
+						<!--{ / }-->
+						<li>√ {? coupons.coupon_same_time == 'Y'}Can be combined with other coupons{:}Cannot be combined with other coupons{/}</li>
+						<li>√ Min. purchase {=get_currency_price(coupons.limit_goods_price,2)}</li>
+						<li>√
+						{? coupons.sale_agent == 'm' }
+							{? coupons.use_type == 'offline'}Downloadable on mobile/tablet only
+							{:}Usable on mobile/tablet only{/}
+						{: coupons.sale_agent == 'app' } Usable in the shopping app only
+						{:}Usable on all devices
+						{/}
+						</li>
+						<li>√
+						{? coupons.sale_payment == 'b' }Usable with bank transfer only
+						{:}Usable with all payment methods
+						{/}</li>
+						<li>√
+						{? coupons.sale_referer == 'n' } Usable on direct visits only
+						{: coupons.sale_referer == 'y' } Usable from selected traffic sources
+							{? coupons.sale_referer_type == 's' }
+								{? salserefereritemloop }
+									{@ salserefereritemloop }
+										<br/>&nbsp;&nbsp;&nbsp;- <span class="left">{.referersale_name}</span>
+									{/}
+								{/}
+							{:}All traffic sources
+							{/}
+						{:}Usable regardless of traffic source
+						{/}
+						</li>
+						{ ? coupons.type=='shipping' || strstr(coupons.type,'_shipping') }
+						{ : }
+							{ ? coupons.issue_type == 'issue' }<li>√ Usable on selected products/categories</li>
+								{? coupons.salescost_provider>0 && coupons.provider_list }
+									<li>√ Usable on selected sellers' products</li>
+								{/}
+							{ : coupons.issue_type == 'except' }<li>√ Not usable on selected products/categories</li>
+								{? coupons.salescost_provider>0 && coupons.provider_list }
+									<li>√ Usable on selected sellers' products</li>
+								{/}
+							{ : }
+								{? coupons.salescost_provider>0 && coupons.provider_list }
+									<li>√ Usable on selected sellers' products</li>
+								{:}
+									<li>√ Usable on all products</li>
+								{/}
+							{ / }
+						{ / }
+					</ul>
+				{/}
+			</div>
+		</td>
+	</tr>
+	{ ? coupons.issue_type == 'issue' || coupons.issue_type == 'except'  }
+	<tr	class="{? (coupons.type =='offline_emoney' || coupons.type =='point') }hide{/}" >
+		<th><p>Product no.</p></th>
+		<td>
+			<input type="text" name="goods_seq" id="coupongoods_goods_seq" size="5"> <input type="button" class="btn_resp size_b" name="goodssearchbtn" value="Search" coupon_seq="{coupons.coupon_seq}" />
+			 <span class="helpicon"  title="http://{? config_system.domain }{config_system.domain}{:}{config_system.subDomain}{/}/goods/view?no=<span class='red'>{coupons.coupon_seq}</span><br/>The product number is the unique number in the product URL."  options="{alignX: 'right'}"></span>
+		</td>
+	</tr>
+	<tr>
+		<td  class="cell left {? (coupons.type =='offline_emoney' || coupons.type =='point') }hide{/}"  colspan="2" >
+			<div style="border-left:1px #ececec;border-top:2px #eaeaea;padding:5px; width:98%; height:150px; border:0px;overflow:auto" class="" readonly>
+			<!--{ @ issuegoods }-->
+			<!--{ / }-->
+			<div style="clear: both"></div>
+			<!--{ @ issuecategorys }-->
+			<div ><a href="/goods/catalog?code={.category_code}" target="_blank" ><span class="blue">{.category}</span></a></div>
+			<!--{ / }-->
+			</div>
+		</td>
+	</tr>
+	{/}
+	</tbody>
+	</table>
+</div>
+
+<div id="coupongoodsreviewerpopup" class="hide">
+	<div class="coupongoodsreviewerno"  class="center"><span class="red"  style="margin:20px 0;font-size:20px;line-height:25px;font-weight:bold;" >This coupon cannot be used on this product.</span></div>
+	<div class="coupongoodsrevieweryes center">
+		<p class="Pt5 Fs19 Fw500 gray_01">This coupon can be used on this product.</p>
+		<p class="Pt10 gray_06">(Final eligibility may vary by coupon conditions.)</p>
+	</div>
+	<div class="coupongoodsrevieweryes coupongoodsreviewerno center Mt10">
+		<div class="issueGoods" >
+			<table border="0" cellspacing="10" cellpadding="10" >
+				<tr>
+				<td rowspan="2" align='center' ><div class='image'><img class="goodsThumbView" alt="" src="" width="80" height="80"></div>
+				</td>
+				<td  align='left' ><div class='name' style='white-space:nowrap;'>test</div></td>
+				</tr>
+				<tr>
+				<td  align='left' class="Pl10"><div class='price'>US$0.00</div>  </td>
+				</tr>
+			</table>
+		</div>
+		<div class="center Pt20">
+			<button type="button" name="coupongoodsdetail" class="coupongoodsdetail btn_resp size_b color2" >View product</button>
+		</div>
+	</div>
+</div>

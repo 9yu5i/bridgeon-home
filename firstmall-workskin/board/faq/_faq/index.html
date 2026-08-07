@@ -1,9 +1,9 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
 @@ FAQ List/View @@
-- 파일위치 : [스킨폴더]/board/faq/_faq/index.html
+- ?�일?�치 : [?�킨?�더]/board/faq/_faq/index.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260806-23" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260807-51" />
 <script type="text/javascript">
 //<![CDATA[
 var board_id = '{_GET.id}';
@@ -75,7 +75,7 @@ var isperm_write = '{managerview.isperm_write}';
 					<a href="/service/guide">Guide</a>
 					<a href="/service/cancellation">Returns &amp; Exchanges</a>
 					<a href="/service/company">About Us</a>
-					<a href="/board/?id=mbqna">Contact Us</a>
+					<a href="/service/company?topic=contact">Contact Us</a>
 					<a href="/service/agreement">Terms of Use</a>
 					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
 				</nav>
@@ -128,9 +128,9 @@ var isperm_write = '{managerview.isperm_write}';
 					<p class="subject help-faq-question">{=preg_replace("/[\[\]]/","",.subject)} {.iconnew} {.iconhot} {.iconfile} {.iconhidden}</p>
 					<p class="add_info">
 						<span class="hide">번호:  {.number}</span>
-						{? strstr(manager.list_show,'[writer]') }작성자: {.name}{/}
-						{? strstr(manager.list_show,'[date]') }등록일: {.date}{/}
-						{? strstr(manager.list_show,'[hit]') }조회수: {.hit}{/}
+						{? strstr(manager.list_show,'[writer]') }?�성?? {.name}{/}
+						{? strstr(manager.list_show,'[date]') }?�록?? {.date}{/}
+						{? strstr(manager.list_show,'[hit]') }조회?? {.hit}{/}
 					</p>
 				</div>
 				<div id="faqcontent_{.seq}" class="answer {? _GET.seq != .seq }hide{/}">
@@ -169,21 +169,21 @@ var isperm_write = '{managerview.isperm_write}';
 
 <ul class="bbs_bottom_wrap hide">
 	<li class="right">
-		<button type="button" name="boad_write_btn{manager.isperm_write}" {? _GET.iframe }id="goods_boad_write_btn{manager.isperm_write}"{:}id="boad_write_btn{manager.isperm_write}"{/} board_id="{boardid}" fileperm_read="{manager.fileperm_write}" class="btn_resp size_b color2 hidden" />{manager.name} 쓰기</button>
+		<button type="button" name="boad_write_btn{manager.isperm_write}" {? _GET.iframe }id="goods_boad_write_btn{manager.isperm_write}"{:}id="boad_write_btn{manager.isperm_write}"{/} board_id="{boardid}" fileperm_read="{manager.fileperm_write}" class="btn_resp size_b color2 hidden" />{manager.name} ?�기</button>
 	</li>
 </ul>
 
 <div id="BoardPwCk" class="hide BoardPwCk">
 	<div class="msg">
-		<h3>비밀번호 확인</h3>
-		<div>게시물 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+		<h3>비�?번호 ?�인</h3>
+		<div>게시�??�록?�에 ?�력?�던 비�?번호�??�력??주세??</div>
 	</div>
 	<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
 		<input type="hidden" name="seq" id="pwck_seq" value="" />
 		<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
 		<div class="ibox">
 			<input type="password" name="pw" id="pwck_pw" class="input" />
-			<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+			<input type="submit" id="BoardPwcheckBtn" value=" ?�인 " class="btnblue" />
 			<input type="button" value=" 취소 " class="btngray" onclick="$('#BoardPwCk').dialog('close');" />
 		</div>
 	</form>
@@ -196,4 +196,4 @@ var isperm_write = '{managerview.isperm_write}';
 </div>
 
 <script src="/app/javascript/js/trendypicker-mypage.js?v=20260806-1"></script>
-<script src="/app/javascript/js/trendypicker-help-topic.js?v=20260806-10"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js?v=20260806-15"></script>

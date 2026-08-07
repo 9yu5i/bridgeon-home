@@ -1,0 +1,1130 @@
+.bo-coupons-page .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.bo-coupons-shell {
+  background: #fff;
+}
+
+.bo-coupons-shell::before {
+  display: none;
+}
+
+/* Desktop only — do not override tablet/mobile .bo-mypage-shell { display: block } */
+@media (min-width: 1121px) {
+  .bo-coupons-shell.subpage_wrap.bo-mypage-shell {
+    display: grid !important;
+  }
+}
+
+.bo-coupons-page {
+  --coupons-purple: var(--bo-purple, #7b3fe4);
+  --coupons-soft: #faf7ff;
+}
+
+.subpage_wrap .subpage_container .title_container.bo-coupons-head,
+.bo-coupons-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 0 12px;
+  padding: 0;
+  text-align: left;
+}
+
+.bo-coupons-head h1,
+.bo-coupons-head p,
+.bo-coupon-register h2,
+.bo-coupon-register p,
+.bo-coupon-section h2,
+.bo-coupon-ticket h3,
+.bo-coupon-ticket p {
+  margin: 0;
+}
+
+.bo-coupons-head h1 {
+  color: #15121b;
+  font-size: 27px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.bo-coupons-head p {
+  margin-top: 7px;
+  color: #85808d;
+  font-size: 14px;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.bo-coupons-time-note {
+  margin: 2px 0 18px;
+  color: #85808d;
+  font-size: 13px;
+  line-height: 1.25;
+  font-weight: 700;
+  text-align: right;
+}
+
+.bo-coupons-page > .bo-coupon-register {
+  margin-bottom: 0;
+}
+
+.bo-coupons-tabs {
+  display: flex;
+  gap: 8px;
+  max-width: 100%;
+  margin: 0 0 22px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.bo-coupons-tabs + .bo-coupon-section,
+.bo-coupon-section-expiring[hidden] + .bo-coupon-section {
+  margin-top: 0;
+}
+
+.bo-coupons-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.bo-coupons-tabs a {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--coupons-purple);
+  border-radius: 999px;
+  color: #15131c;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.bo-coupons-tabs a:hover,
+.bo-coupons-tabs a.is-active {
+  color: var(--coupons-purple);
+  background: #eadcff;
+}
+
+.bo-coupon-register {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 190px) minmax(280px, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-height: 104px;
+  margin-bottom: 0;
+  padding: 0 24px;
+  border-radius: 10px;
+  background: var(--coupons-soft);
+}
+
+.bo-coupon-register-icon {
+  display: block;
+  width: 42px;
+  height: 42px;
+  justify-self: center;
+  background: url("../../images/mypage/coupons/register.png") center / contain no-repeat;
+}
+
+.bo-coupon-register h2 {
+  color: #211b2c;
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+.bo-coupon-register-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+}
+
+.bo-coupon-register-form input,
+.bo-coupon-register-form button,
+.bo-coupon-register-form input[type="text"] {
+  box-sizing: border-box;
+  align-self: center;
+  width: auto;
+  height: 39px;
+  border: 0;
+  border-radius: 4px;
+  outline: none;
+  box-shadow: none;
+  font-size: 13px;
+  line-height: 39px;
+  font-weight: 500;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.bo-coupon-register-form input,
+.bo-coupon-register-form input[type="text"] {
+  min-width: 0;
+  width: 100%;
+  padding: 0 18px;
+  color: #312a3d;
+  background: #fff;
+}
+
+.bo-coupon-register-form input::placeholder,
+.bo-coupon-register-form input[type="text"]::placeholder {
+  color: #9a93a6;
+  font-weight: 500;
+}
+
+.bo-coupon-register-form button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: #fff;
+  background: var(--coupons-purple);
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.bo-coupon-register-form button:hover,
+.bo-coupon-register-form button:focus-visible {
+  color: #fff;
+  background: #31136c;
+}
+
+.bo-coupon-register-message {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  grid-column: 1 / -1;
+  min-height: 16px;
+  margin: 0;
+  color: #e11867;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.bo-coupon-register-message.is-success {
+  color: var(--coupons-purple);
+}
+
+.bo-coupon-section {
+  margin-top: 46px;
+}
+
+.bo-coupon-section h2 {
+  margin-bottom: 22px;
+  color: #211b2c;
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.bo-coupon-section h2 span {
+  color: var(--coupons-purple);
+}
+
+.bo-coupon-section-expiring h2 span {
+  color: #ef9c26;
+  font-size: 20px;
+}
+
+.bo-coupon-section-expiring[hidden],
+.bo-coupon-empty[hidden] {
+  display: none !important;
+}
+
+.bo-coupon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 34px;
+}
+
+.bo-coupon-ticket {
+  position: relative;
+  min-height: 124px;
+  overflow: hidden;
+  padding: 22px 30px 20px;
+  border-radius: 9px;
+  background: url("../../images/mypage/coupons/coupon_big.png") center / 100% 100% no-repeat;
+}
+
+.bo-coupon-ticket::after {
+  content: "";
+  position: absolute;
+  right: 42px;
+  bottom: 18px;
+  z-index: 0;
+  width: 54px;
+  height: 54px;
+  background: url("../../images/mypage/coupons/tag.png") center / contain no-repeat;
+  pointer-events: none;
+}
+
+.bo-coupon-ticket.is-expiring-soon,
+.bo-coupon-ticket.has-top-expire,
+.bo-coupon-section-expiring .bo-coupon-ticket {
+  background-image: url("../../images/mypage/coupons/coupon_small.png");
+}
+
+.bo-coupon-ticket.has-top-expire .bo-coupon-expire-inline,
+.bo-coupon-ticket:has(.bo-coupon-ticket-top > p[data-coupon-expires-on]) .bo-coupon-expire-inline {
+  display: none !important;
+}
+
+.bo-coupon-ticket > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Keep actions static so Details (absolute) anchors to the ticket, not the action bar */
+.bo-coupon-ticket > .bo-coupon-ticket-actions {
+  position: static;
+  z-index: 1;
+}
+
+.bo-coupon-ticket-top {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+  min-height: 23px;
+  margin-bottom: 11px;
+}
+
+.bo-coupon-ticket-top span {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  color: #fff;
+  background: var(--coupons-purple);
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bo-coupon-ticket-top p {
+  margin-left: auto;
+  margin-right: 4px;
+  color: #211b2c;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 500;
+  text-align: left;
+}
+
+.bo-coupon-ticket-top p b {
+  color: #e11867;
+  font-weight: 700;
+}
+
+.bo-coupon-ticket h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  color: #111;
+  font-size: 21px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.bo-coupon-ticket h3 strong {
+  color: #111;
+  font-size: 35px;
+  line-height: 0.92;
+}
+
+.bo-coupons-page .bo-coupon-ticket .bo-coupon-name,
+.bo-coupons-page .bo-coupon-ticket p.bo-coupon-name,
+.bo-coupon-ticket .bo-coupon-name,
+.bo-coupon-ticket p.bo-coupon-name,
+.bo-coupon-ticket .bo-coupon-name *,
+.bo-coupon-section .bo-coupon-name {
+  margin-top: 4px !important;
+  color: #111 !important;
+  -webkit-text-fill-color: #111 !important;
+  opacity: 1 !important;
+  font-size: 16px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.bo-coupon-terms {
+  margin-top: 17px !important;
+  color: #211b2c;
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.bo-coupon-expire-inline {
+  margin-top: 14px !important;
+  color: #211b2c;
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.bo-coupon-expire-inline b {
+  color: #a274ff;
+  font-weight: 700;
+}
+
+.bo-coupon-ticket-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* Desktop: Details stays a normal action button in the actions row */
+.bo-coupon-ticket-actions .bo-coupon-action,
+.bo-coupon-ticket-actions .downloadbtn {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid #ded8e8;
+  border-radius: 999px;
+  color: #6f6879;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.bo-coupon-ticket-actions .downloadbtn,
+.bo-coupon-ticket-actions .offline_use {
+  border-color: transparent;
+  color: #fff;
+  background: var(--coupons-purple);
+}
+
+.bo-coupon-ticket-actions .bo-coupon-action:hover,
+.bo-coupon-ticket-actions .bo-coupon-action:focus-visible {
+  color: var(--coupons-purple);
+  border-color: var(--coupons-purple);
+  background: #eadcff;
+}
+
+.bo-coupon-ticket-actions .downloadbtn:hover,
+.bo-coupon-ticket-actions .downloadbtn:focus-visible,
+.bo-coupon-ticket-actions .offline_use:hover,
+.bo-coupon-ticket-actions .offline_use:focus-visible {
+  color: #fff;
+  border-color: transparent;
+  background: #31136c;
+}
+
+.bo-coupon-empty {
+  margin: 24px 0;
+  color: #6f6879;
+  text-align: center;
+  font-size: 14px;
+}
+
+.bo-coupons-pagination,
+.bo-coupons-page .paging_navigation {
+  display: none !important;
+}
+
+/* Same outer size as .bo-newsletter (sibling of main inside the shell) */
+.bo-coupons-shell > .bo-coupons-help-banner {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 74px minmax(0, 1fr) auto;
+  align-items: center;
+  justify-self: center;
+  gap: 24px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(1488px, 100%);
+  min-width: 0;
+  min-height: 112px;
+  margin: 56px auto 0;
+  padding: 22px clamp(20px, 4vw, 72px);
+  border-radius: 13px;
+  color: #fff;
+  background: #000;
+}
+
+.bo-coupons-help-banner > span {
+  display: block;
+  width: 48px;
+  height: 48px;
+  background: url("../../images/mypage/headphone.png") center / contain no-repeat;
+}
+
+.bo-coupons-help-banner > div {
+  min-width: 0;
+}
+
+.bo-coupons-help-banner h2,
+.bo-coupons-help-banner p {
+  margin: 0;
+  color: #fff;
+}
+
+.bo-coupons-help-banner h2 {
+  font-size: 23px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.bo-coupons-help-banner p {
+  margin-top: 7px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.bo-coupons-help-banner p a {
+  color: #9f61ff;
+  text-decoration: none;
+}
+
+/* Match prototype .coupons-help-banner > a (white pill CTA) */
+.bo-coupons-help-banner > a.bo-coupons-help-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 192px;
+  height: 43px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  color: #7b3fe4;
+  background: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.bo-coupons-help-banner > a.bo-coupons-help-cta b {
+  color: inherit;
+  font-weight: 800;
+}
+
+.bo-coupons-help-banner > a.bo-coupons-help-cta:hover,
+.bo-coupons-help-banner > a.bo-coupons-help-cta:focus-visible {
+  color: #fff;
+  background: #7b3fe4;
+}
+
+@media (max-width: 1280px) and (min-width: 1121px) {
+  .bo-coupons-shell > .bo-coupons-help-banner {
+    gap: 16px;
+    padding-inline: clamp(20px, 3vw, 40px);
+  }
+
+  .bo-coupons-help-banner > a.bo-coupons-help-cta {
+    min-width: 0;
+    padding-inline: 16px;
+    font-size: 14px;
+  }
+}
+
+.bo-coupons-page .tab_basic.hide,
+.bo-coupons-page .Clearfix.hide,
+.bo-coupons-page .res_table.dn,
+.bo-coupons-page .coupon_box {
+  display: none !important;
+}
+
+/* Firstmall coupon layers — match TrendyPicker dialog language */
+.resp_layer_pop {
+  width: min(560px, calc(100vw - 32px));
+  overflow: hidden;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 22px 54px rgba(37, 26, 62, 0.18);
+  text-align: left;
+}
+
+.resp_layer_pop > .title {
+  margin: 0;
+  padding: 24px 56px 14px 24px;
+  border: 0;
+  border-bottom: 1px solid #eee8f5;
+  color: #15121b;
+  background: #fff;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.resp_layer_pop .btn_pop_close {
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: transparent;
+  background-size: 14px 14px;
+  transition: background-color 0.2s ease;
+}
+
+.resp_layer_pop .btn_pop_close:hover,
+.resp_layer_pop .btn_pop_close:focus-visible {
+  background-color: #f3ecff;
+}
+
+.layer_pop_contents,
+.resp_layer_pop .layer_pop_contents.v3,
+.resp_layer_pop .layer_pop_contents.v5 {
+  max-height: min(70vh, 560px);
+  padding: 18px 24px 28px;
+  color: #312a3d;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.resp_layer_pop .y_scroll_auto {
+  max-height: inherit;
+  overflow: auto;
+}
+
+.layer_pop_contents .stitle,
+.resp_layer_pop .layer_pop_contents .stitle {
+  padding: 4px 0 12px;
+  color: #6f6879;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.layer_pop_contents .ibox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.layer_pop_contents .ibox input[type="text"],
+.layer_pop_contents .use_input {
+  box-sizing: border-box;
+  flex: 1 1 180px;
+  width: auto;
+  min-width: 0;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #ded8e8;
+  border-radius: 8px;
+  color: #312a3d;
+  background: #fff;
+  font-size: 14px;
+  line-height: 42px;
+  font-weight: 500;
+  outline: none;
+  box-shadow: none;
+}
+
+.layer_pop_contents .ibox input[type="text"]:focus,
+.layer_pop_contents .use_input:focus {
+  border-color: var(--coupons-purple, #7b3fe4);
+}
+
+.layer_pop_contents .ibox .btn_resp,
+.layer_pop_contents .btn_resp.size_b.color6 {
+  height: 42px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--coupons-purple, #7b3fe4);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (min-width: 761px) {
+  .bo-coupons-page .mobile-only {
+    display: none !important;
+  }
+
+  /* head → register → time-note (tight) → tabs → sections */
+  .bo-coupons-page > .bo-coupon-register {
+    margin-bottom: 0;
+  }
+
+  .bo-coupons-page > .bo-coupons-time-note {
+    margin: 22px 0 22px;
+  }
+
+  .bo-coupons-page > .bo-coupons-tabs {
+    margin: 0 0 22px;
+  }
+}
+
+@media (max-width: 1120px) {
+  .bo-coupons-shell.subpage_wrap.bo-mypage-shell {
+    display: block !important;
+  }
+
+  .bo-coupons-shell .subpage_container.bo-coupons-page {
+    row-gap: 0;
+  }
+
+  .bo-coupons-shell > .bo-coupons-help-banner {
+    display: grid !important;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px 14px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 200px auto 0;
+    padding: 18px clamp(14px, 3.5vw, 20px);
+  }
+
+  .bo-coupons-help-banner > span {
+    width: 40px;
+    height: 40px;
+  }
+
+  .bo-coupons-help-banner h2 {
+    font-size: 18px;
+  }
+
+  .bo-coupons-help-banner p {
+    font-size: 12px;
+  }
+
+  .bo-coupons-help-banner > a.bo-coupons-help-cta {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  /* Tablet: keep desktop title_container flex structure */
+  .subpage_wrap .subpage_container .title_container.bo-coupons-head,
+  .bo-coupons-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .bo-coupons-head h1 {
+    font-size: 25px;
+  }
+
+  .bo-coupons-head p {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .bo-coupons-tabs {
+    margin: 0 0 20px;
+  }
+
+  .bo-coupon-register {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 8px 12px;
+    min-height: 0;
+    margin-bottom: 0;
+    padding: 14px 15px;
+    border-radius: 9px;
+  }
+
+  .bo-coupons-page > .bo-coupons-time-note {
+    margin: 4px 0 18px;
+  }
+
+  .bo-coupon-register-icon {
+    width: 34px;
+    height: 34px;
+    background-size: 34px 34px;
+  }
+
+  .bo-coupon-register h2 {
+    font-size: 15px;
+  }
+
+  .bo-coupon-register-form {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) 112px;
+    align-items: center;
+    gap: 9px;
+    margin-top: 8px;
+  }
+
+  .bo-coupon-register-form input,
+  .bo-coupon-register-form button,
+  .bo-coupon-register-form input[type="text"] {
+    height: 37px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 37px;
+  }
+
+  .bo-coupon-register-form input,
+  .bo-coupon-register-form input[type="text"] {
+    padding: 0 12px;
+  }
+
+  .bo-coupon-register-message {
+    font-size: 11px;
+  }
+
+  .bo-coupon-section {
+    margin-top: 28px;
+  }
+
+  .bo-coupon-section:first-of-type {
+    margin-top: 0;
+  }
+
+  .bo-coupon-section h2 {
+    margin-bottom: 28px;
+    font-size: 21px;
+  }
+
+  .bo-coupon-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .bo-coupon-ticket {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-content: start;
+    column-gap: 8px;
+    min-height: 143px;
+    padding: 17px 46px 19px 22px;
+    border-radius: 8px;
+  }
+
+  /* Tablet/mobile only: Details → top-right help icon */
+  .bo-coupon-ticket .coupongoodsreviewbtn,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn {
+    position: absolute;
+    top: 12px;
+    right: 22px;
+    z-index: 3;
+    box-sizing: border-box;
+    width: 26px;
+    height: 26px;
+    margin: 0;
+    padding: 0;
+    border: 0 !important;
+    border-radius: 0;
+    color: transparent !important;
+    background: transparent !important;
+    font-size: 0;
+    line-height: 0;
+    text-indent: -9999px;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: none;
+  }
+
+  .bo-coupon-ticket .coupongoodsreviewbtn::before,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("../../images/mypage/help.png") center / 20px 20px no-repeat;
+    pointer-events: none;
+  }
+
+  .bo-coupon-ticket .coupongoodsreviewbtn:hover,
+  .bo-coupon-ticket .coupongoodsreviewbtn:focus,
+  .bo-coupon-ticket .coupongoodsreviewbtn:focus-visible,
+  .bo-coupon-ticket .coupongoodsreviewbtn:active,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn:hover,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn:focus,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn:focus-visible,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn:active {
+    color: transparent !important;
+    border: 0 !important;
+    background: transparent !important;
+    opacity: 1;
+  }
+
+  .bo-coupon-ticket .coupongoodsreviewbtn:hover::before,
+  .bo-coupon-ticket .coupongoodsreviewbtn:focus::before,
+  .bo-coupon-ticket .coupongoodsreviewbtn:focus-visible::before,
+  .bo-coupon-ticket .coupongoodsreviewbtn:active::before,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn:hover::before,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn:focus::before,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn:focus-visible::before,
+  .bo-coupon-ticket-actions .coupongoodsreviewbtn:active::before {
+    background-image: url("../../images/mypage/help_hover.png");
+  }
+
+  /* Collapse the bar when only Details remains — do not display:none (hides the icon) */
+  .bo-coupon-ticket-actions:has(.coupongoodsreviewbtn):not(:has(.downloadbtn)):not(:has(.offline_use)) {
+    height: 0;
+    margin: 0;
+    min-height: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .bo-coupon-ticket::after {
+    right: 28px;
+    bottom: 14px;
+    width: 46px;
+    height: 46px;
+  }
+
+  .bo-coupon-ticket-top {
+    display: contents;
+    min-height: 24px;
+    margin: 0;
+  }
+
+  .bo-coupon-ticket-top > span {
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .bo-coupon-ticket-top > p[data-coupon-expires-on] {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    max-width: none;
+    margin: 14px 0 0 !important;
+    margin-left: 0 !important;
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .bo-coupon-ticket h3 {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 12px;
+    font-size: 21px;
+  }
+
+  .bo-coupon-ticket:not(:has(.bo-coupon-ticket-top)) h3 {
+    margin-top: 0;
+  }
+
+  .bo-coupon-ticket h3 strong {
+    font-size: 36px;
+  }
+
+  .bo-coupon-name {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    font-size: 17px;
+  }
+
+  .bo-coupon-terms {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    margin-top: 18px !important;
+    font-size: 12px;
+  }
+
+  .bo-coupon-expire-inline {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    margin-top: 10px !important;
+    font-size: 12px;
+  }
+
+  .bo-coupon-ticket.has-top-expire .bo-coupon-ticket-actions,
+  .bo-coupon-ticket:has(.bo-coupon-ticket-top > p[data-coupon-expires-on]) .bo-coupon-ticket-actions {
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+
+  .bo-coupon-ticket-actions {
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+
+  .resp_layer_pop {
+    width: min(100% - 24px, 560px);
+    border-radius: 14px;
+  }
+
+  .resp_layer_pop > .title {
+    padding: 20px 48px 12px 18px;
+    font-size: 19px;
+  }
+
+  .layer_pop_contents,
+  .resp_layer_pop .layer_pop_contents.v3,
+  .resp_layer_pop .layer_pop_contents.v5 {
+    padding: 14px 18px 22px;
+  }
+}
+
+/* Details / Use coupon layers: center on mobile, taller scroll area */
+@media (max-width: 760px) {
+  #couponTargetLayer.resp_layer_pop,
+  #couponuse_area.resp_layer_pop,
+  .resp_layer_pop {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 10020;
+    box-sizing: border-box;
+    width: min(calc(100vw - 32px), 360px) !important;
+    max-width: calc(100vw - 32px) !important;
+    max-height: min(88vh, 640px) !important;
+    margin: 0 !important;
+    transform: translate(-50%, -50%) !important;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  #couponTargetLayer.resp_layer_pop > .title,
+  #couponuse_area.resp_layer_pop > .title,
+  .resp_layer_pop > .title {
+    padding: 14px 42px 10px 16px;
+    font-size: 17px;
+  }
+
+  #couponTargetLayer .y_scroll_auto,
+  #couponuse_area .y_scroll_auto,
+  .resp_layer_pop .y_scroll_auto {
+    max-height: calc(min(88vh, 640px) - 52px) !important;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #couponTargetLayer .layer_pop_contents,
+  #couponTargetLayer .layer_pop_contents.v3,
+  #couponuse_area .layer_pop_contents,
+  #couponuse_area .layer_pop_contents.v3,
+  .resp_layer_pop .layer_pop_contents.v3,
+  .resp_layer_pop .layer_pop_contents.v5 {
+    max-height: none;
+    padding: 10px 16px 14px;
+  }
+
+  .bo-coupon-detail-table th,
+  .bo-coupon-detail-table td {
+    padding: 8px 0;
+    font-size: 13px;
+  }
+
+  .resp_layer_pop .btn_pop_close {
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .bo-coupon-register {
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 16px 20px;
+  }
+
+  .bo-coupon-register-icon {
+    width: 36px;
+    height: 36px;
+    background-size: 36px 36px;
+  }
+
+  .bo-coupon-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  /* Mobile: title stays visible; stack layout */
+  .subpage_wrap .subpage_container .title_container.bo-coupons-head,
+  .bo-coupons-head {
+    display: block !important;
+    margin-bottom: 12px;
+  }
+
+  .bo-coupons-page > .bo-coupons-time-note {
+    display: block;
+    margin: 14px 0 30px;
+    font-size: 12px;
+    text-align: right;
+  }
+
+  /* head → register → time-note → tabs → sections */
+  .bo-coupons-shell .subpage_container.bo-coupons-page {
+    display: grid;
+  }
+
+  .bo-coupons-page > .btn_sub_all,
+  .bo-coupons-page > .tab_basic {
+    order: 0;
+  }
+
+  .bo-coupons-page > .bo-coupons-head {
+    order: 1;
+  }
+
+  .bo-coupons-page > .bo-coupon-register {
+    order: 2;
+    margin-bottom: 0;
+  }
+
+  .bo-coupons-page > .bo-coupons-time-note {
+    order: 3;
+  }
+
+  .bo-coupons-page > .bo-coupons-tabs {
+    order: 4;
+  }
+
+  .bo-coupons-page > .bo-coupon-section,
+  .bo-coupons-page > .bo-coupon-empty,
+  .bo-coupons-page > .paging_navigation {
+    order: 5;
+  }
+
+  .bo-coupon-ticket-top p {
+    margin-left: 0 !important;
+  }
+
+  .bo-coupon-ticket-actions {
+    flex-wrap: wrap;
+  }
+
+  .bo-coupon-ticket .downloadbtn,
+  .bo-coupon-ticket .bo-coupon-action:not(.coupongoodsreviewbtn) {
+    min-height: 32px;
+  }
+}
+
+@media (max-width: 380px) {
+  .bo-coupon-register-form {
+    grid-template-columns: minmax(0, 1fr) 104px;
+  }
+
+  .bo-coupon-ticket {
+    padding-inline: 18px;
+  }
+}

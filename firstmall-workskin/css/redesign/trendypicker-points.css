@@ -1,0 +1,549 @@
+.bo-points-shell {
+  background: #fff;
+}
+
+.bo-points-shell::before {
+  display: none;
+}
+
+.bo-points-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 0 14px;
+  padding: 0;
+  text-align: left;
+}
+
+.bo-points-head h1 {
+  margin: 0 0 8px;
+  color: #15131c;
+  font-size: 27px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.bo-points-head p {
+  margin: 0;
+  color: #6f6879;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.bo-points-head a {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0;
+  color: var(--bo-purple, #7b3fe4);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.bo-points-head a:hover {
+  color: #31136c;
+}
+
+.bo-points-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.bo-points-summary-card {
+  min-height: 130px;
+  padding: 22px;
+  border-radius: 16px;
+  color: #15131c;
+  background: #f8f4ff;
+  box-shadow: 0 4px 14px rgba(49, 19, 108, 0.1);
+}
+
+.bo-points-summary-card--primary {
+  color: #fff;
+  background: linear-gradient(135deg, #31136c, #8c54f0);
+  box-shadow: 0 4px 14px rgba(49, 19, 108, 0.16);
+}
+
+.bo-points-summary-card span,
+.bo-points-summary-card p {
+  display: block;
+  margin: 0;
+}
+
+.bo-points-summary-card span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.bo-points-summary-card strong {
+  display: block;
+  margin-top: 12px;
+  color: var(--bo-purple, #7b3fe4);
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.bo-points-summary-card--primary strong {
+  color: #fff;
+}
+
+.bo-points-summary-card p {
+  margin-top: 10px;
+  color: #6f6879;
+  opacity: 1;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.bo-points-summary-card--primary p {
+  color: #fff;
+  opacity: 0.8;
+}
+
+.bo-points-earning-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 26px;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 28px;
+  border-radius: 16px;
+  background: #f8f4ff;
+  box-shadow: 0 4px 14px rgba(49, 19, 108, 0.08);
+}
+
+.bo-points-earning-card p,
+.bo-points-earning-card h2,
+.bo-points-earning-card small {
+  margin: 0;
+}
+
+.bo-points-earning-card > div:first-child p {
+  color: var(--bo-purple, #7b3fe4);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.bo-points-earning-card h2 {
+  margin-top: 8px;
+  color: #15131c;
+  font-size: 22px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.bo-points-earning-card h2 em {
+  font-style: normal;
+}
+
+.bo-points-earning-card small {
+  display: block;
+  margin-top: 10px;
+  color: #6f6879;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.bo-points-earning-meter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  height: 100%;
+  margin: auto 0;
+}
+
+.bo-points-earning-meter span {
+  display: block;
+  height: 11px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e2d8f4;
+}
+
+.bo-points-earning-meter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #31136c, var(--bo-purple, #7b3fe4));
+}
+
+.bo-points-earning-meter i.is-empty {
+  background: #e2d8f4;
+}
+
+.bo-points-earning-meter p {
+  margin-top: 10px;
+  color: #6f6879;
+  text-align: center;
+  font-size: 13px;
+}
+
+.bo-points-earning-meter b {
+  color: #15131c;
+}
+
+.bo-points-history {
+  padding: 28px;
+  border-radius: 16px;
+  background: #f8f4ff;
+  box-shadow: 0 4px 14px rgba(49, 19, 108, 0.08);
+}
+
+.bo-points-history-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.bo-points-history h2 {
+  margin: 0 0 6px;
+  color: #15131c;
+  font-size: 21px;
+  line-height: 1.15;
+  font-weight: 850;
+}
+
+.bo-points-history-head p {
+  margin: 0;
+  color: #6f6879;
+  font-size: 13px;
+}
+
+.bo-points-history-tabs {
+  display: flex;
+  gap: 8px;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.bo-points-history-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.bo-points-history-tabs button {
+  flex: 0 0 auto;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--bo-purple, #7b3fe4);
+  border-radius: 999px;
+  color: #15131c;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.bo-points-history-tabs button:hover,
+.bo-points-history-tabs button.is-active {
+  color: var(--bo-purple, #7b3fe4);
+  background: #eadcff;
+}
+
+.bo-points-history-list {
+  display: grid;
+  gap: 10px;
+}
+
+.bo-points-history-row {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  gap: 4px 14px;
+  align-items: center;
+  min-height: 76px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.bo-points-history-row[hidden] {
+  display: none;
+}
+
+.bo-points-history-row > span {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  display: block;
+  width: 34px;
+  height: 34px;
+  background: url("../../images/mypage/points_add.png") center / contain no-repeat;
+  font-size: 0;
+}
+
+.bo-points-history-row--use > span {
+  background-image: url("../../images/mypage/points_use.png");
+}
+
+.bo-points-history-row > div {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  min-width: 0;
+}
+
+/* No valid-date line: keep title/meta and amount/date stacks vertically centered */
+.bo-points-history-row:not(:has(.bo-points-history-valid)) > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bo-points-history-row:not(:has(.bo-points-history-valid)) strong {
+  align-self: end;
+}
+
+.bo-points-history-row:not(:has(.bo-points-history-valid)) time {
+  align-self: start;
+}
+
+.bo-points-history-row h3,
+.bo-points-history-row p {
+  margin: 0;
+}
+
+.bo-points-history-row h3 {
+  color: #15131c;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 650;
+}
+
+.bo-points-history-row p,
+.bo-points-history-row time {
+  color: #6f6879;
+  font-size: 12px;
+}
+
+.bo-points-history-row p {
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bo-points-history-row p br {
+  display: none;
+}
+
+.bo-points-history-row .bo-points-history-valid::before {
+  content: "· ";
+  margin-left: 0.35em;
+}
+
+.bo-points-history-row strong {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: end;
+  justify-self: end;
+  color: var(--bo-purple, #7b3fe4);
+  text-align: right;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.bo-points-history-row time {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: start;
+  justify-self: end;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.bo-points-history-row--use strong {
+  color: #f02a7c;
+}
+
+.bo-points-empty {
+  text-align: center;
+}
+
+.bo-points-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+@media (max-width: 1120px) {
+  .bo-points-head {
+    display: block;
+  }
+
+  .bo-points-head a {
+    margin-top: 12px;
+  }
+
+  .bo-points-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bo-points-summary-card--primary {
+    grid-column: 1 / -1;
+  }
+
+  .bo-points-earning-card {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .bo-points-history {
+    padding: 18px 14px;
+  }
+
+  .bo-points-history-head {
+    display: block;
+  }
+
+  .bo-points-history-tabs {
+    margin-top: 12px;
+  }
+
+  /* Tablet keeps desktop row pattern: p one line, time under strong on the right */
+  .bo-points-history-row {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 4px 12px;
+  }
+
+  .bo-points-history-row p {
+    white-space: nowrap;
+  }
+
+  .bo-points-history-row strong {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: end;
+    text-align: right;
+  }
+
+  .bo-points-history-row time {
+    grid-column: 3;
+    grid-row: 2;
+    align-self: start;
+    text-align: right;
+  }
+}
+
+@media (max-width: 760px) {
+  .bo-points-history-row {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 2px 10px;
+    align-items: start;
+  }
+
+  .bo-points-history-row > span,
+  .bo-points-history-row > div {
+    grid-row: 1 / 3;
+  }
+
+  .bo-points-history-row:not(:has(.bo-points-history-valid)) {
+    align-items: center;
+  }
+
+  .bo-points-history-row:not(:has(.bo-points-history-valid)) > span,
+  .bo-points-history-row:not(:has(.bo-points-history-valid)) > div {
+    align-self: center;
+  }
+
+  .bo-points-history-row p {
+    white-space: normal;
+  }
+
+  .bo-points-history-row p br {
+    display: block;
+  }
+
+  .bo-points-history-row .bo-points-history-valid {
+    display: block;
+    margin-top: 2px;
+  }
+
+  .bo-points-history-row .bo-points-history-valid::before {
+    content: none;
+    margin: 0;
+  }
+
+  /* Mobile: amount on the right, date directly under it */
+  .bo-points-history-row strong {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: end;
+    justify-self: end;
+    text-align: right;
+  }
+
+  .bo-points-history-row time {
+    grid-column: 3;
+    grid-row: 2;
+    align-self: start;
+    justify-self: end;
+    text-align: right;
+  }
+
+  .bo-points-history-row:not(:has(.bo-points-history-valid)) strong {
+    align-self: end;
+  }
+
+  .bo-points-history-row:not(:has(.bo-points-history-valid)) time {
+    align-self: start;
+  }
+}
+
+/* Very narrow phones: drop the cramped 3-column squeeze */
+@media (max-width: 374px) {
+  .bo-points-history-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    gap: 8px 10px;
+    align-items: start;
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .bo-points-history-row > span {
+    grid-column: 1;
+    grid-row: 1;
+    width: 28px;
+    height: 28px;
+    align-self: start;
+  }
+
+  .bo-points-history-row > div {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .bo-points-history-row:not(:has(.bo-points-history-valid)) > div {
+    justify-content: flex-start;
+  }
+
+  .bo-points-history-row h3 {
+    font-size: 14px;
+  }
+
+  .bo-points-history-row strong,
+  .bo-points-history-row time {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+  }
+
+  .bo-points-history-row strong {
+    justify-self: start;
+    text-align: left;
+    font-size: 15px;
+  }
+
+  .bo-points-history-row time {
+    justify-self: end;
+    text-align: right;
+  }
+}

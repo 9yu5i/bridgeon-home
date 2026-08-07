@@ -1,0 +1,148 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 마일리지(포인트) 내역 / TrendyPicker
+- 파일위치 : [스킨폴더]/mypage/emoney.html
+- 게시판에 회원의 평생 누적 적립/사용/만료예정 합계를 주는 필드가 없어서,
+  Earned/Used 카드는 "현재 이 페이지에 표시된 내역" 기준으로 JS가 직접
+  합산해 보여줌 (라벨에 "on this page"로 명시). Expiring Soon은 만료
+  기준 데이터 자체가 없어 넣지 않음.
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-points.css?v=20260806-13" />
+
+<div class="subpage_wrap bo-mypage-shell bo-points-shell">
+
+	<!-- +++++ mypage LNB ++++ -->
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/mypage/membership">Membership</a></li>
+				<li><a class="on" href="/mypage/emoney" aria-current="page">Points</a></li>
+				<li><a href="/service/cs">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+	<!-- +++++ //mypage LNB ++++ -->
+
+	<!-- +++++ mypage contents ++++ -->
+	<main class="subpage_container bo-mypage bo-points-page">
+		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
+
+		<div class="title_container bo-points-head">
+			<div>
+				<h1><span designElement="text">Points</span></h1>
+				<p>Track the points you earned, used, and have available for your next order.</p>
+			</div>
+			<a href="/mypage/membership">View membership benefits &rarr;</a>
+		</div>
+
+		<section class="bo-points-summary" aria-label="Points summary">
+			<article class="bo-points-summary-card bo-points-summary-card--primary">
+				<span>Available Points</span>
+				<strong>{=number_format(emoney)}</strong>
+				<p>Ready to use at checkout.</p>
+			</article>
+			<article class="bo-points-summary-card">
+				<span>Earned</span>
+				<strong data-points-earned-total>0</strong>
+				<p>Lifetime earned points.</p>
+			</article>
+			<article class="bo-points-summary-card">
+				<span>Used</span>
+				<strong data-points-used-total>0</strong>
+				<p>Redeemed on orders.</p>
+			</article>
+		</section>
+
+		<section class="bo-points-history" aria-labelledby="bo-points-history-title">
+			<div class="bo-points-history-head">
+				<div>
+					<h2 id="bo-points-history-title">Points History</h2>
+					<p>Recent earning and spending records.</p>
+				</div>
+				<div class="bo-points-history-tabs" aria-label="Filter point history">
+					<button class="is-active" type="button" data-point-filter="all" aria-pressed="true">All</button>
+					<button type="button" data-point-filter="earn" aria-pressed="false">Earned</button>
+					<button type="button" data-point-filter="use" aria-pressed="false">Used</button>
+					<button type="button" data-point-filter="expire" aria-pressed="false">Expiring within 1 year</button>
+				</div>
+			</div>
+
+
+			<!--{ ? loop }-->
+			<div class="bo-points-history-list">
+				<!--{ @ loop }-->
+				<article class="bo-points-history-row bo-points-history-row--{? .gb=='plus'}earn{:}use{/}" data-point-type="{? .gb=='plus'}earn{:}use{/}" data-amount="{.emoney}" data-expiry="{.limit_date}">
+					<span aria-hidden="true"><!--{ ? .gb=='plus' }-->+<!--{ : }-->-<!--{ / }--></span>
+					<div>
+						<h3>{.memo}</h3>
+						<p>Balance after: {=number_format(.remain)} P<!--{ ? .limit_date }--><span class="bo-points-history-valid">Valid until {.limit_date}</span><!--{ / }--></p>
+					</div>
+					<strong><!--{ ? .gb=='plus' }-->+<!--{ : }-->-<!--{ / }-->{=number_format(.emoney)} P</strong>
+					<time>{=date('Y.m.d',strtotime(.regist_date))}</time>
+				</article>
+				<!--{ / }-->
+			</div>
+			<div class="paging_navigation bo-points-pagination">{pagin}</div>
+			<!--{ : }-->
+			<div class="no_data_area2 bo-points-empty">
+				There is no point history.
+			</div>
+			<!--{ / }-->
+		</section>
+	</main>
+	<!-- +++++ //mypage contents ++++ -->
+
+</div>
+
+<script type="text/javascript" src="../common/mypage_ui.js"></script>
+<script type="text/javascript">
+$(function() {
+	// Sum this page's rows only — the board has no lifetime earned/used total field.
+	var earned = 0, used = 0;
+	$(".bo-points-history-row").each(function() {
+		var amount = parseFloat($(this).data("amount")) || 0;
+		if ($(this).data("point-type") === "earn") earned += amount;
+		else used += amount;
+	});
+	$("[data-points-earned-total]").text(earned.toLocaleString());
+	$("[data-points-used-total]").text(used.toLocaleString());
+
+	$(".bo-points-history-tabs button").on("click", function() {
+		var filter = $(this).data("point-filter");
+		$(".bo-points-history-tabs button").removeClass("is-active").attr("aria-pressed", "false");
+		$(this).addClass("is-active").attr("aria-pressed", "true");
+
+		var now = new Date();
+		var oneYearOut = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+
+		$(".bo-points-history-row").each(function() {
+			var show;
+			if (filter === "all") {
+				show = true;
+			} else if (filter === "expire") {
+				var expiry = $(this).data("expiry");
+				var expiryDate = expiry ? new Date(expiry) : null;
+				show = !!(expiryDate && !isNaN(expiryDate) && expiryDate >= now && expiryDate <= oneYearOut);
+			} else {
+				show = $(this).data("point-type") === filter;
+			}
+			$(this).prop("hidden", !show);
+		});
+	});
+});
+</script>
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>

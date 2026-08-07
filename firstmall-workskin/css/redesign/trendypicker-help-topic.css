@@ -30,24 +30,53 @@
   content: none !important;
 }
 
-/* overflow-x: hidden on ancestors breaks sticky; keep page scroll on the viewport */
-html:has(.bo-help-topic-page),
-body:has(.bo-help-topic-page),
-html:has(.bo-help-board-page),
-body:has(.bo-help-board-page),
-html:has(.bo-help-qna-page),
-body:has(.bo-help-qna-page) {
-  overflow-x: visible !important;
-  overflow-y: auto !important;
+/* Desktop: overflow-x visible so sticky topic nav can pin.
+   Mobile/tablet: clip — visible overflow was causing full-page horizontal scroll. */
+@media (min-width: 1121px) {
+  html:has(.bo-help-topic-page),
+  body:has(.bo-help-topic-page),
+  html:has(.bo-help-board-page),
+  body:has(.bo-help-board-page),
+  html:has(.bo-help-qna-page),
+  body:has(.bo-help-qna-page) {
+    overflow-x: visible !important;
+    overflow-y: auto !important;
+  }
+
+  body:has(.bo-help-topic-page) #layout_wrap,
+  body:has(.bo-help-topic-page) #layout_body,
+  body:has(.bo-help-board-page) #layout_wrap,
+  body:has(.bo-help-board-page) #layout_body,
+  body:has(.bo-help-qna-page) #layout_wrap,
+  body:has(.bo-help-qna-page) #layout_body {
+    overflow: visible !important;
+  }
 }
 
-body:has(.bo-help-topic-page) #layout_wrap,
-body:has(.bo-help-topic-page) #layout_body,
-body:has(.bo-help-board-page) #layout_wrap,
-body:has(.bo-help-board-page) #layout_body,
-body:has(.bo-help-qna-page) #layout_wrap,
-body:has(.bo-help-qna-page) #layout_body {
-  overflow: visible !important;
+@media (max-width: 1120px) {
+  html:has(.bo-help-topic-page),
+  body:has(.bo-help-topic-page),
+  html:has(.bo-help-board-page),
+  body:has(.bo-help-board-page),
+  html:has(.bo-help-qna-page),
+  body:has(.bo-help-qna-page),
+  html:has(.bo-help-shell),
+  body:has(.bo-help-shell) {
+    overflow-x: clip !important;
+    overflow-y: auto !important;
+  }
+
+  body:has(.bo-help-topic-page) #layout_wrap,
+  body:has(.bo-help-topic-page) #layout_body,
+  body:has(.bo-help-board-page) #layout_wrap,
+  body:has(.bo-help-board-page) #layout_body,
+  body:has(.bo-help-qna-page) #layout_wrap,
+  body:has(.bo-help-qna-page) #layout_body,
+  body:has(.bo-help-shell) #layout_wrap,
+  body:has(.bo-help-shell) #layout_body {
+    overflow-x: clip !important;
+    max-width: 100%;
+  }
 }
 
 .bo-help-topic-page .bo-help-topic-container,
@@ -314,7 +343,7 @@ body:has(.bo-help-qna-page) #layout_body {
 
 .help-topic-panel a,
 .help-topic-body a {
-  color: var(--help-purple);
+  color: var(--help-muted);
   font-weight: 750;
   text-decoration: none;
 }
@@ -322,6 +351,102 @@ body:has(.bo-help-qna-page) #layout_body {
 .help-topic-panel a:hover,
 .help-topic-body a:hover {
   text-decoration: underline;
+}
+
+.help-topic-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.help-topic-mini-card {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid #eadfff;
+  border-radius: 14px;
+  background: #fbf8ff;
+}
+
+.help-topic-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.help-topic-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--help-ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.help-topic-form-field {
+  display: grid;
+  gap: 8px;
+}
+
+.help-topic-form-field > label {
+  display: block;
+}
+
+.help-topic-form label:last-of-type {
+  grid-column: 1 / -1;
+}
+
+.help-topic-form input,
+.help-topic-form select,
+.help-topic-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid #d9c8ff;
+  border-radius: 10px;
+  color: var(--help-ink);
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+}
+
+.help-topic-shell .help-topic-form input[type="text"],
+.help-topic-shell .help-topic-form input[type="email"] {
+  min-height: 40px;
+  height: 40px;
+}
+
+.help-topic-form textarea {
+  min-height: 112px;
+  padding-top: 12px;
+  resize: vertical;
+}
+
+.help-topic-form > button,
+.help-topic-form > a.help-topic-form-submit {
+  grid-column: 1 / -1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--help-purple);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.help-topic-form > a.help-topic-form-submit:hover,
+.help-topic-form > a.help-topic-form-submit:focus-visible {
+  color: #fff;
+  background: #6a34c9;
 }
 
 .help-topic-body .service_section,
@@ -473,6 +598,11 @@ body:has(.bo-help-qna-page) #layout_body {
   outline: none !important;
 }
 
+/* Firstmall clearfix pseudo becomes a flex item and steals one trailing gap */
+.help-topic-shell .bbs_top_wrap::before,
+.help-topic-shell .bbs_top_wrap::after,
+.help-topic-shell .help-board-toolbar::before,
+.help-topic-shell .help-board-toolbar::after,
 .help-topic-shell .bbs_top_wrap .right2::before,
 .help-topic-shell .bbs_top_wrap .right2::after,
 .help-topic-shell .bbs_top_wrap .help-board-actions::before,
@@ -502,6 +632,19 @@ body:has(.bo-help-qna-page) #layout_body {
   flex: 0 0 auto;
 }
 
+.bo-help-board-page:not(.bo-help-faq-page) .help-topic-shell .help-board-toolbar {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+  width: 100%;
+}
+
+.bo-help-board-page:not(.bo-help-faq-page) .help-topic-shell .help-board-filter,
+.bo-help-board-page:not(.bo-help-faq-page) .help-topic-shell .help-board-search {
+  width: 100% !important;
+  max-width: none;
+  min-width: 0;
+}
+
 /* Native select fallback before JS enhance */
 .help-topic-shell .bbs_top_wrap select:not(.realtrend-select-native) {
   display: block !important;
@@ -529,22 +672,29 @@ body:has(.bo-help-qna-page) #layout_body {
 /* Custom category dropdown (realtrend-select) */
 .help-topic-shell .help-board-filter .realtrend-select-wrap,
 .help-topic-shell .help-faq-filter .realtrend-select-wrap,
-.help-topic-shell .bbs_top_wrap .help-board-select {
+.help-topic-shell .bbs_top_wrap .help-board-select,
+.help-topic-shell .bo-qna-write-table .help-board-select,
+.help-topic-shell .help-topic-form .help-board-select {
   position: relative;
   display: block;
   width: 100%;
+  max-width: 260px;
   min-width: 0;
 }
 
 .help-topic-shell .help-board-filter .realtrend-select-wrap.is-open,
 .help-topic-shell .help-faq-filter .realtrend-select-wrap.is-open,
-.help-topic-shell .bbs_top_wrap .help-board-select.is-open {
+.help-topic-shell .bbs_top_wrap .help-board-select.is-open,
+.help-topic-shell .bo-qna-write-table .help-board-select.is-open,
+.help-topic-shell .help-topic-form .help-board-select.is-open {
   z-index: 120;
 }
 
 .help-topic-shell .help-board-filter .realtrend-select-wrap::after,
 .help-topic-shell .help-faq-filter .realtrend-select-wrap::after,
-.help-topic-shell .bbs_top_wrap .help-board-select::after {
+.help-topic-shell .bbs_top_wrap .help-board-select::after,
+.help-topic-shell .bo-qna-write-table .help-board-select::after,
+.help-topic-shell .help-topic-form .help-board-select::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -560,13 +710,17 @@ body:has(.bo-help-qna-page) #layout_body {
 
 .help-topic-shell .help-board-filter .realtrend-select-wrap.is-open::after,
 .help-topic-shell .help-faq-filter .realtrend-select-wrap.is-open::after,
-.help-topic-shell .bbs_top_wrap .help-board-select.is-open::after {
+.help-topic-shell .bbs_top_wrap .help-board-select.is-open::after,
+.help-topic-shell .bo-qna-write-table .help-board-select.is-open::after,
+.help-topic-shell .help-topic-form .help-board-select.is-open::after {
   transform: translateY(-20%) rotate(225deg);
 }
 
 .help-topic-shell .help-board-filter .realtrend-select-trigger,
 .help-topic-shell .help-faq-filter .realtrend-select-trigger,
-.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-trigger {
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-trigger,
+.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-trigger,
+.help-topic-shell .help-topic-form .help-board-select .realtrend-select-trigger {
   display: flex;
   align-items: center;
   width: 100%;
@@ -585,9 +739,11 @@ body:has(.bo-help-qna-page) #layout_body {
   cursor: pointer;
   box-sizing: border-box;
   box-shadow: none;
+  user-select: none;
 }
 
-.help-topic-shell .help-faq-filter .realtrend-select-trigger {
+.help-topic-shell .help-faq-filter .realtrend-select-trigger,
+.help-topic-shell .help-topic-form .realtrend-select-trigger {
   min-height: 44px;
   height: 44px;
   font-size: 14px;
@@ -595,14 +751,18 @@ body:has(.bo-help-qna-page) #layout_body {
 
 .help-topic-shell .help-board-filter .realtrend-select-wrap.is-open .realtrend-select-trigger,
 .help-topic-shell .help-faq-filter .realtrend-select-wrap.is-open .realtrend-select-trigger,
-.help-topic-shell .bbs_top_wrap .help-board-select.is-open .realtrend-select-trigger {
+.help-topic-shell .bbs_top_wrap .help-board-select.is-open .realtrend-select-trigger,
+.help-topic-shell .bo-qna-write-table .help-board-select.is-open .realtrend-select-trigger,
+.help-topic-shell .help-topic-form .help-board-select.is-open .realtrend-select-trigger {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 
 .help-topic-shell .help-board-filter .realtrend-select-value,
 .help-topic-shell .help-faq-filter .realtrend-select-value,
-.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-value {
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-value,
+.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-value,
+.help-topic-shell .help-topic-form .help-board-select .realtrend-select-value {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -610,7 +770,9 @@ body:has(.bo-help-qna-page) #layout_body {
 
 .help-topic-shell .help-board-filter .realtrend-select-menu,
 .help-topic-shell .help-faq-filter .realtrend-select-menu,
-.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu {
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu,
+.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-menu,
+.help-topic-shell .help-topic-form .help-board-select .realtrend-select-menu {
   position: absolute;
   top: calc(100% - 1px);
   left: 0;
@@ -634,21 +796,32 @@ body:has(.bo-help-qna-page) #layout_body {
 .help-topic-shell .help-board-filter .realtrend-select-menu.is-open,
 .help-topic-shell .help-faq-filter .realtrend-select-menu.is-open,
 .help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu.is-open,
+.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-menu.is-open,
+.help-topic-shell .help-topic-form .help-board-select .realtrend-select-menu.is-open,
 .help-topic-shell .help-board-filter .realtrend-select-wrap.is-open .realtrend-select-menu,
 .help-topic-shell .help-faq-filter .realtrend-select-wrap.is-open .realtrend-select-menu,
-.help-topic-shell .bbs_top_wrap .help-board-select.is-open .realtrend-select-menu {
+.help-topic-shell .bbs_top_wrap .help-board-select.is-open .realtrend-select-menu,
+.help-topic-shell .bo-qna-write-table .help-board-select.is-open .realtrend-select-menu,
+.help-topic-shell .help-topic-form .help-board-select.is-open .realtrend-select-menu {
   display: block !important;
+}
+
+.help-topic-shell .help-topic-form .realtrend-select-trigger[aria-expanded="false"] + .realtrend-select-menu {
+  display: none !important;
 }
 
 .help-topic-shell .help-board-filter .realtrend-select-menu li,
 .help-topic-shell .help-faq-filter .realtrend-select-menu li,
-.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li {
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li,
+.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-menu li,
+.help-topic-shell .help-topic-form .help-board-select .realtrend-select-menu li {
   padding: 8px 10px;
   border-radius: 6px;
   color: #16121f;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
+  user-select: none;
 }
 
 .help-topic-shell .help-board-filter .realtrend-select-menu li:hover,
@@ -656,7 +829,11 @@ body:has(.bo-help-qna-page) #layout_body {
 .help-topic-shell .help-faq-filter .realtrend-select-menu li:hover,
 .help-topic-shell .help-faq-filter .realtrend-select-menu li.is-selected,
 .help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li:hover,
-.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li.is-selected {
+.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li.is-selected,
+.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-menu li:hover,
+.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-menu li.is-selected,
+.help-topic-shell .help-topic-form .help-board-select .realtrend-select-menu li:hover,
+.help-topic-shell .help-topic-form .help-board-select .realtrend-select-menu li.is-selected {
   color: var(--help-purple);
   background: #f7f1ff;
 }
@@ -664,7 +841,9 @@ body:has(.bo-help-qna-page) #layout_body {
 .help-topic-shell .help-board-filter .realtrend-select-native,
 .help-topic-shell .help-faq-filter .realtrend-select-native,
 .help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-native,
-.help-topic-shell .bbs_top_wrap select.realtrend-select-native {
+.help-topic-shell .bbs_top_wrap select.realtrend-select-native,
+.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-native,
+.help-topic-shell .help-topic-form .help-board-select .realtrend-select-native {
   position: absolute !important;
   width: 1px !important;
   height: 1px !important;
@@ -676,6 +855,11 @@ body:has(.bo-help-qna-page) #layout_body {
   white-space: nowrap !important;
   appearance: none !important;
   pointer-events: none !important;
+}
+
+.help-topic-shell .help-topic-form .help-board-select {
+  width: 100%;
+  max-width: none;
 }
 
 .help-topic-shell .bbs_top_wrap input[type="text"],
@@ -1251,7 +1435,7 @@ body:has(.bo-help-qna-page) #layout_body {
   align-items: center;
   min-height: 50px;
   margin: 0;
-  padding: 12px 2px;
+  padding: 25px 2px;
   border: 0;
   border-bottom: 1px solid #efeaf6;
   background: transparent;
@@ -1263,7 +1447,7 @@ body:has(.bo-help-qna-page) #layout_body {
 .help-topic-shell .help-board-row:last-child {
   border-bottom: 1px solid #e8e2ef;
   margin-bottom: 0;
-  padding-bottom: 10px;
+  padding-bottom: 25px;
 }
 
 .help-topic-shell .res_table .tbody:hover,
@@ -1330,6 +1514,15 @@ body:has(.bo-help-qna-page) #layout_body {
   cursor: pointer;
 }
 
+.help-topic-shell .res_table .tbody .hand {
+  position: relative;
+  top: 2px;
+}
+
+.help-topic-shell .res_table .tbody .hand a {
+  position: static;
+}
+
 .help-topic-shell .res_table .tbody:hover .subject,
 .help-topic-shell .res_table .tbody:hover .hand {
   color: var(--help-purple);
@@ -1388,8 +1581,8 @@ body:has(.bo-help-qna-page) #layout_body {
 }
 
 .help-topic-shell .bbs_bottom_wrap .btn_resp.color2 {
-  min-height: 42px;
-  padding: 0 18px;
+  min-height: 38px;
+  padding: 0 14px;
   border: 0;
   border-radius: 999px;
   color: #fff;
@@ -1440,33 +1633,37 @@ body:has(.bo-help-qna-page) #layout_body {
   border-bottom: 0;
 }
 
-.help-topic-shell .faq_new .question {
+.help-topic-shell .faq_new .question,
+.help-topic-shell #bbslist .faq_new .question {
   display: grid;
-  grid-template-columns: 258px minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, 1fr);
   gap: 18px;
-  align-items: start;
+  align-items: center;
   min-height: 48px;
   margin: 0;
-  padding: 8px 4px;
+  padding: 25px 4px;
   cursor: pointer;
+}
+
+.help-topic-shell .faq_new .question::before {
+  content: none !important;
+  display: none !important;
 }
 
 .help-topic-shell .faq_new .help-faq-category,
 .help-topic-shell .faq_new .help-faq-category .cat {
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  display: block;
   align-self: center;
-  max-width: 100%;
+  max-width: none;
+  overflow: visible;
+  padding-top: 0;
   color: #867d96;
   font-size: 13px;
   font-weight: 600;
   line-height: 1.35;
   white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .help-topic-shell .faq_new .question .subject .cat,
@@ -1476,34 +1673,111 @@ body:has(.bo-help-qna-page) #layout_body {
 
 .help-topic-shell .faq_new .question .subject,
 .help-topic-shell .faq_new .help-faq-question {
+  min-width: 0;
+  width: 100% !important;
+  max-width: none !important;
   margin: 0;
+  padding: 0 !important;
+  overflow: visible;
+  border: 0 !important;
+  background: transparent !important;
   color: var(--help-ink);
   font-size: 14px;
   font-weight: 600;
   line-height: 1.45;
+  white-space: normal;
+  text-overflow: clip;
+  box-sizing: border-box;
+}
+
+/* Firstmall .hand is effectively capped (~200px), which leaves the red-box gap */
+.help-topic-shell .faq_new .question .subject .hand,
+.help-topic-shell .faq_new .question .subject .boad_faqview_btn,
+.help-topic-shell .faq_new .help-faq-question .hand,
+.help-topic-shell .faq_new .help-faq-question .boad_faqview_btn,
+.help-topic-shell .faq_new .question .subject .highlight-link {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  text-overflow: clip !important;
+  box-sizing: border-box !important;
 }
 
 .help-topic-shell .faq_new .question .subject a,
 .help-topic-shell .faq_new .help-faq-question a {
+  display: inline !important;
+  width: auto !important;
+  max-width: none !important;
   color: inherit !important;
   text-decoration: none !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
 }
 
 .help-topic-shell .faq_new .question .add_info {
   display: none;
 }
 
-.help-topic-shell .faq_new .answer {
-  margin: 0;
-  padding: 0 4px 18px 280px;
+/* FAQ answer: soft panel + smooth height slide (JS sets exact max-height) */
+.help-topic-shell .faq_new .answer,
+.help-topic-shell .faq_new .answer.hide {
+  display: block !important;
+  overflow: hidden !important;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-height: 0;
+  border: 0 !important;
+  background: transparent !important;
   color: var(--help-muted);
   font-size: 14px;
   line-height: 1.6;
+  transition: max-height 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.help-topic-shell .faq_new .answer .help-faq-answer-inner,
+.help-topic-shell .faq_new .help-faq-item .answer .help-faq-answer-inner,
+.help-topic-shell .help-faq-item p,
+.help-topic-shell .faq_new .answer p {
+  margin: 0;
+  padding: 16px 18px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  background: var(--help-soft);
+  color: var(--help-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.help-topic-shell .faq_new .answer .help-faq-answer-inner > p {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
   background: transparent;
 }
 
-.help-topic-shell .faq_new .answer.hide {
-  display: none;
+.help-topic-shell .faq_new .answer .help-faq-answer-inner > p + p {
+  margin-top: 10px;
+}
+
+.help-topic-shell .faq_new .answer::before {
+  content: none !important;
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .help-topic-shell .faq_new .answer,
+  .help-topic-shell .faq_new .answer.hide {
+    transition: none;
+  }
 }
 
 .help-topic-shell .faq_new > li.is-open .question .subject,
@@ -1658,16 +1932,28 @@ body:has(.bo-help-qna-page) #layout_body {
   .bo-help-board-page .bo-help-topic-container,
   .bo-help-qna-page .bo-help-topic-container {
     width: 100% !important;
-    max-width: none !important;
+    max-width: 100% !important;
+    min-width: 0;
     padding-bottom: 48px;
+    overflow-x: clip;
   }
 
   .help-topic-shell {
     padding: 28px;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
   }
 
   .help-topic-layout {
     grid-template-columns: 1fr;
+    min-width: 0;
+    overflow-x: clip;
+  }
+
+  .help-topic-body {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .help-topic-nav {
@@ -1714,6 +2000,86 @@ body:has(.bo-help-qna-page) #layout_body {
   .bo-help-topic-page > .service_section.bo-help-topic-body {
     margin-bottom: 48px;
   }
+
+  .help-topic-shell .bbs_top_wrap,
+  .help-topic-shell #boardsearch .bbs_top_wrap,
+  .help-topic-shell .help-board-toolbar,
+  .help-topic-shell .help-faq-toolbar .bbs_top_wrap {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .help-topic-shell .help-board-toolbar > li,
+  .help-topic-shell .bbs_top_wrap > li {
+    float: none !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .help-topic-shell .help-board-toolbar .help-board-filter,
+  .help-topic-shell .help-board-toolbar .help-faq-filter,
+  .help-topic-shell .help-board-toolbar .help-board-search,
+  .help-topic-shell .help-board-toolbar .help-faq-search-field,
+  .help-topic-shell .bbs_top_wrap .help-board-filter,
+  .help-topic-shell .bbs_top_wrap .help-faq-filter,
+  .help-topic-shell .bbs_top_wrap .help-board-search,
+  .help-topic-shell .bbs_top_wrap .help-faq-search-field {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .help-topic-shell .help-board-toolbar .help-board-action,
+  .help-topic-shell .bbs_top_wrap .help-board-action {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  .help-topic-shell .help-board-toolbar .help-board-search + .help-board-action,
+  .help-topic-shell .help-board-toolbar .help-faq-search-field + .help-board-action,
+  .help-topic-shell .bbs_top_wrap .help-board-search + .help-board-action,
+  .help-topic-shell .bbs_top_wrap .help-faq-search-field + .help-board-action {
+    margin-left: auto !important;
+  }
+
+  .help-topic-shell .bbs_top_wrap .help-board-action .btn_resp,
+  .help-topic-shell .bbs_top_wrap .help-board-action .btn_resp.size_b,
+  .help-topic-shell .bbs_top_wrap .btn_resp.size_b,
+  .help-topic-shell .help-board-toolbar .btn_resp.size_b {
+    float: none !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: auto !important;
+    margin: 0 !important;
+  }
+
+  /* Category dropdown must span the same width as the search input */
+  .help-topic-shell .help-board-filter .realtrend-select-wrap,
+  .help-topic-shell .help-faq-filter .realtrend-select-wrap,
+  .help-topic-shell .bbs_top_wrap .help-board-select,
+  .help-topic-shell .help-topic-form .help-board-select,
+  .help-topic-shell .help-topic-form .realtrend-select-wrap {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .help-topic-shell .help-board-filter .realtrend-select-trigger,
+  .help-topic-shell .help-faq-filter .realtrend-select-trigger,
+  .help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-trigger,
+  .help-topic-shell .help-topic-form .realtrend-select-trigger {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box;
+  }
 }
 
 @media (max-width: 760px) {
@@ -1740,6 +2106,40 @@ body:has(.bo-help-qna-page) #layout_body {
     padding: 16px;
   }
 
+  .help-topic-card-grid,
+  .help-topic-form {
+    grid-template-columns: 1fr;
+  }
+
+  .help-topic-form label:last-of-type,
+  .help-topic-form > button,
+  .help-topic-form > a.help-topic-form-submit {
+    grid-column: auto;
+  }
+
+  /* My 1:1 Inquiry write: form spans the card edge-to-edge (keep table layout) */
+  .help-topic-panel.bo-qna-write-panel {
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden;
+  }
+
+  .help-topic-panel.bo-qna-write-panel > h2 {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .help-topic-panel.bo-qna-write-panel #writeform {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .help-topic-shell .bo-qna-write-actions {
+    padding: 0 16px;
+  }
+
   .help-topic-shell .help-board-article {
     padding: 0;
   }
@@ -1758,28 +2158,43 @@ body:has(.bo-help-qna-page) #layout_body {
 
   .help-topic-shell .bbs_top_wrap,
   .help-topic-shell #boardsearch .bbs_top_wrap,
-  .help-topic-shell .help-faq-toolbar .bbs_top_wrap {
+  .help-topic-shell .help-faq-toolbar .bbs_top_wrap,
+  .help-topic-shell .help-board-toolbar {
+    display: flex !important;
     flex-wrap: wrap;
-    justify-content: stretch;
+    justify-content: flex-start;
   }
 
-  .help-topic-shell .bbs_top_wrap .help-board-filter,
-  .help-topic-shell .bbs_top_wrap .help-faq-filter,
-  .help-topic-shell .bbs_top_wrap .help-board-search,
-  .help-topic-shell .bbs_top_wrap .help-faq-search-field,
-  .help-topic-shell .bbs_top_wrap .help-board-action {
-    flex: 1 1 100%;
+  .help-topic-shell .help-board-filter .realtrend-select-wrap,
+  .help-topic-shell .help-faq-filter .realtrend-select-wrap,
+  .help-topic-shell .bbs_top_wrap .help-board-select {
+    width: 100%;
     max-width: none;
-    min-width: 0;
   }
 
   .help-topic-shell .bbs_top_wrap .help-board-search input,
   .help-topic-shell .bbs_top_wrap .help-faq-search-field input,
   .help-topic-shell .bbs_top_wrap input[type="text"],
-  .help-topic-shell .bbs_top_wrap .res_bbs_search_input,
-  .help-topic-shell .bbs_top_wrap .btn_resp,
-  .help-topic-shell .bbs_top_wrap button.btn_resp {
+  .help-topic-shell .bbs_top_wrap .res_bbs_search_input {
     width: 100% !important;
+    height: 40px !important;
+    box-sizing: border-box;
+  }
+
+  .help-topic-shell .help-board-filter .realtrend-select-trigger,
+  .help-topic-shell .help-faq-filter .realtrend-select-trigger,
+  .help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-trigger,
+  .help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-trigger {
+    min-height: 40px;
+    height: 40px;
+  }
+
+  .help-topic-shell .bbs_top_wrap .btn_resp,
+  .help-topic-shell .bbs_top_wrap button.btn_resp,
+  .help-topic-shell .help-board-toolbar .btn_resp.size_b {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 14px !important;
   }
 
   .help-topic-shell .res_table .thead,
@@ -1790,47 +2205,108 @@ body:has(.bo-help-qna-page) #layout_body {
   .help-topic-shell .res_table .tbody,
   .help-topic-shell .help-board-row {
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px 10px;
+    gap: 5px 10px;
     min-height: 0;
-    padding: 12px 2px;
+    padding: 18px 2px;
   }
 
-  .help-topic-shell .res_table .tbody > li:first-child,
-  .help-topic-shell .res_table .tbody > li.cat {
+  .help-topic-shell .res_table .tbody > li:first-child {
     grid-column: 1 / -1;
-    font-size: 11px;
+    font-size: 13px;
   }
 
-  .help-topic-shell .res_table .tbody > li.subject {
+  .help-topic-shell .res_table .tbody > li.cat,
+  .help-topic-shell .res_table > .tbody > li span.cat {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    align-self: start;
+    text-align: left;
     font-size: 13px;
+    line-height: 1.35;
   }
 
   .help-topic-shell .res_table .tbody > li.date,
   .help-topic-shell .res_table .tbody > li:last-child {
-    font-size: 11px;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: start;
+    position: relative;
+    top: -2px;
+    text-align: right;
+    font-size: 13px;
+    line-height: 1.35;
   }
 
-  .help-topic-shell .faq_new .question {
+  .help-topic-shell .res_table .tbody > li.subject {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 14px;
+  }
+
+  .help-topic-shell .faq_new .question,
+  .help-topic-shell #bbslist .faq_new .question {
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 5px;
+    align-content: center;
     min-height: 0;
-    padding: 10px 2px;
+    padding: 18px 2px;
   }
 
   .help-topic-shell .faq_new .help-faq-category,
   .help-topic-shell .faq_new .help-faq-category .cat {
+    order: 1;
+    display: block;
+    max-width: none;
+    overflow: visible;
     align-self: start;
-    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
     line-height: 1.35;
+    white-space: normal;
+  }
+
+  .help-topic-shell .faq_new .question .subject,
+  .help-topic-shell .faq_new .question .subject a,
+  .help-topic-shell .faq_new .help-faq-question,
+  .help-topic-shell .faq_new .help-faq-question a {
+    order: 2;
   }
 
   .help-topic-shell .faq_new .question .subject,
   .help-topic-shell .faq_new .help-faq-question {
-    font-size: 13px;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 14px;
+    white-space: normal;
   }
 
-  .help-topic-shell .faq_new .answer {
-    padding: 0 2px 16px;
+  .help-topic-shell .bo-qna-write-table .form_multi_row2 li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .help-topic-shell .bo-qna-write-table .form_multi_row2 li input.size_mail {
+    order: 1;
+    width: 100%;
+    max-width: none;
+  }
+
+  .help-topic-shell .bo-qna-write-table .form_multi_row2 li .Dib {
+    order: 2;
+  }
+
+  .help-topic-shell .faq_new .answer .help-faq-answer-inner,
+  .help-topic-shell .help-faq-item p,
+  .help-topic-shell .faq_new .answer p {
+    padding: 14px 14px 16px;
+  }
+
+  .help-topic-shell .faq_new .answer .help-faq-answer-inner > p {
+    padding: 0;
   }
 
   .help-topic-head h1,
@@ -1856,4 +2332,206 @@ body:has(.bo-help-qna-page) #layout_body {
     border-radius: 0 0 16px 16px;
     font-size: 14px;
   }
+}
+
+/* My 1:1 Inquiry write form (mypage/myqna_write.html) */
+.help-topic-shell .table_row_a.Thc.bo-qna-write-table {
+  display: table !important;
+  margin-bottom: 16px;
+  border-collapse: collapse;
+}
+
+.help-topic-shell .bo-qna-write-table th,
+.help-topic-shell .bo-qna-write-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--help-line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+table[class].Thc > thead > tr > th,
+table[class].Thc > tbody > tr > th {
+  white-space: nowrap;
+  text-align: center !important;
+  vertical-align: middle;
+}
+
+.help-topic-shell .bo-qna-write-table th p {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin: 0;
+  color: var(--help-ink);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center !important;
+  white-space: nowrap;
+}
+
+.help-topic-shell .bo-qna-write-table input[type="text"],
+.help-topic-shell .bo-qna-write-table input[type="password"],
+.help-topic-shell .bo-qna-write-table select {
+  width: 100%;
+  max-width: 260px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--help-line);
+  border-radius: 8px;
+  color: var(--help-ink);
+  font-size: 13px;
+}
+
+.help-topic-shell .bo-qna-write-table select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 32px;
+  border-color: #ded8e8;
+  border-radius: 8px;
+  color: #332e3d;
+  background:
+    #fff
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><path d='M2 3.5l3 3 3-3' stroke='%23332e3d' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>")
+    no-repeat right 12px center;
+  background-size: 7px 7px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-radius 0.18s ease;
+}
+
+.help-topic-shell .bo-qna-write-table select:focus {
+  border-color: #ded8e8;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  outline: none;
+  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
+}
+
+.help-topic-shell .bo-qna-write-table select option {
+  padding: 9px 10px;
+  color: #16121f;
+  background: #fff;
+}
+
+.help-topic-shell .bo-qna-write-table select option:checked,
+.help-topic-shell .bo-qna-write-table select option:hover {
+  color: #16121f;
+  background: #f1e8ff;
+}
+
+.help-topic-shell .bo-qna-write-table .form_multi_row2 {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.help-topic-shell .bo-qna-write-table .form_multi_row2 li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.help-topic-shell .bo-qna-write-table .form_multi_row2 li .Dib {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+@media (max-width: 760px) {
+  .help-topic-shell .bo-qna-write-table .form_multi_row2 li {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .help-topic-shell .bo-qna-write-table .form_multi_row2 li .Dib {
+    align-self: flex-start;
+  }
+}
+
+.help-topic-shell input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  margin: 0 6px 0 0;
+  border: 1.5px solid var(--help-line);
+  border-radius: 50%;
+  vertical-align: middle;
+  background: #fff;
+  cursor: pointer;
+}
+
+.help-topic-shell input[type="checkbox"]:checked {
+  border-color: var(--help-purple);
+  background: var(--help-purple);
+}
+
+.help-topic-shell input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+
+.help-topic-shell .bo-qna-write-textarea {
+  display: block;
+  width: 100%;
+  min-height: 220px;
+  padding: 14px;
+  border: 1px solid var(--help-line);
+  border-radius: 10px;
+  color: var(--help-ink);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.help-topic-shell .bo-qna-write-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  min-width: 96px;
+  height: 42px;
+  padding: 0 22px !important;
+  border: 1px solid var(--help-purple) !important;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp.color2 {
+  color: #fff !important;
+  background: var(--help-purple) !important;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp.color2:hover {
+  background: #6a34c9 !important;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp:not(.color2) {
+  color: var(--help-purple) !important;
+  background: #fff !important;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp:not(.color2):hover {
+  background: #f5f0ff !important;
 }

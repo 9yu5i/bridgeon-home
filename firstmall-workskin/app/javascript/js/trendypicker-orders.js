@@ -59,8 +59,17 @@
 
   const makeAction = (source, className = "") => {
     if (!source) return null;
+    if (
+      source.classList.contains("review_btn_disabled") &&
+      /write\s+a?\s*review/i.test(source.textContent)
+    ) {
+      return null;
+    }
     const action = source.cloneNode(true);
     action.className = `order_btn ${className}`.trim();
+    if (/write\s+a?\s*review/i.test(action.textContent)) {
+      action.dataset.ordersReviewOpen = "";
+    }
     if (action.tagName === "BUTTON") action.type = "button";
     return action;
   };
@@ -863,8 +872,20 @@
   const trackModal = document.querySelector("[data-orders-page-track-modal]");
   const trackDialog = trackModal?.querySelector(".orders-track-dialog");
   const trackPrimary = trackModal?.querySelector("[data-orders-page-track-primary]");
+  const reviewDialog = trackModal?.querySelector(".orders-review-dialog");
+  const reviewRating = trackModal?.querySelector(".orders-review-rating");
+  const reviewUpload = trackModal?.querySelector("[data-orders-review-upload]");
+  const reviewFiles = trackModal?.querySelector("[data-orders-review-files]");
+  const reviewPreview = trackModal?.querySelector("[data-orders-review-preview]");
+  const reviewUploadStatus = trackModal?.querySelector("[data-orders-review-upload-status]");
+  const reviewTitle = trackModal?.querySelector("[data-orders-review-title]");
+  const reviewCopy = trackModal?.querySelector("[data-orders-review-copy]");
+  const reviewError = trackModal?.querySelector("[data-orders-review-error]");
+  const reviewSubmit = trackModal?.querySelector("[data-orders-review-submit]");
   let trackTrigger = null;
   let nativeTrackAction = null;
+  let reviewPhotoUrls = [];
+  let selectedReviewRating = 0;
 
   const setTrackText = (selector, value) => {
     const target = trackModal?.querySelector(selector);
@@ -882,7 +903,18 @@
     if (!trackModal || trackModal.hidden) return;
     trackModal.hidden = true;
     trackModal.setAttribute("aria-hidden", "true");
+    if (reviewDialog) reviewDialog.hidden = true;
+    if (trackDialog) trackDialog.hidden = true;
     document.body.classList.remove("is-orders-modal-open");
+    reviewPhotoUrls.forEach((url) => URL.revokeObjectURL(url));
+    reviewPhotoUrls = [];
+    if (reviewFiles) reviewFiles.value = "";
+    if (reviewPreview) reviewPreview.replaceChildren();
+    if (reviewUploadStatus) reviewUploadStatus.textContent = "Up to 5 photos";
+    if (reviewError) {
+      reviewError.hidden = true;
+      reviewError.textContent = "";
+    }
     nativeTrackAction = null;
     trackTrigger?.focus();
     trackTrigger = null;
@@ -937,11 +969,72 @@
       if (state) state.textContent = index < stage ? "Complete" : index === stage ? "Current" : "Pending";
     });
 
+    if (reviewDialog) reviewDialog.hidden = true;
+    trackDialog.hidden = false;
     trackModal.hidden = false;
     trackModal.setAttribute("aria-hidden", "false");
     document.body.classList.add("is-orders-modal-open");
     window.requestAnimationFrame(() => trackDialog.focus({ preventScroll: true }));
   };
+
+  const openReviewModal = (trigger) => {
+    const card = trigger.closest(".bo-order-card");
+    if (!card || !trackModal || !reviewDialog) return;
+
+    const mobileItem = trigger.closest(".orders-mobile-item");
+    const products = [...card.querySelectorAll(":scope > .shipping .oc_item_info_detail")];
+    const firstProduct = products[0];
+    const image =
+      mobileItem?.querySelector(".orders-mobile-thumb img") ||
+      firstProduct?.querySelector(".goods_thumb") ||
+      firstProduct?.querySelector(".img_link img");
+    const name =
+      textOf(mobileItem, "h3") ||
+      (products.length === 1 ? textOf(firstProduct, ".goods_name") : "Selected items");
+    const price =
+      textOf(mobileItem, "strong") ||
+      textOf(card, ".orders-card-head__aside > strong", card.dataset.orderPrice);
+
+    trackTrigger = trigger;
+    setTrackText("[data-orders-review-brand]", textOf(firstProduct, ".brand_name", "TrendyPicker"));
+    setTrackText("[data-orders-review-name]", name || "Selected items");
+    setTrackText("[data-orders-review-price]", price);
+
+    const thumb = trackModal.querySelector("[data-orders-review-thumb]");
+    if (thumb) {
+      const imageUrl = image?.currentSrc || image?.src || "";
+      thumb.style.backgroundImage = imageUrl ? `url(${JSON.stringify(imageUrl)})` : "";
+    }
+
+    reviewRating?.querySelectorAll("[data-orders-review-rating]").forEach((button) => {
+      button.classList.remove("is-active");
+    });
+    selectedReviewRating = 0;
+    if (reviewTitle) reviewTitle.value = "";
+    if (reviewCopy) reviewCopy.value = "";
+    if (reviewError) {
+      reviewError.hidden = true;
+      reviewError.textContent = "";
+    }
+    if (reviewSubmit) reviewSubmit.disabled = false;
+    if (trackDialog) trackDialog.hidden = true;
+    reviewDialog.hidden = false;
+    trackModal.hidden = false;
+    trackModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("is-orders-modal-open");
+    window.requestAnimationFrame(() => reviewDialog.focus({ preventScroll: true }));
+  };
+
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest(
+      "[data-orders-review-open], [data-review-write-open], .bo-orders-page .order_btn",
+    );
+    if (!button || !page.contains(button) || !/write\s+a?\s*review/i.test(button.textContent)) return;
+    if (button.matches(".review_btn_disabled, [aria-disabled='true']")) return;
+    event.preventDefault();
+    event.stopPropagation();
+    openReviewModal(button);
+  }, true);
 
   page.addEventListener("click", (event) => {
     const button = event.target.closest(".orders-track-button");
@@ -952,6 +1045,75 @@
 
   trackModal?.querySelectorAll("[data-orders-page-track-close]").forEach((button) => {
     button.addEventListener("click", closeTrackModal);
+  });
+
+  reviewRating?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-orders-review-rating]");
+    if (!button) return;
+    const rating = Number(button.dataset.ordersReviewRating || 0);
+    selectedReviewRating = rating;
+    if (reviewError) {
+      reviewError.hidden = true;
+      reviewError.textContent = "";
+    }
+    reviewRating.querySelectorAll("[data-orders-review-rating]").forEach((star) => {
+      star.classList.toggle("is-active", Number(star.dataset.ordersReviewRating || 0) <= rating);
+    });
+  });
+
+  reviewUpload?.addEventListener("click", () => reviewFiles?.click());
+
+  reviewFiles?.addEventListener("change", () => {
+    reviewPhotoUrls.forEach((url) => URL.revokeObjectURL(url));
+    reviewPhotoUrls = [];
+    reviewPreview?.replaceChildren();
+
+    [...reviewFiles.files]
+      .filter((file) => file.type.startsWith("image/"))
+      .slice(0, 5)
+      .forEach((file) => {
+        const url = URL.createObjectURL(file);
+        reviewPhotoUrls.push(url);
+        const item = document.createElement("span");
+        item.className = "orders-review-preview-item";
+        const image = document.createElement("img");
+        image.src = url;
+        image.alt = file.name;
+        item.append(image);
+        reviewPreview?.append(item);
+      });
+
+    if (reviewUploadStatus) {
+      reviewUploadStatus.textContent = reviewPhotoUrls.length
+        ? `${reviewPhotoUrls.length}/5 photos`
+        : "Up to 5 photos";
+    }
+  });
+
+  reviewSubmit?.addEventListener("click", () => {
+    if (!selectedReviewRating) {
+      if (reviewError) {
+        reviewError.textContent = "Please select a star rating.";
+        reviewError.hidden = false;
+      }
+      reviewRating?.querySelector("[data-orders-review-rating]")?.focus();
+      return;
+    }
+
+    if (!reviewTitle?.value.trim()) {
+      reviewTitle?.reportValidity();
+      reviewTitle?.focus();
+      return;
+    }
+
+    if (!reviewCopy?.value.trim()) {
+      reviewCopy?.reportValidity();
+      reviewCopy?.focus();
+      return;
+    }
+
+    reviewSubmit.disabled = true;
+    window.location.assign("/mypage/mygdreview_catalog?perpage=6");
   });
 
   trackPrimary?.addEventListener("click", () => {

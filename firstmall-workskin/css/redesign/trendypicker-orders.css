@@ -732,11 +732,192 @@
 }
 
 .bo-orders-page .review_btn_disabled {
-  border-color: #d8d2df !important;
-  color: #9b93a5 !important;
-  background: #f5f3f7 !important;
-  cursor: not-allowed !important;
-  pointer-events: none;
+  display: none !important;
+}
+
+.orders-dialog[hidden] {
+  display: none;
+}
+
+.orders-dialog-product {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 13px;
+  background: #f7f4ff;
+}
+
+.orders-dialog-product .orders-dialog-thumb {
+  background-position: center;
+  background-size: cover;
+}
+
+.orders-dialog-product p,
+.orders-dialog-product strong,
+.orders-dialog-product small {
+  margin: 0;
+}
+
+.orders-dialog-product p {
+  color: #928a9d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.orders-dialog-product strong {
+  display: block;
+  margin-top: 4px;
+  color: #17121f;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.orders-dialog-product small {
+  display: block;
+  margin-top: 7px;
+  color: #111;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.orders-review-rating {
+  display: flex;
+  gap: 6px;
+  margin-top: 18px;
+}
+
+.orders-review-rating button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #d8cfeb;
+  background: #f4efff;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.orders-review-rating button.is-active {
+  color: #ffad11;
+  background: #fff7df;
+}
+
+.orders-review-field {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.orders-review-field span {
+  color: #17121f;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.orders-review-field input,
+.orders-review-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #ded8e8;
+  border-radius: 10px;
+  color: #221b2f;
+  background: #fff;
+  font: inherit;
+  font-size: 15px;
+  outline: 0;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.orders-review-field input {
+  height: 44px;
+  padding: 0 14px;
+}
+
+.orders-review-field textarea {
+  min-height: 118px;
+  padding: 13px 14px;
+  resize: vertical;
+}
+
+.orders-review-field input:focus,
+.orders-review-field textarea:focus {
+  border-color: var(--orders-purple);
+  box-shadow: 0 0 0 3px rgba(123, 63, 228, 0.14);
+}
+
+.orders-review-upload {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 15px;
+}
+
+.orders-review-upload button {
+  height: 36px;
+  margin: 0;
+  padding: 0 14px;
+  border: 1px dashed var(--orders-purple);
+  border-radius: 999px;
+  color: var(--orders-purple);
+  background: #fbf9ff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.orders-review-upload span {
+  color: #80788c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.orders-review-file-input {
+  display: none;
+}
+
+.orders-review-preview {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.orders-review-preview:empty {
+  display: none;
+}
+
+.orders-review-preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid #e5ddf2;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.orders-review-error {
+  margin: 12px 0 0;
+  color: #d13b54;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.orders-review-error[hidden] {
+  display: none;
+}
+
+.orders-review-dialog .orders-dialog-primary:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
 
 body.is-orders-detail-open {
@@ -1303,6 +1484,7 @@ body.is-orders-detail-open {
     font-weight: 700;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
 
   .bo-orders-page .orders-mobile-copy p {

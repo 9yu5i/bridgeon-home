@@ -5,7 +5,7 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260806-23" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260807-51" />
 
 <div class="subpage_wrap bo-mypage-shell bo-help-topic-page">
 	<aside class="bo-account-side">
@@ -40,10 +40,17 @@
 			</nav>
 
 			<header class="help-topic-head">
+				<!--{? _GET.topic == 'contact'}-->
+				<span class="help-topic-kicker">About Us</span>
+				<h1><span designElement="text">Contact Us</span></h1>
+				<p designElement="text">Contact customer support for order, product, account, payment, delivery, return, and policy questions.</p>
+				<div class="help-topic-meta"><span>Support contact</span></div>
+				<!--{:}-->
 				<span class="help-topic-kicker">Customer Service</span>
 				<h1><span designElement="text">About Us</span></h1>
 				<p designElement="text">The fastest international shipping from Korea — learn about TrendyPicker's vision, products, and team.</p>
 				<div class="help-topic-meta"><span>Company information</span></div>
+				<!--{/}-->
 			</header>
 
 			<div class="help-topic-layout">
@@ -54,13 +61,65 @@
 					<a href="/mypage/myqna_catalog">Q&amp;A</a>
 					<a href="/service/guide">Guide</a>
 					<a href="/service/cancellation">Returns &amp; Exchanges</a>
-					<a class="is-active" href="/service/company" aria-current="page">About Us</a>
-					<a href="/board/?id=mbqna">Contact Us</a>
+					<a {? _GET.topic != 'contact'}class="is-active" aria-current="page"{/} href="/service/company">About Us</a>
+					<a {? _GET.topic == 'contact'}class="is-active" aria-current="page"{/} href="/service/company?topic=contact">Contact Us</a>
 					<a href="/service/agreement">Terms of Use</a>
 					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
 				</nav>
 
 				<div class="help-topic-body bo-help-topic-body">
+					<!--{? _GET.topic == 'contact'}-->
+					<section class="help-topic-panel">
+						<h2><span designElement="text">Customer support</span></h2>
+						<p designElement="text">For the fastest help, include your order number, product name, option name, destination country, and a short explanation of the issue.</p>
+						<div class="help-topic-card-grid">
+							<article class="help-topic-mini-card">
+								<h3>Email</h3>
+								<p><a href="mailto:help@bridge.com">help@bridge.com</a></p>
+							</article>
+							<article class="help-topic-mini-card">
+								<h3>Service email</h3>
+								<p><a href="mailto:tp.svc@trendypicker.com">tp.svc@trendypicker.com</a></p>
+							</article>
+							<article class="help-topic-mini-card">
+								<h3>Phone</h3>
+								<p><a href="tel:0215995976">02-1599-5976</a></p>
+							</article>
+							<article class="help-topic-mini-card">
+								<h3>Address</h3>
+								<p>RM 715, 120, Sinsan-ro, Saha-gu, Busan, Republic of Korea</p>
+							</article>
+						</div>
+					</section>
+
+					<section class="help-topic-panel">
+						<h2><span designElement="text">Contact form</span></h2>
+						<form class="help-topic-form" action="/mypage/myqna_write" method="get">
+							<label>Name
+								<input type="text" name="contact_name" placeholder="Name" />
+							</label>
+							<label>Email
+								<input type="email" name="contact_email" placeholder="name@email.com" />
+							</label>
+							<div class="help-topic-form-field">
+								<label for="contact_reason">Reason</label>
+								<select id="contact_reason" name="contact_reason" aria-label="Reason">
+									<option>Order support</option>
+									<option>Product support</option>
+									<option>Return or exchange</option>
+									<option>Partnership</option>
+								</select>
+							</div>
+							<label>Order number
+								<input type="text" name="order_seq" placeholder="Optional" />
+							</label>
+							<label>Message
+								<textarea name="contact_message" placeholder="How can we help?"></textarea>
+							</label>
+							<button type="submit">Send Message</button>
+						</form>
+					</section>
+					<!--{:}-->
 					<section class="help-topic-panel">
 						<h2><span designElement="text">Our Vision</span></h2>
 						<p class="desc1" designElement="text">(The Fastest International Shipping from Korea)</p>
@@ -93,6 +152,7 @@
 						<h2><span designElement="text">Our Location</span></h2>
 						<p>{=showMapApi('300', '300')}</p>
 					</section>
+					<!--{/}-->
 				</div>
 			</div>
 		</article>
@@ -101,3 +161,6 @@
 
 <script src="/app/javascript/js/trendypicker-mypage.js"></script>
 <script src="/app/javascript/js/trendypicker-help-topic.js"></script>
+<!--{? _GET.topic == 'contact'}-->
+<script src="/app/javascript/js/trendypicker-contact.js"></script>
+<!--{/}-->

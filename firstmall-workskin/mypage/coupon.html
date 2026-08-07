@@ -1,0 +1,325 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Coupons / TrendyPicker
+- Path: [skin]/mypage/coupon.html
+- URL: /mypage/coupon
+- tab=1 My Coupons, tab=2 Downloadable
+- Register: offline_serialnumber → ../coupon/offlinecoupon_member
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--{ ? checkO2OService }-->
+	<!--{ # o2o_mypage_coupon_init }-->
+<!--{ / }-->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css?v=20260807-6" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-coupons.css?v=20260807-35" />
+
+<div class="subpage_wrap bo-mypage-shell bo-coupons-shell">
+
+	<!-- +++++ mypage LNB ++++ -->
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a class="on" href="/mypage/coupon" aria-current="page">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/mypage/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a href="/service/cs">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+	<!-- +++++ //mypage LNB ++++ -->
+
+	<!-- +++++ mypage contents ++++ -->
+	<main class="subpage_container bo-mypage bo-coupons-page">
+		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
+
+		<!-- Dashboard scrapes unusedcount from this hidden Firstmall tab markup -->
+		<div class="tab_basic size2 hide" aria-hidden="true">
+			<ul>
+				<li {? _GET.tab == '1' || !_GET.tab}class="on"{/}>
+					<a href="/mypage/coupon?tab=1"><span designElement="text">보유한 쿠폰</span>(<strong class="pointcolor2">{=number_format(unusedcount)}</strong>/{=number_format(totalcount)})</a>
+				</li>
+				<li {? _GET.tab == '2'}class="on"{/}>
+					<a href="/mypage/coupon?tab=2"><span designElement="text">다운로드 가능 쿠폰</span>({=number_format(svcount)})</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="title_container bo-coupons-head">
+			<div>
+				<h1><span designElement="text">Coupons</span></h1>
+				<p>Save more with exclusive TrendyPicker coupons.</p>
+			</div>
+		</div>
+
+		<section class="bo-coupon-register" aria-labelledby="bo-coupon-register-title">
+			<span class="bo-coupon-register-icon" aria-hidden="true"></span>
+			<div class="bo-coupon-register-copy">
+				<h2 id="bo-coupon-register-title">Register a Coupon</h2>
+			</div>
+			<form class="bo-coupon-register-form" data-coupon-register-form novalidate>
+				<label class="sr-only" for="offline_serialnumber">Enter your coupon code and start saving!</label>
+				<input id="offline_serialnumber" name="offline_serialnumber" type="text" maxlength="35" placeholder="Enter your coupon code and start saving!" autocomplete="off" aria-describedby="bo-coupon-register-message" />
+				<button type="submit" id="offlinecouponbtn">Apply Coupon</button>
+				<p class="bo-coupon-register-message" id="bo-coupon-register-message" data-coupon-register-message aria-live="polite"></p>
+			</form>
+		</section>
+
+		<p class="bo-coupons-time-note">All expiration times are based on KST (UTC+9).</p>
+
+		<nav class="bo-coupons-tabs" aria-label="Coupon lists">
+			<a class="{? _GET.tab == '1' || !_GET.tab}is-active{/}" href="/mypage/coupon?tab=1">My Coupons</a>
+			<a class="{? _GET.tab == '2'}is-active{/}" href="/mypage/coupon?tab=2">Downloadable</a>
+		</nav>
+
+		<!--{? _GET.tab == '1'  || !_GET.tab}-->
+		<section class="bo-coupon-section bo-coupon-section-expiring" data-coupon-expiring-section hidden aria-labelledby="bo-coupon-expiring-title">
+			<h2 id="bo-coupon-expiring-title">Expiring Soon <span aria-hidden="true">&#9888;</span></h2>
+			<div class="bo-coupon-grid bo-coupon-grid--two" data-coupon-expiring-grid></div>
+		</section>
+
+		<section class="bo-coupon-section" aria-labelledby="bo-my-coupons-title">
+			<h2 id="bo-my-coupons-title">My Coupons <span data-coupon-count>({=number_format(unusedcount)})</span></h2>
+
+			<!--{ ? loop }-->
+			<div class="bo-coupon-grid" data-coupon-grid>
+				<!--{ @ loop }-->
+				<article
+					class="bo-coupon-ticket"
+					data-coupon-ticket
+					data-use-status="{.use_status}"
+					data-day-limit="{.issuedaylimit}"
+					data-issue-date="{.issuedate}"
+					data-coupon-seq="{.coupon_seq}"
+					data-download-seq="{.download_seq}"
+				>
+					<div class="bo-coupon-ticket-top" data-coupon-top></div>
+					<h3 data-coupon-sale>{.salepricetitle}</h3>
+					<p class="bo-coupon-name">{.cp_name}</p>
+					<!--{? (.type != 'offline_emoney' && .use_type != 'offline') }-->
+					<p class="bo-coupon-terms">{.limit_price}</p>
+					<!--{ / }-->
+					<!--{? .issuedate && .type != 'offline_emoney' && .use_type != 'offline' }-->
+					<p class="bo-coupon-expire-inline" data-coupon-expire data-day-limit="{.issuedaylimit}">{.issuedate}</p>
+					<!--{ / }-->
+					<div class="bo-coupon-ticket-actions">
+						<!--{? .use_type=='offline' && .use_status == 'unused'}-->
+						<button type="button" class="bo-coupon-action offline_use" coupon_seq="{.coupon_seq}" download_seq="{.download_seq}">Use</button>
+						<!--{ / }-->
+						<!--{? .type != 'offline_emoney' }-->
+						<button type="button" class="bo-coupon-action coupongoodsreviewbtn" aria-label="Details" coupon_type="{? .type == 'offline_coupon' }offline{:}online{/}" coupon_seq="{.coupon_seq}" download_seq="{.download_seq}" use_type="{.use_type}" issue_type="{.issue_type}" coupon_name="{.coupon_name}">Details</button>
+						<!--{ / }-->
+					</div>
+				</article>
+				<!--{ / }-->
+			</div>
+			<div class="paging_navigation bo-coupons-pagination">{pagin}</div>
+			<!--{ : }-->
+			<div class="no_data_area2 bo-coupon-empty">
+				You have no coupons.
+			</div>
+			<!--{ / }-->
+		</section>
+		<!--{ : }-->
+		<section class="bo-coupon-section" aria-labelledby="bo-downloadable-coupons-title">
+			<h2 id="bo-downloadable-coupons-title">Downloadable Coupons <span>({=number_format(svcount)})</span></h2>
+
+			<!--{ ? loop }-->
+			<div class="bo-coupon-grid">
+				<!--{ @ loop }-->
+				<article
+					class="bo-coupon-ticket"
+					data-coupon-ticket
+					data-issue-date="{.downloaddate}"
+					data-coupon-seq="{.coupon_seq}"
+				>
+					<div class="bo-coupon-ticket-top" data-coupon-top></div>
+					<h3 data-coupon-sale>{.salepricetitle}</h3>
+					<p class="bo-coupon-name">{.coupon_name}</p>
+					<!--{? .use_type != 'offline' }-->
+					<p class="bo-coupon-terms">{.limit_price}</p>
+					<!--{ / }-->
+					<!--{? .downloaddate }-->
+					<p class="bo-coupon-expire-inline" data-coupon-expire>{.downloaddate}</p>
+					<!--{ / }-->
+					<div class="bo-coupon-ticket-actions">
+						<!--{? .downckbtn }-->
+						<button type="button" class="downloadbtn" coupon_type="{.type}" coupon_seq="{.coupon_seq}" coupon_name="{.coupon_name}" coupon_point="{.coupon_point}">Get Deal</button>
+						<!--{ / }-->
+						<!--{? .type != 'offline_emoney' }-->
+						<button type="button" class="bo-coupon-action coupongoodsreviewbtn" aria-label="Details" coupon_type="{? .type == 'offline_coupon' }offline{:}online{/}" coupon_seq="{.coupon_seq}" download_seq="{.download_seq}" use_type="{.use_type}" issue_type="{.issue_type}" coupon_name="{.coupon_name}">Details</button>
+						<!--{ / }-->
+					</div>
+				</article>
+				<!--{ / }-->
+			</div>
+			<div class="paging_navigation bo-coupons-pagination">{pagin}</div>
+			<!--{ : }-->
+			<div class="no_data_area2 bo-coupon-empty">
+				There are no downloadable coupons.
+			</div>
+			<!--{ / }-->
+		</section>
+		<!--{ / }-->
+
+	</main>
+	<!-- +++++ //mypage contents ++++ -->
+
+	<section class="bo-coupons-help-banner" aria-label="Help Center">
+		<span aria-hidden="true"></span>
+		<div>
+			<h2>Need help with your order?</h2>
+			<p>Visit our <a href="/service/cs">Help Center</a> for FAQs or contact our customer support.</p>
+		</div>
+		<a class="bo-coupons-help-cta" href="/service/cs">Go to Help Center <b aria-hidden="true">&rarr;</b></a>
+	</section>
+
+</div>
+
+<!-- Staff coupon use -->
+<div id="couponuse_area" class="resp_layer_pop hide">
+	<h4 class="title">Use coupon</h4>
+	<div class="y_scroll_auto">
+		<div class="layer_pop_contents v3">
+			<h5 class="stitle">Enter the staff code.</h5>
+			<form name="confirmuserForm" id="confirmuserForm" method="post" action="../mypage_process/usemycoupon" target="actionFrame">
+				<input type="hidden" name="download_seq" id="download_seq" value="" />
+				<div class="ibox">
+					<input type="text" name="manager_code" id="manager_code" class="use_input" title="Enter the staff code" />
+					<button type="submit" id="BoardPwcheckBtn" class="btn_resp size_b color6">Confirm</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="$('#manager_code').val(''); hideCenterLayer()"></a>
+</div>
+
+<div id="showList" class="hide"></div>
+
+<!-- Coupon details -->
+<div id="couponTargetLayer" class="resp_layer_pop hide">
+	<h4 class="title">Coupon details</h4>
+	<div class="y_scroll_auto">
+		<div class="layer_pop_contents v3"></div>
+	</div>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+
+<script type="text/javascript" src="../common/mypage_ui.js"></script>
+<!--{? _GET.tab != '2'}-->
+<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js"></script>
+<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js"></script>
+<!--{ / }-->
+<script src="/app/javascript/js/trendypicker-coupons.js?v=20260807-15"></script>
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	{? _GET.tab == '2'}
+	$(".downloadbtn").live("click", function() {
+		var mypoint = {? mypoint }{mypoint}{:}0{/};
+		var coupon_type = $(this).attr("coupon_type");
+		var coupon_seq = $(this).attr("coupon_seq");
+		var coupon_name = $(this).attr("coupon_name");
+		var coupon_point = $(this).attr("coupon_point");
+		if (coupon_type == "point" && (mypoint < coupon_point || mypoint < 1)) {
+			if (mypoint < 1) {
+				openDialogAlert(getAlert("mp178"), "400", "140", function() {});
+			} else {
+				openDialogAlert(getAlert("mp179"), "400", "140", function() {});
+			}
+			return false;
+		}
+		openDialogConfirm("[" + coupon_name + "] " + getAlert("mp046"), 400, 140, function() {
+			$.ajax({
+				url: "../coupon/download_member",
+				data: { coupon_seq: coupon_seq },
+				type: "post",
+				dataType: "json",
+				success: function(data) {
+					if (data.result) {
+						openDialogAlert(data.msg, "400", "140", function() { document.location.reload(); });
+					} else {
+						openDialogAlert(data.msg, "400", "140", function() {});
+					}
+				}
+			});
+		}, function() {});
+	});
+	{:}
+	{/}
+
+	$(".coupongoodsreviewbtn").live("click", function() {
+		var $btn = $(this);
+		var $ticket = $btn.closest("[data-coupon-ticket]");
+		var coupon_type = $btn.attr("coupon_type") || "online";
+
+		function openTicketSummary() {
+			if (!$ticket.length) return;
+			var name = $.trim($ticket.find(".bo-coupon-name").first().text()) || "Coupon";
+			var sale = $.trim($ticket.find("[data-coupon-sale]").first().text()) || "";
+			var terms = $.trim($ticket.find(".bo-coupon-terms").first().text()) || "";
+			var expire = $.trim(
+				$ticket.find("[data-coupon-expires-on]").first().text() ||
+				$ticket.find(".bo-coupon-expire-inline").first().text()
+			) || "";
+			var $table = $('<table class="table_row_a bo-coupon-detail-table"><tbody></tbody></table>');
+			var $body = $table.find("tbody");
+			function addRow(label, value) {
+				if (!value) return;
+				var $tr = $("<tr/>");
+				$tr.append($("<th/>").append($("<p/>").text(label)));
+				$tr.append($("<td/>").text(value));
+				$body.append($tr);
+			}
+			addRow("Coupon name", name);
+			addRow("Benefit", sale);
+			addRow("Terms", terms);
+			addRow("Validity", expire);
+			$("#couponTargetLayer .layer_pop_contents").empty().append($table);
+			showCenterLayer("#couponTargetLayer");
+		}
+
+		{? _GET.tab == '1'  || !_GET.tab }
+		var download_seq = $btn.attr("download_seq") || $ticket.attr("data-download-seq") || "";
+		var coupon_seq = $btn.attr("coupon_seq") || $ticket.attr("data-coupon-seq") || "";
+		var coupongoodsreviewerurl = "../coupon/coupongoodsreviewer?no=" + download_seq + "&coupon_type=" + coupon_type + "&coupon_seq=" + coupon_seq + "&download_seq=" + download_seq;
+		{:}
+		var coupon_seq = $btn.attr("coupon_seq") || $ticket.attr("data-coupon-seq") || "";
+		var coupongoodsreviewerurl = "../coupon/coupongoodsreviewer?no=" + coupon_seq + "&coupon_type=" + coupon_type;
+		{/}
+
+		$.get(coupongoodsreviewerurl, {}, function(data) {
+			var html = String(data || "");
+			if (!$.trim(html) || (/잘못된\s*접근/.test(html) && !/bo-coupon-detail-table|Coupon name|table_row_a/.test(html))) {
+				openTicketSummary();
+				return;
+			}
+			html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, function (block) {
+				return /alert\s*\(/.test(block) ? "" : block;
+			});
+			$("#couponTargetLayer .layer_pop_contents").html(html);
+			showCenterLayer("#couponTargetLayer");
+		}).fail(function () {
+			openTicketSummary();
+		});
+		return false;
+	});
+
+	$(".offline_use").live("click", function() {
+		$("#download_seq").val($(this).attr("download_seq"));
+		showCenterLayer("#couponuse_area");
+	});
+});
+</script>

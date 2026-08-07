@@ -23,7 +23,7 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-columns: clamp(170px, 14vw, 196px) minmax(0, 1fr);
+  grid-template-columns: clamp(188px, 15.5vw, 220px) minmax(0, 1fr);
   align-items: start;
   justify-content: center;
   gap: clamp(20px, 2.4vw, 32px);
@@ -94,7 +94,7 @@ html.is-page-entering body {
   left: 50%;
   z-index: -1;
   width: 100vw;
-  height: 568px;
+  height: 597px;
   transform: translateX(-50%);
   background:
     radial-gradient(circle at 67% 5%, rgba(238, 161, 255, 0.92), transparent 30%),
@@ -338,6 +338,11 @@ html.is-page-entering body {
   padding: 0;
   color: var(--bo-text);
   font-family: Pretendard, "Apple SD Gothic Neo", Arial, sans-serif;
+}
+
+/* Firstmall user.css hides .title_container below 1023px — keep redesign titles visible */
+.subpage_wrap.bo-mypage-shell .subpage_container .title_container {
+  display: block;
 }
 
 @media (min-width: 1121px) {
@@ -1696,14 +1701,19 @@ body.is-orders-modal-open {
 .bo-newsletter {
   display: grid;
   grid-column: 1 / -1;
-  grid-template-columns: 1fr 470px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 470px);
   align-items: center;
   justify-self: center;
   gap: 34px;
-  width: min(calc(100% + 160px), calc(100vw - 48px), 1488px);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(1488px, 100%);
+  min-width: 0;
   min-height: 112px;
   margin-top: 56px;
-  padding: 22px 72px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 22px clamp(20px, 4vw, 72px);
   border-radius: 13px;
   color: #fff;
   background: #000;
@@ -1813,6 +1823,14 @@ body.is-orders-modal-open {
 .bo-newsletter button:hover,
 .bo-newsletter button:focus-visible {
   background: #31136c;
+}
+
+@media (max-width: 1280px) and (min-width: 1121px) {
+  .bo-newsletter {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+    gap: 20px;
+    padding-inline: clamp(20px, 3vw, 40px);
+  }
 }
 
 .mypage-avatar-dialog[hidden] {
@@ -2191,10 +2209,14 @@ body.is-mypage-logout-open {
   .bo-mypage-shell .subpage_container.bo-mypage {
     display: grid;
     column-gap: 0;
-    row-gap: clamp(18px, 3vw, 28px);
     width: min(100%, 980px);
     margin: 0 auto;
     padding: 0;
+    gap: 15px;
+  }
+
+  .bo-dashboard-shell .subpage_container.bo-mypage {
+    row-gap: clamp(22px, 3.2vw, 32px);
   }
 
   .bo-profile {
@@ -2538,7 +2560,19 @@ body.is-mypage-logout-open {
   }
 
   .bo-newsletter {
-    display: none;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-top: 28px;
+    padding: 20px clamp(16px, 4vw, 22px);
+  }
+
+  .bo-newsletter form {
+    grid-template-columns: minmax(0, 1fr) minmax(104px, 132px);
+    width: 100%;
+    max-width: 100%;
   }
 }
 

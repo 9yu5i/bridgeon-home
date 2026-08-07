@@ -1,10 +1,10 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
-@@ 나의 1:1 문의 List @@
-- 파일위치 : [스킨폴더]/mypage/myqna_catalog.html
+@@ ?�의 1:1 문의 List @@
+- ?�일?�치 : [?�킨?�더]/mypage/myqna_catalog.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260806-23" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css?v=20260807-51" />
 
 <div class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-qna-page">
 
@@ -58,7 +58,7 @@
 					<a href="/service/guide">Guide</a>
 					<a href="/service/cancellation">Returns &amp; Exchanges</a>
 					<a href="/service/company">About Us</a>
-					<a href="/board/?id=mbqna">Contact Us</a>
+					<a href="/service/company?topic=contact">Contact Us</a>
 					<a href="/service/agreement">Terms of Use</a>
 					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
 				</nav>
@@ -95,7 +95,7 @@
 										<select name="category" id="searchcategory" aria-label="Topic">
 											<option value="" {? !_GET.category} selected="selected"{/}>All topics</option>
 											<!--{@ categorylist}-->
-											<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{.value_}</option>
+											<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{? .value_ == '배송지??불만'}Shipping Delay / Complaint{: .value_ == '반품문의'}Return Inquiry{: .value_ == 'A/S문의'}A/S (Warranty) Inquiry{: .value_ == '?�불문의'}Refund Inquiry{: .value_ == '주문결제문의'}Order / Payment Inquiry{: .value_ == '?�원?�보문의'}Account Info Inquiry{: .value_ == '취소문의'}Cancellation Inquiry{: .value_ == '교환문의'}Exchange Inquiry{: .value_ == '?�품?�보문의'}Product Info Inquiry{: .value_ == '?�품문의'}Product Inquiry{: .value_ == '기�?문의'}Other Inquiry{:}{.value_}{/}</option>
 											<!--{/}-->
 										</select>
 										<!--{:}-->
@@ -187,15 +187,15 @@
 
 							<div id="BoardPwCk" class="hide BoardPwCk">
 								<div class="msg">
-									<h3> 비밀번호 확인</h3>
-									<div>게시물 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+									<h3> 비�?번호 ?�인</h3>
+									<div>게시�??�록?�에 ?�력?�던 비�?번호�??�력??주세??</div>
 								</div>
 								<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame " >
 								<input type="hidden" name="seq" id="pwck_seq" value="" />
 								<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
 								<div class="ibox">
 									<input type="password" name="pw" id="pwck_pw" class="input" />
-									<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+									<input type="submit" id="BoardPwcheckBtn" value=" ?�인 " class="btnblue" />
 									<input type="button" value=" 취소 " class="bbs_btn" onclick="$('#BoardPwCk').dialog('close');" />
 								</div>
 								</form>
@@ -203,8 +203,8 @@
 
 							<div id="CmtBoardPwCkNew" class="hide BoardPwCk">
 								<div class="msg">
-									<h3> 비밀번호 확인</h3>
-									<div>댓글/답글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+									<h3> 비�?번호 ?�인</h3>
+									<div>?��?/?��? ?�록?�에 ?�력?�던 비�?번호�??�력??주세??</div>
 								</div>
 								<form name="BoardPwcheckFormNew" id="CmtBoardPwcheckFormNew" method="post" >
 								<input type="hidden" name="modetype" id="cmtmodetype_new" value="" />
@@ -214,7 +214,7 @@
 								<input type="hidden" name="cmtreplyidx" id="cmt_pwck_cmtreplyidx_new" value="" />
 								<div class="ibox">
 									<input type="password" name="pw" id="cmt_pwck_pw_new" class="input" />
-									<input type="button" id="CmtBoardPwcheckBtnNew" value=" 확인 " class="btnblue" />
+									<input type="button" id="CmtBoardPwcheckBtnNew" value=" ?�인 " class="btnblue" />
 									<input type="button" value=" 취소 " class="btngray" onclick="$('#CmtBoardPwCkNew').dialog('close');" />
 								</div>
 								</form>
@@ -231,6 +231,27 @@
 
 <script type="text/javascript" src="../common/mypage_ui.js"></script>
 <script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script>
+(function () {
+	var categoryLabels = {
+		"\uBC30\uC1A1\uC9C0\uC5F0/\uBD88\uB9CC": "Shipping Delay / Complaint",
+		"\uBC18\uD488\uBB38\uC758": "Return Inquiry",
+		"A/S\uBB38\uC758": "A/S (Warranty) Inquiry",
+		"\uD658\uBD88\uBB38\uC758": "Refund Inquiry",
+		"\uC8FC\uBB38\uACB0\uC81C\uBB38\uC758": "Order / Payment Inquiry",
+		"\uD68C\uC6D0\uC815\uBCF4\uBB38\uC758": "Account Info Inquiry",
+		"\uCDE8\uC18C\uBB38\uC758": "Cancellation Inquiry",
+		"\uAD50\uD658\uBB38\uC758": "Exchange Inquiry",
+		"\uC0C1\uD488\uC815\uBCF4\uBB38\uC758": "Product Info Inquiry",
+		"\uC0C1\uD488\uBB38\uC758": "Product Inquiry",
+		"\uAE30\uD0C0\uBB38\uC758": "Other Inquiry"
+	};
+	document.querySelectorAll("#searchcategory option").forEach(function (option) {
+		var label = categoryLabels[option.textContent.trim()];
+		if (label) option.textContent = label;
+	});
+})();
+</script>
 <script src="/app/javascript/js/trendypicker-help-topic.js"></script>
 
 <script type="text/javascript">

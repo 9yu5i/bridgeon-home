@@ -227,15 +227,37 @@
 @media (max-width: 1120px) {
   .bo-help-shell {
     padding-block: 30px 36px;
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  .bo-help-page,
+  .bo-help-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    overflow-x: clip;
   }
 
   .bo-help-page {
-    width: 100% !important;
     max-width: none !important;
   }
 
   .bo-help-content {
     gap: 18px;
+  }
+
+  .help-hero,
+  .help-directory-card,
+  .help-directory-group {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .help-directory-card a,
+  .help-directory-email {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .help-hero {
