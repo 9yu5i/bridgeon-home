@@ -1,0 +1,62 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Best Sellers / TrendyPicker
+- Path: [skin]/goods/best.html
+- URL: /goods/best
+- Design: listing/best.html prototype
+- Category tabs are real <a href> links (native categorylist), so switching
+  category is a plain page navigation — no AJAX, no scroll-guard needed.
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-best.css" />
+<style>
+#goodsSearchForm { display: none !important; }
+</style>
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-best-page";
+if (document.body) {
+	document.body.className += (document.body.className ? " " : "") + "is-best-page";
+}
+</script>
+
+<main class="bo-best-main">
+	<section class="bo-best-hero" aria-label="Best sellers promotion">
+		<div class="bo-best-hero-inner">
+			<p class="bo-best-hero-kicker">Discover the Top 100 products</p>
+			<h1 class="bo-best-hero-title">BEST</h1>
+		</div>
+	</section>
+
+	<div class="bo-best-shell">
+		<nav class="bo-best-breadcrumbs" aria-label="Breadcrumb">
+			<a href="/main">Home</a>
+			<span aria-hidden="true">&gt;</span>
+			<span>BEST</span>
+		</nav>
+
+		<div class="bo-best-category-tabs" role="tablist" aria-label="Best product categories">
+			<a class="bo-best-tab<!--{ ? !rankingCategory || !rankingCategory.category_code || rankingCategory.category_code == 'ALL' }--> is-active<!--{ / }-->" href="best?ranking_type={rankingType}" role="tab">All</a>
+			<!--{ @ categorylist }-->
+			<a class="bo-best-tab<!--{ ? rankingCategory.category_code == .category_code }--> is-active<!--{ / }-->" href="best?ranking_category={.category_code}&amp;ranking_type={rankingType}" role="tab">{.title}</a>
+			<!--{ / }-->
+		</div>
+
+		<!-- filters / recommend / sort module: goods/_search_form_light.html -->
+		{=showGoodsSearchFormLight()}
+
+		<!-- product grid module: goods/search_list_template.html -->
+		<div id="searchedItemDisplay" class="searched_item_display bo-best-grid" data-displaytype="lattice"></div>
+	</div>
+</main>
+
+<div id="wish_alert">
+	<div class="wa_on"></div>
+	<div class="wa_off"></div>
+	<div class="wa_msg"></div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+	colorFilter_white("#searchFilterSelected .color_type");
+});
+</script>
+<script src="/app/javascript/js/trendypicker-best.js?v={=date('YmdHis')}"></script>

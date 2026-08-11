@@ -57,8 +57,8 @@
 
 			<div class="bo-profile__progress">
 				<p>
-					<span><b aria-hidden="true">★</b> <!--{ ? member.next_level.order_sum_price > member.order_sum }-->US${=number_format(member.next_level.order_sum_price-member.order_sum,2)}<!--{ : }-->US$0.00<!--{ / }--> to <em>{member.next_level.group_name}</em></span>
-					<strong><!--{ ? member.order_sum > 0 }-->US${=number_format(member.order_sum,0)} / <!--{ / }-->US${=number_format(member.next_level.order_sum_price,0)}</strong>
+					<span><b aria-hidden="true">★</b> <!--{ ? member.next_level.order_sum_price > member.order_sum }-->US ${=number_format(member.next_level.order_sum_price-member.order_sum,2)}<!--{ : }-->US $0.00<!--{ / }--> to <em>{member.next_level.group_name}</em></span>
+					<strong><!--{ ? member.order_sum > 0 }-->US ${=number_format(member.order_sum,0)} / <!--{ / }-->US ${=number_format(member.next_level.order_sum_price,0)}</strong>
 				</p>
 				<progress
 					class="bo-profile__progress-track"

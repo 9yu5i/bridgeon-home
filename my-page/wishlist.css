@@ -23,7 +23,7 @@
 
 .wishlist-grid .mypage-wish.is-active::after {
   opacity: 1;
-  background-image: url("../img/listing/wish_hover.png");
+  background-image: url("../img/listing/wish_pink.png");
 }
 
 @media (max-width: 1120px) {

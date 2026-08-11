@@ -1,0 +1,191 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 회원가입 > 회원정보 입력 / Create Account / TrendyPicker
+- Path: [skin]/member/register.html
+- URL: /member/register?join_type=member
+- Form module + Firstmall JS kept; visual reskin to match login
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-login.css" />
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-auth-page";
+if (document.body) {
+	document.body.className += (document.body.className ? " " : "") + "is-auth-page";
+} else {
+	document.addEventListener("DOMContentLoaded", function () {
+		document.body.className += (document.body.className ? " " : "") + "is-auth-page";
+	});
+}
+</script>
+
+<main class="bo-login-main bo-login-main--register">
+	<div class="bo-login-shell">
+		<div class="bo-login-inner">
+			<header class="title_container bo-login-head">
+				<p class="bo-login-kicker">TrendyPicker</p>
+				<h1><span designElement="text">Create an Account</span></h1>
+			</header>
+
+			<div class="mypage_greeting Pb30 hide">
+				<span class="pilsu_icon"></span> <span designElement="text">항목은 <span class="pointcolor">필수 입력</span> 항목입니다.</span>
+			</div>
+
+			<div class="resp_member_join_wrap bo-login-card bo-register-card">
+				<form name="registFrm" id="registFrm" target="actionFrame" method="post" action="{=sslAction('../member_process/register_ok')}" onSubmit="registAct()" novalidate>
+				<input type="hidden" name="mtype" value="{mtype}"/>
+				<!--{? !member_seq }-->
+				<!--{? mailing == 'y'}-->
+				<input type="hidden" name="mailing" value="y" />
+				<!--{ / }-->
+				<!--{? sms == 'y'}-->
+				<input type="hidden" name="sms" value="y" />
+				<!--{ / }-->
+				<!--{ / }-->
+				<!-- ------- 회원가입 입력폼. 파일위치 : [스킨폴더]/member/register_form.html ------- -->
+				{# form_member}
+				<!-- ------- //회원가입 입력폼 ------- -->
+
+				<div id="btn_register" class="btn_area_c bo-login-actions">
+					<button type="submit" class="btn_resp size_login1 color2 Wmax bo-login-submit"><span designElement="text">Register</span></button>
+				</div>
+				</form>
+
+				<div class="bo-login-divider" aria-hidden="true"><span designElement="text">Or continue with</span></div>
+				<ul class="login_sns_icon bo-login-sns">
+					<li><img src="../images/icon/icon-sns-google.png" alt="google" /></li>
+					<li><img src="../images/icon/icon-sns-facebook.png" alt="facebook" /></li>
+					<li><img src="../images/icon/icon-sns-apple.png" alt="apple" /></li>
+					<li><img src="../images/icon/icon-sns-twitter.png" alt="twitter" /></li>
+				</ul>
+				<div class="register_info bo-register-legal">By creating an account, you agree to TrendyPicker's <a href="/service/agreement">Terms of Use</a> and <a href="/service/privacy">Privacy Policy.</a></div>
+			</div>
+		</div>
+	</div>
+</main>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+	$(".class_check_password_validation").each(function(){
+		init_check_password_validation($(this));
+	});
+
+	$("input[name='userid']").blur(function() {
+		if($(this).val()){
+			$.post("../member_process/id_chk", { userid : $(this).val() }, function(response){
+				var text = response.return_result;
+				var userid = response.userid;
+				$("#id_info").html(text);
+				$("input[name='userid']").val(userid);
+			},'json');
+		}
+    });
+
+	{? mtype=='business' && joinform.bno_use=='Y'}
+	$("input[name='bno']").blur(function() {
+		if($(this).val()){
+			$.post("../member_process/bno_chk", { bno : $(this).val() }, function(response){
+				var text = response.return_result;
+				var bno = response.bno;
+				$("#bno_info").html(text);
+			},'json');
+		}
+    });
+	{/}
+
+	$('#find_email').change(function() {
+		if($(this).val() == "select"){
+			$("input[name='email[1]']").val("");
+			$("input[name='email[1]']").hide();
+			return;
+		}
+		$("input[name='email[1]']").val($(this).val());
+		if(!$(this).val()){
+			$("input[name='email[1]']").show();
+			$("input[name='email[1]']").attr("readonly",false);
+		}else{
+			$("input[name='email[1]']").hide();
+			$("input[name='email[1]']").attr("readonly",true);
+		}
+	});
+
+});
+
+function filterKey(e) {
+	var keycode;
+	var prevent = null;
+	var filter = "[0-9a-z]";
+	if(filter){
+		if (e != null) {
+			keycode = e.which;
+			prevent = function() {
+				e.which = 0;
+				e.preventDefault();
+			};
+		}
+		else {
+			keycode = window.event.keyCode;
+			prevent = function() {
+				window.event.keyCode = 0;
+				window.event.returnValue = false;
+			};
+		}
+
+		var sKey = String.fromCharCode(keycode);
+		var re = new RegExp(filter);
+		if(!re.test(sKey)) {
+			prevent();
+		}
+	}
+}
+
+function registAct(){
+	$('#btn_register').hide();
+}
+</script>
+
+{? joinform.user_icon=='Y' }
+<script type="text/javascript">
+$(document).ready(function() {
+
+		$("button#membericonUpdate").live("click",function(){
+			$('#membericonRegist')[0].reset();
+			$("input[name=user_icon][value='99']").attr("checked",true);
+			showCenterLayer('#membericonUpdatePopup');
+		});
+});
+	function membericonFileUpload(str){
+		if(str > 0) {
+			alert(getAlert('mb008'));
+			return false;
+		}
+		var frm = $('#membericonRegist');
+		frm.attr("action","../member_process/membericonsave");
+		frm.submit();
+	}
+
+	function membericonDisplay(filenm){
+		$("#membericon_img").attr("src",filenm);
+		$("#membericon_img").css("display","block");
+		$("#membericonDelete").css("display","block");
+		$('#membericonRegist')[0].reset();
+		hideCenterLayer();
+	}
+</script>
+
+<div id="membericonUpdatePopup" class="resp_layer_pop hide">
+	<h4 class="title">아이콘 등록</h4>
+	<div class="y_scroll_auto2">
+		<div class="layer_pop_contents v5 C">
+			<form name="membericonRegist" id="membericonRegist" method="post" action="" enctype="multipart/form-data"  target="actionFrame">
+				<p class="stitle v4 gray_03 Pt30 Pb30">
+					사이즈는 30 × 30 으로 등록해 주세요.
+				</p>
+				<input type="file" name="membericonFile" id="membericonFile" onChange="membericonFileUpload();" />
+			</form>
+		</div>
+	</div>
+	<div class="layer_bottom_btn_area2">
+		<button type="button" class="btn_resp size_c color5 Wmax" onclick="hideCenterLayer()">취소</button>
+	</div>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+{/}

@@ -31,11 +31,9 @@ if (document.body) {
 		var hasDropped = hasBrandArray || droppedParams.some(function (key) {
 			return url.searchParams.has(key);
 		});
-		var needsPerFix = url.searchParams.get("per") !== "30";
-		if (!hasDropped && !needsPerFix) return;
+		if (!hasDropped) return;
 		var canonical = new URL(url.origin + url.pathname);
 		canonical.searchParams.set("code", code);
-		canonical.searchParams.set("per", "30");
 		window.location.replace(canonical.toString());
 	} catch (_err) {}
 })();
@@ -95,9 +93,6 @@ if (document.body) {
 							<option value="review">Review</option>
 						</select>
 					</label>
-					<a class="category_filter_mo" href="javascript:void(0)" aria-label="Open filters">
-						<img src="/data/skin/{skin}/images/icon/icon-filter.png" alt="" />
-					</a>
 				</div>
 			</div>
 
@@ -198,12 +193,10 @@ if (document.body) {
 		var hasDropped = hasBrandArray || droppedParams.some(function (key) {
 			return url.searchParams.has(key);
 		});
-		var needsPerFix = url.searchParams.get("per") !== "30";
-		if (!hasDropped && !needsPerFix) return;
+		if (!hasDropped) return;
 
 		var canonical = new URL(url.origin + url.pathname);
 		canonical.searchParams.set("code", code);
-		canonical.searchParams.set("per", "30");
 		window.location.replace(canonical.toString());
 	} catch (_err) {}
 })();
@@ -370,20 +363,6 @@ $(function () {
 	}
 
 	enhanceBrandSortSelect();
-
-	/* Keep hidden form in sync when URL already has per=30 (no AJAX). */
-	function syncBrandPerSelect() {
-		var $per = $("form#goodsSearchForm select[name='per']");
-		if (!$per.length) return;
-		if (!$per.find("option[value='30']").length) {
-			$per.append('<option value="30">30</option>');
-		}
-		if (String($per.val()) !== "30") {
-			$per.val("30");
-		}
-	}
-
-	syncBrandPerSelect();
 
 	$("#catalog_filter").on("change", function () {
 		var sort = $(this).val();

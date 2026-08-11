@@ -1,0 +1,224 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Time Deal / TrendyPicker
+- Path: [skin]/promotion/timedeal.html
+- URL: /promotion/timedeal
+- Design: timedeal/timedeal.html prototype
+- Products: Firstmall #searchedItemDisplay (searchMode=timedeal)
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-timedeal.css" />
+<style>
+#goodsSearchForm,
+body.is-timedeal-page .search_nav,
+body.is-timedeal-page .title_container,
+body.is-timedeal-page .structure_nav,
+body.is-timedeal-page #subpageLNB,
+body.is-timedeal-page #subAllButton,
+body.is-timedeal-page .category_edit_area {
+	display: none !important;
+}
+</style>
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-timedeal-page";
+if (document.body) {
+	document.body.className += (document.body.className ? " " : "") + "is-timedeal-page";
+}
+</script>
+
+<main class="bo-timedeal-main" id="timedeal_page">
+	<section class="bo-timedeal-hero listing-hero--time-deal" aria-label="Time Deal promotion">
+		<div class="bo-timedeal-hero-inner timedeal-hero-inner">
+			<div class="timedeal-schedule-band">
+				<div class="timedeal-countdown" aria-live="polite" data-timedeal-countdown{? display_mode == "single"} data-timedeal-live="single"{/}>
+					<p class="timedeal-countdown-label" data-timedeal-label>
+						<!--{ ? display_mode == 'single' }-->
+						{? eventData.status == "진행 중"}Deal Ends In{:? eventData.status == "시작 전"}Next Deal Starts In{:}Next Deal Starts In{/}
+						<!--{ : }-->
+						{? display_mode == "upcoming"}Next Deal Starts In{:}Deal Ends In{/}
+						<!--{ / }-->
+					</p>
+					<div class="timedeal-countdown-timer" aria-hidden="true">
+						<span class="timedeal-countdown-unit">
+							<b class="num2 countdown_hour" data-timedeal-hours>00</b><em>HRS</em>
+						</span>
+						<span class="timedeal-countdown-divider"></span>
+						<span class="timedeal-countdown-unit">
+							<b class="num2 countdown_min" data-timedeal-minutes>00</b><em>MINS</em>
+						</span>
+						<span class="timedeal-countdown-divider"></span>
+						<span class="timedeal-countdown-unit">
+							<b class="num2 countdown_sec" data-timedeal-seconds>00</b><em>SECS</em>
+						</span>
+					</div>
+					<span class="countdown_day hide" aria-hidden="true"></span>
+				</div>
+
+				<div class="timedeal-schedule" role="tablist" aria-label="Deal schedule" data-timedeal-schedule>
+					<a
+						class="timedeal-schedule-tab{? display_mode != "upcoming"} is-active{/}"
+						href="/promotion/timedeal?display_mode=current"
+						role="tab"
+						aria-selected="{? display_mode != "upcoming"}true{:}false{/}"
+						data-timedeal-schedule="now"
+					>
+						<span class="timedeal-schedule-icon" aria-hidden="true">&#128293;
+							<strong>ON SALE NOW</strong>
+						</span>
+						<span class="timedeal-schedule-copy">
+							<span>00:00 - 11:59</span>
+							<em>Up to <b>60%</b> Off</em>
+						</span>
+					</a>
+					<a
+						class="timedeal-schedule-tab{? display_mode == "upcoming"} is-active{/}"
+						href="/promotion/timedeal?display_mode=upcoming"
+						role="tab"
+						aria-selected="{? display_mode == "upcoming"}true{:}false{/}"
+						data-timedeal-schedule="upcoming"
+					>
+						<span class="timedeal-schedule-icon" aria-hidden="true">&#9203;
+							<strong>UPCOMING</strong>
+						</span>
+						<span class="timedeal-schedule-copy">
+							<span>12:00 - 19:59</span>
+							<em>Preview the Next Deal</em>
+						</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<div class="bo-timedeal-shell">
+		<nav class="bo-timedeal-breadcrumbs" aria-label="Breadcrumb">
+			<a href="/main">Home</a>
+			<span aria-hidden="true">&gt;</span>
+			<span>Time Deal</span>
+		</nav>
+
+		<section class="bo-timedeal-results" aria-label="Time Deal product results">
+			<div class="bo-timedeal-toolbar">
+				<p class="bo-timedeal-count">
+					<span class="bo-timedeal-count-desktop">All Products </span>
+					<strong data-timedeal-count>({=number_format(totcount)})</strong>
+					<span class="bo-timedeal-count-mobile" data-timedeal-count-mobile>
+						All Products ({=number_format(totcount)} Items)
+					</span>
+				</p>
+
+				<div class="timedeal-categories" role="tablist" aria-label="Deal categories">
+					<button type="button" class="timedeal-category is-active" role="tab" aria-selected="true" data-timedeal-category="all">All Deals</button>
+					<button type="button" class="timedeal-category" role="tab" aria-selected="false" data-timedeal-category="beauty">Beauty</button>
+					<button type="button" class="timedeal-category" role="tab" aria-selected="false" data-timedeal-category="k-food">K-Food</button>
+					<button type="button" class="timedeal-category" role="tab" aria-selected="false" data-timedeal-category="lifestyle">Lifestyle</button>
+					<button type="button" class="timedeal-category" role="tab" aria-selected="false" data-timedeal-category="k-pop">K-POP</button>
+					<button type="button" class="timedeal-category" role="tab" aria-selected="false" data-timedeal-category="k-traditional">K-Traditional</button>
+				</div>
+
+				<div class="bo-timedeal-toolbar-actions">
+					<label class="bo-timedeal-sort">
+						<span class="bo-timedeal-sr">Sort products</span>
+						<select class="filter_select" id="catalog_filter" aria-label="Sort products">
+							<option value="ranking" selected>Ending Soon</option>
+							<option value="sale">Best Selling</option>
+							<option value="regist">Newest</option>
+							<option value="low_price">Price: Low to High</option>
+							<option value="high_price">Price: High to Low</option>
+							<option value="review">Top Rated</option>
+						</select>
+					</label>
+				</div>
+			</div>
+
+			<div class="catalog_mo">
+				<div class="catalog_filter"></div>
+			</div>
+
+			<!-- ------- 검색필터, 상품정렬( 파일위치 : [스킨폴더]/goods/_search_form_light.html ) ------- -->
+			{=showGoodsSearchFormLight()}
+			<!-- ------- //검색필터, 상품정렬 ------- -->
+
+			<!-- ------- 상품 영역( data-displaytype : "lattice", "list" ), 파일위치 : [스킨폴더]/goods/search_list_template.html ------- -->
+			<div
+				id="searchedItemDisplay"
+				class="searched_item_display bo-timedeal-grid"
+				data-displaytype="lattice"
+			></div>
+			<!-- ------- //상품 영역 ------- -->
+		</section>
+	</div>
+</main>
+
+<div id="wish_alert">
+	<div class="wa_on"></div>
+	<div class="wa_off"></div>
+	<div class="wa_msg"></div>
+</div>
+
+<script src="/app/javascript/js/trendypicker-timedeal.js"></script>
+<script type="text/javascript">
+$(function () {
+	colorFilter_white("#searchFilterSelected .color_type");
+
+	$("#catalog_filter").on("change", function () {
+		var sort = $(this).val();
+		$("#filteredItemSorting li.item_order ul.list li label input").each(function () {
+			if ($(this).val() == sort) {
+				$(this).click();
+			}
+		});
+	});
+
+	/*{ ? display_mode == 'single' }*/
+	if ("{eventData.status}" === "진행 중") {
+		var timeIntervalEnd = setInterval(function () {
+			var time = showClockTime(
+				"text",
+				'{=date("Y", strtotime(eventData.end_date))}',
+				'{=date("m", strtotime(eventData.end_date))}',
+				'{=date("d", strtotime(eventData.end_date))}',
+				'{=date("H", strtotime(eventData.end_date))}',
+				'{=date("i", strtotime(eventData.end_date))}',
+				'{=date("s", strtotime(eventData.end_date))}',
+				"countdown_day",
+				"countdown_hour",
+				"countdown_min",
+				"countdown_sec",
+				"timedeal",
+				"class"
+			);
+
+			if (time == 0) {
+				clearInterval(timeIntervalEnd);
+				var label = document.querySelector("[data-timedeal-label]");
+				if (label) label.textContent = "Time Deal Ended.";
+			}
+		}, 1000);
+	} else if ("{eventData.status}" === "시작 전") {
+		var timeIntervalStart = setInterval(function () {
+			var time = showClockTime(
+				"text",
+				'{=date("Y", strtotime(eventData.start_date))}',
+				'{=date("m", strtotime(eventData.start_date))}',
+				'{=date("d", strtotime(eventData.start_date))}',
+				'{=date("H", strtotime(eventData.start_date))}',
+				'{=date("i", strtotime(eventData.start_date))}',
+				'{=date("s", strtotime(eventData.start_date))}',
+				"countdown_day",
+				"countdown_hour",
+				"countdown_min",
+				"countdown_sec",
+				"timedeal",
+				"class"
+			);
+
+			if (time == 0) {
+				clearInterval(timeIntervalStart);
+				var label = document.querySelector("[data-timedeal-label]");
+				if (label) label.textContent = "Time Deal Started!";
+			}
+		}, 1000);
+	}
+	/*{ / }*/
+});
+</script>

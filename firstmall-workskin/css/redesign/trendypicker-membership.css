@@ -145,8 +145,8 @@
 .bo-membership-benefits-head {
   display: grid;
   justify-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
+  gap: 20px;
+  margin-bottom: 50px;
   text-align: center;
 }
 
@@ -156,7 +156,7 @@
   justify-content: center;
   min-height: 38px;
   margin: 0;
-  padding: 0 32px;
+  padding: 7px 32px;
   border-radius: 999px;
   color: #fff;
   background: linear-gradient(90deg, #d96f8b, #df6c85);
@@ -257,18 +257,24 @@
   text-align: center;
 }
 
+.bo-membership-tier:has(.bo-membership-current-label) {
+  border: 2px solid currentColor;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04), 0 10px 24px rgba(23, 16, 38, 0.1);
+}
+
 .bo-membership-current-label {
   position: absolute;
   left: 50%;
-  top: -34px;
+  top: -40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 104px;
-  height: 28px;
-  border: 1px solid #d99712;
+  min-height: 28px;
+  padding: 0 16px;
+  border: 1px solid currentColor;
   border-radius: 999px;
-  color: #c37a00;
+  color: inherit;
   background: #fff;
   font-size: 13px;
   font-weight: 900;
@@ -459,16 +465,14 @@
   .bo-membership-tier-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
+    margin-top: 64px;
   }
 
   .bo-membership-current-label {
-    top: 10px;
-    right: 10px;
-    left: auto;
     min-width: 92px;
-    height: 24px;
+    min-height: 24px;
+    padding: 6px 14px;
     font-size: 13px;
-    transform: none;
   }
 
   .bo-membership-tier {
@@ -509,12 +513,16 @@
 }
 
 @media (max-width: 760px) {
+  .bo-membership-benefits-head h2 {
+    padding: 10px 24px;
+  }
+
   .bo-membership-tier-grid {
     display: flex;
     grid-template-columns: none;
     gap: 14px;
     margin: 0 -6px;
-    padding: 6px 6px 14px;
+    padding: 54px 6px 14px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;

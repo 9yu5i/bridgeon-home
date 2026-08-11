@@ -498,9 +498,14 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
 
 .bo-brand-detail-count {
   margin: 0;
-  color: #171320;
+  color: #111;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
+}
+
+.bo-brand-detail-count strong[data-brand-count] {
+  color: #171320;
+  font-weight: 800;
 }
 
 .bo-brand-detail-count-mobile {
@@ -653,21 +658,6 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   background: #f2ebff;
 }
 
-.bo-brand-detail-shell .category_filter_mo {
-  display: none;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #e6ddf4;
-  border-radius: 999px;
-  align-items: center;
-  justify-content: center;
-}
-
-.bo-brand-detail-shell .category_filter_mo img {
-  width: 18px;
-  height: 18px;
-}
-
 /* Keep Firstmall search modules present but quiet in redesign chrome */
 .bo-brand-detail-shell #searchModule,
 .bo-brand-detail-shell .search_filter_wrap,
@@ -679,7 +669,7 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
 .bo-brand-detail-shell #searchedItemDisplay[data-displaytype="lattice"] > ul,
 .bo-brand-detail-shell .searched_item_display > ul {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   row-gap: 12px;
   column-gap: 12px;
@@ -792,7 +782,7 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   .bo-brand-detail-grid.searched_item_display[data-displaytype="lattice"] > ul,
   .bo-brand-detail-shell #searchedItemDisplay[data-displaytype="lattice"] > ul,
   .bo-brand-detail-shell .searched_item_display > ul {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
     row-gap: 14px;
     column-gap: 14px;
@@ -834,6 +824,15 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   line-clamp: 2;
 }
 
+.bo-brand-detail-shell .sale_price::before,
+.bo-brand-detail-shell .consumer_price::before,
+.bo-brand-detail-grid .sale_price::before,
+.bo-brand-detail-grid .consumer_price::before,
+.bo-brand-detail-shell .listing-card-price strong::before,
+.bo-brand-detail-shell .listing-card-price del::before {
+  content: "US ";
+}
+
 /* Wish hover: match listing/new pink heart */
 .bo-brand-detail-shell .item_img_area,
 .bo-brand-detail-grid .item_img_area,
@@ -871,6 +870,9 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   pointer-events: none;
 }
 
+.bo-brand-detail-shell .display_zzim::before,
+.bo-brand-detail-grid .display_zzim::before,
+.bo-brand-detail-shell .respGoodsZzim::before,
 .bo-brand-detail-shell .display_zzim::after,
 .bo-brand-detail-grid .display_zzim::after,
 .bo-brand-detail-shell .respGoodsZzim::after {
@@ -878,8 +880,39 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   display: block;
   width: 18px;
   height: 18px;
-  background: url("../../images/listing/wish.png") center / contain no-repeat;
-  transition: transform 0.25s ease;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transition: opacity 0.25s ease;
+}
+
+.bo-brand-detail-shell .display_zzim::before,
+.bo-brand-detail-grid .display_zzim::before,
+.bo-brand-detail-shell .respGoodsZzim::before {
+  position: absolute;
+  background-image: url("../../images/listing/wish_pink.png");
+  opacity: 1;
+}
+
+.bo-brand-detail-shell .display_zzim::after,
+.bo-brand-detail-grid .display_zzim::after,
+.bo-brand-detail-shell .respGoodsZzim::after {
+  position: absolute;
+  background-image: url("../../images/listing/wish_hover.png");
+  opacity: 0;
+}
+
+.bo-brand-detail-shell .display_zzim:hover::before,
+.bo-brand-detail-grid .display_zzim:hover::before,
+.bo-brand-detail-shell .respGoodsZzim:hover::before,
+.bo-brand-detail-shell .display_zzim[act="stay"]::before,
+.bo-brand-detail-grid .display_zzim[act="stay"]::before,
+.bo-brand-detail-shell .respGoodsZzim:has(.zzimImage.active)::before,
+.bo-brand-detail-shell .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::before,
+.bo-brand-detail-grid .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::before,
+.bo-brand-detail-shell .display_zzim:has(.zzimOnImg[style*="display: none"])::before,
+.bo-brand-detail-grid .display_zzim:has(.zzimOnImg[style*="display: none"])::before {
+  opacity: 0;
 }
 
 .bo-brand-detail-shell .display_zzim:hover::after,
@@ -888,16 +921,13 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
 .bo-brand-detail-shell .display_zzim[act="stay"]::after,
 .bo-brand-detail-grid .display_zzim[act="stay"]::after,
 .bo-brand-detail-shell .respGoodsZzim:has(.zzimImage.active)::after,
+.bo-brand-detail-shell .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::after,
+.bo-brand-detail-grid .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::after,
 .bo-brand-detail-shell .display_zzim:has(.zzimOnImg[style*="display: none"])::after,
 .bo-brand-detail-grid .display_zzim:has(.zzimOnImg[style*="display: none"])::after {
-  background-image: url("../../images/listing/wish_hover.png");
+  opacity: 1;
 }
 
-.bo-brand-detail-shell .display_zzim:hover::after,
-.bo-brand-detail-grid .display_zzim:hover::after,
-.bo-brand-detail-shell .respGoodsZzim:hover::after {
-  transform: scale(1.18);
-}
 
 @media (max-width: 760px) {
   .bo-brand-detail-hero,
@@ -914,17 +944,6 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
     padding-top: 24px;
   }
 
-  .bo-brand-detail-count-desktop {
-    display: none;
-  }
-
-  .bo-brand-detail-count-mobile {
-    display: inline;
-  }
-
-  .bo-brand-detail-shell .category_filter_mo {
-    display: inline-flex;
-  }
 }
 
 @media (min-width: 761px) and (max-width: 1120px) {

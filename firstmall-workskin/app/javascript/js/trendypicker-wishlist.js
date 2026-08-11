@@ -148,6 +148,15 @@
     return results;
   };
 
+  // Most recently wishlisted first (higher wish_seq = added later).
+  const wishGrid = page.querySelector(".bo-wishlist-grid");
+  if (wishGrid) {
+    const bySeqDesc = Array.from(wishGrid.querySelectorAll(":scope > .bo-wish-card")).sort(
+      (a, b) => Number(b.dataset.wishSeq || 0) - Number(a.dataset.wishSeq || 0)
+    );
+    bySeqDesc.forEach((card) => wishGrid.appendChild(card));
+  }
+
   const cards = Array.from(page.querySelectorAll(".bo-wish-card"));
   const tabs = page.querySelector(".bo-wishlist-tabs");
   const listWrap =
@@ -446,6 +455,25 @@
     categoriesReady = true;
     applyFilters();
   };
+
+  // Mobile/tablet: float the wish button over the product image instead of
+  // sitting beside the cart button. Reparent on breakpoint change so the
+  // desktop 2-up action row is untouched.
+  const compactMedia = window.matchMedia("(max-width: 1120px)");
+
+  const placeWishButtons = (isCompact) => {
+    cards.forEach((card) => {
+      const media = card.querySelector(".bo-wish-card__media");
+      const actions = card.querySelector(".bo-wish-card__actions");
+      const wishBtn = card.querySelector(".bo-wish-card__wish-btn");
+      if (!media || !actions || !wishBtn) return;
+      const target = isCompact ? media : actions;
+      if (wishBtn.parentElement !== target) target.appendChild(wishBtn);
+    });
+  };
+
+  placeWishButtons(compactMedia.matches);
+  compactMedia.addEventListener("change", (event) => placeWishButtons(event.matches));
 
   cards.forEach(seedCardCategory);
   syncTabs();

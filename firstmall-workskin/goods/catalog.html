@@ -1,0 +1,148 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Category catalog / TrendyPicker
+- Path: [skin]/goods/catalog.html
+- URL: /goods/catalog
+- Design: listing/beauty.html (left filter stays Firstmall native)
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<link rel="stylesheet" href="/data/skin/{=skin}/css/redesign/trendypicker-catalog.css" />
+<style>
+body.is-catalog-page .search_nav,
+body.is-catalog-page .title_container,
+body.is-catalog-page .structure_nav,
+body.is-catalog-page #subpageLNB,
+body.is-catalog-page #subAllButton,
+body.is-catalog-page .filtered_item_sorting {
+	display: none !important;
+}
+</style>
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-catalog-page";
+if (document.body) {
+	document.body.className += (document.body.className ? " " : "") + "is-catalog-page";
+}
+</script>
+
+<div id="itemstmplayer" class="hide"></div>
+
+<main class="bo-catalog-main" id="catalog_page" data-category-title="{categoryData.title}">
+	<section class="bo-catalog-hero" aria-label="Category promotion">
+		<div class="bo-catalog-hero-inner">
+			<p class="bo-catalog-hero-kicker" data-catalog-kicker>Shop by category</p>
+			<h1 class="bo-catalog-hero-title">{categoryData.title}</h1>
+		</div>
+	</section>
+
+	<div class="bo-catalog-shell">
+		<nav class="bo-catalog-breadcrumbs" aria-label="Breadcrumb">
+			<a href="/main">Home</a>
+			<span aria-hidden="true">&gt;</span>
+			<span>{categoryData.title}</span>
+		</nav>
+
+		<div class="bo-catalog-layout">
+			<aside class="bo-catalog-filters search_left" aria-label="Product filters">
+				<div class="catalog_mo">
+					<span class="filter_title">FILTER<a href="#"><img src="../images/icon/icon-delete.png" alt=""></a></span>
+				</div>
+				<!-- Firstmall native filter — not redesigned -->
+				{=showGoodsSearchFormLight()}
+				<div class="fixed_bottom">
+					<a href="#" onclick="resetParams();" class="selected_clear">Clear All</a>
+					<button class="btn_resp size_d color2">Show Results</button>
+				</div>
+			</aside>
+
+			<section class="bo-catalog-results catalog_right" aria-label="Product results">
+				<!--{ ? categoryData.top_html }-->
+				<div class="category_edit_area mobile_img_adjust">
+					{categoryData.top_html}
+				</div>
+				<!--{ / }-->
+
+				<div class="bo-catalog-toolbar">
+					<p class="bo-catalog-count">
+						<span class="bo-catalog-count-desktop">All Products </span>
+						<strong data-catalog-count>({=number_format(totcount)})</strong>
+						<span class="bo-catalog-count-mobile" data-catalog-count-mobile>
+							{=number_format(totcount)} Items
+						</span>
+					</p>
+					<div class="bo-catalog-toolbar-actions">
+						<label class="bo-catalog-sort">
+							<span class="bo-catalog-sr">Sort products</span>
+							<select class="filter_select" id="catalog_filter" aria-label="Sort products">
+								<option value="ranking">Best Selling</option>
+								<option value="regist">Newest</option>
+								<option value="low_price">Price: Low to High</option>
+								<option value="high_price">Price: High to Low</option>
+								<option value="review">Top Rated</option>
+								<option value="sale">Sale</option>
+							</select>
+						</label>
+						<a class="category_filter_mo" aria-label="Open filters">
+							<img src="../images/icon/icon-filter.png" alt="">
+						</a>
+					</div>
+				</div>
+
+				<div class="catalog_mo">
+					<div class="catalog_filter"></div>
+				</div>
+
+				<div
+					id="searchedItemDisplay"
+					class="searched_item_display bo-catalog-grid"
+					data-displaytype="lattice"
+				></div>
+			</section>
+		</div>
+	</div>
+</main>
+
+<div id="wish_alert">
+	<div class="wa_on"></div>
+	<div class="wa_off"></div>
+	<div class="wa_msg"></div>
+</div>
+
+<script src="/app/javascript/js/trendypicker-catalog.js"></script>
+<script type="text/javascript">
+$(function () {
+	colorFilter_white("#searchFilterSelected .color_type");
+
+	$("#catalog_filter").on("change", function () {
+		var sort = $(this).val();
+		$("#filteredItemSorting li.item_order ul.list li label input").each(function () {
+			if ($(this).val() == sort) {
+				$(this).click();
+			}
+		});
+	});
+
+	$(document).on("click", ".catalog_filter .selected_item_area a.remove", function () {
+		var fi = $(this).parent().data("filteritem");
+		$("#searchFilterSelected .selected_item_area li").each(function () {
+			if (fi == $(this).data("filteritem")) {
+				$(this).find("a.remove").click();
+			}
+		});
+	});
+
+	$(document).on("click", ".catalog_category, .catalog_filter", function () {
+		$(".catalog_filter > ul").remove();
+		$(".catalog_filter").append($(".search_filter_selected .selected_item_area").clone());
+	});
+
+	$(".category_filter_mo").on("click", function () {
+		$(".search_left").addClass("on");
+	});
+
+	$("#catalog_page .filter_title a, .fixed_bottom > button").on("click", function () {
+		$(".search_left").removeClass("on");
+	});
+
+	window.setTimeout(function () {
+		$(".catalog_filter").append($(".search_filter_selected .selected_item_area").clone());
+	}, 1000);
+});
+</script>

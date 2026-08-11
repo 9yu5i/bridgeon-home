@@ -145,7 +145,7 @@
   height: var(--deal-share-icon-size);
   transform: translate(-50%, -50%);
   opacity: 0;
-  background: url("../img/listing/wish_hover.png") center / contain no-repeat;
+  background: url("../img/listing/wish_pink.png") center / contain no-repeat;
   transition: opacity 0.2s ease;
 }
 

@@ -1,0 +1,697 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 회원가입 입력폼 @@
+- 파일위치 : [스킨폴더]/member/register_form.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<div id="marketingDeatilLayer" class="resp_layer_pop hide">
+	<h4 class="title">마케팅 및 광고 활용 동의</h4>
+	<div class="y_scroll_auto2">
+		<div class="layer_pop_contents v5">
+			{=nl2br(policy_marketing)}
+		</div>
+	</div>
+	<div class="layer_bottom_btn_area2">
+		<button type="button" class="btn_resp size_c color5 Wmax" onclick="hideCenterLayer()">확인</button>
+	</div>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+<div id="formMemberArea" class="resp_member_join">
+
+<!-- O2O 통합 가입 안내 -->
+<!--{ ? checkO2ORequired }-->
+	<!--{ # o2o_member_join_gate }-->
+<!--{ / }-->
+
+{? mtype=='member' }
+	<input type="hidden" name="kid_agree" value="{kid_agree}"/>
+	<div class="resp_join_table">
+        {? !member_seq }
+        <h4>Welcome to {config_basic.shopName}</h4>
+        { / }
+		{? rute && rute != 'none'  //SNS전용이 아닌경우에만 출력}
+			{? sns_change == 0 }
+				<ul>
+					<li class="th"><p designElement="text">아이디 / 비밀번호</p></li>
+					<li class="td"><span designElement="text">아직 등록하지 않았습니다.</span> <button type="button" class="btn_resp size_b color2" onclick="sns_change_id();"><span designElement="text">등록</span></button></li>
+				</ul>
+			{ : }
+				<ul class="required">
+					<li class="th"><p designElement="text">ID</p></li>
+					<li class="td">{userid}</li>
+				</ul>
+                {? joinform.email_use=='Y' }
+                    <ul {? joinform.email_required=='Y' }class="required"{ / }>
+                        <li class="th "><p designElement="text">E-mail</p></li>
+                        <li class="td row_email">
+                            <input type="email" name="email[0]" value="{=str_split_arr(email,'@',0)}" class="size_mail1" /> @
+                            <input type="email" name="email[1]" value="{=str_split_arr(email,'@',1)}" class="size_mail2" />
+                            <select name="find_email" id="find_email" style="display:none;">
+                                <option value="">Direct</option>
+                                {@ email_arr }
+                                    <option value="{.codecd}">{.codecd}</option>
+                                { / }
+                            </select>
+                        </li>
+                    </ul>
+                { / }
+				<ul class="required">
+					<li class="th"><p designElement="text">Old Password</p></li>
+					<li class="td">
+						<input type="password" name="old_password" value="" class="eng_only" />
+					</li>
+				</ul>
+				<ul>
+					<li class="th"><p designElement="text">New Password</p></li>
+					<li class="td">
+						<input type="password" name="new_password" value="" class="eng_only class_check_password_validation"/>
+					</li>
+				</ul>
+			{ / }
+			{? joinform.user_name_use=='Y'}
+				<ul {? joinform.user_name_required=='Y' }class="required"{ / }>
+					<li class="th"><p designElement="text">First Name</p></li>
+					<li class="td">
+						<input type="text" name="user_first_name" value="{=str_split_arr(user_name,' ',0)}" {? str_split_arr(user_name,' ',0)}readonly{/} />
+					</li>
+				</ul>
+				<ul {? joinform.user_name_required=='Y' }class="required"{ / }>
+					<li class="th"><p designElement="text">Last Name</p></li>
+					<li class="td">
+						<input type="text" name="user_last_name" value="{=str_split_arr(user_name,' ',1)}" {? str_split_arr(user_name,' ',1)}readonly{/} />
+					</li>
+				</ul>
+			{ / }
+		{ : }
+			<ul class="required">
+				<li class="th "><p designElement="text">ID</p></li>
+				<li class="td">
+					{? member_seq }
+                        <input type="text" name="userid" readonly class="eng_only" value="{userid}"/>
+					{ : }
+						<input type="text" name="userid" id="userid" autocapitalize="off" value="" onkeypress="filterKey();" onpaste="javascript:return false;" class="eng_only" placeholder="6–20 characters using letters and numbers only (no spaces)." />
+						<p id="id_info" class="guide_text"></p>
+					{ / }
+				</li>
+			</ul>
+            {? joinform.email_use=='Y' }
+                <ul {? joinform.email_required=='Y' }class="required"{ / }>
+                    <li class="th "><p designElement="text">E-mail</p></li>
+                    <li class="td row_email">
+                        <input type="email" name="email[0]" value="{=str_split_arr(email,'@',0)}" class="size_mail1" /> @
+                        <input type="email" name="email[1]" value="{=str_split_arr(email,'@',1)}" class="size_mail2" />
+                        <select name="find_email" id="find_email" style="display:none;">
+                            <option value="">Direct</option>
+                            {@ email_arr }
+                                <option value="{.codecd}">{.codecd}</option>
+                            { / }
+                        </select>
+                    </li>
+                </ul>
+            { / }
+			{? member_seq }
+				<ul class="required">
+					<li class="th "><p designElement="text">Old Password</p></li>
+					<li class="td">
+						<input type="password" name="old_password" value="" class="eng_only" />
+					</li>
+				</ul>
+				<ul>
+					<li class="th"><p designElement="text">New Password</p></li>
+					<li class="td">
+						<input type="password" name="new_password" value="" class="eng_only class_check_password_validation" />
+					</li>
+				</ul>
+			{ : }
+				<ul class="required">
+					<li class="th "><p designElement="text">New Password</p></li>
+					<li class="td">
+						<input type="password" name="password" value="" class="eng_only class_check_password_validation" />
+					</li>
+				</ul>
+				<ul class="required">
+					<li class="th "><p designElement="text">Re-type New Password</p></li>
+					<li class="td">
+						<input type="password" name="re_password" value="" class="eng_only" />
+					</li>
+				</ul>
+			{ / }
+			{? member_seq && joinform.user_name_use=='Y'}
+				<ul {? joinform.user_name_required=='Y' }class="required"{ / }>
+					<li class="th "><p designElement="text">First Name</p></li>
+					<li class="td">
+						<input type="text" name="first_name" value="{=str_split_arr(user_name,' ',0)}" {? str_split_arr(user_name,' ',0)}readonly{/} />
+					</li>
+				</ul>
+				<ul {? joinform.user_name_required=='Y' }class="required"{ / }>
+					<li class="th "><p designElement="text">Last Name</p></li>
+					<li class="td">
+						<input type="text" name="last_name" value="{=str_split_arr(user_name,' ',1)}" {? str_split_arr(user_name,' ',1)}readonly{/} />
+					</li>
+				</ul>
+
+			{ / }
+		{ / }
+		{? joinform.phone_use=='Y' }
+			<ul {? joinform.phone_required=='Y' }class="required"{ / }>
+				<li class="th "><p designElement="text">Tel</p></li>
+				<li class="td row_phone">
+					<input type="tel" name="phone[]" value="{=str_split_arr(phone,'-',0)}" class="size_phone" maxlength="4" /> -
+					<input type="tel" name="phone[]" value="{=str_split_arr(phone,'-',1)}" class="size_phone" maxlength="4" /> -
+					<input type="tel" name="phone[]" value="{=str_split_arr(phone,'-',2)}" class="size_phone" maxlength="4" />
+				</li>
+			</ul>
+		{ / }
+		{? joinform.cellphone_use=='Y' }
+			<ul class="dn{? joinform.cellphone_required=='Y' } required{ / }">
+				<li class="th "><p designElement="text">Phone</p></li>
+				<li class="td row_phone">
+					<input type="tel" name="cellphone[]" value="{=str_split_arr(cellphone,'-',0)}" class="size_phone" maxlength="4" {?regitst_auth}readonly{/} /> -
+					<input type="tel" name="cellphone[]" value="{=str_split_arr(cellphone,'-',1)}" class="size_phone" maxlength="4" {?regitst_auth}readonly{/} /> -
+					<input type="tel" name="cellphone[]" value="{=str_split_arr(cellphone,'-',2)}" class="size_phone" maxlength="4" {?regitst_auth}readonly{/} />
+					<!--{ ? confirmPhone == 'Y' }-->
+					<script>$("input[name='cellphone[]']").attr("disabled",true);</script>
+					<button type="button" class="btn_resp size_b color2" onclick="authphone_popup('cellphone');"><span designElement="text">Phone Auth</span></button>
+					<!--{ / }-->
+				</li>
+			</ul>
+		{ / }
+		{? member_seq && (joinform.email_use =='Y' || joinform.cellphone_use =='Y') }
+			<ul class="dn">
+				<li class="th "><p designElement="text">마케팅 및 광고 활용 동의</p><a href="javascript:void(0)" onclick="showCenterLayer('#marketingDeatilLayer')"><span class="ml10 Und">보기</span></a></li>
+				<li class="td">
+					<div class="Pt10">
+						{? joinform.email_use =='Y' }
+						<label class="ml10"><input type="checkbox" name="mailing" value="y" class="mr5"/> <span designElement="text">이메일 수신</span></label>
+						{ / }
+						{? joinform.cellphone_use =='Y' }
+						<label class="ml10"><input type="checkbox" name="sms" value="y" class="mr5"/> <span designElement="text">SMS 수신</span></label>
+						{ / }
+					</div>
+					<p class="Pt10 desc" designElement="text">{? joinform.email_use =='Y' }이메일{/}{? joinform.email_use =='Y' && joinform.cellphone_use =='Y' },{/} {? joinform.cellphone_use =='Y' }SMS{/} 수신에 동의하시면 여러가지 할인해택과 각종 이벤트 정보를 받아보실 수 있습니다.</br>회원가입관련,주문배송관련 등의 정보는 수신동의와 상관없이 구매 회원에게 발송됩니다.</p>
+				</li>
+			</ul>
+		{ / }
+		{? joinform.address_use=='Y' }
+			<ul {? joinform.address_required=='Y' }class="required"{ / }>
+				<li class="th "><p designElement="text">Address</p></li>
+				<li class="td">
+					<input type="hidden" name="address_type" value="{address_type}"/>
+					<input type="tel" name="new_zipcode" value="{new_zipcode}" class="size_zip_all" readonly />
+					<button type="button" class="btn_resp size_b color4" onclick="openDialogZipcode_resp('member');"><span designElement="text">Find</span></button>
+					<div class="address_area">
+						<input type="text" name="address" value="{address}" class="address size_full {? address_type == 'street'}hide{/}" readonly />
+						<input type="text" name="address_street" value="{address_street}" class="address_street size_full {? address_type != 'street'}hide{/}" readonly />
+					</div>
+					<div class="address_area">
+						<input type="text" name="address_detail" value="{address_detail}" class="size_full" />
+					</div>
+					{? member_seq}
+						{? address_type == "street"}
+							<button type="button" class="btn_resp size_b" onclick="view_address('zibun');">지번 주소보기</button>
+						{:}
+							{? address_street}
+								<button type="button" class="btn_resp size_b" onclick="view_address('street');">도로명 주소보기</button>
+							{/}
+						{/}
+					{/}
+					<p id="address_view" style="padding-top:5px; display:none;"></p>
+				</li>
+			</ul>
+		{ / }
+		{? member_seq && joinform.nickname_use=='Y' }
+			<ul {? joinform.nickname_required=='Y' }class="required"{ / }>
+				<li class="th "><p designElement="text">Screen Name</p></li>
+				<li class="td">
+					<input type="text" name="nickname" value="{nickname}" maxlength="10" />
+				</li>
+			</ul>
+		{ / }
+		{? member_seq && joinform.birthday_use=='Y' }
+			<ul {? joinform.birthday_required=='Y' }class="required"{ / } style="vertical-align: top;">
+				<li class="th "><p designElement="text">Birth</p></li>
+				<li class="td">
+					<label class="row_email">
+						<input type="text" name="birthday" value="{birthday}" class="datepicker" style="margin-right:10px;" readonly />
+						<span class="btn_resp size_c" designElement="text" style="height:48px;">Find</span>
+					</label>
+				</li>
+			</ul>
+		{ / }
+		{? joinform.anniversary_use=='Y' }
+			<ul {? joinform.anniversary_required=='Y' }class="required"{ / }>
+				<li class="th "><p designElement="text">기념일</p></li>
+				<li class="td">
+					<select name="anniversary[]">
+						<option value="">선택</option>
+						<!--{ @ m_arr }-->
+						<option value="{.value_}" {?substr(anniversary,0,2)==.value_ }selected{/}>{.value_}</option>
+						<!--{ / }-->
+					</select> <span designElement="text">월</span> &nbsp;
+					<select name="anniversary[]">
+						<option value="">선택</option>
+						<!--{ @ d_arr }-->
+						<option value="{.value_}" {?substr(anniversary,3,2)==.value_ }selected{/}>{.value_}</option>
+						<!--{ / }-->
+					</select> <span designElement="text">일</span>
+				</li>
+			</ul>
+		{ / }
+		{? member_seq && joinform.sex_use=='Y' }
+			<ul {? joinform.sex_required=='Y' }class="required"{ / }>
+				<li class="th "><p designElement="text">성별</p></li>
+                <li class="td">
+                    <select name="sex">
+						<option value="male" {? sex == 'male' }selected{/}>Male</option>
+                        <option value="female" {? sex == 'male' }selected{/}>Female</option>
+					</select>
+                </li>
+				<!--<li class="td designed_radio_checkbox join_form">
+					<label><input type="radio" name="sex" value="male" {? sex == 'male' }checked{/} /> <span designElement="text">남성</span></label>
+					<label><input type="radio" name="sex" value="female"  {? sex == 'female' }checked{/}  /> <span designElement="text">여성</span></label>
+				</li>-->
+			</ul>
+		{ / }
+		{? joinform.user_icon=='Y' }
+			<ul>
+				<li class="th"><p designElement="text">아이콘</p></li>
+				<li class="td">
+					<ul class="member_icon_list">
+						{@ memberIcondata }
+							<li>
+								<label class="lab1">
+									<div class="Mb4"><input type="radio" name="user_icon" value="{=(.index_+1)}" {? user_icon == (.index_+1) } checked="checked" {/} /></div>
+									<img src="/data/icon/member/{.value_}" class="icon_membericon"/>
+								</label>
+							</li>
+						{/}
+						{? member_seq}
+							<li>
+								<label class="lab1 L">
+									<div class="Mb4">
+										<input type="radio" name="user_icon" value="99" {? user_icon==99 &&  user_icon_file } checked="checked" {/} />
+										<button type="button" class="btn_resp size_a Ml4" id="membericonUpdate">직접등록</button>
+									</div>
+									<img src="/data/icon/member/{user_icon_file}" id="membericon_img" {? !user_icon_file } class="hide" {/} />
+								</label>
+							</li>
+						{/}
+					</ul>
+				</li>
+			</ul>
+		{ / }
+		{? joinform.recommend_use=='Y' }
+			{? member_seq && recommend }
+				<ul {? joinform.recommend_required=='Y' }class="required"{ / }>
+					<li class="th "><p designElement="text">추천인ID</p></li>
+					<li class="td">{recommend}</li>
+				</ul>
+			{: !member_seq }
+				<ul {? joinform.recommend_required=='Y' }class="required"{ / }>
+					<li class="th "><p designElement="text">추천인ID</p></li>
+					<li class="td">
+						<input type="text" name="recommend" id="recommend" value="{recommend}" style="width:160px;" />
+						<button type="button" onclick="chkRecommend('u');" class="btn_resp size_b">확인</button>
+						<p id="recommend_return_txt" class="guide_text"></p>
+						<ul class="list_01 v3 desc pd_1">
+						<!--
+						{? emoneyapp.emoneyJoin > 0 }
+							<li>신규회원 -  마일리지 <span class="pointcolor">{=number_format(emoneyapp.emoneyJoin)}</span>원 지급</li>
+						{/}
+						-->
+						{? emoneyapp.emoneyJoiner > 0 }
+							<li><p designElement="text">추천인ID 입력시 - 마일리지 <span class="pointcolor">{=number_format(emoneyapp.emoneyJoiner)}</span>원 추가지급</p></li>
+						{/}
+						{? emoneyapp.emoneyRecommend > 0 }
+							<li><p designElement="text">추천받은 회원 - 마일리지 <span class="pointcolor2">{emoneyapp.emoneyRecommend}</span>원 지급</p></li>
+						{/}
+						</ul>
+					</li>
+				</ul>
+			{ / }
+		{ / }
+		{? fb_invite }
+			<ul>
+				<li class="th "><p designElement="text">Facebook 초대한ID</p></li>
+				<li class="td"><input type="text" name="fb_invite" value="{fb_invite}" /></li>
+			</ul>
+		{ / }
+        <h4 class="Pt16">How did you get to our site?</h4>
+		{? form_sub}
+			{@ form_sub}
+				{? .used == 'Y' && .join_type=='user' }
+					{? .required=='Y' }
+						<ul class="form_sub required">
+							<li class="th dn">
+								<p><input type="hidden" name="required[]" value="{.joinform_seq}"><input type="hidden" name="required_title[]" value="{.label_title}">{.label_title}</p>
+							</li>
+					{:}
+						<ul class="form_sub">
+							<li class="th{? .index_ == 2} other_evt_dn{:} dn{/}">
+								<p>{.label_title}</p>
+							</li>
+					{/}
+							<li class="td custom_form join_form other_evt{.index_}">
+								{.label_view}
+                                {? .index_ == 2}<p>You are only allowed to change your Instagram username once a month.</p>{/}
+							</li>
+						</ul>
+				{/}
+			{/}
+		{/}
+	</div>
+{/}
+
+
+
+
+{? mtype=='business' }
+	<div class="resp_join_table">
+		{? rute && rute != 'none'  //SNS전용이 아닌경우에만 출력}
+			<input type="hidden" name="user_name" value="{user_name}" />
+			{? sns_change == 0 }
+				<ul>
+					<li class="th"><p designElement="text">아이디 / 비밀번호</p></li>
+					<li class="td"><span designElement="text">아직 등록하지 않았습니다.</span> <button type="button" class="btn_resp size_b color2" onclick="sns_change_id();"><span designElement="text">등록</span></button></li>
+				</ul>
+			{ : }
+				<ul class="required">
+					<li class="th"><p designElement="text">아이디</p></li>
+					<li class="td">{userid}</li>
+				</ul>
+				<ul class="required">
+					<li class="th"><p designElement="text">기존 비밀번호</p></li>
+					<li class="td"><input type="password" name="old_password" value="" class="eng_only" /></li>
+				</ul>
+				<ul>
+					<li class="th"><p designElement="text">신규 비밀번호</p></li>
+					<li class="td">
+						<input type="password" name="new_password" value="" class="eng_only class_check_password_validation" />
+					</li>
+				</ul>
+			{ / }
+		{ : }
+			<ul class="required">
+				<li class="th"><p designElement="text">아이디</p></li>
+				<li class="td">
+				{? member_seq }
+					{userid}
+				{ : }
+					<input type="text" name="userid" id="userid" value="" onkeypress="filterKey();" class="eng_only" onpaste="javascript:return false;" placeholder="공백 없는 영문/숫자 포함 6~20자" />
+					<p id="id_info" class="guide_text"></p>
+				{ / }
+				</li>
+			</ul>
+			{? member_seq }
+				<ul class="required">
+					<li class="th"><p designElement="text">기존 비밀번호</p></li>
+					<li class="td"><input type="password" name="old_password" value="" class="eng_only" /></li>
+				</ul>
+				<ul>
+					<li class="th"><p designElement="text">신규 비밀번호</p></li>
+					<li class="td">
+						<input type="password" name="new_password" value="" class="eng_only class_check_password_validation" />
+					</li>
+				</ul>
+			{ : }
+				<ul class="required">
+					<li class="th"><p designElement="text">비밀번호</p></li>
+					<li class="td">
+						<input type="password" name="password" value="" class="eng_only class_check_password_validation" />
+					</li>
+				</ul>
+				<ul class="required">
+					<li class="th"><p designElement="text">비밀번호 확인</p></li>
+					<li class="td">
+						<input type="password" name="re_password" value="" class="eng_only" />
+					</li>
+				</ul>
+			{ / }
+		{ / }
+		{? joinform.bname_use=='Y' }
+			<ul {? joinform.bname_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">업체명</p></li>
+				<li class="td"><input type="text" name="bname" value="{bname}" /></li>
+			</ul>
+		{ / }
+		{? joinform.bceo_use=='Y' }
+			<ul {? joinform.bceo_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">대표자명</p></li>
+				<li class="td"><input type="text" name="bceo" value="{bceo}" /></li>
+			</ul>
+		{ / }
+		{? joinform.bno_use=='Y' }
+			<ul {? joinform.bno_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">사업자 등록번호</p></li>
+				<li class="td">
+					<input type="tel" name="bno" value="{bno}" placeholder="ex) 123-12-12345" />
+					<p id="bno_info" class="guide_text"></p>
+				</li>
+			</ul>
+		{ / }
+		{? joinform.bitem_use=='Y' }
+			<ul {? joinform.bitem_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">업태</p></li>
+				<li class="td"><input type="text" name="bitem" value="{bitem}" /></li>
+			</ul>
+			<ul {? joinform.bitem_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">종목</p></li>
+				<li class="td"><input type="text" name="bstatus" value="{bstatus}" /></li>
+			</ul>
+		{ / }
+		{? joinform.badress_use=='Y' }
+			<ul {? joinform.badress_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">사업장 주소</p></li>
+				<li class="td">
+					<input type="hidden" name="baddress_type" value="{baddress_type}" />
+					<input type="text" name="new_bzipcode" value="{bzipcode}" class="size_zip_all" readonly />
+					<button type="button" class="btn_resp size_b color4" onclick="openDialogZipcode_resp('business')"><span designElement="text">주소찾기</span></button>
+					<div class="address_area">
+						<input type="text" name="baddress" value="{baddress}" class="size_full {? address_type == 'street'}hide{/}" readonly />
+						<input type="text" name="baddress_street" value="{baddress_street}" class="size_full {? address_type != 'street'}hide{/}" readonly />
+					</div>
+					<div class="address_area">
+						<input type="text" name="baddress_detail" value="{baddress_detail}" class="size_full" />
+					</div>
+				</li>
+			</ul>
+		{ / }
+		{? joinform.bperson_use=='Y' }
+			<ul {? joinform.bperson_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">담당자 명</p></li>
+				<li class="td"><input type="text" name="bperson" value="{bperson}" /></li>
+			</ul>
+		{ / }
+		{? joinform.bpart_use=='Y' }
+			<ul {? joinform.bpart_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">담당자 부서명</p></li>
+				<li class="td"><input type="text" name="bpart" value="{bpart}" /></li>
+			</ul>
+		{ / }
+		{? joinform.bemail_use=='Y' }
+			<ul {? joinform.bemail_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">이메일</p></li>
+				<li class="td">
+					<input type="email" name="email[0]" value="{=str_split_arr(email,'@',0)}" class="size_mail1" /> @
+					<input type="email" name="email[1]" value="{=str_split_arr(email,'@',1)}" class="size_mail2" />
+					<select name="find_email" id="find_email">
+						<option value="">직접선택</option>
+						{@ email_arr }
+							<option value="{.codecd}">{.codecd}</option>
+						{ / }
+					</select>
+				</li>
+			</ul>
+		{ / }
+		{? joinform.bphone_use=='Y' }
+			<ul {? joinform.bphone_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">전화번호</p></li>
+				<li class="td">
+					<input type="tel" name="bphone[]" value="{=str_split_arr(bphone,'-',0)}" class="size_phone" /> -
+					<input type="tel" name="bphone[]" value="{=str_split_arr(bphone,'-',1)}" class="size_phone" /> -
+					<input type="tel" name="bphone[]" value="{=str_split_arr(bphone,'-',2)}" class="size_phone" />
+				</li>
+			</ul>
+		{ / }
+		{? joinform.bcellphone_use=='Y' }
+			<ul {? joinform.bcellphone_required=='Y' }class="required"{ / }>
+				<li class="th"><p designElement="text">휴대폰번호</p></li>
+				<li class="td">
+					<input type="text" name="bcellphone[]" value="{=str_split_arr(bcellphone,'-',0)}" class="size_phone" /> -
+					<input type="text" name="bcellphone[]" value="{=str_split_arr(bcellphone,'-',1)}" class="size_phone" /> -
+					<input type="text" name="bcellphone[]" value="{=str_split_arr(bcellphone,'-',2)}" class="size_phone" />
+					<!--{ ? confirmPhone == 'Y' }-->
+						<script>$("input[name='bcellphone[]']").attr("disabled",true);</script>
+						<button type="button" class="btn_resp size_b color2" onclick="authphone_popup('bcellphone');">휴대폰인증</button>
+					<!--{ / }-->
+				</li>
+			</ul>
+		{ / }
+		{? member_seq && (joinform.bemail_use =='Y' || joinform.bcellphone_use =='Y')}
+		<ul>
+			<li class="th "><p designElement="text">마케팅 및 광고 활용 동의</p><a href="javascript:void(0)" onclick="showCenterLayer('#marketingDeatilLayer')"><span class="ml10 Und">보기</span></a></li>
+			<li class="td">
+				<div class="Pt10">
+					{? joinform.bemail_use =='Y' }
+					<label class="ml10"><input type="checkbox" name="mailing" value="y" class="mr5"/> <span designElement="text">이메일 수신</span></label>
+					{ / }
+					{? joinform.bcellphone_use=='Y' }
+					<label class="ml10"><input type="checkbox" name="sms" value="y" class="mr5"/> <span designElement="text">SMS 수신</span></label>
+					{ / }
+				</div>
+				<p class="Pt10 desc" designElement="text">{? joinform.bemail_use =='Y' }이메일{/} {? joinform.bemail_use=='Y' && joinform.bcellphone_use=='Y' }, {/} {? joinform.bcellphone_use=='Y' }SMS{/} 수신에 동의하시면 여러가지 할인해택과 각종 이벤트 정보를 받아보실 수 있습니다.</br>회원가입관련,주문배송관련 등의 정보는 수신동의와 상관없이 구매 회원에게 발송됩니다.</p>
+			</li>
+
+		</ul>
+		{ / }
+		{? joinform.user_icon=='Y' }
+			<ul>
+				<li class="th"><p designElement="text">아이콘</p></li>
+				<li class="td">
+					<ul class="member_icon_list">
+						{@ memberIcondata }
+							<li>
+								<label class="lab1">
+									<div class="Mb4"><input type="radio" name="user_icon" value="{=(.index_+1)}" {? user_icon == (.index_+1) } checked="checked" {/} /></div>
+									<img src="/data/icon/member/{.value_}" class="icon_membericon"/>
+								</label>
+							</li>
+						{/}
+						{? member_seq}
+							<li>
+								<div class="Mb4">
+									<input type="radio" name="user_icon" value="99" {? user_icon==99 &&  user_icon_file } checked="checked" {/} />
+									<button type="button" class="btn_resp size_b" id="membericonUpdate">직접등록</button>
+								</div>
+								<label>
+									<img src="/data/icon/member/{user_icon_file}" id="membericon_img" {? !user_icon_file } class="hide" {/} />
+								</label>
+							</li>
+						{/}
+					</ul>
+				</li>
+			</ul>
+		{ / }
+		{? joinform.recommend_use=='Y' }
+			<ul {? joinform.recommend_required=='Y' }class="required"{ / }>
+				<li class="th"><p>추천인ID</p></li>
+				<li class="td">
+					<input type="text" name="recommend" id="brecommend" value="{recommend}" style="width:160px;" />
+					<button type="button" class="btn_resp size_b" onclick="chkRecommend('b');">확인</button>
+					<p id="brecommend_return_txt" class="guide_text"></p>
+					<ul class="list_01 v3 desc pd_1">
+					<!--
+					{? emoneyapp.emoneyJoin > 0 }
+						<li>신규회원 -  마일리지 <span class="pointcolor">{=number_format(emoneyapp.emoneyJoin)}</span>원 지급</li>
+					{/}
+					-->
+					{? emoneyapp.emoneyJoiner > 0 }
+						<li><p designElement="text">추천인ID 입력시 - 마일리지 <span class="pointcolor">{=number_format(emoneyapp.emoneyJoiner)}</span>원 추가지급</p></li>
+					{/}
+					{? emoneyapp.emoneyRecommend > 0 }
+						<li><p designElement="text">추천받은 회원 - 마일리지 <span class="pointcolor2">{emoneyapp.emoneyRecommend}</span>원 지급</p></li>
+					{/}
+					</ul>
+				</li>
+			</ul>
+		{ / }
+
+		{? form_sub}
+			{@ form_sub}
+				{? .used == 'Y' && .join_type=='order'}
+					{? .required=='Y' }
+						<ul class="form_sub required">
+							<li class="th"><p><input type="hidden" name="required[]" value="{.joinform_seq}"><input type="hidden" name="required_title[]" value="{.label_title}">{.label_title}</p></li>
+					{:}
+						<ul class="form_sub">
+							<li class="th"><p>{.label_title}</p></li>
+					{/}
+							<li class="td custom_form designed_radio_checkbox join_form">
+								{.label_view}
+								{?.label_desc}<p class="desc pd_2">{.label_desc}</p>{/}
+							</li>
+						</ul>
+				{/}
+			{/}
+		{/}
+	</div>
+{ / }
+
+</div>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	$(function(){
+		$(".selectLabelSet").each(function(){
+			var selectLabelSetObj = $(this);
+			$("select.selectLabelDepth1",selectLabelSetObj).bind('change',function(){
+				var childs = $("option:selected",this).attr('childs').split(';');
+				var joinform_seq = $(this).attr('joinform_seq');
+				var select2 = $("input.hiddenLabelDepth[type='hidden'][joinform_seq='"+joinform_seq+"']").val();
+				if(childs[0]){
+					$(".selectsubDepth",selectLabelSetObj).show();
+					$("select.selectLabelDepth2[joinform_seq='"+joinform_seq+"']").empty();
+					for(var i=0; i< childs.length ; i++){
+						$("select.selectLabelDepth2[joinform_seq='"+joinform_seq+"']")
+						.append("<option value='"+childs[i]+"'>"+childs[i]+"</option>");
+					}
+				}else{
+					$(".selectsubDepth",selectLabelSetObj).hide();
+				}
+				$("select.selectLabelDepth2 option[value='"+select2+"']").attr('selected',true);
+			}).trigger('change');
+		});
+
+
+		/* ========== 반응형 프론트엔드 추가 ========= */
+		// designed radio UI
+		$('.designed_radio_checkbox input[type=radio]').closest('.designed_radio_checkbox').addClass('type_radio');
+		$('.designed_radio_checkbox input[checked]').parent('label').addClass('on');
+
+		$('.designed_radio_checkbox input[type=radio]').on('change', function() {
+			$(this).parent().parent().find('label').removeClass('on');
+			$(this).parent('label').addClass('on');
+		});
+		// designed checkbox UI
+		$('.designed_radio_checkbox input[type=checkbox]').on('change', function() {
+			if ( $(this).prop('checked') ) {
+				$(this).parent('label').addClass('on');
+			} else {
+				$(this).parent('label').removeClass('on');
+			}
+		});
+		/* ========== //반응형 프론트엔드 추가 ========= */
+	});
+    
+    // other 인풋박스 on/off (bind to input — label change never fires)
+    $("li.other_evt1:last-child > input[type=text]").attr("placeholder","Other");
+    $("li.other_evt0 > label > input[type=checkbox]").on("change", function() {
+        var labelText = $(this).closest("label").text().replace(/\s+/g, " ").trim();
+        if (labelText === "Other") {
+            if ($(this).is(":checked")) {
+                $("li.other_evt1:last-child > input[type=text]").show();
+            } else {
+                $("li.other_evt1:last-child > input[type=text]").hide();
+            }
+        }
+    });
+    if ($("li.other_evt0 > label:last-child input").is(":checked")) {
+        $("li.other_evt1:last-child > input[type=text]").show();
+    }
+
+	// 추천인 확인
+	function chkRecommend(type){
+		var recommend	= $("#recommend").val();
+		if(type=="b")	recommend = $("#brecommend").val();
+		if	(!recommend){
+			//추천인명을 입력하세요
+			openDialogAlert(getAlert('mb009'), 400, 150);
+			return;
+		}
+		actionFrame.location.href	= '/member/recommend_confirm?recomid='+recommend+'&type='+type;
+	}
+</script>

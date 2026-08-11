@@ -1440,12 +1440,12 @@
 }
 
 .mypage-wish::before {
-  background-image: url("../img/listing/wish.png");
+  background-image: url("../img/listing/wish_pink.png");
   opacity: 1;
 }
 
 .mypage-wish::after {
-  background-image: url("../img/listing/wish_hover.png");
+  background-image: url("../img/listing/wish_pink.png");
   opacity: 0;
 }
 

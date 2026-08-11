@@ -233,6 +233,29 @@ const wireBrandLinks = () => {
 
 wireBrandLinks();
 
+const isTimeDealNavLabel = (text) => {
+  const normalized = text.replace(/\s+/g, " ").replace(/🔥/g, "").trim().toLowerCase();
+  return normalized === "time deal" || normalized === "timedeal";
+};
+
+const wireTimeDealLinks = () => {
+  const timeDealUrl = getTimeDealUrl();
+  document
+    .querySelectorAll(
+      ".category-nav a.accent-warm, .category-nav a, .mobile-menu-list a, .mobile-submenu-list a, .mobile-cats a"
+    )
+    .forEach((link) => {
+      if (!isTimeDealNavLabel(link.textContent || "")) return;
+      link.setAttribute("href", timeDealUrl);
+      // Time Deal is a leaf page — don't open an empty mobile tertiary panel
+      if (link.getAttribute("data-mobile-third-open") === "time-deal") {
+        link.removeAttribute("data-mobile-third-open");
+      }
+    });
+};
+
+wireTimeDealLinks();
+
 document.querySelectorAll(".category-nav a[data-mega-target='tp-pick']").forEach((link) => {
   link.setAttribute("href", getEditorsPickUrl());
 });

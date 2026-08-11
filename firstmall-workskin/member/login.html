@@ -1,121 +1,134 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
 @@ 로그인 / Sign In / TrendyPicker
-- 파일위치 : [스킨폴더]/member/login.html
-- 폼 필드/JS 로직은 원본 그대로 유지, 시각적으로만 재스킨
+- Path: [skin]/member/login.html
+- URL: /member/login
+- Form fields + Firstmall JS kept; visual reskin only
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<style>
-#layout_wrap {background-color:#f8f8f8;}
-#layout_body {background-color:initial;}
-.title_container {padding: 0;}
-@media only screen and (max-width:767px) {
-    #layout_body {padding:0;}
-    .layout_footer {margin-top:0;}
-}
-</style>
 {is_file_kakao_tag}
 
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-login.css?v=20260807-1" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-login.css" />
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-login-page is-auth-page";
+if (document.body) {
+	document.body.className += (document.body.className ? " " : "") + "is-login-page is-auth-page";
+} else {
+	document.addEventListener("DOMContentLoaded", function () {
+		document.body.className += (document.body.className ? " " : "") + "is-login-page is-auth-page";
+	});
+}
+</script>
 
-<div class="bo-login-shell">
-	<div class="title_container bo-login-head">
-		<!--{ ? _GET.order_auth }-->
-		<h2><span designElement="text">Order List</span></h2>
-		<!--{ : mode }-->
-		<h2><span designElement="text">Order Sign In</span></h2>
-		<!--{ : }-->
-		<h2><span designElement="text">Sign In</span></h2>
-		<!--{ / }-->
-	</div>
+<main class="bo-login-main">
+	<div class="bo-login-shell">
+		<div class="bo-login-inner">
+			<header class="title_container bo-login-head">
+				<p class="bo-login-kicker">TrendyPicker</p>
+				<!--{ ? _GET.order_auth }-->
+				<h1><span designElement="text">Order List</span></h1>
+				<!--{ : mode }-->
+				<h1><span designElement="text">Order Sign In</span></h1>
+				<!--{ : }-->
+				<h1><span designElement="text">Sign In</span></h1>
+				<!--{ / }-->
+			</header>
 
-	<div class="bo-login-card">
-		<!-- 탭 -->
-		<div class="resp_login_wrap bo-login-tabs-wrap">
-			<div id="loginTab" class="tab_basic fullsize bo-login-tabs">
-				<ul>
-					<li class="on"><a href="javascript:void(0)" data-tab="member"><span designElement="text">Member</span></a></li>
-					<li { ? mode == 'settle' }style="display:none"{ / }><a href="javascript:void(0)" data-tab="nonmember"><span designElement="text">Guest</span></a></li>
-				</ul>
+			<div class="bo-login-card">
+				<div class="resp_login_wrap bo-login-tabs-wrap">
+					<div id="loginTab" class="tab_basic fullsize bo-login-tabs">
+						<ul>
+							<li class="on"><a href="javascript:void(0)" data-tab="member"><span designElement="text">Member</span></a></li>
+							<li { ? mode == 'settle' }style="display:none"{ / }><a href="javascript:void(0)" data-tab="nonmember"><span designElement="text">Guest</span></a></li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- +++++++++++ Member +++++++++++ -->
+				<div id="member" class="loginTabContetns resp_login_wrap Mt0 bo-login-panel">
+					<form name="loginForm" target="actionFrame" method="post" action="{=sslAction('../login_process/login')}" onsubmit="return submitLoginForm(this)">
+						<input type="hidden" name="return_url" value="{return_url}"/>
+						<input type="hidden" name="order_auth" value="{_GET.order_auth}"/>
+						<fieldset>
+							<ul class="login_real_area bo-login-fields">
+								<li class="bo-login-field">
+									<label class="bo-login-label" for="userid"><span designElement="text">Email</span></label>
+									<input type="text" name="userid" id="userid" class="box_id bo-login-input" value="{? idsavechecked }{idsavechecked}{/}" placeholder="Email or ID" required="required" autocomplete="username" />
+								</li>
+								<li class="bo-login-field">
+									<label class="bo-login-label" for="password"><span designElement="text">Password</span></label>
+									<input type="password" name="password" id="password" class="box_pw bo-login-input" placeholder="Password" password="password" required="required" autocomplete="current-password" />
+								</li>
+								<li class="bo-login-remember">
+									<label class="id_save"><input type="checkbox" name="idsave" id="idsave" value="checked" {? idsavechecked } checked="checked" {/} /> <span designElement="text">Stay Signed in</span></label>
+								</li>
+								<li class="bo-login-actions">
+									<button type="submit" class="btn_resp size_login1 color2 bo-login-submit"><span designElement="text">Sign in</span></button>
+								</li>
+								<li class="find_join bo-login-links">
+									Forgot your
+									<a href="../member/find?mode=findpw" designElement="text">Password</a>
+									or
+									<a href="../member/find?mode=findid" designElement="text">ID</a>?
+									<span class="bo-login-links-sep" aria-hidden="true">|</span>
+									<a href="../member/register?join_type=member" designElement="text">Sign up</a>
+								</li>
+							</ul>
+
+							<!--{? count(joinform.use_sns) > 0 }-->
+							<h3 class="title_sub3 v3 hide"><span designElement="text">또는 SNS 로그인</span></h3>
+							<ul class="sns_login_ul hide">
+								<!--{@ joinform.use_sns }-->
+								{? .key_ }<li class="sns-login-button" snstype="{=.key_}"><div class="img"><img src="../images/design/sns_icon_{=.key_}.png" alt="{=.key_} 로그인" title="{=.value_['nm']} 로그인"/></div></li>{/}
+								<!--{ / }-->
+							</ul>
+							<!--{/}-->
+
+							<div class="bo-login-divider" aria-hidden="true"><span>or continue with</span></div>
+							<ul class="login_sns_icon bo-login-sns">
+								<li><img src="../images/icon/icon-sns-google.png" alt="Google" /></li>
+								<li><img src="../images/icon/icon-sns-facebook.png" alt="Facebook" /></li>
+								<li><img src="../images/icon/icon-sns-apple.png" alt="Apple" /></li>
+								<li><img src="../images/icon/icon-sns-twitter.png" alt="X" /></li>
+							</ul>
+
+							<!--{ ? mode == 'settle' }-->
+							<div class="Pt40 bo-login-guest-order"><button type="button" class="btn_resp size_c color4 Wmax" onclick="document.location.href='{_GET.return_url}';"><span designElement="text">Guest Order</span></button></div>
+							<!--{ : mode }-->
+							<div class="Pt40 bo-login-guest-order"><button type="button" class="btn_resp size_c color4 Wmax" onclick="document.location.href='../order/cart';"><span designElement="text">Guest Order</span></button></div>
+							<!--{ / }-->
+						</fieldset>
+					</form>
+				</div>
+				<!-- +++++++++++ //Member +++++++++++ -->
+
+				<!-- +++++++++++ Guest +++++++++++ -->
+				<div id="nonmember" class="loginTabContetns resp_login_wrap Mt0 bo-login-panel" style="display:none;">
+					<form name="order_auth_form" target="actionFrame" method="post" action="{=sslAction('../mypage_process/order_auth')}">
+						<input type="hidden" name="return_url" value="{return_url}"/>
+						<ul class="login_real_area bo-login-fields">
+							<li class="bo-login-field">
+								<label class="bo-login-label" for="order_seq"><span designElement="text">Order Number</span></label>
+								<input type="text" name="order_seq" id="order_seq" value="" class="box_order bo-login-input" placeholder="Order number" />
+							</li>
+							<li class="bo-login-field">
+								<label class="bo-login-label" for="order_email"><span designElement="text">Order Email</span></label>
+								<input type="text" name="order_email" id="order_email" value="" class="box_order bo-login-input" placeholder="Order email" />
+							</li>
+							<li class="desc_area bo-login-guest-note">
+								<p designElement="text">Guests can look up orders with an order number and email.</p>
+							</li>
+							<li class="bo-login-actions">
+								<button type="submit" class="btn_resp size_login1 bo-login-submit"><span designElement="text">Order List</span></button>
+							</li>
+						</ul>
+					</form>
+				</div>
+				<!-- +++++++++++ //Guest +++++++++++ -->
 			</div>
 		</div>
-
-		<!-- +++++++++++ 회원 +++++++++++ -->
-		<div id="member" class="loginTabContetns resp_login_wrap Mt0 bo-login-panel">
-			<form name="loginForm" target="actionFrame" method="post" action="{=sslAction('../login_process/login')}" onsubmit="return submitLoginForm(this)">
-			<input type="hidden" name="return_url" value="{return_url}"/>
-			<input type="hidden" name="order_auth" value="{_GET.order_auth}"/>
-				<fieldset>
-					<ul class="login_real_area bo-login-fields">
-						<li class="input_area bo-login-field-group">
-							<label class="ab_p bo-login-field-label">Email</label>
-							<input type="text" name="userid" id="userid" class="box_id bo-login-input" value="{? idsavechecked }{idsavechecked}{/}" placeholder="ID" required="required" />
-							<input type="password" name="password" id="password" class="box_pw bo-login-input" placeholder="Password" password="password" required="required" />
-						</li>
-						<li class="bo-login-remember">
-							<label class="id_save"><input type="checkbox" name="idsave" id="idsave" value="checked"  {? idsavechecked } checked="checked" {/} /> <span designElement="text">Stay Signed in</span></label>
-						</li>
-						<li>
-							<button type="submit" class="btn_resp size_login1 color2 bo-login-submit"><span designElement="text">Sign in</span></button>
-						</li>
-						<li class="find_join bo-login-links">Forgot your&nbsp;
-							<a href="../member/find?mode=findpw" designElement="text">Password</a>&nbsp;or&nbsp;
-							<a href="../member/find?mode=findid" designElement="text">ID</a>? &nbsp;|&nbsp;
-							<a href="../member/register?join_type=member" designElement="text">Sign up</a>
-						</li>
-					</ul>
-
-					<!-- SNS 가입폼 -->
-					<!--{? count(joinform.use_sns) > 0 }-->
-					<h3 class="title_sub3 v3 hide"><span designElement="text">또는 SNS 로그인</span></h3>
-					<ul class="sns_login_ul hide">
-						<!--{@ joinform.use_sns }-->
-						{? .key_ }<li class="sns-login-button" snstype="{=.key_}"><div class="img"><img src="../images/design/sns_icon_{=.key_}.png" alt="{=.key_} 로그인" title="{=.value_['nm']} 로그인"/></div></li>{/}
-						<!--{ / }-->
-					</ul>
-					<!--{/}-->
-					<ul class="login_sns_icon bo-login-sns">
-						<li><img src="../images/icon/icon-sns-google.png" alt="google" /></li>
-						<li><img src="../images/icon/icon-sns-facebook.png" alt="facebook" /></li>
-						<li><img src="../images/icon/icon-sns-apple.png" alt="apple" /></li>
-						<li><img src="../images/icon/icon-sns-twitter.png" alt="twitter" /></li>
-					</ul>
-
-					<!--{ ? mode == 'settle' }-->
-					<div class="Pt40 bo-login-guest-order"><button type="button" class="btn_resp size_c color4 Wmax"  onclick="document.location.href='{_GET.return_url}';"><span designElement="text">Guest Order</span></button></div>
-					<!--{ : mode }-->
-					<div class="Pt40 bo-login-guest-order"><button type="button" class="btn_resp size_c color4 Wmax" onclick="document.location.href='../order/cart';"/><span designElement="text">Guest Order</span></button></div>
-					<!--{ / }-->
-				</fieldset>
-			</form>
-		</div>
-		<!-- +++++++++++ //회원 +++++++++++ -->
-
-
-		<!-- +++++++++++ 비회원 +++++++++++ -->
-		<div id="nonmember" class="loginTabContetns resp_login_wrap Mt0 bo-login-panel" style="display:none;">
-			<form name="order_auth_form" target="actionFrame" method="post" action="{=sslAction('../mypage_process/order_auth')}">
-			<input type="hidden" name="return_url" value="{return_url}"/>
-				<ul class="login_real_area bo-login-fields">
-					<li class="input_area Pb20 bo-login-field-group">
-						<input type="text" name="order_seq" value="" class="box_order bo-login-input" placeholder="Order Number" />
-						<input type="text" name="order_email" value="" class="box_order bo-login-input" placeholder="Order Email" />
-					</li>
-					<li class="desc_area hide">
-						<p designElement="text">비회원은 주문번호와 이메일로 주문을 조회할 수 있습니다.</p>
-					</li>
-					<li>
-						<button type="submit" class="btn_resp size_login1 bo-login-submit"><span designElement="text">Order List</span></button>
-					</li>
-				</ul>
-			</form>
-		</div>
-		<!-- +++++++++++ //비회원 +++++++++++ -->
 	</div>
-</div>
-
-
+</main>
 
 <script src="/app/javascript/js/skin-snslogin.js?v={=date('YmdHis')}"></script>
-
 <script type="text/javascript">
 var return_url	= "../main/index";
 <!--{?_GET.return_url }-->
@@ -143,10 +156,8 @@ function submitLoginForm(frm){
 }
 
 $(document).ready(function() {
-	// 로딩시 ID 인풋박스 포커스
 	$("form[name='loginForm'] input[name='userid']").focus();
 
-	// 회원가입 로그인 탭UI 190208 - sjg
 	$('#loginTab a').on('click', function() {
 		var tab_name = $(this).data('tab');
 		$('.loginTabContetns').hide();
@@ -155,5 +166,4 @@ $(document).ready(function() {
 		$(this).closest('li').addClass('on');
 	});
 });
-
 </script>

@@ -149,6 +149,37 @@ client-side by brand. Upload listing wish/cart icons under `images/listing/`.
 
 Header / mobile menu NEW · New Arrival links should point to `/goods/new_arrivals`.
 
+### Time Deal only
+
+Prototype `timedeal/timedeal.html` → live `/promotion/timedeal` (`promotion/timedeal.html`).
+Products stay on Firstmall `#searchedItemDisplay` (`searchMode=timedeal`). Upload checklist:
+`TIMEDEAL-UPLOAD.md`.
+
+```text
+[test skin]/promotion/timedeal.html
+[test skin]/css/redesign/trendypicker-timedeal.css
+[test skin]/app/javascript/js/trendypicker-timedeal.js
+[test skin]/images/timedeal/clock_pink.png
+[test skin]/images/listing/wish_pink.png
+```
+
+Header / mobile menu TIME DEAL links should already point to `/promotion/timedeal`.
+
+### Category catalog
+
+Live `/goods/catalog` maps from prototype `listing/beauty.html` (and other category listing pages).
+Left filter stays Firstmall native. Hero, breadcrumbs, toolbar, sort dropdown, and product grid are redesigned.
+
+Wish: `listing-card-wish-inline` (design_list cards) and `.goodsZzimBtn` both use `wish_pink` / `wish_hover`. Also upload `/data/design_list/redesign_goods_list_style.css` so the shared card CSS does not `scale()` the heart.
+
+```text
+[test skin]/goods/catalog.html
+[test skin]/css/redesign/trendypicker-catalog.css
+[test skin]/app/javascript/js/trendypicker-catalog.js
+[test skin]/images/listing/wish_pink.png
+[test skin]/images/listing/wish_hover.png
+```
+
 `service/cs.html` maps the local `my-page/help-center.html` hero and directory design onto
 Firstmall's native customer-service routes. Its responsive presentation is isolated in
 `css/redesign/trendypicker-help.css`; the directory needs no extra page script.

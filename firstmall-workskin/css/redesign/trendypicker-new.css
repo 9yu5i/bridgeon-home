@@ -407,9 +407,15 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
   color: #8f86a0;
   font-size: 12px;
   line-height: 1.35;
-  font-weight: 600;
+  font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-decoration: none;
+}
+
+.bo-new-brand-grid .listing-card-brand:hover,
+.bo-new-brand-grid .brand_name:hover {
+  color: #7943e2;
   text-decoration: none;
 }
 
@@ -433,7 +439,7 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
   align-items: center;
   gap: 4px;
   margin: 0 0 10px;
-  color: #171320;
+  color: #e53935;
   font-size: 14px;
   line-height: 1;
 }
@@ -457,17 +463,25 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
 }
 
 .bo-new-brand-grid .sale_price,
-.bo-new-brand-grid .listing-card-price strong {
-  color: #171320;
-  font-size: 15px;
+.bo-new-brand-grid .listing-card-price strong,
+.bo-new-brand-grid .sale_price .num {
+  color: #e53935;
+  font-size: 16px;
   font-weight: 800;
+
+
+.bo-new-brand-grid .sale_price::before,
+.bo-new-brand-grid .consumer_price::before,
+.bo-new-brand-grid .listing-card-price strong::before,
+.bo-new-brand-grid .listing-card-price del::before {
+  content: "US ";
 }
 
 .bo-new-brand-grid .consumer_price,
 .bo-new-brand-grid .goods_price_area del,
 .bo-new-brand-grid .listing-card-price del {
   color: #8f86a0;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .bo-new-brand-grid .listing-card-badge,
@@ -502,9 +516,12 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  height: 40px;
-  min-height: 40px;
-  padding: 0;
+  /* Beat Firstmall common.css `button { height: 42px !important; }` */
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  padding: 0 !important;
+  line-height: 1 !important;
   border: 1px solid #ded8e8;
   border-radius: 10px;
   color: var(--bo-purple);
@@ -513,18 +530,21 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
   transition: border-color 0.25s ease, background-color 0.25s ease;
 }
 
-.bo-new-brand-grid .listing-card-actions--desktop button img {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
+.bo-new-brand-grid .listing-card-actions--desktop button img,
+.bo-new-brand-grid .listing-card-wish img,
+.bo-new-brand-grid .listing-card-wish-inline img,
+.bo-new-brand-grid .heart-img {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .bo-new-brand-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
-.bo-new-brand-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after,
-.bo-new-brand-grid .listing-card-wish-inline::before,
-.bo-new-brand-grid .listing-card-wish-inline::after {
+.bo-new-brand-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -534,6 +554,7 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
   background-position: center;
   background-repeat: no-repeat;
   background-size: 18px auto;
+  transform: none;
   transition: opacity 0.25s ease;
 }
 
@@ -545,26 +566,6 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
 .bo-new-brand-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after {
   background-image: url("../../images/listing/cart_hover.png");
   opacity: 0;
-}
-
-.bo-new-brand-grid .listing-card-wish-inline::before {
-  background-image: url("../../images/listing/wish.png");
-  opacity: 1;
-}
-
-.bo-new-brand-grid .listing-card-wish-inline::after {
-  background-image: url("../../images/listing/wish_hover.png");
-  opacity: 0;
-}
-
-.bo-new-brand-grid .listing-card-wish-inline.is-active::before,
-.bo-new-brand-grid .listing-card-wish-inline:hover::before {
-  opacity: 0;
-}
-
-.bo-new-brand-grid .listing-card-wish-inline.is-active::after,
-.bo-new-brand-grid .listing-card-wish-inline:hover::after {
-  opacity: 1;
 }
 
 .bo-new-brand-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover {
@@ -580,9 +581,105 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
   opacity: 1;
 }
 
+/* Wish: pink heart swap only — never scale */
+.bo-new-brand-grid .listing-card-wish,
+.bo-new-brand-grid .listing-card-wish-inline {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transform: none !important;
+}
+
+.bo-new-brand-grid .listing-card-wish {
+  right: 10px;
+  bottom: 10px;
+}
+
+.bo-new-brand-grid .listing-card-actions--desktop .listing-card-wish-inline {
+  position: relative;
+  width: 40px;
+  min-width: 40px;
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  border: 1px solid #ded8e8;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
 .bo-new-brand-grid .listing-card-actions--desktop .listing-card-wish-inline:hover {
   border-color: #ded8e8;
   background-color: #fff;
+}
+
+.bo-new-brand-grid .listing-card-wish .heart-img,
+.bo-new-brand-grid .listing-card-wish-inline .heart-img,
+.bo-new-brand-grid .listing-card-wish:hover .heart-img,
+.bo-new-brand-grid .listing-card-wish-inline:hover .heart-img,
+.bo-new-brand-grid .listing-card-wish:hover .heart-img:not(.zzim-hidden),
+.bo-new-brand-grid .listing-card-wish-inline:hover .heart-img:not(.zzim-hidden) {
+  transform: none !important;
+}
+
+.bo-new-brand-grid .listing-card-wish::before,
+.bo-new-brand-grid .listing-card-wish::after,
+.bo-new-brand-grid .listing-card-wish-inline::before,
+.bo-new-brand-grid .listing-card-wish-inline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 18px;
+  height: 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 18px auto;
+  transform: none !important;
+  transition: opacity 0.25s ease;
+}
+
+.bo-new-brand-grid .listing-card-wish::before,
+.bo-new-brand-grid .listing-card-wish-inline::before {
+  background-image: url("../../images/listing/wish_pink.png");
+  opacity: 1;
+}
+
+.bo-new-brand-grid .listing-card-wish::after,
+.bo-new-brand-grid .listing-card-wish-inline::after {
+  background-image: url("../../images/listing/wish_hover.png");
+  opacity: 0;
+}
+
+.bo-new-brand-grid .listing-card-wish:hover::before,
+.bo-new-brand-grid .listing-card-wish-inline:hover::before,
+.bo-new-brand-grid .listing-card-wish.is-active::before,
+.bo-new-brand-grid .listing-card-wish-inline.is-active::before,
+.bo-new-brand-grid .listing-card-wish[aria-pressed="true"]::before,
+.bo-new-brand-grid .listing-card-wish-inline[aria-pressed="true"]::before,
+.bo-new-brand-grid .listing-card-wish:has(.zzimOnImg:not(.zzim-hidden))::before,
+.bo-new-brand-grid .listing-card-wish-inline:has(.zzimOnImg:not(.zzim-hidden))::before {
+  opacity: 0;
+}
+
+.bo-new-brand-grid .listing-card-wish:hover::after,
+.bo-new-brand-grid .listing-card-wish-inline:hover::after,
+.bo-new-brand-grid .listing-card-wish.is-active::after,
+.bo-new-brand-grid .listing-card-wish-inline.is-active::after,
+.bo-new-brand-grid .listing-card-wish[aria-pressed="true"]::after,
+.bo-new-brand-grid .listing-card-wish-inline[aria-pressed="true"]::after,
+.bo-new-brand-grid .listing-card-wish:has(.zzimOnImg:not(.zzim-hidden))::after,
+.bo-new-brand-grid .listing-card-wish-inline:has(.zzimOnImg:not(.zzim-hidden))::after {
+  opacity: 1;
 }
 
 /* Classic Firstmall wish control on image */
@@ -602,6 +699,7 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
   background: #fff !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   cursor: pointer;
+  transform: none !important;
 }
 
 .bo-new-brand-grid .display_zzim img,
@@ -614,21 +712,49 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
   pointer-events: none;
 }
 
+.bo-new-brand-grid .display_zzim::before,
+.bo-new-brand-grid .respGoodsZzim::before,
 .bo-new-brand-grid .display_zzim::after,
 .bo-new-brand-grid .respGoodsZzim::after {
   content: "";
-  display: block;
+  position: absolute;
   width: 18px;
   height: 18px;
-  background: url("../../images/listing/wish.png") center / contain no-repeat;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: none !important;
+  transition: opacity 0.25s ease;
+}
+
+.bo-new-brand-grid .display_zzim::before,
+.bo-new-brand-grid .respGoodsZzim::before {
+  background-image: url("../../images/listing/wish_pink.png");
+  opacity: 1;
+}
+
+.bo-new-brand-grid .display_zzim::after,
+.bo-new-brand-grid .respGoodsZzim::after {
+  background-image: url("../../images/listing/wish_hover.png");
+  opacity: 0;
+}
+
+.bo-new-brand-grid .display_zzim:hover::before,
+.bo-new-brand-grid .display_zzim[act="stay"]::before,
+.bo-new-brand-grid .respGoodsZzim:hover::before,
+.bo-new-brand-grid .respGoodsZzim:has(.zzimImage.active)::before,
+.bo-new-brand-grid .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::before,
+.bo-new-brand-grid .display_zzim:has(.zzimOnImg[style*="display: none"])::before {
+  opacity: 0;
 }
 
 .bo-new-brand-grid .display_zzim:hover::after,
 .bo-new-brand-grid .display_zzim[act="stay"]::after,
 .bo-new-brand-grid .respGoodsZzim:hover::after,
 .bo-new-brand-grid .respGoodsZzim:has(.zzimImage.active)::after,
+.bo-new-brand-grid .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::after,
 .bo-new-brand-grid .display_zzim:has(.zzimOnImg[style*="display: none"])::after {
-  background-image: url("../../images/listing/wish_hover.png");
+  opacity: 1;
 }
 
 .bo-new-empty {
@@ -654,10 +780,76 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
 .bo-new-paging .paging_navigation {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
   gap: 6px;
   margin: 0;
   width: 100%;
+}
+
+.bo-new-paging .paging_navigation a,
+.bo-new-paging .paging_navigation input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  margin: 0;
+  border: 1px solid #e6ddf4;
+  border-radius: 10px;
+  color: #6d657c;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.bo-new-paging .paging_navigation a:hover {
+  border-color: var(--bo-purple, #7b3fe4);
+  color: var(--bo-purple, #7b3fe4);
+}
+
+.bo-new-paging .paging_navigation a.on {
+  border-color: var(--bo-purple, #7b3fe4);
+  background: var(--bo-purple, #7b3fe4);
+  color: #fff;
+  cursor: default;
+}
+
+.bo-new-paging .paging_navigation a.prev,
+.bo-new-paging .paging_navigation a.next,
+.bo-new-paging .paging_navigation a[rel="prev"],
+.bo-new-paging .paging_navigation a[rel="next"] {
+  overflow: visible;
+  text-indent: 0;
+  background-image: none;
+  font-size: 0;
+}
+
+.bo-new-paging .paging_navigation a.prev::before,
+.bo-new-paging .paging_navigation a[rel="prev"]::before {
+  content: "\2039";
+  font-size: 16px;
+}
+
+.bo-new-paging .paging_navigation a.next::before,
+.bo-new-paging .paging_navigation a[rel="next"]::before {
+  content: "\203a";
+  font-size: 16px;
+}
+
+.bo-new-paging .paging_navigation a.first,
+.bo-new-paging .paging_navigation a.last,
+.bo-new-paging .paging_navigation a.end,
+.bo-new-paging .paging_navigation a[rel="first"],
+.bo-new-paging .paging_navigation a[rel="last"],
+.bo-new-paging .paging_navigation a[rel="end"] {
+  display: none;
 }
 
 @media (min-width: 761px) {
@@ -726,14 +918,14 @@ body.is-new-arrivals-page .subpage_wrap .subpage_container {
 
   .bo-new-brand-grid .listing-card-actions--desktop {
     display: grid;
-    grid-template-columns: 1fr 44px;
+    grid-template-columns: 1fr 40px;
     gap: 8px;
     padding: 0 10px 10px;
   }
 
   .bo-new-brand-grid .listing-card-actions--desktop .listing-card-wish-inline {
-    width: 44px;
-    min-width: 44px;
+    width: 40px;
+    min-width: 40px;
   }
 }
 

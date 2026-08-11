@@ -1089,13 +1089,13 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: 18px auto;
-  transform: scale(1);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: none;
+  transition: opacity 0.25s ease;
 }
 
 .listing-card-wish::before,
 .listing-card-wish-inline::before {
-  background-image: url("../img/listing/wish.png");
+  background-image: url("../img/listing/wish_pink.png");
   opacity: 1;
 }
 
@@ -1117,13 +1117,7 @@
 .listing-card-wish-inline.is-active::after,
 .listing-card-wish-inline:not(.is-hover-suppressed):hover::after {
   opacity: 1;
-}
-
-.listing-card-wish:not(.is-hover-suppressed):hover::before,
-.listing-card-wish:not(.is-hover-suppressed):hover::after,
-.listing-card-wish-inline:not(.is-hover-suppressed):hover::before,
-.listing-card-wish-inline:not(.is-hover-suppressed):hover::after {
-  transform: scale(1.18);
+  transform: none;
 }
 
 .listing-card-body {
@@ -1613,7 +1607,7 @@
 
   .listing-card-actions--desktop {
     display: grid;
-    grid-template-columns: 1fr 44px;
+    grid-template-columns: 1fr 40px;
     gap: 8px;
     padding: 0 10px 10px;
   }
@@ -1636,8 +1630,8 @@
   }
 
   .listing-card-actions--desktop .listing-card-wish-inline {
-    width: 44px;
-    min-width: 44px;
+    width: 40px;
+    min-width: 40px;
     background-image: none;
   }
 

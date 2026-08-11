@@ -1,0 +1,1935 @@
+/*
+  TrendyPicker Time Deal (Firstmall)
+  - Page: /promotion/timedeal → promotion/timedeal.html
+  - Design: timedeal/timedeal.html prototype
+*/
+
+html.is-timedeal-page {
+  height: auto !important;
+  min-height: 100%;
+  overflow-x: hidden !important;
+  overflow-y: scroll !important;
+}
+
+html.is-timedeal-page.overflow {
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+html.is-timedeal-page:not(.overflow) body.is-timedeal-page {
+  height: auto !important;
+  min-height: 100%;
+  overflow: visible !important;
+}
+
+body.is-timedeal-page,
+body.is-timedeal-page #layout_wrap,
+body.is-timedeal-page #layout_body {
+  width: 100%;
+  max-width: none;
+  height: auto !important;
+  min-height: 0;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  background: #262626;
+}
+
+html.is-timedeal-page:not(.overflow) body.is-timedeal-page,
+html.is-timedeal-page:not(.overflow) body.is-timedeal-page #layout_wrap,
+html.is-timedeal-page:not(.overflow) body.is-timedeal-page #layout_body {
+  overflow: visible !important;
+}
+
+body.is-timedeal-page .subpage_wrap,
+body.is-timedeal-page .subpage_wrap .subpage_container {
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+.bo-timedeal-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.bo-timedeal-main {
+  /* Match prototype timedeal.css — countdown 720×121, schedule height 121 */
+  --bo-purple: #7b3fe4;
+  --purple: #7b3fe4;
+  --listing-price: #e53935;
+  --listing-card-width: 260px;
+  --listing-grid-gap: 16px;
+  --listing-grid-width: calc(var(--listing-card-width) * 4 + var(--listing-grid-gap) * 3);
+  --listing-hero-inner-height: clamp(260px, 27vw, 520px);
+  --listing-shell-margin-top: -23px;
+  --timedeal-shell-max: 1600px;
+  --timedeal-shell-radius: 24px;
+  --timedeal-shell-left: max(0px, calc((100% - var(--timedeal-shell-max)) / 2));
+  --timedeal-band-inset: var(--timedeal-shell-radius);
+  --timedeal-schedule-band-gap: clamp(10px, 1.15vw, 22px);
+  --timedeal-countdown-width: clamp(280px, 36vw, 640px);
+  --timedeal-countdown-block-height: clamp(52px, 5.8vw, 110px);
+  --timedeal-schedule-pad: clamp(5px, 0.45vw, 8px);
+  --timedeal-schedule-bar-height: clamp(54px, 5.1vw, 96px);
+  --timedeal-schedule-tab-min-height: calc(
+    var(--timedeal-schedule-bar-height) - (var(--timedeal-schedule-pad) * 2)
+  );
+  --timedeal-schedule-tab-pad-y: clamp(6px, 0.7vw, 12px);
+  --timedeal-schedule-overlap: clamp(130px, 18.5vw, 310px);
+  --timedeal-schedule-top: calc(
+    var(--listing-hero-inner-height)
+    - var(--timedeal-schedule-overlap)
+    - var(--timedeal-countdown-block-height)
+  );
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: #262626;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
+}
+
+.bo-timedeal-hero.listing-hero--time-deal {
+  position: relative;
+  z-index: auto;
+  min-height: var(--listing-hero-inner-height);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(123, 63, 228, 0.35), transparent 42%),
+    linear-gradient(120deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.72)),
+    linear-gradient(135deg, #3a2a52 0%, #1a1228 55%, #120d1a 100%);
+}
+
+.bo-timedeal-hero-inner.timedeal-hero-inner {
+  position: relative;
+  z-index: auto;
+  box-sizing: border-box;
+  min-height: var(--listing-hero-inner-height);
+}
+
+.timedeal-schedule-band {
+  position: absolute;
+  top: var(--timedeal-schedule-top);
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--timedeal-schedule-band-gap);
+  width: min(100%, var(--timedeal-shell-max));
+  margin: 0;
+  padding: 0 var(--timedeal-shell-radius);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.timedeal-countdown {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 0.729vw, 14px);
+  box-sizing: border-box;
+  width: var(--timedeal-countdown-width);
+  max-width: 100%;
+  height: var(--timedeal-countdown-block-height);
+  min-height: var(--timedeal-countdown-block-height);
+  padding: clamp(10px, 0.85vw, 16px) clamp(12px, 0.7vw, 14px);
+  border: 1px solid rgba(168, 85, 247, 0.58);
+  border-radius: clamp(14px, 1vw, 18px);
+  background:
+    radial-gradient(circle at 16% 18%, rgba(155, 89, 239, 0.32) 0%, transparent 44%),
+    radial-gradient(circle at 92% 82%, rgba(176, 76, 240, 0.14) 0%, transparent 40%),
+    linear-gradient(135deg, #1a0033 0%, #0d001a 46%, #050010 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(210, 150, 255, 0.38),
+    inset 0 0 28px rgba(123, 63, 228, 0.14),
+    0 0 0 1px rgba(168, 85, 247, 0.2),
+    0 0 16px rgba(139, 63, 228, 0.42),
+    0 0 36px rgba(123, 63, 228, 0.2),
+    0 10px 32px rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+.timedeal-countdown-label {
+  flex: 0 0 auto;
+  margin: 0;
+  margin-left: clamp(10px, 1.25vw, 24px);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: clamp(14px, 0.88vw, 17px);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.timedeal-countdown-timer {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.timedeal-countdown-unit {
+  display: grid;
+  flex: 1 1 0;
+  justify-items: center;
+  gap: 2px;
+  min-width: 0;
+  padding-inline: 10px;
+}
+
+.timedeal-countdown-unit b {
+  min-width: 28px;
+  color: #fff;
+  font-size: clamp(24px, 1.7vw, 34px);
+  line-height: 1;
+  font-weight: 700;
+}
+
+.timedeal-countdown-unit em {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+.timedeal-countdown-divider {
+  flex: 0 0 1px;
+  align-self: stretch;
+  width: 1px;
+  margin-block: 2px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.timedeal-schedule {
+  --timedeal-thumb-x: 0%;
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  width: var(--timedeal-countdown-width);
+  max-width: 100%;
+  margin: 0;
+  padding: var(--timedeal-schedule-pad);
+  box-sizing: border-box;
+  min-height: var(--timedeal-schedule-bar-height);
+  overflow: hidden;
+  border: 1px solid rgba(155, 89, 239, 0.42);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 12% 50%, rgba(176, 76, 240, 0.22), transparent 38%),
+    linear-gradient(180deg, rgba(24, 14, 38, 0.98) 0%, rgba(8, 6, 14, 0.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(123, 63, 228, 0.12),
+    0 14px 36px rgba(0, 0, 0, 0.34);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.timedeal-schedule-tab {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 0.4vw, 8px);
+  min-width: 0;
+  min-height: var(--timedeal-schedule-tab-min-height);
+  padding: var(--timedeal-schedule-tab-pad-y) clamp(6px, 0.5vw, 10px);
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: transparent;
+  text-align: center;
+  text-decoration: none;
+  isolation: isolate;
+}
+
+.timedeal-schedule-tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #b04cf0 0%, #8b3fe4 42%, #e055c0 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 8px 22px rgba(176, 76, 240, 0.38);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.timedeal-schedule-tab.is-active::before {
+  opacity: 1;
+}
+
+.timedeal-schedule-tab:not(:first-child) {
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.timedeal-schedule-tab.is-active {
+  border-left-color: transparent;
+}
+
+.timedeal-schedule-tab.is-active + .timedeal-schedule-tab {
+  border-left-color: transparent;
+}
+
+.timedeal-schedule-copy strong,
+.timedeal-schedule-copy span,
+.timedeal-schedule-copy em {
+  transition: color 0.35s ease;
+}
+
+.timedeal-schedule-icon {
+  display: block;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.timedeal-schedule-icon strong {
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.timedeal-schedule-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  width: 100%;
+}
+
+.timedeal-schedule-copy span {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.timedeal-schedule-copy em {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.25;
+}
+
+.timedeal-schedule-tab.is-active .timedeal-schedule-copy em,
+.timedeal-schedule-tab:hover .timedeal-schedule-copy em {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.timedeal-schedule:has(.timedeal-schedule-tab:hover) .timedeal-schedule-tab.is-active:not(:hover) .timedeal-schedule-copy em {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.timedeal-schedule-copy em b {
+  color: #ff5ec8;
+  font-weight: 800;
+}
+
+.bo-timedeal-shell {
+  position: relative;
+  z-index: 4;
+  isolation: isolate;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1600px;
+  margin: var(--listing-shell-margin-top) auto 0;
+  padding: 20px 16px 88px;
+  border-radius: 24px 24px 0 0;
+  background: #fff;
+}
+
+.bo-timedeal-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  color: #8f86a0;
+  font-size: 14px;
+}
+
+.bo-timedeal-breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bo-timedeal-breadcrumbs a:hover,
+.bo-timedeal-breadcrumbs a:focus-visible {
+  color: var(--bo-purple);
+}
+
+.bo-timedeal-breadcrumbs span:last-child {
+  color: #171320;
+  font-weight: 600;
+}
+
+.bo-timedeal-toolbar {
+  position: relative;
+  z-index: 40;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 40px;
+  padding-bottom: 52px;
+}
+
+.bo-timedeal-count {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+  color: #171320;
+  font-size: 15px;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.bo-timedeal-count strong {
+  font-weight: 700;
+}
+
+.bo-timedeal-count-mobile {
+  display: none;
+}
+
+/* Centered on the page/shell, not between count/sort flex items */
+.timedeal-categories {
+  position: absolute;
+  top: 44px;
+  left: 50%;
+  z-index: 90;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  max-width: min(100%, calc(100vw - 32px));
+  overflow-x: auto;
+  scrollbar-width: none;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+
+.timedeal-categories .timedeal-category {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.timedeal-categories::-webkit-scrollbar {
+  display: none;
+}
+
+.timedeal-category {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 35px;
+  padding: 0 18px;
+  border: 1px solid #e7e0f3;
+  border-radius: 999px;
+  color: #4f4760;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.timedeal-category:hover {
+  background-color: rgba(208, 181, 255, 0.62);
+  color: #111;
+}
+
+.timedeal-category.is-active {
+  border-color: var(--bo-purple, #7b3fe4);
+  color: #fff;
+  background: var(--bo-purple, #7b3fe4);
+}
+
+.bo-timedeal-toolbar-actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 1 1 0;
+  justify-content: flex-end;
+  min-width: 0;
+  pointer-events: none;
+}
+
+.bo-timedeal-toolbar-actions .bo-timedeal-sort,
+.bo-timedeal-toolbar-actions .realtrend-select-wrap,
+.bo-timedeal-toolbar-actions select {
+  pointer-events: auto;
+}
+
+.bo-timedeal-sort {
+  position: relative;
+  z-index: 60;
+  display: block;
+}
+
+.bo-timedeal-sort .realtrend-select-wrap {
+  position: relative;
+  display: block;
+  min-width: 132px;
+  z-index: 1;
+}
+
+.bo-timedeal-sort .realtrend-select-wrap.is-open {
+  z-index: 80;
+}
+
+.bo-timedeal-sort .realtrend-select-wrap::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transform: translateY(-50%);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+.bo-timedeal-sort .realtrend-select-wrap.is-open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.bo-timedeal-sort .realtrend-select-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.bo-timedeal-sort .realtrend-select-trigger {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 132px;
+  height: 36px;
+  padding: 0 32px 0 12px;
+  border: 1px solid #ded8e8;
+  border-radius: 8px;
+  color: #111;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.bo-timedeal-sort .realtrend-select-wrap.is-open .realtrend-select-trigger {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.bo-timedeal-sort .realtrend-select-value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 34px;
+}
+
+.bo-timedeal-sort .realtrend-select-menu {
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 0;
+  right: 0;
+  z-index: 31;
+  display: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 10px 6px 6px;
+  list-style: none;
+  border: 1px solid #ded8e8;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
+  max-height: min(220px, 40dvh);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.bo-timedeal-sort .realtrend-select-menu::-webkit-scrollbar {
+  display: none;
+}
+
+.bo-timedeal-sort .realtrend-select-menu.is-open {
+  display: block;
+}
+
+.bo-timedeal-sort .realtrend-select-menu li {
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #111;
+  font-size: 13px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.bo-timedeal-sort .realtrend-select-menu li:hover,
+.bo-timedeal-sort .realtrend-select-menu li.is-selected {
+  color: #7b3fe4;
+  background: #f2ebff;
+}
+
+/* Quiet Firstmall search chrome */
+.bo-timedeal-shell #searchModule,
+.bo-timedeal-shell .search_filter_wrap,
+.bo-timedeal-shell #filteredItemSorting,
+.bo-timedeal-shell .filter_count,
+.bo-timedeal-shell .catalog_mo {
+  margin: 0;
+}
+
+.bo-timedeal-shell #searchModule,
+.bo-timedeal-shell .search_filter_wrap,
+.bo-timedeal-shell #filteredItemSorting {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* ===== Product grid — ported from listing/listing.css (.listing-grid) ===== */
+/* Grid must be on the UL only — never on #searchedItemDisplay itself */
+.bo-timedeal-shell #searchedItemDisplay,
+.bo-timedeal-shell #searchedItemDisplay.searched_item_display {
+  display: block;
+  width: 100%;
+  max-width: none;
+  float: none;
+  clear: both;
+}
+
+.bo-timedeal-shell #searchedItemDisplay::after,
+.bo-timedeal-shell #searchedItemDisplay.searched_item_display::after {
+  content: none;
+  display: none;
+}
+
+.bo-timedeal-shell #searchedItemDisplay > ul.listing-grid,
+.bo-timedeal-shell #searchedItemDisplay > ul,
+.bo-timedeal-shell #searchedItemDisplay[data-displaytype="lattice"] > ul {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  float: none !important;
+}
+
+.bo-timedeal-shell #searchedItemDisplay ul > li.is-timedeal-cat-hidden,
+.bo-timedeal-shell #searchedItemDisplay ul > li.listing-card.is-timedeal-cat-hidden {
+  display: none !important;
+}
+
+.bo-timedeal-shell .goods_category_area {
+  display: none !important;
+}
+
+.bo-timedeal-shell .listing-card > .goods_list_style5,
+.bo-timedeal-shell .listing-card > .goods_list_style1,
+.bo-timedeal-shell .listing-card > .goods_list_style2,
+.bo-timedeal-shell .listing-card > .gl_item,
+.bo-timedeal-shell #searchedItemDisplay > ul > li > .goods_list_style5,
+.bo-timedeal-shell #searchedItemDisplay > ul > li > .gl_item {
+  display: contents;
+}
+
+.bo-timedeal-shell #searchedItemDisplay > ul > li,
+.bo-timedeal-shell #searchedItemDisplay > ul > li.listing-card,
+.bo-timedeal-shell .listing-card {
+  display: grid !important;
+  grid-template-rows: auto 1fr auto;
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100%;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  clear: none !important;
+  overflow: hidden;
+  border: 1px solid #ece7f4;
+  border-radius: 20px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.bo-timedeal-shell #searchedItemDisplay .paging_navigation {
+  display: flex;
+  width: 100%;
+  clear: both;
+}
+
+.bo-timedeal-shell .listing-card-media,
+.bo-timedeal-shell .item_img_area {
+  position: relative;
+}
+
+.bo-timedeal-shell .listing-card-image,
+.bo-timedeal-shell .item_img_area {
+  position: relative;
+  z-index: 0;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  overflow: hidden;
+  background: #f4f1fb;
+}
+
+.bo-timedeal-shell .listing-card-image > img,
+.bo-timedeal-shell .item_img_area > a > img,
+.bo-timedeal-shell .item_img_area > img:not(.timedeal-card-deal-clock) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bo-timedeal-shell .listing-card:hover .listing-card-image > img,
+  .bo-timedeal-shell .listing-card:hover .item_img_area > a > img,
+  .bo-timedeal-shell .listing-card:hover .item_img_area > img:not(.timedeal-card-deal-clock):not(.heart-img):not(.timedeal-card-deal-clock),
+  .bo-timedeal-shell #searchedItemDisplay > ul > li:hover .listing-card-image > img,
+  .bo-timedeal-shell #searchedItemDisplay > ul > li:hover .item_img_area > a > img,
+  .bo-timedeal-shell #searchedItemDisplay > ul > li:hover .item_img_area img.square_display {
+    transform: scale(1.06);
+  }
+}
+
+.bo-timedeal-shell .item_img_area .display_cart,
+.bo-timedeal-shell .item_img_area .btn_cart,
+.bo-timedeal-shell .item_img_area .cart_btn,
+.bo-timedeal-shell .item_img_area .goods_cart,
+.bo-timedeal-shell .item_img_area .icon_cart,
+.bo-timedeal-shell .item_img_area .display_option,
+.bo-timedeal-shell .item_img_area [onclick*="displayAddToCart"],
+.bo-timedeal-shell .item_img_area [onclick*="AddToCart"],
+.bo-timedeal-shell .goods_list_style5 .display_cart,
+.bo-timedeal-shell .goods_list_style5 .btn_cart,
+.bo-timedeal-shell .gl_item > .display_cart,
+.bo-timedeal-shell .gl_item > .btn_cart,
+.bo-timedeal-shell .item_img_area img[src*="cart"] {
+  display: none !important;
+}
+
+/* Time Deal badge — clock + rate share the same visual height */
+.bo-timedeal-shell .timedeal-card-deal {
+  position: absolute;
+  top: 11px;
+  left: 13px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  pointer-events: none;
+}
+
+.bo-timedeal-shell .timedeal-card-deal-clock {
+  display: block;
+  flex: 0 0 22px;
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  margin: 0 !important;
+  object-fit: contain;
+}
+
+.bo-timedeal-shell .timedeal-card-deal-rate {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  padding: 0 8px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-align: center;
+  white-space: nowrap;
+  background: #ff5a96;
+}
+
+.bo-timedeal-shell .display_zzim:not(.listing-card-wish),
+.bo-timedeal-shell .respGoodsZzim:not(.listing-card-wish),
+.bo-timedeal-shell .is-timedeal-zzim-duplicate {
+  display: none !important;
+}
+
+.bo-timedeal-shell .listing-card-wish {
+  position: absolute !important;
+  right: 10px;
+  bottom: 10px;
+  z-index: 3;
+  display: grid !important;
+  place-items: center;
+  box-sizing: border-box;
+  width: 34px;
+  height: 34px;
+  padding: 0 !important;
+  border: 0;
+  border-radius: 50%;
+  background: #fff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+.bo-timedeal-shell .listing-card-wish::before,
+.bo-timedeal-shell .listing-card-wish::after,
+.bo-timedeal-shell .listing-card-wish-inline::before,
+.bo-timedeal-shell .listing-card-wish-inline::after,
+.bo-timedeal-shell .display_zzim::before,
+.bo-timedeal-shell .display_zzim::after,
+.bo-timedeal-shell .respGoodsZzim::before,
+.bo-timedeal-shell .respGoodsZzim::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 18px;
+  height: 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 18px auto;
+  transform: none;
+  transition: opacity 0.25s ease;
+}
+
+.bo-timedeal-shell .listing-card-wish-inline {
+  position: relative;
+}
+
+.bo-timedeal-shell .listing-card-wish::before,
+.bo-timedeal-shell .listing-card-wish-inline::before,
+.bo-timedeal-shell .display_zzim::before,
+.bo-timedeal-shell .respGoodsZzim::before {
+  background-image: url("../../images/listing/wish_pink.png");
+  opacity: 1;
+}
+
+.bo-timedeal-shell .listing-card-wish::after,
+.bo-timedeal-shell .listing-card-wish-inline::after,
+.bo-timedeal-shell .display_zzim::after,
+.bo-timedeal-shell .respGoodsZzim::after {
+  background-image: url("../../images/listing/wish_hover.png");
+  opacity: 0;
+}
+
+.bo-timedeal-shell .listing-card-wish img,
+.bo-timedeal-shell .listing-card-wish-inline img,
+.bo-timedeal-shell .display_zzim img,
+.bo-timedeal-shell .respGoodsZzim img,
+.bo-timedeal-shell .respGoodsZzim .zzimImage {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.bo-timedeal-shell .listing-card-wish.is-active::before,
+.bo-timedeal-shell .listing-card-wish:not(.is-hover-suppressed):hover::before,
+.bo-timedeal-shell .listing-card-wish-inline.is-active::before,
+.bo-timedeal-shell .listing-card-wish-inline:not(.is-hover-suppressed):hover::before,
+.bo-timedeal-shell .listing-card-wish[aria-pressed="true"]::before,
+.bo-timedeal-shell .listing-card-wish-inline[aria-pressed="true"]::before,
+.bo-timedeal-shell .display_zzim:hover::before,
+.bo-timedeal-shell .display_zzim[act="stay"]::before,
+.bo-timedeal-shell .respGoodsZzim:hover::before,
+.bo-timedeal-shell .respGoodsZzim:has(.zzimImage.active)::before,
+.bo-timedeal-shell .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::before {
+  opacity: 0;
+}
+
+.bo-timedeal-shell .listing-card-wish .heart-img,
+.bo-timedeal-shell .listing-card-wish-inline .heart-img,
+.bo-timedeal-shell .listing-card-wish:hover .heart-img,
+.bo-timedeal-shell .listing-card-wish-inline:hover .heart-img,
+.bo-timedeal-shell .listing-card-wish:hover .heart-img:not(.zzim-hidden),
+.bo-timedeal-shell .listing-card-wish-inline:hover .heart-img:not(.zzim-hidden) {
+  transform: none !important;
+}
+
+.bo-timedeal-shell .listing-card-wish.is-active::after,
+.bo-timedeal-shell .listing-card-wish:not(.is-hover-suppressed):hover::after,
+.bo-timedeal-shell .listing-card-wish-inline.is-active::after,
+.bo-timedeal-shell .listing-card-wish-inline:not(.is-hover-suppressed):hover::after,
+.bo-timedeal-shell .listing-card-wish[aria-pressed="true"]::after,
+.bo-timedeal-shell .listing-card-wish-inline[aria-pressed="true"]::after,
+.bo-timedeal-shell .display_zzim:hover::after,
+.bo-timedeal-shell .display_zzim[act="stay"]::after,
+.bo-timedeal-shell .respGoodsZzim:hover::after,
+.bo-timedeal-shell .respGoodsZzim:has(.zzimImage.active)::after,
+.bo-timedeal-shell .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::after {
+  opacity: 1;
+  transform: none;
+}
+
+.bo-timedeal-shell .listing-card-body,
+.bo-timedeal-shell .searched_item_display .item_info_area,
+.bo-timedeal-shell .item_info_area {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 10px 12px 0;
+  margin: 0;
+  list-style: none;
+  background: #fff;
+}
+
+.bo-timedeal-shell .item_info_area > li,
+.bo-timedeal-shell .item_info_area > p,
+.bo-timedeal-shell .item_info_area > .listing-card-brand,
+.bo-timedeal-shell .item_info_area > .goods_name_area,
+.bo-timedeal-shell .item_info_area > .goods_price_area {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.bo-timedeal-shell .listing-card-body .item_info_area {
+  padding: 0;
+}
+
+.bo-timedeal-shell .item_info_area > .listing-card-brand,
+.bo-timedeal-shell .item_info_area > .brand_name {
+  order: 1;
+}
+
+.bo-timedeal-shell .item_info_area > .goods_name_area {
+  order: 2;
+}
+
+.bo-timedeal-shell .item_info_area > .goods_price_area,
+.bo-timedeal-shell .item_info_area > .listing-card-price {
+  order: 3;
+}
+
+.bo-timedeal-shell .listing-card-brand,
+.bo-timedeal-shell .item_info_area > .listing-card-brand,
+.bo-timedeal-shell .brand_name,
+.bo-timedeal-shell .goods_brand_area,
+.bo-timedeal-shell .brand_name_area {
+  display: block;
+  order: 1;
+  margin: 0 0 1px;
+  overflow: hidden;
+  color: #8f86a0;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.bo-timedeal-shell .listing-card-brand:hover,
+.bo-timedeal-shell .brand_name:hover {
+  color: var(--purple, #7943e2);
+  text-decoration: none;
+}
+
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_name_area .brand_name:before,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_name_area .brand_name:after,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_brand_area .name:before,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_brand_area .name:after {
+  content: none;
+  display: none;
+}
+
+.bo-timedeal-shell .is-timedeal-brand-source,
+.bo-timedeal-shell .goods_name_area .brand_name.is-timedeal-brand-source,
+.bo-timedeal-shell .goods_brand_area.is-timedeal-brand-source,
+.bo-timedeal-shell .goods_brand_area:has(.is-timedeal-brand-source) {
+  display: none !important;
+}
+
+.bo-timedeal-shell .listing-card-title,
+.bo-timedeal-shell .listing-card-title a,
+.bo-timedeal-shell .goods_name_area .name,
+.bo-timedeal-shell .goods_name_area a,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_name_area a {
+  display: -webkit-box;
+  min-height: 0;
+  margin: 0 0 2px;
+  overflow: hidden;
+  color: #171320;
+  font-size: 14px;
+  line-height: 1.25;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none !important;
+  transition: color 0.2s ease;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.bo-timedeal-shell .listing-card-title:hover,
+.bo-timedeal-shell .listing-card-title a:hover,
+.bo-timedeal-shell .goods_name_area .name:hover,
+.bo-timedeal-shell .goods_name_area a:hover,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_name_area a:hover,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_name_area a:focus {
+  color: var(--bo-purple, #7b3fe4) !important;
+  text-decoration: none !important;
+}
+
+.bo-timedeal-shell .listing-card-body,
+.bo-timedeal-shell .item_info_area,
+.bo-timedeal-shell .goods_name_area {
+  text-align: left;
+}
+
+.bo-timedeal-shell .goods_name_area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.bo-timedeal-shell .goods_name_area .brand_name {
+  display: none !important;
+}
+
+.bo-timedeal-shell .listing-card-rating,
+.bo-timedeal-shell .displaY_review_score_a,
+.bo-timedeal-shell .displaY_review_score_c,
+.bo-timedeal-shell .goods_review_area,
+.bo-timedeal-shell .review_count,
+.bo-timedeal-shell .reviewCnt {
+  display: none !important;
+}
+
+.bo-timedeal-shell .listing-card-rating-star,
+.bo-timedeal-shell .listing-card-rating img {
+  display: block;
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  max-width: none;
+  object-fit: contain;
+}
+
+.bo-timedeal-shell .listing-card-rating span:last-child {
+  color: #8f86a0;
+}
+
+.bo-timedeal-shell .listing-card-price,
+.bo-timedeal-shell .goods_price_area,
+.bo-timedeal-shell .searched_item_display .goods_list_style5 .item_info_area .goods_price_area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  padding-top: 0;
+}
+
+/* 할인가(빨강) → 정가 / 할인율 숨김 */
+.bo-timedeal-shell .goods_price_area .sale_price,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_price_area .sale_price,
+.bo-timedeal-shell .searched_item_display .goods_list_style5 .item_info_area .goods_price_area .sale_price,
+.bo-timedeal-shell .listing-card-price strong {
+  order: 1;
+  color: var(--listing-price, #e53935) !important;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.bo-timedeal-shell .sale_price::before,
+.bo-timedeal-shell .consumer_price::before,
+.bo-timedeal-shell .listing-card-price strong::before,
+.bo-timedeal-shell .listing-card-price del::before {
+  content: "US ";
+}
+
+.bo-timedeal-shell .goods_price_area .sale_price .num,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_price_area .sale_price .num {
+  color: inherit !important;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: 0;
+}
+
+.bo-timedeal-shell .goods_price_area .price_won {
+  display: none !important;
+}
+
+.bo-timedeal-shell .goods_price_area .consumer_price,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_price_area .consumer_price,
+.bo-timedeal-shell .listing-card-price del {
+  order: 2;
+  color: #8f86a0;
+  font-size: 13px;
+  text-decoration: line-through;
+}
+
+.bo-timedeal-shell .goods_price_area .discount_rate,
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_price_area .discount_rate,
+.bo-timedeal-shell .searched_item_display .goods_list_style5 .item_info_area .goods_price_area .discount_rate,
+.bo-timedeal-shell .listing-card-price .discount,
+.bo-timedeal-shell .listing-card-discount {
+  display: none !important;
+}
+
+.bo-timedeal-shell .goods_name_area > br,
+.bo-timedeal-shell .item_info_area > li:not(.goods_name_area):not(.goods_price_area):not(.goods_brand_area):not(.brand_name_area):not(.listing-card-brand) {
+  display: none;
+}
+
+.bo-timedeal-shell .searched_item_display .item_info_area .goods_brand_area,
+.bo-timedeal-shell .searched_item_display .item_info_area .brand_name_area {
+  display: block;
+}
+
+.bo-timedeal-shell .listing-card-actions--desktop {
+  display: none;
+}
+
+.bo-timedeal-shell .listing-card-cart {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: calc(100% - 20px);
+  height: 38px;
+  margin: 0 10px 10px;
+  padding: 0;
+  border: 1px solid var(--purple);
+  border-radius: 10px;
+  color: var(--purple);
+  background: #fff;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.bo-timedeal-shell .listing-card-cart:hover {
+  border-color: #7943e2;
+  background-color: #7943e2;
+}
+
+.bo-timedeal-shell .listing-card-cart::before,
+.bo-timedeal-shell .listing-card-cart::after,
+.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
+.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after,
+.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline)::before,
+.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 18px;
+  height: calc(18px * 24 / 22);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 18px auto;
+  transition: opacity 0.25s ease;
+}
+
+.bo-timedeal-shell .listing-card-cart::before,
+.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
+.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline)::before {
+  background-image: url("../../images/listing/cart.png");
+  opacity: 1;
+}
+
+.bo-timedeal-shell .listing-card-cart::after,
+.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after,
+.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline)::after {
+  background-image: url("../../images/listing/cart_hover.png");
+  opacity: 0;
+}
+
+.bo-timedeal-shell .listing-card-cart:hover::before,
+.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::before,
+.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover::before {
+  opacity: 0;
+}
+
+.bo-timedeal-shell .listing-card-cart:hover::after,
+.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::after,
+.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover::after {
+  opacity: 1;
+}
+
+.bo-timedeal-shell .paging_navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 32px;
+}
+
+.bo-timedeal-shell .paging_navigation a,
+.bo-timedeal-shell .paging_navigation input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  margin: 0;
+  border: 1px solid #e6ddf4;
+  border-radius: 10px;
+  color: #6d657c;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.bo-timedeal-shell .paging_navigation a:hover {
+  border-color: #7b3fe4;
+  color: #7b3fe4;
+}
+
+.bo-timedeal-shell .paging_navigation a.on {
+  border-color: #7b3fe4;
+  background: #7b3fe4;
+  color: #fff;
+}
+
+.bo-timedeal-shell .paging_navigation a.prev,
+.bo-timedeal-shell .paging_navigation a.next,
+.bo-timedeal-shell .paging_navigation a[rel="prev"],
+.bo-timedeal-shell .paging_navigation a[rel="next"] {
+  overflow: visible;
+  text-indent: 0;
+  background-image: none;
+  font-size: 0;
+}
+
+.bo-timedeal-shell .paging_navigation a.prev::before,
+.bo-timedeal-shell .paging_navigation a[rel="prev"]::before {
+  content: "\2039";
+  font-size: 16px;
+}
+
+.bo-timedeal-shell .paging_navigation a.next::before,
+.bo-timedeal-shell .paging_navigation a[rel="next"]::before {
+  content: "\203a";
+  font-size: 16px;
+}
+
+.bo-timedeal-shell .paging_navigation a.first,
+.bo-timedeal-shell .paging_navigation a.last,
+.bo-timedeal-shell .paging_navigation a.end,
+.bo-timedeal-shell .paging_navigation a[rel="first"],
+.bo-timedeal-shell .paging_navigation a[rel="last"],
+.bo-timedeal-shell .paging_navigation a[rel="end"] {
+  display: none;
+}
+
+@media (min-width: 761px) {
+  .bo-timedeal-main {
+    --listing-shell-margin-top: calc(-1 * clamp(23px, 5.208vw, 100px));
+    --timedeal-shell-radius: 28px;
+    --timedeal-band-inset: var(--timedeal-shell-radius);
+  }
+
+  .timedeal-schedule-band {
+    left: var(--timedeal-shell-left);
+    width: calc(50% - var(--timedeal-shell-left));
+    max-width: none;
+    padding: 0 0 0 var(--timedeal-band-inset);
+    transform: none;
+  }
+
+  .timedeal-schedule {
+    width: 100%;
+    max-width: none;
+  }
+
+  .timedeal-countdown {
+    width: calc(75% + 28px);
+    max-width: 100%;
+  }
+
+  .bo-timedeal-shell {
+    margin-top: var(--listing-shell-margin-top);
+    padding: 32px 24px 72px;
+    border-radius: 28px 28px 0 0;
+    box-shadow: 0 -10px 30px rgba(23, 16, 38, 0.08);
+  }
+
+  .timedeal-schedule-tab {
+    z-index: 1;
+    isolation: isolate;
+  }
+
+  .timedeal-schedule-tab::before {
+    content: none;
+  }
+
+  .timedeal-schedule::after {
+    content: "";
+    position: absolute;
+    top: var(--timedeal-schedule-pad);
+    left: var(--timedeal-schedule-pad);
+    z-index: 0;
+    width: calc((100% - (var(--timedeal-schedule-pad) * 2)) / 2);
+    height: calc(100% - (var(--timedeal-schedule-pad) * 2));
+    border-radius: 12px;
+    background: linear-gradient(135deg, #b04cf0 0%, #8b3fe4 42%, #e055c0 100%);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.14),
+      0 8px 22px rgba(176, 76, 240, 0.38);
+    transform: translateX(var(--timedeal-thumb-x));
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+  .timedeal-schedule:has(.timedeal-schedule-tab[data-timedeal-schedule="upcoming"].is-active) {
+    --timedeal-thumb-x: 100%;
+  }
+
+  .timedeal-schedule:has(.timedeal-schedule-tab[data-timedeal-schedule="now"]:hover) {
+    --timedeal-thumb-x: 0%;
+  }
+
+  .timedeal-schedule:has(.timedeal-schedule-tab[data-timedeal-schedule="upcoming"]:hover) {
+    --timedeal-thumb-x: 100%;
+  }
+
+  .bo-timedeal-shell #searchedItemDisplay > ul.listing-grid,
+  .bo-timedeal-shell #searchedItemDisplay > ul,
+  .bo-timedeal-shell #searchedItemDisplay[data-displaytype="lattice"] > ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .bo-timedeal-main {
+    --listing-hero-inner-height: clamp(320px, 40vw, 420px);
+    --timedeal-countdown-block-height: clamp(78px, 9vw, 98px);
+    --timedeal-schedule-bar-height: clamp(72px, 8.2vw, 90px);
+    --timedeal-schedule-pad: clamp(5px, 0.65vw, 8px);
+    --timedeal-schedule-band-gap: clamp(12px, 1.6vw, 20px);
+    --timedeal-schedule-tab-pad-y: clamp(6px, 0.9vw, 10px);
+  }
+
+  .bo-timedeal-breadcrumbs {
+    display: none;
+  }
+
+  .bo-timedeal-hero.listing-hero--time-deal,
+  .bo-timedeal-hero-inner.timedeal-hero-inner {
+    min-height: var(--listing-hero-inner-height);
+  }
+
+  .timedeal-schedule-band {
+    top: auto;
+    bottom: clamp(66px, 8.5vw, 92px);
+    left: var(--timedeal-shell-left);
+    width: calc(50% - var(--timedeal-shell-left));
+    padding: 0 0 0 var(--timedeal-band-inset);
+    transform: none;
+  }
+
+  .timedeal-countdown {
+    width: calc(75% + 24px);
+    margin-inline: 0;
+    border-radius: 18px;
+  }
+
+  .timedeal-countdown-label {
+    margin-left: clamp(18px, 2.3vw, 26px);
+    font-size: clamp(13px, 1.55vw, 16px);
+  }
+
+  .timedeal-countdown-unit {
+    padding-inline: clamp(6px, 1vw, 10px);
+  }
+
+  .timedeal-countdown-unit b {
+    font-size: clamp(28px, 3.45vw, 34px);
+  }
+
+  .timedeal-countdown-unit em {
+    font-size: clamp(10px, 1.2vw, 13px);
+    letter-spacing: 0;
+  }
+
+  .timedeal-schedule {
+    border-radius: 16px;
+  }
+
+  .timedeal-schedule-tab {
+    gap: clamp(5px, 0.8vw, 8px);
+    border-radius: 12px;
+  }
+
+  .timedeal-schedule-icon strong {
+    font-size: clamp(11px, calc(8.88px + 0.279vw), 12px);
+    line-height: 1.1;
+  }
+
+  .timedeal-schedule-copy span {
+    font-size: clamp(12px, 1.5vw, 14px);
+  }
+
+  .timedeal-schedule-copy em {
+    font-size: clamp(11px, 1.35vw, 14px);
+  }
+
+  .bo-timedeal-toolbar {
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding-bottom: 0;
+  }
+
+  .bo-timedeal-count-desktop,
+  .bo-timedeal-count strong {
+    display: none;
+  }
+
+  .bo-timedeal-count-mobile {
+    display: inline;
+  }
+
+  .bo-timedeal-count,
+  .bo-timedeal-toolbar-actions {
+    flex: 0 0 auto;
+  }
+
+  .timedeal-categories {
+    position: static;
+    order: 3;
+    align-self: stretch;
+    left: auto;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 18px;
+    gap: 10px;
+    padding: 0 16px 2px 0;
+    transform: none;
+  }
+
+  .timedeal-category {
+    min-height: 36px;
+    padding-inline: 12px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 1121px) {
+  .bo-timedeal-main {
+    --listing-shell-margin-top: -100px;
+    --timedeal-schedule-shell-gap: 68px;
+    --timedeal-schedule-top: calc(
+      var(--listing-hero-inner-height)
+      + var(--listing-shell-margin-top)
+      - var(--timedeal-schedule-shell-gap)
+      - var(--timedeal-schedule-bar-height)
+      - var(--timedeal-schedule-band-gap)
+      - var(--timedeal-countdown-block-height)
+    );
+  }
+
+  .bo-timedeal-shell {
+    margin-top: var(--listing-shell-margin-top);
+    padding: 36px 40px 80px;
+  }
+
+  .timedeal-schedule-band {
+    left: var(--timedeal-shell-left);
+    width: calc(50% - var(--timedeal-shell-left));
+    padding: 0 0 0 var(--timedeal-band-inset);
+    transform: none;
+  }
+
+  .bo-timedeal-shell #searchedItemDisplay > ul.listing-grid,
+  .bo-timedeal-shell #searchedItemDisplay > ul,
+  .bo-timedeal-shell #searchedItemDisplay[data-displaytype="lattice"] > ul {
+    width: min(100%, var(--listing-grid-width)) !important;
+    max-width: var(--listing-grid-width) !important;
+    margin-inline: auto;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--listing-grid-gap);
+  }
+
+  .bo-timedeal-shell #searchedItemDisplay > ul > li,
+  .bo-timedeal-shell #searchedItemDisplay > ul > li.listing-card,
+  .bo-timedeal-shell .listing-card {
+    box-sizing: border-box;
+    width: 100% !important;
+    max-width: var(--listing-card-width) !important;
+    height: 100%;
+    /* Use border (not outline): outline-offset:-1px is clipped by overflow:hidden on the thumb */
+    border: 1px solid #ece7f4;
+    outline: 0;
+    border-radius: 18px;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .bo-timedeal-shell .listing-card-media,
+  .bo-timedeal-shell .item_img_area,
+  .bo-timedeal-shell .listing-card-image {
+    border-radius: 17px 17px 0 0;
+  }
+
+  .bo-timedeal-shell .listing-card-image,
+  .bo-timedeal-shell .item_img_area {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
+  }
+
+  .bo-timedeal-shell .listing-card-wish,
+  .bo-timedeal-shell .display_zzim,
+  .bo-timedeal-shell .respGoodsZzim {
+    display: none !important;
+  }
+
+  .bo-timedeal-shell .listing-card-actions--desktop {
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    gap: 8px;
+    padding: 0 10px 10px;
+  }
+
+  .bo-timedeal-shell .listing-card-actions--desktop button,
+  .bo-timedeal-shell .listing-card-actions--desktop a {
+    position: relative;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+    padding: 0 !important;
+    border: 1px solid #ded8e8;
+    border-radius: 10px;
+    color: var(--purple);
+    background-color: #fff;
+    transition: border-color 0.25s ease, background-color 0.25s ease;
+  }
+
+  .bo-timedeal-shell .listing-card-actions--desktop .listing-card-wish-inline {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 40px;
+    min-width: 40px;
+    border: 1px solid #ded8e8;
+    border-radius: 10px;
+    box-shadow: none;
+    background-image: none;
+  }
+
+  .bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover,
+  .bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover {
+    border-color: #7943e2;
+    background-color: #7943e2;
+  }
+
+  .bo-timedeal-shell .listing-card-actions--desktop .listing-card-wish-inline:hover {
+    border-color: #ded8e8;
+    background-color: #fff;
+  }
+
+  .bo-timedeal-shell .listing-card-cart {
+    display: none;
+  }
+
+  .bo-timedeal-shell .listing-card-title,
+  .bo-timedeal-shell .goods_name_area .name {
+    min-height: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .bo-timedeal-shell .listing-card-brand,
+  .bo-timedeal-shell .brand_name {
+    font-size: 13px;
+  }
+
+  .bo-timedeal-shell .listing-card-price strong,
+  .bo-timedeal-shell .goods_price_area .sale_price,
+  .bo-timedeal-shell .goods_price_area .sale_price .num {
+    font-size: 16px;
+  }
+
+  .bo-timedeal-shell .listing-card-price del,
+  .bo-timedeal-shell .goods_price_area .consumer_price {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 760px) {
+  .bo-timedeal-main {
+    --timedeal-mobile-hero-height: clamp(270px, 70vw, 281px);
+    --listing-shell-margin-top: calc(-1 * clamp(18px, 5.721vw, 23px));
+  }
+
+  .bo-timedeal-hero.listing-hero--time-deal {
+    min-height: var(--timedeal-mobile-hero-height);
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 6% 72%, rgba(223, 85, 192, 0.44) 0 6px, transparent 34px),
+      radial-gradient(circle at 8% 92%, rgba(255, 129, 213, 0.34) 0 10px, transparent 45px),
+      radial-gradient(circle at 82% 11%, rgba(191, 99, 255, 0.46), transparent 36%),
+      linear-gradient(126deg, #0d0617 0%, #220036 40%, #090611 100%);
+  }
+
+  .bo-timedeal-hero.listing-hero--time-deal::before,
+  .bo-timedeal-hero.listing-hero--time-deal::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .bo-timedeal-hero.listing-hero--time-deal::before {
+    background:
+      linear-gradient(148deg, transparent 0 28%, rgba(216, 84, 255, 0.78) 32%, rgba(130, 62, 228, 0.22) 39%, transparent 49%),
+      linear-gradient(20deg, transparent 0 49%, rgba(161, 65, 255, 0.44) 52%, transparent 62%),
+      radial-gradient(ellipse at 84% 34%, rgba(199, 94, 255, 0.58), transparent 45%);
+    opacity: 0.86;
+  }
+
+  .bo-timedeal-hero.listing-hero--time-deal::after {
+    background:
+      radial-gradient(circle at 23% 6%, rgba(123, 63, 228, 0.34) 0 1px, transparent 2px),
+      radial-gradient(circle at 71% 13%, rgba(255, 255, 255, 0.58) 0 1px, transparent 2px),
+      radial-gradient(circle at 92% 46%, rgba(255, 255, 255, 0.44) 0 1px, transparent 2px);
+    opacity: 0.8;
+  }
+
+  .bo-timedeal-hero-inner.timedeal-hero-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 12px;
+    min-height: var(--timedeal-mobile-hero-height);
+    padding: 46px 0 0;
+    text-align: left;
+  }
+
+  .timedeal-schedule-band {
+    position: static;
+    transform: none;
+    width: 100%;
+    padding: 0;
+    gap: 12px;
+    pointer-events: auto;
+  }
+
+  .timedeal-countdown {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-items: center;
+    align-content: center;
+    width: min(340px, calc(100% - 60px));
+    height: auto;
+    min-height: 98px;
+    margin-inline: auto;
+    padding: 16px clamp(76px, 26vw, 106px) 14px clamp(22px, 8vw, 32px);
+    gap: 7px;
+    overflow: hidden;
+    border-radius: 13px;
+  }
+
+  .timedeal-countdown::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 11% 18%, rgba(183, 93, 255, 0.24), transparent 36%),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 48%),
+      linear-gradient(135deg, rgba(22, 7, 46, 0.96), rgba(7, 2, 22, 0.96));
+  }
+
+  .timedeal-countdown::after {
+    content: "\23F0";
+    position: absolute;
+    z-index: 1;
+    right: 19px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-8deg);
+    color: #c8a0ff;
+    font-size: clamp(48px, 15vw, 62px);
+    line-height: 1;
+    filter: hue-rotate(235deg) saturate(1.35);
+    text-shadow:
+      0 0 10px rgba(179, 92, 255, 0.8),
+      0 0 22px rgba(255, 100, 200, 0.34);
+  }
+
+  .timedeal-countdown-label {
+    position: relative;
+    z-index: 2;
+    margin-left: 0;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 12px;
+    line-height: 1.15;
+    font-weight: 600;
+  }
+
+  .timedeal-countdown-timer {
+    position: relative;
+    z-index: 2;
+    justify-content: flex-start;
+    gap: 15px;
+  }
+
+  .timedeal-countdown-unit {
+    flex: 0 0 auto;
+    gap: 3px;
+    min-width: 34px;
+    padding-inline: 0;
+  }
+
+  .timedeal-countdown-unit b {
+    min-width: 0;
+    font-size: 31px;
+    letter-spacing: 0;
+  }
+
+  .timedeal-countdown-unit em {
+    font-size: 7px;
+    letter-spacing: 0;
+  }
+
+  .timedeal-countdown-divider {
+    display: none;
+  }
+
+  .timedeal-schedule {
+    width: 100%;
+    max-width: none;
+    margin-inline: auto;
+    padding: 0 clamp(18px, 6vw, 24px);
+    gap: 8px;
+    justify-content: flex-start;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(18px, 6vw, 24px);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .timedeal-schedule::-webkit-scrollbar {
+    display: none;
+  }
+
+  .timedeal-schedule-tab {
+    flex: 0 0 clamp(112px, 31.5vw, 126px);
+    min-width: clamp(112px, 31.5vw, 126px);
+    min-height: 68px;
+    padding: 8px 9px;
+    gap: 5px;
+    border: 1px solid rgba(184, 112, 255, 0.48);
+    border-radius: 7px;
+    background: rgba(14, 8, 29, 0.78);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    scroll-snap-align: start;
+  }
+
+  .timedeal-schedule-tab:not(.is-active)::before {
+    opacity: 0;
+  }
+
+  .timedeal-schedule-tab.is-active {
+    border-color: transparent;
+    background: transparent;
+  }
+
+  .timedeal-schedule-tab:not(:first-child) {
+    border-left: 1px solid rgba(168, 85, 247, 0.38);
+  }
+
+  .timedeal-schedule-tab.is-active {
+    border-left-color: transparent;
+  }
+
+  .timedeal-schedule-tab.is-active + .timedeal-schedule-tab {
+    border-left: 1px solid rgba(168, 85, 247, 0.38);
+  }
+
+  .timedeal-schedule-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 3px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 11px;
+    line-height: 1.1;
+  }
+
+  .timedeal-schedule-icon strong {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .timedeal-schedule-copy {
+    gap: 3px;
+    align-items: center;
+  }
+
+  .timedeal-schedule-copy span {
+    font-size: 12px;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .timedeal-schedule-copy em {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    font-size: 11px;
+    line-height: 1.2;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .timedeal-schedule-tab:not(.is-active) .timedeal-schedule-copy em {
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .bo-timedeal-shell {
+    margin-top: var(--listing-shell-margin-top);
+  }
+
+  .bo-timedeal-breadcrumbs {
+    display: none;
+  }
+
+  .bo-timedeal-toolbar {
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding-bottom: 0;
+  }
+
+  .bo-timedeal-count-desktop,
+  .bo-timedeal-count strong {
+    display: none;
+  }
+
+  .bo-timedeal-count-mobile {
+    display: inline;
+  }
+
+  .bo-timedeal-count,
+  .bo-timedeal-toolbar-actions {
+    flex: 0 1 auto;
+  }
+
+  .timedeal-categories {
+    position: static;
+    order: 3;
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 18px;
+    gap: 10px;
+    padding: 0 16px 2px 0;
+    transform: none;
+  }
+
+  .timedeal-category {
+    min-height: 36px;
+    padding-inline: 12px;
+    font-size: 12px;
+  }
+
+  .bo-timedeal-shell .timedeal-card-deal {
+    height: 22px;
+    gap: 5px;
+  }
+
+  .bo-timedeal-shell .timedeal-card-deal-clock {
+    flex-basis: 20px;
+    width: 20px !important;
+    height: 20px !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
+  }
+
+  .bo-timedeal-shell .timedeal-card-deal-rate {
+    height: 22px;
+    min-height: 22px;
+    max-height: 22px;
+    padding: 0 7px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 760px) and (min-width: 600px) {
+  .timedeal-schedule {
+    justify-content: center;
+  }
+}
