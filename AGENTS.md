@@ -119,6 +119,15 @@ When working on the live Firstmall skin or `firstmall-workskin/`:
 - Keep upload candidates under `firstmall-workskin/`. Prefer
   `node tools/check-firstmall-workskin.mjs` for work-skin validation.
 - Do not add CSS/JS `?v=` query strings on Firstmall skin links.
+- T.P Magazine Firstmall files: `css/redesign/trendypicker-magazine.css`,
+  `app/javascript/js/trendypicker-magazine.js`, `main/magazine.html`,
+  `board/magazine/gallery01/{index,view}.html`, plus magazine branches in
+  `board/index.html` and `board/view.html`. Upload checklist:
+  `firstmall-workskin/MAGAZINE-UPLOAD.md`.
+- New Arrival Firstmall files: `css/redesign/trendypicker-new.css`,
+  `app/javascript/js/trendypicker-new.js`, `goods/new_arrivals.html`.
+  Live URL: `/goods/new_arrivals` (maps from prototype `listing/new.html`).
+  Point header/mobile NEW links to `/goods/new_arrivals`.
 
 ## Design Rules
 

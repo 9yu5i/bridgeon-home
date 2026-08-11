@@ -17,6 +17,7 @@ Firstmall original.
 
 ```text
 firstmall-workskin/
+├─ MAGAZINE-UPLOAD.md          ← T.P Magazine deploy checklist
 ├─ app/
 │  └─ javascript/
 │     └─ js/
@@ -25,7 +26,8 @@ firstmall-workskin/
 │        ├─ trendypicker-orders.js
 │        ├─ trendypicker-wishlist.js
 │        ├─ trendypicker-profile.js
-│        └─ trendypicker-profile-birthday.js
+│        ├─ trendypicker-profile-birthday.js
+│        └─ trendypicker-magazine.js
 ├─ css/
 │  └─ redesign/
 │     ├─ trendypicker-mypage.css
@@ -33,10 +35,13 @@ firstmall-workskin/
 │     ├─ trendypicker-orders.css
 │     ├─ trendypicker-wishlist.css
 │     ├─ trendypicker-help.css
-│     └─ trendypicker-help-topic.css
+│     ├─ trendypicker-help-topic.css
+│     └─ trendypicker-magazine.css
 ├─ images/
 │  └─ mypage/
 │     └─ *.png
+├─ main/
+│  └─ magazine.html
 ├─ mypage/
 │  ├─ dashboard.html
 │  ├─ myinfo.html
@@ -46,6 +51,10 @@ firstmall-workskin/
 │  └─ myqna_catalog.html
 ├─ board/
 │  ├─ index.html
+│  ├─ view.html
+│  ├─ magazine/gallery01/
+│  │  ├─ index.html
+│  │  └─ view.html
 │  ├─ notice/default01/index.html
 │  └─ faq/_faq/index.html
 ├─ _modules/
@@ -74,7 +83,9 @@ Firstmall's shared application JavaScript directory:
 [test skin]/css/redesign/trendypicker-wishlist.css
 [test skin]/css/redesign/trendypicker-help.css
 [test skin]/css/redesign/trendypicker-help-topic.css
+[test skin]/css/redesign/trendypicker-magazine.css
 [test skin]/images/mypage/*.png
+[test skin]/main/magazine.html
 [test skin]/mypage/dashboard.html
 [test skin]/mypage/myinfo.html
 [test skin]/mypage/order_catalog.html
@@ -82,6 +93,9 @@ Firstmall's shared application JavaScript directory:
 [test skin]/mypage/mypage_lnb.html
 [test skin]/mypage/myqna_catalog.html
 [test skin]/board/index.html
+[test skin]/board/view.html
+[test skin]/board/magazine/gallery01/index.html
+[test skin]/board/magazine/gallery01/view.html
 [test skin]/board/notice/default01/index.html
 [test skin]/board/faq/_faq/index.html
 [test skin]/_modules/common/board_lnb.html
@@ -96,10 +110,44 @@ Firstmall's shared application JavaScript directory:
 /app/javascript/js/trendypicker-wishlist.js
 /app/javascript/js/trendypicker-profile.js
 /app/javascript/js/trendypicker-profile-birthday.js
+/app/javascript/js/trendypicker-magazine.js
 ```
 
 Do not upload to the active production skin first.
 Do not add CSS/JS `?v=` query strings on Firstmall skin links; use a hard refresh after upload.
+
+### T.P Magazine only
+
+Magazine 화면만 올릴 때는 `MAGAZINE-UPLOAD.md` 체크리스트를 사용하세요.
+
+```text
+[test skin]/css/redesign/trendypicker-magazine.css
+[test skin]/main/magazine.html
+[test skin]/board/index.html
+[test skin]/board/view.html
+[test skin]/board/magazine/gallery01/index.html
+[test skin]/board/magazine/gallery01/view.html
+/app/javascript/js/trendypicker-magazine.js
+```
+
+### New Arrival only
+
+Prototype `listing/new.html` → live `/goods/new_arrivals` (`goods/new_arrivals.html`).
+Products come from Firstmall `#searchedItemDisplay` (`searchMode=new_arrivals`) and are regrouped
+client-side by brand. Upload listing wish/cart icons under `images/listing/`.
+
+```text
+[test skin]/css/redesign/trendypicker-new.css
+[test skin]/goods/new_arrivals.html
+[test skin]/images/listing/cart.png
+[test skin]/images/listing/cart_hover.png
+[test skin]/images/listing/wish.png
+[test skin]/images/listing/wish_hover.png
+[test skin]/images/listing/star.png
+/app/javascript/js/trendypicker-new.js
+```
+
+Header / mobile menu NEW · New Arrival links should point to `/goods/new_arrivals`.
 
 `service/cs.html` maps the local `my-page/help-center.html` hero and directory design onto
 Firstmall's native customer-service routes. Its responsive presentation is isolated in

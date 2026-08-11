@@ -1,0 +1,567 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Brand detail / product list / TrendyPicker
+- Path: [skin]/goods/brand.html
+- URL: /goods/brand?code=... (e.g. Abib)
+- Design: brand/detail.html prototype
+- brandData.top_html (.brand_top_area):
+  - img.banner (+ .banner_overlay) → .bo-brand-detail-hero-media
+  - .brand_description → About the brand
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-brand.css" />
+<style>
+#goodsSearchForm { display: none !important; }
+</style>
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-brand-page is-brand-detail-page";
+if (document.body) {
+	document.body.className += (document.body.className ? " " : "") + "is-brand-page is-brand-detail-page";
+}
+/* Canonicalize early (before any later scripts) so filter QS cannot wipe the page. */
+(function () {
+	try {
+		var url = new URL(window.location.href);
+		var code = url.searchParams.get("code");
+		if (!code) return;
+		var droppedParams = ["page", "searchMode", "category", "sorting", "filter_display"];
+		var hasBrandArray = false;
+		url.searchParams.forEach(function (_value, key) {
+			if (/^brand(\[\d*\])?$/.test(key)) hasBrandArray = true;
+		});
+		var hasDropped = hasBrandArray || droppedParams.some(function (key) {
+			return url.searchParams.has(key);
+		});
+		var needsPerFix = url.searchParams.get("per") !== "30";
+		if (!hasDropped && !needsPerFix) return;
+		var canonical = new URL(url.origin + url.pathname);
+		canonical.searchParams.set("code", code);
+		canonical.searchParams.set("per", "30");
+		window.location.replace(canonical.toString());
+	} catch (_err) {}
+})();
+</script>
+
+<main class="bo-brand-detail-main">
+	<section class="bo-brand-detail-hero" aria-label="Brand highlight">
+		<div class="bo-brand-detail-hero-media" data-brand-hero-media aria-hidden="true"></div>
+		<div class="bo-brand-detail-hero-copy">
+			<p class="bo-brand-detail-eyebrow">Brand Story</p>
+			<h1>{add_meta_info.brand_title}</h1>
+		</div>
+	</section>
+
+	<div class="bo-brand-detail-shell">
+		<nav class="bo-brand-breadcrumbs" aria-label="Breadcrumb">
+			<a href="/main">Home</a>
+			<span aria-hidden="true">&gt;</span>
+			<a href="/goods/brand_main">All Brands</a>
+			<span aria-hidden="true">&gt;</span>
+			<span>{add_meta_info.brand_title}</span>
+		</nav>
+
+		<section class="bo-brand-detail-about" aria-labelledby="bo-brand-about-title">
+			<div class="bo-brand-detail-about-copy">
+				<h2 id="bo-brand-about-title">About the brand</h2>
+				<div class="bo-brand-detail-intro" data-brand-intro>
+					<p class="bo-brand-detail-intro-fallback">Explore products from {add_meta_info.brand_title}.</p>
+				</div>
+			</div>
+		</section>
+
+		<!--{? brandData.top_html }-->
+		<div class="bo-brand-top-source" data-brand-top-source hidden>
+			{brandData.top_html}
+		</div>
+		<!--{/}-->
+
+		<div class="bo-brand-detail-products">
+			<div class="bo-brand-category-stash" data-brand-category-stash hidden></div>
+
+			<div class="bo-brand-detail-toolbar">
+				<p class="bo-brand-detail-count">
+					<span class="bo-brand-detail-count-desktop">All Products </span>
+					<strong data-brand-count>({=number_format(totcount)})</strong>
+					<span class="bo-brand-detail-count-mobile" data-brand-count-mobile>{=number_format(totcount)} Items</span>
+				</p>
+				<div class="bo-brand-detail-toolbar-actions">
+					<label class="bo-brand-detail-sort">
+						<span class="bo-brand-sr">Sort products</span>
+						<select class="filter_select" id="catalog_filter" aria-label="Sort products">
+							<option value="regist">New</option>
+							<option value="sale">Sale</option>
+							<option value="ranking">Ranking</option>
+							<option value="low_price">Low Price</option>
+							<option value="high_price">High Price</option>
+							<option value="review">Review</option>
+						</select>
+					</label>
+					<a class="category_filter_mo" href="javascript:void(0)" aria-label="Open filters">
+						<img src="/data/skin/{skin}/images/icon/icon-filter.png" alt="" />
+					</a>
+				</div>
+			</div>
+
+			<div
+				class="bo-brand-detail-category-tabs"
+				data-brand-category-tabs
+				role="tablist"
+				aria-label="Brand product categories"
+				hidden
+			></div>
+
+			<div class="catalog_mo">
+				<div class="catalog_filter"></div>
+			</div>
+
+			<!-- filters / recommend / sort module: goods/_search_form_light.html -->
+			{=showGoodsSearchFormLight()}
+
+			<!-- product grid module: goods/search_list_template.html -->
+			<div id="searchedItemDisplay" class="searched_item_display bo-brand-detail-grid" data-displaytype="lattice"></div>
+		</div>
+	</div>
+</main>
+
+<div id="wish_alert">
+	<div class="wa_on"></div>
+	<div class="wa_off"></div>
+	<div class="wa_msg"></div>
+</div>
+
+<script type="text/javascript">
+(function () {
+	function hydrateBrandTopHtml() {
+		var source = document.querySelector("[data-brand-top-source]");
+		if (!source) return;
+
+		var hero = document.querySelector("[data-brand-hero-media]");
+		var intro = document.querySelector("[data-brand-intro]");
+		var area = source.querySelector(".brand_top_area") || source;
+		var banner = area.querySelector("img.banner");
+		var overlay = area.querySelector(".banner_overlay");
+		var description = area.querySelector(".brand_description");
+
+		if (hero) {
+			var bannerSrc = banner && (banner.getAttribute("src") || banner.src);
+			if (bannerSrc) {
+				hero.style.backgroundImage = 'url("' + bannerSrc.replace(/"/g, '\\"') + '")';
+				hero.className += (hero.className ? " " : "") + "has-banner";
+			}
+			if (overlay && overlay.parentNode !== hero) {
+				hero.appendChild(overlay);
+			}
+		}
+
+		if (intro && description) {
+			var text = (description.textContent || "").replace(/\s+/g, " ").trim();
+			if (text) {
+				intro.textContent = text;
+			}
+		}
+
+		source.parentNode && source.parentNode.removeChild(source);
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", hydrateBrandTopHtml);
+	} else {
+		hydrateBrandTopHtml();
+	}
+})();
+
+/*
+  Landing on (or refreshing into) this page with the full filter querystring
+  that Firstmall's own filter/sort JS writes into the address bar (page,
+  searchMode, brand[], category, sorting, filter_display, ...) makes the
+  server truncate the response right after the main landmark close tag —
+  everything below it, including the hero banner hydration script and the
+  scroll-guard script, never reaches the browser. Loading with just ?code=...
+  always renders the full page correctly, so canonicalize back to that on
+  every fresh load and let client-side JS re-apply sort/filter afterwards
+  if needed.
+
+  IMPORTANT: never put a literal main end-tag in this file outside the real
+  landmark — Firstmall cuts the skin response at that string.
+*/
+(function ensureBrandCanonicalUrl() {
+	/* Kept as a no-op backup; early head script already canonicalizes. */
+	try {
+		var url = new URL(window.location.href);
+		var code = url.searchParams.get("code");
+		if (!code) return;
+
+		var droppedParams = ["page", "searchMode", "category", "sorting", "filter_display"];
+		var hasBrandArray = false;
+		url.searchParams.forEach(function (_value, key) {
+			if (/^brand(\[\d*\])?$/.test(key)) hasBrandArray = true;
+		});
+		var hasDropped = hasBrandArray || droppedParams.some(function (key) {
+			return url.searchParams.has(key);
+		});
+		var needsPerFix = url.searchParams.get("per") !== "30";
+		if (!hasDropped && !needsPerFix) return;
+
+		var canonical = new URL(url.origin + url.pathname);
+		canonical.searchParams.set("code", code);
+		canonical.searchParams.set("per", "30");
+		window.location.replace(canonical.toString());
+	} catch (_err) {}
+})();
+
+$(function () {
+	colorFilter_white("#searchFilterSelected .color_type");
+
+	/*
+	  Firstmall filter/sort AJAX often forces scrollTop(0).
+	  Do NOT lock scrolling — only ignore programmatic jumps to the top
+	  for a short window, then always restore native scroll behavior.
+	*/
+	var scrollGuardTimer = null;
+	var scrollGuardY = 0;
+	var nativeScrollTo = window.scrollTo.bind(window);
+	var nativeScrollIntoView = Element.prototype.scrollIntoView;
+	var jqScrollTop = $.fn.scrollTop;
+
+	function clearScrollGuard() {
+		if (scrollGuardTimer) {
+			window.clearTimeout(scrollGuardTimer);
+			scrollGuardTimer = null;
+		}
+		window.scrollTo = nativeScrollTo;
+		Element.prototype.scrollIntoView = nativeScrollIntoView;
+		$.fn.scrollTop = jqScrollTop;
+	}
+
+	function guardScrollBriefly() {
+		clearScrollGuard();
+		scrollGuardY =
+			window.pageYOffset ||
+			document.documentElement.scrollTop ||
+			document.body.scrollTop ||
+			0;
+
+		window.scrollTo = function (a, b) {
+			var top =
+				typeof a === "number"
+					? b
+					: a && typeof a === "object"
+						? a.top
+						: undefined;
+			if (typeof top === "number" && top < 8 && scrollGuardY > 8) {
+				return;
+			}
+			return nativeScrollTo.apply(window, arguments);
+		};
+
+		Element.prototype.scrollIntoView = function () {
+			/* Skip Firstmall anchor jumps during filter refresh. */
+			return;
+		};
+
+		$.fn.scrollTop = function (value) {
+			if (typeof value !== "undefined") {
+				if (Number(value) < 8 && scrollGuardY > 8) return this;
+			}
+			return jqScrollTop.apply(this, arguments);
+		};
+
+		scrollGuardTimer = window.setTimeout(clearScrollGuard, 900);
+		$(document).one("ajaxStop", function () {
+			window.setTimeout(clearScrollGuard, 40);
+		});
+	}
+
+	/*
+	  Catch-all: guard around ANY goods/category/search/filter AJAX call,
+	  not just the ones we trigger ourselves. This also covers Firstmall's
+	  own scroll-triggered pagination (infinite scroll), which otherwise
+	  forces scrollTop(0) on every request and makes the page feel like it
+	  can't be scrolled down at all.
+	*/
+	$(document).on("ajaxSend", function (_event, _xhr, settings) {
+		var url = (settings && settings.url) || "";
+		if (/goods|category|search|filter/i.test(String(url))) {
+			guardScrollBriefly();
+		}
+	});
+
+	function enhanceBrandSortSelect() {
+		var nativeSelect = document.querySelector("#catalog_filter");
+		if (!nativeSelect || nativeSelect.closest(".realtrend-select-wrap")) return;
+
+		nativeSelect.className +=
+			(nativeSelect.className ? " " : "") + "realtrend-select-native";
+		nativeSelect.tabIndex = -1;
+		nativeSelect.setAttribute("aria-hidden", "true");
+
+		var wrap = document.createElement("span");
+		wrap.className = "realtrend-select-wrap";
+
+		var trigger = document.createElement("button");
+		trigger.type = "button";
+		trigger.className = "realtrend-select-trigger";
+		trigger.setAttribute("aria-haspopup", "listbox");
+		trigger.setAttribute("aria-expanded", "false");
+		trigger.setAttribute("aria-label", "Sort products");
+
+		var value = document.createElement("span");
+		value.className = "realtrend-select-value";
+
+		var menu = document.createElement("ul");
+		menu.className = "realtrend-select-menu";
+		menu.setAttribute("role", "listbox");
+
+		function closeMenu() {
+			wrap.classList.remove("is-open");
+			menu.classList.remove("is-open");
+			trigger.setAttribute("aria-expanded", "false");
+		}
+
+		function openMenu() {
+			wrap.classList.add("is-open");
+			menu.classList.add("is-open");
+			trigger.setAttribute("aria-expanded", "true");
+		}
+
+		function syncSelection() {
+			var selected = nativeSelect.options[nativeSelect.selectedIndex];
+			value.textContent = selected ? selected.textContent : "New";
+			Array.prototype.forEach.call(menu.querySelectorAll("li"), function (item) {
+				var isSelected = item.getAttribute("data-value") === nativeSelect.value;
+				item.className = isSelected ? "is-selected" : "";
+				item.setAttribute("aria-selected", isSelected ? "true" : "false");
+			});
+		}
+
+		Array.prototype.forEach.call(nativeSelect.options, function (option) {
+			var item = document.createElement("li");
+			item.textContent = option.textContent;
+			item.setAttribute("data-value", option.value);
+			item.setAttribute("role", "option");
+			item.addEventListener("click", function (event) {
+				event.preventDefault();
+				event.stopPropagation();
+				nativeSelect.value = option.value;
+				$(nativeSelect).trigger("change");
+				syncSelection();
+				closeMenu();
+			});
+			menu.appendChild(item);
+		});
+
+		trigger.appendChild(value);
+		wrap.appendChild(trigger);
+		wrap.appendChild(menu);
+		nativeSelect.parentNode.insertBefore(wrap, nativeSelect);
+		wrap.appendChild(nativeSelect);
+
+		trigger.addEventListener("click", function (event) {
+			event.preventDefault();
+			event.stopPropagation();
+			if (wrap.classList.contains("is-open")) closeMenu();
+			else openMenu();
+		});
+
+		document.addEventListener("click", function (event) {
+			if (!wrap.contains(event.target)) closeMenu();
+		});
+
+		syncSelection();
+	}
+
+	enhanceBrandSortSelect();
+
+	/* Keep hidden form in sync when URL already has per=30 (no AJAX). */
+	function syncBrandPerSelect() {
+		var $per = $("form#goodsSearchForm select[name='per']");
+		if (!$per.length) return;
+		if (!$per.find("option[value='30']").length) {
+			$per.append('<option value="30">30</option>');
+		}
+		if (String($per.val()) !== "30") {
+			$per.val("30");
+		}
+	}
+
+	syncBrandPerSelect();
+
+	$("#catalog_filter").on("change", function () {
+		var sort = $(this).val();
+		guardScrollBriefly();
+		$("#filteredItemSorting li.item_order ul.list li label input").each(function () {
+			if ($(this).val() == sort) {
+				$(this).click();
+			}
+		});
+	});
+
+	/* Category tabs = brand's 2nd-level categories from Firstmall filter */
+	var tabsRoot = document.querySelector("[data-brand-category-tabs]");
+	var stashRoot = document.querySelector("[data-brand-category-stash]");
+	var activeCategory = "all";
+	var drilledOnce = false;
+	var building = false;
+
+	function readFilterCategoryLinks() {
+		return Array.prototype.slice.call(
+			document.querySelectorAll(
+				".filter_category_section ul.filter_detail_item a[data-value]"
+			)
+		);
+	}
+
+	function syncBrandCount() {
+		var raw = ($("#filterResultCount").text() || "").replace(/[^0-9]/g, "");
+		if (!raw) return;
+		var formatted = Number(raw).toLocaleString("en-US");
+		var countNode = document.querySelector("[data-brand-count]");
+		var countMobile = document.querySelector("[data-brand-count-mobile]");
+		if (countNode) countNode.textContent = "(" + formatted + ")";
+		if (countMobile) countMobile.textContent = formatted + " Items";
+	}
+
+	function stashSecondLevelLinks(links) {
+		if (!stashRoot) return;
+		stashRoot.innerHTML = "";
+		links.forEach(function (link) {
+			var clone = document.importNode(link, true);
+			clone.setAttribute("href", "javascript:void(0)");
+			stashRoot.appendChild(clone);
+		});
+	}
+
+	function getStashedLinks() {
+		if (!stashRoot) return [];
+		return Array.prototype.slice.call(
+			stashRoot.querySelectorAll("a[data-value]")
+		);
+	}
+
+	function triggerCategoryLink(link, options) {
+		if (!link) return;
+		var opts = options || {};
+		if (opts.keepScroll === true) guardScrollBriefly();
+		if (typeof window.setFilterCategory === "function") {
+			window.setFilterCategory(link, false);
+		} else {
+			link.click();
+		}
+	}
+
+	function renderCategoryTabs() {
+		if (!tabsRoot) return;
+		var links = getStashedLinks();
+		tabsRoot.innerHTML = "";
+
+		if (!links.length) {
+			tabsRoot.hidden = true;
+			return;
+		}
+
+		tabsRoot.hidden = false;
+
+		function addTab(id, label) {
+			var button = document.createElement("button");
+			button.type = "button";
+			button.setAttribute("role", "tab");
+			button.setAttribute("data-brand-cat", id);
+			button.textContent = label;
+			var isActive = activeCategory === id;
+			button.className = isActive ? "is-active" : "";
+			button.setAttribute("aria-selected", isActive ? "true" : "false");
+			button.addEventListener("click", function (event) {
+				event.preventDefault();
+				event.stopPropagation();
+				activateCategory(id);
+			});
+			tabsRoot.appendChild(button);
+		}
+
+		addTab("all", "All");
+		links.forEach(function (link) {
+			var nameNode = link.querySelector(".name");
+			var label = ((nameNode && nameNode.textContent) || link.textContent || "")
+				.replace(/\s+/g, " ")
+				.trim();
+			var id = link.getAttribute("data-value") || "";
+			if (!label || !id) return;
+			addTab(id, label);
+		});
+	}
+
+	function activateCategory(id) {
+		activeCategory = id;
+		renderCategoryTabs();
+
+		if (id === "all") {
+			var allLink = document.querySelector(
+				'.filter_category_section a.pc_all_cate, .filter_category_section a[data-searchname="all"]'
+			);
+			triggerCategoryLink(allLink, { keepScroll: true });
+			return;
+		}
+
+		var live = document.querySelector(
+			'.filter_category_section ul.filter_detail_item a[data-value="' + id + '"]'
+		);
+		var stashed = stashRoot
+			? stashRoot.querySelector('a[data-value="' + id + '"]')
+			: null;
+		triggerCategoryLink(live || stashed, { keepScroll: true });
+	}
+
+	function captureSecondLevelAndRender() {
+		var links = readFilterCategoryLinks();
+		if (!links.length) {
+			if (tabsRoot) tabsRoot.hidden = true;
+			return;
+		}
+
+		/*
+		  A single top-level category (e.g. BEAUTY) means the 2nd-level
+		  categories aren't in the DOM yet — Firstmall only renders them
+		  after that category is selected. Auto-click it once via
+		  Firstmall's native setFilterCategory() to reveal the 2nd level.
+		  Confirmed live: this AJAX call alone does not corrupt the page —
+		  the earlier scroll/truncation bug came from a fresh full-page
+		  request landing directly on the complex filter querystring
+		  (refresh), which ensureBrandCanonicalUrl() now prevents by
+		  redirecting back to a plain ?code=... URL on every load.
+		*/
+		if (!drilledOnce && links.length === 1) {
+			drilledOnce = true;
+			building = true;
+			triggerCategoryLink(links[0], { keepScroll: true });
+			return;
+		}
+
+		stashSecondLevelLinks(links);
+		building = false;
+		renderCategoryTabs();
+		syncBrandCount();
+	}
+
+	function bootCategoryTabs() {
+		captureSecondLevelAndRender();
+	}
+
+	/* Firstmall rebuilds filter HTML over AJAX after setFilterCategory */
+	$(document).on("ajaxComplete", function (_event, _xhr, settings) {
+		var url = (settings && settings.url) || "";
+		if (url && /goods|category|search|filter/i.test(String(url)) === false && !building) {
+			syncBrandCount();
+			return;
+		}
+		window.setTimeout(function () {
+			if (building || (drilledOnce && getStashedLinks().length === 0)) {
+				captureSecondLevelAndRender();
+			} else {
+				syncBrandCount();
+			}
+		}, 80);
+	});
+
+	window.setTimeout(bootCategoryTabs, 400);
+	window.setTimeout(bootCategoryTabs, 1200);
+});
+</script>

@@ -12,12 +12,14 @@ const requiredFiles = [
   "css/redesign/trendypicker-reviews.css",
   "css/redesign/trendypicker-help.css",
   "css/redesign/trendypicker-help-topic.css",
+  "css/redesign/trendypicker-magazine.css",
   "app/javascript/js/trendypicker-mypage.js",
   "app/javascript/js/trendypicker-help-topic.js",
   "app/javascript/js/trendypicker-orders.js",
   "app/javascript/js/trendypicker-wishlist.js",
   "app/javascript/js/trendypicker-profile.js",
   "app/javascript/js/trendypicker-profile-birthday.js",
+  "app/javascript/js/trendypicker-magazine.js",
   "mypage/dashboard.html",
   "mypage/myinfo.html",
   "mypage/order_catalog.html",
@@ -25,8 +27,11 @@ const requiredFiles = [
   "mypage/mygdreview_catalog.html",
   "mypage/mypage_lnb.html",
   "mypage/myqna_catalog.html",
+  "main/magazine.html",
   "board/index.html",
   "board/view.html",
+  "board/magazine/gallery01/index.html",
+  "board/magazine/gallery01/view.html",
   "board/notice/default01/index.html",
   "board/notice/default01/view.html",
   "board/faq/_faq/index.html",
@@ -40,6 +45,66 @@ const requiredFiles = [
   "images/mypage/cart.png",
   "images/mypage/wish_liked.png",
   "README.md",
+  "MAGAZINE-UPLOAD.md",
+];
+
+const requiredMagazineHtmlFiles = [
+  "main/magazine.html",
+  "board/index.html",
+  "board/view.html",
+  "board/magazine/gallery01/index.html",
+  "board/magazine/gallery01/view.html",
+];
+
+const requiredMagazineCssTokens = [
+  "--magazine-purple",
+  ".bo-magazine-lead",
+  ".bo-magazine-post-card",
+  ".magazine-related-grid",
+  ".magazine-scroll-reveal",
+  "magazineFeatureReveal",
+  ".magazine-newsletter",
+];
+
+const requiredMagazineJsTokens = [
+  "bindMagazineFrame",
+  "bindMagazineOpenInTop",
+  "bindMagazinePopular",
+  "bindMagazineRelated",
+  "bindMagazineScrollReveal",
+  "playLeadFeatureReveal",
+  "magazine-frame-height",
+  "data-magazine-related",
+  "is-popular-visible",
+];
+
+const requiredMagazineHomeTokens = [
+  "/data/skin/{skin}/css/redesign/trendypicker-magazine.css",
+  "/app/javascript/js/trendypicker-magazine.js",
+  'id="magazine_home_frame"',
+  "data-list-src",
+  "perpage=100",
+  "magazine-newsletter",
+];
+
+const requiredMagazineListTokens = [
+  "/data/skin/{skin}/css/redesign/trendypicker-magazine.css",
+  "/app/javascript/js/trendypicker-magazine.js",
+  "bo-magazine-board",
+  "bo-magazine-lead",
+  "bo-magazine-post-card",
+  "data-magazine-popular",
+  "perpage=12",
+];
+
+const requiredMagazineViewTokens = [
+  "/data/skin/{skin}/css/redesign/trendypicker-magazine.css",
+  "/app/javascript/js/trendypicker-magazine.js",
+  "magazine-detail-shell",
+  "data-magazine-related",
+  "datacategory",
+  "magazine-related-grid",
+  "magazine-newsletter",
 ];
 
 const requiredOrdersTokens = [
@@ -651,6 +716,19 @@ if (existsSync(boardViewPath)) {
     failed = true;
     console.error(`Missing confirmed Help board view token: ${token}`);
   }
+  if (
+    !boardView.includes("_GET.id == 'magazine'") &&
+    !boardView.includes("manager.id == 'magazine'")
+  ) {
+    failed = true;
+    console.error("board/view.html must branch magazine to the redesign shell");
+  }
+  if (!boardView.includes("/main/magazine")) {
+    failed = true;
+    console.error(
+      "board/view.html magazine branch must set boardlistsurl to /main/magazine",
+    );
+  }
 }
 
 const noticeViewPath = resolve(workskinRoot, "board/notice/default01/view.html");
@@ -978,6 +1056,87 @@ if (existsSync(jsPath)) {
     failed = true;
     console.error(`Missing Firstmall dashboard interaction token: ${token}`);
   }
+}
+
+const magazineCssPath = resolve(
+  workskinRoot,
+  "css/redesign/trendypicker-magazine.css",
+);
+if (existsSync(magazineCssPath)) {
+  const css = readFileSync(magazineCssPath, "utf8");
+  for (const token of requiredMagazineCssTokens) {
+    if (css.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall magazine CSS token: ${token}`);
+  }
+  if (css.includes("?v=")) {
+    failed = true;
+    console.error("Magazine CSS must not document ?v= cache-busting on Firstmall links");
+  }
+}
+
+const magazineJsPath = resolve(
+  workskinRoot,
+  "app/javascript/js/trendypicker-magazine.js",
+);
+if (existsSync(magazineJsPath)) {
+  const script = readFileSync(magazineJsPath, "utf8");
+  for (const token of requiredMagazineJsTokens) {
+    if (script.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall magazine JS token: ${token}`);
+  }
+}
+
+const magazineHomePath = resolve(workskinRoot, "main/magazine.html");
+if (existsSync(magazineHomePath)) {
+  const home = readFileSync(magazineHomePath, "utf8");
+  for (const token of requiredMagazineHomeTokens) {
+    if (home.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall magazine home token: ${token}`);
+  }
+  if (home.includes("?v=")) {
+    failed = true;
+    console.error("Magazine home must not use ?v= on CSS/JS links");
+  }
+}
+
+const magazineListPath = resolve(
+  workskinRoot,
+  "board/magazine/gallery01/index.html",
+);
+if (existsSync(magazineListPath)) {
+  const list = readFileSync(magazineListPath, "utf8");
+  for (const token of requiredMagazineListTokens) {
+    if (list.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall magazine list token: ${token}`);
+  }
+}
+
+const magazineViewPath = resolve(
+  workskinRoot,
+  "board/magazine/gallery01/view.html",
+);
+if (existsSync(magazineViewPath)) {
+  const view = readFileSync(magazineViewPath, "utf8");
+  for (const token of requiredMagazineViewTokens) {
+    if (view.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall magazine view token: ${token}`);
+  }
+  if (view.includes("{category}") && !view.includes("datacategory")) {
+    failed = true;
+    console.error("Magazine view must use datacategory, not bare {category} (Array bug)");
+  }
+}
+
+for (const relativePath of requiredMagazineHtmlFiles) {
+  const file = resolve(workskinRoot, relativePath);
+  if (existsSync(file)) continue;
+  failed = true;
+  console.error(`Missing Firstmall magazine HTML file: ${relativePath}`);
 }
 
 if (failed) process.exit(1);

@@ -1,0 +1,104 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 브랜드 메인 / All Brands / TrendyPicker
+- 파일위치 : [스킨폴더]/goods/brand_main.html
+- 디자인 목업은 글자 목록형(letter-grouped) 레이아웃이라, 원본의 이미지 기반
+  "ALL 탭 + 알파벳 탭 전환" 방식 대신 실제 brandMenuData(글자별 그룹)를
+  그대로 이어서 보여주는 방식으로 구성. 알파벳 버튼은 각 그룹으로 점프하는
+  실제 앵커 링크. 검색은 타이핑하는 즉시 클라이언트 단에서 브랜드명 매칭 필터링.
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-brand.css" />
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-brand-page";
+if (document.body) document.body.className += (document.body.className ? " " : "") + "is-brand-page";
+</script>
+
+<!-- 브랜드 데이터 로드 -->
+<!--{=assignBrandMenuData()}-->
+
+<div class="bo-brand-shell">
+	<nav class="bo-brand-breadcrumbs" aria-label="Breadcrumb">
+		<a href="/main">Home</a>
+		<span aria-hidden="true">&gt;</span>
+		<span>All Brands</span>
+	</nav>
+
+	<h1 class="bo-brand-title">All Brands</h1>
+
+	<!--{ ? brandMenuData }-->
+	<div class="bo-brand-toolbar">
+		<div class="bo-brand-alpha" role="tablist" aria-label="Jump to letter">
+			<!--{ @ (brandMenuData) }-->
+			<!--{ ? !preg_match("/[ㄱ-힣]/u", .key_) }-->
+			<!--{ ? .value_[0] }-->
+			<a class="bo-brand-alpha-button" role="tab" href="#bo-brand-group-{=str_replace("/", "", strtr(base64_encode(str_replace("/", "", .key_)), "+=", "-_"))}"><!--{ ? strtoupper(.key_) == 'OTHER' }-->#<!--{ : }-->{=strtoupper(.key_)}<!--{ / }--></a>
+			<!--{ : }-->
+			<span class="bo-brand-alpha-button bo-brand-alpha-button--empty" aria-disabled="true"><!--{ ? strtoupper(.key_) == 'OTHER' }-->#<!--{ : }-->{=strtoupper(.key_)}<!--{ / }--></span>
+			<!--{ / }-->
+			<!--{ / }-->
+			<!--{ / }-->
+		</div>
+		<form id="brandFm" class="bo-brand-search" role="search">
+			<label class="sr-only" for="bo-brand-search-input">Search brands</label>
+			<input id="bo-brand-search-input" type="text" name="keyword" class="search_input" placeholder="Search Brands" autocomplete="off" />
+		</form>
+	</div>
+
+	<div class="bo-brand-directory" data-brand-directory>
+		<!--{ @ (brandMenuData) }-->
+		<!--{ ? !preg_match("/[ㄱ-힣]/u", .key_) }-->
+		<section class="bo-brand-group" id="bo-brand-group-{=str_replace("/", "", strtr(base64_encode(str_replace("/", "", .key_)), "+=", "-_"))}">
+			<h2 class="bo-brand-group-letter"><!--{ ? strtoupper(.key_) == 'OTHER' }-->#<!--{ : }-->{=strtoupper(.key_)}<!--{ / }--></h2>
+			<ul class="bo-brand-group-list">
+				<!--{ @ .value_ }-->
+				<li>
+					<a href="/goods/brand?code={..category_code}" data-brand-code="{..category_code}">
+						{..prn_title}
+						<!--{ ? ..best == 'Y' }-->
+						<span class="bo-brand-best-badge" aria-hidden="true">B</span>
+						<!--{ / }-->
+					</a>
+				</li>
+				<!--{ / }-->
+			</ul>
+		</section>
+		<!--{ / }-->
+		<!--{ / }-->
+	</div>
+	<p class="bo-brand-empty" id="bo-brand-filter-empty" hidden>No brands found.</p>
+	<!--{ : }-->
+	<div class="no_data_area2">
+		No brand information available.
+	</div>
+	<!--{ / }-->
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	function filterBrands(keyword) {
+		var kw = $.trim(keyword).toLowerCase();
+		var anyVisible = false;
+		$(".bo-brand-group").each(function() {
+			var $group = $(this);
+			var groupHasMatch = false;
+			$group.find(".bo-brand-group-list a[data-brand-code]").each(function() {
+				var show = !kw || $(this).text().toLowerCase().indexOf(kw) > -1;
+				$(this).parent("li").toggle(show);
+				if (show) groupHasMatch = true;
+			});
+			$group.toggle(groupHasMatch);
+			if (groupHasMatch) anyVisible = true;
+		});
+		$("#bo-brand-filter-empty").prop("hidden", anyVisible);
+	}
+
+	$("#bo-brand-search-input").on("input", function() {
+		filterBrands($(this).val());
+	});
+
+	$("#brandFm").submit(function() {
+		filterBrands($("#bo-brand-search-input").val());
+		return false;
+	});
+});
+</script>

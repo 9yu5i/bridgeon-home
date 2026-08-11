@@ -1089,7 +1089,8 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: 18px auto;
-  transition: opacity 0.25s ease;
+  transform: scale(1);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .listing-card-wish::before,
@@ -1116,6 +1117,13 @@
 .listing-card-wish-inline.is-active::after,
 .listing-card-wish-inline:not(.is-hover-suppressed):hover::after {
   opacity: 1;
+}
+
+.listing-card-wish:not(.is-hover-suppressed):hover::before,
+.listing-card-wish:not(.is-hover-suppressed):hover::after,
+.listing-card-wish-inline:not(.is-hover-suppressed):hover::before,
+.listing-card-wish-inline:not(.is-hover-suppressed):hover::after {
+  transform: scale(1.18);
 }
 
 .listing-card-body {
@@ -1617,8 +1625,8 @@
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
-    height: 40px;
-    min-height: 40px;
+    height: 36px;
+    min-height: 36px;
     padding: 0;
     border: 1px solid #ded8e8;
     border-radius: 10px;

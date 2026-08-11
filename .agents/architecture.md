@@ -129,5 +129,16 @@ presentation only and preserves native board collections, inquiry actions, and p
 Server-runtime Firstmall HTML is validated separately by
 `tools/check-firstmall-workskin.mjs`.
 
+T.P Magazine on Firstmall is owned by `firstmall-workskin/main/magazine.html` (home shell +
+iframe), `board/magazine/gallery01/index.html` (list/Popular), `board/magazine/gallery01/view.html`
+(detail + Related), scoped styles in `css/redesign/trendypicker-magazine.css`, and behavior in
+`app/javascript/js/trendypicker-magazine.js`. Deploy steps live in
+`firstmall-workskin/MAGAZINE-UPLOAD.md`.
+
+New Arrival on Firstmall is owned by `firstmall-workskin/goods/new_arrivals.html`
+(`/goods/new_arrivals`), scoped styles in `css/redesign/trendypicker-new.css`, and
+`app/javascript/js/trendypicker-new.js`, which regroups live `#searchedItemDisplay` goods by brand
+(prototype layout: `listing/new.html`).
+
 The detailed readiness and page mapping are documented in
 `docs/firstmall-integration-readiness.md`.

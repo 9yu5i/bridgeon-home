@@ -12,6 +12,59 @@ window.location.replace('/service/company?topic=contact');
 <!--{:}-->
 <!--{? manager.id == 'magazine' }-->
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css" />
+{? _GET.iframe}
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "bo-magazine-iframe";
+</script>
+<style>
+/* Must win against Firstmall layout widths inside magazine iframe */
+html.bo-magazine-iframe,
+html.bo-magazine-iframe body {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	height: auto !important;
+	min-height: 0 !important;
+	margin: 0 !important;
+	box-sizing: border-box !important;
+	background: transparent !important;
+	overflow: hidden !important;
+}
+html.bo-magazine-iframe body {
+	/* No side padding — must match parent .magazine-topic-tabs width */
+	padding: 0 0 56px !important;
+}
+html.bo-magazine-iframe #layout_wrap,
+html.bo-magazine-iframe #layout_body,
+html.bo-magazine-iframe #boardlayout,
+html.bo-magazine-iframe .subpage_wrap,
+html.bo-magazine-iframe .subpage_container,
+html.bo-magazine-iframe #bbslist {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	height: auto !important;
+	min-height: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	float: none !important;
+	left: auto !important;
+	right: auto !important;
+	position: static !important;
+	box-sizing: border-box !important;
+	background: transparent !important;
+	overflow: visible !important;
+}
+html.bo-magazine-iframe #layout_header,
+html.bo-magazine-iframe #layout_footer,
+html.bo-magazine-iframe #subpageLNB,
+html.bo-magazine-iframe #subAllButton {
+	display: none !important;
+}
+</style>
+{/}
 <style>
 @media only screen and (max-width:1023px) {
     .subpage_wrap .subpage_container { padding-bottom:0 !important;}
@@ -65,16 +118,6 @@ var isperm_write = '{managerview.isperm_write}';
 			<div class="title_container">
 				<h3>{manager.name}</h3>
 			</div>
-            <!--{/}-->
-            <!--{? manager.id == 'magazine' && false}-->
-            <div class="category_event bd">
-                <ul class="board_category magazine_menu">
-                    <li><a href="/main/magazine">HOME</a></li>
-                    <!--{@ categorylist}-->
-                    <li {? _GET.category == .value_} class="on"{/}><a href="/board/?id=magazine&category={=str_replace('&','%26',.value_)}">{.value_}</a></li>
-                    <!--{/}-->
-                </ul>
-            </div>
             <!--{/}-->
 		{/}
 
@@ -150,8 +193,9 @@ $(document).ready(function(){
         });
     }
     <!--{/}-->
-    $('.boad_view_btn').live('click', function() {
-        event.preventDefault();
+    $('.boad_view_btn').live('click', function(event) {
+        if (event && event.preventDefault) event.preventDefault();
+        if (event && event.stopPropagation) event.stopPropagation();
         var viewlink = $(this).attr('viewlink');
         var board_seq = $(this).attr('board_seq');
         var viewtype = $(this).attr('viewtype');
@@ -159,10 +203,23 @@ $(document).ready(function(){
         if(viewtype == 'layer' && (pagetype == 'goods' || pagetype == 'mypage') ){
             boardviewtype(viewlink,board_seq,viewtype);
         }else{
+            var targetUrl = viewlink || '';
+            try {
+                var parsed = new URL(viewlink, window.location.origin);
+                parsed.searchParams.delete('iframe');
+                parsed.searchParams.delete('popup');
+                targetUrl = parsed.pathname + parsed.search + parsed.hash;
+            } catch (e) {
+                targetUrl = String(viewlink || '')
+                    .replace(/([?&])iframe=1(?=&|$)/g, '$1')
+                    .replace(/([?&])popup=1(?=&|$)/g, '$1')
+                    .replace(/[?&]$/, '')
+                    .replace(/\?&/, '?');
+            }
             if ( self !== top ) {
-                window.parent.location.href=viewlink.replace("&iframe=1", "").replace("&popup=1", "");
+                window.top.location.assign(targetUrl);
             } else {
-                document.location.href=viewlink;
+                document.location.assign(targetUrl);
             }
 
         }

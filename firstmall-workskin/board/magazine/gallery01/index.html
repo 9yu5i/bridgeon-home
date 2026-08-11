@@ -11,25 +11,92 @@
 #subAllButton { display: none; }
 .subpage_wrap .subpage_container { padding-left: 0; padding-top: 0; }
 {? _GET.iframe}
-.bo-magazine-iframe #layout_body { padding: 0; }
+/* iframe layout unlock is owned by board/index.html + trendypicker-magazine.css/js */
 {:}
 body.is-magazine-page,
+body:has(.magazine-main),
 body.is-magazine-page #layout_wrap,
-body.is-magazine-page #layout_body {
+body.is-magazine-page #layout_body,
+body:has(.magazine-main) #layout_wrap,
+body:has(.magazine-main) #layout_body {
 	width: 100%;
 	max-width: none;
+	min-width: 0;
 	margin: 0;
 	padding-left: 0;
 	padding-right: 0;
 	background: #202020;
-	overflow-x: clip;
+	overflow-x: hidden;
 	overflow-y: auto;
+}
+.magazine-main {
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100vw;
+	max-width: 100vw;
+	margin: 0;
+	margin-left: calc(50% - 50vw);
+	padding: 0;
+	float: none;
+	clear: both;
+	background: #202020;
+}
+.magazine-shell {
+	box-sizing: border-box;
+	width: min(1350px, calc(100vw - 80px));
+	max-width: 100%;
+	margin-top: clamp(-65px, -3.8vw, -43px);
+	margin-right: auto;
+	margin-left: auto;
+}
+@media (max-width: 1120px) {
+	body.is-magazine-page #layout_wrap,
+	body.is-magazine-page #layout_body,
+	body:has(.magazine-main) #layout_wrap,
+	body:has(.magazine-main) #layout_body {
+		width: 100% !important;
+		max-width: 100% !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	.magazine-main {
+		align-items: stretch !important;
+		width: 100% !important;
+		max-width: 100% !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+	.magazine-shell {
+		align-self: stretch !important;
+		width: 100% !important;
+		max-width: 100% !important;
+		margin-right: 0 !important;
+		margin-left: 0 !important;
+		padding-left: clamp(20px, 4vw, 40px) !important;
+		padding-right: clamp(20px, 4vw, 40px) !important;
+	}
+}
+@media (max-width: 760px) {
+	.magazine-shell {
+		width: 100% !important;
+		max-width: 100% !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		padding-left: 14px !important;
+		padding-right: 14px !important;
+	}
 }
 .subpage_wrap,
 .subpage_wrap .subpage_container {
+	display: block;
 	width: 100%;
-	max-width: none;
-	margin: 0 auto;
+	max-width: 100%;
+	min-width: 0;
+	margin: 0;
 	padding: 0;
 	float: none;
 	background: transparent;
@@ -69,7 +136,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 			<a href="/main/magazine">Home</a>
 			<!--{? categorylist}-->
 			<!--{@ categorylist}-->
-			<a {? _GET.category == .value_}class="is-active"{/} href="/board/?id=magazine&amp;category={=str_replace('&','%26',.value_)}">{.value_}</a>
+			<a {? _GET.category == .value_}class="is-active"{/} href="/board/?id=magazine&amp;category={=str_replace('&','%26',.value_)}&amp;perpage=12">{.value_}</a>
 			<!--{/}-->
 			<!--{/}-->
 		</nav>
@@ -81,7 +148,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 	<input type="hidden" name="popup" value="{_GET.popup}" />
 	<input type="hidden" name="iframe" value="{_GET.iframe}" />
 	<input type="hidden" name="goods_seq" value="{_GET.goods_seq}" />
-	<input type="hidden" name="perpage" id="perpage" value="{_GET.perpage}" />
+	<input type="hidden" name="perpage" id="perpage" value="{? _GET.category}{? _GET.perpage}{_GET.perpage}{:}12{/}{:}{_GET.perpage}{/}" />
 	<input type="hidden" name="page" id="page" value="{_GET.page}" />
 	<input type="hidden" name="category" id="category" value="{_GET.category}" />
 </form>
@@ -95,7 +162,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 		<article class="bo-magazine-feature">
 			<button
 				type="button"
-				class="bo-magazine-feature-media boad_view_btn{loop[0].isperm_read}"
+				class="bo-magazine-feature-media magazine-image boad_view_btn{loop[0].isperm_read}"
 				viewlink="{boardurl->view}{loop[0].seq}"
 				viewtype="{manager.viewtype}"
 				pagetype="{pagetype}"
@@ -129,7 +196,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 					>{=strip_tags(loop[0].subject_real)}</button>
 				</h3>
 				{? loop[0].contentcut}
-				<p class="bo-magazine-excerpt">{loop[0].contentcut}</p>
+				<p class="bo-magazine-excerpt">{=strip_tags(loop[0].contentcut)}</p>
 				{/}
 				<time datetime="{loop[0].date}">{=date('F d, Y',strtotime(loop[0].date))}</time>
 			</div>
@@ -147,7 +214,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 				<article class="bo-magazine-side-card">
 					<button
 						type="button"
-						class="bo-magazine-side-thumb boad_view_btn{.isperm_read}"
+						class="bo-magazine-side-thumb magazine-image boad_view_btn{.isperm_read}"
 						viewlink="{boardurl->view}{.seq}"
 						viewtype="{manager.viewtype}"
 						pagetype="{pagetype}"
@@ -195,7 +262,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 		<article class="bo-magazine-post-card">
 			<button
 				type="button"
-				class="bo-magazine-post-image boad_view_btn{.isperm_read}"
+				class="bo-magazine-post-image magazine-image boad_view_btn{.isperm_read}"
 				viewlink="{boardurl->view}{.seq}"
 				viewtype="{manager.viewtype}"
 				pagetype="{pagetype}"
@@ -228,7 +295,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 				>{.subject_real}</button>
 			</h3>
 			{? .contentcut}
-			<p class="bo-magazine-post-excerpt">{.contentcut}</p>
+			<p class="bo-magazine-post-excerpt">{=strip_tags(.contentcut)}</p>
 			{/}
 		</article>
 		{ / }
@@ -239,21 +306,28 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 <div class="bo-magazine-empty">No magazine posts yet.</div>
 { / }
 
-{ ? noticeloop && _GET.category == '' }
+{ ? loop && _GET.category == '' }
 <section class="bo-magazine-popular" aria-labelledby="bo-magazine-popular-title" data-magazine-popular>
-	<div class="bo-magazine-section-head bo-magazine-popular-head">
-		<div>
-			<h2 id="bo-magazine-popular-title">Popular Posts</h2>
-			<p>Editor picks worth reading right now.</p>
+	<div class="bo-magazine-popular-grid" data-magazine-popular-track>
+		<div class="bo-magazine-section-head bo-magazine-popular-head">
+			<div>
+				<h2 id="bo-magazine-popular-title">Popular Posts</h2>
+				<p>Most viewed magazine stories right now.</p>
+			</div>
+			<div class="magazine-popular-controls" data-magazine-popular-controls hidden>
+				<button type="button" class="magazine-popular-arrow" data-magazine-popular-prev aria-label="Previous popular posts">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+				</button>
+				<button type="button" class="magazine-popular-arrow" data-magazine-popular-next aria-label="Next popular posts">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" /></svg>
+				</button>
+			</div>
 		</div>
-	</div>
-	<div class="bo-magazine-popular-grid">
-		{@ noticeloop }
-		{? .index_ <= 2 }
-		<article class="bo-magazine-popular-card">
+		{@ loop }
+		<article class="bo-magazine-post-card" data-hit="{.hit}" data-seq="{.seq}" hidden>
 			<button
 				type="button"
-				class="bo-magazine-popular-media boad_view_btn{.isperm_read}"
+				class="bo-magazine-post-image magazine-image boad_view_btn{.isperm_read}"
 				viewlink="{boardurl->view}{.seq}"
 				viewtype="{manager.viewtype}"
 				pagetype="{pagetype}"
@@ -261,16 +335,34 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 				board_id="{_GET.id}"
 				aria-label="Read {=strip_tags(.subject_real)}"
 			>
-				{? .index_ == 0 }
-				<img src="/data/skin/{skin}/images/main/magazine_fin1.png" alt="{=strip_tags(.subject_real)}" loading="lazy" />
-				{: .index_ == 1 }
-				<img src="/data/skin/{skin}/images/main/magazine_fin2.png" alt="{=strip_tags(.subject_real)}" loading="lazy" />
+				{? .file_key_w && .uccdomain_thumbnail}
+				<img src="{.uccdomain_thumbnail}" alt="" loading="lazy" />
+				{: strstr(.filelist['realfile'],'http') }
+				<img src="http{=str_replace('http','',.filelist['realfile'])}" alt="" loading="lazy" />
+				{: strstr(.filelist['realfile'],'/data/editor/') }
+				<img src="{.filelist['realfile']}" alt="" loading="lazy" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
 				{:}
-				<img src="/data/skin/{skin}/images/main/magazine_fin3.png" alt="{=strip_tags(.subject_real)}" loading="lazy" />
+				<img src="/data/board/{_GET.id}/{.filelist['realfile']}" alt="" loading="lazy" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
 				{/}
 			</button>
+			{?.category}
+			<p>{=str_replace(']','',str_replace('[','',.category))}</p>
+			{/}
+			<h3>
+				<button
+					type="button"
+					class="boad_view_btn{.isperm_read}"
+					viewlink="{boardurl->view}{.seq}"
+					viewtype="{manager.viewtype}"
+					pagetype="{pagetype}"
+					board_seq="{.seq}"
+					board_id="{_GET.id}"
+				>{.subject_real}</button>
+			</h3>
+			{? .contentcut}
+			<p class="bo-magazine-post-excerpt">{=strip_tags(.contentcut)}</p>
+			{/}
 		</article>
-		{/}
 		{/}
 	</div>
 </section>
@@ -289,6 +381,17 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 <!--{ / }-->
 
 {? !_GET.iframe }
+		<section class="newsletter editors-newsletter magazine-newsletter" aria-labelledby="magazine-newsletter-title">
+			<div>
+				<h2 id="magazine-newsletter-title">Be the first to know</h2>
+				<p>Get trend updates, exclusive offers, and more!</p>
+			</div>
+			<form action="/member_process/newsletter" method="post">
+				<label class="bo-magazine-sr" for="magazine-newsletter-email">Email</label>
+				<input id="magazine-newsletter-email" name="email" type="email" placeholder="Enter Your Email" />
+				<button type="submit">SUBSCRIBE</button>
+			</form>
+		</section>
 	</section>
 </main>
 {/}
@@ -311,33 +414,5 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 
 <script src="/app/javascript/js/trendypicker-magazine.js"></script>
 {? _GET.iframe}
-<script>
-(function () {
-	function postMagazineHeight() {
-		if (window.parent === window) return;
-		var height = Math.max(
-			document.body ? document.body.scrollHeight : 0,
-			document.documentElement ? document.documentElement.scrollHeight : 0
-		);
-		window.parent.postMessage({ type: "magazine-frame-height", height: height }, "*");
-	}
-	window.addEventListener("load", postMagazineHeight);
-	window.addEventListener("resize", postMagazineHeight);
-	if (window.MutationObserver && document.body) {
-		new MutationObserver(postMagazineHeight).observe(document.body, {
-			childList: true,
-			subtree: true,
-			attributes: true
-		});
-	}
-	Array.prototype.forEach.call(document.images || [], function (img) {
-		if (img.complete) return;
-		img.addEventListener("load", postMagazineHeight);
-		img.addEventListener("error", postMagazineHeight);
-	});
-	setTimeout(postMagazineHeight, 50);
-	setTimeout(postMagazineHeight, 300);
-	setTimeout(postMagazineHeight, 1000);
-})();
-</script>
+<!-- height sync owned by trendypicker-magazine.js -->
 {/}

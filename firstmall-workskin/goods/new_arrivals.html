@@ -1,0 +1,75 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ New Arrivals / 신상품 / TrendyPicker
+- Path: [skin]/goods/new_arrivals.html
+- URL: /goods/new_arrivals
+- Design: listing/new.html prototype (brand-section layout)
+- Products: Firstmall #searchedItemDisplay (searchMode=new_arrivals),
+  regrouped client-side by brand into .bo-new-brand-sections
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-new.css" />
+<style>
+#goodsSearchForm,
+#slideBanner_New,
+body.is-new-arrivals-page .search_nav,
+body.is-new-arrivals-page .title_container,
+body.is-new-arrivals-page .structure_nav,
+body.is-new-arrivals-page #subpageLNB,
+body.is-new-arrivals-page #subAllButton {
+	display: none !important;
+}
+</style>
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-new-arrivals-page new-scroll-reveal-pending";
+if (document.body) {
+	document.body.className += (document.body.className ? " " : "") + "is-new-arrivals-page";
+}
+</script>
+
+<main class="bo-new-main">
+	<section class="bo-new-hero" aria-label="New arrivals promotion">
+		<div class="bo-new-hero-inner">
+			<p class="bo-new-hero-kicker">Fresh arrivals by brand</p>
+			<h1 class="bo-new-hero-title">NEW ARRIVAL</h1>
+		</div>
+	</section>
+
+	<div class="bo-new-shell">
+		<nav class="bo-new-breadcrumbs" aria-label="Breadcrumb">
+			<a href="/main">Home</a>
+			<span aria-hidden="true">&gt;</span>
+			<span>NEW</span>
+		</nav>
+
+		<section class="bo-new-results" aria-label="New arrival product results">
+			{=showGoodsSearchFormLight()}
+
+			<div
+				class="bo-new-brand-sections"
+				data-new-brand-sections
+				aria-live="polite"
+			></div>
+
+			<div class="bo-new-paging" data-new-paging></div>
+
+			<div
+				id="searchedItemDisplay"
+				class="searched_item_display bo-new-source-grid"
+				data-displaytype="lattice"
+			></div>
+		</section>
+	</div>
+</main>
+
+<div id="wish_alert">
+	<div class="wa_on"></div>
+	<div class="wa_off"></div>
+	<div class="wa_msg"></div>
+</div>
+
+<script src="/app/javascript/js/trendypicker-new.js"></script>
+<script type="text/javascript">
+$(function () {
+	colorFilter_white("#searchFilterSelected .color_type");
+});
+</script>

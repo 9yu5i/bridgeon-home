@@ -5,6 +5,44 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <!--{? _GET.id == 'notice' || _GET.id == 'faq' || _GET.id == 'mbqna' || manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' }-->
 {#skin}
+<!--{: _GET.id == 'magazine' || manager.id == 'magazine' }-->
+<script type="text/javascript">
+//<![CDATA[
+var board_id = '{_GET.id}';
+var boardlistsurl = '/main/magazine';
+var boardwriteurl = '{boardurl->write}';
+var boardviewurl = '{boardurl->view}';
+var boardmodifyurl = '{boardurl->modify}';
+var boardreplyurl = '{boardurl->reply}';
+var boardrpermurl = '{boardurl->perm}';
+var gl_isuser = false;
+{ ? defined('__ISUSER__') }
+gl_isuser = '{=defined('__ISUSER__')}';
+{ / }
+var return_url = '{=urlencode(_SERVER.REQUEST_URI)}';
+
+var comment = '{comment}';
+var commentlay = '{commentlay}';
+var isperm_write = '{managerview.isperm_write}';
+//]]>
+</script>
+<script type="text/javascript" src="/app/javascript/js/board.js?v=7" charset="utf-8"></script>
+{? commentskinjsuse }
+<script type="text/javascript" src="/app/javascript/js/board_mobile.js?v=1" charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/js/board_comment_mobile.js?v=2" charset="utf-8"></script>
+{/}
+<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js" charset="utf-8"></script>
+
+<div id="boardlayout" class="magazine-view-layout">
+	<div class="subpage_wrap">
+		<div class="subpage_container">
+			<div id="bbsview">
+				{#skin}
+			</div>
+		</div>
+	</div>
+</div>
 <!--{:}-->
 <script type="text/javascript">
 //<![CDATA[

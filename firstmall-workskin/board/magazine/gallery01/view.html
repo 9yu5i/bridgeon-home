@@ -1,172 +1,212 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ T.P Magazine board view / TrendyPicker
+- Path: [skin]/board/magazine/gallery01/view.html
+- URL: /board/view?id=magazine&seq=...
+- Layout aligned to editors-pick/magazine-detail.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css" />
+
 <style type="text/css">
-#subpageLNB, #subAllButton { display:none; }
-.subpage_wrap .subpage_container { padding-left:0; }
-@media only screen and (max-width:1023px) {
-	.subpage_wrap .subpage_container { padding-left:10px; }
+#subpageLNB,
+#subAllButton,
+.title_container { display: none !important; }
+.subpage_wrap .subpage_container { padding: 0 !important; }
+body.is-magazine-page #layout_body,
+body:has(.magazine-detail-main) #layout_body {
+	max-width: none !important;
 }
-    #layout_body {max-width:1084px;}
 </style>
 
-<form name="form1" id="form1" method="post" action="{=sslAction('../board_process')}"  target="actionFrame">
-	<input type="hidden" name="mode" id="mode" value="{mode}" />
-	<input type="hidden" name="board_id" id="board_id" value="{_GET.id}" />
-	<input type="hidden" name="reply" id="reply" value="{_GET.reply}" />
-	{? seq }
-	<input type="hidden" name="seq" id="board_seq" value="{seq}" />
-	{/}
-	<input type="hidden" name="popup" value="{_GET.popup}" >
-	<input type="hidden" name="iframe" value="{_GET.iframe}" >
-	<input type="hidden" name="goods_seq" value="{_GET.goods_seq}" >
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-magazine-page";
+if (document.body) document.body.className += (document.body.className ? " " : "") + "is-magazine-page";
+</script>
 
-	<div class="gallery_detail_title">
-		{iconmobile} {subject} {iconnew} {iconhot} {iconhidden}
-	</div>
-	<ul class="gallery_detail_desc">
-		<li>{=date('F d, Y',strtotime(r_date))}</li>
-		<li>{name}</li>
-		<!--<li>조회수 {=number_format(hit)}</li>-->
-	</ul>
-	{? filelist}
-	<ul class="gallery_detail_filelist">
-		{@ filelist}
-		<li>
-			<span class="realfilelist hand highlight-link" realfiledir="{.realfiledir}" realfilename="{.orignfile}"  realfilename="{.orignfile}" board_id="{_GET.id}" filedown="../board_process?mode=board_file_down&board_id={_GET.id}&realfiledir={.realfiledir}&realfilename={.orignfile}">{.orignfile} (<span class="size">{.realsizefile}</span>) <button type="button"  class="bbs_btn">down</button></span>
-			{? .is_image }
-				<span class="hand" imgsrc="{.realfile}" onclick="board_file_review('{.realfile}','{.imagesize[0]}','{.imagesize[1]}');" ><img src="../../../images/icon/icon_zoom.gif" hspace="1" title="미리보기"/></span>
+<main class="magazine-main magazine-detail-main">
+	<section class="magazine-detail-hero" aria-label="Magazine detail hero"></section>
+
+	<article class="magazine-detail-shell">
+		<nav class="magazine-breadcrumb" aria-label="Breadcrumb">
+			<a href="/main">Home</a>
+			<span aria-hidden="true">&gt;</span>
+			<a href="/main/magazine">T.P Magazine</a>
+			{? datacategory}
+			<span aria-hidden="true">&gt;</span>
+			<a href="/board/?id=magazine&amp;category={=str_replace('&','%26',str_replace(']','',str_replace('[','',datacategory)))}&amp;perpage=12">{=str_replace(']','',str_replace('[','',datacategory))}</a>
+			{: _GET.category}
+			<span aria-hidden="true">&gt;</span>
+			<a href="/board/?id=magazine&amp;category={=str_replace('&','%26',_GET.category)}&amp;perpage=12">{_GET.category}</a>
 			{/}
-		</li>
+		</nav>
+
+		<div class="magazine-detail-hero-copy">
+			{? datacategory}
+			<p>
+				<a href="/board/?id=magazine&amp;category={=str_replace('&','%26',str_replace(']','',str_replace('[','',datacategory)))}&amp;perpage=12">{=str_replace(']','',str_replace('[','',datacategory))}</a>
+			</p>
+			{: _GET.category}
+			<p>
+				<a href="/board/?id=magazine&amp;category={=str_replace('&','%26',_GET.category)}&amp;perpage=12">{_GET.category}</a>
+			</p>
+			{:}
+			<p><a href="/main/magazine">MAGAZINE</a></p>
+			{/}
+			<h1 id="magazine-detail-title">{=strip_tags(subject)}</h1>
+			<header class="magazine-article-head">
+				<div>
+					<p>TrendyPicker Editorial</p>
+					<time datetime="{r_date}">{=date('M j, Y',strtotime(r_date))}</time>
+					{? name}
+					<span class="magazine-article-editor">{name}</span>
+					{/}
+				</div>
+			</header>
+		</div>
+
+		{? filelist}
+		{@ filelist}
+		{? .index_ == 0 && .is_image }
+		<div class="magazine-detail-hero-image magazine-image" style="background-image:url('{.realfile}');">
+			<img src="{.realfile}" alt="" />
+		</div>
 		{/}
-	</ul>
-	{/}
-	
-	<!--{? file_key_w && uccdomain_fileswf}-->
-	<div class="board_detail_contents">
-		<embed src="{uccdomain_fileswf}" width="{managerview.video_size0}" height="{managerview.video_size1}" allowfullscreen="true" wmode="transparent"></embed>
-	</div>
-	<!--{/}-->
-
-	<div class="board_detail_contents">
-		{contents}
-	</div>
-
-	<!--{? managerview.auth_recommend_use == 'Y' }-->
-	<div class="c_scorelay hide">{#scoreskin}</div>
-	<!--{/}-->
-	
-    <ul class="login_sns_icon" style="text-align: left;">
-        <li><img src="../../../images/icon/icon-sns-insta.png" alt="google" /></li>
-        <li><img src="../../../images/icon/icon-sns-facebook.png" alt="facebook" /></li>
-        <li><img src="../../../images/icon/icon-sns-twitter.png" alt="apple" /></li>
-        <li><img src="../../../images/icon/icon-sns-link.png" alt="twitter" /></li>
-    </ul>
-
-	<div class="board_sns_link hide">
-		{=snslinkurl('board', subject)}
-	</div>
-</form>
-
-
-<!--{? commentlay == 'Y' || comment > 0 // 댓글 사용여부, 댓글수 }-->
-<a name="cmtlist"></a>
-<div class="board_comment_area"  id="comment_container">{#commentskin}</div>
-<!--{/}-->
-
-<!-- 이전/다음 글 -->
-<div id="prenextlist" class="board_prev_next_list">
-	{#prenextskin}
-</div>
-
-<!-- 하단 각종 버튼 -->
-<ul class="board_detail_btns">
-	<li class="left"><button type="button" name="boardviewclose" class="btn_resp size_b color2">목록</button></li>
-	<li class="right">
-	{? manager.auth_write != '[admin]' }
-		{? display == 0 && managerview.isperm_moddel != "_mbno"}
-			<button type="button" name="boad_modify_btn{managerview.isperm_moddel}" board_seq="{seq}"  board_id="{boardid}" class="btn_resp size_b">수정</button>
 		{/}
-	{/}
-	{? ((display == 0 || (display == 1 && replyor == 0 && comment ==0) ) ) && managerview.isperm_moddel != "_mbno"}
-		<button type="button"  name="boad_delete_btn{managerview.isperm_moddel}"  board_seq="{seq}"  board_id="{boardid}" class="btn_resp size_b">삭제</button>
-	{/}
-	{? display == 0 && replylay == 'Y' && managerview.isperm_write != "_no" }
-		<button type="button" name="boad_reply_btn" board_seq="{seq}" board_id="{boardid}" class="btn_resp size_b">답변</button>
-	{/}
-	{? manager.auth_write != '[admin]' }
-		{? managerview.isperm_write != "_no" }
-			<button type="button" name="boad_write_btn{managerview.isperm_write}" id="boad_write_btn{managerview.isperm_write}"  board_id="{boardid}" class="btn_resp size_b color2">{manager.name} 쓰기</button>
+		{: file_key_w && uccdomain_thumbnail }
+		<div class="magazine-detail-hero-image magazine-image" style="background-image:url('{uccdomain_thumbnail}');">
+			<img src="{uccdomain_thumbnail}" alt="" />
+		</div>
 		{/}
-	{/}
-	</li>
-</ul>
 
+		<div class="magazine-article-layout">
+			<form name="form1" id="form1" method="post" action="{=sslAction('../board_process')}" target="actionFrame">
+				<input type="hidden" name="mode" id="mode" value="{mode}" />
+				<input type="hidden" name="board_id" id="board_id" value="{_GET.id}" />
+				<input type="hidden" name="reply" id="reply" value="{_GET.reply}" />
+				{? seq }
+				<input type="hidden" name="seq" id="board_seq" value="{seq}" />
+				{/}
+				<input type="hidden" name="popup" value="{_GET.popup}" />
+				<input type="hidden" name="iframe" value="{_GET.iframe}" />
+				<input type="hidden" name="goods_seq" value="{_GET.goods_seq}" />
+
+				<div class="magazine-article-body board_detail_contents content" data-magazine-article-body>
+					<!--{? file_key_w && uccdomain_fileswf}-->
+					<embed src="{uccdomain_fileswf}" width="{managerview.video_size0}" height="{managerview.video_size1}" allowfullscreen="true" wmode="transparent"></embed>
+					<!--{/}-->
+					{contents}
+				</div>
+
+				<!--{? managerview.auth_recommend_use == 'Y' }-->
+				<div class="c_scorelay hide">{#scoreskin}</div>
+				<!--{/}-->
+
+				<div class="board_sns_link hide">
+					{=snslinkurl('board', subject)}
+				</div>
+			</form>
+		</div>
+
+		<section class="magazine-related" aria-labelledby="magazine-related-title">
+			<div class="bo-magazine-section-head magazine-related-head">
+				<h2 id="magazine-related-title">Related Posts</h2>
+				<a href="/main/magazine">VIEW MORE -&gt;</a>
+			</div>
+			<div
+				class="magazine-related-grid"
+				data-magazine-related
+				data-current-seq="{seq}"
+				{? datacategory}
+				data-category="{=str_replace(']','',str_replace('[','',datacategory))}"
+				{: _GET.category}
+				data-category="{_GET.category}"
+				{/}
+			></div>
+		</section>
+
+		<ul class="board_detail_btns magazine-detail-actions" aria-label="Magazine article actions">
+			<li class="right">
+				{? manager.auth_write != '[admin]' }
+					{? display == 0 && managerview.isperm_moddel != "_mbno"}
+						<button type="button" name="boad_modify_btn{managerview.isperm_moddel}" board_seq="{seq}" board_id="{boardid}" class="btn_resp size_b">수정</button>
+					{/}
+				{/}
+				{? ((display == 0 || (display == 1 && replyor == 0 && comment ==0) ) ) && managerview.isperm_moddel != "_mbno"}
+					<button type="button" name="boad_delete_btn{managerview.isperm_moddel}" board_seq="{seq}" board_id="{boardid}" class="btn_resp size_b">삭제</button>
+				{/}
+				{? display == 0 && replylay == 'Y' && managerview.isperm_write != "_no" }
+					<button type="button" name="boad_reply_btn" board_seq="{seq}" board_id="{boardid}" class="btn_resp size_b">답변</button>
+				{/}
+			</li>
+		</ul>
+
+		<!--{? commentlay == 'Y' || comment > 0 }-->
+		<a name="cmtlist"></a>
+		<div class="board_comment_area" id="comment_container">{#commentskin}</div>
+		<!--{/}-->
+
+		<section class="newsletter editors-newsletter magazine-newsletter" aria-labelledby="magazine-detail-newsletter-title">
+			<div>
+				<h2 id="magazine-detail-newsletter-title">Be the first to know</h2>
+				<p>Get trend updates, exclusive offers, and more!</p>
+			</div>
+			<form action="/member_process/newsletter" method="post">
+				<label class="bo-magazine-sr" for="magazine-detail-newsletter-email">Email</label>
+				<input id="magazine-detail-newsletter-email" name="email" type="email" placeholder="Enter Your Email" />
+				<button type="submit">SUBSCRIBE</button>
+			</form>
+		</section>
+	</article>
+</main>
 
 <div id="CmtBoardPwCk" class="hide BoardPwCk">
 	<div class="msg">
-		<h3> 비밀번호 확인</h3>
-		<div style="padding:10px 0 0;">댓글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+		<h3>Password</h3>
+		<div>Enter the password used when writing this comment.</div>
 	</div>
-	<form name="BoardPwcheckForm" id="CmtBoardPwcheckForm" method="post" >
-	<input type="hidden" name="seq" id="cmt_pwck_seq" value="" />
-	<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq" value="" />
-	<div class="ibox">
-		<input type="password" name="pw" id="cmt_pwck_pw" style="width:140px;" />
-		<button type="submit" id="CmtBoardPwcheckBtn" class="btn_resp size_b color2" />확인</button>
-		<button type="button" class="btn_resp size_b" onclick="$('#CmtBoardPwCk').dialog('close');" />취소</button>
-	</div>
+	<form name="BoardPwcheckForm" id="CmtBoardPwcheckForm" method="post">
+		<input type="hidden" name="seq" id="cmt_pwck_seq" value="" />
+		<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="cmt_pwck_pw" style="width:140px;" />
+			<button type="submit" id="CmtBoardPwcheckBtn" class="btn_resp size_b color2">Confirm</button>
+			<button type="button" class="btn_resp size_b" onclick="$('#CmtBoardPwCk').dialog('close');">Cancel</button>
+		</div>
 	</form>
 </div>
-<!-- //댓글 비회원 비밀번호 확인 -->
 
 <div id="ModDelBoardPwCk" class="hide BoardPwCk">
 	<div class="msg">
-		<h3> 비밀번호 확인</h3>
-		<div style="padding:10px 0 0;">게시글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+		<h3>Password</h3>
+		<div>Enter the password used when writing this post.</div>
 	</div>
-	<form name="ModDelBoardPwcheckForm" id="ModDelBoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame " >
-	<input type="hidden" name="modetype" id="modetype" value="" />
-	<input type="hidden" name="seq" id="moddel_pwck_seq" value="" />
-	<input type="hidden" name="returnurl" id="moddel_pwck_returnurl" value="" />
-	<div class="ibox">
-		<input type="password" name="pw" id="moddel_pwck_pw" style="width:140px;" />
-		<button type="submit" id="BoardPwcheckBtn" class="btn_resp size_b color2" />확인</button>
-		<button type="button" class="btn_resp size_b" onclick="$('#ModDelBoardPwCk').dialog('close');" />취소</button>
-	</div>
+	<form name="ModDelBoardPwcheckForm" id="ModDelBoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
+		<input type="hidden" name="modetype" id="modetype" value="" />
+		<input type="hidden" name="seq" id="moddel_pwck_seq" value="" />
+		<input type="hidden" name="returnurl" id="moddel_pwck_returnurl" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="moddel_pwck_pw" style="width:140px;" />
+			<button type="submit" id="BoardPwcheckBtn" class="btn_resp size_b color2">Confirm</button>
+			<button type="button" class="btn_resp size_b" onclick="$('#ModDelBoardPwCk').dialog('close');">Cancel</button>
+		</div>
 	</form>
 </div>
-<!-- //게시글 비회원 비밀번호 확인 -->
 
+<script src="/app/javascript/js/trendypicker-magazine.js"></script>
 <script type="text/javascript">
-	function getboardLogin(){
-		{? defined('__ISUSER__') === true }
-			//해당 서비스를 이용하시려면 관리자에게 문의하여 주시길 바랍니다.
-			openDialogAlert(getAlert('et366'),'450','140');
-		{:}
-			//이용하시려면 로그인이 필요합니다!<br/>로그인하시겠습니까?
-			openDialogConfirm(getAlert('et367'),'400','155',function(){location.href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}";},function(){});
-		{/}
-	}
+function getboardLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et366'),'450','140');
+	{:}
+		openDialogConfirm(getAlert('et367'),'400','155',function(){location.href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}";},function(){});
+	{/}
+}
 
-	function getcmtMbLogin(){
-		{? defined('__ISUSER__') === true }
-			//글작성자만 이용가능합니다.
-			openDialogAlert(getAlert('et368'),'400','140');
-		{:}
-			//이용하시려면 로그인이 필요합니다!<br/>로그인하시겠습니까?
-			openDialogConfirm(getAlert('et367'),'400','155',function(){location.href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}";},function(){});
-		{/}
-	}
-
-	$(window).load(function () {
-		//이미지 가로가 큰경우
-		$(".content img").each(function() {
-			<!--{ ? layout_config.layoutScrollLeft != 'hidden' || layout_config.layoutScrollRight != 'hidden'}-->
-				var default_width = '{layout_config.body_width-100}';//(본문레이아웃사이즈-100) 또는 직접값변경
-			<!--{:}-->
-				var default_width = '{layout_config.body_width-50}';//(본문레이아웃사이즈-50) 또는 직접값변경
-			<!--{/}-->
-			if( $(this).width() > default_width || $(this).height() > default_width ) {
-				imageResize(this,default_width);
-			}
-		});
-	});
+function getcmtMbLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et368'),'400','140');
+	{:}
+		openDialogConfirm(getAlert('et367'),'400','155',function(){location.href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}";},function(){});
+	{/}
+}
 </script>
