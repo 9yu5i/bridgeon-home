@@ -1,3 +1,11 @@
+/**
+ * TrendyPicker Best Sellers
+ * /goods/best → goods/best.html
+ *
+ * 1. Wait for Firstmall to inject #searchedItemDisplay > ul
+ * 2. Rank badges on listing cards
+ * 3. Infinite scroll via /goods/search_list (not /goods/best?page=)
+ */
 (() => {
   const page = document.body;
   if (!page || !page.classList.contains("is-best-page")) return;
@@ -68,7 +76,7 @@
     */
     function fetchPage(pageNumber) {
       const url = new URL(window.location.href);
-      url.pathname = url.pathname.replace(/\/best$/, "/search_list");
+      url.pathname = url.pathname.replace(/\/best\/?$/, "/search_list");
       url.searchParams.set("page", String(pageNumber));
       url.searchParams.set("auto", "1");
       return fetch(url.toString(), { credentials: "same-origin" })

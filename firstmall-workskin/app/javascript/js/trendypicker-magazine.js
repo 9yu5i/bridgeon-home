@@ -1,17 +1,14 @@
-/*
-  TrendyPicker T.P Magazine (Firstmall)
-  Upload to: /app/javascript/js/trendypicker-magazine.js
-  Used by: main/magazine.html, board/magazine/gallery01/index.html|view.html
-  Guide: firstmall-workskin/MAGAZINE-UPLOAD.md
-
-  Responsibilities:
-  - Home iframe height sync + bfcache list reset
-  - Open article detail in top window (never inside iframe)
-  - Popular Posts carousel (hit top 10)
-  - Detail Related Posts (3 cards)
-  - Scroll reveal (home + related + newsletter)
-  - Lead feature keyframe reveal (iframe above-the-fold)
-*/
+/**
+ * TrendyPicker T.P Magazine
+ * /main/magazine, /board/?id=magazine, /board/view?id=magazine
+ * Upload: firstmall-workskin/MAGAZINE-UPLOAD.md
+ *
+ * 1. Home iframe height sync + bfcache list reset
+ * 2. Open article detail in the top window (never inside the iframe)
+ * 3. Popular Posts carousel (hit top 10 of loaded page)
+ * 4. Detail Related Posts (3 cards)
+ * 5. Scroll reveal (below-fold). Lead/Latest animate in CSS on first paint.
+ */
 (function () {
   "use strict";
 
@@ -26,7 +23,7 @@
   function isIframeDoc() {
     return (
       (document.documentElement &&
-        document.documentElement.className.indexOf("bo-magazine-iframe") !== -1) ||
+        document.documentElement.classList.contains("bo-magazine-iframe")) ||
       /(?:^|[?&])iframe=1(?:&|$)/.test(window.location.search || "")
     );
   }
@@ -34,10 +31,7 @@
   function unlockIframeChrome() {
     if (!isIframeDoc()) return;
 
-    if (document.documentElement.className.indexOf("bo-magazine-iframe") === -1) {
-      document.documentElement.className +=
-        (document.documentElement.className ? " " : "") + "bo-magazine-iframe";
-    }
+    document.documentElement.classList.add("bo-magazine-iframe");
 
     ["#layout_header", "#layout_footer", "#subpageLNB", "#subAllButton"].forEach(
       function (selector) {
@@ -126,10 +120,7 @@
 
   function unlockParentLayout() {
     if (document.body) {
-      if (document.body.className.indexOf("is-magazine-page") === -1) {
-        document.body.className +=
-          (document.body.className ? " " : "") + "is-magazine-page";
-      }
+      document.body.classList.add("is-magazine-page");
       document.body.style.setProperty("background", "#202020", "important");
       document.body.style.setProperty("overflow-x", "hidden", "important");
       document.body.style.setProperty("overflow-y", "auto", "important");
@@ -213,7 +204,7 @@
   function getMagazineListSrc(frame) {
     return (
       (frame && frame.getAttribute("data-list-src")) ||
-      "/board/?id=magazine&iframe=1&perpage=100"
+      "/board/?id=magazine&iframe=1&perpage=12"
     );
   }
 
@@ -342,9 +333,7 @@
     frame.addEventListener("load", function () {
       lastHeight = 0;
       resizeFrame();
-      window.setTimeout(resizeFrame, 150);
-      window.setTimeout(resizeFrame, 500);
-      window.setTimeout(resizeFrame, 1200);
+      window.setTimeout(resizeFrame, 80);
       centerMagazinePage();
     });
 
@@ -399,21 +388,6 @@
     if (per === 12) return false;
 
     url.searchParams.set("perpage", "12");
-    window.location.replace(url.toString());
-    return true;
-  }
-
-  /* Home list pool for Popular ranking (hit top 10 across loaded board posts). */
-  function ensureHomePerpageForPopular() {
-    var board = document.querySelector(".bo-magazine-board.is-home");
-    var popular = document.querySelector("[data-magazine-popular]");
-    if (!board || !popular) return false;
-
-    var url = new URL(window.location.href);
-    var per = parseInt(url.searchParams.get("perpage") || "0", 10);
-    if (per >= 100) return false;
-
-    url.searchParams.set("perpage", "100");
     window.location.replace(url.toString());
     return true;
   }
@@ -567,37 +541,11 @@
     if (!el || el.classList.contains("is-inview") || el.getAttribute("data-magazine-revealing") === "1") {
       return;
     }
-    /*
-      Above-the-fold cards (lead feature) were getting is-inview in the same
-      turn as magazine-scroll-reveal, so opacity:0 never painted and the
-      transition looked like "no animation". Paint hidden state first.
-    */
     el.setAttribute("data-magazine-revealing", "1");
     window.setTimeout(function () {
       el.classList.add("is-inview");
       el.removeAttribute("data-magazine-revealing");
     }, 80);
-  }
-
-  /* Force lead feature keyframe replay — transition-based reveal is unreliable in iframe. */
-  var leadFeatureRevealPlayed = false;
-  function playLeadFeatureReveal(force) {
-    var feature =
-      document.querySelector(".bo-magazine-lead .bo-magazine-feature") ||
-      document.querySelector(".bo-magazine-feature");
-    if (!feature) return;
-    if (leadFeatureRevealPlayed && !force) return;
-    leadFeatureRevealPlayed = true;
-
-    feature.classList.add("magazine-scroll-reveal");
-    feature.classList.remove("is-inview");
-    feature.removeAttribute("data-magazine-revealing");
-    feature.style.removeProperty("animation");
-    void feature.offsetWidth;
-
-    window.setTimeout(function () {
-      feature.classList.add("is-inview");
-    }, 160);
   }
 
   function prepareMagazineScrollTarget(el, delay) {
@@ -650,23 +598,9 @@
       add(document.querySelector(".magazine-newsletter"), 0.08);
     }
 
-    /* Magazine home board (iframe list) */
+    /* Iframe home: lead/latest/side cards animate in CSS. JS only below-fold. */
     if (document.querySelector(".bo-magazine-board") || isIframeDoc()) {
-      /* Lead left feature card — short delay so the rise is visible on load. */
-      add(
-        document.querySelector(".bo-magazine-lead .bo-magazine-feature") ||
-          document.querySelector(".bo-magazine-feature"),
-        0.08
-      );
-      add(document.querySelector(".bo-magazine-latest"), 0.14);
       add(document.querySelector(".bo-magazine-popular"), 0.04);
-
-      Array.prototype.forEach.call(
-        document.querySelectorAll(".bo-magazine-side-card"),
-        function (card, index) {
-          add(card, 0.16 + Math.min(index, 4) * 0.06);
-        }
-      );
 
       Array.prototype.forEach.call(
         document.querySelectorAll(
@@ -755,6 +689,7 @@
   };
 
   function bindMagazineScrollReveal() {
+    document.documentElement.classList.add("is-magazine-reveal-ready");
     magazineScrollReveal.targets = collectMagazineScrollTargets();
     if (!magazineScrollReveal.targets.length) return;
 
@@ -769,10 +704,6 @@
       var line = viewHeight * 0.92;
       magazineScrollReveal.targets.forEach(function (el) {
         if (!isRevealTargetActive(el) || el.classList.contains("is-inview")) return;
-        /* Lead feature uses dedicated keyframe playback. */
-        if (el.classList.contains("bo-magazine-feature") && el.closest(".bo-magazine-lead")) {
-          return;
-        }
         var box = getRevealViewportBox(el);
         /* Reveal when any part enters the lower viewport band. */
         if (box.top < line && box.bottom > 24) revealMagazineTarget(el);
@@ -820,8 +751,6 @@
     if (!magazineScrollReveal.bound) {
       bindRevealScrollListeners(syncReveal);
       window.setTimeout(syncReveal, 120);
-      window.setTimeout(syncReveal, 400);
-      window.setTimeout(syncReveal, 1000);
       magazineScrollReveal.bound = true;
     }
   }
@@ -947,8 +876,13 @@
   }
 
   ready(function () {
+    if (
+      !isIframeDoc() &&
+      !document.querySelector(".magazine-main, .magazine-detail-main, .bo-magazine-board")
+    ) {
+      return;
+    }
     if (ensureCategoryPerpageTwelve()) return;
-    if (ensureHomePerpageForPopular()) return;
 
     bindMagazineOpenInTop();
     bindMagazinePopular();
@@ -968,46 +902,33 @@
     if (isIframeDoc()) {
       unlockIframeChrome();
       postMagazineHeight();
-      window.setTimeout(function () {
-        playLeadFeatureReveal(true);
-      }, 180);
+      window.addEventListener("resize", postMagazineHeight);
+
+      if (typeof ResizeObserver === "function") {
+        var heightFrame = 0;
+        var heightObserver = new ResizeObserver(function () {
+          if (heightFrame) return;
+          heightFrame = window.requestAnimationFrame(function () {
+            heightFrame = 0;
+            postMagazineHeight();
+          });
+        });
+        [".bo-magazine-board", ".bo-magazine-popular", "#bbslist"].forEach(function (selector) {
+          var node = document.querySelector(selector);
+          if (node) heightObserver.observe(node);
+        });
+      }
 
       window.addEventListener("load", function () {
         unlockIframeChrome();
-        syncPostCardExcerptLines();
-        syncMagazineImageHover();
-        refreshMagazineScrollReveal();
-        playLeadFeatureReveal(false);
         postMagazineHeight();
       });
-      window.addEventListener("resize", postMagazineHeight);
-
-      Array.prototype.forEach.call(document.images || [], function (img) {
-        if (img.complete) return;
-        img.addEventListener("load", postMagazineHeight);
-        img.addEventListener("error", postMagazineHeight);
-      });
-
-      window.setTimeout(function () {
-        syncPostCardExcerptLines();
-        syncMagazineImageHover();
-        postMagazineHeight();
-      }, 100);
-      window.setTimeout(function () {
-        syncPostCardExcerptLines();
-        postMagazineHeight();
-      }, 400);
-      window.setTimeout(postMagazineHeight, 1000);
       return;
     }
 
     centerMagazinePage();
     window.setTimeout(centerMagazinePage, 50);
-    window.setTimeout(centerMagazinePage, 300);
     window.addEventListener("load", function () {
-      syncPostCardExcerptLines();
-      syncMagazineImageHover();
-      refreshMagazineScrollReveal();
       centerMagazinePage();
     });
     window.addEventListener("resize", centerMagazinePage);

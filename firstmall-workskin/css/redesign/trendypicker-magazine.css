@@ -1,14 +1,18 @@
-/*
-  TrendyPicker T.P Magazine (Firstmall)
-  - Owns: /main/magazine, /board/?id=magazine, /board/view?id=magazine
-  - Linked from: main/magazine.html, board/index.html (magazine),
-    board/magazine/gallery01/index.html, board/magazine/gallery01/view.html
-  - Pair with: /app/javascript/js/trendypicker-magazine.js
-  - Upload guide: firstmall-workskin/MAGAZINE-UPLOAD.md
+/* TrendyPicker T.P Magazine
+   /main/magazine, /board/?id=magazine, /board/view?id=magazine
+   Pair: app/javascript/js/trendypicker-magazine.js
+   Upload: firstmall-workskin/MAGAZINE-UPLOAD.md
+
+   1. Page chrome / tokens
+   2. Hero / shell / image hover
+   3. List (tabs, iframe, lead, latest, popular, newsletter)
+   4. Detail (article, related, actions)
+   5. Scroll reveal
+   6. Responsive — last
 */
 
+/* ——— Page chrome ——— */
 .magazine-main,
-.bo-magazine-page,
 .bo-magazine-board,
 .bo-magazine-iframe {
   --magazine-bg: #f6f3ff;
@@ -28,8 +32,7 @@
 }
 
 body.is-magazine-page,
-body:has(.magazine-main),
-body:has(.bo-magazine-page) {
+body:has(.magazine-main) {
   background: #202020;
   overflow-x: hidden;
   overflow-y: auto;
@@ -38,9 +41,7 @@ body:has(.bo-magazine-page) {
 body.is-magazine-page #layout_wrap,
 body.is-magazine-page #layout_body,
 body:has(.magazine-main) #layout_wrap,
-body:has(.magazine-main) #layout_body,
-body:has(.bo-magazine-page) #layout_wrap,
-body:has(.bo-magazine-page) #layout_body {
+body:has(.magazine-main) #layout_body {
   width: 100%;
   max-width: none;
   min-width: 0;
@@ -55,8 +56,7 @@ body:has(.bo-magazine-page) #layout_body {
   Firstmall #layout_body is often a fixed/left-biased column.
   Break magazine-main out to the real viewport, then center the shell inside it.
 */
-.magazine-main,
-.bo-magazine-page {
+.magazine-main {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -72,8 +72,8 @@ body:has(.bo-magazine-page) #layout_body {
   background: #202020;
 }
 
-.magazine-hero,
-.bo-magazine-hero {
+/* ——— Hero / shell ——— */
+.magazine-hero {
   position: relative;
   display: block;
   align-self: stretch;
@@ -117,8 +117,7 @@ body:has(.bo-magazine-page) #layout_body {
     linear-gradient(145deg, rgba(255, 255, 255, 0.56), rgba(123, 63, 228, 0.16));
 }
 
-.magazine-hero-copy,
-.bo-magazine-hero-copy {
+.magazine-hero-copy {
   position: relative;
   z-index: 2;
   display: grid;
@@ -127,16 +126,14 @@ body:has(.bo-magazine-page) #layout_body {
   text-align: center;
 }
 
-.magazine-hero-copy p,
-.bo-magazine-eyebrow {
+.magazine-hero-copy p {
   margin: 0 0 9px;
   color: var(--magazine-purple);
   font-size: clamp(14px, 1.1vw, 20px);
   font-weight: 900;
 }
 
-.magazine-hero-copy h1,
-.bo-magazine-hero-copy h1 {
+.magazine-hero-copy h1 {
   margin: 0;
   color: #31136c;
   font-size: clamp(45px, 5.4vw, 97px);
@@ -144,8 +141,7 @@ body:has(.bo-magazine-page) #layout_body {
   font-weight: 900;
 }
 
-.magazine-hero-copy span,
-.bo-magazine-hero-copy p:last-child {
+.magazine-hero-copy span {
   max-width: 468px;
   margin-top: 16px;
   color: #534864;
@@ -155,8 +151,7 @@ body:has(.bo-magazine-page) #layout_body {
 }
 
 .magazine-shell,
-.magazine-detail-shell,
-.bo-magazine-shell {
+.magazine-detail-shell {
   position: relative;
   z-index: 3;
   box-sizing: border-box;
@@ -180,6 +175,7 @@ body:has(.bo-magazine-page) #layout_body {
 .magazine-detail-shell {
   background: #fff;
 }
+
 
 /* Image hover zoom (prototype .magazine-image::before) */
 .magazine-image,
@@ -236,8 +232,8 @@ body:has(.bo-magazine-page) #layout_body {
   transform: scale(1.04);
 }
 
-.magazine-breadcrumb,
-.bo-magazine-breadcrumb {
+/* ——— List ——— */
+.magazine-breadcrumb {
   display: flex;
   align-items: center;
   gap: 7px;
@@ -246,14 +242,12 @@ body:has(.bo-magazine-page) #layout_body {
   font-size: 14px;
 }
 
-.magazine-breadcrumb a,
-.bo-magazine-breadcrumb a {
+.magazine-breadcrumb a {
   color: inherit;
   text-decoration: none;
 }
 
-.magazine-breadcrumb span:last-child,
-.bo-magazine-breadcrumb span:last-child {
+.magazine-breadcrumb span:last-child {
   color: #171320;
   font-weight: 600;
 }
@@ -308,8 +302,7 @@ body:has(.bo-magazine-page) #layout_body {
   background: var(--magazine-purple);
 }
 
-.magazine-frame,
-.bo-magazine-frame {
+.magazine-frame {
   display: block;
   width: 100%;
   max-width: 100%;
@@ -429,6 +422,7 @@ html.bo-magazine-iframe #subAllButton {
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 13px 27px rgba(64, 47, 88, 0.08);
+  animation: magazineFeatureReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
 }
 
 .bo-magazine-feature.magazine-scroll-reveal,
@@ -570,6 +564,7 @@ html.bo-magazine-iframe #subAllButton {
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 13px 27px rgba(64, 47, 88, 0.08);
+  animation: magazineFeatureReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
 
 .bo-magazine-latest-list {
@@ -584,6 +579,8 @@ html.bo-magazine-iframe #subAllButton {
   align-items: center;
   padding: 13px 0;
   border-top: 1px solid var(--magazine-line);
+  opacity: 0;
+  animation: magazineFeatureReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .bo-magazine-side-card:first-of-type {
@@ -888,266 +885,7 @@ html.bo-magazine-iframe #subAllButton {
   display: none;
 }
 
-/* Tablet + mobile only — keep desktop (≥1121px) on 2-col lead / inset shell */
-@media (max-width: 1120px) {
-  body.is-magazine-page #layout_wrap,
-  body.is-magazine-page #layout_body,
-  body:has(.magazine-main) #layout_wrap,
-  body:has(.magazine-main) #layout_body,
-  body:has(.magazine-detail-main) #layout_wrap,
-  body:has(.magazine-detail-main) #layout_body {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .magazine-main,
-  .bo-magazine-page,
-  .magazine-detail-main {
-    align-items: stretch !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  .magazine-shell,
-  .magazine-detail-shell,
-  .bo-magazine-shell {
-    align-self: stretch !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-top: -38px;
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-    padding: 38px clamp(20px, 4vw, 40px) 61px;
-    border-radius: 25px 25px 0 0;
-  }
-
-  .magazine-breadcrumb,
-  .bo-magazine-breadcrumb {
-    display: none;
-  }
-
-  .magazine-topic-tabs {
-    justify-content: flex-start;
-  }
-
-  .bo-magazine-lead {
-    grid-template-columns: 1fr;
-  }
-
-  .bo-magazine-latest {
-    padding: 20px;
-  }
-
-  .bo-magazine-latest .bo-magazine-section-head {
-    margin-bottom: 9px;
-  }
-
-  .bo-magazine-side-card {
-    grid-template-columns: minmax(0, 45%) minmax(0, 1fr);
-    align-items: start;
-    gap: 14px;
-    padding: 16px 0;
-  }
-
-  .bo-magazine-side-thumb {
-    width: 100%;
-    aspect-ratio: 802 / 500;
-  }
-
-  .bo-magazine-category-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .bo-magazine-popular-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .bo-magazine-popular-head {
-    padding-right: 100px;
-  }
-
-  .magazine-newsletter.editors-newsletter,
-  .magazine-newsletter {
-    min-height: 106px;
-    margin-top: 50px;
-    padding: 22px 36px;
-  }
-}
-
-@media (max-width: 760px) {
-  .magazine-hero,
-  .bo-magazine-hero {
-    min-height: 225px;
-  }
-
-  .magazine-hero-copy,
-  .bo-magazine-hero-copy {
-    padding: 52px 20px 0;
-  }
-
-  .magazine-hero-copy h1,
-  .bo-magazine-hero-copy h1 {
-    font-size: 38px;
-  }
-
-  .magazine-hero-copy span,
-  .bo-magazine-hero-copy p:last-child {
-    max-width: 270px;
-    margin-top: 11px;
-    font-size: 12px;
-  }
-
-  .magazine-shell,
-  .magazine-detail-shell,
-  .bo-magazine-shell {
-    align-self: stretch !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-top: -25px;
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-    padding: 25px 14px 36px;
-    border-radius: 22px 22px 0 0;
-  }
-
-  .magazine-topic-tabs {
-    justify-content: flex-start;
-    gap: 22px;
-    margin-bottom: 23px;
-  }
-
-  .bo-magazine-feature-copy {
-    padding: 16px 14px 18px;
-  }
-
-  .bo-magazine-feature-copy h3 button {
-    font-size: 20px;
-  }
-
-  .bo-magazine-side-card {
-    grid-template-columns: minmax(0, 42%) minmax(0, 1fr);
-    align-items: start;
-  }
-
-  .bo-magazine-side-card > div {
-    min-width: 0;
-  }
-
-  /* Keep right copy from growing past the thumb: title max 3 lines */
-  .bo-magazine-side-card h3 button,
-  .bo-magazine-side-card h3 button.boad_view_btn {
-    display: -webkit-box;
-    overflow: hidden;
-    width: 100%;
-    max-width: 100%;
-    white-space: normal;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    text-overflow: ellipsis;
-    max-height: calc(1.22em * 3);
-  }
-
-  .bo-magazine-category-grid,
-  .bo-magazine-popular-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .bo-magazine-popular-head {
-    padding-right: 96px;
-  }
-
-  .bo-magazine-popular .magazine-popular-arrow {
-    width: 36px;
-    height: 36px;
-  }
-
-  .magazine-newsletter.editors-newsletter,
-  .magazine-newsletter {
-    grid-template-columns: 1fr;
-    gap: 10px;
-    min-height: 106px;
-    margin-top: 34px;
-    padding: 19px 16px 15px;
-    border-radius: 12px;
-  }
-
-  .magazine-newsletter h2 {
-    font-size: 14px;
-  }
-
-  .magazine-newsletter form {
-    grid-template-columns: 1fr 94px;
-    height: 40px;
-  }
-
-  .magazine-newsletter input {
-    padding: 0 11px;
-    font-size: 12px;
-  }
-
-  .magazine-newsletter button {
-    margin: 0;
-    font-size: 12px;
-  }
-}
-
-/* Narrow phones (<375): Latest as 2-up vertical cards */
-@media (max-width: 374px) {
-  .bo-magazine-latest {
-    padding: 14px 12px;
-  }
-
-  .bo-magazine-latest-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px 10px;
-  }
-
-  .bo-magazine-side-card {
-    grid-template-columns: 1fr;
-    align-items: start;
-    gap: 8px;
-    padding: 0;
-    border-top: 0;
-  }
-
-  .bo-magazine-side-card:first-of-type {
-    border-top: 0;
-  }
-
-  .bo-magazine-side-thumb {
-    width: 100%;
-    border-radius: 8px;
-  }
-
-  .bo-magazine-side-card h3 {
-    margin: 0 0 4px;
-  }
-
-  .bo-magazine-side-card h3 button,
-  .bo-magazine-side-card h3 button.boad_view_btn {
-    font-size: 13px;
-    line-height: 1.25;
-    max-height: calc(1.25em * 3);
-  }
-
-  .bo-magazine-side-card time {
-    font-size: 11px;
-  }
-}
-
-/* ===== Magazine detail (/board/view?id=magazine) ===== */
+/* ——— Detail ——— */
 .magazine-view-layout,
 .magazine-view-layout .subpage_wrap,
 .magazine-view-layout .subpage_container,
@@ -1449,124 +1187,6 @@ html.bo-magazine-iframe #subAllButton {
   min-width: 0;
 }
 
-/* Scroll reveal — magazine home + related + newsletter */
-.magazine-scroll-reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--magazine-reveal-delay, 0s);
-  will-change: opacity, transform;
-}
-
-.magazine-scroll-reveal.is-inview {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/*
-  Lead left feature is above-the-fold inside a tall iframe, so CSS transitions
-  often never paint the hidden state. Use keyframes + pre-hide on first paint.
-*/
-@keyframes magazineFeatureReveal {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-html.bo-magazine-iframe .bo-magazine-lead .bo-magazine-feature {
-  opacity: 0;
-  transform: translateY(40px);
-}
-
-html.bo-magazine-iframe .bo-magazine-lead .bo-magazine-feature.magazine-scroll-reveal {
-  transition: none;
-  transition-delay: 0s;
-}
-
-html.bo-magazine-iframe .bo-magazine-lead .bo-magazine-feature.is-inview {
-  opacity: 1;
-  transform: translateY(0);
-  animation: magazineFeatureReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Newsletter: clearer bottom -> up */
-.magazine-newsletter.magazine-scroll-reveal,
-.magazine-newsletter.editors-newsletter.magazine-scroll-reveal {
-  transform: translateY(40px);
-}
-
-.magazine-newsletter.magazine-scroll-reveal.is-inview,
-.magazine-newsletter.editors-newsletter.magazine-scroll-reveal.is-inview {
-  transform: translateY(0);
-}
-
-/* Related: keep section/divider space, reveal head + cards */
-.magazine-related.magazine-scroll-reveal {
-  opacity: 1;
-  transform: none;
-  will-change: auto;
-}
-
-.magazine-related.magazine-scroll-reveal .magazine-related-head,
-.magazine-related.magazine-scroll-reveal .magazine-related-grid .bo-magazine-post-card {
-  opacity: 0;
-  transform: translateY(22px);
-  transition:
-    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
-}
-
-.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-head {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-grid .bo-magazine-post-card {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-grid .bo-magazine-post-card:nth-child(1) {
-  transition-delay: 0.05s;
-}
-
-.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-grid .bo-magazine-post-card:nth-child(2) {
-  transition-delay: 0.12s;
-}
-
-.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-grid .bo-magazine-post-card:nth-child(3) {
-  transition-delay: 0.19s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .magazine-scroll-reveal,
-  .magazine-newsletter.magazine-scroll-reveal,
-  .magazine-newsletter.editors-newsletter.magazine-scroll-reveal,
-  .magazine-related.magazine-scroll-reveal .magazine-related-head,
-  .magazine-related.magazine-scroll-reveal .magazine-related-grid .bo-magazine-post-card,
-  html.bo-magazine-iframe .bo-magazine-lead .bo-magazine-feature,
-  html.bo-magazine-iframe .bo-magazine-lead .bo-magazine-feature.is-inview {
-    opacity: 1;
-    transform: none;
-    transition: none;
-    animation: none;
-  }
-}
-
-@media (max-width: 1120px) {
-  .magazine-related-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 /* Detail action buttons */
 .magazine-detail-actions {
   box-sizing: border-box;
@@ -1662,7 +1282,336 @@ html.bo-magazine-iframe .bo-magazine-lead .bo-magazine-feature.is-inview {
   box-shadow: 0 10px 22px rgba(49, 19, 108, 0.18);
 }
 
+/* ——— Scroll reveal ——— */
+/*
+  Hide only after JS marks the document ready. Otherwise a slow iframe
+  (Firstmall chrome + board.js) leaves lead/latest stuck at opacity:0.
+*/
+html.is-magazine-reveal-ready .magazine-scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--magazine-reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes magazineFeatureReveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bo-magazine-side-card:nth-child(1) {
+  animation-delay: 0.16s;
+}
+
+.bo-magazine-side-card:nth-child(2) {
+  animation-delay: 0.22s;
+}
+
+.bo-magazine-side-card:nth-child(3) {
+  animation-delay: 0.28s;
+}
+
+.bo-magazine-side-card:nth-child(4) {
+  animation-delay: 0.34s;
+}
+
+.bo-magazine-side-card:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.bo-magazine-side-card:nth-child(6) {
+  animation-delay: 0.46s;
+}
+
+/* Newsletter: clearer bottom -> up */
+.magazine-newsletter.magazine-scroll-reveal,
+.magazine-newsletter.editors-newsletter.magazine-scroll-reveal {
+  transform: translateY(40px);
+}
+
+.magazine-newsletter.magazine-scroll-reveal.is-inview,
+.magazine-newsletter.editors-newsletter.magazine-scroll-reveal.is-inview {
+  transform: translateY(0);
+}
+
+/* Related: keep section/divider space, reveal head + cards */
+.magazine-related.magazine-scroll-reveal {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+.magazine-related.magazine-scroll-reveal .magazine-related-head,
+.magazine-related.magazine-scroll-reveal .magazine-related-grid .bo-magazine-post-card {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-head {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-grid .bo-magazine-post-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-grid .bo-magazine-post-card:nth-child(1) {
+  transition-delay: 0.05s;
+}
+
+.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-grid .bo-magazine-post-card:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+.magazine-related.magazine-scroll-reveal.is-inview .magazine-related-grid .bo-magazine-post-card:nth-child(3) {
+  transition-delay: 0.19s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.is-magazine-reveal-ready .magazine-scroll-reveal,
+  .magazine-newsletter.magazine-scroll-reveal,
+  .magazine-newsletter.editors-newsletter.magazine-scroll-reveal,
+  .magazine-related.magazine-scroll-reveal .magazine-related-head,
+  .magazine-related.magazine-scroll-reveal .magazine-related-grid .bo-magazine-post-card,
+  .bo-magazine-feature,
+  .bo-magazine-latest,
+  .bo-magazine-side-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ——— Responsive ——— */
+@media (max-width: 1120px) {
+  body.is-magazine-page #layout_wrap,
+  body.is-magazine-page #layout_body,
+  body:has(.magazine-main) #layout_wrap,
+  body:has(.magazine-main) #layout_body,
+  body:has(.magazine-detail-main) #layout_wrap,
+  body:has(.magazine-detail-main) #layout_body {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .magazine-main,
+  .magazine-detail-main {
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .magazine-shell,
+  .magazine-detail-shell {
+    align-self: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: -38px;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding: 38px clamp(20px, 4vw, 40px) 61px;
+    border-radius: 25px 25px 0 0;
+  }
+
+  .magazine-breadcrumb {
+    display: none;
+  }
+
+  .magazine-topic-tabs {
+    justify-content: flex-start;
+  }
+
+  .bo-magazine-lead {
+    grid-template-columns: 1fr;
+  }
+
+  .bo-magazine-latest {
+    padding: 20px;
+  }
+
+  .bo-magazine-latest .bo-magazine-section-head {
+    margin-bottom: 9px;
+  }
+
+  .bo-magazine-side-card {
+    grid-template-columns: minmax(0, 45%) minmax(0, 1fr);
+    align-items: start;
+    gap: 14px;
+    padding: 16px 0;
+  }
+
+  .bo-magazine-side-thumb {
+    width: 100%;
+    aspect-ratio: 802 / 500;
+  }
+
+  .bo-magazine-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .bo-magazine-popular-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .bo-magazine-popular-head {
+    padding-right: 100px;
+  }
+
+  .magazine-newsletter.editors-newsletter,
+  .magazine-newsletter {
+    min-height: 106px;
+    margin-top: 50px;
+    padding: 22px 36px;
+  }
+
+  .magazine-related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 760px) {
+  .magazine-hero {
+    min-height: 225px;
+  }
+
+  .magazine-hero-copy {
+    padding: 52px 20px 0;
+  }
+
+  .magazine-hero-copy h1 {
+    font-size: 38px;
+  }
+
+  .magazine-hero-copy span {
+    max-width: 270px;
+    margin-top: 11px;
+    font-size: 12px;
+  }
+
+  .magazine-shell,
+  .magazine-detail-shell {
+    align-self: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: -25px;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding: 25px 14px 36px;
+    border-radius: 22px 22px 0 0;
+  }
+
+  .magazine-topic-tabs {
+    justify-content: flex-start;
+    gap: 22px;
+    margin-bottom: 23px;
+  }
+
+  .bo-magazine-feature-copy {
+    padding: 16px 14px 18px;
+  }
+
+  .bo-magazine-feature-copy h3 button {
+    font-size: 20px;
+  }
+
+  .bo-magazine-side-card {
+    grid-template-columns: minmax(0, 42%) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .bo-magazine-side-card > div {
+    min-width: 0;
+  }
+
+  /* Keep right copy from growing past the thumb: title max 3 lines */
+  .bo-magazine-side-card h3 button,
+  .bo-magazine-side-card h3 button.boad_view_btn {
+    display: -webkit-box;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    text-overflow: ellipsis;
+    max-height: calc(1.22em * 3);
+  }
+
+  .bo-magazine-category-grid,
+  .bo-magazine-popular-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bo-magazine-popular-head {
+    padding-right: 96px;
+  }
+
+  .bo-magazine-popular .magazine-popular-arrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .magazine-newsletter.editors-newsletter,
+  .magazine-newsletter {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    min-height: 106px;
+    margin-top: 34px;
+    padding: 19px 16px 15px;
+    border-radius: 12px;
+  }
+
+  .magazine-newsletter h2 {
+    font-size: 14px;
+  }
+
+  .magazine-newsletter form {
+    grid-template-columns: 1fr 94px;
+    height: 40px;
+  }
+
+  .magazine-newsletter input {
+    padding: 0 11px;
+    font-size: 12px;
+  }
+
+  .magazine-newsletter button {
+    margin: 0;
+    font-size: 12px;
+  }
+
   .magazine-detail-hero {
     min-height: 120px;
   }
@@ -1701,5 +1650,50 @@ html.bo-magazine-iframe .bo-magazine-lead .bo-magazine-feature.is-inview {
   .magazine-detail-actions .btn_resp,
   .magazine-detail-actions button.btn_resp {
     width: 100%;
+  }
+}
+
+/* Narrow phones (<375): Latest as 2-up vertical cards */
+@media (max-width: 374px) {
+  .bo-magazine-latest {
+    padding: 14px 12px;
+  }
+
+  .bo-magazine-latest-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 10px;
+  }
+
+  .bo-magazine-side-card {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 8px;
+    padding: 0;
+    border-top: 0;
+  }
+
+  .bo-magazine-side-card:first-of-type {
+    border-top: 0;
+  }
+
+  .bo-magazine-side-thumb {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .bo-magazine-side-card h3 {
+    margin: 0 0 4px;
+  }
+
+  .bo-magazine-side-card h3 button,
+  .bo-magazine-side-card h3 button.boad_view_btn {
+    font-size: 13px;
+    line-height: 1.25;
+    max-height: calc(1.25em * 3);
+  }
+
+  .bo-magazine-side-card time {
+    font-size: 11px;
   }
 }

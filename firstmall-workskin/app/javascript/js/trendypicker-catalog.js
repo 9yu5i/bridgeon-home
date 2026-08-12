@@ -1,10 +1,17 @@
 /**
  * TrendyPicker category catalog
- * - Page: /goods/catalog
- * - Custom sort dropdown + wish icons for listing-card and goodsZzimBtn
+ * /goods/catalog → goods/catalog.html
+ *
+ * 1. Hero kicker / title / theme from categoryData.title
+ * 2. Custom sort dropdown on #catalog_filter (native change stays in catalog.html)
+ * 3. Wish icon src swap for native zzim fallback
+ * 4. Strip trailing "USD" text nodes from get_currency_price()
  */
 (function () {
 	"use strict";
+
+	var page = document.body;
+	if (!page || !page.classList.contains("is-catalog-page")) return;
 
 	var HERO = {
 		beauty: { kicker: "Glow. Everyday.", title: "K-Beauty", theme: "beauty" },
@@ -61,8 +68,7 @@
 		var nativeSelect = document.querySelector("#catalog_page #catalog_filter");
 		if (!nativeSelect || nativeSelect.closest(".realtrend-select-wrap")) return;
 
-		nativeSelect.className +=
-			(nativeSelect.className ? " " : "") + " realtrend-select-native";
+		nativeSelect.classList.add("realtrend-select-native");
 		nativeSelect.tabIndex = -1;
 		nativeSelect.setAttribute("aria-hidden", "true");
 

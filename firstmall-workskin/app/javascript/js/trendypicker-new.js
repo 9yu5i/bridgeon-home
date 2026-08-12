@@ -1,3 +1,14 @@
+/**
+ * TrendyPicker New Arrivals
+ * /goods/new_arrivals → goods/new_arrivals.html
+ *
+ * 1. Guard: body.is-new-arrivals-page + #searchedItemDisplay
+ * 2. Regroup Firstmall lattice cards into brand sections
+ * 3. Hydrate brand banner images from /goods/brand
+ * 4. Move paging under the brand sections
+ * 5. Force per=40 + ajaxComplete / MutationObserver regroup
+ * 6. Scroll reveal
+ */
 (() => {
   const page = document.body;
   if (!page || !page.classList.contains("is-new-arrivals-page")) return;
@@ -115,7 +126,7 @@
     label.textContent = "NEW ARRIVALS";
 
     const grid = document.createElement("ul");
-    grid.className = "bo-new-brand-grid scroll-reveal-stagger new-reveal-grid";
+    grid.className = "bo-new-brand-grid tp-listing-grid scroll-reveal-stagger new-reveal-grid";
     grid.setAttribute("aria-label", `${brand.name} new arrivals`);
 
     items.forEach((item, index) => {

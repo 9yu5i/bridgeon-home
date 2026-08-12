@@ -1,5 +1,18 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
 
+/* TrendyPicker My Page shell
+   Shared by /mypage/* account pages (dashboard, profile, orders, …)
+
+   1. Page chrome / tokens / nav
+   2. Dashboard (profile, cards, activity)
+   3. Newsletter
+   4. Scroll reveal
+   5. Avatar / logout dialogs
+   6. Responsive — last
+*/
+
+/* ——— Page chrome ——— */
+
 .bo-mypage,
 .bo-mypage *,
 .bo-mypage *::before,
@@ -345,20 +358,7 @@ html.is-page-entering body {
   display: block;
 }
 
-@media (min-width: 1121px) {
-  .bo-mypage-shell > .subpage_container.bo-mypage {
-    grid-column: 2;
-    justify-self: stretch;
-    width: 100%;
-    max-width: min(var(--bo-account-content-width), 100%);
-    box-sizing: border-box;
-  }
-
-  .bo-mypage-shell .subpage_container.bo-mypage {
-    padding-top: 60px;
-  }
-}
-
+/* ——— Dashboard ——— */
 .bo-mypage > *,
 .bo-profile > *,
 .bo-card > *,
@@ -1698,6 +1698,7 @@ body.is-orders-modal-open {
   display: none;
 }
 
+/* ——— Newsletter ——— */
 .bo-newsletter {
   display: grid;
   grid-column: 1 / -1;
@@ -1717,47 +1718,6 @@ body.is-orders-modal-open {
   border-radius: 13px;
   color: #fff;
   background: #000;
-}
-
-.bo-page-reveal,
-.bo-scroll-reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.82s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.82s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--bo-reveal-delay, 0s);
-  will-change: opacity, transform;
-}
-
-.bo-page-reveal.is-inview,
-.bo-scroll-reveal.is-inview {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
-
-  html.is-page-leaving body {
-    opacity: 1;
-    transition: none;
-  }
-
-  html.is-page-entering body {
-    opacity: 1;
-    animation: none;
-  }
-
-  .bo-page-reveal,
-  .bo-scroll-reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
 }
 
 .bo-newsletter h2,
@@ -1825,14 +1785,53 @@ body.is-orders-modal-open {
   background: #31136c;
 }
 
-@media (max-width: 1280px) and (min-width: 1121px) {
-  .bo-newsletter {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
-    gap: 20px;
-    padding-inline: clamp(20px, 3vw, 40px);
+/* ——— Scroll reveal ———
+   Short and starts immediately (see initDashboardReveal in
+   trendypicker-mypage.js) — the old 0.82s duration plus up to 900ms of
+   delay before it even started was long enough to read as cards vanishing
+   and reappearing rather than a smooth entrance. */
+.bo-page-reveal,
+.bo-scroll-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--bo-reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+.bo-page-reveal.is-inview,
+.bo-scroll-reveal.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+
+  html.is-page-leaving body {
+    opacity: 1;
+    transition: none;
+  }
+
+  html.is-page-entering body {
+    opacity: 1;
+    animation: none;
+  }
+
+  .bo-page-reveal,
+  .bo-scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
 
+/* ——— Avatar / logout dialogs ——— */
 .mypage-avatar-dialog[hidden] {
   display: none !important;
 }
@@ -2173,6 +2172,29 @@ body.is-mypage-logout-open {
 .mypage-logout-confirm:hover,
 .mypage-logout-confirm:focus-visible {
   background: #31136c;
+}
+
+/* ——— Responsive ——— */
+@media (min-width: 1121px) {
+  .bo-mypage-shell > .subpage_container.bo-mypage {
+    grid-column: 2;
+    justify-self: stretch;
+    width: 100%;
+    max-width: min(var(--bo-account-content-width), 100%);
+    box-sizing: border-box;
+  }
+
+  .bo-mypage-shell .subpage_container.bo-mypage {
+    padding-top: 60px;
+  }
+}
+
+@media (max-width: 1280px) and (min-width: 1121px) {
+  .bo-newsletter {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+    gap: 20px;
+    padding-inline: clamp(20px, 3vw, 40px);
+  }
 }
 
 @media (max-width: 1120px) {
@@ -2762,15 +2784,12 @@ body.is-mypage-logout-open {
   .bo-live-order {
     --bo-order-image-size: 104px;
     --bo-order-copy-gap: 20px;
+    padding: 14px;
+    border-radius: 18px;
   }
 
   .bo-mypage .bo-live-order__product {
     align-items: start;
-  }
-
-  .bo-live-order {
-    padding: 14px;
-    border-radius: 18px;
   }
 
   .bo-live-order__image em {

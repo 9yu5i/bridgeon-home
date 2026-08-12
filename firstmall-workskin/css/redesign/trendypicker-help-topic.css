@@ -1,5 +1,15 @@
 /* TrendyPicker Help Topic / Customer Service shell
-   Source pattern: my-page/help-center.css (.help-topic-shell) */
+   Source pattern: my-page/help-center.css (.help-topic-shell)
+
+   1. Tokens + account-shell overflow
+   2. Prototype shell / nav / body / panels
+   3. Board list + FAQ toolbar
+   4. Notice article + membership table
+   5. FAQ accordion
+   6. Legacy purple hero (About / Policies)
+   7. QnA write form
+   8. Responsive (1120 / 760) — last, so it overrides the sections above
+*/
 
 .bo-help-topic-page,
 .bo-help-board-page,
@@ -26,8 +36,8 @@
 .bo-help-topic-page.bo-mypage-shell::before,
 .bo-help-board-page.bo-mypage-shell::before,
 .bo-help-qna-page.bo-mypage-shell::before {
-  display: none !important;
-  content: none !important;
+  display: none;
+  content: none;
 }
 
 /* Desktop: overflow-x visible so sticky topic nav can pin.
@@ -422,8 +432,7 @@
   resize: vertical;
 }
 
-.help-topic-form > button,
-.help-topic-form > a.help-topic-form-submit {
+.help-topic-form > button {
   grid-column: 1 / -1;
   justify-self: end;
   display: inline-flex;
@@ -443,12 +452,6 @@
   cursor: pointer;
 }
 
-.help-topic-form > a.help-topic-form-submit:hover,
-.help-topic-form > a.help-topic-form-submit:focus-visible {
-  color: #fff;
-  background: #6a34c9;
-}
-
 .help-topic-body .service_section,
 .help-topic-body.service_section {
   display: grid;
@@ -459,19 +462,15 @@
   background: transparent;
 }
 
-.help-topic-body .service_section > h3,
-.help-topic-body.service_section > h3 {
-  margin: 0;
-}
-
 .help-topic-body .service_section > h3 + p,
 .help-topic-body.service_section > h3 + p {
   margin-top: -6px;
 }
 
 /* Stack consecutive heading+content into panel-like blocks */
-.help-topic-body.service_section > h3,
-.help-topic-body .service_section > h3 {
+.help-topic-body .service_section > h3,
+.help-topic-body.service_section > h3 {
+  margin: 0;
   padding: 24px 24px 0;
   border: 1px solid var(--help-line);
   border-bottom: 0;
@@ -584,7 +583,6 @@
 
 /* Kill Firstmall connected-group chrome only (not toolbar field wrappers) */
 .help-topic-shell .bbs_top_wrap .right2,
-.help-topic-shell .bbs_top_wrap .help-board-actions,
 .help-topic-shell .bbs_top_wrap .searchform {
   display: contents !important;
   float: none !important;
@@ -605,8 +603,6 @@
 .help-topic-shell .help-board-toolbar::after,
 .help-topic-shell .bbs_top_wrap .right2::before,
 .help-topic-shell .bbs_top_wrap .right2::after,
-.help-topic-shell .bbs_top_wrap .help-board-actions::before,
-.help-topic-shell .bbs_top_wrap .help-board-actions::after,
 .help-topic-shell .bbs_top_wrap .searchform::before,
 .help-topic-shell .bbs_top_wrap .searchform::after {
   content: none !important;
@@ -1645,7 +1641,8 @@
   cursor: pointer;
 }
 
-.help-topic-shell .faq_new .question::before {
+.help-topic-shell .faq_new .question::before,
+.help-topic-shell .faq_new .answer::before {
   content: none !important;
   display: none !important;
 }
@@ -1768,11 +1765,6 @@
   margin-top: 10px;
 }
 
-.help-topic-shell .faq_new .answer::before {
-  content: none !important;
-  display: none !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .help-topic-shell .faq_new .answer,
   .help-topic-shell .faq_new .answer.hide {
@@ -1794,136 +1786,195 @@
   list-style: none;
 }
 
-/* ——— Legacy purple hero (About / Policies not yet shelled) ——— */
-.bo-help-topic-head,
-.visual_title.bo-help-topic-head + .bo-help-topic-body,
-.bo-help-topic-page > .bo-help-topic-body:not(.help-topic-body) {
-  width: min(909px, calc(100% - 48px));
-  max-width: 909px;
-  box-sizing: border-box;
-  margin-inline: auto;
+/* ——— QnA write form (mypage/myqna_write.html) ——— */
+.help-topic-shell .table_row_a.Thc.bo-qna-write-table {
+  display: table !important;
+  margin-bottom: 16px;
+  border-collapse: collapse;
 }
 
-.bo-help-topic-head {
-  position: relative;
-  min-height: 0;
-  margin-top: 60px;
-  padding: 28px 32px;
-  overflow: hidden;
-  border: 1px solid rgba(123, 63, 228, 0.12);
-  border-radius: 18px 18px 0 0;
-  background:
-    radial-gradient(circle at 88% 18%, rgba(255, 216, 244, 0.68), transparent 34%),
-    linear-gradient(135deg, #25105c 0%, #7b3fe4 58%, #c283ff 100%);
-  box-shadow: 0 12px 30px rgba(49, 19, 108, 0.08);
-}
-
-.bo-help-topic-head .img_area {
-  display: none;
-}
-
-.bo-help-topic-head .visual_gon,
-.bo-help-topic-head .title_inner_a {
-  position: static;
-  width: auto;
-  height: auto;
-  margin: 0;
-  padding: 0;
-  color: #fff;
+.help-topic-shell .bo-qna-write-table th,
+.help-topic-shell .bo-qna-write-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--help-line);
   text-align: left;
+  vertical-align: middle;
 }
 
-.bo-help-topic-head .title_inner_a li {
+table[class].Thc > thead > tr > th,
+table[class].Thc > tbody > tr > th {
+  white-space: nowrap;
+  text-align: center !important;
+  vertical-align: middle;
+}
+
+.help-topic-shell .bo-qna-write-table th p {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   margin: 0;
-  padding: 0;
-}
-
-.bo-help-topic-head .descr {
-  margin: 0 0 7px;
-  color: #eadfff;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.bo-help-topic-head h2,
-.bo-help-topic-head h2 span {
-  margin: 0;
-  color: #fff;
-  font-size: clamp(30px, 3vw, 42px);
-  line-height: 1.1;
-  font-weight: 900;
-}
-
-.visual_title.bo-help-topic-head + .bo-help-topic-body,
-.bo-help-topic-page > .service_section.bo-help-topic-body {
-  margin-top: 0;
-  margin-bottom: 76px;
-  padding: 34px 36px 44px;
-  border: 1px solid var(--help-line);
-  border-top: 0;
-  border-radius: 0 0 18px 18px;
-  color: var(--help-muted);
-  background: var(--help-panel);
-  box-shadow: 0 16px 34px rgba(49, 19, 108, 0.08);
-  font-size: 14px;
-  line-height: 1.75;
-}
-
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title1,
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title2,
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title3,
-.bo-help-topic-page > .service_section.bo-help-topic-body h3.title1,
-.bo-help-topic-page > .service_section.bo-help-topic-body h3.title2,
-.bo-help-topic-page > .service_section.bo-help-topic-body h3.title3 {
-  margin: 32px 0 10px;
-  padding: 0;
-  border: 0;
   color: var(--help-ink);
-  background: transparent;
-  font-weight: 850;
-  line-height: 1.35;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center !important;
+  white-space: nowrap;
 }
 
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title1:first-child,
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title2:first-child,
-.bo-help-topic-page > .service_section.bo-help-topic-body h3.title1:first-child,
-.bo-help-topic-page > .service_section.bo-help-topic-body h3.title2:first-child {
-  margin-top: 0;
+.help-topic-shell .bo-qna-write-table input[type="text"],
+.help-topic-shell .bo-qna-write-table input[type="password"],
+.help-topic-shell .bo-qna-write-table select {
+  width: 100%;
+  max-width: 260px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--help-line);
+  border-radius: 8px;
+  color: var(--help-ink);
+  font-size: 13px;
 }
 
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title1,
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title1 span,
-.bo-help-topic-page > .service_section.bo-help-topic-body h3.title1,
-.bo-help-topic-page > .service_section.bo-help-topic-body h3.title1 span {
-  font-size: 22px;
+.help-topic-shell .bo-qna-write-table select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 32px;
+  border-color: #ded8e8;
+  border-radius: 8px;
+  color: #332e3d;
+  background:
+    #fff
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><path d='M2 3.5l3 3 3-3' stroke='%23332e3d' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>")
+    no-repeat right 12px center;
+  background-size: 7px 7px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-radius 0.18s ease;
 }
 
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title2,
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title2 span,
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title3,
-.visual_title.bo-help-topic-head + .bo-help-topic-body h3.title3 span,
-.bo-help-topic-page > .service_section.bo-help-topic-body h3.title2,
-.bo-help-topic-page > .service_section.bo-help-topic-body h3.title2 span {
-  font-size: 17px;
+.help-topic-shell .bo-qna-write-table select:focus {
+  border-color: #ded8e8;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  outline: none;
+  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
 }
 
-.visual_title.bo-help-topic-head + .bo-help-topic-body p,
-.bo-help-topic-page > .service_section.bo-help-topic-body p {
+.help-topic-shell .bo-qna-write-table select option {
+  padding: 9px 10px;
+  color: #16121f;
+  background: #fff;
+}
+
+.help-topic-shell .bo-qna-write-table select option:checked,
+.help-topic-shell .bo-qna-write-table select option:hover {
+  color: #16121f;
+  background: #f1e8ff;
+}
+
+.help-topic-shell .bo-qna-write-table .form_multi_row2 {
+  display: grid;
+  gap: 8px;
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.visual_title.bo-help-topic-head + .bo-help-topic-body p + p,
-.bo-help-topic-page > .service_section.bo-help-topic-body p + p {
-  margin-top: 12px;
+.help-topic-shell .bo-qna-write-table .form_multi_row2 li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.visual_title.bo-help-topic-head + .bo-help-topic-body a,
-.bo-help-topic-page > .service_section.bo-help-topic-body a {
-  color: var(--help-purple);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+.help-topic-shell .bo-qna-write-table .form_multi_row2 li .Dib {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.help-topic-shell input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  margin: 0 6px 0 0;
+  border: 1.5px solid var(--help-line);
+  border-radius: 50%;
+  vertical-align: middle;
+  background: #fff;
+  cursor: pointer;
+}
+
+.help-topic-shell input[type="checkbox"]:checked {
+  border-color: var(--help-purple);
+  background: var(--help-purple);
+}
+
+.help-topic-shell input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+
+.help-topic-shell .bo-qna-write-textarea {
+  display: block;
+  width: 100%;
+  min-height: 220px;
+  padding: 14px;
+  border: 1px solid var(--help-line);
+  border-radius: 10px;
+  color: var(--help-ink);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.help-topic-shell .bo-qna-write-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  min-width: 96px;
+  height: 42px;
+  padding: 0 22px !important;
+  border: 1px solid var(--help-purple) !important;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp.color2 {
+  color: #fff !important;
+  background: var(--help-purple) !important;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp.color2:hover {
+  background: #6a34c9 !important;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp:not(.color2) {
+  color: var(--help-purple) !important;
+  background: #fff !important;
+}
+
+.help-topic-shell .bo-qna-write-actions .btn_resp:not(.color2):hover {
+  background: #f5f0ff !important;
 }
 
 /* ——— Responsive ——— */
@@ -1957,10 +2008,10 @@
   }
 
   .help-topic-nav {
-    position: static !important;
-    top: auto !important;
-    left: auto !important;
-    width: auto !important;
+    position: static;
+    top: auto;
+    left: auto;
+    width: auto;
     display: flex;
     gap: 10px;
     overflow-x: auto;
@@ -1970,7 +2021,7 @@
   }
 
   .help-topic-nav-placeholder {
-    display: none !important;
+    display: none;
   }
 
   .help-topic-nav::-webkit-scrollbar {
@@ -1984,21 +2035,6 @@
   .help-topic-nav a {
     flex: 0 0 auto;
     white-space: nowrap;
-  }
-
-  .bo-help-topic-head,
-  .visual_title.bo-help-topic-head + .bo-help-topic-body,
-  .bo-help-topic-page > .service_section.bo-help-topic-body {
-    width: calc(100% - 44px);
-  }
-
-  .bo-help-topic-head {
-    margin-top: 30px;
-  }
-
-  .visual_title.bo-help-topic-head + .bo-help-topic-body,
-  .bo-help-topic-page > .service_section.bo-help-topic-body {
-    margin-bottom: 48px;
   }
 
   .help-topic-shell .bbs_top_wrap,
@@ -2112,8 +2148,7 @@
   }
 
   .help-topic-form label:last-of-type,
-  .help-topic-form > button,
-  .help-topic-form > a.help-topic-form-submit {
+  .help-topic-form > button {
     grid-column: auto;
   }
 
@@ -2297,6 +2332,7 @@
 
   .help-topic-shell .bo-qna-write-table .form_multi_row2 li .Dib {
     order: 2;
+    align-self: flex-start;
   }
 
   .help-topic-shell .faq_new .answer .help-faq-answer-inner,
@@ -2308,230 +2344,4 @@
   .help-topic-shell .faq_new .answer .help-faq-answer-inner > p {
     padding: 0;
   }
-
-  .help-topic-head h1,
-  .help-topic-head h1 span {
-    font-size: 34px;
-  }
-
-  .bo-help-topic-head {
-    width: calc(100% - 32px);
-    padding: 22px;
-    border-radius: 16px 16px 0 0;
-  }
-
-  .bo-help-topic-head h2,
-  .bo-help-topic-head h2 span {
-    font-size: 30px;
-  }
-
-  .visual_title.bo-help-topic-head + .bo-help-topic-body,
-  .bo-help-topic-page > .service_section.bo-help-topic-body {
-    width: calc(100% - 32px);
-    padding: 24px 20px 32px;
-    border-radius: 0 0 16px 16px;
-    font-size: 14px;
-  }
-}
-
-/* My 1:1 Inquiry write form (mypage/myqna_write.html) */
-.help-topic-shell .table_row_a.Thc.bo-qna-write-table {
-  display: table !important;
-  margin-bottom: 16px;
-  border-collapse: collapse;
-}
-
-.help-topic-shell .bo-qna-write-table th,
-.help-topic-shell .bo-qna-write-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--help-line);
-  text-align: left;
-  vertical-align: middle;
-}
-
-table[class].Thc > thead > tr > th,
-table[class].Thc > tbody > tr > th {
-  white-space: nowrap;
-  text-align: center !important;
-  vertical-align: middle;
-}
-
-.help-topic-shell .bo-qna-write-table th p {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  margin: 0;
-  color: var(--help-ink);
-  font-size: 13px;
-  font-weight: 800;
-  text-align: center !important;
-  white-space: nowrap;
-}
-
-.help-topic-shell .bo-qna-write-table input[type="text"],
-.help-topic-shell .bo-qna-write-table input[type="password"],
-.help-topic-shell .bo-qna-write-table select {
-  width: 100%;
-  max-width: 260px;
-  height: 40px;
-  padding: 0 12px;
-  border: 1px solid var(--help-line);
-  border-radius: 8px;
-  color: var(--help-ink);
-  font-size: 13px;
-}
-
-.help-topic-shell .bo-qna-write-table select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding-right: 32px;
-  border-color: #ded8e8;
-  border-radius: 8px;
-  color: #332e3d;
-  background:
-    #fff
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'><path d='M2 3.5l3 3 3-3' stroke='%23332e3d' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>")
-    no-repeat right 12px center;
-  background-size: 7px 7px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-radius 0.18s ease;
-}
-
-.help-topic-shell .bo-qna-write-table select:focus {
-  border-color: #ded8e8;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  outline: none;
-  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
-}
-
-.help-topic-shell .bo-qna-write-table select option {
-  padding: 9px 10px;
-  color: #16121f;
-  background: #fff;
-}
-
-.help-topic-shell .bo-qna-write-table select option:checked,
-.help-topic-shell .bo-qna-write-table select option:hover {
-  color: #16121f;
-  background: #f1e8ff;
-}
-
-.help-topic-shell .bo-qna-write-table .form_multi_row2 {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.help-topic-shell .bo-qna-write-table .form_multi_row2 li {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.help-topic-shell .bo-qna-write-table .form_multi_row2 li .Dib {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-
-@media (max-width: 760px) {
-  .help-topic-shell .bo-qna-write-table .form_multi_row2 li {
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .help-topic-shell .bo-qna-write-table .form_multi_row2 li .Dib {
-    align-self: flex-start;
-  }
-}
-
-.help-topic-shell input[type="checkbox"] {
-  -webkit-appearance: none;
-  appearance: none;
-  position: relative;
-  width: 16px;
-  height: 16px;
-  margin: 0 6px 0 0;
-  border: 1.5px solid var(--help-line);
-  border-radius: 50%;
-  vertical-align: middle;
-  background: #fff;
-  cursor: pointer;
-}
-
-.help-topic-shell input[type="checkbox"]:checked {
-  border-color: var(--help-purple);
-  background: var(--help-purple);
-}
-
-.help-topic-shell input[type="checkbox"]:checked::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fff;
-  transform: translate(-50%, -50%);
-}
-
-.help-topic-shell .bo-qna-write-textarea {
-  display: block;
-  width: 100%;
-  min-height: 220px;
-  padding: 14px;
-  border: 1px solid var(--help-line);
-  border-radius: 10px;
-  color: var(--help-ink);
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 1.6;
-  resize: vertical;
-}
-
-.help-topic-shell .bo-qna-write-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.help-topic-shell .bo-qna-write-actions .btn_resp {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  width: auto !important;
-  min-width: 96px;
-  height: 42px;
-  padding: 0 22px !important;
-  border: 1px solid var(--help-purple) !important;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: color 0.2s ease, background-color 0.2s ease;
-}
-
-.help-topic-shell .bo-qna-write-actions .btn_resp.color2 {
-  color: #fff !important;
-  background: var(--help-purple) !important;
-}
-
-.help-topic-shell .bo-qna-write-actions .btn_resp.color2:hover {
-  background: #6a34c9 !important;
-}
-
-.help-topic-shell .bo-qna-write-actions .btn_resp:not(.color2) {
-  color: var(--help-purple) !important;
-  background: #fff !important;
-}
-
-.help-topic-shell .bo-qna-write-actions .btn_resp:not(.color2):hover {
-  background: #f5f0ff !important;
 }

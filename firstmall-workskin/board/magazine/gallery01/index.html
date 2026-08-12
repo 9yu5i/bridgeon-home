@@ -1,7 +1,7 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
 @@ T.P Magazine board list / TrendyPicker
 - Path: [skin]/board/magazine/gallery01/index.html
-- Used by /board/?id=magazine (+ iframe from /main/magazine)
+- Used by /board/?id=magazine (magazine home + category list)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css" />
@@ -148,7 +148,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 	<input type="hidden" name="popup" value="{_GET.popup}" />
 	<input type="hidden" name="iframe" value="{_GET.iframe}" />
 	<input type="hidden" name="goods_seq" value="{_GET.goods_seq}" />
-	<input type="hidden" name="perpage" id="perpage" value="{? _GET.category}{? _GET.perpage}{_GET.perpage}{:}12{/}{:}{_GET.perpage}{/}" />
+	<input type="hidden" name="perpage" id="perpage" value="{? _GET.perpage}{_GET.perpage}{:}12{/}" />
 	<input type="hidden" name="page" id="page" value="{_GET.page}" />
 	<input type="hidden" name="category" id="category" value="{_GET.category}" />
 </form>
@@ -171,13 +171,13 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 				aria-label="Read {=strip_tags(loop[0].subject_real)}"
 			>
 				{? loop[0].file_key_w && loop[0].uccdomain_thumbnail}
-				<img src="{loop[0].uccdomain_thumbnail}" alt="" loading="lazy" />
+				<img src="{loop[0].uccdomain_thumbnail}" alt="" fetchpriority="high" />
 				{: strstr(loop[0].filelist['realfile'],'http') }
-				<img src="http{=str_replace('http','',loop[0].filelist['realfile'])}" alt="" loading="lazy" />
+				<img src="http{=str_replace('http','',loop[0].filelist['realfile'])}" alt="" fetchpriority="high" />
 				{: strstr(loop[0].filelist['realfile'],'/data/editor/') }
-				<img src="{loop[0].filelist['realfile']}" alt="" loading="lazy" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
+				<img src="{loop[0].filelist['realfile']}" alt="" fetchpriority="high" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
 				{:}
-				<img src="/data/board/{_GET.id}/{loop[0].filelist['realfile']}" alt="" loading="lazy" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
+				<img src="/data/board/{_GET.id}/{loop[0].filelist['realfile']}" alt="" fetchpriority="high" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
 				{/}
 			</button>
 			<div class="bo-magazine-feature-copy">

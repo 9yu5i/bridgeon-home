@@ -1,9 +1,16 @@
-/*
-  TrendyPicker Best Sellers (Firstmall)
-  - Page: /goods/best → goods/best.html
-  - Pair with: css/redesign/trendypicker-best.css
+/* TrendyPicker Best Sellers
+   /goods/best → goods/best.html
+
+   1. Page chrome (hide Firstmall title/LNB, unlock subpage width)
+   2. Hero
+   3. Shell / breadcrumbs / category tabs
+   4. Product grid (card/wish in trendypicker-listing-cards.css)
+   5. Rank badge
+   6. Infinite-scroll sentinel
+   7. Responsive (761 / 1121 / 760) — last
 */
 
+/* ——— Page chrome ——— */
 body.is-best-page,
 body.is-best-page #layout_wrap,
 body.is-best-page #layout_body {
@@ -37,6 +44,7 @@ body.is-best-page .subpage_wrap .subpage_container {
   background: #262626;
 }
 
+/* ——— Hero ——— */
 .bo-best-hero {
   position: relative;
   min-height: clamp(220px, 27vw, 420px);
@@ -74,6 +82,7 @@ body.is-best-page .subpage_wrap .subpage_container {
   text-shadow: 0 8px 28px rgba(199, 66, 122, 0.22);
 }
 
+/* ——— Shell / breadcrumbs / tabs ——— */
 .bo-best-shell {
   position: relative;
   z-index: 2;
@@ -156,7 +165,7 @@ body.is-best-page .subpage_wrap .subpage_container {
   color: #fff;
 }
 
-/* Product grid: native Firstmall lattice cards, restyled to a clean grid */
+/* ——— Product grid + card ——— */
 .bo-best-grid {
   display: block;
   width: 100%;
@@ -168,8 +177,6 @@ body.is-best-page .subpage_wrap .subpage_container {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
-  row-gap: 14px;
-  column-gap: 14px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -178,115 +185,8 @@ body.is-best-page .subpage_wrap .subpage_container {
 .bo-best-grid[data-displaytype="lattice"] > ul > li {
   width: auto !important;
   margin: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
   padding: 0 !important;
   float: none !important;
-}
-
-/* Live Firstmall redesign cards (.listing-card) inside the best grid */
-.bo-best-grid .listing-card,
-.bo-best-grid .goods_list_style1 {
-  position: relative;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  box-sizing: border-box;
-  width: 100% !important;
-  height: 100%;
-  min-width: 0;
-  overflow: hidden;
-  border: 1px solid #ece7f4;
-  border-radius: 12px;
-  background: #fff;
-  float: none !important;
-  margin: 0 !important;
-}
-
-.bo-best-grid .listing-card-media,
-.bo-best-grid .item_img_area {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 12px 12px 0 0;
-  background: #f6f3fb;
-}
-
-.bo-best-grid .listing-card-image,
-.bo-best-grid .item_img_area img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.bo-best-grid .listing-card-body,
-.bo-best-grid .item_info_area {
-  display: flex;
-  flex-direction: column;
-  padding: 12px 12px 0;
-  background: #fff;
-}
-
-.bo-best-grid .listing-card-brand,
-.bo-best-grid .brand_name {
-  display: block;
-  margin: 0 0 4px;
-  overflow: hidden;
-  color: #8f86a0;
-  font-size: 12px;
-  line-height: 1.35;
-  font-weight: 500;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-decoration: none;
-}
-
-.bo-best-grid .listing-card-brand:hover,
-.bo-best-grid .brand_name:hover {
-  color: #7943e2;
-  text-decoration: none;
-}
-
-.bo-best-grid .listing-card-title,
-.bo-best-grid .goods_name_area .name {
-  display: -webkit-box;
-  min-height: 2.7em;
-  margin: 0 0 6px;
-  overflow: hidden;
-  color: #171320;
-  font-size: 14px;
-  line-height: 1.35;
-  font-weight: 600;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
-
-.bo-best-grid .listing-card-price,
-.bo-best-grid .goods_price_area {
-  margin: 0 0 10px;
-}
-
-.bo-best-grid .sale_price,
-.bo-best-grid .listing-card-price strong,
-.bo-best-grid .sale_price .num {
-  color: #e53935;
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.bo-best-grid .sale_price::before,
-.bo-best-grid .consumer_price::before,
-.bo-best-grid .listing-card-price strong::before,
-.bo-best-grid .listing-card-price del::before {
-  content: "US ";
-}
-
-.bo-best-grid .consumer_price,
-.bo-best-grid .goods_price_area del,
-.bo-best-grid .listing-card-price del {
-  color: #8f86a0;
-  font-size: 13px;
 }
 
 .bo-best-rank {
@@ -310,258 +210,7 @@ body.is-best-page .subpage_wrap .subpage_container {
   background: linear-gradient(135deg, var(--bo-purple, #7b3fe4) 0%, #ff5aa7 100%);
 }
 
-.bo-best-grid .listing-card-actions--desktop {
-  display: none;
-}
-
-.bo-best-grid .listing-card-actions--desktop button {
-  position: relative;
-  display: grid;
-  place-items: center;
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  height: 35px !important;
-  min-height: 35px !important;
-  max-height: 35px !important;
-  padding: 0 !important;
-  line-height: 1 !important;
-  border: 1px solid #ded8e8;
-  border-radius: 10px;
-  color: var(--bo-purple, #7b3fe4);
-  background-color: #fff;
-  cursor: pointer;
-  transition: border-color 0.25s ease, background-color 0.25s ease;
-}
-
-.bo-best-grid .listing-card-actions--desktop button img,
-.bo-best-grid .listing-card-wish img,
-.bo-best-grid .listing-card-wish-inline img,
-.bo-best-grid .heart-img {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-.bo-best-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
-.bo-best-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 18px;
-  height: calc(18px * 24 / 22);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 18px auto;
-  transform: none;
-  transition: opacity 0.25s ease;
-}
-
-.bo-best-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before {
-  background-image: url("../../images/listing/cart.png");
-  opacity: 1;
-}
-
-.bo-best-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after {
-  background-image: url("../../images/listing/cart_hover.png");
-  opacity: 0;
-}
-
-.bo-best-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover {
-  border-color: #7943e2;
-  background-color: #7943e2;
-}
-
-.bo-best-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::before {
-  opacity: 0;
-}
-
-.bo-best-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::after {
-  opacity: 1;
-}
-
-/* Wish: pink heart swap only — never scale */
-.bo-best-grid .listing-card-wish,
-.bo-best-grid .listing-card-wish-inline {
-  position: absolute;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  box-sizing: border-box;
-  width: 34px;
-  height: 34px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  cursor: pointer;
-  transform: none !important;
-}
-
-.bo-best-grid .listing-card-wish {
-  right: 10px;
-  bottom: 10px;
-}
-
-.bo-best-grid .listing-card-actions--desktop .listing-card-wish-inline {
-  position: relative;
-  width: 40px;
-  min-width: 40px;
-  height: 35px !important;
-  min-height: 35px !important;
-  max-height: 35px !important;
-  border: 1px solid #ded8e8;
-  border-radius: 10px;
-  box-shadow: none;
-}
-
-.bo-best-grid .listing-card-actions--desktop .listing-card-wish-inline:hover {
-  border-color: #ded8e8;
-  background-color: #fff;
-}
-
-.bo-best-grid .listing-card-wish .heart-img,
-.bo-best-grid .listing-card-wish-inline .heart-img,
-.bo-best-grid .listing-card-wish:hover .heart-img,
-.bo-best-grid .listing-card-wish-inline:hover .heart-img,
-.bo-best-grid .listing-card-wish:hover .heart-img:not(.zzim-hidden),
-.bo-best-grid .listing-card-wish-inline:hover .heart-img:not(.zzim-hidden) {
-  transform: none !important;
-}
-
-.bo-best-grid .listing-card-wish::before,
-.bo-best-grid .listing-card-wish::after,
-.bo-best-grid .listing-card-wish-inline::before,
-.bo-best-grid .listing-card-wish-inline::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 18px;
-  height: 18px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 18px auto;
-  transform: none !important;
-  transition: opacity 0.25s ease;
-}
-
-.bo-best-grid .listing-card-wish::before,
-.bo-best-grid .listing-card-wish-inline::before {
-  background-image: url("../../images/listing/wish_pink.png");
-  opacity: 1;
-}
-
-.bo-best-grid .listing-card-wish::after,
-.bo-best-grid .listing-card-wish-inline::after {
-  background-image: url("../../images/listing/wish_hover.png");
-  opacity: 0;
-}
-
-.bo-best-grid .listing-card-wish:hover::before,
-.bo-best-grid .listing-card-wish-inline:hover::before,
-.bo-best-grid .listing-card-wish.is-active::before,
-.bo-best-grid .listing-card-wish-inline.is-active::before,
-.bo-best-grid .listing-card-wish[aria-pressed="true"]::before,
-.bo-best-grid .listing-card-wish-inline[aria-pressed="true"]::before,
-.bo-best-grid .listing-card-wish:has(.zzimOnImg:not(.zzim-hidden))::before,
-.bo-best-grid .listing-card-wish-inline:has(.zzimOnImg:not(.zzim-hidden))::before {
-  opacity: 0;
-}
-
-.bo-best-grid .listing-card-wish:hover::after,
-.bo-best-grid .listing-card-wish-inline:hover::after,
-.bo-best-grid .listing-card-wish.is-active::after,
-.bo-best-grid .listing-card-wish-inline.is-active::after,
-.bo-best-grid .listing-card-wish[aria-pressed="true"]::after,
-.bo-best-grid .listing-card-wish-inline[aria-pressed="true"]::after,
-.bo-best-grid .listing-card-wish:has(.zzimOnImg:not(.zzim-hidden))::after,
-.bo-best-grid .listing-card-wish-inline:has(.zzimOnImg:not(.zzim-hidden))::after {
-  opacity: 1;
-}
-
-/* Classic Firstmall wish control on image (older card markup fallback) */
-.bo-best-grid .display_zzim,
-.bo-best-grid .respGoodsZzim {
-  position: absolute !important;
-  right: 10px;
-  bottom: 10px;
-  z-index: 3;
-  display: grid !important;
-  place-items: center;
-  box-sizing: border-box;
-  width: 34px;
-  height: 34px;
-  padding: 0 !important;
-  border-radius: 50%;
-  background: #fff !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  cursor: pointer;
-  transform: none !important;
-}
-
-.bo-best-grid .display_zzim img,
-.bo-best-grid .respGoodsZzim img,
-.bo-best-grid .respGoodsZzim .zzimImage {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  opacity: 0 !important;
-  pointer-events: none;
-}
-
-.bo-best-grid .display_zzim::before,
-.bo-best-grid .respGoodsZzim::before,
-.bo-best-grid .display_zzim::after,
-.bo-best-grid .respGoodsZzim::after {
-  content: "";
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  transform: none !important;
-  transition: opacity 0.25s ease;
-}
-
-.bo-best-grid .display_zzim::before,
-.bo-best-grid .respGoodsZzim::before {
-  background-image: url("../../images/listing/wish_pink.png");
-  opacity: 1;
-}
-
-.bo-best-grid .display_zzim::after,
-.bo-best-grid .respGoodsZzim::after {
-  background-image: url("../../images/listing/wish_hover.png");
-  opacity: 0;
-}
-
-.bo-best-grid .display_zzim:hover::before,
-.bo-best-grid .display_zzim[act="stay"]::before,
-.bo-best-grid .respGoodsZzim:hover::before,
-.bo-best-grid .respGoodsZzim:has(.zzimImage.active)::before,
-.bo-best-grid .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::before,
-.bo-best-grid .display_zzim:has(.zzimOnImg[style*="display: none"])::before {
-  opacity: 0;
-}
-
-.bo-best-grid .display_zzim:hover::after,
-.bo-best-grid .display_zzim[act="stay"]::after,
-.bo-best-grid .respGoodsZzim:hover::after,
-.bo-best-grid .respGoodsZzim:has(.zzimImage.active)::after,
-.bo-best-grid .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::after,
-.bo-best-grid .display_zzim:has(.zzimOnImg[style*="display: none"])::after {
-  opacity: 1;
-}
-
-/* Replaced by continuous scroll loading (trendypicker-best.js) */
+/* ——— Infinite scroll ——— */
 .bo-best-shell .paging_navigation {
   display: none !important;
 }
@@ -571,6 +220,7 @@ body.is-best-page .subpage_wrap .subpage_container {
   height: 1px;
 }
 
+/* ——— Responsive ——— */
 @media (min-width: 761px) {
   .bo-best-shell {
     margin-top: -36px;
@@ -596,22 +246,6 @@ body.is-best-page .subpage_wrap .subpage_container {
     gap: 16px;
   }
 
-  .bo-best-grid .listing-card-actions--desktop {
-    display: grid;
-    grid-template-columns: 1fr 40px;
-    gap: 8px;
-    padding: 0 10px 10px;
-  }
-
-  /* Desktop already has the wish button in the actions row below */
-  .bo-best-grid .listing-card-wish {
-    display: none;
-  }
-
-  .bo-best-grid .listing-card-actions--desktop .listing-card-wish-inline {
-    width: 40px;
-    min-width: 40px;
-  }
 }
 
 @media (max-width: 760px) {

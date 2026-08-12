@@ -6,6 +6,7 @@
 - Products: Firstmall #searchedItemDisplay (searchMode=timedeal)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-listing-cards.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-timedeal.css" />
 <style>
 #goodsSearchForm,
@@ -19,10 +20,8 @@ body.is-timedeal-page .category_edit_area {
 }
 </style>
 <script>
-document.documentElement.className += (document.documentElement.className ? " " : "") + "is-timedeal-page";
-if (document.body) {
-	document.body.className += (document.body.className ? " " : "") + "is-timedeal-page";
-}
+document.documentElement.classList.add("is-timedeal-page");
+if (document.body) document.body.classList.add("is-timedeal-page");
 </script>
 
 <main class="bo-timedeal-main" id="timedeal_page">
@@ -141,7 +140,7 @@ if (document.body) {
 			<!-- ------- 상품 영역( data-displaytype : "lattice", "list" ), 파일위치 : [스킨폴더]/goods/search_list_template.html ------- -->
 			<div
 				id="searchedItemDisplay"
-				class="searched_item_display bo-timedeal-grid"
+				class="searched_item_display bo-timedeal-grid tp-listing-grid"
 				data-displaytype="lattice"
 			></div>
 			<!-- ------- //상품 영역 ------- -->

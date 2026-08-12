@@ -1,10 +1,19 @@
 /**
- * TrendyPicker Time Deal (Firstmall)
- * - Page: /promotion/timedeal → promotion/timedeal.html
- * - Design helpers: sort UI, deal badges, fallback countdown, count sync
+ * TrendyPicker Time Deal
+ * /promotion/timedeal → promotion/timedeal.html
+ *
+ * 1. Guard: body.is-timedeal-page
+ * 2. Custom sort on #catalog_filter (page copy, do not merge)
+ * 3. Listing card chrome, deal badge, brand line
+ * 4. Client category tabs (Firstmall set_classification is a no-op here)
+ * 5. Fallback 12h countdown + schedule tab scroll
+ * 6. Unlock html.overflow + MutationObserver / ajaxComplete regroup
  */
 (function () {
 	"use strict";
+
+	var page = document.body;
+	if (!page || !page.classList.contains("is-timedeal-page")) return;
 
 	function ready(fn) {
 		if (document.readyState === "loading") {
@@ -34,8 +43,7 @@
 		var nativeSelect = document.querySelector("#timedeal_page #catalog_filter");
 		if (!nativeSelect || nativeSelect.closest(".realtrend-select-wrap")) return;
 
-		nativeSelect.className +=
-			(nativeSelect.className ? " " : "") + "realtrend-select-native";
+		nativeSelect.classList.add("realtrend-select-native");
 		nativeSelect.tabIndex = -1;
 		nativeSelect.setAttribute("aria-hidden", "true");
 
@@ -73,7 +81,7 @@
 			value.textContent = selected ? selected.textContent : "Ending Soon";
 			Array.prototype.forEach.call(menu.querySelectorAll("li"), function (item) {
 				var isSelected = item.getAttribute("data-value") === nativeSelect.value;
-				item.className = isSelected ? "is-selected" : "";
+				item.classList.toggle("is-selected", isSelected);
 				item.setAttribute("aria-selected", isSelected ? "true" : "false");
 			});
 		}
@@ -431,8 +439,6 @@
 						priceArea.appendChild(rate);
 					}
 				}
-
-				orderCardRows(card, info);
 			}
 
 			ensureCardChrome(card);
@@ -495,27 +501,68 @@
 			return "";
 		}
 
+		var codePrefixToKey = {
+			"0008": "beauty",
+			"0009": "k-food",
+			"0010": "lifestyle",
+			"0011": "k-pop",
+			"0012": "k-traditional"
+		};
+
+		function normalizeLabel(text) {
+			return String(text || "")
+				.replace(/\(\s*\d[\d,]*\s*\)/g, " ")
+				.replace(/\s+/g, " ")
+				.trim()
+				.toLowerCase();
+		}
+
+		// Category tabs only cover top-level groups (Beauty, K-Food, ...), but
+		// each product card's own category text is a leaf sub-category
+		// ("Cheeks", "Toners", "Candy & Chocolate", ...) that rarely contains
+		// the top-level name itself — a keyword-guess regex list can't cover
+		// that vocabulary. Instead, read the site's own full category nav
+		// (every link has a code like 000800020003, whose first 4 digits are
+		// the top-level code) and build an exact leaf-label -> top-level map
+		// from it directly, so it stays correct as categories are added or
+		// renamed. Ambiguous labels reused under more than one top-level
+		// (e.g. "Kitchen" under both Lifestyle and K-Traditional) are left
+		// unmapped rather than guessed.
 		function headerCategoryCodes() {
 			var codes = { beauty: [], "k-food": [], lifestyle: [], "k-pop": [], "k-traditional": [] };
+			var labelMap = {};
+			var ambiguous = {};
 			var links = document.querySelectorAll("a[href*='/goods/catalog?code=']");
 			Array.prototype.forEach.call(links, function (link) {
 				var href = link.getAttribute("href") || "";
 				var match = href.match(/[?&]code=([^&]+)/i);
 				if (!match) return;
-				var key = classifyLabel(link.textContent);
-				if (!key || !codes[key]) return;
 				var code = decodeURIComponent(match[1]);
+				var key = codePrefixToKey[code.slice(0, 4)];
+				if (!key) return;
+
 				if (codes[key].indexOf(code) === -1) codes[key].push(code);
+
+				var label = normalizeLabel(link.textContent);
+				if (!label || ambiguous[label]) return;
+				if (labelMap[label] && labelMap[label] !== key) {
+					delete labelMap[label];
+					ambiguous[label] = true;
+					return;
+				}
+				labelMap[label] = key;
 			});
 			Object.keys(fallbackCodes).forEach(function (key) {
 				if (codes[key].indexOf(fallbackCodes[key]) === -1) {
 					codes[key].unshift(fallbackCodes[key]);
 				}
 			});
-			return codes;
+			return { codes: codes, labelMap: labelMap };
 		}
 
-		var codeMap = headerCategoryCodes();
+		var headerData = headerCategoryCodes();
+		var codeMap = headerData.codes;
+		var labelKeyMap = headerData.labelMap;
 
 		function shortestCode(key) {
 			var codes = (codeMap[key] || []).slice().sort(function (a, b) {
@@ -553,7 +600,15 @@
 			return parts.join(" ").replace(/\s+/g, " ").trim();
 		}
 
+		function cardCategoryLabel(card) {
+			var area = card.querySelector(".goods_category_area, .cate, [data-category], [data-category-code]");
+			return area ? normalizeLabel(area.textContent) : "";
+		}
+
 		function cardMatchesCategory(card, key) {
+			var label = cardCategoryLabel(card);
+			if (label && labelKeyMap[label]) return labelKeyMap[label] === key;
+
 			var hay = cardCategoryText(card);
 			if (classifyLabel(hay) === key) return true;
 			var matchers = categoryMatchers[key] || [];
@@ -608,9 +663,27 @@
 			}
 		}
 
+		function currentPageNumber() {
+			var active = document.querySelector(".paging_navigation .on");
+			var page = active ? parseInt(active.textContent, 10) : NaN;
+			return page > 0 ? page : 1;
+		}
+
 		function activateCategory(key) {
 			setActiveTab(key);
 			tryServerCategory(key);
+
+			// Switching tabs (including back to "All Deals") should start from
+			// page 1 of that view instead of staying on whatever page number
+			// pagination happened to be at under the previous tab — otherwise
+			// "All Deals" looked like it was still showing the old category's
+			// page. observeProducts()'s MutationObserver re-applies the active
+			// filter once the fresh page 1 cards load.
+			if (currentPageNumber() !== 1 && typeof window.goodsSearchPage === "function") {
+				window.goodsSearchPage(1);
+				return;
+			}
+
 			applyClientCategoryFilter(key);
 		}
 
@@ -729,7 +802,6 @@
 	}
 
 	ready(function () {
-		if (!document.body || !document.body.classList.contains("is-timedeal-page")) return;
 		unlockPageScroll();
 		if (window.MutationObserver) {
 			new MutationObserver(function () {

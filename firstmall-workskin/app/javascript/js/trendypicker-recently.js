@@ -1,28 +1,26 @@
 /**
- * TrendyPicker Wishlist
- * /mypage/wish → mypage/wish.html
+ * TrendyPicker Recently Viewed
+ * /goods/recently → goods/recently.html
+ * Same structure/behavior as mypage/wish.html (trendypicker-wishlist.js) —
+ * mirrored here under recently-scoped classes and native endpoints.
  *
- * 1. Guard: .bo-wishlist-page
- * 2. Sort cards by wish_seq (newest first)
- * 3. Category tabs via seed + product-page breadcrumbs/codes
- * 4. Brand hydrate from get_brand_list / goods view
- * 5. Compact wish-button reparent at 1120px
+ * 1. Guard: .bo-recently-page
+ * 2. Category tabs via seed + product-page breadcrumbs/codes
+ * 3. Brand hydrate from get_brand_list / goods view
  */
 (() => {
-  const page = document.querySelector(".bo-wishlist-page");
+  const page = document.querySelector(".bo-recently-page");
   if (!page) return;
 
   const CATEGORY_KEYS = ["beauty", "k-food", "lifestyle", "k-pop", "k-traditional"];
   const FETCH_CONCURRENCY = 6;
 
-  // The wishlist record has no category field of its own, so each card's
-  // category is only knowable by fetching its full product page and reading
-  // the breadcrumb (see readCategoryFromPage below) — that's what makes
-  // classification slow: it's N full-page fetches, not a cheap lookup. This
-  // cache makes repeat visits in the same tab/session instant by skipping
-  // the fetch entirely for a goods_seq already resolved once. Shares its
-  // storage key with trendypicker-recently.js since it's the same product
-  // catalog either way.
+  // The recently-viewed record has no category field of its own, so each
+  // card's category is only knowable by fetching its full product page and
+  // reading the breadcrumb (see readCategoryFromPage below) — that's what
+  // makes classification slow: it's N full-page fetches, not a cheap
+  // lookup. This cache makes repeat visits in the same tab/session instant
+  // by skipping the fetch entirely for a goods_seq already resolved once.
   const CATEGORY_CACHE_KEY = "bo-category-cache-v1";
   const readCategoryCache = () => {
     try {
@@ -183,28 +181,19 @@
     return results;
   };
 
-  // Most recently wishlisted first (higher wish_seq = added later).
-  const wishGrid = page.querySelector(".bo-wishlist-grid");
-  if (wishGrid) {
-    const bySeqDesc = Array.from(wishGrid.querySelectorAll(":scope > .bo-wish-card")).sort(
-      (a, b) => Number(b.dataset.wishSeq || 0) - Number(a.dataset.wishSeq || 0)
-    );
-    bySeqDesc.forEach((card) => wishGrid.appendChild(card));
-  }
-
-  const cards = Array.from(page.querySelectorAll(".bo-wish-card"));
-  const tabs = page.querySelector(".bo-wishlist-tabs");
+  const cards = Array.from(page.querySelectorAll(".bo-recently-card"));
+  const tabs = page.querySelector(".bo-recently-tabs");
   const listWrap =
-    page.querySelector(".bo-wishlist-list-wrap") ||
-    page.querySelector(".bo-wishlist-grid")?.parentElement;
-  let activeFilter = tabs?.querySelector("button.is-active")?.dataset.wishFilter || "all";
+    page.querySelector(".bo-recently-list-wrap") ||
+    page.querySelector(".bo-recently-grid")?.parentElement;
+  let activeFilter = tabs?.querySelector("button.is-active")?.dataset.recentlyFilter || "all";
   let categoriesReady = false;
 
   const emptyResult = document.createElement("div");
-  emptyResult.className = "bo-wishlist-filter-empty";
-  emptyResult.textContent = "No matching wishlist items.";
+  emptyResult.className = "bo-recently-filter-empty";
+  emptyResult.textContent = "No matching recently viewed items.";
   emptyResult.hidden = true;
-  if (listWrap && !listWrap.querySelector(".bo-wishlist-filter-empty")) {
+  if (listWrap && !listWrap.querySelector(".bo-recently-filter-empty")) {
     listWrap.append(emptyResult);
   }
 
@@ -218,10 +207,10 @@
     let visibleCount = 0;
 
     cards.forEach((card) => {
-      const category = resolveCategory(card.dataset.wishCategory);
+      const category = resolveCategory(card.dataset.recentlyCategory);
       // Only show a card once its category is actually known and matches —
       // showing not-yet-hydrated cards by default (old behavior) meant
-      // clicking a category tab briefly showed every other category too,
+      // clicking e.g. "Beauty" briefly showed every other category too,
       // until each card's product page finished loading and it got hidden.
       const show = activeFilter === "all" || category === activeFilter;
 
@@ -230,28 +219,28 @@
     });
 
     if (!categoriesReady && activeFilter !== "all") {
-      emptyResult.textContent = "Loading wishlist categories...";
+      emptyResult.textContent = "Loading categories...";
       emptyResult.hidden = visibleCount > 0;
       return;
     }
 
-    emptyResult.textContent = "No matching wishlist items.";
+    emptyResult.textContent = "No matching recently viewed items.";
     emptyResult.hidden = visibleCount > 0 || cards.length === 0;
   };
 
   const syncTabs = () => {
-    tabs?.querySelectorAll("button[data-wish-filter]").forEach((tab) => {
-      const isActive = (tab.dataset.wishFilter || "all") === activeFilter;
+    tabs?.querySelectorAll("button[data-recently-filter]").forEach((tab) => {
+      const isActive = (tab.dataset.recentlyFilter || "all") === activeFilter;
       tab.classList.toggle("is-active", isActive);
       tab.setAttribute("aria-pressed", String(isActive));
     });
   };
 
   tabs?.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-wish-filter]");
+    const button = event.target.closest("button[data-recently-filter]");
     if (!button || !tabs.contains(button)) return;
     event.preventDefault();
-    activeFilter = button.dataset.wishFilter || "all";
+    activeFilter = button.dataset.recentlyFilter || "all";
     syncTabs();
     applyFilters();
   });
@@ -429,16 +418,16 @@
 
   const seedCardCategory = (card) => {
     const seedText =
-      card.querySelector(".bo-wish-card__category-seed")?.textContent ||
-      card.dataset.wishCategory ||
+      card.querySelector(".bo-recently-card__category-seed")?.textContent ||
+      card.dataset.recentlyCategory ||
       "";
     const category = resolveCategory(seedText);
-    card.dataset.wishCategory = category || "";
+    card.dataset.recentlyCategory = category || "";
   };
 
   const hydrateCards = async () => {
     const brandElements = cards
-      .map((card) => card.querySelector(".bo-wish-card__brand"))
+      .map((card) => card.querySelector(".bo-recently-card__brand"))
       .filter(Boolean);
 
     const elementsByCode = new Map();
@@ -477,7 +466,7 @@
     await mapLimit(cards, FETCH_CONCURRENCY, async (card) => {
       seedCardCategory(card);
 
-      const brand = card.querySelector(".bo-wish-card__brand");
+      const brand = card.querySelector(".bo-recently-card__brand");
       const needsBrand = Boolean(brand && !brand.textContent.trim());
       const goodsSeq = card.dataset.goodsSeq || "";
       const cachedCategory = goodsSeq ? categoryCache[goodsSeq] : undefined;
@@ -485,13 +474,13 @@
       // Already resolved this goods_seq earlier in the session and don't
       // need brand text either — skip the fetch entirely.
       if (cachedCategory && !needsBrand) {
-        card.dataset.wishCategory = cachedCategory;
+        card.dataset.recentlyCategory = cachedCategory;
         applyFilters();
         return;
       }
 
       const productUrl =
-        card.querySelector(".bo-wish-card__media > a")?.href ||
+        card.querySelector(".bo-recently-card__media > a")?.href ||
         card.querySelector('a[href*="/goods/view"]')?.href ||
         (goodsSeq ? `/goods/view?no=${encodeURIComponent(goodsSeq)}` : "");
       if (!productUrl) return;
@@ -508,7 +497,7 @@
       const pageCategory =
         cachedCategory || readCategoryFromPage(documentPage) || readCategoryFromCodes(documentPage);
       if (pageCategory) {
-        card.dataset.wishCategory = pageCategory;
+        card.dataset.recentlyCategory = pageCategory;
         if (goodsSeq) {
           categoryCache[goodsSeq] = pageCategory;
           writeCategoryCache();
@@ -520,25 +509,6 @@
     categoriesReady = true;
     applyFilters();
   };
-
-  // Mobile/tablet: float the wish button over the product image instead of
-  // sitting beside the cart button. Reparent on breakpoint change so the
-  // desktop 2-up action row is untouched.
-  const compactMedia = window.matchMedia("(max-width: 1120px)");
-
-  const placeWishButtons = (isCompact) => {
-    cards.forEach((card) => {
-      const media = card.querySelector(".bo-wish-card__media");
-      const actions = card.querySelector(".bo-wish-card__actions");
-      const wishBtn = card.querySelector(".bo-wish-card__wish-btn");
-      if (!media || !actions || !wishBtn) return;
-      const target = isCompact ? media : actions;
-      if (wishBtn.parentElement !== target) target.appendChild(wishBtn);
-    });
-  };
-
-  placeWishButtons(compactMedia.matches);
-  compactMedia.addEventListener("change", (event) => placeWishButtons(event.matches));
 
   cards.forEach(seedCardCategory);
   syncTabs();

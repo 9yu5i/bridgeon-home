@@ -1,5 +1,17 @@
+/**
+ * TrendyPicker Coupons
+ * /mypage/coupon → mypage/coupon.html
+ *
+ * 1. Translate / format ticket sale, expire, badges
+ * 2. Fetch remaining paging pages into one grid
+ * 3. Split unused tickets expiring within 7 days
+ * 4. Offline coupon register + Firstmall layer close
+ */
 (function () {
   "use strict";
+
+  var page = document.querySelector(".bo-coupons-page");
+  if (!page) return;
 
   function ready(fn) {
     if (document.readyState === "loading") {
@@ -295,25 +307,12 @@
     });
   }
 
-  function forceCouponNameColor(root) {
-    (root || document).querySelectorAll(".bo-coupon-name").forEach(function (el) {
-      el.style.setProperty("color", "#111", "important");
-      el.style.setProperty("-webkit-text-fill-color", "#111", "important");
-      el.style.setProperty("opacity", "1", "important");
-      Array.prototype.forEach.call(el.querySelectorAll("*"), function (child) {
-        child.style.setProperty("color", "#111", "important");
-        child.style.setProperty("-webkit-text-fill-color", "#111", "important");
-      });
-    });
-  }
-
   function decorateTickets(root) {
     translateTicketUi(root || document);
     formatSaleTitles(root || document);
     formatExpireInline(root || document);
     normalizeTicketBadges(root || document);
     cleanTicketTops(root || document);
-    forceCouponNameColor(root || document);
   }
 
   function ticketKey(ticket) {
@@ -425,7 +424,6 @@
       formatSaleTitles(expiringGrid);
       normalizeTicketBadges(expiringGrid);
       cleanTicketTops(expiringGrid);
-      forceCouponNameColor(expiringGrid);
     }
   }
 

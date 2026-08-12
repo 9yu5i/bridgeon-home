@@ -1,0 +1,559 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Cart / TrendyPicker
+- Path: [skin]/order/cart.html
+- URL: /order/cart
+- Design: cart/cart.html prototype
+- Commerce actions stay Firstmall (cart_form, del, addsettle, optional_changes)
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-cart.css" />
+{is_file_facebook_tag}
+
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-cart-page";
+if (document.body) {
+	document.body.className += (document.body.className ? " " : "") + "is-cart-page";
+}
+</script>
+
+<main class="cart-main cart-page {? !shipping_group_list}is-cart-empty{/}">
+	<div class="cart-shell">
+		<section class="cart-heading">
+			<div>
+				<h1>YOUR CART <span>({=number_format(total_ea)})</span></h1>
+				<p>Review your item and proceed to checkout.</p>
+			</div>
+			<a class="cart-continue" href="/goods/best">Continue Shopping -&gt;</a>
+		</section>
+
+		<section class="cart-shipping" aria-label="Shipping destination and free shipping progress">
+			<div class="cart-ship-destination">
+				<span aria-hidden="true"><img src="/data/skin/{skin}/images/cart/box.png" alt=""></span>
+				<p data-cart-ship-country>Shipping to {ini_info.nation}</p>
+				<button type="button" id="select_other_country" data-cart-ship-change aria-haspopup="dialog" aria-controls="cart-country-dialog">Change</button>
+			</div>
+			<div class="cart-free-shipping">
+				<div>
+					<p data-cart-shipping-message>You're <b>US$0.00</b> away from <b class="cart-ship-free-word">FREE</b> shipping!</p>
+					<span>FREE shipping <img src="/data/skin/{skin}/images/cart/shipping.png" alt="" aria-hidden="true"></span>
+				</div>
+				<div class="cart-shipping-meter" aria-hidden="true" style="--cart-shipping-progress: {? total >= 48}100{:}{=round(total / 48 * 100)}{/}%;">
+					<span data-cart-shipping-meter></span>
+				</div>
+				<progress value="{? total >= 48}100{:}{=round(total / 48 * 100)}{/}" max="100" aria-label="Free shipping progress" data-cart-shipping-progress></progress>
+			</div>
+		</section>
+
+		<form name="cart_form" id="cart_form" method="post" target="actionFrame" action="order">
+			<input type="hidden" name="cart_version" value="3" />
+			<input type="hidden" name="nation" value="{ini_info.nation}" />
+			<input type="hidden" name="kr_nation" value="{ini_info.kr_nation}" />
+
+			<div class="cart-content">
+				<section class="cart-items-card" aria-label="Cart items">
+					<!-- { ? shipping_group_list } -->
+					<div class="cart-items-head">
+						<label><input type="checkbox" class="btn_select_all" /> Select All</label>
+						<span>Price</span>
+						<span>Quantity</span>
+						<span>Total</span>
+					</div>
+					<div class="cart-item-list">
+						<!--{ @ shipping_group_list }-->
+						<ul class="shipping_group_list">
+							<!--{ @ .goods }-->
+								<li class="cart_goods cart-item" id="cart_goods_{..cart_option_seq}" data-cart-unit-price="{..price}" data-cart-unit-compare="{? ..consumer_price > ..price }{..consumer_price}{:}{..price}{/}" data-cart-ea="{..ea}">
+								<div class="cart-item-check cgd_top">
+									<input type="hidden" name="ship_possible[{..cart_option_seq}]" value="{.ship_possible}" />
+									<input type="checkbox" name="cart_option_seq[]" value="{..cart_option_seq}" stat="{.ship_possible}" rel="{..goods_seq}" />
+								</div>
+								<a class="cart-item-image" href="../goods/view?no={..goods_seq}">
+									<img src="{..image}" alt="" onerror="this.src='../images/common/noimage_list.gif'" />
+								</a>
+								<div class="cart-item-info">
+									<p><a class="cart-item-brand" href="../goods/view?no={..goods_seq}">{..r_brand_name[0]}</a></p>
+									<h2><a class="cart-item-name" href="../goods/view?no={..goods_seq}">{..goods_name}</a></h2>
+									<!--{ ? ..option1!=null }-->
+									<span
+										class="realtrend-select-wrap cart-option-select"
+										data-cart-option-select
+										data-cart-option-seq="{..cart_option_seq}"
+									>
+										<button
+											type="button"
+											class="realtrend-select-trigger"
+											aria-haspopup="listbox"
+											aria-expanded="false"
+											aria-label="Product option"
+										>
+											<span class="realtrend-select-value"
+												>{..option1}{? ..option2 != null } / {..option2}{/}{? ..option3 != null } / {..option3}{/}{? ..option4 != null } / {..option4}{/}{? ..option5 != null } / {..option5}{/}</span
+											>
+										</button>
+										<ul class="realtrend-select-menu" role="listbox"></ul>
+									</span>
+									<!--{ / }-->
+									<!--{ ? ..cart_suboptions }-->
+									<ul class="cart_suboptions">
+										<!--{ @ cart_suboptions }-->
+										<li>{ ? ...suboption }{ ? ...suboption_title }<span class="xtle v3">{...suboption_title}</span>{ / }{...suboption}: { / }{=number_format(...ea)}ea</li>
+										<!--{ / }-->
+									</ul>
+									<!--{ / }-->
+									<div class="cart-item-links">
+										<button type="button" class="btn_this_wish" value="{..cart_option_seq}">Move to Wishlist</button>
+										<span>|</span>
+										<button type="button" class="btn_this_delete btn_thisitem_del" value="{..cart_option_seq}">Delete</button>
+									</div>
+									<button type="button" class="btn_option_modify sr-only" id="{..cart_option_seq}" tabindex="-1" aria-hidden="true">Edit</button>
+								</div>
+								<div class="cart-item-amounts">
+									<p class="cart-item-price">
+										<!--{ ? ..consumer_price > ..price }-->
+										<del>{=get_currency_price(..consumer_price,2)}</del>
+										<!--{ : ..tot_sale_price > 0 && ..ea > 0 }-->
+										<del>{=get_currency_price((..tot_result_price+..tot_sale_price)/..ea,2)}</del>
+										<!--{ / }-->
+										<strong>{=get_currency_price(..price,2)}</strong>
+									</p>
+									<div class="cart-qty" data-cart-qty data-cart-option-seq="{..cart_option_seq}" aria-label="Quantity">
+										<button type="button" data-cart-qty-change="-1" aria-label="Decrease quantity">-</button>
+										<output data-cart-qty-value>{=number_format(..ea)}</output>
+										<button type="button" data-cart-qty-change="1" aria-label="Increase quantity">+</button>
+									</div>
+									<strong class="cart-item-total" id="option_suboption_price_sum_{..cart_option_seq}">{=get_currency_price(..tot_result_price,2,'', '<span class="num">_str_price_</span>')}</strong>
+								</div>
+
+								<div id="optional_changes_area_{..cart_option_seq}" class="resp_layer_pop hide">
+									<h4 class="title">Edit</h4>
+									<div class="y_scroll_auto">
+										<div class="layer_pop_contents v2 Pb70">
+											<div id="onContent">옵션/수량 변경 컨텐츠</div>
+										</div>
+									</div>
+									<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+								</div>
+								<div id="cart_sale_detail_{..cart_option_seq}" class="resp_layer_pop hide">
+									<h4 class="title">Discount Detail</h4>
+									<div class="y_scroll_auto2">
+										<div class="layer_pop_contents v5">
+											<div class="resp_1line_table">
+												<!--{ @ ..sales.title_list }-->
+												<ul id="mobile_cart_option_{...key_}_saletr_{..cart_option_seq}" { ? ..tsales.sale_list[...key_] > 0 }{ : }class="hide"{ / }>
+													<li class="th size1"><p>{..sales.title_list[...key_]}</p></li>
+													<li class="td"><span id="mobile_cart_option_{...key_}_saleprice_{..cart_option_seq}">{=get_currency_price(..tsales.sale_list[...key_],2)}</span></li>
+												</ul>
+												<!--{ / }-->
+											</div>
+										</div>
+									</div>
+									<div class="layer_bottom_btn_area2">
+										<button type="button" class="btn_resp size_c color5 Wmax" onclick="hideCenterLayer()">OK</button>
+									</div>
+									<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+								</div>
+							</li>
+							<!--{ / }-->
+						</ul>
+						<!--{ / }-->
+					</div>
+					<!-- { : } -->
+					<p class="cart-empty-message">Your cart is empty.</p>
+					<!-- { / } -->
+				</section>
+
+				<!-- { ? shipping_group_list } -->
+				<button type="button" class="cart-delete-selected btn_select_del">
+					<img src="/data/skin/{skin}/images/cart/delete.png" alt="" aria-hidden="true" />Delete Selected
+				</button>
+
+				<aside class="cart-side">
+					<section class="cart-promo-card">
+						<h2>PROMO CODE</h2>
+						<div class="cart-promo-row" data-cart-promo-form>
+							<label class="sr-only" for="cartpromotioncode">Promo code</label>
+							<input type="text" name="cartpromotioncode" id="cartpromotioncode" value="{cart_promotioncode}" placeholder="Enter promo code" />
+							<button type="button" data-cart-promo-apply>Apply</button>
+						</div>
+						<p class="cart-promo-message cart-promo-message--error" data-cart-promo-error aria-live="polite" hidden>Invalid promo code. Please check and try again.</p>
+						<div class="cart-promo-applied" data-cart-promo-applied {? !cart_promotioncode }hidden{/}>
+							<p>
+								<img class="cart-promo-check-icon" src="/data/skin/{skin}/images/cart/check.png" alt="" aria-hidden="true" />
+								<span>Promo code applied!</span>
+								<button type="button" data-cart-promo-remove aria-label="Remove promo code">&times;</button>
+							</p>
+							<p>
+								<span data-cart-promo-applied-code>{cart_promotioncode}</span>
+								<strong id="total_promotion_goods_sale"></strong>
+							</p>
+						</div>
+					</section>
+
+					<section class="cart-coupon-card" aria-labelledby="cart-coupon-title">
+						<div class="cart-coupon-head">
+							<div>
+								<h2 id="cart-coupon-title">COUPON</h2>
+								<p data-cart-selected-coupon>No coupon selected.</p>
+							</div>
+						</div>
+						<button type="button" class="cart-coupon-select-button" data-cart-coupon-open>Select Coupon</button>
+						<div class="cart-coupon-selected" data-cart-coupon-selected hidden>
+							<p>
+								<img class="cart-promo-check-icon" src="/data/skin/{skin}/images/cart/check.png" alt="" aria-hidden="true" />
+								<span>Coupon selected!</span>
+								<button type="button" data-cart-coupon-remove aria-label="Remove selected coupon">&times;</button>
+							</p>
+							<p>
+								<span data-cart-coupon-selected-code>Coupon</span>
+								<strong data-cart-coupon-selected-discount></strong>
+							</p>
+							<small data-cart-coupon-selected-note>Applied at checkout.</small>
+						</div>
+					</section>
+
+					<section class="cart-summary-card">
+						<h2>ORDER SUMMARY</h2>
+						<dl>
+							<div>
+								<dt>Subtotal <span>({=number_format(total_ea)} items)</span></dt>
+								<dd id="totalGoodsPrice">{=get_currency_price(total,2,'', '<span class="num">_str_price_</span>')}</dd>
+							</div>
+							<div>
+								<dt>Product Discount</dt>
+								<dd class="cart-discount" id="saleTotalPrice" data-cart-discount>{?total_sale>0}- {/}<span id="mobile_total_sale">US$0.00</span></dd>
+							</div>
+							<div class="cart-summary-promo" data-cart-summary-promo {? !cart_promotioncode }hidden{/}>
+								<dt>Promo code</dt>
+								<dd data-cart-summary-promo-discount></dd>
+							</div>
+							<div class="cart-summary-coupon" data-cart-summary-coupon hidden>
+								<dt data-cart-summary-coupon-label>Coupon</dt>
+								<dd data-cart-summary-coupon-discount></dd>
+							</div>
+							<div>
+								<dt>Shipping</dt>
+								<dd class="{? total_shipping_price>0 }{:}cart-free{/}" id="shippingTotalPrice">{?total_shipping_price>0}(+) {/}<span id="total_shipping_price">{=get_currency_price(total_shipping_price,2)}</span></dd>
+							</div>
+							<div class="cart-taxes-row">
+								<dt>
+									Estimated Taxes
+									<span class="cart-info-wrap">
+										<button type="button" class="cart-info-button" aria-label="About estimated taxes">i</button>
+										<span class="cart-summary-tooltip" role="note">The final amount will be charged in USD. Your payment amount may vary slightly due to exchange rates and payment provider policies.</span>
+									</span>
+								</dt>
+								<dd class="cart-customs">Charged at customs</dd>
+							</div>
+							<div class="cart-summary-total">
+								<dt>Total</dt>
+								<dd id="totalPrice">{=get_currency_price(total_price,2,'', '<span class="num">_str_price_</span>')}</dd>
+							</div>
+						</dl>
+						<p class="cart-save">
+							<img src="/data/skin/{skin}/images/cart/promo.png" alt="" aria-hidden="true" />
+							You save <strong data-cart-save>US$0.00</strong>
+						</p>
+						<input type="button" class="btn_resp size_e color2 btn_all_order cart-checkout" {? total_ea < 1 }onclick="openDialogAlert('Please select items to order.','400','140');return false;" {/} value="PROCEED TO CHECKOUT -&gt;" />
+						<span class="cart-or">- OR -</span>
+						<button type="button" class="cart-paypal" aria-label="PayPal" data-cart-paypal>
+							<img src="/data/skin/{skin}/images/cart/paypal.png" alt="PayPal" />
+						</button>
+						<div class="cart-paypal-slot hide" aria-hidden="true">
+							{navercheckout_tpl}
+							{talkbuyorder_tpl}
+						</div>
+						<small>
+							<img src="/data/skin/{skin}/images/cart/secure.png" alt="" aria-hidden="true" />Secure Checkout
+						</small>
+					</section>
+				</aside>
+				<!-- { / } -->
+
+				<section class="cart-recommendations" aria-label="Recommended products">
+					<h2>You May Also Love</h2>
+					<div class="cart-rec-track">
+						{=showDesignDisplay(10363)}
+					</div>
+				</section>
+			</div>
+		</form>
+
+		<section class="cart-newsletter cart-scroll-reveal" aria-labelledby="cart-newsletter-title">
+			<div>
+				<h2 id="cart-newsletter-title">Be the first to know</h2>
+				<p>Get trend updates, exclusive offers, and more!</p>
+			</div>
+			<form action="/member_process/newsletter" method="post">
+				<label class="sr-only" for="cart-newsletter-email">Email</label>
+				<input id="cart-newsletter-email" name="email" type="email" placeholder="Enter Your Email" />
+				<button type="submit">SUBSCRIBE</button>
+			</form>
+		</section>
+	</div>
+</main>
+
+<div class="cart-coupon-dialog" id="cart-coupon-dialog" hidden aria-hidden="true">
+	<button type="button" class="cart-coupon-backdrop" data-cart-coupon-close aria-label="Close coupon list"></button>
+	<section class="cart-coupon-modal" role="dialog" aria-modal="true" aria-labelledby="cart-coupon-dialog-title">
+		<button type="button" class="cart-coupon-close" data-cart-coupon-close aria-label="Close coupon list">&times;</button>
+		<div class="cart-coupon-modal-head">
+			<h2 id="cart-coupon-dialog-title">Select Coupon</h2>
+			<p>Only coupons that match the selected cart items can be used.</p>
+		</div>
+		<div class="cart-coupon-list" data-cart-coupon-list></div>
+	</section>
+</div>
+
+<div class="cart-country-dialog" id="cart-country-dialog" hidden aria-hidden="true">
+	<button type="button" class="cart-country-backdrop" data-cart-country-close aria-label="Close country list"></button>
+	<section class="cart-country-modal" role="dialog" aria-modal="true" aria-labelledby="cart-country-title">
+		<button type="button" class="cart-country-close" data-cart-country-close aria-label="Close country list">&times;</button>
+		<h2 id="cart-country-title">Select shipping country</h2>
+		<label class="sr-only" for="cart-country-search">Search country</label>
+		<input
+			id="cart-country-search"
+			class="cart-country-search"
+			type="search"
+			placeholder="Search country"
+			data-cart-country-search
+		/>
+		<ul class="cart-country-list" data-cart-country-list role="listbox" aria-label="Shipping countries">
+			<!--{ @ ship_gl_arr }-->
+			<li>
+				<button
+					type="button"
+					role="option"
+					data-cart-country="{.nation_str}"
+					data-cart-country-label="{ship_gl_list[.key_]['gl_nation']}"
+					aria-selected="{? ini_info.nation == .nation_str || ini_info.nation == ship_gl_list[.key_]['gl_nation']}true{:}false{/}"
+					class="{? ini_info.nation == .nation_str || ini_info.nation == ship_gl_list[.key_]['gl_nation']}is-selected{/}"
+				>{ship_gl_list[.key_]['gl_nation']}</button>
+			</li>
+			<!--{ / }-->
+			<li>
+				<button type="button" role="option" data-cart-country="KOREA" data-cart-country-label="Korea" class="{? ini_info.nation=='KOREA'}is-selected{/}">Korea</button>
+			</li>
+		</ul>
+	</section>
+</div>
+
+<div id="select_country_layer_pop" class="resp_layer_pop hide" aria-hidden="true"></div>
+
+<div id="optional_changes_dialog" style="display:none;"></div>
+<div id="shipping_detail_lay" class="resp_layer_pop hide">
+	<h4 class="title">Delivery method</h4>
+	<div class="y_scroll_auto2">
+		<div class="layer_pop_contents v5"></div>
+	</div>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+
+{ #INTERNATIONAL_SHIPPING_INFO }
+
+<form name="orderFrm" id="orderFrm" method="post" action="cacluate" target="actionFrame"></form>
+<div id="wish_alert">
+	<div class="wa_on"></div>
+	<div class="wa_off"></div>
+	<div class="wa_msg"></div>
+</div>
+
+<script type="text/javascript">
+	var gl_member_seq = "{member_seq}";
+
+	{?  APP_LIKE_TYPE == 'API' }
+	try{
+		window.fbAsyncInit = function() {
+			FB.init({
+			appId      : plus_app_id,
+			status     : true,
+			cookie     : true,
+			xfbml      : true,
+			oauth      : true,
+			version    : 'v{APP_VER}'
+			});
+			{? cfg.order.fblike_ordertype && fblikesale }
+				FB.getLoginStatus(function(response) {
+					$("#fbloginlay").hide();
+						{ ? !fbuser }
+							$.ajax({'url' : '../sns_process/facebooklogincknone', 'type' : 'post'});
+						{ / }
+					if (response.status === 'connected') {
+					} else {
+						$("#fbloginlay").show();
+					}
+				});
+			{ / }
+		}
+	} catch (facebookjsok) {
+	}
+	{ / }
+
+	$(document).ready(function() {
+		var cartVersion = $('input[name=cart_version]').val();
+
+		{ ? !is_goods}
+		$(".goods_delivery_info").hide();
+		{ / }
+
+		$("form#cart_form .btn_select_all").change(function() {
+			if($(this).is(":checked")){
+				$("form#cart_form .btn_select_all").attr("checked",true);
+				$("form#cart_form input[name='cart_option_seq[]']").each(function(){
+					$(this).attr("checked",true);
+				});
+				$(".cart_goods").addClass('selected');
+				if(cartVersion >= 3){
+					setPriceInfoCheck();
+				}
+			}else{
+				$("form#cart_form .btn_select_all").removeAttr("checked");
+				$("form#cart_form input[name='cart_option_seq[]']").each(function(){
+					$(this).removeAttr("checked");
+				});
+				$(".cart_goods").removeClass('selected');
+				if(cartVersion >= 3){
+					setPriceInfoCheck();
+				}
+			}
+		});
+
+		$(".btn_thisitem_del, .btn_this_delete").click(function() {
+			var selected_order = $(this).val();
+			$("input[name='cart_option_seq[]']").removeAttr("checked");
+			$("input[name='cart_option_seq[]'][value='"+selected_order+"']").attr("checked", true);
+			$("form#cart_form").attr("action","del");
+			$("form#cart_form").attr("target","actionFrame");
+			$("form#cart_form")[0].submit();
+		});
+
+		$(".btn_this_wish").click(function() {
+			if(!gl_member_seq){
+				if(confirm(getAlert('gv009'))){
+					top.document.location.href = "/member/login?return_url={_SERVER['REQUEST_URI']}";
+					return;
+				}else{
+					return;
+				}
+			}
+			var selected_order = $(this).val();
+			if(!selected_order) return;
+			var $btn = $(this);
+			if($btn.data("wishBusy")) return;
+			$btn.data("wishBusy", true);
+
+			$.ajax({
+				'url' : '../mypage/wish_add?mode=cart',
+				'type' : 'post',
+				'data' : {'cart_option_seq': selected_order},
+				'traditional': true,
+				'success' : function(){
+					$("#wish_alert .wa_on").show();
+					$("#wish_alert .wa_off").hide();
+					$("#wish_alert .wa_msg").html(getAlert('gv056'));
+					$("#wish_alert").stop(true,true).show();
+					clearInterval(alert_timer);
+					alert_timer = setInterval(function(){
+						clearInterval(alert_timer);
+						$("#wish_alert").stop(true,true).show().fadeOut('slow');
+					},800);
+
+					// Remove from cart after wishlist save
+					$("input[name='cart_option_seq[]']").removeAttr("checked").prop("checked", false);
+					$("input[name='cart_option_seq[]'][value='"+selected_order+"']")
+						.attr("checked", true)
+						.prop("checked", true);
+					$("form#cart_form").attr("action","del");
+					$("form#cart_form").attr("target","actionFrame");
+					$("form#cart_form")[0].submit();
+				},
+				'error' : function(){
+					$btn.data("wishBusy", false);
+				}
+			});
+		});
+
+		$(".btn_select_del").click(function() {
+			var selected_order = '';
+			$("input[name='cart_option_seq[]']").each(function(e, el) {
+				if( $(el).attr('checked') == 'checked' ){
+					selected_order += $(el).val() + ",";
+				}
+			});
+			if(!selected_order){
+				openDialogAlert(getAlert('oc003'),'400','140');
+				return false;
+			}
+			$("form#cart_form").attr("action","del");
+			$("form#cart_form").attr("target","actionFrame");
+			$("form#cart_form")[0].submit();
+		});
+
+		$("button.btn_option_modify").bind("click",function() {
+			var id = $(this).attr("id");
+			var url = "optional_changes?no="+id+"&t="+new Date().getTime();
+			var area_obj = $("#optional_changes_area_"+id);
+			$(".cart-item-list").find("#onContent").html("옵션/수량 변경 컨텐츠");
+			$.get(url, function(data) {
+				area_obj.find('#onContent').empty().html(data);
+				showCenterLayer(area_obj);
+			});
+		});
+
+		$(".btn_all_order").bind("click",function() {
+			$("form#cart_form").attr("action","addsettle");
+			$("form#cart_form").attr("target","actionFrame");
+			$("form#cart_form")[0].submit();
+		});
+
+		$("input[name='cart_option_seq[]']").bind("click",function(){
+			if($(this).is(":checked")){
+				$("#cart_goods_" + $(this).val()).addClass('selected');
+			}else{
+				$("#cart_goods_" + $(this).val()).removeClass('selected');
+			}
+		});
+
+		{? cart_promotioncode }
+			getPromotionckloding();
+		{/}
+
+		if (typeof bind_shipping_modify_btn === "function") {
+			bind_shipping_modify_btn();
+		}
+
+		$("#select_other_country").bind("click",function(event) {
+			event.preventDefault();
+			return false;
+		});
+	});
+
+	function getPromotionckloding() {
+		var cartpromotioncode = '{cart_promotioncode}';
+		if( cartpromotioncode  ) {
+			$.ajax({
+				'url' : '../promotion/getPromotionJson?mode=cart',
+				'data' : {'cartpromotioncode':cartpromotioncode},
+				'type' : 'post',
+				'dataType': 'json',
+				'success': function(data) {
+					order_price_calculate();
+				}
+			});
+		}
+	}
+
+	function order_price_calculate()
+	{
+		var f = $("form#orderFrm");
+		f.attr("action","calculate?mode=cart");
+		f.attr("target","actionFrame");
+		f[0].submit();
+	}
+
+	function chg_shipping_nation(nation){
+		var tmpFrm	= '<form name="nationFrm" id="nationFrm" method="post" action="./cart"><input type="hidden" name="nation" value="' + nation + '"></form>';
+		$('body').append(tmpFrm);
+		$("#nationFrm").submit();
+	}
+</script>
+<script src="/app/javascript/js/trendypicker-cart.js"></script>

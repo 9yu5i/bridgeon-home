@@ -46,6 +46,9 @@ const requiredFiles = [
   "images/mypage/wish_liked.png",
   "README.md",
   "MAGAZINE-UPLOAD.md",
+  "order/cart.html",
+  "css/redesign/trendypicker-cart.css",
+  "app/javascript/js/trendypicker-cart.js",
 ];
 
 const requiredMagazineHtmlFiles = [
@@ -72,7 +75,7 @@ const requiredMagazineJsTokens = [
   "bindMagazinePopular",
   "bindMagazineRelated",
   "bindMagazineScrollReveal",
-  "playLeadFeatureReveal",
+  "is-magazine-reveal-ready",
   "magazine-frame-height",
   "data-magazine-related",
   "is-popular-visible",
@@ -83,7 +86,7 @@ const requiredMagazineHomeTokens = [
   "/app/javascript/js/trendypicker-magazine.js",
   'id="magazine_home_frame"',
   "data-list-src",
-  "perpage=100",
+  "perpage=12",
   "magazine-newsletter",
 ];
 
@@ -130,6 +133,20 @@ const requiredOrdersTokens = [
 ];
 
 const forbiddenOrdersTokens = ["board_category2", 'class="order_tab"', "?v="];
+
+const requiredCartTokens = [
+  "/data/skin/{skin}/css/redesign/trendypicker-cart.css",
+  "/app/javascript/js/trendypicker-cart.js",
+  'id="cart_form"',
+  'name="cart_option_seq[]"',
+  "btn_all_order",
+  "btn_select_del",
+  "cart-promo-card",
+  "cart-coupon-card",
+  "cartpromotioncode",
+  "getPromotionJson?mode=cart",
+  "addsettle",
+];
 
 const requiredWishlistTokens = [
   "/data/skin/{skin}/css/redesign/trendypicker-wishlist.css",
@@ -459,11 +476,6 @@ const requiredProfileCssPatterns = [
     pattern: /\.bo-profile-address__card\.is-default\s*\{[^}]*background:/s,
   },
   {
-    label: "address delete button keeps its pink default state",
-    pattern:
-      /\.bo-profile-address__actions\s+\.bo-profile-address__delete\s*\{[^}]*border-color:\s*#f0d8e3;[^}]*color:\s*#d63d75;/s,
-  },
-  {
     label: "profile address modal follows the source responsive dialog shell",
     pattern:
       /\.profile-address-dialog\s*\{[^}]*place-items:\s*center;[\s\S]*?\.profile-address-modal\s*\{[^}]*width:\s*min\(680px,\s*calc\(100vw\s*-\s*48px\)\);[^}]*overflow:\s*hidden;[^}]*border-radius:\s*18px;/s,
@@ -574,6 +586,20 @@ if (existsSync(ordersPath)) {
   if (orders.includes("custom_tracking_number = 'EE123456789KR'")) {
     failed = true;
     console.error("Orders page must not replace the live EMS tracking number with sample data");
+  }
+}
+
+const cartPath = resolve(workskinRoot, "order/cart.html");
+if (existsSync(cartPath)) {
+  const cart = readFileSync(cartPath, "utf8");
+  for (const token of requiredCartTokens) {
+    if (cart.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall cart token: ${token}`);
+  }
+  if (cart.includes("?v=")) {
+    failed = true;
+    console.error("Cart must not use ?v= on CSS/JS links");
   }
 }
 
@@ -979,15 +1005,10 @@ if (existsSync(profileJsPath)) {
     'card.className = "bo-profile-address__card is-default"',
     "syncProfileSideAlignment",
     "--bo-profile-side-offset",
-    "setDefaultAddress",
     'nativeModal.dataset.addressSubmitIntent = "save"',
     'nativeModal.dataset.addressSubmitIntent = "default"',
-    'const isSilentDefaultUpdate = pendingAddressOperation === "set-default"',
     "defaultInput.checked = shouldSetDefault",
     'defaultInput.removeAttribute("checked")',
-    'classList.add("is-default-updating")',
-    'classList.contains("is-default-updating")',
-    'pendingAddressOperation = "set-default"',
     "trendypicker-address-footer",
     "defaultButton.dataset.trendypickerSubmitBound",
     "if (!validateNativeAddressForm(nativeModal)) return",

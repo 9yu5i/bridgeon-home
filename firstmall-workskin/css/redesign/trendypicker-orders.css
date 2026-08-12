@@ -1,6 +1,18 @@
+/* TrendyPicker Orders
+   /mypage/order_catalog → mypage/order_catalog.html
+
+   1. Page chrome / hide Firstmall
+   2. Head / search / filters
+   3. Order cards
+   4. Paging
+   5. Dialogs / review
+   6. Detail modal
+   7. Responsive — last
+*/
+
+/* ——— Page chrome ——— */
 .bo-orders-shell {
   --orders-purple: #7b3fe4;
-  --orders-deep: #31136c;
   --orders-line: #e4dced;
   --orders-ink: #15131c;
   min-height: 100vh;
@@ -32,6 +44,7 @@
   display: none !important;
 }
 
+/* ——— Head / search / filters ——— */
 .bo-orders-head {
   display: block !important;
   visibility: visible;
@@ -394,6 +407,7 @@
   display: none !important;
 }
 
+/* ——— Order cards ——— */
 .bo-orders-page .order_list {
   margin: 0;
   padding: 0;
@@ -520,8 +534,7 @@
   background: #efe9f7;
 }
 
-.bo-orders-page .orders-thumb .goods_thumb,
-.bo-orders-page .orders-preview-thumb {
+.bo-orders-page .orders-thumb .goods_thumb {
   display: block;
   width: 100%;
   height: 100%;
@@ -603,54 +616,6 @@
 
 .bo-orders-page .orders-mobile-items {
   display: none;
-}
-
-.bo-orders-page .paging_navigation {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 32px;
-  font-size: inherit;
-  text-align: center;
-}
-
-.bo-orders-page .paging_navigation a,
-.bo-orders-page .paging_navigation input {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  min-width: 34px;
-  height: 34px;
-  margin: 0 !important;
-  padding: 0 10px;
-  border: 0 !important;
-  border-radius: 8px;
-  color: #7d7691 !important;
-  background: transparent !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  line-height: 1 !important;
-  text-indent: 0 !important;
-  vertical-align: middle;
-}
-
-.bo-orders-page .paging_navigation a:hover,
-.bo-orders-page .paging_navigation a:focus-visible {
-  color: var(--orders-purple) !important;
-  background: #f3ebff !important;
-  position: static;
-  z-index: auto;
-}
-
-.bo-orders-page .paging_navigation a.on {
-  color: #fff !important;
-  background: var(--orders-purple) !important;
-  border-color: var(--orders-purple) !important;
-  font-weight: 600 !important;
-  cursor: default;
 }
 
 .bo-orders-page .order_btn,
@@ -735,6 +700,57 @@
   display: none !important;
 }
 
+/* ——— Paging ——— */
+.bo-orders-page .paging_navigation {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 32px;
+  font-size: inherit;
+  text-align: center;
+}
+
+.bo-orders-page .paging_navigation a,
+.bo-orders-page .paging_navigation input {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 34px;
+  height: 34px;
+  margin: 0 !important;
+  padding: 0 10px;
+  border: 0 !important;
+  border-radius: 8px;
+  color: #7d7691 !important;
+  background: transparent !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  text-indent: 0 !important;
+  vertical-align: middle;
+}
+
+.bo-orders-page .paging_navigation a:hover,
+.bo-orders-page .paging_navigation a:focus-visible {
+  color: var(--orders-purple) !important;
+  background: #f3ebff !important;
+  position: static;
+  z-index: auto;
+}
+
+.bo-orders-page .paging_navigation a.on {
+  color: #fff !important;
+  background: var(--orders-purple) !important;
+  border-color: var(--orders-purple) !important;
+  font-weight: 600 !important;
+  cursor: default;
+}
+
+
+/* ——— Dialogs / review ——— */
 .orders-dialog[hidden] {
   display: none;
 }
@@ -920,6 +936,7 @@
   cursor: wait;
 }
 
+/* ——— Detail modal ——— */
 body.is-orders-detail-open {
   overflow: hidden;
 }
@@ -1265,11 +1282,11 @@ body.is-orders-detail-open {
   display: none;
 }
 
+/* ——— Responsive ——— */
 @media (min-width: 1121px) {
   .bo-orders-shell .subpage_container.bo-orders-page {
     padding-top: 60px;
   }
-
 }
 
 @media (max-width: 1120px) {
@@ -1540,10 +1557,6 @@ body.is-orders-detail-open {
 }
 
 @media (max-width: 760px) {
-  .bo-orders-shell {
-    padding-top: 30px;
-  }
-
   .bo-orders-page {
     width: calc(100% + 8px);
     max-width: calc(100% + 8px);

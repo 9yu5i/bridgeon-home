@@ -1,3 +1,15 @@
+/* TrendyPicker Membership
+   /mypage/membership → mypage/membership.html
+   /main/membership redirects here
+
+   1. Page chrome
+   2. Head
+   3. Status / progress
+   4. Benefits board / tiers
+   5. Responsive — last
+*/
+
+/* ——— Page chrome ——— */
 .bo-membership-shell {
   background: #fff;
 }
@@ -10,6 +22,7 @@
   color: var(--bo-text);
 }
 
+/* ——— Head ——— */
 .subpage_wrap .subpage_container .bo-membership-head {
   margin: 0 0 24px;
   padding: 0;
@@ -31,6 +44,7 @@
   line-height: 1.45;
 }
 
+/* ——— Status / progress ——— */
 .bo-membership-status {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
@@ -130,6 +144,7 @@
   border-radius: 999px;
 }
 
+/* ——— Benefits board / tiers ——— */
 .bo-membership-benefits {
   position: relative;
   overflow: hidden;
@@ -423,6 +438,7 @@
   font-weight: 700;
 }
 
+/* ——— Responsive ——— */
 @media (max-width: 1120px) {
   .bo-membership-head h1 {
     font-size: 24px;

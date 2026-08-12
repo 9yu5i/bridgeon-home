@@ -1,3 +1,13 @@
+/**
+ * TrendyPicker Profile birthday calendar
+ * /mypage/myinfo → mypage/myinfo.html
+ * Runs after trendypicker-profile.js, which marks input[name="birthday"]
+ * with data-profile-birthday.
+ *
+ * 1. Guard: [data-profile-birthday]
+ * 2. Custom month/year selects (page copy, do not merge)
+ * 3. Day grid + Today / Done; writes YYYY-MM-DD onto the native input
+ */
 (() => {
   const input = document.querySelector("[data-profile-birthday]");
   if (!input) return;

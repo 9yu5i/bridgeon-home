@@ -1,9 +1,16 @@
-/*
-  TrendyPicker Time Deal (Firstmall)
-  - Page: /promotion/timedeal → promotion/timedeal.html
-  - Design: timedeal/timedeal.html prototype
+/* TrendyPicker Time Deal
+   /promotion/timedeal → promotion/timedeal.html
+   Prototype: timedeal/timedeal.html
+
+   1. Page chrome / tokens
+   2. Hero / countdown / schedule
+   3. Shell / toolbar
+   4. Product grid (wish/cart in trendypicker-listing-cards.css)
+   5. Paging
+   6. Responsive — last
 */
 
+/* ——— Page chrome ——— */
 html.is-timedeal-page {
   height: auto !important;
   min-height: 100%;
@@ -103,6 +110,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   font-family: Pretendard, "Noto Sans KR", sans-serif;
 }
 
+/* ——— Hero / countdown / schedule ——— */
 .bo-timedeal-hero.listing-hero--time-deal {
   position: relative;
   z-index: auto;
@@ -283,10 +291,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.timedeal-schedule-tab.is-active {
-  border-left-color: transparent;
-}
-
+.timedeal-schedule-tab.is-active,
 .timedeal-schedule-tab.is-active + .timedeal-schedule-tab {
   border-left-color: transparent;
 }
@@ -344,6 +349,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   font-weight: 800;
 }
 
+/* ——— Shell / toolbar ——— */
 .bo-timedeal-shell {
   position: relative;
   z-index: 4;
@@ -630,7 +636,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   clip: rect(0, 0, 0, 0);
 }
 
-/* ===== Product grid — ported from listing/listing.css (.listing-grid) ===== */
+/* ——— Product grid / wish / cart ——— */
 /* Grid must be on the UL only — never on #searchedItemDisplay itself */
 .bo-timedeal-shell #searchedItemDisplay,
 .bo-timedeal-shell #searchedItemDisplay.searched_item_display {
@@ -807,115 +813,6 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
 .bo-timedeal-shell .respGoodsZzim:not(.listing-card-wish),
 .bo-timedeal-shell .is-timedeal-zzim-duplicate {
   display: none !important;
-}
-
-.bo-timedeal-shell .listing-card-wish {
-  position: absolute !important;
-  right: 10px;
-  bottom: 10px;
-  z-index: 3;
-  display: grid !important;
-  place-items: center;
-  box-sizing: border-box;
-  width: 34px;
-  height: 34px;
-  padding: 0 !important;
-  border: 0;
-  border-radius: 50%;
-  background: #fff !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  cursor: pointer;
-}
-
-.bo-timedeal-shell .listing-card-wish::before,
-.bo-timedeal-shell .listing-card-wish::after,
-.bo-timedeal-shell .listing-card-wish-inline::before,
-.bo-timedeal-shell .listing-card-wish-inline::after,
-.bo-timedeal-shell .display_zzim::before,
-.bo-timedeal-shell .display_zzim::after,
-.bo-timedeal-shell .respGoodsZzim::before,
-.bo-timedeal-shell .respGoodsZzim::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 18px;
-  height: 18px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 18px auto;
-  transform: none;
-  transition: opacity 0.25s ease;
-}
-
-.bo-timedeal-shell .listing-card-wish-inline {
-  position: relative;
-}
-
-.bo-timedeal-shell .listing-card-wish::before,
-.bo-timedeal-shell .listing-card-wish-inline::before,
-.bo-timedeal-shell .display_zzim::before,
-.bo-timedeal-shell .respGoodsZzim::before {
-  background-image: url("../../images/listing/wish_pink.png");
-  opacity: 1;
-}
-
-.bo-timedeal-shell .listing-card-wish::after,
-.bo-timedeal-shell .listing-card-wish-inline::after,
-.bo-timedeal-shell .display_zzim::after,
-.bo-timedeal-shell .respGoodsZzim::after {
-  background-image: url("../../images/listing/wish_hover.png");
-  opacity: 0;
-}
-
-.bo-timedeal-shell .listing-card-wish img,
-.bo-timedeal-shell .listing-card-wish-inline img,
-.bo-timedeal-shell .display_zzim img,
-.bo-timedeal-shell .respGoodsZzim img,
-.bo-timedeal-shell .respGoodsZzim .zzimImage {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-.bo-timedeal-shell .listing-card-wish.is-active::before,
-.bo-timedeal-shell .listing-card-wish:not(.is-hover-suppressed):hover::before,
-.bo-timedeal-shell .listing-card-wish-inline.is-active::before,
-.bo-timedeal-shell .listing-card-wish-inline:not(.is-hover-suppressed):hover::before,
-.bo-timedeal-shell .listing-card-wish[aria-pressed="true"]::before,
-.bo-timedeal-shell .listing-card-wish-inline[aria-pressed="true"]::before,
-.bo-timedeal-shell .display_zzim:hover::before,
-.bo-timedeal-shell .display_zzim[act="stay"]::before,
-.bo-timedeal-shell .respGoodsZzim:hover::before,
-.bo-timedeal-shell .respGoodsZzim:has(.zzimImage.active)::before,
-.bo-timedeal-shell .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::before {
-  opacity: 0;
-}
-
-.bo-timedeal-shell .listing-card-wish .heart-img,
-.bo-timedeal-shell .listing-card-wish-inline .heart-img,
-.bo-timedeal-shell .listing-card-wish:hover .heart-img,
-.bo-timedeal-shell .listing-card-wish-inline:hover .heart-img,
-.bo-timedeal-shell .listing-card-wish:hover .heart-img:not(.zzim-hidden),
-.bo-timedeal-shell .listing-card-wish-inline:hover .heart-img:not(.zzim-hidden) {
-  transform: none !important;
-}
-
-.bo-timedeal-shell .listing-card-wish.is-active::after,
-.bo-timedeal-shell .listing-card-wish:not(.is-hover-suppressed):hover::after,
-.bo-timedeal-shell .listing-card-wish-inline.is-active::after,
-.bo-timedeal-shell .listing-card-wish-inline:not(.is-hover-suppressed):hover::after,
-.bo-timedeal-shell .listing-card-wish[aria-pressed="true"]::after,
-.bo-timedeal-shell .listing-card-wish-inline[aria-pressed="true"]::after,
-.bo-timedeal-shell .display_zzim:hover::after,
-.bo-timedeal-shell .display_zzim[act="stay"]::after,
-.bo-timedeal-shell .respGoodsZzim:hover::after,
-.bo-timedeal-shell .respGoodsZzim:has(.zzimImage.active)::after,
-.bo-timedeal-shell .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::after {
-  opacity: 1;
-  transform: none;
 }
 
 .bo-timedeal-shell .listing-card-body,
@@ -1122,8 +1019,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
 .bo-timedeal-shell .goods_price_area .discount_rate,
 .bo-timedeal-shell .searched_item_display .item_info_area .goods_price_area .discount_rate,
 .bo-timedeal-shell .searched_item_display .goods_list_style5 .item_info_area .goods_price_area .discount_rate,
-.bo-timedeal-shell .listing-card-price .discount,
-.bo-timedeal-shell .listing-card-discount {
+.bo-timedeal-shell .listing-card-price .discount {
   display: none !important;
 }
 
@@ -1135,10 +1031,6 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
 .bo-timedeal-shell .searched_item_display .item_info_area .goods_brand_area,
 .bo-timedeal-shell .searched_item_display .item_info_area .brand_name_area {
   display: block;
-}
-
-.bo-timedeal-shell .listing-card-actions--desktop {
-  display: none;
 }
 
 .bo-timedeal-shell .listing-card-cart {
@@ -1162,11 +1054,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
 }
 
 .bo-timedeal-shell .listing-card-cart::before,
-.bo-timedeal-shell .listing-card-cart::after,
-.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
-.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after,
-.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline)::before,
-.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline)::after {
+.bo-timedeal-shell .listing-card-cart::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1179,32 +1067,25 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   transition: opacity 0.25s ease;
 }
 
-.bo-timedeal-shell .listing-card-cart::before,
-.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
-.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline)::before {
+.bo-timedeal-shell .listing-card-cart::before {
   background-image: url("../../images/listing/cart.png");
   opacity: 1;
 }
 
-.bo-timedeal-shell .listing-card-cart::after,
-.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after,
-.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline)::after {
+.bo-timedeal-shell .listing-card-cart::after {
   background-image: url("../../images/listing/cart_hover.png");
   opacity: 0;
 }
 
-.bo-timedeal-shell .listing-card-cart:hover::before,
-.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::before,
-.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover::before {
+.bo-timedeal-shell .listing-card-cart:hover::before {
   opacity: 0;
 }
 
-.bo-timedeal-shell .listing-card-cart:hover::after,
-.bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::after,
-.bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover::after {
+.bo-timedeal-shell .listing-card-cart:hover::after {
   opacity: 1;
 }
 
+/* ——— Paging ——— */
 .bo-timedeal-shell .paging_navigation {
   display: flex;
   flex-wrap: wrap;
@@ -1277,6 +1158,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   display: none;
 }
 
+/* ——— Responsive ——— */
 @media (min-width: 761px) {
   .bo-timedeal-main {
     --listing-shell-margin-top: calc(-1 * clamp(23px, 5.208vw, 100px));
@@ -1539,55 +1421,6 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
     display: none !important;
   }
 
-  .bo-timedeal-shell .listing-card-actions--desktop {
-    display: grid;
-    grid-template-columns: 1fr 40px;
-    gap: 8px;
-    padding: 0 10px 10px;
-  }
-
-  .bo-timedeal-shell .listing-card-actions--desktop button,
-  .bo-timedeal-shell .listing-card-actions--desktop a {
-    position: relative;
-    display: grid;
-    place-items: center;
-    box-sizing: border-box;
-    width: 100%;
-    min-width: 0;
-    height: 35px !important;
-    min-height: 35px !important;
-    max-height: 35px !important;
-    padding: 0 !important;
-    border: 1px solid #ded8e8;
-    border-radius: 10px;
-    color: var(--purple);
-    background-color: #fff;
-    transition: border-color 0.25s ease, background-color 0.25s ease;
-  }
-
-  .bo-timedeal-shell .listing-card-actions--desktop .listing-card-wish-inline {
-    position: relative;
-    right: auto;
-    bottom: auto;
-    width: 40px;
-    min-width: 40px;
-    border: 1px solid #ded8e8;
-    border-radius: 10px;
-    box-shadow: none;
-    background-image: none;
-  }
-
-  .bo-timedeal-shell .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover,
-  .bo-timedeal-shell .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover {
-    border-color: #7943e2;
-    background-color: #7943e2;
-  }
-
-  .bo-timedeal-shell .listing-card-actions--desktop .listing-card-wish-inline:hover {
-    border-color: #ded8e8;
-    background-color: #fff;
-  }
-
   .bo-timedeal-shell .listing-card-cart {
     display: none;
   }
@@ -1802,17 +1635,10 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   .timedeal-schedule-tab.is-active {
     border-color: transparent;
     background: transparent;
-  }
-
-  .timedeal-schedule-tab:not(:first-child) {
-    border-left: 1px solid rgba(168, 85, 247, 0.38);
-  }
-
-  .timedeal-schedule-tab.is-active {
     border-left-color: transparent;
   }
 
-  .timedeal-schedule-tab.is-active + .timedeal-schedule-tab {
+  .timedeal-schedule-tab:not(:first-child) {
     border-left: 1px solid rgba(168, 85, 247, 0.38);
   }
 

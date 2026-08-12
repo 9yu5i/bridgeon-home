@@ -1,5 +1,20 @@
 # TrendyPicker Decisions
 
+## 2026-08-12: Firstmall New vs Modified Uses The 2026-07-30 Original Skin
+
+Decision:
+
+- The read-only original skin is
+  `C:\Users\user\Desktop\(DONT CHANGE-20260730)Firstmall-original\responsive_food_mealkit_gl`.
+- New vs modified for `firstmall-workskin/` is always that folder, never git status.
+- Do not edit the original folder.
+
+Why:
+
+- `firstmall-workskin/` is an upload package copied into this repo. Git "added" does not mean
+  the live Firstmall skin lacked the file. The 2026-07-30 dump is the homepage/skin source of
+  truth.
+
 ## 2026-08-05: Firstmall Redesign Uses Existing HTML + New CSS Files Only
 
 Decision:
@@ -337,6 +352,44 @@ Why:
 - Rebuilding those controls as static HTML would disconnect validation and account behavior.
 - A scoped stylesheet gives the native form the TrendyPicker visual language without making
   `common.css`, `user.css`, or `member/register_form.html` more complicated.
+
+## 2026-08-12: Shared Listing Cards + Dead Redesign Classes
+
+Decision:
+
+- Delete redesign BEM classes that are not present in work-skin HTML or JS. Keep Firstmall-native
+  class overrides (`visual_title`, `sale_price`, `btn_resp`, …) even when they are absent from
+  static templates, because Firstmall can inject them at runtime.
+- Extract copied listing-card / wish / cart CSS into
+  `css/redesign/trendypicker-listing-cards.css`, scoped to `.tp-listing-grid`. Link it before the
+  page CSS on catalog, best, new, brand detail, and timedeal. Page files keep lattice columns,
+  heroes, badges, and page-specific chrome (catalog 18px/`US$`, timedeal deal badge).
+
+Why:
+
+- `npm run check` unused-class scans the whole repo, so prototype HTML can mask Firstmall-dead
+  classes. A work-skin HTML/JS audit is a separate pass.
+- Wish/cart/heart rules were copied five times. One shared file is the owner; page files should
+  not grow another copy.
+
+## 2026-08-12: Redesign Style Check Is Required
+
+Decision:
+
+- Run `tools/check-css-style.mjs` as part of `npm run check` and `npm run check:firstmall`.
+- Fail on duplicate selectors in the same `trendypicker-*` CSS file/media context, and on
+  files whose `!important` ratio exceeds 25%.
+- Warn on file growth past a recorded baseline, and on `!important` rising past a recorded
+  baseline or 10% on a new file.
+- Do not treat large page CSS/JS as a defect. Do not split My Page, Orders, Profile,
+  Magazine, or Time Deal files just to silence a size warning.
+
+Why:
+
+- Multiple agents keep appending leftover selector blocks and extra `!important` instead of
+  editing the existing rule.
+- A standing 1200-line warning on every large page taught agents to ignore the check.
+- `!important` should stay exceptional: Firstmall ID/legacy overrides only.
 
 ## 2026-07-31: Use TrendyPicker As The Only Product Brand
 

@@ -1,11 +1,15 @@
-/*
-  TrendyPicker Auth pages (Firstmall)
-  - /member/login → member/login.html
-  - /member/find → member/find.html
-  - /member/register → member/register.html (+ register_form.html)
-  - Compact frosted card on dark purple page; Firstmall form/JS intact
+/* TrendyPicker Auth
+   /member/login → member/login.html
+   /member/find → member/find.html
+   /member/register → member/register.html
+
+   1. Page chrome / tokens
+   2. Login shell / tabs / form
+   3. Find ID / Reset / Register
+   4. Responsive — last
 */
 
+/* ——— Page chrome ——— */
 html.is-auth-page,
 body.is-login-page,
 body.is-auth-page,
@@ -68,7 +72,7 @@ body.is-auth-page .title_container {
   color: var(--bo-text);
 }
 
-/* Frosted glass shell — reference style; form content unchanged */
+/* ——— Login shell / tabs / form ——— */
 .bo-login-shell {
   position: relative;
   z-index: 1;
@@ -656,45 +660,7 @@ html.is-auth-page body.is-auth-page .bo-login-panel .hide {
   display: none;
 }
 
-@media (min-width: 761px) {
-  .bo-login-main {
-    padding: 64px 24px 100px;
-  }
-
-  .bo-login-shell {
-    width: min(100%, 420px);
-    padding: 36px 32px 38px;
-    border-radius: 28px;
-    box-shadow:
-      0 0 0 1px rgba(214, 196, 255, 0.22),
-      0 0 32px rgba(155, 107, 255, 0.4),
-      0 0 72px rgba(123, 63, 228, 0.32),
-      0 0 140px rgba(123, 63, 228, 0.18);
-  }
-}
-
-@media (max-width: 760px) {
-  .bo-login-main {
-    padding: 28px 14px 64px;
-  }
-
-  .bo-login-shell {
-    width: min(100%, 380px);
-    padding: 26px 18px 28px;
-    border-radius: 18px;
-  }
-
-  html.is-auth-page body.is-auth-page .bo-login-tabs li a,
-  html.is-auth-page body.is-auth-page .bo-login-main .tab_basic > ul > li > a {
-    height: 38px;
-    min-height: 38px;
-    max-height: 38px;
-    font-size: 13px;
-  }
-}
-
-/* ========== Find ID / Reset Password + Register ========== */
-
+/* ——— Find ID / Reset / Register ——— */
 .bo-login-main--register .bo-login-shell {
   width: min(100%, 520px);
 }
@@ -1153,12 +1119,6 @@ body.is-auth-page .bo-login-main--register .resp_member_join_wrap .resp_member_j
   border: 0;
 }
 
-@media (max-width: 420px) {
-  body.is-auth-page .bo-login-main--register .resp_member_join_wrap .resp_member_join .resp_join_table li.custom_form.other_evt0 {
-    grid-template-columns: 1fr;
-  }
-}
-
 .bo-login-main--register .resp_join_table .btn_resp {
   border-radius: 999px;
 }
@@ -1188,14 +1148,54 @@ body.is-auth-page .bo-login-main--register .resp_member_join_wrap .resp_member_j
   display: none;
 }
 
+/* ——— Responsive ——— */
 @media (min-width: 761px) {
+  .bo-login-main {
+    padding: 64px 24px 100px;
+  }
+
+  .bo-login-shell {
+    width: min(100%, 420px);
+    padding: 36px 32px 38px;
+    border-radius: 28px;
+    box-shadow:
+      0 0 0 1px rgba(214, 196, 255, 0.22),
+      0 0 32px rgba(155, 107, 255, 0.4),
+      0 0 72px rgba(123, 63, 228, 0.32),
+      0 0 140px rgba(123, 63, 228, 0.18);
+  }
+
   .bo-login-main--register .bo-login-shell {
     width: min(100%, 540px);
   }
 }
 
 @media (max-width: 760px) {
+  .bo-login-main {
+    padding: 28px 14px 64px;
+  }
+
+  .bo-login-shell {
+    width: min(100%, 380px);
+    padding: 26px 18px 28px;
+    border-radius: 18px;
+  }
+
+  html.is-auth-page body.is-auth-page .bo-login-tabs li a,
+  html.is-auth-page body.is-auth-page .bo-login-main .tab_basic > ul > li > a {
+    height: 38px;
+    min-height: 38px;
+    max-height: 38px;
+    font-size: 13px;
+  }
+
   .bo-login-main--register .bo-login-shell {
     width: min(100%, 400px);
+  }
+}
+
+@media (max-width: 420px) {
+  body.is-auth-page .bo-login-main--register .resp_member_join_wrap .resp_member_join .resp_join_table li.custom_form.other_evt0 {
+    grid-template-columns: 1fr;
   }
 }

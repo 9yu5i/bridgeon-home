@@ -1,3 +1,13 @@
+/**
+ * TrendyPicker My Page shared shell
+ * Loaded on account pages, Help Center, and service shells.
+ *
+ * 1. Same-origin page transitions + scroll-to-top
+ * 2. Dashboard reveal, live-order track modal, avatar upload
+ * 3. Coupon / review / wishlist brand hydrators
+ * 4. Reviews filters + edit layer
+ * 5. Logout confirm
+ */
 (() => {
   const pageTransitionKey = "trendypicker-page-transition";
   const scrollTopOnNavigationKey = "trendypicker-scroll-top";
@@ -190,11 +200,10 @@
 
     if (!revealTargets.length) return;
 
-    revealTargets.forEach((target, index) => {
+    revealTargets.forEach((target) => {
       if (!target.classList.contains("bo-scroll-reveal")) {
         target.classList.add("bo-page-reveal");
       }
-      target.style.setProperty("--bo-reveal-delay", `${Math.min(index, 3) * 0.06}s`);
     });
 
     const showRevealTarget = (target) => target.classList.add("is-inview");
@@ -206,13 +215,21 @@
 
     const revealAll = () => revealTargets.forEach(showRevealTarget);
 
-    // Paint opacity:0 first, then animate in on the next frames.
+    // A single rAF isn't reliable here: if the browser hasn't painted
+    // between adding .bo-page-reveal (opacity:0) and adding .is-inview
+    // (opacity:1), it can collapse both into one paint and skip the CSS
+    // transition entirely — which is exactly why the fade stopped playing
+    // when this was simplified to one rAF. Nesting two rAFs guarantees an
+    // actual paint of the opacity:0 state happens first. This is still
+    // fast (~1 frame, not the old 900ms failsafe) and the fade itself is
+    // now short (0.35s).
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(revealAll);
     });
 
-    // Failsafe: never leave dashboard cards stuck invisible.
-    window.setTimeout(revealAll, 900);
+    // Safety net in case rAF never fires (e.g. a backgrounded tab) —
+    // short, not the old 900ms.
+    window.setTimeout(revealAll, 300);
   };
 
   initDashboardReveal();
@@ -243,6 +260,42 @@
     if (!response.ok) return null;
 
     return new DOMParser().parseFromString(await response.text(), "text/html");
+  };
+
+  // Run async work over a list with at most `limit` in flight at once —
+  // used below so brand hydration doesn't fire dozens of full product-page
+  // fetches (~240KB each) all at once, which was queuing behind the
+  // browser's per-host connection cap and stretching dashboard load past
+  // 6+ seconds.
+  const mapLimit = async (items, limit, mapper) => {
+    let nextIndex = 0;
+    const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (nextIndex < items.length) {
+        const index = nextIndex;
+        nextIndex += 1;
+        await mapper(items[index], index);
+      }
+    });
+    await Promise.all(workers);
+  };
+
+  // Product-page brand lookups resolved once this session don't need to be
+  // fetched again on the next dashboard visit.
+  const PRODUCT_BRAND_CACHE_KEY = "bo-product-brand-cache-v1";
+  const readProductBrandCache = () => {
+    try {
+      return JSON.parse(sessionStorage.getItem(PRODUCT_BRAND_CACHE_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  };
+  const productBrandCache = readProductBrandCache();
+  const writeProductBrandCache = () => {
+    try {
+      sessionStorage.setItem(PRODUCT_BRAND_CACHE_KEY, JSON.stringify(productBrandCache));
+    } catch {
+      // Storage full/unavailable — the cache is a nice-to-have, not required.
+    }
   };
 
   const hydrateCouponCount = async () => {
@@ -325,6 +378,7 @@
     const productBrandRequests = new Map();
 
     const loadProductBrand = (url) => {
+      if (productBrandCache[url] !== undefined) return Promise.resolve(productBrandCache[url]);
       if (productBrandRequests.has(url)) return productBrandRequests.get(url);
 
       const request = fetchHtmlDocument(url)
@@ -341,23 +395,31 @@
           const bracketBrand = productName.match(/^\[([^\]]+)\]/);
           return bracketBrand ? bracketBrand[1].trim() : "";
         })
+        .then((brandName) => {
+          productBrandCache[url] = brandName;
+          writeProductBrandCache();
+          return brandName;
+        })
         .catch(() => "");
 
       productBrandRequests.set(url, request);
       return request;
     };
 
-    await Promise.all(
-      brandElements
-        .filter((element) => !element.textContent.trim())
-        .map(async (element) => {
-          const productUrl = element.closest(".bo-product")?.querySelector(".bo-product__image")
-            ?.href;
-          if (!productUrl) return;
+    // At most 4 of these ~240KB full product-page fetches in flight at
+    // once, instead of firing every missing brand simultaneously and
+    // letting the browser's own connection queue serialize them anyway.
+    await mapLimit(
+      brandElements.filter((element) => !element.textContent.trim()),
+      4,
+      async (element) => {
+        const productUrl = element.closest(".bo-product")?.querySelector(".bo-product__image")
+          ?.href;
+        if (!productUrl) return;
 
-          const brandName = await loadProductBrand(productUrl);
-          if (brandName) element.textContent = brandName;
-        }),
+        const brandName = await loadProductBrand(productUrl);
+        if (brandName) element.textContent = brandName;
+      },
     );
   };
 

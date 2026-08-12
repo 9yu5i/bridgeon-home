@@ -137,6 +137,7 @@ Products come from Firstmall `#searchedItemDisplay` (`searchMode=new_arrivals`) 
 client-side by brand. Upload listing wish/cart icons under `images/listing/`.
 
 ```text
+[test skin]/css/redesign/trendypicker-listing-cards.css
 [test skin]/css/redesign/trendypicker-new.css
 [test skin]/goods/new_arrivals.html
 [test skin]/images/listing/cart.png
@@ -157,6 +158,7 @@ Products stay on Firstmall `#searchedItemDisplay` (`searchMode=timedeal`). Uploa
 
 ```text
 [test skin]/promotion/timedeal.html
+[test skin]/css/redesign/trendypicker-listing-cards.css
 [test skin]/css/redesign/trendypicker-timedeal.css
 [test skin]/app/javascript/js/trendypicker-timedeal.js
 [test skin]/images/timedeal/clock_pink.png
@@ -174,6 +176,7 @@ Wish: `listing-card-wish-inline` (design_list cards) and `.goodsZzimBtn` both us
 
 ```text
 [test skin]/goods/catalog.html
+[test skin]/css/redesign/trendypicker-listing-cards.css
 [test skin]/css/redesign/trendypicker-catalog.css
 [test skin]/app/javascript/js/trendypicker-catalog.js
 [test skin]/images/listing/wish_pink.png
@@ -188,8 +191,8 @@ The linked Customer Service destinations (Notice, FAQ, Q&A, Guide, Returns) use 
 sidebar plus `.help-topic-shell` (breadcrumb, topic title, Topics nav, native board/content body).
 About Us / Contact / Terms / Privacy still use the earlier Help Topic head treatment and can be
 shelled next. Shared presentation lives in `css/redesign/trendypicker-help-topic.css`.
-`app/javascript/js/trendypicker-help-topic.js` keeps the Topics nav pinned while scrolling on
-desktop, because Firstmall layout overflow otherwise breaks native `position: sticky`.
+`app/javascript/js/trendypicker-help-topic.js` owns Help Topic selects, FAQ accordion, and
+board/article cleanup. Topics nav uses CSS `position: sticky`.
 
 `mypage/order_catalog.html` keeps Firstmall's real `record`, `items`, and `options` collections,
 the native date search, order detail, cancellation, refund, exchange/return inquiry, review, and

@@ -1,3 +1,14 @@
+/**
+ * TrendyPicker Orders
+ * /mypage/order_catalog → mypage/order_catalog.html
+ *
+ * 1. Guard: .bo-orders-page; force sc_date=0 when Firstmall omits it
+ * 2. Build summary cards from native .order_list rows
+ * 3. Fetch cancel/refund + return history into the same list
+ * 4. Hydrate shipping address from order_view
+ * 5. Detail / track / review modals
+ * 6. Search, status filter, custom period select
+ */
 (() => {
   const page = document.querySelector(".bo-orders-page");
   if (!page) return;

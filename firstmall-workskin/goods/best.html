@@ -7,6 +7,7 @@
   category is a plain page navigation — no AJAX, no scroll-guard needed.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-listing-cards.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-best.css" />
 <style>
 #goodsSearchForm { display: none !important; }
@@ -44,7 +45,7 @@ if (document.body) {
 		{=showGoodsSearchFormLight()}
 
 		<!-- product grid module: goods/search_list_template.html -->
-		<div id="searchedItemDisplay" class="searched_item_display bo-best-grid" data-displaytype="lattice"></div>
+		<div id="searchedItemDisplay" class="searched_item_display bo-best-grid tp-listing-grid" data-displaytype="lattice"></div>
 	</div>
 </main>
 
@@ -59,4 +60,4 @@ $(function() {
 	colorFilter_white("#searchFilterSelected .color_type");
 });
 </script>
-<script src="/app/javascript/js/trendypicker-best.js?v={=date('YmdHis')}"></script>
+<script src="/app/javascript/js/trendypicker-best.js"></script>

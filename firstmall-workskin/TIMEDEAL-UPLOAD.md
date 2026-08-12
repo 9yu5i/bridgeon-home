@@ -9,6 +9,7 @@ Skin entry: `promotion/timedeal.html`
 ```text
 /data/design_list/timedeal_listing_style.html
 [test skin]/promotion/timedeal.html
+[test skin]/css/redesign/trendypicker-listing-cards.css
 [test skin]/css/redesign/trendypicker-timedeal.css
 [test skin]/app/javascript/js/trendypicker-timedeal.js
 [test skin]/images/timedeal/clock_pink.png

@@ -1,9 +1,16 @@
-/*
-  TrendyPicker category catalog (Firstmall)
-  - Page: /goods/catalog → goods/catalog.html
-  - Design: listing/beauty.html minus redesigned left filter
+/* TrendyPicker category catalog
+   /goods/catalog → goods/catalog.html
+   Prototype: listing/beauty.html (left filter stays Firstmall-native)
+
+   1. Page chrome / overflow
+   2. Hero (category themes)
+   3. Shell / breadcrumbs / toolbar / sort
+   4. Product grid (card/wish in trendypicker-listing-cards.css)
+   5. Catalog card overrides
+   6. Responsive (761 / 1024 / 1023) — last
 */
 
+/* ——— Page chrome ——— */
 html.is-catalog-page,
 html.is-catalog-page.overflow {
   height: auto !important;
@@ -64,6 +71,7 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   font-family: Pretendard, "Noto Sans KR", sans-serif;
 }
 
+/* ——— Hero ——— */
 .bo-catalog-hero {
   position: relative;
   min-height: clamp(260px, 27vw, 520px);
@@ -120,6 +128,7 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   font-weight: 800;
 }
 
+/* ——— Shell / toolbar / sort ——— */
 .bo-catalog-shell {
   position: relative;
   z-index: 2;
@@ -337,7 +346,7 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   height: 18px;
 }
 
-/* Product grid */
+/* ——— Product grid + card ——— */
 .bo-catalog-grid {
   display: block !important;
   width: 100% !important;
@@ -368,99 +377,22 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   background: transparent !important;
 }
 
+/* ——— Catalog card overrides ——— */
 .bo-catalog-grid .listing-card,
 .bo-catalog-grid .gl_item {
   display: flex !important;
   flex-direction: column;
-  width: 100% !important;
-  max-width: none !important;
-  float: none !important;
-  margin: 0 !important;
-  overflow: hidden;
-  border: 1px solid #ece7f4;
   border-radius: 18px;
-  background: #fff;
 }
 
 .bo-catalog-grid .listing-card-media,
 .bo-catalog-grid .item_img_area {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background: #f6f3fb;
-}
-
-.bo-catalog-grid .listing-card-image,
-.bo-catalog-grid .item_img_area img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  border-radius: 18px 18px 0 0;
 }
 
 .bo-catalog-grid .listing-card-body,
 .bo-catalog-grid .item_info_area {
-  display: flex;
-  flex-direction: column;
   padding: 10px 10px 0;
-  background: #fff;
-}
-
-.bo-catalog-grid .listing-card-brand,
-.bo-catalog-grid .brand_name {
-  display: block;
-  margin: 0 0 4px;
-  overflow: hidden;
-  color: #8f86a0;
-  font-size: 12px;
-  line-height: 1.35;
-  font-weight: 500;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-decoration: none;
-}
-
-.bo-catalog-grid .listing-card-brand:hover,
-.bo-catalog-grid .brand_name:hover {
-  color: var(--bo-purple, #7943e2);
-  text-decoration: none;
-}
-
-.bo-catalog-grid .listing-card-title,
-.bo-catalog-grid .goods_name_area .name {
-  display: -webkit-box;
-  min-height: 2.7em;
-  margin: 0 0 6px;
-  overflow: hidden;
-  color: #171320;
-  font-size: 14px;
-  line-height: 1.35;
-  font-weight: 600;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.bo-catalog-grid .listing-card-title-link:hover .listing-card-title,
-.bo-catalog-grid .goods_name_area a:hover .name {
-  color: var(--bo-purple);
-  text-decoration: none;
-}
-
-.bo-catalog-grid .listing-card-price,
-.bo-catalog-grid .goods_price_area {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 6px;
-  margin: 0 0 10px;
-}
-
-.bo-catalog-grid .sale_price,
-.bo-catalog-grid .listing-card-price strong,
-.bo-catalog-grid .sale_price .num {
-  color: var(--listing-price);
-  font-size: 16px;
-  font-weight: 800;
 }
 
 .bo-catalog-grid .sale_price::before,
@@ -470,231 +402,11 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   content: "US$ ";
 }
 
-.bo-catalog-grid .consumer_price,
-.bo-catalog-grid .listing-card-price del {
-  color: #8f86a0;
-  font-size: 13px;
-}
-
-.bo-catalog-grid .discount_rate,
-.bo-catalog-grid .listing-card-price .discount_rate,
-.bo-catalog-grid .goods_price_area .discount_rate,
-.bo-catalog-grid .searched_item_display .item_info_area .goods_price_area .discount_rate,
 #catalog_page .bo-catalog-grid .discount_rate {
   display: none !important;
 }
 
-/* Wish: listing-card + goodsZzimBtn — never scale, filled pink on hover */
-body.is-catalog-page .listing-card-wish .heart-img,
-body.is-catalog-page .listing-card-wish-inline .heart-img,
-body.is-catalog-page .listing-card-wish:hover .heart-img,
-body.is-catalog-page .listing-card-wish-inline:hover .heart-img,
-body.is-catalog-page .listing-card-wish:hover .heart-img:not(.zzim-hidden),
-body.is-catalog-page .listing-card-wish-inline:hover .heart-img:not(.zzim-hidden),
-body.is-catalog-page .goodsZzimBtn img,
-body.is-catalog-page .respGoodsZzim img {
-  transform: none !important;
-}
-
-.bo-catalog-grid .listing-card-wish-inline,
-.bo-catalog-grid .display_zzim,
-.bo-catalog-grid .respGoodsZzim,
-.bo-catalog-grid .goodsZzimBtn {
-  position: relative;
-  transform: none !important;
-}
-
-/* .listing-card-wish is the thumbnail-overlay heart icon — the native
-   redesign_goods_list_style.css already pins it with position:absolute;
-   right:10px;bottom:10px. Forcing position:relative here (like the inline
-   actions-bar variant needs) knocked it out of that pinned spot. */
-.bo-catalog-grid .listing-card-wish {
-  transform: none !important;
-}
-
-.bo-catalog-grid .listing-card-wish::before,
-.bo-catalog-grid .listing-card-wish::after,
-.bo-catalog-grid .listing-card-wish-inline::before,
-.bo-catalog-grid .listing-card-wish-inline::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 18px;
-  height: 18px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 18px auto;
-  transform: none !important;
-  transition: opacity 0.2s ease;
-}
-
-.bo-catalog-grid .listing-card-wish::before,
-.bo-catalog-grid .listing-card-wish-inline::before {
-  background-image: url("../../images/listing/wish_pink.png");
-  opacity: 1;
-}
-
-.bo-catalog-grid .listing-card-wish::after,
-.bo-catalog-grid .listing-card-wish-inline::after {
-  background-image: url("../../images/listing/wish_hover.png");
-  opacity: 0;
-}
-
-.bo-catalog-grid .listing-card-wish img,
-.bo-catalog-grid .listing-card-wish-inline img,
-.bo-catalog-grid .listing-card-wish-inline .heart-img,
-.bo-catalog-grid .heart-img {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transform: none !important;
-}
-
-.bo-catalog-grid .listing-card-wish:hover::before,
-.bo-catalog-grid .listing-card-wish-inline:hover::before,
-.bo-catalog-grid .listing-card-wish.is-active::before,
-.bo-catalog-grid .listing-card-wish-inline.is-active::before,
-.bo-catalog-grid .listing-card-wish[aria-pressed="true"]::before,
-.bo-catalog-grid .listing-card-wish-inline[aria-pressed="true"]::before {
-  opacity: 0;
-}
-
-.bo-catalog-grid .listing-card-wish:hover::after,
-.bo-catalog-grid .listing-card-wish-inline:hover::after,
-.bo-catalog-grid .listing-card-wish.is-active::after,
-.bo-catalog-grid .listing-card-wish-inline.is-active::after,
-.bo-catalog-grid .listing-card-wish[aria-pressed="true"]::after,
-.bo-catalog-grid .listing-card-wish-inline[aria-pressed="true"]::after {
-  opacity: 1;
-  transform: none !important;
-}
-
-.bo-catalog-grid .goodsZzimBtn .zzimOffImg,
-.bo-catalog-grid .goodsZzimBtn .zzimOnImg,
-.bo-catalog-grid .respGoodsZzim .zzimOffImg,
-.bo-catalog-grid .respGoodsZzim .zzimOnImg,
-.bo-catalog-grid .respGoodsZzim .zzimImage {
-  width: 18px !important;
-  height: 18px !important;
-  max-width: 18px !important;
-  object-fit: contain;
-  transform: none !important;
-  transition: opacity 0.22s ease;
-}
-
-.bo-catalog-grid .goodsZzimBtn .zzimOnImg,
-.bo-catalog-grid .respGoodsZzim .zzimOnImg {
-  display: block !important;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: 0;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, -50%) !important;
-}
-
-.bo-catalog-grid .goodsZzimBtn:hover .zzimOffImg,
-.bo-catalog-grid .respGoodsZzim:hover .zzimOffImg {
-  opacity: 0;
-}
-
-.bo-catalog-grid .goodsZzimBtn:hover .zzimOnImg,
-.bo-catalog-grid .respGoodsZzim:hover .zzimOnImg,
-.bo-catalog-grid .goodsZzimBtn[act="stay"] .zzimOnImg {
-  opacity: 1;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop {
-  display: none;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop button,
-.bo-catalog-grid .listing-card-actions--desktop a {
-  position: relative;
-  display: grid;
-  place-items: center;
-  box-sizing: border-box;
-  width: 100%;
-  height: 35px;
-  min-height: 35px;
-  max-height: 35px;
-  padding: 0 !important;
-  border: 1px solid #ded8e8;
-  border-radius: 10px;
-  color: var(--bo-purple);
-  background: #fff;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
-.bo-catalog-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after,
-.bo-catalog-grid .listing-card-actions--desktop a:not(.listing-card-wish-inline)::before,
-.bo-catalog-grid .listing-card-actions--desktop a:not(.listing-card-wish-inline)::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 18px;
-  height: calc(18px * 24 / 22);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 18px auto;
-  transition: opacity 0.25s ease;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
-.bo-catalog-grid .listing-card-actions--desktop a:not(.listing-card-wish-inline)::before {
-  background-image: url("../../images/listing/cart.png");
-  opacity: 1;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after,
-.bo-catalog-grid .listing-card-actions--desktop a:not(.listing-card-wish-inline)::after {
-  background-image: url("../../images/listing/cart_hover.png");
-  opacity: 0;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover,
-.bo-catalog-grid .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover {
-  border-color: #7943e2;
-  background-color: #7943e2;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::before,
-.bo-catalog-grid .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover::before {
-  opacity: 0;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::after,
-.bo-catalog-grid .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover::after {
-  opacity: 1;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop .listing-card-wish-inline {
-  width: 40px;
-  min-width: 40px;
-}
-
-.bo-catalog-grid .listing-card-actions--desktop .listing-card-wish-inline:hover {
-  border-color: #ded8e8;
-  background-color: #fff;
-}
-
-.bo-catalog-grid .listing-card-cart {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: calc(100% - 20px);
-  height: 38px;
-  margin: 0 10px 10px;
-  border: 1px solid var(--bo-purple);
-  border-radius: 10px;
-  background: #fff;
-}
-
+/* ——— Responsive ——— */
 @media (min-width: 761px) {
   .bo-catalog-grid > ul,
   .bo-catalog-grid[data-displaytype="lattice"] > ul {

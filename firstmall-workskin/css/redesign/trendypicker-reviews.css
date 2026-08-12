@@ -1,3 +1,14 @@
+/* TrendyPicker My Reviews
+   /mypage/mygdreview_catalog → mypage/mygdreview_catalog.html
+
+   1. Page chrome
+   2. Head / search / filters
+   3. Review cards
+   4. Edit dialog
+   5. Responsive — last
+*/
+
+/* ——— Page chrome ——— */
 .bo-reviews-shell {
   background: #fff;
 }
@@ -18,13 +29,14 @@
   transition: color 180ms ease;
 }
 
+/* ——— Head / search / filters ——— */
 .bo-reviews-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-height: 0;
-  margin: 0 0 22px !important;
-  padding: 0 !important;
+  margin: 0 0 22px;
+  padding: 0;
   text-align: left;
 }
 
@@ -42,9 +54,9 @@
   justify-content: space-between;
   gap: 24px;
   width: 100%;
-  margin-top: 0 !important;
+  margin-top: 0;
   margin-bottom: 34px;
-  padding: 0 !important;
+  padding: 0;
 }
 
 .bo-reviews-controls .bo-reviews-search {
@@ -65,15 +77,15 @@
 }
 
 .bo-reviews-search .sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  margin: -1px !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .bo-reviews-search input {
@@ -267,6 +279,7 @@
   pointer-events: none !important;
 }
 
+/* ——— Review cards ——— */
 .bo-reviews-list {
   display: grid;
   gap: 24px;
@@ -516,6 +529,7 @@
   margin-top: 30px;
 }
 
+/* ——— Edit dialog ——— */
 body.is-review-edit-open {
   overflow: hidden;
 }
@@ -829,6 +843,7 @@ body.is-review-edit-open {
   background: var(--bo-purple, #7b3fe4);
 }
 
+/* ——— Responsive ——— */
 @media (max-width: 1120px) {
   .bo-reviews-head {
     align-items: flex-start;

@@ -106,6 +106,10 @@ Firstmall-replaceable behavior under `scripts/prototype/`.
 
 When working on the live Firstmall skin or `firstmall-workskin/`:
 
+- Original skin baseline (read-only, never edit):
+  `C:\Users\user\Desktop\(DONT CHANGE-20260730)Firstmall-original\responsive_food_mealkit_gl`
+  New vs modified is always that folder vs `firstmall-workskin/`. Do not use git add/commit
+  status for that classification.
 - Treat the public URL as the primary clue to the template path. Example:
   `https://trendy-picker.co.kr/goods/view?no=92915` maps to
   `/data/skin/[skin]/goods/view.html`.
@@ -115,19 +119,28 @@ When working on the live Firstmall skin or `firstmall-workskin/`:
 - **HTML:** edit the existing Firstmall skin templates/modules that own the page.
 - **CSS:** add new scoped redesign files (for example `css/redesign/trendypicker-*.css`) and link
   them from the HTML. Do **not** mix TrendyPicker styles into Firstmall
-  `css/common.css` or `css/user.css`.
+  `css/common.css` or `css/user.css`. Do not add `!important` unless a Firstmall ID or
+  legacy rule cannot be beaten with a more specific page-scoped selector.
 - Keep upload candidates under `firstmall-workskin/`. Prefer
-  `node tools/check-firstmall-workskin.mjs` for work-skin validation.
+  `npm run check:firstmall` for work-skin validation (includes the redesign style check).
 - Do not add CSS/JS `?v=` query strings on Firstmall skin links.
 - T.P Magazine Firstmall files: `css/redesign/trendypicker-magazine.css`,
   `app/javascript/js/trendypicker-magazine.js`, `main/magazine.html`,
   `board/magazine/gallery01/{index,view}.html`, plus magazine branches in
   `board/index.html` and `board/view.html`. Upload checklist:
-  `firstmall-workskin/MAGAZINE-UPLOAD.md`.
+  `firstmall-workskin/MAGAZINE-UPLOAD.md`. Do not replace `main/magazine.html`
+  with a redirect stub.
 - New Arrival Firstmall files: `css/redesign/trendypicker-new.css`,
   `app/javascript/js/trendypicker-new.js`, `goods/new_arrivals.html`.
   Live URL: `/goods/new_arrivals` (maps from prototype `listing/new.html`).
   Point header/mobile NEW links to `/goods/new_arrivals`.
+- Shared listing cards: `css/redesign/trendypicker-listing-cards.css` (`.tp-listing-grid`).
+  Link it before the page CSS on catalog / best / new / brand detail / timedeal. Page files
+  keep grid columns, heroes, and badges only.
+- Cart Firstmall files: `order/cart.html` (existing Firstmall template),
+  `css/redesign/trendypicker-cart.css`, `app/javascript/js/trendypicker-cart.js`.
+  Live URL: `/order/cart`. Promo uses `getPromotionJson?mode=cart`. Coupons are selected
+  on cart and applied at checkout.
 
 ## Design Rules
 
@@ -149,8 +162,17 @@ git diff --check
 ```
 
 `npm run check` verifies JavaScript syntax, single-reference unused declarations, CSS brace balance,
-unused CSS classes, local assets, HTML links, duplicate IDs, inline scripts, and prototype markers.
-`git diff --check` catches trailing whitespace and blank-line issues.
+unused CSS classes, local assets, HTML links, duplicate IDs, inline scripts, prototype markers,
+and the redesign style check (`tools/check-css-style.mjs`). `git diff --check` catches trailing
+whitespace and blank-line issues.
+
+`npm run check:firstmall` runs the work-skin validator plus the same style check. The style check
+only inspects `trendypicker-*.css` / `trendypicker-*.js` under `firstmall-workskin/`. It **fails**
+on duplicate selectors in the same file/media context, and on files whose `!important` ratio
+exceeds 25%. It **warns** when a file grows past its recorded size, when a new file crosses the
+soft line limit, or when `!important` use rises past a recorded baseline / 10% on a new file.
+Large page files are expected — do not split them just to silence a size warning. See
+`.agents/coding-rules.md`.
 
 `npm run audit:placeholders` reports unresolved `href="#"` links that must be mapped to Firstmall
 categories, policies, social accounts, or member actions.

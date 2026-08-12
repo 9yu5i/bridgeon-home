@@ -1,5 +1,7 @@
-/* TrendyPicker Wishlist
-   /mypage/wish → mypage/wish.html
+/* TrendyPicker Recently Viewed
+   /goods/recently → goods/recently.html
+   Same structure as mypage/wish.html (trendypicker-wishlist.css) — mirrored here
+   under its own page-scoped classes.
 
    1. Page chrome
    2. Head / tabs
@@ -9,20 +11,20 @@
 */
 
 /* ——— Page chrome ——— */
-.bo-wishlist-shell {
+.bo-recently-shell {
   background: #fff;
 }
 
-.bo-wishlist-shell::before {
+.bo-recently-shell::before {
   display: none;
 }
 
-.bo-wishlist-page {
+.bo-recently-page {
   color: var(--bo-text);
 }
 
 /* ——— Head / tabs ——— */
-.subpage_wrap .subpage_container .title_container.bo-wishlist-head {
+.subpage_wrap .subpage_container .title_container.bo-recently-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
@@ -38,7 +40,7 @@
   text-align: left;
 }
 
-.bo-wishlist-head h2 {
+.bo-recently-head h2 {
   grid-area: title;
   margin: 0;
   color: var(--bo-text);
@@ -47,7 +49,7 @@
   font-weight: 800;
 }
 
-.bo-wishlist-subtitle {
+.bo-recently-subtitle {
   grid-area: subtitle;
   margin: 8px 0 0;
   color: var(--bo-muted);
@@ -57,7 +59,7 @@
   align-self: end;
 }
 
-.bo-wishlist-count {
+.bo-recently-count {
   grid-area: count;
   justify-self: end;
   align-self: end;
@@ -78,7 +80,7 @@
   white-space: nowrap;
 }
 
-.bo-wishlist-tabs {
+.bo-recently-tabs {
   grid-area: tabs;
   display: flex;
   gap: 12px;
@@ -90,11 +92,11 @@
   scrollbar-width: none;
 }
 
-.bo-wishlist-tabs::-webkit-scrollbar {
+.bo-recently-tabs::-webkit-scrollbar {
   display: none;
 }
 
-.bo-wishlist-tabs button {
+.bo-recently-tabs button {
   flex: 0 0 auto;
   min-width: 70px;
   height: 34px;
@@ -110,19 +112,19 @@
   transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
-.bo-wishlist-tabs button:hover,
-.bo-wishlist-tabs button:focus-visible,
-.bo-wishlist-tabs button.is-active {
+.bo-recently-tabs button:hover,
+.bo-recently-tabs button:focus-visible,
+.bo-recently-tabs button.is-active {
   color: var(--bo-purple);
   background: #eadcff;
 }
 
 /* ——— Cards / actions ——— */
-.bo-wishlist-list-wrap {
+.bo-recently-list-wrap {
   clear: both;
 }
 
-.bo-wishlist-grid {
+.bo-recently-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
@@ -131,7 +133,7 @@
   list-style: none;
 }
 
-.bo-wish-card {
+.bo-recently-card {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -144,12 +146,12 @@
   box-shadow: var(--bo-card-shadow);
 }
 
-.bo-wish-card[hidden],
-.bo-wish-card.is-filtered-out {
+.bo-recently-card[hidden],
+.bo-recently-card.is-filtered-out {
   display: none !important;
 }
 
-.bo-wish-card__media {
+.bo-recently-card__media {
   position: relative;
   display: block;
   aspect-ratio: 1 / 1;
@@ -161,11 +163,14 @@
   transition: transform 0.35s ease;
 }
 
-.bo-wish-card:hover .bo-wish-card__media {
+/* del-btn is no longer nested inside .bo-recently-card__media (see below) —
+   it's a sibling positioned against the card itself — so this hover-zoom
+   transform only ever affects the thumbnail. */
+.bo-recently-card:hover .bo-recently-card__media {
   transform: scale(1.06);
 }
 
-.bo-wish-card__media > a {
+.bo-recently-card__media > a {
   position: absolute;
   inset: 0;
   display: block;
@@ -174,9 +179,9 @@
   overflow: hidden;
 }
 
-.bo-wish-card__media img,
-.bo-wish-card__media picture,
-.bo-wish-card__media picture img {
+.bo-recently-card__media img,
+.bo-recently-card__media picture,
+.bo-recently-card__media picture img {
   position: absolute !important;
   inset: 0 !important;
   width: 100% !important;
@@ -184,15 +189,11 @@
   opacity: 0 !important;
 }
 
-.bo-wish-card__cart {
+.bo-recently-card__category-seed {
   display: none !important;
 }
 
-.bo-wish-card__category-seed {
-  display: none !important;
-}
-
-.bo-wish-card__body {
+.bo-recently-card__body {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -202,7 +203,7 @@
   list-style: none;
 }
 
-.bo-wish-card__name {
+.bo-recently-card__name {
   margin: 0;
   color: var(--bo-text);
   font-size: 14px;
@@ -210,7 +211,7 @@
   font-weight: 600;
 }
 
-.bo-wish-card__brand {
+.bo-recently-card__brand {
   display: block;
   min-height: 16px;
   margin: 0 0 4px;
@@ -223,11 +224,11 @@
   white-space: nowrap;
 }
 
-.bo-wish-card__brand:empty {
+.bo-recently-card__brand:empty {
   visibility: hidden;
 }
 
-.bo-wish-card__name label {
+.bo-recently-card__name label {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -239,7 +240,7 @@
   cursor: pointer;
 }
 
-.bo-wish-card__price {
+.bo-recently-card__price {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -250,8 +251,8 @@
   margin-top: 6px;
 }
 
-.bo-wish-card__price .sale_price,
-.bo-wish-card__price .consumer_price {
+.bo-recently-card__price .sale_price,
+.bo-recently-card__price .consumer_price {
   flex: 0 1 auto;
   min-width: 0;
   max-width: 100%;
@@ -260,7 +261,7 @@
   white-space: nowrap;
 }
 
-.bo-wish-card__price .sale_price {
+.bo-recently-card__price .sale_price {
   display: block;
   min-height: calc(13px * 1.2);
   color: #ff2637;
@@ -269,7 +270,7 @@
   font-weight: 700;
 }
 
-.bo-wish-card__price .consumer_price {
+.bo-recently-card__price .consumer_price {
   display: block;
   color: #8f86a0;
   font-size: 13px;
@@ -278,11 +279,11 @@
   text-decoration: line-through;
 }
 
-.bo-wish-card__price .consumer_price:empty {
+.bo-recently-card__price .consumer_price:empty {
   display: none;
 }
 
-.bo-wish-card__actions {
+.bo-recently-card__actions {
   display: grid;
   grid-template-columns: 1fr 31px;
   align-items: stretch;
@@ -291,10 +292,10 @@
   padding-top: 8px;
 }
 
-.bo-wish-card__actions .btn_resp.color2.bo-wish-card__cart-btn,
-.bo-wish-card__actions .bo-wish-card__wish-btn,
-.bo-wish-card__cart-btn,
-.bo-wish-card__wish-btn {
+.bo-recently-card__actions .btn_resp.color2.bo-recently-card__cart-btn,
+.bo-recently-card__actions .bo-recently-card__wish-btn,
+.bo-recently-card__cart-btn,
+.bo-recently-card__wish-btn {
   position: relative;
   display: grid !important;
   place-items: center;
@@ -316,13 +317,13 @@
   text-indent: 0;
 }
 
-.bo-wish-card__actions .btn_resp.color2.bo-wish-card__cart-btn,
-.bo-wish-card__cart-btn {
+.bo-recently-card__actions .btn_resp.color2.bo-recently-card__cart-btn,
+.bo-recently-card__cart-btn {
   background: var(--bo-purple) !important;
   transition: background-color 0.25s ease;
 }
 
-.bo-wish-card__cart-btn::after {
+.bo-recently-card__cart-btn::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -333,36 +334,105 @@
   filter: brightness(0) invert(1);
 }
 
-.bo-wish-card__actions .btn_resp.color2.bo-wish-card__cart-btn:hover,
-.bo-wish-card__actions .btn_resp.color2.bo-wish-card__cart-btn:focus-visible,
-.bo-wish-card__cart-btn:hover,
-.bo-wish-card__cart-btn:focus-visible {
+.bo-recently-card__actions .btn_resp.color2.bo-recently-card__cart-btn:hover,
+.bo-recently-card__actions .btn_resp.color2.bo-recently-card__cart-btn:focus-visible,
+.bo-recently-card__cart-btn:hover,
+.bo-recently-card__cart-btn:focus-visible {
   background: #31136c !important;
 }
 
-.bo-wish-card__wish-btn {
-  border-color: #f0d8e3 !important;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+/* Wish (heart) toggle — reuses the same native zzim markup/behavior used on
+   catalog/best/brand cards. Sits in the action row next to Add to Cart.
+   Outline heart by default; crossfades to a filled pink heart on hover or
+   once active (matches the wish-icon behavior on catalog/best/brand). */
+.bo-recently-card__wish-btn {
+  transition: border-color 0.2s ease;
 }
 
-.bo-wish-card__wish-btn:hover,
-.bo-wish-card__wish-btn:focus-visible {
-  border-color: #d63d75 !important;
-  background: #fdeef3 !important;
+.bo-recently-card__wish-btn .heart-img {
+  position: absolute !important;
+  width: 16px !important;
+  height: 16px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
-.bo-wish-card__wish-btn::after {
+.bo-recently-card__wish-btn::before,
+.bo-recently-card__wish-btn::after {
   content: "";
   position: absolute;
   inset: 0;
   margin: auto;
-  width: 14px;
-  height: 14px;
-  background: url("../../images/mypage/wish_liked.png") center / contain no-repeat;
+  width: 16px;
+  height: 16px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transition: opacity 0.2s ease;
+}
+
+.bo-recently-card__wish-btn::before {
+  background-image: url("../../images/listing/wish_pink.png");
+  opacity: 1;
+}
+
+.bo-recently-card__wish-btn::after {
+  background-image: url("../../images/listing/wish_hover.png");
+  opacity: 0;
+}
+
+.bo-recently-card__wish-btn:hover::before,
+.bo-recently-card__wish-btn.is-active::before,
+.bo-recently-card__wish-btn[aria-pressed="true"]::before {
+  opacity: 0;
+}
+
+.bo-recently-card__wish-btn:hover::after,
+.bo-recently-card__wish-btn.is-active::after,
+.bo-recently-card__wish-btn[aria-pressed="true"]::after {
+  opacity: 1;
+}
+
+/* Delete (remove from recently viewed) — overlaid on the thumbnail.
+   mypage/cancel.png already has its own pink circular backdrop baked in, so
+   this button carries no background/border of its own (that was doubling up
+   with the icon's own circle before). */
+.bo-recently-card__del-btn,
+.bo-recently-card__del-btn:hover,
+.bo-recently-card__del-btn:focus-visible {
+  /* Beat native .btn_resp.size_a { height:20px; padding:0 5px; line-height:19px; }
+     and .btn_resp.color5 { border-color:#999; background-color:#999; } in
+     common.css (both are 2-class selectors, more specific than this single
+     class) — the height mismatch was letting the button's box sit off from
+     where the icon (sized to 24px) was centered. */
+  position: absolute;
+  top: 8px !important;
+  right: 8px !important;
+  z-index: 2;
+  width: 24px !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  max-height: 24px !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  cursor: pointer;
+}
+
+.bo-recently-card__del-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 24px;
+  height: 24px;
+  background: url("../../images/mypage/cancel.png") center / contain no-repeat;
 }
 
 /* ——— Empty / paging ——— */
-.bo-wishlist-empty {
+.bo-recently-empty {
   display: grid;
   justify-items: center;
   gap: 8px;
@@ -374,7 +444,7 @@
   color: var(--bo-muted);
 }
 
-.bo-wishlist-filter-empty {
+.bo-recently-filter-empty {
   padding: 48px 16px;
   color: var(--bo-muted);
   font-size: 14px;
@@ -382,7 +452,7 @@
   text-align: center;
 }
 
-.bo-wishlist-pagination {
+.bo-recently-pagination {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -390,7 +460,7 @@
   margin-top: 32px;
 }
 
-.bo-wishlist-pagination a {
+.bo-recently-pagination a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -403,50 +473,32 @@
   font-weight: 600;
 }
 
-.bo-wishlist-pagination a.on {
+.bo-recently-pagination a.on {
   color: #fff;
   background: var(--bo-purple);
 }
 
 /* ——— Responsive ——— */
 @media (max-width: 1120px) {
-  .subpage_wrap .subpage_container .title_container.bo-wishlist-head {
+  .subpage_wrap .subpage_container .title_container.bo-recently-head {
     margin-bottom: 14px;
   }
 
-  .bo-wishlist-head h2 {
+  .bo-recently-head h2 {
     font-size: 28px;
   }
 
-  .bo-wishlist-subtitle {
+  .bo-recently-subtitle {
     font-size: 14px;
   }
 
-  .bo-wishlist-grid {
+  .bo-recently-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .bo-wish-card__actions {
-    grid-template-columns: 1fr;
-  }
-
-  .bo-wish-card__wish-btn {
-    position: absolute !important;
-    bottom: 8px;
-    right: 8px;
-    z-index: 2;
-    width: 32px !important;
-    height: 32px !important;
-    min-height: 32px !important;
-    max-height: 32px !important;
-    border-radius: 50% !important;
-    background: #fff !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   }
 }
 
 @media (max-width: 760px) {
-  .subpage_wrap .subpage_container .title_container.bo-wishlist-head {
+  .subpage_wrap .subpage_container .title_container.bo-recently-head {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       "title"
@@ -457,23 +509,23 @@
     padding-top: 0 !important;
   }
 
-  .bo-wishlist-count {
+  .bo-recently-count {
     justify-self: end;
     margin-top: 10px;
   }
 
-  .bo-wishlist-tabs {
+  .bo-recently-tabs {
     margin-inline: -2px;
   }
 
-  .bo-wishlist-grid {
+  .bo-recently-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
 }
 
 @media (max-width: 380px) {
-  .bo-wishlist-grid {
+  .bo-recently-grid {
     gap: 8px;
   }
 }

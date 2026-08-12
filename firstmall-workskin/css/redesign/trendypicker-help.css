@@ -1,6 +1,15 @@
+/* TrendyPicker Help Center
+   /service/cs → service/cs.html
+
+   1. Page chrome / tokens
+   2. Hero
+   3. Directory + contact card
+   4. Responsive — last
+*/
+
+/* ——— Page chrome ——— */
 .bo-help-shell {
   --help-purple: #7b3fe4;
-  --help-deep: #31136c;
   --help-muted: #6f687d;
   --help-soft: #f7f1ff;
   --bo-account-content-width: 1680px;
@@ -25,6 +34,7 @@
   box-sizing: border-box;
 }
 
+/* ——— Hero ——— */
 .help-hero,
 .help-directory-card {
   border: 1px solid rgba(123, 63, 228, 0.12);
@@ -75,6 +85,7 @@
   line-height: 1.45;
 }
 
+/* ——— Directory + contact ——— */
 .help-directory-card {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -218,6 +229,7 @@
   color: rgba(255, 255, 255, 0.78);
 }
 
+/* ——— Responsive ——— */
 @media (min-width: 1121px) {
   .bo-help-shell .subpage_container.bo-help-page {
     padding-top: 60px;
@@ -231,19 +243,18 @@
     max-width: 100%;
   }
 
-  .bo-help-page,
+  .bo-help-page {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0;
+    overflow-x: clip;
+  }
+
   .bo-help-content {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0;
     overflow-x: clip;
-  }
-
-  .bo-help-page {
-    max-width: none !important;
-  }
-
-  .bo-help-content {
     gap: 18px;
   }
 
@@ -272,10 +283,6 @@
 }
 
 @media (max-width: 760px) {
-  .bo-help-shell {
-    padding-top: 30px;
-  }
-
   .bo-help-content {
     gap: 16px;
   }

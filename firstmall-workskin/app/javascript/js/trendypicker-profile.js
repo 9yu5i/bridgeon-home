@@ -1,4 +1,17 @@
+/**
+ * TrendyPicker Profile
+ * /mypage/myinfo → mypage/myinfo.html
+ *
+ * 1. Guard: .bo-profile-page
+ * 2. Move native Firstmall rows into personal / password cards
+ * 3. Country / phone / email custom selects (page copies, do not merge)
+ * 4. Preferences, default-address hydrate, native address iframe modal
+ * 5. Avatar upload via Firstmall membericonDisplay
+ * 6. SNS connect click-through + desktop side alignment
+ */
 (() => {
+  if (!document.querySelector(".bo-profile-page")) return;
+
   const nativeFieldTable = document.querySelector(
     "[data-bo-native-source] .resp_join_table",
   );
@@ -805,7 +818,6 @@
   const addressModalLayer = document.querySelector("[data-bo-address-modal-layer]");
   const addressModalFrame = document.querySelector("[data-bo-address-modal-frame]");
   let pendingAddressSeq = "";
-  let pendingAddressOperation = "edit";
   let addressSavePending = false;
   let addressFrameNeedsReload = false;
   let addressSaveFallbackTimer = 0;
@@ -861,7 +873,6 @@
     window.clearTimeout(addressSaveFallbackTimer);
     addressSaveFallbackTimer = 0;
     addressFrameNeedsReload = true;
-    pendingAddressOperation = "edit";
     restoreAddressSaveAlerts?.();
     hideAddressModal();
     hydrateDefaultAddress();
@@ -1560,10 +1571,7 @@
           }
 
           const insertModeInput = nativeModal.querySelector('input[name="insert_mode"]');
-          if (
-            (!pendingAddressSeq || insertModeInput?.value === "insert") &&
-            pendingAddressOperation !== "set-default"
-          ) {
+          if (!pendingAddressSeq || insertModeInput?.value === "insert") {
             defaultInput.checked = false;
           }
           syncDefaultButton();
@@ -1596,10 +1604,8 @@
           saveButton.addEventListener(
             "click",
             (event) => {
-              const isSilentDefaultUpdate = pendingAddressOperation === "set-default";
-              const shouldSetDefault =
-                isSilentDefaultUpdate || nativeModal.dataset.addressSubmitIntent === "default";
-              if (!isSilentDefaultUpdate && !validateNativeAddressForm(nativeModal)) {
+              const shouldSetDefault = nativeModal.dataset.addressSubmitIntent === "default";
+              if (!validateNativeAddressForm(nativeModal)) {
                 event.preventDefault();
                 event.stopImmediatePropagation();
                 addressSavePending = false;
@@ -1621,7 +1627,6 @@
               addressSavePending = true;
               window.clearTimeout(addressSaveFallbackTimer);
               addressSaveFallbackTimer = window.setTimeout(completeAddressSave, 1200);
-              pendingAddressOperation = "edit";
             },
             true,
           );
@@ -1657,39 +1662,6 @@
           nativeActionFrame.dataset.trendypickerSaveBound = "true";
         }
 
-        if (pendingAddressOperation === "set-default") {
-          const submitDefaultAddress = (attemptsLeft = 24) => {
-            const addressSeqInput = nativeModal.querySelector('input[name="address_seq"]');
-            const insertModeInput = nativeModal.querySelector('input[name="insert_mode"]');
-            const saveButton = nativeModal.querySelector("#insert_address");
-            const isReady =
-              addressSeqInput?.value === pendingAddressSeq &&
-              insertModeInput?.value === "update" &&
-              defaultInput &&
-              saveButton;
-
-            if (!isReady) {
-              if (attemptsLeft > 0) {
-                window.setTimeout(() => submitDefaultAddress(attemptsLeft - 1), 100);
-              } else {
-                pendingAddressOperation = "edit";
-                hydrateDefaultAddress();
-              }
-              return;
-            }
-
-            nativeModal.dataset.addressSubmitIntent = "default";
-            defaultInput.checked = true;
-            defaultInput.setAttribute("checked", "checked");
-            defaultInput.dispatchEvent(new Event("change", { bubbles: true }));
-            saveButton.click();
-          };
-
-          submitDefaultAddress();
-          return;
-        }
-
-        if (addressModalLayer.classList.contains("is-default-updating")) return;
         const addressModal = addressModalLayer.querySelector(".profile-address-modal");
         if (addressModal) addressModal.scrollTop = 0;
         frameDocument.documentElement.scrollTop = 0;
@@ -1718,23 +1690,11 @@
   const openAddressModal = (addressSeq = "") => {
     if (!addressModalLayer) return;
     pendingAddressSeq = String(addressSeq || "");
-    pendingAddressOperation = "edit";
-    addressModalLayer.classList.remove("is-default-updating");
-    requestNativeAddressEditor();
-  };
-
-  const setDefaultAddress = (addressSeq, radio) => {
-    if (!addressSeq) return;
-    addressModalLayer?.classList.add("is-default-updating");
-    pendingAddressSeq = String(addressSeq);
-    pendingAddressOperation = "set-default";
-    radio.disabled = true;
     requestNativeAddressEditor();
   };
 
   const closeAddressModal = () => {
     hideAddressModal();
-    pendingAddressOperation = "edit";
     hydrateDefaultAddress();
   };
 

@@ -1,10 +1,15 @@
-/*
-  TrendyPicker Brand (Firstmall)
-  - List: /goods/brand_main → goods/brand_main.html
-  - Detail: /goods/brand?code=... → goods/brand.html
-  - Pair with: css/redesign/trendypicker-brand.css
+/* TrendyPicker Brand
+   List:   /goods/brand_main → goods/brand_main.html
+   Detail: /goods/brand?code=… → goods/brand.html
+
+   1. Page chrome
+   2. Brand list (directory / alpha / search)
+   3. Brand list responsive
+   4. Brand detail (hero / about / toolbar / sort / grid)
+   5. Brand detail responsive — last
 */
 
+/* ——— Page chrome ——— */
 body.is-brand-page,
 body.is-brand-page #layout_wrap,
 body.is-brand-page #layout_body {
@@ -33,6 +38,7 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   background: transparent !important;
 }
 
+/* ——— Brand list ——— */
 .bo-brand-shell {
   --brand-line: #ece7f4;
   --brand-muted: #8f86a0;
@@ -43,22 +49,6 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   padding: 28px 16px 88px;
   background: #fff;
   border-radius: 24px 24px 0 0;
-}
-
-@media (min-width: 761px) {
-  .bo-brand-shell {
-    margin-top: 24px;
-    padding: 32px 32px 72px;
-    border-radius: 28px 28px 0 0;
-    box-shadow: 0 -10px 30px rgba(23, 16, 38, 0.08);
-  }
-}
-
-@media (min-width: 1121px) {
-  .bo-brand-shell {
-    margin-top: 32px;
-    padding: 36px 40px 80px;
-  }
 }
 
 .bo-brand-breadcrumbs {
@@ -247,13 +237,26 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   display: none;
 }
 
+/* ——— Brand list responsive ——— */
 @media (min-width: 761px) {
+  .bo-brand-shell {
+    margin-top: 24px;
+    padding: 32px 32px 72px;
+    border-radius: 28px 28px 0 0;
+    box-shadow: 0 -10px 30px rgba(23, 16, 38, 0.08);
+  }
+
   .bo-brand-group-list {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1121px) {
+  .bo-brand-shell {
+    margin-top: 32px;
+    padding: 36px 40px 80px;
+  }
+
   .bo-brand-group {
     grid-template-columns: 72px minmax(0, 1fr);
     gap: 24px;
@@ -304,7 +307,7 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   }
 }
 
-/* ===== Brand detail (/goods/brand?code=...) ===== */
+/* ——— Brand detail ——— */
 .bo-brand-sr {
   position: absolute;
   width: 1px;
@@ -627,17 +630,8 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   height: 0;
 }
 
-/* Match .listing-sort .realtrend-select-menu */
 .bo-brand-detail-sort .realtrend-select-menu.is-open {
   display: block;
-  top: calc(100% - 1px);
-  bottom: auto;
-  border: 1px solid #ded8e8;
-  border-top: 0;
-  border-radius: 0 0 8px 8px;
-  padding: 10px 6px 6px;
-  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
-  background: #fff;
 }
 
 .bo-brand-detail-sort .realtrend-select-menu li {
@@ -671,8 +665,6 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  row-gap: 12px;
-  column-gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -682,8 +674,6 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
 .bo-brand-detail-shell .searched_item_display > ul > li {
   width: auto !important;
   margin: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
   padding: 0 !important;
   float: none !important;
 }
@@ -762,6 +752,17 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   display: none;
 }
 
+.bo-brand-detail-shell .searched_item_display .goods_name_area .name,
+.bo-brand-detail-grid .goods_name_area .name {
+  display: -webkit-box;
+  min-height: 2.7em;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+/* ——— Brand detail responsive ——— */
 @media (min-width: 761px) {
   .bo-brand-detail-hero-copy {
     padding: 64px 32px 100px;
@@ -784,8 +785,13 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   .bo-brand-detail-shell .searched_item_display > ul {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
-    row-gap: 14px;
-    column-gap: 14px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .bo-brand-detail-hero,
+  .bo-brand-detail-hero-copy {
+    min-height: clamp(280px, 33vw, 370px);
   }
 }
 
@@ -809,125 +815,8 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   .bo-brand-detail-shell .searched_item_display > ul {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 14px;
-    row-gap: 14px;
-    column-gap: 14px;
   }
 }
-
-.bo-brand-detail-shell .searched_item_display .goods_name_area .name,
-.bo-brand-detail-grid .goods_name_area .name {
-  display: -webkit-box;
-  min-height: 2.7em;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
-
-.bo-brand-detail-shell .sale_price::before,
-.bo-brand-detail-shell .consumer_price::before,
-.bo-brand-detail-grid .sale_price::before,
-.bo-brand-detail-grid .consumer_price::before,
-.bo-brand-detail-shell .listing-card-price strong::before,
-.bo-brand-detail-shell .listing-card-price del::before {
-  content: "US ";
-}
-
-/* Wish hover: match listing/new pink heart */
-.bo-brand-detail-shell .item_img_area,
-.bo-brand-detail-grid .item_img_area,
-.bo-brand-detail-shell .gl_item {
-  position: relative;
-}
-
-.bo-brand-detail-shell .display_zzim,
-.bo-brand-detail-grid .display_zzim,
-.bo-brand-detail-shell .respGoodsZzim {
-  position: absolute !important;
-  right: 10px;
-  bottom: 10px;
-  z-index: 3;
-  display: grid !important;
-  place-items: center;
-  box-sizing: border-box;
-  width: 34px;
-  height: 34px;
-  padding: 0 !important;
-  border-radius: 50%;
-  background: #fff !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  cursor: pointer;
-}
-
-.bo-brand-detail-shell .display_zzim img,
-.bo-brand-detail-grid .display_zzim img,
-.bo-brand-detail-shell .respGoodsZzim img,
-.bo-brand-detail-shell .respGoodsZzim .zzimImage {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  opacity: 0 !important;
-  pointer-events: none;
-}
-
-.bo-brand-detail-shell .display_zzim::before,
-.bo-brand-detail-grid .display_zzim::before,
-.bo-brand-detail-shell .respGoodsZzim::before,
-.bo-brand-detail-shell .display_zzim::after,
-.bo-brand-detail-grid .display_zzim::after,
-.bo-brand-detail-shell .respGoodsZzim::after {
-  content: "";
-  display: block;
-  width: 18px;
-  height: 18px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  transition: opacity 0.25s ease;
-}
-
-.bo-brand-detail-shell .display_zzim::before,
-.bo-brand-detail-grid .display_zzim::before,
-.bo-brand-detail-shell .respGoodsZzim::before {
-  position: absolute;
-  background-image: url("../../images/listing/wish_pink.png");
-  opacity: 1;
-}
-
-.bo-brand-detail-shell .display_zzim::after,
-.bo-brand-detail-grid .display_zzim::after,
-.bo-brand-detail-shell .respGoodsZzim::after {
-  position: absolute;
-  background-image: url("../../images/listing/wish_hover.png");
-  opacity: 0;
-}
-
-.bo-brand-detail-shell .display_zzim:hover::before,
-.bo-brand-detail-grid .display_zzim:hover::before,
-.bo-brand-detail-shell .respGoodsZzim:hover::before,
-.bo-brand-detail-shell .display_zzim[act="stay"]::before,
-.bo-brand-detail-grid .display_zzim[act="stay"]::before,
-.bo-brand-detail-shell .respGoodsZzim:has(.zzimImage.active)::before,
-.bo-brand-detail-shell .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::before,
-.bo-brand-detail-grid .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::before,
-.bo-brand-detail-shell .display_zzim:has(.zzimOnImg[style*="display: none"])::before,
-.bo-brand-detail-grid .display_zzim:has(.zzimOnImg[style*="display: none"])::before {
-  opacity: 0;
-}
-
-.bo-brand-detail-shell .display_zzim:hover::after,
-.bo-brand-detail-grid .display_zzim:hover::after,
-.bo-brand-detail-shell .respGoodsZzim:hover::after,
-.bo-brand-detail-shell .display_zzim[act="stay"]::after,
-.bo-brand-detail-grid .display_zzim[act="stay"]::after,
-.bo-brand-detail-shell .respGoodsZzim:has(.zzimImage.active)::after,
-.bo-brand-detail-shell .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::after,
-.bo-brand-detail-grid .display_zzim:has(.zzimOnImg:not(.zzim-hidden))::after,
-.bo-brand-detail-shell .display_zzim:has(.zzimOnImg[style*="display: none"])::after,
-.bo-brand-detail-grid .display_zzim:has(.zzimOnImg[style*="display: none"])::after {
-  opacity: 1;
-}
-
 
 @media (max-width: 760px) {
   .bo-brand-detail-hero,
@@ -942,13 +831,5 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   .bo-brand-detail-shell {
     margin-top: -36px;
     padding-top: 24px;
-  }
-
-}
-
-@media (min-width: 761px) and (max-width: 1120px) {
-  .bo-brand-detail-hero,
-  .bo-brand-detail-hero-copy {
-    min-height: clamp(280px, 33vw, 370px);
   }
 }

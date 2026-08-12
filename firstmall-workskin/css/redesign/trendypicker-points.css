@@ -1,3 +1,14 @@
+/* TrendyPicker Points
+   /mypage/emoney → mypage/emoney.html
+
+   1. Page chrome
+   2. Head
+   3. Summary
+   4. History
+   5. Responsive — last
+*/
+
+/* ——— Page chrome ——— */
 .bo-points-shell {
   background: #fff;
 }
@@ -6,6 +17,7 @@
   display: none;
 }
 
+/* ——— Head ——— */
 .bo-points-head {
   display: flex;
   align-items: flex-end;
@@ -44,6 +56,7 @@
   color: #31136c;
 }
 
+/* ——— Summary ——— */
 .bo-points-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -103,89 +116,7 @@
   opacity: 0.8;
 }
 
-.bo-points-earning-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 26px;
-  align-items: center;
-  margin-bottom: 24px;
-  padding: 28px;
-  border-radius: 16px;
-  background: #f8f4ff;
-  box-shadow: 0 4px 14px rgba(49, 19, 108, 0.08);
-}
-
-.bo-points-earning-card p,
-.bo-points-earning-card h2,
-.bo-points-earning-card small {
-  margin: 0;
-}
-
-.bo-points-earning-card > div:first-child p {
-  color: var(--bo-purple, #7b3fe4);
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.bo-points-earning-card h2 {
-  margin-top: 8px;
-  color: #15131c;
-  font-size: 22px;
-  line-height: 1.25;
-  font-weight: 700;
-}
-
-.bo-points-earning-card h2 em {
-  font-style: normal;
-}
-
-.bo-points-earning-card small {
-  display: block;
-  margin-top: 10px;
-  color: #6f6879;
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.bo-points-earning-meter {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-self: center;
-  height: 100%;
-  margin: auto 0;
-}
-
-.bo-points-earning-meter span {
-  display: block;
-  height: 11px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #e2d8f4;
-}
-
-.bo-points-earning-meter i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #31136c, var(--bo-purple, #7b3fe4));
-}
-
-.bo-points-earning-meter i.is-empty {
-  background: #e2d8f4;
-}
-
-.bo-points-earning-meter p {
-  margin-top: 10px;
-  color: #6f6879;
-  text-align: center;
-  font-size: 13px;
-}
-
-.bo-points-earning-meter b {
-  color: #15131c;
-}
-
+/* ——— History ——— */
 .bo-points-history {
   padding: 28px;
   border-radius: 16px;
@@ -373,6 +304,7 @@
   margin-top: 20px;
 }
 
+/* ——— Responsive ——— */
 @media (max-width: 1120px) {
   .bo-points-head {
     display: block;
@@ -390,11 +322,6 @@
     grid-column: 1 / -1;
   }
 
-  .bo-points-earning-card {
-    grid-template-columns: 1fr;
-    padding: 20px;
-  }
-
   .bo-points-history {
     padding: 18px 14px;
   }
@@ -407,41 +334,16 @@
     margin-top: 12px;
   }
 
-  /* Tablet keeps desktop row pattern: p one line, time under strong on the right */
   .bo-points-history-row {
     grid-template-columns: 32px minmax(0, 1fr) auto;
     gap: 4px 12px;
-  }
-
-  .bo-points-history-row p {
-    white-space: nowrap;
-  }
-
-  .bo-points-history-row strong {
-    grid-column: 3;
-    grid-row: 1;
-    align-self: end;
-    text-align: right;
-  }
-
-  .bo-points-history-row time {
-    grid-column: 3;
-    grid-row: 2;
-    align-self: start;
-    text-align: right;
   }
 }
 
 @media (max-width: 760px) {
   .bo-points-history-row {
-    grid-template-columns: 32px minmax(0, 1fr) auto;
     gap: 2px 10px;
     align-items: start;
-  }
-
-  .bo-points-history-row > span,
-  .bo-points-history-row > div {
-    grid-row: 1 / 3;
   }
 
   .bo-points-history-row:not(:has(.bo-points-history-valid)) {
@@ -469,31 +371,6 @@
   .bo-points-history-row .bo-points-history-valid::before {
     content: none;
     margin: 0;
-  }
-
-  /* Mobile: amount on the right, date directly under it */
-  .bo-points-history-row strong {
-    grid-column: 3;
-    grid-row: 1;
-    align-self: end;
-    justify-self: end;
-    text-align: right;
-  }
-
-  .bo-points-history-row time {
-    grid-column: 3;
-    grid-row: 2;
-    align-self: start;
-    justify-self: end;
-    text-align: right;
-  }
-
-  .bo-points-history-row:not(:has(.bo-points-history-valid)) strong {
-    align-self: end;
-  }
-
-  .bo-points-history-row:not(:has(.bo-points-history-valid)) time {
-    align-self: start;
   }
 }
 

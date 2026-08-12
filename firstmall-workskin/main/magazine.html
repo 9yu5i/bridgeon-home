@@ -123,8 +123,8 @@ body:has(.magazine-main) #layout_body {
 			name="magazine_home_frame"
 			id="magazine_home_frame"
 			class="magazine-frame"
-			src="/board/?id=magazine&amp;iframe=1&amp;perpage=100"
-			data-list-src="/board/?id=magazine&amp;iframe=1&amp;perpage=100"
+			src="/board/?id=magazine&amp;iframe=1&amp;perpage=12"
+			data-list-src="/board/?id=magazine&amp;iframe=1&amp;perpage=12"
 			width="100%"
 			height="600"
 			frameborder="0"
@@ -149,5 +149,6 @@ body:has(.magazine-main) #layout_body {
 
 <script src="/app/javascript/js/trendypicker-magazine.js"></script>
 <script>
-document.body.className += (document.body.className ? " " : "") + "is-magazine-page";
+document.documentElement.classList.add("is-magazine-page");
+if (document.body) document.body.classList.add("is-magazine-page");
 </script>

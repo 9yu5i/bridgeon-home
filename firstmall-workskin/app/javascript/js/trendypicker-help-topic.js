@@ -1,4 +1,15 @@
+/**
+ * TrendyPicker Help Topic / Board
+ * Guide, FAQ, Notice, Q&A, policies, company/contact
+ *
+ * 1. Custom selects (board filter, QnA write, contact form)
+ * 2. FAQ category alias + list label restore
+ * 3. Notice/FAQ article heading cleanup
+ * 4. FAQ accordion (neutralize Firstmall call_faq_view)
+ */
 (() => {
+  if (!document.querySelector(".help-topic-shell")) return;
+
   const enhanceBoardSelect = (nativeSelect) => {
     if (!nativeSelect || nativeSelect.dataset.helpSelectReady === "1") return;
     if (nativeSelect.closest(".realtrend-select-wrap")) {
@@ -332,16 +343,4 @@
       toggleFaqItem(question.closest(".help-faq-item, .faq_new > li"));
     });
   }
-
-  /* Topics nav uses CSS position:sticky. Avoid JS fixed pinning — it fights
-     scroll at the bottom of long notice/FAQ articles and causes jump/errors. */
-  document.querySelectorAll(".help-topic-nav.is-pinned").forEach((nav) => {
-    nav.classList.remove("is-pinned");
-    nav.style.position = "";
-    nav.style.top = "";
-    nav.style.left = "";
-    nav.style.width = "";
-    nav.style.zIndex = "";
-  });
-  document.querySelectorAll(".help-topic-nav-placeholder").forEach((node) => node.remove());
 })();

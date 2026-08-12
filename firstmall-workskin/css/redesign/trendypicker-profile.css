@@ -1,3 +1,15 @@
+/* TrendyPicker Profile
+   /mypage/myinfo → mypage/myinfo.html
+
+   1. Page chrome
+   2. Head / cards / form
+   3. Birthday
+   4. Address / security / danger
+   5. Address dialog
+   6. Responsive — last
+*/
+
+/* ——— Page chrome ——— */
 .bo-profile-shell {
   --profile-purple: #7b3fe4;
   --profile-line: #e4dced;
@@ -19,16 +31,7 @@
   color: #15131c;
 }
 
-@media (min-width: 1121px) {
-  .bo-profile-shell > .bo-account-side {
-    margin-top: var(--bo-profile-side-offset, 60px) !important;
-  }
-
-  .bo-profile-shell .subpage_container.bo-mypage.bo-profile-page {
-    padding-top: 60px;
-  }
-}
-
+/* ——— Head / cards / form ——— */
 .bo-profile-page__head h1,
 .bo-profile-page__head p,
 .bo-profile-card__head h2,
@@ -507,6 +510,7 @@
   background: #f2ebff;
 }
 
+/* ——— Birthday ——— */
 .profile-birthday-dialog[hidden] {
   display: none;
 }
@@ -695,16 +699,6 @@ body.is-profile-birthday-open {
   color: #30283e;
 }
 
-@media (max-width: 480px) {
-  .profile-birthday-dialog {
-    padding: 12px;
-  }
-
-  .profile-birthday-panel {
-    width: min(350px, calc(100vw - 24px));
-    max-height: calc(100dvh - 24px);
-  }
-}
 
 .bo-profile-native-fields .btn_resp {
   min-height: 40px;
@@ -728,6 +722,7 @@ body.is-profile-birthday-open {
   display: none !important;
 }
 
+/* ——— Address / security / danger ——— */
 .bo-profile-address__card,
 .bo-profile-address__empty,
 .bo-profile-address__loading,
@@ -847,31 +842,12 @@ body.is-profile-birthday-open {
 .bo-profile-outline-action:focus-visible,
 .bo-profile-address__empty a:hover,
 .bo-profile-address__empty a:focus-visible,
-.bo-profile-address__actions button:not(.bo-profile-address__delete):hover,
-.bo-profile-address__actions button:not(.bo-profile-address__delete):focus-visible {
+.bo-profile-address__actions button:hover,
+.bo-profile-address__actions button:focus-visible {
   color: #fff;
   background: #31136c;
   outline: 0;
   transform: translateY(-1px);
-}
-
-.bo-profile-address__actions .bo-profile-address__delete {
-  border-color: #f0d8e3;
-  color: #d63d75;
-  background: #fff;
-}
-
-.bo-profile-address__delete:hover,
-.bo-profile-address__delete:focus-visible {
-  border-color: #d63d75;
-  color: #fff;
-  background: #d63d75;
-  outline: 0;
-}
-
-.bo-profile-address__delete:disabled {
-  cursor: default;
-  opacity: 0.5;
 }
 
 .bo-profile-address .bo-profile-card__head {
@@ -1202,7 +1178,118 @@ label.bo-profile-preference {
   background: #a62f46;
 }
 
+/* ——— Address dialog ——— */
+body.is-profile-address-open {
+  overflow: hidden;
+}
+
+.profile-address-dialog[hidden] {
+  display: none;
+}
+
+.profile-address-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  font-family: Pretendard, "Apple SD Gothic Neo", Arial, sans-serif;
+}
+
+.profile-address-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(19, 12, 36, 0.46);
+  cursor: pointer;
+}
+
+.profile-address-modal {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: min(680px, calc(100vw - 48px));
+  max-height: calc(100vh - 32px);
+  overflow: hidden;
+  padding: 22px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 24px 64px rgba(49, 19, 108, 0.2);
+}
+
+.profile-address-dialog-head {
+  margin-bottom: 14px;
+  padding-right: 40px;
+}
+
+.profile-address-dialog-head h2,
+.profile-address-dialog-head p {
+  margin: 0;
+  color: #111;
+}
+
+.profile-address-dialog-head h2 {
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.profile-address-dialog-head p {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.profile-address-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--profile-purple);
+  background: #f4efff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.profile-address-close:hover,
+.profile-address-close:focus-visible {
+  color: #fff;
+  background: #31136c;
+  outline: 0;
+}
+
+.profile-address-native-host {
+  height: 520px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.profile-address-native-frame {
+  display: block;
+  width: 100%;
+  height: 520px;
+  min-height: 0;
+  border: 0;
+}
+
+/* ——— Responsive ——— */
 @media (min-width: 1121px) {
+  .bo-profile-shell > .bo-account-side {
+    margin-top: var(--bo-profile-side-offset, 60px) !important;
+  }
+
+  .bo-profile-shell .subpage_container.bo-mypage.bo-profile-page {
+    padding-top: 60px;
+  }
+
   .bo-profile-form {
     gap: 16px;
     width: 100%;
@@ -1463,10 +1550,6 @@ label.bo-profile-preference {
 }
 
 @media (max-width: 760px) {
-  .bo-profile-shell {
-    padding-top: 30px;
-  }
-
   .bo-profile-page .bo-profile-card {
     width: calc(100% + 8px);
     max-width: calc(100% + 8px);
@@ -1492,114 +1575,7 @@ label.bo-profile-preference {
   .bo-profile-page .bo-profile-danger > a {
     font-size: 14px;
   }
-}
 
-body.is-profile-address-open {
-  overflow: hidden;
-}
-
-.profile-address-dialog[hidden] {
-  display: none;
-}
-
-.profile-address-dialog.is-default-updating {
-  display: none !important;
-}
-
-.profile-address-dialog {
-  position: fixed;
-  inset: 0;
-  z-index: 12000;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  font-family: Pretendard, "Apple SD Gothic Neo", Arial, sans-serif;
-}
-
-.profile-address-backdrop {
-  position: absolute;
-  inset: 0;
-  border: 0;
-  background: rgba(19, 12, 36, 0.46);
-  cursor: pointer;
-}
-
-.profile-address-modal {
-  position: relative;
-  z-index: 1;
-  box-sizing: border-box;
-  width: min(680px, calc(100vw - 48px));
-  max-height: calc(100vh - 32px);
-  overflow: hidden;
-  padding: 22px;
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 24px 64px rgba(49, 19, 108, 0.2);
-}
-
-.profile-address-dialog-head {
-  margin-bottom: 14px;
-  padding-right: 40px;
-}
-
-.profile-address-dialog-head h2,
-.profile-address-dialog-head p {
-  margin: 0;
-  color: #111;
-}
-
-.profile-address-dialog-head h2 {
-  font-size: 22px;
-  line-height: 1.2;
-  font-weight: 800;
-}
-
-.profile-address-dialog-head p {
-  margin-top: 4px;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.profile-address-close {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  color: var(--profile-purple);
-  background: #f4efff;
-  font-size: 24px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.profile-address-close:hover,
-.profile-address-close:focus-visible {
-  color: #fff;
-  background: #31136c;
-  outline: 0;
-}
-
-.profile-address-native-host {
-  height: 520px;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.profile-address-native-frame {
-  display: block;
-  width: 100%;
-  height: 520px;
-  min-height: 0;
-  border: 0;
-}
-
-@media (max-width: 760px) {
   .profile-address-dialog {
     padding: 16px;
   }
@@ -1633,5 +1609,16 @@ body.is-profile-address-open {
   .profile-address-native-frame {
     height: 610px;
     min-height: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-birthday-dialog {
+    padding: 12px;
+  }
+
+  .profile-birthday-panel {
+    width: min(350px, calc(100vw - 24px));
+    max-height: calc(100dvh - 24px);
   }
 }

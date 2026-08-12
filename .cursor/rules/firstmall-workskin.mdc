@@ -6,6 +6,16 @@ alwaysApply: false
 
 # Firstmall Skin Integration Rules
 
+## Original Skin Baseline
+
+Compare `firstmall-workskin/` against this folder only. Never edit it.
+
+`C:\Users\user\Desktop\(DONT CHANGE-20260730)Firstmall-original\responsive_food_mealkit_gl`
+
+- File exists there → **수정**
+- File does not exist there → **신규**
+- Do not use git status to decide new vs modified.
+
 ## URL → Template Mapping
 
 The public page URL usually maps to the skin HTML path:
@@ -44,6 +54,19 @@ When linking TrendyPicker design into Firstmall:
   - `[skin]/css/user.css`
 - Do **not** mix redesign patches into those files; they are already too complex.
 - Do **not** use CSS/JS `?v=` query strings on Firstmall links (they have broken asset loading).
+- Do **not** append a second block for a selector that already exists in the same file/media
+  context. Merge into the existing rule. `.a, .b` and `.b,.a` count as the same selector.
+- Do **not** add `!important` unless a Firstmall ID or legacy rule cannot be beaten with a
+  more specific page-scoped selector.
+
+## Validation
+
+After work-skin CSS/JS edits run `npm run check:firstmall` (work-skin validator plus
+`tools/check-css-style.mjs`). That check **fails** on duplicate selectors and on files
+whose `!important` ratio exceeds 25%. It **warns** when a file grows past its recorded
+baseline, or when `!important` use rises. Large page files are expected — do not split
+them to silence a size warning. After a legitimate size or `!important` cleanup, update
+the baselines in `tools/check-css-style.mjs`.
 
 ## Work-Skin Package
 
