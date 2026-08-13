@@ -14,6 +14,11 @@ const serverRenderedClasses = new Set([
   "size_full",
   "size_mail1",
   "size_mail2",
+  // Checkout `{#shipping_address}` module: order/_shipping_address.html
+  "delivery_info",
+  "delivery_info_member",
+  "delivery_info_input",
+  "settle_tab",
 ]);
 
 const collectFiles = (directory, extensions) =>

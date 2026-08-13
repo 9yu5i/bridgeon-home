@@ -7,7 +7,8 @@
    3. Shell / breadcrumbs / toolbar / sort
    4. Product grid (card/wish in trendypicker-listing-cards.css)
    5. Catalog card overrides
-   6. Responsive (761 / 1024 / 1023) — last
+   6. Responsive (761 / 1121 / 1120 / 1024-1120 off-canvas gap)
+   7. Pagination (paging_navigation pill redesign, matches trendypicker-brand.css)
 */
 
 /* ——— Page chrome ——— */
@@ -353,10 +354,16 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   float: none !important;
 }
 
+/* Flexbox, not grid: a trailing/orphan row (fewer items than columns) can
+   sit left-aligned at the same card width as every other row, instead of
+   CSS grid's stretched-to-fill auto-fill columns leaving empty cells.
+   flex-grow stays 0 — cards keep their normal width and never balloon to
+   fill leftover row space. */
 .bo-catalog-grid > ul,
 .bo-catalog-grid[data-displaytype="lattice"] > ul {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 12px;
   width: 100% !important;
   margin: 0 !important;
@@ -367,7 +374,12 @@ body.is-catalog-page .subpage_wrap .subpage_container {
 
 .bo-catalog-grid > ul > li {
   display: block;
-  width: 100% !important;
+  flex: 0 1 calc(50% - 6px);
+  /* Flex items default to min-width:auto (their content's intrinsic min
+     size), which can block shrinking to the 50% basis and collapse the row
+     to 1 column if a card's price/title content refuses to shrink. */
+  min-width: 0;
+  width: auto !important;
   max-width: none !important;
   float: none !important;
   margin: 0 !important;
@@ -410,12 +422,15 @@ body.is-catalog-page .subpage_wrap .subpage_container {
 @media (min-width: 761px) {
   .bo-catalog-grid > ul,
   .bo-catalog-grid[data-displaytype="lattice"] > ul {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--listing-grid-gap);
+  }
+
+  .bo-catalog-grid > ul > li {
+    flex-basis: calc((100% - (2 * var(--listing-grid-gap))) / 3);
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1121px) {
   .bo-catalog-shell {
     margin-top: -100px;
     padding: 28px 32px 56px;
@@ -450,6 +465,9 @@ body.is-catalog-page .subpage_wrap .subpage_container {
 
   .bo-catalog-grid > ul,
   .bo-catalog-grid[data-displaytype="lattice"] > ul {
+    /* Base rule (mobile/tablet) sets display: flex !important — this tier
+       goes back to a real grid so grid-template-columns takes effect. */
+    display: grid !important;
     width: 100%;
     max-width: calc(var(--listing-card-width) * 4 + var(--listing-grid-gap) * 3);
     /* Base rule sets margin: 0 !important — must match !important to win */
@@ -477,7 +495,7 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1120px) {
   .bo-catalog-count-desktop {
     display: none;
   }
@@ -493,4 +511,106 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   .bo-catalog-breadcrumbs {
     display: none;
   }
+}
+
+/* user.css only turns .search_left into the off-canvas filter panel up to
+   max-width:1023px. The desktop sidebar layout now only starts at 1121px,
+   so this gap replicates the same off-canvas behavior for 1024–1120px. */
+@media (min-width: 1024px) and (max-width: 1120px) {
+  #catalog_page .search_left {
+    width: 100% !important;
+    display: none !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 203 !important;
+    background-color: #fff !important;
+    height: 100% !important;
+    float: none !important;
+    padding-right: 0 !important;
+  }
+
+  #catalog_page .search_left.on {
+    display: block !important;
+  }
+
+  #catalog_page .catalog_right {
+    width: 100% !important;
+    padding-left: 0 !important;
+  }
+}
+
+/* ——— Pagination ——— */
+.bo-catalog-shell .paging_navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 32px;
+}
+
+.bo-catalog-shell .paging_navigation a,
+.bo-catalog-shell .paging_navigation input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  margin: 0;
+  border: 1px solid #e6ddf4;
+  border-radius: 10px;
+  color: #6d657c;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.bo-catalog-shell .paging_navigation a:hover {
+  border-color: #7b3fe4;
+  color: #7b3fe4;
+}
+
+.bo-catalog-shell .paging_navigation a.on {
+  border-color: #7b3fe4;
+  background: #7b3fe4;
+  color: #fff;
+  cursor: default;
+}
+
+.bo-catalog-shell .paging_navigation a.prev,
+.bo-catalog-shell .paging_navigation a.next,
+.bo-catalog-shell .paging_navigation a[rel="prev"],
+.bo-catalog-shell .paging_navigation a[rel="next"] {
+  overflow: visible;
+  text-indent: 0;
+  background-image: none;
+  font-size: 0;
+}
+
+.bo-catalog-shell .paging_navigation a.prev::before,
+.bo-catalog-shell .paging_navigation a[rel="prev"]::before {
+  content: "\2039";
+  font-size: 16px;
+}
+
+.bo-catalog-shell .paging_navigation a.next::before,
+.bo-catalog-shell .paging_navigation a[rel="next"]::before {
+  content: "\203a";
+  font-size: 16px;
+}
+
+.bo-catalog-shell .paging_navigation a.first,
+.bo-catalog-shell .paging_navigation a.last,
+.bo-catalog-shell .paging_navigation a.end,
+.bo-catalog-shell .paging_navigation a[rel="first"],
+.bo-catalog-shell .paging_navigation a[rel="last"],
+.bo-catalog-shell .paging_navigation a[rel="end"] {
+  display: none;
 }

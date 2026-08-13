@@ -14,12 +14,16 @@
 
   document.documentElement.classList.add("is-cart-page");
   if (document.body) document.body.classList.add("is-cart-page");
+  try {
+    if (sessionStorage.getItem("tpCartSilentDelete")) window._tpCartSilentDelete = true;
+  } catch (err) {}
   if (page.classList.contains("is-cart-empty") && document.body) {
     document.body.classList.add("is-cart-empty");
   }
 
   var FREE_SHIPPING = 48;
   var COUPON_KEY = "tpCartCoupon";
+  var SELECTION_KEY = "tpCartUnselected";
 
   function text(el) {
     return el ? String(el.textContent || "").replace(/\s+/g, " ").trim() : "";
@@ -74,32 +78,52 @@
     });
   }
 
+  function eachSelectedRow(fn) {
+    Array.prototype.forEach.call(
+      page.querySelectorAll('input[name="cart_option_seq[]"]'),
+      function (cb) {
+        if (!cb.checked) return;
+        var row = cb.closest("li.cart_goods, .cart-item");
+        if (!row || row.style.display === "none") return;
+        fn(row, cb);
+      }
+    );
+  }
+
+  function readRowTotals(row) {
+    var ea = parseInt(row.getAttribute("data-cart-ea"), 10) || 0;
+    if (!ea) {
+      var qtyOut = row.querySelector("[data-cart-qty-value]");
+      ea = parseInt(String(text(qtyOut) || "1").replace(/[^\d]/g, ""), 10) || 1;
+    }
+    var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
+    var compare = parseMoney(row.getAttribute("data-cart-unit-compare"));
+    var priceEl = row.querySelector(".cart-item-price");
+    var del = priceEl && priceEl.querySelector("del");
+    var strong = priceEl && priceEl.querySelector("strong");
+    if (!(unit > 0) && strong) unit = parseMoney(strong.textContent);
+    if (del) {
+      var fromDel = parseMoney(del.textContent);
+      if (fromDel > unit) compare = fromDel;
+    }
+    var line =
+      unit > 0
+        ? unit * ea
+        : parseMoney(text(row.querySelector("[data-cart-line-total], .cart-item-total")));
+    var discount = compare > unit && unit > 0 ? (compare - unit) * ea : 0;
+    return { ea: ea, unit: unit, compare: compare, line: line, discount: discount };
+  }
+
   function syncProductDiscount() {
     var total = 0;
-    page.querySelectorAll("li.cart_goods.cart-item, .cart-item").forEach(function (row) {
-      var compare = parseMoney(row.getAttribute("data-cart-unit-compare"));
-      var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
-      var ea = parseInt(row.getAttribute("data-cart-ea"), 10) || 0;
-      if (!ea) {
-        var qtyOut = row.querySelector("[data-cart-qty-value]");
-        ea = parseInt(String(text(qtyOut) || "1").replace(/[^\d]/g, ""), 10) || 1;
-      }
-      if (!(compare > unit)) {
-        var priceEl = row.querySelector(".cart-item-price");
-        var del = priceEl && priceEl.querySelector("del");
-        var strong = priceEl && priceEl.querySelector("strong");
-        if (del && strong) {
-          compare = parseMoney(del.textContent);
-          unit = parseMoney(strong.textContent);
-        }
-      }
-      if (compare > unit && ea > 0) total += (compare - unit) * ea;
+    eachSelectedRow(function (row) {
+      total += readRowTotals(row).discount;
     });
-
     total = Math.round(total * 100) / 100;
     var saleDd = document.getElementById("saleTotalPrice");
     var saleSpan = document.getElementById("mobile_total_sale");
     var saveEl = document.querySelector("[data-cart-save]");
+    var saleWrap = saleDd && saleDd.closest("div");
 
     if (saleDd) {
       saleDd.innerHTML =
@@ -110,8 +134,15 @@
     } else if (saleSpan) {
       saleSpan.textContent = formatMoney(total);
     }
+    if (saleWrap) {
+      if (total > 0) {
+        saleWrap.hidden = false;
+        saleWrap.removeAttribute("hidden");
+      } else {
+        saleWrap.hidden = true;
+      }
+    }
     if (saveEl) saveEl.textContent = formatMoney(total);
-    normalizeCartCurrency();
   }
 
   function ready(fn) {
@@ -123,35 +154,198 @@
   }
 
   function getSelectedSubtotal() {
-    var boxes = page.querySelectorAll('input[name="cart_option_seq[]"]');
-    if (!boxes.length) {
-      var totalEl = document.getElementById("totalGoodsPrice") || document.getElementById("totalPrice");
-      return parseMoney(text(totalEl));
-    }
-
-    var checkedTotal = 0;
-    var allTotal = 0;
+    var subtotal = 0;
     var anyChecked = false;
-    Array.prototype.forEach.call(boxes, function (cb) {
-      var row = cb.closest("li.cart_goods, .cart-item");
-      if (!row) return;
-      var line = parseMoney(text(row.querySelector(".cart-item-total")));
-      if (!line) {
-        var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
-        var ea = parseInt(row.getAttribute("data-cart-ea"), 10) || 1;
-        line = unit * ea;
-      }
-      allTotal += line;
-      if (!cb.checked) return;
+    eachSelectedRow(function (row) {
       anyChecked = true;
-      checkedTotal += line;
+      subtotal += readRowTotals(row).line;
     });
-
-    if (anyChecked) return checkedTotal;
-    if (allTotal > 0) return allTotal;
-
+    if (anyChecked) return Math.round(subtotal * 100) / 100;
+    if (page.querySelectorAll('input[name="cart_option_seq[]"]').length) return 0;
     var totalEl = document.getElementById("totalGoodsPrice") || document.getElementById("totalPrice");
     return parseMoney(text(totalEl));
+  }
+
+  function paintSelectionSummary() {
+    var subtotal = 0;
+    var discount = 0;
+    var items = 0;
+    eachSelectedRow(function (row) {
+      var info = readRowTotals(row);
+      subtotal += info.line;
+      discount += info.discount;
+      items += info.ea;
+    });
+    subtotal = Math.round(subtotal * 100) / 100;
+    discount = Math.round(discount * 100) / 100;
+
+    syncPromoSummary();
+    var coupon = readStoredCoupon();
+    var promoAmt =
+      parseMoney(text(document.querySelector("[data-cart-summary-promo-discount]"))) ||
+      parseMoney(text(document.getElementById("total_promotion_goods_sale")));
+    var couponAmt = coupon ? estimateCouponDiscount(coupon) : 0;
+    var shippingAmt = parseMoney(text(document.getElementById("total_shipping_price")));
+    // Subtotal is already sale-price (unit × qty). Product Discount is
+    // list−sale info only — do not subtract it again from Total.
+    var grand = Math.max(0, subtotal - promoAmt - couponAmt + shippingAmt);
+    grand = Math.round(grand * 100) / 100;
+
+    var goods = document.getElementById("totalGoodsPrice");
+    var totalEl = document.getElementById("totalPrice");
+    var countEl = document.querySelector("[data-cart-subtotal-count]");
+    var saleDd = document.getElementById("saleTotalPrice");
+    var saleWrap = saleDd && saleDd.closest("div");
+    var saveEl = document.querySelector("[data-cart-save]");
+    var shippingEl = document.getElementById("total_shipping_price");
+    var shippingWrap = document.getElementById("shippingTotalPrice");
+
+    if (countEl) {
+      countEl.textContent = "(" + items + " item" + (items === 1 ? "" : "s") + ")";
+    }
+    if (goods) goods.textContent = formatMoney(subtotal);
+    if (totalEl) totalEl.textContent = formatMoney(grand);
+
+    if (saleDd) {
+      saleDd.innerHTML =
+        (discount > 0 ? "- " : "") +
+        '<span id="mobile_total_sale">' +
+        formatMoney(discount) +
+        "</span>";
+    }
+    if (saleWrap) {
+      if (discount > 0) {
+        saleWrap.hidden = false;
+        saleWrap.removeAttribute("hidden");
+      } else {
+        saleWrap.hidden = true;
+      }
+    }
+    if (saveEl) saveEl.textContent = formatMoney(discount + promoAmt + couponAmt);
+    if (!items) {
+      if (shippingEl) shippingEl.textContent = formatMoney(0);
+      if (shippingWrap) shippingWrap.classList.add("cart-free");
+    }
+
+    syncShippingMeter();
+    paintSelectedCoupon(readStoredCoupon());
+    normalizeCartCurrency();
+  }
+
+  // Checking/unchecking an item can trigger paintSelectionSummary from up to
+  // three independent places at once (the wrapped native setPriceInfoCheck,
+  // the ajaxStop follow-up below, and bindShippingMeter's own change/click
+  // listeners) — each one a full re-scan of the cart list. Routing them all
+  // through a single coalesced timer means a click only ever pays for one
+  // pass instead of two or three stacking up, which is what made toggling a
+  // checkbox feel slow.
+  var paintSelectionSummaryTimer = null;
+  function schedulePaintSelectionSummary(delay) {
+    window.clearTimeout(paintSelectionSummaryTimer);
+    paintSelectionSummaryTimer = window.setTimeout(paintSelectionSummary, delay || 0);
+  }
+
+  // The native setPriceInfoCheck() (common-function.js, not ours to edit)
+  // calls setPriceInfo(), which hits /order/cart_price with async:false —
+  // a SYNCHRONOUS XHR that freezes the entire tab until the server
+  // responds. That's the real reason toggling a checkbox felt slow, not
+  // just extra client-side work. This replicates the same request and the
+  // same setCartPriceInfo(data) success callback (so shipping/discount
+  // detail HTML built server-side still stays accurate) but as a normal
+  // async request, so it never blocks the page.
+  function requestCartPriceInfo() {
+    if (typeof window.jQuery === "undefined") return;
+    var checkGoods = "";
+    var checkCartSeqs = "";
+    Array.prototype.forEach.call(
+      page.querySelectorAll('input[name="cart_option_seq[]"]'),
+      function (cb) {
+        if (cb.checked) {
+          checkGoods += (cb.getAttribute("rel") || "") + "||";
+          checkCartSeqs += cb.value + "||";
+        }
+      }
+    );
+    var nationInput = document.querySelector('input[name="nation"]');
+    window.jQuery.ajax({
+      url: "/order/cart_price",
+      dataType: "json",
+      data: {
+        goodsSeq: checkGoods,
+        nation: nationInput ? nationInput.value : "",
+        checkCartSeqs: checkCartSeqs,
+      },
+      type: "post",
+      success: function (data) {
+        if (typeof window.setCartPriceInfo === "function") {
+          try {
+            window.setCartPriceInfo(data);
+          } catch (err) {}
+        }
+        // setCartPriceInfo() writes get_currency_price()'s raw server
+        // format straight into #totalGoodsPrice/#shippingTotalPrice/
+        // #totalPrice/#saleTotalPrice (e.g. plain KRW, no "US$"), since it
+        // was written to be the last word on those elements. Re-run our
+        // own formatting after it so those fields end up back in "US$"
+        // instead of showing whatever the server just rendered.
+        schedulePaintSelectionSummary(0);
+      },
+    });
+  }
+
+  function patchSetPriceInfoCheck() {
+    var original = window.setPriceInfoCheck;
+    if (typeof original !== "function" || original._tpCartPatched) {
+      if (typeof original === "function" && original._tpCartPatched) return;
+      if (!patchSetPriceInfoCheck.tries) patchSetPriceInfoCheck.tries = 0;
+      if (patchSetPriceInfoCheck.tries < 40) {
+        patchSetPriceInfoCheck.tries += 1;
+        window.setTimeout(patchSetPriceInfoCheck, 100);
+      }
+      return;
+    }
+
+    // Deliberately does not call original() at all — that's the blocking
+    // sync-XHR path. Instant client-side totals + the same request fired
+    // async gets the identical end state without the freeze.
+    function wrapped() {
+      schedulePaintSelectionSummary(0);
+      requestCartPriceInfo();
+    }
+    wrapped._tpCartPatched = true;
+    window.setPriceInfoCheck = wrapped;
+  }
+
+  function resyncAllRowTotals() {
+    collectCartRows().forEach(function (row) {
+      var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
+      var compare = parseMoney(row.getAttribute("data-cart-unit-compare"));
+      if (!(unit > 0)) return;
+      var ea = readRowQty(row);
+      row.setAttribute("data-cart-ea", String(ea));
+      var total = row.querySelector("[data-cart-line-total], .cart-item-total");
+      if (total) total.textContent = formatMoney(unit * ea);
+    });
+  }
+
+  function patchSetCartPriceInfo() {
+    var original = window.setCartPriceInfo;
+    if (typeof original !== "function" || original._tpCartPatched) {
+      if (typeof original === "function" && original._tpCartPatched) return;
+      if (!patchSetCartPriceInfo.tries) patchSetCartPriceInfo.tries = 0;
+      if (patchSetCartPriceInfo.tries < 40) {
+        patchSetCartPriceInfo.tries += 1;
+        window.setTimeout(patchSetCartPriceInfo, 100);
+      }
+      return;
+    }
+    function wrapped(data) {
+      original.call(this, data);
+      resyncAllRowTotals();
+      paintSelectionSummary();
+    }
+    wrapped._tpCartPatched = true;
+    window.setCartPriceInfo = wrapped;
   }
 
   var shippingMeterTransitionsEnabled = false;
@@ -211,12 +405,12 @@
         target.matches("input.btn_select_all") ||
         target.classList.contains("btn_select_all")
       ) {
-        syncShippingMeter();
+        schedulePaintSelectionSummary(0);
       }
     });
     page.addEventListener("click", function (event) {
       if (event.target.closest(".btn_select_all, .checkbox_allselect, .cart-items-head label")) {
-        window.requestAnimationFrame(syncShippingMeter);
+        schedulePaintSelectionSummary(0);
       }
     });
   }
@@ -326,6 +520,33 @@
     }
   }
 
+  // #total_promotion_goods_sale is native Firstmall — populated
+  // asynchronously by order_price_calculate()'s hidden-iframe response
+  // (see getPromotionckloding() inline in cart.html) once a promo code is
+  // active, not by any template expression. Mirror that real amount into
+  // the ORDER SUMMARY card's promo row, same pattern as paintSelectedCoupon
+  // does for the coupon row.
+  function syncPromoSummary() {
+    var row = document.querySelector("[data-cart-summary-promo]");
+    var out = document.querySelector("[data-cart-summary-promo-discount]");
+    var label = document.querySelector("[data-cart-summary-promo-label]");
+    var srcEl = document.getElementById("total_promotion_goods_sale");
+    var codeInput = document.getElementById("cartpromotioncode");
+    var code = codeInput ? String(codeInput.value || "").trim() : "";
+    if (!row || !out) return;
+
+    var amount = parseMoney(srcEl ? srcEl.textContent : "");
+    if (label) label.textContent = code ? "Promo code (" + code + ")" : "Promo code";
+    if (!code || amount <= 0) {
+      out.textContent = "";
+      row.hidden = true;
+      return;
+    }
+    out.textContent = "- " + formatMoney(amount);
+    row.hidden = false;
+    row.removeAttribute("hidden");
+  }
+
   function bindPaypal() {
     var button = document.querySelector("[data-cart-paypal]");
     if (!button) return;
@@ -351,23 +572,86 @@
     sessionStorage.setItem(COUPON_KEY, JSON.stringify(coupon));
   }
 
-  function getCartSaleSubtotal() {
-    var total = 0;
-    var rows = page.querySelectorAll("li.cart_goods.cart-item, .cart-item");
-    rows.forEach(function (row) {
-      var check = row.querySelector('input[name="cart_option_seq[]"]');
-      if (check && !check.checked) return;
-      var line = parseMoney(text(row.querySelector(".cart-item-total")));
-      if (line > 0) {
-        total += line;
-        return;
+  // Cart defaults every item to checked. We only ever need to remember the
+  // items the user unchecked — anything not in this list (including items
+  // added to the cart later) stays checked by default, which is the
+  // behavior a fresh page load already has.
+  function readUnselected() {
+    try {
+      var raw = JSON.parse(sessionStorage.getItem(SELECTION_KEY) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  function writeUnselected(list) {
+    try {
+      if (list.length) {
+        sessionStorage.setItem(SELECTION_KEY, JSON.stringify(list));
+      } else {
+        sessionStorage.removeItem(SELECTION_KEY);
       }
-      var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
-      var ea = parseInt(row.getAttribute("data-cart-ea"), 10) || 1;
-      total += unit * ea;
+    } catch (err) {}
+  }
+
+  function persistSelectionState() {
+    var boxes = page.querySelectorAll('input[name="cart_option_seq[]"]');
+    var unselected = [];
+    Array.prototype.forEach.call(boxes, function (cb) {
+      if (!cb.checked) unselected.push(cb.value);
     });
-    if (total > 0) return total;
-    return parseMoney(text(document.getElementById("totalGoodsPrice")));
+    writeUnselected(unselected);
+  }
+
+  // Runs once on load, after the native inline script in cart.html has
+  // already rendered every checkbox checked (its default). Un-checks
+  // whichever ones the user deselected before navigating away, so the
+  // selection survives a trip to a product page and back — previously it
+  // silently reset to "everything selected" on every fresh load.
+  function restoreSelectionState() {
+    var unselected = readUnselected();
+    if (!unselected.length) return;
+    var unselectedSet = Object.create(null);
+    unselected.forEach(function (value) {
+      unselectedSet[value] = true;
+    });
+
+    var boxes = page.querySelectorAll('input[name="cart_option_seq[]"]');
+    var anyRestored = false;
+    Array.prototype.forEach.call(boxes, function (cb) {
+      if (!unselectedSet[cb.value] || !cb.checked) return;
+      cb.checked = false;
+      anyRestored = true;
+      var row = document.getElementById("cart_goods_" + cb.value);
+      if (row) row.classList.remove("selected");
+    });
+    if (!anyRestored) return;
+
+    var selectAll = document.querySelector(".btn_select_all");
+    if (selectAll && boxes.length) {
+      selectAll.checked = Array.prototype.every.call(boxes, function (cb) {
+        return cb.checked;
+      });
+    }
+    schedulePaintSelectionSummary(0);
+  }
+
+  function bindSelectionPersistence() {
+    page.addEventListener("change", function (event) {
+      var target = event.target;
+      if (!target || !target.matches) return;
+      if (
+        target.matches('input[name="cart_option_seq[]"]') ||
+        target.matches("input.btn_select_all") ||
+        target.classList.contains("btn_select_all")
+      ) {
+        // The native select-all handler updates every checkbox's checked
+        // state synchronously in its own change handler, but handler order
+        // isn't guaranteed — defer a tick so we snapshot after it's done.
+        window.setTimeout(persistSelectionState, 0);
+      }
+    });
   }
 
   function buildCouponTitle(coupon) {
@@ -406,11 +690,95 @@
     return name;
   }
 
+  function parseCouponMinPurchase(coupon) {
+    var blob = [
+      coupon && coupon.terms,
+      coupon && coupon.sale,
+      coupon && coupon.name,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!blob) return 0;
+
+    var patterns = [
+      /([\d.,]+)\s*USD\s*or more/i,
+      /(?:US\$|\$)\s*([\d.,]+)\s*or more/i,
+      /min(?:imum)?\.?\s*purchase[^0-9$]*(?:US\$|\$)?\s*([\d.,]+)/i,
+      /([\d.,]+)\s*(?:USD|US\$|\$)?\s*(?:이상(?:\s*구매)?|or more purchased)/i,
+      /([\d.,]+)\s*(?:원|₩)\s*이상/,
+    ];
+    for (var i = 0; i < patterns.length; i += 1) {
+      var match = blob.match(patterns[i]);
+      if (match) return parseMoney(match[1]);
+    }
+    return 0;
+  }
+
+  function getCouponAvailability(coupon) {
+    if (!coupon) {
+      return { available: false, min: 0, reason: "" };
+    }
+    var min = parseCouponMinPurchase(coupon);
+    var subtotal = getSelectedSubtotal();
+    if (min > 0 && subtotal + 0.001 < min) {
+      return {
+        available: false,
+        min: min,
+        reason: "Available with selected items over " + formatMoney(min) + ".",
+      };
+    }
+    return { available: true, min: min, reason: "" };
+  }
+
+  function showCouponMinError(message) {
+    var note = document.querySelector("[data-cart-coupon-min-error]");
+    if (!note) return;
+    if (!message) {
+      note.hidden = true;
+      note.textContent = "";
+      return;
+    }
+    note.hidden = false;
+    note.textContent = message;
+  }
+
+  function trySelectCoupon(coupon) {
+    var availability = getCouponAvailability(coupon);
+    if (!availability.available) {
+      showCouponMinError(availability.reason || "This coupon cannot be used with the current cart.");
+      return false;
+    }
+    showCouponMinError("");
+    storeCoupon(coupon);
+    paintSelectedCoupon(coupon);
+    closeCouponDialog();
+    return true;
+  }
+
+  function syncCouponTicketState(ticket, coupon, activeId) {
+    if (!ticket) return;
+    var availability = getCouponAvailability(coupon);
+    var applied = Boolean(
+      activeId && coupon && coupon.id && String(coupon.id) === String(activeId)
+    );
+    ticket.classList.toggle("is-applied", applied);
+    ticket.classList.toggle("is-unavailable", !availability.available);
+    var btn = ticket.querySelector(".cart-coupon-apply, button");
+    if (!btn) return;
+    btn.textContent = applied ? "Applied" : "Use";
+    btn.classList.toggle("is-applied", applied);
+    btn.disabled = !availability.available;
+    btn.setAttribute("aria-disabled", availability.available ? "false" : "true");
+  }
+
   function estimateCouponDiscount(coupon) {
+    if (!getCouponAvailability(coupon).available) return 0;
     var sale = String((coupon && coupon.sale) || "").trim();
     var name = String((coupon && coupon.name) || "").trim();
     var blob = (sale + " " + name).replace(/\s+/g, " ").trim();
-    var subtotal = getCartSaleSubtotal();
+    var subtotal = getSelectedSubtotal();
     var pct = blob.match(/(\d+(?:\.\d+)?)\s*%/);
     if (pct) {
       var amount = subtotal * (parseFloat(pct[1]) / 100);
@@ -453,79 +821,88 @@
       return;
     }
 
+    var availability = getCouponAvailability(coupon);
+    if (!availability.available) {
+      storeCoupon(null);
+      paintSelectedCoupon(null);
+      refreshCouponListSelection();
+      return;
+    }
+
     var title = buildCouponTitle(coupon);
     var displayName = buildCouponDisplayName(coupon, title);
     var headline = [title, displayName].filter(Boolean).join(" ");
-    var discountText = "- " + formatMoney(estimateCouponDiscount(coupon));
+    var discount = estimateCouponDiscount(coupon);
+    var discountText = "- " + formatMoney(discount);
+    var messageEl = selected && selected.querySelector("p:first-child span");
 
     if (label) label.textContent = headline || "Coupon selected.";
     if (codeEl) codeEl.textContent = headline || title || "Coupon";
     if (discountEl) discountEl.textContent = discountText;
-    if (noteEl) {
-      noteEl.textContent = coupon.terms || "Applied at checkout.";
-    }
+    if (messageEl) messageEl.textContent = "Coupon selected!";
+    if (noteEl) noteEl.textContent = coupon.terms || "Applied at checkout.";
     if (selected) selected.hidden = false;
-    if (summary) summary.hidden = false;
+    if (summary) summary.hidden = discount <= 0;
     if (summaryLabel) summaryLabel.textContent = "Coupon (" + title + ")";
     if (summaryDiscount) summaryDiscount.textContent = discountText;
     if (openBtn) openBtn.textContent = "Change Coupon";
   }
 
-  function formatCouponSale(sale) {
-    var raw = String(sale || "").trim();
-    if (!raw) return "";
-    if (/<strong/i.test(raw)) return raw;
-    var match = raw.match(/^([\d.,]+)\s*(%|원|₩|\$|USD|US\$)?(.*)$/i);
-    if (!match) return raw;
-    return (
-      "<strong>" +
-      match[1] +
-      "</strong>" +
-      (match[2] || "") +
-      (match[3] || "")
+  function couponBadgeFromTicket(ticket, name) {
+    var el = ticket && ticket.querySelector(
+      ".bo-coupon-ticket-top span, [data-coupon-badge], .cart-owned-coupon > div > span"
     );
+    var fromTicket = text(el);
+    if (fromTicket && !/^my$/i.test(fromTicket)) return fromTicket;
+    var blob = String(name || "");
+    if (/welcome/i.test(blob)) return "WELCOME";
+    if (/special/i.test(blob)) return "SPECIAL";
+    if (/surprise/i.test(blob)) return "SURPRISE";
+    if (/\bnew\b/i.test(blob)) return "NEW";
+    return "";
   }
 
   function couponDataFromTicket(ticket) {
+    var name = text(ticket.querySelector(".bo-coupon-name, [data-coupon-name], p"));
+    var sale = text(ticket.querySelector("[data-coupon-sale], h3"));
+    var terms = text(ticket.querySelector(".bo-coupon-terms, small"));
+    var expire = text(ticket.querySelector(".bo-coupon-expire-inline"));
     return {
       id:
         ticket.getAttribute("data-download-seq") ||
         ticket.getAttribute("data-coupon-seq") ||
         "",
-      name: text(ticket.querySelector(".bo-coupon-name, [data-coupon-name]")),
-      sale: text(ticket.querySelector("[data-coupon-sale], h3")),
-      terms: text(
-        ticket.querySelector(".bo-coupon-terms, .bo-coupon-expire-inline")
-      ),
-      badge: "MY",
+      name: name,
+      sale: sale,
+      terms: terms,
+      expire: expire,
+      badge: couponBadgeFromTicket(ticket, name || sale),
     };
   }
 
   function couponCard(coupon, activeId) {
     var article = document.createElement("article");
-    var applied = String(coupon.id) === String(activeId || "");
-    article.className = "bo-coupon-ticket" + (applied ? " is-applied" : "");
+    var title = buildCouponTitle(coupon);
+    var displayName = buildCouponDisplayName(coupon, title) || coupon.name || "";
+    var meta = [];
+    if (coupon.terms) meta.push(escapeHtml(coupon.terms));
+    if (coupon.expire) meta.push("Expires " + escapeHtml(coupon.expire));
+    article.className = "cart-owned-coupon";
     article.setAttribute("data-coupon-ticket", "");
     if (coupon.id) article.setAttribute("data-download-seq", coupon.id);
     article.innerHTML =
-      '<div class="bo-coupon-ticket-top"><span>' +
-      (coupon.badge || "MY") +
-      "</span></div><h3 data-coupon-sale>" +
-      formatCouponSale(coupon.sale || "") +
-      '</h3><p class="bo-coupon-name">' +
-      (coupon.name || "") +
-      "</p>" +
-      (coupon.terms
-        ? '<p class="bo-coupon-terms">' + coupon.terms + "</p>"
-        : "") +
-      '<div class="bo-coupon-ticket-actions"><button type="button" class="bo-coupon-action cart-coupon-apply">' +
-      (applied ? "Selected" : "Select") +
-      "</button></div>";
+      "<div>" +
+      (coupon.badge ? "<span>" + escapeHtml(coupon.badge) + "</span>" : "") +
+      "<h3>" +
+      escapeHtml(title) +
+      "</h3>" +
+      (displayName ? "<p>" + escapeHtml(displayName) + "</p>" : "") +
+      (meta.length ? "<small>" + meta.join("<br>") + "</small>" : "") +
+      '</div><button type="button" class="cart-coupon-apply">Use</button>';
     article.querySelector("button").addEventListener("click", function () {
-      storeCoupon(coupon);
-      paintSelectedCoupon(coupon);
-      closeCouponDialog();
+      trySelectCoupon(coupon);
     });
+    syncCouponTicketState(article, coupon, activeId);
     return article;
   }
 
@@ -537,31 +914,9 @@
     tickets.forEach(function (ticket) {
       var status = (ticket.getAttribute("data-use-status") || "unused").toLowerCase();
       if (status && status !== "unused" && status !== "n" && status !== "0") return;
-
-      var clone = ticket.cloneNode(true);
-      var coupon = couponDataFromTicket(clone);
+      var coupon = couponDataFromTicket(ticket);
       if (!coupon.name && !coupon.sale) return;
-
-      var actions = clone.querySelector(".bo-coupon-ticket-actions");
-      if (!actions) {
-        actions = document.createElement("div");
-        actions.className = "bo-coupon-ticket-actions";
-        clone.appendChild(actions);
-      }
-      actions.innerHTML = "";
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "bo-coupon-action cart-coupon-apply";
-      var applied = String(coupon.id) === String(activeId || "");
-      btn.textContent = applied ? "Selected" : "Select";
-      if (applied) clone.classList.add("is-applied");
-      btn.addEventListener("click", function () {
-        storeCoupon(coupon);
-        paintSelectedCoupon(coupon);
-        closeCouponDialog();
-      });
-      actions.appendChild(btn);
-      list.appendChild(clone);
+      list.appendChild(couponCard(coupon, activeId));
       mounted += 1;
     });
     return mounted;
@@ -588,19 +943,90 @@
         name: name,
         sale: sale,
         terms: text(row.querySelector(".descr, .coupon_date")),
-        badge: "MY",
+        badge: couponBadgeFromTicket(row, name || sale),
       });
     });
     return list;
   }
 
-  function getCouponTicketId(ticket) {
-    if (!ticket) return "";
-    return (
-      ticket.getAttribute("data-download-seq") ||
-      ticket.getAttribute("data-coupon-seq") ||
-      ""
+  var couponLoadPromise = null;
+
+  function extractCouponMarkup(html) {
+    var raw = String(html || "");
+    var tickets = raw.match(/<article\b[^>]*bo-coupon-ticket[\s\S]*?<\/article>/gi);
+    if (tickets && tickets.length) return tickets.join("");
+    if (/data-coupon-grid|bo-coupon-empty|You have no coupons/i.test(raw)) return "";
+    return null;
+  }
+
+  function renderCouponList(html) {
+    var list = document.querySelector("[data-cart-coupon-list]");
+    if (!list) return;
+    if (!html) {
+      list.innerHTML = "<p class=\"cart-country-empty\">Sign in to use coupons.</p>";
+      return;
+    }
+    var markup = extractCouponMarkup(html);
+    if (markup === "") {
+      list.innerHTML = "<p class=\"cart-country-empty\">You have no coupons.</p>";
+      list.setAttribute("data-loaded", "1");
+      return;
+    }
+    var doc = new DOMParser().parseFromString(
+      markup
+        ? "<div data-coupon-grid>" + markup + "</div>"
+        : html,
+      "text/html"
     );
+    var active = readStoredCoupon();
+    list.innerHTML = "";
+    var mounted = mountCouponTickets(list, doc, active && active.id);
+    if (mounted) {
+      list.setAttribute("data-loaded", "1");
+      return;
+    }
+    var coupons = parseCouponDoc(doc);
+    if (!coupons.length) {
+      list.innerHTML =
+        /\/member\/login|name=["']userid["']/i.test(html)
+          ? "<p class=\"cart-country-empty\">Sign in to use coupons.</p>"
+          : "<p class=\"cart-country-empty\">You have no coupons.</p>";
+      list.setAttribute("data-loaded", "1");
+      return;
+    }
+    coupons.forEach(function (coupon) {
+      list.appendChild(couponCard(coupon, active && active.id));
+    });
+    list.setAttribute("data-loaded", "1");
+  }
+
+  function loadCartCoupons() {
+    var list = document.querySelector("[data-cart-coupon-list]");
+    if (!list) return Promise.resolve();
+    if (list.getAttribute("data-loaded") === "1") return Promise.resolve();
+    if (couponLoadPromise) return couponLoadPromise;
+
+    couponLoadPromise = fetch("/mypage/coupon?tab=1", {
+      credentials: "same-origin",
+      cache: "default",
+    })
+      .then(function (res) {
+        return res.ok ? res.text() : "";
+      })
+      .then(function (html) {
+        renderCouponList(html);
+      })
+      .catch(function () {
+        couponLoadPromise = null;
+        if (!list || list.getAttribute("data-loaded") === "1") return;
+        list.innerHTML = "<p class=\"cart-country-empty\">Could not load coupons.</p>";
+      });
+
+    return couponLoadPromise;
+  }
+
+  function prefetchCartCoupons() {
+    loadCartCoupons();
   }
 
   function refreshCouponListSelection() {
@@ -610,12 +1036,8 @@
     var active = readStoredCoupon();
     var activeId = active && active.id ? String(active.id) : "";
 
-    list.querySelectorAll("[data-coupon-ticket], .bo-coupon-ticket").forEach(function (ticket) {
-      var ticketId = getCouponTicketId(ticket);
-      var applied = Boolean(activeId && ticketId && String(ticketId) === activeId);
-      ticket.classList.toggle("is-applied", applied);
-      var btn = ticket.querySelector(".cart-coupon-apply, .bo-coupon-action");
-      if (btn) btn.textContent = applied ? "Selected" : "Select";
+    list.querySelectorAll("[data-coupon-ticket], .cart-owned-coupon").forEach(function (ticket) {
+      syncCouponTicketState(ticket, couponDataFromTicket(ticket), activeId);
     });
   }
 
@@ -625,6 +1047,8 @@
     dialog.hidden = false;
     dialog.setAttribute("aria-hidden", "false");
     document.body.classList.add("is-cart-coupon-open");
+    showCouponMinError("");
+    refreshCouponListSelection();
   }
 
   function closeCouponDialog() {
@@ -654,44 +1078,26 @@
     }
 
     if (!openBtn || !list) return;
+    openBtn.addEventListener("pointerenter", prefetchCartCoupons);
+    openBtn.addEventListener("focus", prefetchCartCoupons);
     openBtn.addEventListener("click", function () {
       openCouponDialog();
       if (list.getAttribute("data-loaded") === "1") {
         refreshCouponListSelection();
         return;
       }
-      list.innerHTML = "<p class=\"cart-country-empty\">Loading coupons…</p>";
-      fetch("/mypage/coupon?tab=1", { credentials: "same-origin" })
-        .then(function (res) {
-          return res.ok ? res.text() : "";
-        })
-        .then(function (html) {
-          if (!html) {
-            list.innerHTML = "<p class=\"cart-country-empty\">Sign in to use coupons.</p>";
-            return;
-          }
-          var doc = new DOMParser().parseFromString(html, "text/html");
-          var active = readStoredCoupon();
-          list.innerHTML = "";
-          var mounted = mountCouponTickets(list, doc, active && active.id);
-          if (mounted) {
-            list.setAttribute("data-loaded", "1");
-            return;
-          }
-          var coupons = parseCouponDoc(doc);
-          if (!coupons.length) {
-            list.innerHTML = "<p class=\"cart-country-empty\">You have no coupons.</p>";
-            return;
-          }
-          coupons.forEach(function (coupon) {
-            list.appendChild(couponCard(coupon, active && active.id));
-          });
-          list.setAttribute("data-loaded", "1");
-        })
-        .catch(function () {
-          list.innerHTML = "<p class=\"cart-country-empty\">Could not load coupons.</p>";
-        });
+      if (!list.querySelector(".cart-owned-coupon")) {
+        list.innerHTML = "<p class=\"cart-country-empty\">Loading coupons…</p>";
+      }
+      loadCartCoupons().then(function () {
+        refreshCouponListSelection();
+      });
     });
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(prefetchCartCoupons, { timeout: 1200 });
+    } else {
+      window.setTimeout(prefetchCartCoupons, 300);
+    }
 
     page.addEventListener("change", function (event) {
       if (
@@ -946,21 +1352,31 @@
     active: false,
     y: 0,
     timer: null,
-    layerObserver: null,
+    poll: null,
     nativeScrollTo: null,
     jqScrollTop: null,
     onScroll: null,
     closeBound: false,
+    seenOpen: false,
   };
+
+  function cartQvScrollY() {
+    return (
+      window.pageYOffset ||
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0
+    );
+  }
 
   function endCartQvGuard(restore) {
     if (cartQvGuard.timer) {
       window.clearTimeout(cartQvGuard.timer);
       cartQvGuard.timer = null;
     }
-    if (cartQvGuard.layerObserver) {
-      cartQvGuard.layerObserver.disconnect();
-      cartQvGuard.layerObserver = null;
+    if (cartQvGuard.poll) {
+      window.clearInterval(cartQvGuard.poll);
+      cartQvGuard.poll = null;
     }
     if (cartQvGuard.onScroll) {
       window.removeEventListener("scroll", cartQvGuard.onScroll);
@@ -976,15 +1392,18 @@
     }
     document.body.classList.remove("is-cart-qv-loading");
     var y = cartQvGuard.y;
+    var shouldRestore = restore && y > 8 && cartQvScrollY() < 8;
     cartQvGuard.y = 0;
     cartQvGuard.active = false;
-    if (restore && y && typeof window.scrollTo === "function") {
+    cartQvGuard.seenOpen = false;
+    if (shouldRestore && typeof window.scrollTo === "function") {
       window.scrollTo(0, y);
     }
   }
 
   function restoreCartQvScroll() {
-    if (!cartQvGuard.active || !cartQvGuard.y) return;
+    if (!cartQvGuard.active || cartQvGuard.y < 8) return;
+    if (cartQvScrollY() >= 8) return;
     if (cartQvGuard.nativeScrollTo) {
       cartQvGuard.nativeScrollTo.call(window, 0, cartQvGuard.y);
       return;
@@ -994,15 +1413,12 @@
 
   function beginCartQvGuard() {
     endCartQvGuard(false);
-    var savedY =
-      window.pageYOffset ||
-      document.documentElement.scrollTop ||
-      document.body.scrollTop ||
-      0;
+    var savedY = cartQvScrollY();
     if (!savedY) return;
 
     cartQvGuard.y = savedY;
     cartQvGuard.active = true;
+    cartQvGuard.seenOpen = false;
     cartQvGuard.nativeScrollTo = window.scrollTo.bind(window);
 
     window.scrollTo = function (a, b) {
@@ -1029,56 +1445,55 @@
     }
 
     cartQvGuard.onScroll = function () {
-      if (cartQvGuard.active && savedY > 8 && window.pageYOffset < 8) {
-        restoreCartQvScroll();
-      }
+      if (cartQvGuard.active) restoreCartQvScroll();
     };
     window.addEventListener("scroll", cartQvGuard.onScroll, { passive: true });
+
+    cartQvGuard.poll = window.setInterval(function () {
+      if (!cartQvGuard.active) return;
+      restoreCartQvScroll();
+      if (isCartQuickviewOpen()) {
+        cartQvGuard.seenOpen = true;
+        document.body.classList.remove("is-cart-qv-loading");
+        return;
+      }
+      if (cartQvGuard.seenOpen) {
+        endCartQvGuard(true);
+      }
+    }, 120);
+
     cartQvGuard.timer = window.setTimeout(function () {
-      endCartQvGuard(true);
-    }, 4000);
+      endCartQvGuard(false);
+    }, 15000);
   }
 
   function findCartQuickviewLayer() {
+    // #quickviewModal (.qv-modal / .qv-modal-close / .qv-modal-dim) is the
+    // add-to-cart quickview actually used on this page (built by
+    // goods-display_mobile.js). .resp_layer_pop/.ui-dialog below are for
+    // an older quickview layout kept as a fallback in case that changes.
+    var modal = document.getElementById("quickviewModal");
+    if (modal) return modal;
     var quickview =
       document.getElementById("goods_view_quickview") ||
       document.querySelector(".qv-product-card");
     if (!quickview) return null;
-    return quickview.closest(".resp_layer_pop, .ui-dialog");
+    return quickview.closest(".resp_layer_pop, .ui-dialog") || quickview;
   }
 
-  function watchCartQuickviewLayerClose(layer) {
-    if (!layer || !window.MutationObserver) return;
-    if (cartQvGuard.layerObserver) cartQvGuard.layerObserver.disconnect();
-    cartQvGuard.layerObserver = new MutationObserver(function () {
-      if (layer.classList.contains("hide") || !document.body.contains(layer)) {
-        endCartQvGuard(true);
-      }
-    });
-    cartQvGuard.layerObserver.observe(layer, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
+  function isCartQuickviewOpen() {
+    var layer = findCartQuickviewLayer();
+    if (!layer || layer.classList.contains("hide")) return false;
+    if (layer.getAttribute("aria-hidden") === "true") return false;
+    var style = window.getComputedStyle(layer);
+    return style.display !== "none" && style.visibility !== "hidden";
   }
 
   function attachCartQuickviewAfterOpen() {
-    var layer = findCartQuickviewLayer();
-    if (layer && !layer.classList.contains("hide")) {
+    restoreCartQvScroll();
+    if (isCartQuickviewOpen()) {
       document.body.classList.remove("is-cart-qv-loading");
-      watchCartQuickviewLayerClose(layer);
-      restoreCartQvScroll();
-      return;
     }
-    window.setTimeout(function () {
-      var retryLayer = findCartQuickviewLayer();
-      if (retryLayer && !retryLayer.classList.contains("hide")) {
-        document.body.classList.remove("is-cart-qv-loading");
-        watchCartQuickviewLayerClose(retryLayer);
-      }
-      restoreCartQvScroll();
-    }, 0);
-    window.setTimeout(restoreCartQvScroll, 80);
-    window.setTimeout(restoreCartQvScroll, 200);
   }
 
   function bindCartQuickviewClose() {
@@ -1090,7 +1505,7 @@
       function (event) {
         if (
           !event.target.closest(
-            ".resp_layer_bg, .btn_pop_close, .viewerlay_close_btn"
+            ".resp_layer_bg, .btn_pop_close, .viewerlay_close_btn, .qv-modal-dim, .qv-modal-close"
           )
         ) {
           return;
@@ -1109,6 +1524,31 @@
         }, 0);
       }
     });
+  }
+
+  // The floating action buttons (#floating_over: scroll-to-top, chat,
+  // bottom nav) briefly flicker for a couple seconds right after the
+  // add-to-cart quickview closes on mobile/tablet — the modal's own close
+  // triggers a burst of resize/reflow events (images finishing layout,
+  // scroll position settling) that some native show/hide-on-scroll logic
+  // reacts to. Pin the floating buttons visible for a short settle window
+  // after close so that burst doesn't visibly toggle them.
+  function bindCartQvFloatingSettle() {
+    if (!window.MutationObserver) return;
+    var settleTimer = null;
+    var wasOpen = document.body.classList.contains("qv-modal-open");
+
+    new MutationObserver(function () {
+      var isOpen = document.body.classList.contains("qv-modal-open");
+      if (wasOpen && !isOpen) {
+        document.body.classList.add("is-cart-qv-settling");
+        window.clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(function () {
+          document.body.classList.remove("is-cart-qv-settling");
+        }, 1500);
+      }
+      wasOpen = isOpen;
+    }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
   }
 
   function bindRecQuickviewClicks() {
@@ -1391,6 +1831,11 @@
     var slides = collectRecommendationCards(section);
     if (!slides.length) return false;
 
+    // Real cards once, plus two cloned sets for the desktop infinite
+    // marquee (trendypicker-cart.css only shows the clones and only
+    // animates at 1121px+). Mobile/tablet hides the clones and scrolls
+    // the track natively, so the last REAL card sits flush against the
+    // right edge there — see .cart-rec-card--clone in trendypicker-cart.css.
     var list = document.createElement("div");
     list.className = "cart-rec-list";
     var count = slides.length;
@@ -1409,6 +1854,11 @@
     track.appendChild(list);
 
     function measureLoopDistance() {
+      // The marquee only shows/animates at 1121px+ (trendypicker-cart.css).
+      // Below that, clones are display:none and don't count toward
+      // scrollWidth, so this loop would otherwise keep appending up to
+      // count*8 pointless hidden clones on every mobile/tablet load.
+      if (window.innerWidth < 1121) return;
       var first = list.children[0];
       var pivot = list.children[count];
       if (!first || !pivot) return;
@@ -1461,6 +1911,9 @@
     }, 6000);
   }
 
+  var optionalChangesCache = Object.create(null);
+  var optionalChangesPending = Object.create(null);
+
   function openFirstmallOptionEdit(cartOptionSeq) {
     var editBtn = document.getElementById(String(cartOptionSeq));
     if (editBtn && editBtn.classList.contains("btn_option_modify")) {
@@ -1468,6 +1921,563 @@
       return true;
     }
     return false;
+  }
+
+  function fetchOptionalChanges(seq) {
+    seq = String(seq || "");
+    if (!seq) return Promise.reject(new Error("missing seq"));
+    if (optionalChangesCache[seq]) return Promise.resolve(optionalChangesCache[seq]);
+    if (optionalChangesPending[seq]) return optionalChangesPending[seq];
+    optionalChangesPending[seq] = fetch(
+      "/order/optional_changes?no=" + encodeURIComponent(seq),
+      { credentials: "same-origin", cache: "default" }
+    )
+      .then(function (res) {
+        if (!res.ok) throw new Error("optional_changes failed");
+        return res.text();
+      })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, "text/html");
+        optionalChangesCache[seq] = doc;
+        return doc;
+      })
+      .catch(function (err) {
+        delete optionalChangesPending[seq];
+        throw err;
+      });
+    return optionalChangesPending[seq];
+  }
+
+  function prefetchOptionalChanges() {
+    var seen = {};
+    page.querySelectorAll("[data-cart-option-seq]").forEach(function (el) {
+      var seq = el.getAttribute("data-cart-option-seq");
+      if (!seq || seen[seq]) return;
+      seen[seq] = true;
+      fetchOptionalChanges(seq).catch(function () {});
+    });
+  }
+
+  function getOptionalChangesForm(doc) {
+    if (!doc) return null;
+    return (
+      doc.querySelector("#optional_changes_form") ||
+      doc.querySelector("form[name='optional_changes_form']")
+    );
+  }
+
+  function copyFormFields(sourceForm, targetForm) {
+    Array.prototype.forEach.call(sourceForm.elements, function (el) {
+      if (!el || !el.name || el.disabled) return;
+      var type = String(el.type || "").toLowerCase();
+      if ((type === "checkbox" || type === "radio") && !el.checked) return;
+      if (type === "file" || type === "submit" || type === "button") return;
+      var input = document.createElement("input");
+      input.type = "hidden";
+      input.name = el.name;
+      input.value = el.value;
+      targetForm.appendChild(input);
+    });
+  }
+
+  function submitOptionalModify(sourceForm) {
+    if (!sourceForm) return false;
+    var live = document.createElement("form");
+    live.method = "post";
+    live.action = sourceForm.getAttribute("action") || "/order/optional_modify";
+    live.target = "actionFrame";
+    live.enctype = sourceForm.getAttribute("enctype") || "application/x-www-form-urlencoded";
+    live.style.display = "none";
+    copyFormFields(sourceForm, live);
+    document.body.appendChild(live);
+    live.submit();
+    window.setTimeout(function () {
+      if (live.parentNode) live.parentNode.removeChild(live);
+    }, 1500);
+    return true;
+  }
+
+  function readRowQty(row) {
+    if (!row) return 1;
+    var qtyOut = row.querySelector("[data-cart-qty-value]");
+    var ea = parseInt(String(text(qtyOut) || "").replace(/[^\d]/g, ""), 10);
+    if (ea > 0) return ea;
+    return parseInt(row.getAttribute("data-cart-ea"), 10) || 1;
+  }
+
+  function applyUnitPriceToRow(row, unit, compare) {
+    if (!row || !(unit > 0)) return;
+    var ea = readRowQty(row);
+    row.setAttribute("data-cart-unit-price", String(unit));
+    row.setAttribute("data-cart-ea", String(ea));
+    row.setAttribute("data-cart-unit-compare", String(compare > unit ? compare : unit));
+
+    var priceEl = row.querySelector(".cart-item-price");
+    var strong = priceEl && priceEl.querySelector("strong");
+    var del = priceEl && priceEl.querySelector("del");
+    if (strong) strong.textContent = formatMoney(unit);
+    if (compare > unit) {
+      if (!del && priceEl) {
+        del = document.createElement("del");
+        priceEl.insertBefore(del, strong || null);
+      }
+      if (del) del.textContent = formatMoney(compare);
+    } else if (del && del.parentNode) {
+      del.parentNode.removeChild(del);
+    }
+
+    var total = row.querySelector("[data-cart-line-total], .cart-item-total");
+    if (total) total.textContent = formatMoney(unit * ea);
+    paintSelectionSummary();
+  }
+
+  var MERGE_DELETE_KEY = "tpCartOptionMergeDelete";
+  var SILENT_DELETE_KEY = "tpCartSilentDelete";
+  var SILENT_DELETE_FRAME = "tpCartSilentFrame";
+
+  function collectCartRows() {
+    return Array.prototype.slice.call(
+      (page || document).querySelectorAll("li.cart_goods.cart-item, li.cart_goods")
+    );
+  }
+
+  function getRowGoodsSeq(row) {
+    if (!row) return "";
+    var stored = row.getAttribute("data-cart-goods-seq");
+    if (stored) return stored;
+    var check = row.querySelector('input[name="cart_option_seq[]"]');
+    var rel = check && check.getAttribute("rel");
+    if (rel) {
+      row.setAttribute("data-cart-goods-seq", rel);
+      return rel;
+    }
+    var link = row.querySelector('a[href*="goods/view"]');
+    var href = (link && link.getAttribute("href")) || "";
+    var match = href.match(/[?&]no=(\d+)/i);
+    if (match) {
+      row.setAttribute("data-cart-goods-seq", match[1]);
+      return match[1];
+    }
+    return "";
+  }
+
+  function getRowProductKey(row) {
+    var seq = getRowGoodsSeq(row);
+    if (seq) return "g:" + seq;
+    var name = text(row.querySelector(".cart-item-name, .cart-item-info h2 a, .cart-item-info h2"));
+    return name ? "n:" + normalizeOptionKey(name) : "";
+  }
+
+  function getRowOptionSeq(row) {
+    if (!row) return "";
+    var check = row.querySelector('input[name="cart_option_seq[]"]');
+    return (check && check.value) || row.getAttribute("data-cart-option-seq") || "";
+  }
+
+  function getRowOptionLabel(row) {
+    return text(row && row.querySelector(".realtrend-select-value"));
+  }
+
+  function normalizeOptionKey(value) {
+    return String(value || "")
+      .replace(/\(\s*\+?\s*(?:US\$|\$)?\s*[\d.,]+\s*\)/gi, "")
+      .replace(/\s*\/\s*/g, "/")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  function optionKeysMatch(left, right) {
+    var a = normalizeOptionKey(left);
+    var b = normalizeOptionKey(right);
+    if (!a || !b) return false;
+    if (a === b) return true;
+    if (a.indexOf(b) !== -1 || b.indexOf(a) !== -1) return true;
+    var aPart = a.split("/")[0].trim();
+    var bPart = b.split("/")[0].trim();
+    return Boolean(aPart && bPart && aPart === bPart);
+  }
+
+  function findMergeTargetRow(sourceRow, optionLabel, optionValue) {
+    var sourceKey = getRowProductKey(sourceRow);
+    var sourceSeq = getRowOptionSeq(sourceRow);
+    if (!sourceKey || !sourceSeq) return null;
+    var found = null;
+    collectCartRows().forEach(function (row) {
+      if (found || row === sourceRow) return;
+      if (getRowProductKey(row) !== sourceKey) return;
+      if (String(getRowOptionSeq(row)) === String(sourceSeq)) return;
+      var label = getRowOptionLabel(row);
+      if (
+        optionKeysMatch(label, optionLabel) ||
+        optionKeysMatch(label, optionValue)
+      ) {
+        found = row;
+      }
+    });
+    return found;
+  }
+
+  function queueOptionMergeDelete(seq) {
+    try {
+      sessionStorage.setItem(MERGE_DELETE_KEY, String(seq || ""));
+    } catch (err) {}
+  }
+
+  function clearOptionMergeDelete(seq) {
+    try {
+      var stored = sessionStorage.getItem(MERGE_DELETE_KEY) || "";
+      if (!seq || stored === String(seq)) sessionStorage.removeItem(MERGE_DELETE_KEY);
+    } catch (err) {}
+  }
+
+  function isCartDeleteAlertMessage(msg) {
+    return /삭제\s*되었|deleted|removed from/i.test(
+      String(msg || "").replace(/<[^>]+>/g, " ")
+    );
+  }
+
+  function beginSilentCartDelete(seq) {
+    window._tpCartSilentDelete = true;
+    window._tpCartSilentDeleteSeq = String(seq || "");
+    try {
+      sessionStorage.setItem(SILENT_DELETE_KEY, String(seq || "1"));
+    } catch (err) {}
+  }
+
+  function endSilentCartDelete() {
+    window._tpCartSilentDelete = false;
+    window._tpCartSilentDeleteSeq = "";
+    try {
+      sessionStorage.removeItem(SILENT_DELETE_KEY);
+    } catch (err) {}
+  }
+
+  function shouldSilenceCartAlert(msg) {
+    var silent = Boolean(window._tpCartSilentDelete);
+    if (!silent) {
+      try {
+        silent = Boolean(sessionStorage.getItem(SILENT_DELETE_KEY));
+      } catch (err) {}
+    }
+    return silent && isCartDeleteAlertMessage(msg);
+  }
+
+  function finishSilentCartDelete() {
+    var seq = window._tpCartSilentDeleteSeq || "";
+    try {
+      seq = seq || sessionStorage.getItem(SILENT_DELETE_KEY) || "";
+    } catch (err) {}
+    endSilentCartDelete();
+    removeCartRowBySeq(seq);
+    dismissDeleteDialogs();
+  }
+
+  function dismissDeleteDialogs() {
+    var matched = false;
+    Array.prototype.forEach.call(document.querySelectorAll(".ui-dialog"), function (dialog) {
+      if (!isCartDeleteAlertMessage(dialog.textContent || "")) return;
+      matched = true;
+      if (window.jQuery) {
+        try {
+          window.jQuery(dialog).find(".ui-dialog-content").dialog("destroy");
+        } catch (err) {
+          try {
+            window.jQuery(dialog).remove();
+          } catch (err2) {}
+        }
+      } else if (dialog.parentNode) {
+        dialog.parentNode.removeChild(dialog);
+      }
+    });
+    if (!matched) return;
+    Array.prototype.forEach.call(document.querySelectorAll(".ui-widget-overlay"), function (overlay) {
+      if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    });
+  }
+
+  var alertPatchTries = 0;
+
+  function wrapCartAlertFn(name) {
+    var original = window[name];
+    if (typeof original !== "function" || original._tpCartSilent) return false;
+    window[name] = function (msg) {
+      if (shouldSilenceCartAlert(msg)) {
+        finishSilentCartDelete();
+        return;
+      }
+      if (window._tpCartSilentDelete && name === "openDialogAlert") endSilentCartDelete();
+      return original.apply(this, arguments);
+    };
+    window[name]._tpCartSilent = true;
+    return true;
+  }
+
+  function patchCartAlertDialogs() {
+    wrapCartAlertFn("openDialogAlert");
+    wrapCartAlertFn("alert");
+    if (typeof window.openDialogAlert !== "function" && alertPatchTries < 40) {
+      alertPatchTries += 1;
+      window.setTimeout(patchCartAlertDialogs, 80);
+    }
+  }
+
+  function getSilentDeleteFrame() {
+    var frame = document.querySelector('iframe[name="' + SILENT_DELETE_FRAME + '"]');
+    if (frame) return frame;
+    frame = document.createElement("iframe");
+    frame.name = SILENT_DELETE_FRAME;
+    frame.setAttribute("name", SILENT_DELETE_FRAME);
+    frame.title = "cart merge";
+    frame.style.cssText =
+      "position:absolute;width:0;height:0;border:0;overflow:hidden;opacity:0;pointer-events:none;";
+    frame.addEventListener("load", function () {
+      if (!window._tpCartSilentDelete) return;
+      var html = "";
+      try {
+        var doc = frame.contentDocument || (frame.contentWindow && frame.contentWindow.document);
+        html = doc && doc.documentElement ? String(doc.documentElement.innerHTML || "") : "";
+      } catch (err) {}
+      if (isCartDeleteAlertMessage(html) || /openDialogAlert|location\.reload/i.test(html)) {
+        window.setTimeout(function () {
+          if (!window._tpCartSilentDelete) {
+            dismissDeleteDialogs();
+            return;
+          }
+          finishSilentCartDelete();
+        }, 30);
+      }
+    });
+    document.body.appendChild(frame);
+    return frame;
+  }
+
+  function findCartRowBySeq(seq) {
+    if (!seq) return null;
+    var row = document.getElementById("cart_goods_" + seq);
+    if (row) return row;
+    var found = null;
+    collectCartRows().forEach(function (item) {
+      if (!found && String(getRowOptionSeq(item)) === String(seq)) found = item;
+    });
+    return found;
+  }
+
+  function removeCartRowBySeq(seq) {
+    var row = findCartRowBySeq(seq);
+    if (row && row.parentNode) row.parentNode.removeChild(row);
+    if (typeof paintSelectionSummary === "function") paintSelectionSummary();
+  }
+
+  function restoreCartFormTarget(form, action, target) {
+    if (!form) return;
+    form.setAttribute("action", action || "order");
+    form.setAttribute("target", target || "actionFrame");
+  }
+
+  function deleteCartOptionSeq(seq, useFrame, silent) {
+    var form = document.getElementById("cart_form");
+    if (!form || !seq) return Promise.reject(new Error("missing cart form"));
+
+    if (silent) {
+      patchCartAlertDialogs();
+      getSilentDeleteFrame();
+      beginSilentCartDelete(seq);
+    }
+
+    if (useFrame) {
+      var found = false;
+      Array.prototype.forEach.call(form.querySelectorAll('input[name="cart_option_seq[]"]'), function (box) {
+        var match = String(box.value) === String(seq);
+        box.checked = match;
+        if (match) {
+          found = true;
+          box.setAttribute("checked", "checked");
+        } else {
+          box.removeAttribute("checked");
+        }
+      });
+      if (!found) {
+        var extra = document.createElement("input");
+        extra.type = "hidden";
+        extra.name = "cart_option_seq[]";
+        extra.value = String(seq);
+        form.appendChild(extra);
+      }
+      var prevAction = form.getAttribute("action");
+      var prevTarget = form.getAttribute("target");
+      form.setAttribute("action", "del");
+      form.setAttribute("target", silent ? SILENT_DELETE_FRAME : "actionFrame");
+      form.submit();
+      window.setTimeout(function () {
+        restoreCartFormTarget(form, prevAction, prevTarget);
+      }, 0);
+      return Promise.resolve();
+    }
+
+    var body = new URLSearchParams();
+    Array.prototype.forEach.call(form.querySelectorAll("input[type='hidden']"), function (el) {
+      if (el && el.name) body.append(el.name, el.value);
+    });
+    body.append("cart_option_seq[]", String(seq));
+    return fetch("/order/del", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: body.toString(),
+    }).then(function (res) {
+      if (!res.ok) throw new Error("delete failed");
+      return res;
+    });
+  }
+
+  function silentDeleteCartOptionSeq(seq) {
+    if (!seq) return Promise.resolve();
+    return deleteCartOptionSeq(seq, true, true);
+  }
+
+  function flushQueuedOptionMergeDelete() {
+    var seq = "";
+    try {
+      seq = sessionStorage.getItem(MERGE_DELETE_KEY) || "";
+    } catch (err) {}
+    if (!seq) return;
+    if (!findCartRowBySeq(seq)) {
+      clearOptionMergeDelete(seq);
+      return;
+    }
+    clearOptionMergeDelete(seq);
+    silentDeleteCartOptionSeq(seq);
+  }
+
+  function mergeCartOptionRows(sourceRow, targetRow) {
+    var sourceSeq = getRowOptionSeq(sourceRow);
+    var targetSeq = getRowOptionSeq(targetRow);
+    if (!sourceSeq || !targetSeq || sourceSeq === targetSeq) return Promise.resolve();
+    var nextEa = readRowQty(sourceRow) + readRowQty(targetRow);
+    var unit = parseMoney(targetRow.getAttribute("data-cart-unit-price"));
+    var compare = parseMoney(targetRow.getAttribute("data-cart-unit-compare"));
+    queueOptionMergeDelete(sourceSeq);
+    if (sourceRow) sourceRow.style.display = "none";
+    var qtyOut = targetRow.querySelector("[data-cart-qty-value]");
+    if (qtyOut) qtyOut.textContent = String(nextEa);
+    targetRow.setAttribute("data-cart-ea", String(nextEa));
+    if (unit > 0) applyUnitPriceToRow(targetRow, unit, compare);
+    else paintSelectionSummary();
+
+    return fetchOptionalChanges(targetSeq)
+      .then(function (doc) {
+        var form = getOptionalChangesForm(doc);
+        if (!form) throw new Error("optional_changes form missing");
+        var eaInputs = form.querySelectorAll("input[name^='optionEa']");
+        if (!eaInputs.length) eaInputs = form.querySelectorAll("input.ea_change");
+        if (!eaInputs.length) throw new Error("quantity input missing");
+        eaInputs[0].value = String(nextEa);
+        submitOptionalModify(form);
+        window.setTimeout(function () {
+          if (!findCartRowBySeq(sourceSeq)) {
+            clearOptionMergeDelete(sourceSeq);
+            return;
+          }
+          silentDeleteCartOptionSeq(sourceSeq);
+        }, 900);
+      })
+      .catch(function () {
+        silentDeleteCartOptionSeq(sourceSeq);
+      });
+  }
+
+  function mergeDuplicateCartRowsOnLoad() {
+    var rows = collectCartRows().filter(function (row) {
+      return row && row.style.display !== "none";
+    });
+    var i;
+    var j;
+    for (i = 0; i < rows.length; i += 1) {
+      for (j = i + 1; j < rows.length; j += 1) {
+        if (getRowProductKey(rows[i]) !== getRowProductKey(rows[j])) continue;
+        if (!getRowProductKey(rows[i])) continue;
+        if (!optionKeysMatch(getRowOptionLabel(rows[i]), getRowOptionLabel(rows[j]))) continue;
+        mergeCartOptionRows(rows[j], rows[i]);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function applySelectedOptionToForm(form, optionEl, ea) {
+    if (!form || !optionEl) return;
+    var value = optionEl.value;
+    var opts = [
+      optionEl.getAttribute("opt1"),
+      optionEl.getAttribute("opt2"),
+      optionEl.getAttribute("opt3"),
+      optionEl.getAttribute("opt4"),
+      optionEl.getAttribute("opt5"),
+    ];
+    var hasOptAttrs = opts.some(function (part) {
+      return !!part;
+    });
+
+    Array.prototype.forEach.call(
+      form.querySelectorAll('select[name="viewOptions[]"], select[name^="viewOptions"]'),
+      function (select) {
+        if (!select.options || select.options.length < 2) return;
+        var match = Array.prototype.some.call(select.options, function (opt) {
+          return String(opt.value) === String(value);
+        });
+        if (match) select.value = value;
+      }
+    );
+
+    Array.prototype.forEach.call(
+      form.querySelectorAll("input.selected_options[name^='option['], input[name^='option[']"),
+      function (input) {
+        if (/optionTitle/i.test(input.name || "")) return;
+        var seq = parseInt(input.getAttribute("opt_seq"), 10);
+        if (isNaN(seq)) {
+          var match = String(input.name || "").match(/option\[\d+\]\[(\d+)\]/);
+          if (match) seq = parseInt(match[1], 10);
+        }
+        if (isNaN(seq)) return;
+        if (hasOptAttrs) {
+          if (opts[seq] != null && String(opts[seq]) !== "") input.value = opts[seq];
+        } else if (seq === 0) {
+          input.value = value;
+        }
+      }
+    );
+
+    if (ea > 0) {
+      Array.prototype.forEach.call(
+        form.querySelectorAll("input[name^='optionEa'], input.ea_change"),
+        function (input) {
+          input.value = String(ea);
+        }
+      );
+    }
+  }
+
+  function findOptionElement(form, optionValue) {
+    if (!form || optionValue == null || optionValue === "") return null;
+    var found = null;
+    Array.prototype.forEach.call(
+      form.querySelectorAll(
+        'select[name="viewOptions[]"] option, select[name^="viewOptions"] option'
+      ),
+      function (opt) {
+        if (found) return;
+        if (String(opt.value) === String(optionValue)) found = opt;
+      }
+    );
+    return found;
+  }
+
+  function parseOptionPrice(opt, label) {
+    var price = parseMoney(opt && opt.getAttribute && opt.getAttribute("price"));
+    if (price > 0) return price;
+    var extra = String(label || "").match(/\(\s*\+?\s*(?:US\$|\$)?\s*([\d.,]+)\s*\)/i);
+    return extra ? parseMoney(extra[1]) : 0;
   }
 
   function bindOptionSelects() {
@@ -1484,19 +2494,26 @@
 
     function setMenuItems(menu, items, currentLabel) {
       menu.innerHTML = "";
+      var current = String(currentLabel || "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
       items.forEach(function (item) {
         var li = document.createElement("li");
         li.setAttribute("role", "option");
         li.textContent = item.label;
+        li.setAttribute("data-option-label", item.label);
         if (item.value != null) li.setAttribute("data-option-value", item.value);
+        if (item.price > 0) li.setAttribute("data-option-price", String(item.price));
+        if (item.compare > 0) li.setAttribute("data-option-compare", String(item.compare));
         if (item.disabled) {
           li.setAttribute("aria-disabled", "true");
           li.classList.add("is-disabled");
         }
         var selected =
-          currentLabel &&
-          String(item.label).replace(/\s+/g, " ").trim().toLowerCase() ===
-            String(currentLabel).replace(/\s+/g, " ").trim().toLowerCase();
+          current &&
+          (String(item.label).replace(/\s+/g, " ").trim().toLowerCase() === current ||
+            String(item.value || "").replace(/\s+/g, " ").trim().toLowerCase() === current);
         if (selected) {
           li.classList.add("is-selected");
           li.setAttribute("aria-selected", "true");
@@ -1533,6 +2550,8 @@
             label: label,
             value: value,
             disabled: !!opt.disabled,
+            price: parseOptionPrice(opt, label),
+            compare: parseMoney(opt.getAttribute("consumer_price")),
           });
         });
       }
@@ -1542,100 +2561,89 @@
           var label = String(cell.textContent || "").replace(/\s+/g, " ").trim();
           if (!label || seen[label]) return;
           seen[label] = true;
-          choices.push({ label: label, value: label });
+          choices.push({ label: label, value: label, price: 0, compare: 0 });
         });
       }
 
       return choices;
     }
 
+    function paintOptions(wrap, doc) {
+      var menu = wrap.querySelector(".realtrend-select-menu");
+      var valueEl = wrap.querySelector(".realtrend-select-value");
+      if (!menu) return;
+      wrap._cartOptionDoc = doc;
+      var choices = parseOptionChoices(doc);
+      var current = text(valueEl);
+      if (!choices.length && current) {
+        choices = [{ label: current, value: "", price: 0, compare: 0 }];
+      }
+      setMenuItems(menu, choices, current);
+      wrap.setAttribute("data-options-loaded", "1");
+    }
+
     function loadOptions(wrap) {
       var seq = wrap.getAttribute("data-cart-option-seq");
       var menu = wrap.querySelector(".realtrend-select-menu");
-      var valueEl = wrap.querySelector(".realtrend-select-value");
       if (!seq || !menu) return Promise.resolve();
       if (wrap.getAttribute("data-options-loaded") === "1") return Promise.resolve();
 
-      menu.innerHTML = "<li role=\"option\" aria-disabled=\"true\">Loading options…</li>";
-      var url =
-        "/order/optional_changes?no=" + encodeURIComponent(seq) + "&t=" + Date.now();
+      if (optionalChangesCache[seq]) {
+        paintOptions(wrap, optionalChangesCache[seq]);
+        return Promise.resolve();
+      }
 
-      return fetch(url, { credentials: "same-origin" })
-        .then(function (res) {
-          if (!res.ok) throw new Error("load failed");
-          return res.text();
-        })
-        .then(function (html) {
-          var doc = new DOMParser().parseFromString(html, "text/html");
-          wrap._cartOptionDoc = doc;
-          var choices = parseOptionChoices(doc);
-          var current = text(valueEl);
-          if (!choices.length && current) {
-            choices = [{ label: current, value: "" }];
-          }
-          setMenuItems(menu, choices, current);
-          wrap.setAttribute("data-options-loaded", "1");
+      menu.innerHTML = "<li role=\"option\" aria-disabled=\"true\">Loading options…</li>";
+      return fetchOptionalChanges(seq)
+        .then(function (doc) {
+          paintOptions(wrap, doc);
         })
         .catch(function () {
-          var current = text(valueEl);
+          var current = text(wrap.querySelector(".realtrend-select-value"));
           setMenuItems(menu, current ? [{ label: current, value: "" }] : [], current);
           wrap.setAttribute("data-options-loaded", "1");
         });
     }
 
-    function submitSelectedOption(wrap, optionValue) {
-      var doc = wrap._cartOptionDoc;
+    function submitSelectedOption(wrap, optionValue, optionPrice, optionCompare) {
       var seq = wrap.getAttribute("data-cart-option-seq");
-      if (!doc || !seq) {
-        openFirstmallOptionEdit(seq);
+      var row = wrap.closest("li.cart_goods, .cart-item");
+      var optionLabel =
+        text(wrap.querySelector(".realtrend-select-value")) || optionValue;
+      var mergeRow = findMergeTargetRow(row, optionLabel, optionValue);
+      if (mergeRow) {
+        mergeCartOptionRows(row, mergeRow);
         return;
       }
-      var source =
-        doc.querySelector("#optional_changes_form") ||
-        doc.querySelector("form[name='optional_changes_form']");
-      if (!source) {
-        openFirstmallOptionEdit(seq);
-        return;
-      }
+      if (optionPrice > 0) applyUnitPriceToRow(row, optionPrice, optionCompare);
 
-      var selects = source.querySelectorAll('select[name="viewOptions[]"]');
-      var target = null;
-      Array.prototype.forEach.call(selects, function (el) {
-        if (el.options && el.options.length > 1) target = el;
-      });
-      if (!target) {
-        openFirstmallOptionEdit(seq);
-        return;
-      }
-      target.value = optionValue;
-      if (target.value !== optionValue) {
-        openFirstmallOptionEdit(seq);
-        return;
-      }
-
-      var live = document.createElement("form");
-      live.method = "post";
-      live.action = source.getAttribute("action") || "/order/optional_modify";
-      live.target = "actionFrame";
-      live.enctype = source.getAttribute("enctype") || "application/x-www-form-urlencoded";
-      live.style.display = "none";
-      Array.prototype.forEach.call(source.elements, function (el) {
-        if (!el || !el.name || el.disabled) return;
-        var type = String(el.type || "").toLowerCase();
-        if ((type === "checkbox" || type === "radio") && !el.checked) return;
-        if (type === "file" || type === "submit" || type === "button") return;
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = el.name;
-        input.value = el === target ? optionValue : el.value;
-        live.appendChild(input);
-      });
-      document.body.appendChild(live);
-      live.submit();
-      window.setTimeout(function () {
-        if (live.parentNode) live.parentNode.removeChild(live);
-      }, 1500);
+      fetchOptionalChanges(seq)
+        .then(function (doc) {
+          var source = getOptionalChangesForm(doc);
+          var optionEl = findOptionElement(source, optionValue);
+          if (!source || !optionEl) {
+            openFirstmallOptionEdit(seq);
+            return;
+          }
+          applySelectedOptionToForm(source, optionEl, readRowQty(row));
+          if (!(optionPrice > 0)) {
+            var price = parseOptionPrice(optionEl, optionEl.textContent);
+            var compare = parseMoney(optionEl.getAttribute("consumer_price"));
+            if (price > 0) applyUnitPriceToRow(row, price, compare);
+          }
+          submitOptionalModify(source);
+        })
+        .catch(function () {
+          openFirstmallOptionEdit(seq);
+        });
     }
+
+    page.addEventListener("pointerenter", function (event) {
+      var wrap = event.target.closest("[data-cart-option-select]");
+      if (!wrap || !page.contains(wrap)) return;
+      var seq = wrap.getAttribute("data-cart-option-seq");
+      if (seq) fetchOptionalChanges(seq).catch(function () {});
+    }, true);
 
     page.addEventListener("click", function (event) {
       var trigger = event.target.closest("[data-cart-option-select] .realtrend-select-trigger");
@@ -1669,8 +2677,16 @@
         var valueNode = optionWrap.querySelector(".realtrend-select-value");
         closeAll();
         if (!optionValue) return;
-        if (valueNode) valueNode.textContent = text(optionItem);
-        submitSelectedOption(optionWrap, optionValue);
+        if (valueNode) {
+          valueNode.textContent =
+            optionItem.getAttribute("data-option-label") || text(optionItem);
+        }
+        submitSelectedOption(
+          optionWrap,
+          optionValue,
+          parseMoney(optionItem.getAttribute("data-option-price")),
+          parseMoney(optionItem.getAttribute("data-option-compare"))
+        );
         return;
       }
 
@@ -1685,9 +2701,18 @@
   }
 
   function bindQty() {
-    var busy = false;
+    // seq -> pending debounce timer. Clicking +/- repeatedly (or typing then
+    // pressing Enter again) restarts the timer instead of firing a network
+    // request per click — only the last value in a burst gets submitted.
+    var pendingTimers = Object.create(null);
+    var actionFrameSynced = false;
 
     function readQty(wrap) {
+      var input = wrap.querySelector("[data-cart-qty-input]");
+      if (input && (wrap.classList.contains("is-editing") || document.activeElement === input)) {
+        var typed = parseInt(String(input.value).replace(/[^\d]/g, ""), 10);
+        if (typed > 0) return typed;
+      }
       var out = wrap.querySelector("[data-cart-qty-value]") || wrap.querySelector("output");
       return Math.max(1, parseInt(text(out).replace(/,/g, ""), 10) || 1);
     }
@@ -1695,39 +2720,41 @@
     function writeQty(wrap, value) {
       var out = wrap.querySelector("[data-cart-qty-value]") || wrap.querySelector("output");
       if (out) out.textContent = String(value);
+      var input = wrap.querySelector("[data-cart-qty-input]");
+      if (input) input.value = String(value);
     }
 
-    function copyFormFields(sourceForm, targetForm) {
-      Array.prototype.forEach.call(sourceForm.elements, function (el) {
-        if (!el || !el.name || el.disabled) return;
-        var type = String(el.type || "").toLowerCase();
-        if ((type === "checkbox" || type === "radio") && !el.checked) return;
-        if (type === "file" || type === "submit" || type === "button") return;
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = el.name;
-        input.value = el.value;
-        targetForm.appendChild(input);
+    // The native /order/optional_modify response (loaded into the hidden
+    // actionFrame) has been seen writing the cart-wide total into this
+    // row's own line-total element instead of leaving it alone. Once the
+    // frame finishes loading, reassert this row's real total (unit * qty,
+    // which we already know is correct) so it wins over whatever the
+    // native response just wrote.
+    function resyncRowTotal(row) {
+      if (!row) return;
+      var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
+      var compare = parseMoney(row.getAttribute("data-cart-unit-compare"));
+      if (unit > 0) applyUnitPriceToRow(row, unit, compare);
+    }
+
+    function bindActionFrameResync() {
+      if (actionFrameSynced) return;
+      var frame = document.querySelector("iframe[name='actionFrame']");
+      if (!frame) return;
+      actionFrameSynced = true;
+      frame.addEventListener("load", function () {
+        window.setTimeout(function () {
+          resyncAllRowTotals();
+          page.querySelectorAll("li.cart_goods, .cart-item").forEach(resyncRowTotal);
+          paintSelectionSummary();
+        }, 50);
       });
     }
 
     function submitQty(cartOptionSeq, nextEa) {
-      var url =
-        "/order/optional_changes?no=" +
-        encodeURIComponent(cartOptionSeq) +
-        "&t=" +
-        Date.now();
-      busy = true;
-      return fetch(url, { credentials: "same-origin" })
-        .then(function (res) {
-          if (!res.ok) throw new Error("optional_changes failed");
-          return res.text();
-        })
-        .then(function (html) {
-          var doc = new DOMParser().parseFromString(html, "text/html");
-          var source =
-            doc.querySelector("#optional_changes_form") ||
-            doc.querySelector("form[name='optional_changes_form']");
+      return fetchOptionalChanges(cartOptionSeq)
+        .then(function (doc) {
+          var source = getOptionalChangesForm(doc);
           if (!source) throw new Error("optional_changes form missing");
 
           var eaInputs = source.querySelectorAll("input[name^='optionEa']");
@@ -1736,44 +2763,101 @@
           }
           if (!eaInputs.length) throw new Error("quantity input missing");
           eaInputs[0].value = String(nextEa);
-
-          var live = document.createElement("form");
-          live.method = "post";
-          live.action = source.getAttribute("action") || "/order/optional_modify";
-          live.target = "actionFrame";
-          live.enctype =
-            source.getAttribute("enctype") || "application/x-www-form-urlencoded";
-          live.style.display = "none";
-          copyFormFields(source, live);
-          document.body.appendChild(live);
-          live.submit();
-          window.setTimeout(function () {
-            if (live.parentNode) live.parentNode.removeChild(live);
-            busy = false;
-          }, 1500);
+          submitOptionalModify(source);
+          bindActionFrameResync();
         })
         .catch(function () {
-          busy = false;
-          var editBtn = document.getElementById(String(cartOptionSeq));
-          if (editBtn && editBtn.classList.contains("btn_option_modify")) {
-            editBtn.click();
-          }
+          openFirstmallOptionEdit(cartOptionSeq);
         });
     }
+
+    function scheduleSubmit(seq, next) {
+      window.clearTimeout(pendingTimers[seq]);
+      pendingTimers[seq] = window.setTimeout(function () {
+        delete pendingTimers[seq];
+        submitQty(seq, next);
+      }, 180);
+    }
+
+    // Shared by +/-, typing a number, and blur/Enter: paints the new
+    // quantity and this row's total immediately (no network wait), then
+    // debounces the actual save.
+    function changeQty(wrap, row, seq, next) {
+      writeQty(wrap, next);
+      if (row) {
+        row.setAttribute("data-cart-ea", String(next));
+        var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
+        var compare = parseMoney(row.getAttribute("data-cart-unit-compare"));
+        if (!(unit > 0)) {
+          var strong = row.querySelector(".cart-item-price strong");
+          unit = parseMoney(strong && strong.textContent);
+        }
+        if (unit > 0) applyUnitPriceToRow(row, unit, compare);
+      }
+      scheduleSubmit(seq, next);
+    }
+
+    function seqFor(wrap, row) {
+      var seq = wrap.getAttribute("data-cart-option-seq");
+      if (!seq && row && row.id) seq = String(row.id).replace(/^cart_goods_/, "");
+      return seq;
+    }
+
+    function enterEditMode(wrap) {
+      if (!wrap || wrap.classList.contains("is-editing")) return;
+      var out = wrap.querySelector("[data-cart-qty-value]") || wrap.querySelector("output");
+      var input = wrap.querySelector("[data-cart-qty-input]");
+      if (!out || !input) return;
+      input.value = text(out).replace(/,/g, "") || "1";
+      wrap.classList.add("is-editing");
+      input.focus();
+      input.select();
+    }
+
+    function commitEditMode(wrap) {
+      var out = wrap.querySelector("[data-cart-qty-value]") || wrap.querySelector("output");
+      var input = wrap.querySelector("[data-cart-qty-input]");
+      if (!out || !input || !wrap.classList.contains("is-editing")) return;
+      wrap.classList.remove("is-editing");
+
+      var row = wrap.closest("li.cart_goods, .cart-item");
+      var seq = seqFor(wrap, row);
+      if (!seq) {
+        writeQty(wrap, text(out).replace(/,/g, "") || "1");
+        return;
+      }
+
+      var current = Math.max(1, parseInt(text(out).replace(/,/g, ""), 10) || 1);
+      var next = Math.max(1, parseInt(String(input.value).replace(/[^\d]/g, ""), 10) || current);
+      if (next === current) {
+        writeQty(wrap, current);
+        return;
+      }
+      changeQty(wrap, row, seq, next);
+    }
+
+    page.addEventListener("focusin", function (event) {
+      var input = event.target.closest && event.target.closest("[data-cart-qty-input]");
+      if (!input || !page.contains(input)) return;
+      enterEditMode(input.closest("[data-cart-qty]"));
+    });
+
+    page.addEventListener("input", function (event) {
+      var input = event.target.closest && event.target.closest("[data-cart-qty-input]");
+      if (!input || !page.contains(input)) return;
+      var cleaned = String(input.value).replace(/[^\d]/g, "");
+      if (cleaned !== input.value) input.value = cleaned;
+    });
 
     page.addEventListener("click", function (event) {
       var btn = event.target.closest("[data-cart-qty-change]");
       if (!btn || !page.contains(btn)) return;
       event.preventDefault();
-      if (busy) return;
 
       var wrap = btn.closest("[data-cart-qty]");
       if (!wrap) return;
-      var seq = wrap.getAttribute("data-cart-option-seq");
-      if (!seq) {
-        var row = wrap.closest("li.cart_goods, .cart-item");
-        if (row && row.id) seq = String(row.id).replace(/^cart_goods_/, "");
-      }
+      var row = wrap.closest("li.cart_goods, .cart-item");
+      var seq = seqFor(wrap, row);
       if (!seq) return;
 
       var delta = parseInt(btn.getAttribute("data-cart-qty-change"), 10) || 0;
@@ -1781,33 +2865,95 @@
       var next = Math.max(1, current + delta);
       if (next === current) return;
 
-      writeQty(wrap, next);
-      submitQty(seq, next);
+      wrap.classList.remove("is-editing");
+      changeQty(wrap, row, seq, next);
+    });
+
+    page.addEventListener("pointerenter", function (event) {
+      var wrap = event.target && event.target.closest && event.target.closest("[data-cart-qty]");
+      if (!wrap || !page.contains(wrap)) return;
+      var row = wrap.closest("li.cart_goods, .cart-item");
+      var seq = seqFor(wrap, row);
+      if (seq) fetchOptionalChanges(seq).catch(function () {});
+    }, true);
+
+    page.addEventListener(
+      "blur",
+      function (event) {
+        var input = event.target.closest && event.target.closest("[data-cart-qty-input]");
+        if (!input) return;
+        var wrap = input.closest("[data-cart-qty]");
+        if (wrap) commitEditMode(wrap);
+      },
+      true
+    );
+
+    page.addEventListener("keydown", function (event) {
+      var input = event.target.closest && event.target.closest("[data-cart-qty-input]");
+      if (!input) return;
+      if (event.key === "Enter") {
+        event.preventDefault();
+        input.blur();
+      } else if (event.key === "Escape") {
+        var wrap = input.closest("[data-cart-qty]");
+        if (!wrap) return;
+        var out = wrap.querySelector("[data-cart-qty-value]") || wrap.querySelector("output");
+        wrap.classList.remove("is-editing");
+        writeQty(wrap, text(out).replace(/,/g, "") || "1");
+        input.blur();
+      }
     });
   }
 
+  window.tpCartPaintSelectionSummary = paintSelectionSummary;
+  patchSetPriceInfoCheck();
+  patchSetCartPriceInfo();
+
   ready(function () {
+    patchCartAlertDialogs();
     endCartQvGuard(false);
     bindCartQuickviewClose();
+    patchSetPriceInfoCheck();
+    patchSetCartPriceInfo();
+    // After the inline script in cart.html sets its default (everything
+    // checked), so this only overrides what the user actually unchecked
+    // before navigating away.
+    restoreSelectionState();
+    bindSelectionPersistence();
     normalizeCartCurrency();
-    syncShippingMeter();
-    syncProductDiscount();
+    paintSelectionSummary();
     bindShippingMeter();
     bindPromo();
     bindCoupon();
+
+    var promoSaleEl = document.getElementById("total_promotion_goods_sale");
+    if (promoSaleEl && window.MutationObserver) {
+      new MutationObserver(syncPromoSummary).observe(promoSaleEl, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
+    }
     bindPaypal();
     bindCountry();
+    flushQueuedOptionMergeDelete();
     bindOptionSelects();
     bindQty();
+    window.setTimeout(mergeDuplicateCartRowsOnLoad, 80);
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(prefetchOptionalChanges, { timeout: 1200 });
+    } else {
+      window.setTimeout(prefetchOptionalChanges, 200);
+    }
     initCartNewsletterReveal();
     bindRecQuickviewClicks();
+    bindCartQvFloatingSettle();
     window.requestAnimationFrame(function () {
       tryBindRecommendations();
     });
     window.requestAnimationFrame(function () {
       normalizeCartCurrency();
-      syncShippingMeter();
-      syncProductDiscount();
+      paintSelectionSummary();
       window.requestAnimationFrame(enableShippingMeterTransitions);
     });
   });

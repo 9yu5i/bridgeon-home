@@ -141,6 +141,15 @@ When working on the live Firstmall skin or `firstmall-workskin/`:
   `css/redesign/trendypicker-cart.css`, `app/javascript/js/trendypicker-cart.js`.
   Live URL: `/order/cart`. Promo uses `getPromotionJson?mode=cart`. Coupons are selected
   on cart and applied at checkout.
+- Checkout Firstmall files: `order/settle.html` (existing Firstmall template),
+  `order/_shipping_address.html`, `order/pop_delivery_address.html`,
+  `css/redesign/trendypicker-checkout.css`, `app/javascript/js/trendypicker-checkout.js`.
+  Live URL: `/order/settle` (cart `addsettle`). Match cart visual language. Keep
+  Firstmall discount/coupon fields in the template for apply JS; do not show the
+  Discount picker UI. Coupon comes from cart `tpCartCoupon`. Tax uses original
+  `state_tax_input` + `/order/get_state_ajax` + `order_price_calculate`. Standard
+  Shipping shows "Charged at customs"; Express (`ship_set_code=quick`) shows the
+  calculated tax amount.
 
 ## Design Rules
 

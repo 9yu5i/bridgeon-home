@@ -141,5 +141,15 @@ New Arrival on Firstmall is owned by `firstmall-workskin/goods/new_arrivals.html
 `app/javascript/js/trendypicker-new.js`, which regroups live `#searchedItemDisplay` goods by brand
 (prototype layout: `listing/new.html`).
 
+Checkout on Firstmall is owned by `firstmall-workskin/order/settle.html` (`/order/settle`,
+from cart `addsettle`), scoped styles in `css/redesign/trendypicker-checkout.css`, and
+`app/javascript/js/trendypicker-checkout.js`. Consignee tax fields stay in
+`order/_shipping_address.html` (`tax_billing_method`, `state_tax_input`) and address-book tax
+lookup in `order/pop_delivery_address.html` (`getTaxRateForState` → `/order/get_state_ajax` →
+`order_price_calculate`). It follows the cart page visual language and applies the coupon stored
+on cart (`tpCartCoupon`). The Discount picker UI is hidden; Firstmall coupon/promo fields stay
+in the template for apply JS. Estimated Taxes: Standard Shipping → "Charged at customs";
+Express → `.total_tax` amount.
+
 The detailed readiness and page mapping are documented in
 `docs/firstmall-integration-readiness.md`.

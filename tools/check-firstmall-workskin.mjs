@@ -49,6 +49,11 @@ const requiredFiles = [
   "order/cart.html",
   "css/redesign/trendypicker-cart.css",
   "app/javascript/js/trendypicker-cart.js",
+  "order/settle.html",
+  "order/_shipping_address.html",
+  "order/pop_delivery_address.html",
+  "css/redesign/trendypicker-checkout.css",
+  "app/javascript/js/trendypicker-checkout.js",
 ];
 
 const requiredMagazineHtmlFiles = [
@@ -146,6 +151,22 @@ const requiredCartTokens = [
   "cartpromotioncode",
   "getPromotionJson?mode=cart",
   "addsettle",
+];
+
+const requiredCheckoutTokens = [
+  "/data/skin/{skin}/css/redesign/trendypicker-checkout.css",
+  "/app/javascript/js/trendypicker-checkout.js",
+  'id="orderFrm"',
+  'id="download_seq"',
+  "checkout-discount-legacy",
+  "checkout-summary-card",
+  "cart-summary-promo",
+  "cart-summary-coupon",
+  "cart-save",
+  "checkout-items-card",
+  "checkout-mileage-card",
+  "checkout-pay",
+  "total_tax",
 ];
 
 const requiredWishlistTokens = [
@@ -600,6 +621,57 @@ if (existsSync(cartPath)) {
   if (cart.includes("?v=")) {
     failed = true;
     console.error("Cart must not use ?v= on CSS/JS links");
+  }
+}
+
+const checkoutPath = resolve(workskinRoot, "order/settle.html");
+if (existsSync(checkoutPath)) {
+  const checkout = readFileSync(checkoutPath, "utf8");
+  for (const token of requiredCheckoutTokens) {
+    if (checkout.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall checkout token: ${token}`);
+  }
+  if (checkout.includes("?v=")) {
+    failed = true;
+    console.error("Checkout must not use ?v= on CSS/JS links");
+  }
+}
+
+const checkoutJsPath = resolve(
+  workskinRoot,
+  "app/javascript/js/trendypicker-checkout.js",
+);
+if (existsSync(checkoutJsPath)) {
+  const checkoutJs = readFileSync(checkoutJsPath, "utf8");
+  for (const token of [
+    "tpCartCoupon",
+    "get_state_ajax",
+    "ship_set_list",
+  ]) {
+    if (checkoutJs.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall checkout JS token: ${token}`);
+  }
+}
+
+const shippingAddressPath = resolve(workskinRoot, "order/_shipping_address.html");
+if (existsSync(shippingAddressPath)) {
+  const shippingAddress = readFileSync(shippingAddressPath, "utf8");
+  for (const token of ["tax_billing_method", "state_tax_input"]) {
+    if (shippingAddress.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall shipping address token: ${token}`);
+  }
+}
+
+const popDeliveryPath = resolve(workskinRoot, "order/pop_delivery_address.html");
+if (existsSync(popDeliveryPath)) {
+  const popDelivery = readFileSync(popDeliveryPath, "utf8");
+  for (const token of ["getTaxRateForState", "/order/get_state_ajax"]) {
+    if (popDelivery.includes(token)) continue;
+    failed = true;
+    console.error(`Missing Firstmall delivery address token: ${token}`);
   }
 }
 

@@ -38,8 +38,9 @@ const IMPORTANT_PCT_HEADROOM = 1;
 const cssLineBaselines = {
   "trendypicker-best.css": 261,
   "trendypicker-brand.css": 836,
-  "trendypicker-cart.css": 3448,
-  "trendypicker-catalog.css": 497,
+  "trendypicker-cart.css": 3371,
+  "trendypicker-checkout.css": 1672,
+  "trendypicker-catalog.css": 616,
   "trendypicker-coupons.css": 1119,
   "trendypicker-help-topic.css": 2348,
   "trendypicker-help.css": 321,
@@ -59,8 +60,9 @@ const cssLineBaselines = {
 
 const jsLineBaselines = {
   "trendypicker-best.js": 137,
-  "trendypicker-cart.js": 1814,
-  "trendypicker-catalog.js": 227,
+  "trendypicker-cart.js": 2960,
+  "trendypicker-checkout.js": 482,
+  "trendypicker-catalog.js": 406,
   "trendypicker-coupons.js": 544,
   "trendypicker-help-topic.js": 347,
   "trendypicker-magazine.js": 938,

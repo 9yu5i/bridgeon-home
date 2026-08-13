@@ -1,0 +1,290 @@
+<h3 class="title3"><span designElement="text">Consignee</span></h3>
+<!-- 배송불가 MSG :: START -->
+<div class="ship_possible {? !ship_possible}hide{/}">
+	<input type="hidden" id="ship_possible" name="ship_possible" value="{?ship_possible}N{/}" />
+	아래의 국가(<span class="kr_nation bold international_nation">{ini_info.kr_nation}</span>)로 배송이 불가능한 상품이 있습니다.<br />
+	장바구니에서 주문 상품을 변경해 주세요.
+	<button type="button" class="btn_resp pointcolor imp" onclick="location='/order/cart'">장바구니로 돌아가기</button>
+</div>
+<!-- 배송불가 MSG :: END -->
+
+<!-- 회원관련 배송정보 -->
+<div class="recipient delivery_info_member">
+	<!-- 최종 배송지 :: START -->
+	<div class="real_delivery hide">
+		<div class="real_delivery_area">
+			<ul>
+			<!-- 국내 -->
+				<li><input type="text" name="recipient_user_name" value="{members.default_address.user_name}"  class="inputbox_large wid100"  title="{=getAlert('os055')}" required/>
+				</li>
+				<li class="goods_delivery_info">
+					<input type="text" name="recipient_new_zipcode" value="{members.default_address.zipcode}" class="inputbox_large"   title="{=getAlert('os052')}" required/>
+					<input type="hidden" name="recipient_address_type" value="{members.default_address.address_type}" class="inputbox_large wid100"   title="배송지 주소지타입(도로명/지번)" />
+					<input type="text" name="recipient_address_street" value="{members.default_address.address_street}" title="배송지 도로명 주소" readonly/>
+					<input type="text" name="recipient_address" value="{members.default_address.address}" title="{=getAlert('os053')}" required readonly/>
+					<input type="text" name="recipient_address_detail" value="{members.default_address.address_detail}" title="{=getAlert('os054')}" required/>
+				</li>
+				<li class="domestic hide">
+					<div class="phone_num1">{=getAlert('os056')}</div>
+					<div class="phone_num2">
+						<input type="text" name="recipient_phone[]" value="{members.default_address.phone1}" class="inputbox_large" onkeydown="onlyNumber(this)" /> -
+						<input type="text" name="recipient_phone[]" value="{members.default_address.phone2}" class="inputbox_large" onkeydown="onlyNumber(this)" /> -
+						<input type="text" name="recipient_phone[]" value="{members.default_address.phone3}" class="inputbox_large" onkeydown="onlyNumber(this)" />
+					</div>
+				</li>
+				<li class="domestic hide">
+					<div class="phone_num1">{=getAlert('os057')}</div>
+					<div class="phone_num2">
+						<input type="text" name="recipient_cellphone[]" value="{members.default_address.cellphone1}" class="inputbox_large" onkeydown="onlyNumber(this)" valid="휴대폰" /> -
+						<input type="text" name="recipient_cellphone[]" value="{members.default_address.cellphone2}" class="inputbox_large" onkeydown="onlyNumber(this)" valid="휴대폰" /> -
+						<input type="text" name="recipient_cellphone[]" value="{members.default_address.cellphone3}" class="inputbox_large" onkeydown="onlyNumber(this)" valid="휴대폰" />
+					</div>
+				</li>
+			<!-- 해외 -->
+				<li class="international hide goods_delivery_info">
+					<input type="text" name="international_address" value="" title="{=getAlert('os058')}" required/>
+					<input type="text" name="international_town_city" value="" title="{=getAlert('os059')}" required/>
+					<input type="text" name="international_county" value="" title="{=getAlert('os060')}"/>
+					<input type="text" name="international_postcode" value="" title="{=getAlert('os052')}" required/>
+					<input type="text" class="hide" name="international_country" value="" title="{=getAlert('os061')}" required/>
+					<input type="text" class="hide" name="international_recipient_phone" value="" valid="Phone"/>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- 최종 배송지 :: END -->
+
+	<!-- 회원 배송지 VIEW :: START -->
+	<div class="delivery_info">
+		<ul class="list_01 v2">
+			<!-- 받는분 -->
+			<li class="user_name_area">
+				<span class="recipient_user_name pointcolor imp">{members.default_address.user_name}</span>
+				<!--{? members }--> <button type="button" class="btn_resp Mt-2" onclick="address_modify('delivery'); if (window.tpActivateSavedAddressTab) window.tpActivateSavedAddressTab();">Change</button><!--{ / }-->
+				<button type="button" class="btn_resp Mt-2 color2" onclick="address_modify('delivery'); if (window.tpActivateSavedAddressTab) window.tpActivateSavedAddressTab();">Edit</button>
+			</li>
+			<!-- 주소 -->
+			<li {?!is_goods}class="hide"{/} >
+			<!--{ ? members.default_address.zipcode }-->
+				<span class="kr_zipcode">[<span class="recipient_zipcode">{members.default_address.zipcode}</span>]</span>
+				<span class="recipient_address">
+				<!--{ ? members.default_address.address_type == 'street' }-->
+					{members.default_address.address_street}
+				<!--{ : }-->
+					{members.default_address.address}
+				<!--{ / }-->
+				</span>
+				<span class="recipient_address_detail">{members.default_address.address_detail}</span>
+			<!--{ : }-->
+				<span class="kr_zipcode hide">[<span class="recipient_zipcode"></span>]</span> <span class="recipient_address">No shipping address</span> <span class="recipient_address_detail"></span>
+			<!--{ / }-->
+			</li>
+			<!-- 연락처 -->
+			<li>
+				<span class="phone">{?members.default_address.phone}{members.default_address.phone}{:}No additional contact information{/}</span>
+			</li>
+			<!-- 이메일 -->
+			<li {?!is_coupon}class="hide"{/}>
+				{members.email}
+			</li>
+			<!-- 배송국가 -->
+			<li class="nation_section {?!is_goods}hide{/}" >
+				Shipping Country : <span class="international_nation">{ini_info.nation}</span>
+				<input type="hidden" id="address_nation" name="address_nation" value="{ini_info.nation}" />
+				<input type="hidden" id="address_nation_key" name="address_nation_key" value="{ini_info.nation_key}" />
+			</li>
+			<!-- 기타 안내 :: START -->
+			<li class="desc {?!is_direct_store}hide{/}">
+				※ 매장수령상품은 매장에서 상품을 수령하세요.
+			</li>
+			<li class="desc {?!is_coupon}hide{/}">
+				※ 티켓번호는 문자와 이메일로 보내 드립니다.
+			</li>
+			<!-- 기타 안내 :: END -->
+		</ul>
+	</div>
+	<!-- 회원 배송지 VIEW :: END -->
+</div>
+
+<!-- 받는분 정보 입력 란 -->
+<div class="delivery_selecter delivery_info_input hide">
+	<!--{? members }-->
+	<ul class="settle_tab delivery_choice clearbox">
+		<li class="current"><a href="javascript:;">Saved address</a></li>
+		<li class="input_tab"><a href="javascript:;">New address</a></li>
+	</ul>
+	<div class="settle_tab_contents tab_box1 delivery_often">
+	<!-- 다른 배송지 목록. 파일위치 : [스킨폴더]/order/pop_delivery_address.html -->
+	</div>
+	<!--{ / }-->
+
+	<div class="settle_tab_contents tab_box2 delivery_input" style="display:none">
+		<ul class="list_01 v2">
+			<!-- 받는분 -->
+			<li class="hide">
+				<input type="hidden" id="default_address_nation" name="default_address_nation" value="{members.default_address.nation}" />
+			</li>
+			<li class="same_as_orderer_row">
+				<label for="same_as_ordered_checkbox">
+					<input id="same_as_ordered_checkbox" type="checkbox" name="same_as_ordered_checkbox">
+					Same as orderer
+				</label>
+			</li>
+			<li class="order_user_info hide">
+				<input type="text" name="order_user_first_name" value="{=str_split_arr(members.user_name,' ',0)}" class="pilsu" title="First Name" {?members.rute=='none'&&members.user_name}readonly{/} required />
+				<input type="text" name="order_user_last_name" value="{=str_split_arr(members.user_name,' ',1)}" class="pilsu" title="Last Name" {?members.rute=='none'&&members.user_name}readonly{/} required />
+				<input type="tel" name="order_user_phone" value="{members.cellphone1}"/>
+				<input type="email" name="order_email" value="{members.email}" class="pilsu size_email_full"/>
+			</li>
+			<li class="row_recipient_name double_input_row checkout-field-row">
+				<label class="checkout-field">
+					<span>First name</span>
+					<input type="text" name="recipient_input_user_first_name" class="full_size pilsu" value="{=str_split_arr(members.default_address.user_name,' ',0)}" title="First Name" required />
+				</label>
+				<label class="checkout-field">
+					<span>Last name</span>
+					<input type="text" name="recipient_input_user_last_name" class="pilsu" value="{=str_split_arr(members.default_address.user_name,' ',1)}" title="Last Name" required />
+				</label>
+			</li>
+			<li class="row_recipient_contact double_input_row checkout-field-row">
+				<label class="checkout-field">
+					<span>Phone</span>
+					<span class="checkout-phone-combo">
+						<select class="phone_prefix_select" id="phonePrefix" title="The country phone code depends on the selected shipping country." disabled >
+							<option value="+82">+82</option>
+						</select>
+						<input type="text" name="recipient_input_phone" class="pilsu" onkeydown="onlyNumber(this)" value="{members.default_address.phone}" title="Local Phone" required />
+					</span>
+				</label>
+				<label class="checkout-field">
+					<span>Email</span>
+					<input type="email" name="recipient_input_email" class="pilsu" value="{members.email}" title="Email" required />
+				</label>
+			</li>
+			<!-- 국내 -->
+			<li class="domestic goods_delivery_info {?!is_goods}hide{/}">
+				<input type="hidden" name="recipient_input_address_type" value="{members.default_address.address_type}" class="hide" title="{=getAlert('os052')}" />
+				<input type="text" name="recipient_input_new_zipcode" value="{members.default_address.zipcode}" title="{=getAlert('os052')}" class="pilsu size_zip_all" readonly required />
+				<button type="button" class="btn_resp size_b color4" onclick="openDialogZipcode_resp('morder');">검색</button>
+			</li>
+			<li class="domestic goods_delivery_info {?!is_goods}hide{/}">
+				<input type="text" name="recipient_input_address_street" value="{members.default_address.address_street}" class="pilsu size_address hide" title="도로명 주소" readonly />
+				<input type="text" name="recipient_input_address" value="{members.default_address.address}" class="pilsu size_address" title="{=getAlert('os053')}" readonly />
+			</li>
+			<li class="domestic goods_delivery_info {?!is_goods}hide{/}">
+				<input type="text" name="recipient_input_address_detail" value="{members.default_address.address_detail}" class="pilsu size_address" title="{=getAlert('os054')}" required />
+			</li>
+			<!-- 해외 -->
+			<li class="international goods_delivery_info hide checkout-field-row checkout-field-row-full">
+				<label class="checkout-field">
+					<span>Address</span>
+					<input type="text" name="international_address_input" class="pilsu size_full" maxlength="35" value="{=str_split_arr(members.default_address.international_address,'|',0)}" title="Address 1" required />
+				</label>
+				<span id="wrongAddressMsg" class="hide">Max 35 characters. English letters, numbers, and . , ( ) * &amp; + - _ ~ / : ; ‘ ’ “ ” only.</span>
+			</li>
+			<li class="international goods_delivery_info double_input_row hide checkout-field-row">
+				<label class="checkout-field">
+					<span>Apt / suite</span>
+					<input type="text" name="international_address_input_2" class="size_full" value="{=str_split_arr(members.default_address.international_address,'|',1)}" title="Address 2" />
+				</label>
+				<label class="checkout-field">
+					<span>Address 3</span>
+					<input type="text" name="international_address_input_3" class="size_full" value="{=str_split_arr(members.default_address.international_address,'|',2)}" title="Address 3" />
+				</label>
+			</li>
+			<li class="international goods_delivery_info four_input_row hide checkout-field-row">
+				<label class="checkout-field">
+					<span>City</span>
+					<input type="text" name="international_town_city_input" class="pilsu size_full" maxlength="15" value="{members.default_address.international_town_city}" title="{=getAlert('os059')}" oninput="this.value = this.value.replace(/,/g, '')" required />
+				</label>
+				<input type="text" name="international_county_text_input" class="hide" maxlength="15" value="{members.default_address.international_county}" title="State" oninput="this.value = this.value.replace(/,/g, '')"/>
+				<div class="hide">
+					<label class="checkout-field">
+						<span>State</span>
+						<span class="state-select-wrapper">
+							<input type="text" id="stateSearchInput" name="international_county_input" class="size_full pilsu dropdown_search_input" value="{members.default_address.international_county}" placeholder="Search state" autocomplete="off" />
+							<input type="hidden" id="searchInputHidden" name="international_county_code_input" name="searchValue" value="{members.default_address.international_county_code}"/>
+							<ul id="stateOptionsList" class="state-options options-hidden"></ul>
+						</span>
+					</label>
+				</div>
+				<label class="checkout-field">
+					<span>ZIP</span>
+					<input type="text" name="international_postcode_input" class="pilsu" value="{members.default_address.international_postcode}" title="{=getAlert('os052')}" required />
+				</label>
+				<label class="checkout-field">
+					<span>Country</span>
+					<span class="country-select-wrapper">
+						<input type="text" id="countrySearchInput" name="international_country_input" class="size_full pilsu dropdown_search_input" value="{members.default_address.international_country}" placeholder="Search country" autocomplete="off" />
+						<input type="hidden" id="taxBillingMethod" name="tax_billing_method" value="ddu" />
+						<input type="hidden" id="stateTax" name="state_tax_input" value="{members.default_address.international_county_tax}" />
+						<input type="hidden" id="countrySearchInputHidden" name="international_country_code_input" name="searchValue" />
+						<ul id="countryOptionsList" class="country-options country-options-hidden">
+							<!--{ @ ship_gl_arr }-->
+							<li data-nation="{.nation_str}" data-key="{.nation_key}" data-name="{ship_gl_list[.key_]['kr_nation']}">
+								<img src="/admin/skin/default/images/common/icon/nation/{ship_gl_list[.key_]['kr_nation']}.png" alt="">
+								<span>{ship_gl_list[.key_]['kr_nation']}</span>
+							</li>
+							<!--{ / }-->
+						</ul>
+					</span>
+				</label>
+			</li>
+			<li class="row_tax_id checkout-field-row checkout-field-row-full">
+				<label class="checkout-field">
+					<span>Tax ID <em>(optional)</em></span>
+					<input type="text" name="international_tax_id_input" title="Tax ID (Optional)" class="size_full" />
+				</label>
+			</li>
+			<!-- 이메일 -->
+			<li {?!is_coupon}class="hide"{/}>
+				<input type="email" name="recipient_email" value="{members.email}" class="size_email_full" title="{=getAlert('os050')}" />
+			</li>
+
+			<li class="guidance checkout-consignee-note">
+				Home address only · no P.O. boxes · local phone number
+			</li>
+
+			<!-- 기타 안내 :: START -->
+			<li class="desc {?!is_direct_store}hide{/}">
+				※ 매장수령상품은 매장에서 상품을 수령하세요.
+			</li>
+			<li class="desc {?!is_coupon}hide{/}">
+				※ 티켓번호는 문자와 이메일로 보내 드립니다.
+			</li>
+			<!-- 기타 안내 :: END -->
+
+			<!--{? members }-->
+			<li class="checkout-consignee-saves">
+				<input type="hidden" name="address_seq" value="{members.default_address.address_seq}" />
+				<label title="This will overwrite the existing default address in your address book.">
+					<input type="checkbox" name="save_delivery_address" value="1" />
+					Set as default
+				</label>
+				<label title="This will save a new address or updates an existing one in your address book.">
+					<input type="checkbox" name="save_delivery_address_often" value="1" title="Saves a new address or updates an existing one in your address book."/>
+					Save to address book
+				</label>
+			</li>
+			<!--{ / }-->
+		</ul>
+	</div>
+</div>
+
+<!-- 배송 메세지 -->
+<div id="shipMessage" class="ship_message checkout-delivery-message">
+	<span class="checkout-field-label">Delivery message</span>
+	<div class="checkout-select-field">
+		<input type="text" class="ship_message_txt" name="memo" id="memo" value="" title="Enter delivery message" autocomplete="off" />
+		<ul class="add_message">
+			<li>If I am not home, please leave at the security office.</li>
+			<li>If I am not home, please call me or leave a text message.</li>
+			<li>Please contact me before shipping.</li>
+		<!--{ ? lately_msg }-->
+			<!--{ @ lately_msg }-->
+			<li><span class="lately desc">(Recently) </span>{.value_.ship_message}</li>
+			<!--{ / }-->
+		<!--{ / }-->
+		</ul>
+	</div>
+</div>

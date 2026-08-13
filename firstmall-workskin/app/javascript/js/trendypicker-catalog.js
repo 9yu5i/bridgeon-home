@@ -6,6 +6,8 @@
  * 2. Custom sort dropdown on #catalog_filter (native change stays in catalog.html)
  * 3. Wish icon src swap for native zzim fallback
  * 4. Strip trailing "USD" text nodes from get_currency_price()
+ * 5. Borrow cards from the next page to fill a partial last grid row
+ * 6. Force per=40 on the desktop (1121px+) tier
  */
 (function () {
 	"use strict";
@@ -198,9 +200,187 @@
 	function refreshDynamicUI() {
 		applyWishIcons();
 		stripCurrencySuffix();
+		stripAlreadyBorrowedItems();
+		fillLastRow();
+	}
+
+	// Column count isn't fixed — 2 on mobile, 3 on tablet, and the desktop
+	// tier (1121px+) uses grid-template-columns: repeat(auto-fill, ...) so a
+	// wide screen can fit 4+ — see detectColumnCount(). If this page's item
+	// count isn't a multiple of the actual rendered column count and there's
+	// a next page, borrow just enough cards from it (via the same
+	// search_list AJAX call the native catalog JS uses) so the last row is
+	// never left partially empty. The true last page is left alone —
+	// nothing to borrow from.
+	//
+	// Borrowing means that next page would otherwise show those same cards
+	// again — so the borrowed goods_seq list is recorded in sessionStorage
+	// (keyed by the exact page + filters it was borrowed for), and stripped
+	// back out if the user actually navigates there. Removing them can push
+	// that page under a multiple of its own column count too, so
+	// stripAlreadyBorrowedItems() always runs before fillLastRow() to let
+	// the shortfall cascade forward page by page.
+	var BORROWED_KEY_PREFIX = "bo-catalog-borrowed:";
+	var fillingLastRow = false;
+
+	function normalizedQueryKey(params) {
+		var keys = [];
+		params.forEach(function (_value, key) {
+			if (key !== "auto" && key !== "_" && keys.indexOf(key) === -1) keys.push(key);
+		});
+		keys.sort();
+		var normalized = new URLSearchParams();
+		keys.forEach(function (key) {
+			normalized.set(key, params.get(key));
+		});
+		return BORROWED_KEY_PREFIX + normalized.toString();
+	}
+
+	function extractGoodsSeq(li) {
+		var link = li.querySelector('a[href*="/goods/view?no="], a[href*="/goods/view/no="]');
+		if (!link) return null;
+		var match = /[?&]no=(\d+)/.exec(link.getAttribute("href") || "");
+		return match ? match[1] : null;
+	}
+
+	function detectColumnCount(items) {
+		if (items.length < 2) return items.length;
+		var firstTop = Math.round(items[0].getBoundingClientRect().top);
+		var count = 0;
+		for (var i = 0; i < items.length; i += 1) {
+			if (Math.round(items[i].getBoundingClientRect().top) !== firstTop) break;
+			count += 1;
+		}
+		return count || 1;
+	}
+
+	function stripAlreadyBorrowedItems() {
+		var grid = document.getElementById("searchedItemDisplay");
+		if (!grid) return;
+		var list = grid.querySelector("ul");
+		if (!list) return;
+
+		var key = normalizedQueryKey(new URLSearchParams(window.location.search));
+		var raw;
+		try {
+			raw = window.sessionStorage.getItem(key);
+		} catch (e) {
+			return;
+		}
+		if (!raw) return;
+
+		var ids;
+		try {
+			ids = JSON.parse(raw);
+		} catch (e) {
+			return;
+		}
+		if (!ids || !ids.length) return;
+
+		var idSet = {};
+		ids.forEach(function (id) {
+			idSet[id] = true;
+		});
+
+		Array.prototype.forEach.call(list.querySelectorAll(":scope > li"), function (li) {
+			var seq = extractGoodsSeq(li);
+			if (seq && idSet[seq]) li.remove();
+		});
+	}
+
+	function fillLastRow() {
+		if (fillingLastRow) return;
+		var grid = document.getElementById("searchedItemDisplay");
+		if (!grid) return;
+		var list = grid.querySelector("ul");
+		if (!list) return;
+		var items = list.querySelectorAll(":scope > li");
+		if (items.length < 2) return;
+
+		// Column count isn't fixed: mobile/tablet are 2/3 columns, but the
+		// desktop tier (1121px+) uses grid-template-columns: repeat(auto-fill, ...)
+		// so a wide screen can fit 4, 5, or more. Measure it from the actual
+		// layout instead of assuming a number.
+		var columns = detectColumnCount(items);
+		if (columns < 2) return;
+
+		var remainder = items.length % columns;
+		if (remainder === 0) return;
+
+		var nav = document.querySelector(".paging_navigation");
+		var hasNext = nav && nav.querySelector('a.next, a[rel="next"]');
+		if (!hasNext) return;
+
+		var needed = columns - remainder;
+		var fetchUrl = new URL(window.location.href);
+		var currentPage = parseInt(fetchUrl.searchParams.get("page"), 10) || 1;
+		fetchUrl.pathname = fetchUrl.pathname.replace(/\/catalog\/?$/, "/search_list");
+		fetchUrl.searchParams.set("page", String(currentPage + 1));
+		fetchUrl.searchParams.set("auto", "1");
+		fetchUrl.searchParams.set("_", String(Date.now()));
+
+		var borrowedFromKey = normalizedQueryKey(fetchUrl.searchParams);
+
+		fillingLastRow = true;
+		fetch(fetchUrl.toString(), { credentials: "same-origin" })
+			.then(function (res) {
+				return res.text();
+			})
+			.then(function (html) {
+				var doc = new DOMParser().parseFromString(html, "text/html");
+				var borrowed = Array.prototype.slice.call(
+					doc.querySelectorAll("li.categories_listing_style"),
+					0,
+					needed
+				);
+				if (!borrowed.length) return;
+
+				var borrowedIds = [];
+				borrowed.forEach(function (li) {
+					li.setAttribute("data-bo-borrowed", "1");
+					list.appendChild(li);
+					var seq = extractGoodsSeq(li);
+					if (seq) borrowedIds.push(seq);
+				});
+
+				if (!borrowedIds.length) return;
+				try {
+					var existingRaw = window.sessionStorage.getItem(borrowedFromKey);
+					var existing = existingRaw ? JSON.parse(existingRaw) : [];
+					window.sessionStorage.setItem(
+						borrowedFromKey,
+						JSON.stringify(existing.concat(borrowedIds))
+					);
+				} catch (e) {
+					/* sessionStorage unavailable — dedup skipped, not fatal */
+				}
+			})
+			.catch(function () {
+				/* leave the partial row as-is on failure */
+			})
+			.then(function () {
+				fillingLastRow = false;
+			});
+	}
+
+	// Desktop tier (see the 1121px breakpoint in trendypicker-catalog.css)
+	// always shows 40 per page, regardless of what `per` an entry link used.
+	// 40 is a value the server actually honors (confirmed live — arbitrary
+	// values silently fall back to the site default instead).
+	function ensureDesktopPageSize() {
+		if (window.innerWidth < 1121) return false;
+		var url = new URL(window.location.href);
+		if (url.searchParams.get("_perlock") === "1") return false;
+		if (url.searchParams.get("per") === "40") return false;
+
+		url.searchParams.set("per", "40");
+		url.searchParams.set("_perlock", "1");
+		window.location.replace(url.toString());
+		return true;
 	}
 
 	ready(function () {
+		if (ensureDesktopPageSize()) return;
 		applyHero();
 		enhanceSortSelect();
 		refreshDynamicUI();

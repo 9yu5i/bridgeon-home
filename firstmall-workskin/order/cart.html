@@ -50,6 +50,7 @@ if (document.body) {
 			<input type="hidden" name="kr_nation" value="{ini_info.kr_nation}" />
 
 			<div class="cart-content">
+				<div class="cart-items-col">
 				<section class="cart-items-card" aria-label="Cart items">
 					<!-- { ? shipping_group_list } -->
 					<div class="cart-items-head">
@@ -62,7 +63,7 @@ if (document.body) {
 						<!--{ @ shipping_group_list }-->
 						<ul class="shipping_group_list">
 							<!--{ @ .goods }-->
-								<li class="cart_goods cart-item" id="cart_goods_{..cart_option_seq}" data-cart-unit-price="{..price}" data-cart-unit-compare="{? ..consumer_price > ..price }{..consumer_price}{:}{..price}{/}" data-cart-ea="{..ea}">
+								<li class="cart_goods cart-item" id="cart_goods_{..cart_option_seq}" data-cart-goods-seq="{..goods_seq}" data-cart-unit-price="{..price}" data-cart-unit-compare="{? ..consumer_price > ..price }{..consumer_price}{:}{..price}{/}" data-cart-ea="{..ea}">
 								<div class="cart-item-check cgd_top">
 									<input type="hidden" name="ship_possible[{..cart_option_seq}]" value="{.ship_possible}" />
 									<input type="checkbox" name="cart_option_seq[]" value="{..cart_option_seq}" stat="{.ship_possible}" rel="{..goods_seq}" />
@@ -118,10 +119,14 @@ if (document.body) {
 									</p>
 									<div class="cart-qty" data-cart-qty data-cart-option-seq="{..cart_option_seq}" aria-label="Quantity">
 										<button type="button" data-cart-qty-change="-1" aria-label="Decrease quantity">-</button>
-										<output data-cart-qty-value>{=number_format(..ea)}</output>
+										<span class="cart-qty-field">
+											<output data-cart-qty-value>{=number_format(..ea)}</output>
+											<input type="text" class="cart-qty-input" data-cart-qty-input inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="4" value="{=..ea}" aria-label="Quantity" />
+										</span>
 										<button type="button" data-cart-qty-change="1" aria-label="Increase quantity">+</button>
 									</div>
-									<strong class="cart-item-total" id="option_suboption_price_sum_{..cart_option_seq}">{=get_currency_price(..tot_result_price,2,'', '<span class="num">_str_price_</span>')}</strong>
+									<strong class="cart-item-total" data-cart-line-total>{=get_currency_price(..tot_result_price,2,'', '<span class="num">_str_price_</span>')}</strong>
+									<span class="hide" id="option_suboption_price_sum_{..cart_option_seq}" aria-hidden="true">{=get_currency_price(..tot_result_price,2,'', '<span class="num">_str_price_</span>')}</span>
 								</div>
 
 								<div id="optional_changes_area_{..cart_option_seq}" class="resp_layer_pop hide">
@@ -161,12 +166,14 @@ if (document.body) {
 					<p class="cart-empty-message">Your cart is empty.</p>
 					<!-- { / } -->
 				</section>
-
 				<!-- { ? shipping_group_list } -->
 				<button type="button" class="cart-delete-selected btn_select_del">
 					<img src="/data/skin/{skin}/images/cart/delete.png" alt="" aria-hidden="true" />Delete Selected
 				</button>
+				<!-- { / } -->
+				</div>
 
+				<!-- { ? shipping_group_list } -->
 				<aside class="cart-side">
 					<section class="cart-promo-card">
 						<h2>PROMO CODE</h2>
@@ -193,7 +200,6 @@ if (document.body) {
 						<div class="cart-coupon-head">
 							<div>
 								<h2 id="cart-coupon-title">COUPON</h2>
-								<p data-cart-selected-coupon>No coupon selected.</p>
 							</div>
 						</div>
 						<button type="button" class="cart-coupon-select-button" data-cart-coupon-open>Select Coupon</button>
@@ -215,15 +221,15 @@ if (document.body) {
 						<h2>ORDER SUMMARY</h2>
 						<dl>
 							<div>
-								<dt>Subtotal <span>({=number_format(total_ea)} items)</span></dt>
+								<dt>Subtotal <span data-cart-subtotal-count>({=number_format(total_ea)} items)</span></dt>
 								<dd id="totalGoodsPrice">{=get_currency_price(total,2,'', '<span class="num">_str_price_</span>')}</dd>
 							</div>
-							<div>
+							<div {? !(total_sale > 0) }hidden{/}>
 								<dt>Product Discount</dt>
 								<dd class="cart-discount" id="saleTotalPrice" data-cart-discount>{?total_sale>0}- {/}<span id="mobile_total_sale">US$0.00</span></dd>
 							</div>
 							<div class="cart-summary-promo" data-cart-summary-promo {? !cart_promotioncode }hidden{/}>
-								<dt>Promo code</dt>
+								<dt data-cart-summary-promo-label>Promo code</dt>
 								<dd data-cart-summary-promo-discount></dd>
 							</div>
 							<div class="cart-summary-coupon" data-cart-summary-coupon hidden>
@@ -234,15 +240,9 @@ if (document.body) {
 								<dt>Shipping</dt>
 								<dd class="{? total_shipping_price>0 }{:}cart-free{/}" id="shippingTotalPrice">{?total_shipping_price>0}(+) {/}<span id="total_shipping_price">{=get_currency_price(total_shipping_price,2)}</span></dd>
 							</div>
-							<div class="cart-taxes-row">
-								<dt>
-									Estimated Taxes
-									<span class="cart-info-wrap">
-										<button type="button" class="cart-info-button" aria-label="About estimated taxes">i</button>
-										<span class="cart-summary-tooltip" role="note">The final amount will be charged in USD. Your payment amount may vary slightly due to exchange rates and payment provider policies.</span>
-									</span>
-								</dt>
-								<dd class="cart-customs">Charged at customs</dd>
+							<div>
+								<dt>Estimated Taxes</dt>
+								<dd class="cart-tax-tbd">TBD</dd>
 							</div>
 							<div class="cart-summary-total">
 								<dt>Total</dt>
@@ -299,6 +299,7 @@ if (document.body) {
 		<div class="cart-coupon-modal-head">
 			<h2 id="cart-coupon-dialog-title">Select Coupon</h2>
 			<p>Only coupons that match the selected cart items can be used.</p>
+			<p class="cart-coupon-min-error" data-cart-coupon-min-error hidden></p>
 		</div>
 		<div class="cart-coupon-list" data-cart-coupon-list></div>
 	</section>
@@ -397,22 +398,22 @@ if (document.body) {
 
 		$("form#cart_form .btn_select_all").change(function() {
 			if($(this).is(":checked")){
-				$("form#cart_form .btn_select_all").attr("checked",true);
+				$("form#cart_form .btn_select_all").attr("checked",true).prop("checked", true);
 				$("form#cart_form input[name='cart_option_seq[]']").each(function(){
-					$(this).attr("checked",true);
+					$(this).attr("checked",true).prop("checked", true);
 				});
 				$(".cart_goods").addClass('selected');
 				if(cartVersion >= 3){
 					setPriceInfoCheck();
 				}
 			}else{
-				$("form#cart_form .btn_select_all").removeAttr("checked");
+				$("form#cart_form .btn_select_all").removeAttr("checked").prop("checked", false);
 				$("form#cart_form input[name='cart_option_seq[]']").each(function(){
-					$(this).removeAttr("checked");
+					$(this).removeAttr("checked").prop("checked", false);
 				});
 				$(".cart_goods").removeClass('selected');
-				if(cartVersion >= 3){
-					setPriceInfoCheck();
+				if(typeof window.tpCartPaintSelectionSummary === "function"){
+					window.tpCartPaintSelectionSummary();
 				}
 			}
 		});
@@ -499,10 +500,43 @@ if (document.body) {
 			});
 		});
 
+		// PROCEED TO CHECKOUT only carries the checked items — this mirrors the
+		// original's "선택 주문" (Order Selected) handler, not "전체 주문" (Order
+		// All): addsettle?mode=choice + only the checked cart_option_seq[]
+		// values, instead of plain addsettle (which always sends everything
+		// regardless of checkbox state).
 		$(".btn_all_order").bind("click",function() {
-			$("form#cart_form").attr("action","addsettle");
-			$("form#cart_form").attr("target","actionFrame");
+			var selected_order = '';
+			var ship_possible = true;
+			// .prop("checked") reads the live checkbox state. .attr("checked")
+			// (what the original's equivalent handler uses) only reflects the
+			// checked="checked" markup from page load and never updates when a
+			// user toggles an individual checkbox — that stale read is what let
+			// every item through to checkout regardless of selection.
+			$("input[name='cart_option_seq[]']").each(function(e, el) {
+				if( $(el).prop('checked') ){
+					if( $(el).attr('stat') != 'Y' ){
+						ship_possible = false;
+						return false;
+					}
+					selected_order += $(el).val() + ",";
+				}
+			});
+
+			if(!ship_possible){
+				openDialogAlert(getAlert('os142'),'400','140');
+				return false;
+			}
+
+			if(!selected_order){
+				openDialogAlert(getAlert('oc042'),'400','140');
+				return false;
+			}
+
+			$("form#cart_form").attr("action","addsettle?mode=choice");
+			$("form#cart_form").attr("target","");
 			$("form#cart_form")[0].submit();
+			$("form#cart_form").attr("target","actionFrame");
 		});
 
 		$("input[name='cart_option_seq[]']").bind("click",function(){
