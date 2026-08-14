@@ -1,0 +1,238 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ #LAYOUT_FOOTER @@
+- 파일위치 : [스킨폴더]/layout_footer/standard.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-footer.css" />
+
+<div id="layout_footer" class="layout_footer">
+	<div class="logo_wrap">
+        <div class="logo_title">
+    		<h2 class="logo_area"><a href="/" aria-label="TrendyPicker home">Trendy<span>Picker</span></a></h2>
+        </div>
+        <div class="info_title">
+            <ul class="footer_contents">
+                <li class="footer_a1">
+                    <h3 class="title"><span designElement="text">MY ACCOUNT</span></h3>
+                    <ul class="menu">
+                        <li><a href="/mypage/dashboard" designElement="text">My Account</a></li>
+                        <li><a href="/service/cs" designElement="text">Customer Service</a></li>
+                        <li><a href="/mypage/order_catalog?sc_date=0" designElement="text">Order Tracking</a></li>
+                    </ul>
+                </li>
+                <li class="footer_b1">
+                    <h3 class="title"><span designElement="text">ABOUT US</span></h3>
+                    <ul class="menu">
+                        <li><a href="/service/company" designElement="text">About Us</a></li>
+                        <li><a href="/service/company?topic=contact" designElement="text">Contact Us</a></li>
+                    </ul>
+                </li>
+                <li class="footer_c1">
+                    <h3 class="title"><span designElement="text">POLICIES</span></h3>
+                    <ul class="menu">
+                        <li><a href="/service/agreement" designElement="text">Terms of Use</a></li>
+                        <li><a href="/service/privacy" designElement="text">Privacy &amp; Cookie Policy</a></li>
+                    </ul>
+                </li>
+                <li class="footer_d1">
+                    <h3 class="title"><span designElement="text">CONTACT US</span></h3>
+                    <ul class="menu">
+                        <li><a href="mailto:help@bridge.com" designElement="text">help@bridge.com</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+	<div class="bottom_wrap">
+        <div class="footer_comp">
+            <div class="footer_method">
+                <div class="pay">
+                    <label>Payment Method</label>
+                    <img src="../images/icon/icon-pay-1.png" title="" alt="">
+                    <img src="../images/icon/icon-pay-2.png" title="" alt="">
+                    <img src="../images/icon/icon-pay-3.png" title="" alt="">
+                    <img src="../images/icon/icon-pay-4.png" title="" alt="">
+                    <img src="../images/icon/icon-pay-5.png" title="" alt="">
+                </div>
+                <div class="delivery">
+                    <label>Delivery Method</label>
+					<img src="../images/icon/icon-delivery-5.png" title="" alt="">
+                    <img src="../images/icon/icon-delivery-1.png" title="" alt="">
+                    <img src="../images/icon/icon-delivery-2.png" title="" alt="">
+                    <img src="../images/icon/icon-delivery-3.png" title="" alt="">
+                    <img src="../images/icon/icon-delivery-4.png" title="" alt="">
+                </div>
+            </div>
+            <div class="copyright">
+                <p designElement="text">© 2025 {config_basic.shopName}, Inc. All rights reserved.</p>
+                <p><span designElement="text">COMPANY</span> : {config_basic.companyName}<span designElement="text">LICENSE</span> : {config_basic.businessLicense}<span designElement="text">CEO</span> : {config_basic.ceo}</p>
+                <p><span designElement="text">ADDRESS</span> : <!--{? config_basic.companyAddress_type == "street"}{config_basic.companyAddress_street}{:}{config_basic.companyAddress}{/} {config_basic.companyAddressDetail}-->RM 715, 120, Sinsan-ro, Saha-gu, Busan, Republic of Korea</p>
+				<p><span designElement="text">NUMBER</span> : {config_basic.companyPhone}<span designElement="text">EMAIL</span> : tp.svc@trendypicker.com</p>
+            </div>
+            <!-- //회사 정보 -->
+            <div class="footer_sns">
+                <a href="#"><img src="../images/icon/icon-sns-insta-white.png" alt=""></a>
+                <a href="#"><img src="../images/icon/icon-sns-facebook-white.png" alt=""></a>
+                <a href="#"><img src="../images/icon/icon-sns-googleplus-white.png" alt=""></a>
+                <a href="#"><img src="../images/icon/icon-sns-youtube-white.png" alt=""></a>
+                <a href="#"><img src="../images/icon/icon-sns-twitter-white.png" alt=""></a>
+            </div>
+        </div>
+	</div>
+</div>
+
+<!--{?preg_match('/goods\/view/',_SERVER.REQUEST_URI)}-->
+	<!--{? navercheckout_tpl }-->
+<div class="pcHideMoShow" style="height:117px;">&nbsp;</div>
+	<!--{ / }-->
+<div class="pcHideMoShow" style="height:80px;">&nbsp;</div>
+<!--{ / }-->
+<!-- 하단영역 : 끝 -->
+
+<!-- 플로팅 - BACK/TOP(대쉬보드) -->
+<div id="floating_over">
+    <div class="fixed_menu">
+        <ul>
+            <li><a href="/" class="home"></a></li>
+            <li><a href="#" class="menu"></a></li>
+            <li><a href="#search" class="search"></a></li>
+            <li><a href="/mypage/wish" class="wish"></a></li>
+            <li><a href="/mypage/index" class="my"></a></li>
+        </ul>
+        <div class="fixed_bar"></div>
+    </div>
+	<!--<a href="javascript:history.back();" class="ico_floating_back" title="뒤로 가기"></a>
+	<a href="javascript:history.forward();" class="ico_floating_foward" title="앞으로 가기"></a>-->
+	<a href="javascript:void(0);" onclick="$('html,body').animate({scrollTop:0},'slow');" class="ico_floating_top" title="위로 가기"><img src="../images/icon/icon-scroll-top.png" alt=""></a>
+    <a href="#" class="ico_floating_talk" title="talk"><img src="../images/icon/icon-scroll-talk.png" alt=""></a>
+	<!--{? (preg_match('/main\/index/',_SERVER.REQUEST_URI) || preg_match('/goods\/catalog/',_SERVER.REQUEST_URI) || preg_match('/goods\/brand/',_SERVER.REQUEST_URI) || preg_match('/goods\/location/',_SERVER.REQUEST_URI) || preg_match('/goods\/search/',_SERVER.REQUEST_URI) || preg_match('/bigdata\/catalog/',_SERVER.REQUEST_URI)) && dataRightQuicklist && !preg_match('/goods\/view/',_SERVER.REQUEST_URI) }-->
+	{? push_count_today_images}<a href="javascript:;" class="ico_floating_recently dn"><span designElement="text">최근본</span><br /><img src="{push_count_today_images}" onerror="this.src='../images/common/noimage.gif'"></a>{/}
+	<!--{ / }-->
+
+	<!-- 최근 본 상품(LAYER) -->
+	<!--{ ? (preg_match('/main\/index/',_SERVER.REQUEST_URI) || preg_match('/goods\/catalog/',_SERVER.REQUEST_URI) || preg_match('/goods\/brand/',_SERVER.REQUEST_URI) || preg_match('/goods\/location/',_SERVER.REQUEST_URI) || preg_match('/goods\/search/',_SERVER.REQUEST_URI) || preg_match('/bigdata\/catalog/',_SERVER.REQUEST_URI)) && dataRightQuicklist }-->
+	<div id="recently_popup">
+		<div class="recently_popup">
+			<h1>최근 본 상품</h1>
+			<div class="recently_thumb">
+				<div id="recently_slide_bottom" style="width:285px; min-height:80px;">
+					<div class="thumb">
+					<!--{ ? dataRightQuicklist }-->
+						<ul>
+							<!--{ @ dataRightQuicklist }-->
+							{? ( .index_ < 40 ) //10page까지 노출}
+								{? (.index_ && (.index_%4) == 0 )}</ul><ul>{/}
+								<li><a href="../goods/view?no={.goods_seq}" class="right_quick_goods"><img src="{.image}" onerror="this.src='../images/common/noimage_list.gif'" alt="{.goods_name}"></a><a href="javascript:rightDeleteItem('mobile_bottom_item_recent', '{.goods_seq}',$(this))" class="btn_delete cover">삭제</a></li>
+							{/}
+							<!--{ / }-->
+						</ul>
+					<!--{ : }-->
+						<h2> 최근 본 상품이 없습니다.</h2>
+					<!--{ / }-->
+					</div>
+				</div>
+				<div class="recently_page">
+					<a href="javascript:;" class="btn_page cover">선택</a>
+				</div>
+			</div>
+			<a href="javascript:;" class="btn_close">모두보기</a>
+		</div>
+		<div class="recently_bg"></div>
+	</div>
+		<!--{ ? dataRightQuicklist.size_ > 3 }-->
+	<script type="text/javascript">
+	<!--
+		$(function(){
+			/* 최근 본 상품 - LAYER(슬라이드) */
+			$("#recently_slide_bottom").touchSlider({
+				flexible:true, roll:true, paging:$("#recently_slide_bottom").next().find(".btn_page"),
+				initComplete:function(e){$("#recently_slide_bottom").next().find(".btn_page").each(function(i, el){$(this).text("page " + (i+1));});},
+				counter:function(e){$("#recently_slide_bottom").next().find(".btn_page").removeClass("on").eq(e.current-1).addClass("on");}
+			});
+		});
+	//-->
+	</script>
+		<!--{ / }-->
+	<!--{ / }-->
+</div>
+<!-- //플로팅 - BACK/TOP(대쉬보드) -->
+
+<script type="text/javascript">
+	$(function() {
+        /* 반응형 슬라이드 배너 관련( 절대 삭제 금지 ) */
+		{? settle }
+			$('.slider_before_loading').remove();
+		{ : }
+			$('.slider_before_loading').removeClass('slider_before_loading');
+		{ / }
+
+		// 상품 색상 코드값 디자인( new 상품정보 )
+		if ( $('.displaY_color_option').length > 0 ) {
+			$('.displaY_color_option .areA').filter(function() {
+				return ( $(this).css('background-color') == 'rgb(255, 255, 255)' );
+			}).addClass('border');
+		}
+        $(".layout_footer .footer_contents>li .title").on("click", function(){
+            $(this).parent().toggleClass("on");
+        });
+        $(".fixed_menu .menu").on("click", function(){
+            $(".resp_top_hamburger > a").click();
+        });
+        $(".fixed_menu .search").on("click", function(){
+            $("#btnSearchV2").click();
+            $("#searchVer2InputBox").focus();
+        });
+
+		$( window ).on('resize', function() {
+			if ( window.innerWidth != WINDOWWIDTH ) {
+				setTimeout(function(){ WINDOWWIDTH = window.innerWidth; }, 10);
+			}
+		});
+	});
+
+	/*######################## 17.12.19 gcs yjy : 앱 처리(fb 로그아웃) s */
+	function logoutfb(){
+		FB.getLoginStatus(logoutfb_process);
+	}
+	function logoutfb_process(){
+		FB.api('/me', function(response) {
+
+			FB.logout(function(response) {
+
+			});
+
+			isLogin = false;
+			{? defined('__ISUSER__')}
+			loadingStart("body",{segments: 12, width: 15.5, space: 6, length: 13, color: '#000000', speed: 1.5});
+				$.ajax({
+				'url' : '../sns_process/facebooklogout',
+				'dataType': 'json',
+				'success': function(res) {
+
+					if(res.result == true){
+						alert("로그아웃되었습니다.");
+
+					{? mobileapp=='y'}
+					{? m_device=='iphone'}
+					window.webkit.messageHandlers.CSharp.postMessage("Logout?");
+	//				window.webkit.messageHandlers.CSharp.postMessage('GoHome');
+					{:}
+					CSharp.postMessage("Logout?");
+	//				CSharp.postMessage('GoHome');
+					{/}
+					{/}
+
+
+					}else{
+						document.location.reload();
+					}
+				}
+				});
+			{/}
+			if (fbId != "")  initializeFbTokenValues();
+			if (fbUid != "") initializeFbUserValues();
+
+			return false;
+		});
+	}
+	/*######################## 17.12.19 gcs yjy : 앱 처리(fb 로그아웃) e */
+</script>

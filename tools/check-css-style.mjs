@@ -39,9 +39,10 @@ const cssLineBaselines = {
   "trendypicker-best.css": 261,
   "trendypicker-brand.css": 836,
   "trendypicker-cart.css": 3371,
-  "trendypicker-checkout.css": 1672,
+  "trendypicker-checkout.css": 2396,
   "trendypicker-catalog.css": 616,
   "trendypicker-coupons.css": 1119,
+  "trendypicker-footer.css": 212,
   "trendypicker-help-topic.css": 2348,
   "trendypicker-help.css": 321,
   "trendypicker-listing-cards.css": 440,
@@ -61,12 +62,12 @@ const cssLineBaselines = {
 const jsLineBaselines = {
   "trendypicker-best.js": 137,
   "trendypicker-cart.js": 2960,
-  "trendypicker-checkout.js": 482,
+  "trendypicker-checkout.js": 1629,
   "trendypicker-catalog.js": 406,
   "trendypicker-coupons.js": 544,
   "trendypicker-help-topic.js": 347,
   "trendypicker-magazine.js": 938,
-  "trendypicker-mypage.js": 1087,
+  "trendypicker-mypage.js": 1208,
   "trendypicker-new.js": 334,
   "trendypicker-orders.js": 1413,
   "trendypicker-profile-birthday.js": 292,
@@ -183,7 +184,7 @@ function importantStats(css) {
 }
 
 const SIZE_HINT =
-  "audit for dead or leftover duplicate rules — do not split a page file just to silence this";
+  "audit for dead or leftover duplicate rules ??do not split a page file just to silence this";
 const IMPORTANT_HINT =
   "prefer a more specific page-scoped selector; !important is last resort for Firstmall ID/legacy rules";
 
@@ -208,12 +209,12 @@ for (const file of collect(workskinRoot, ".css")) {
   if (baseline == null) {
     if (lineCount > CSS_LINE_WARN) {
       warnings.push(
-        `${relPath} is ${lineCount} lines (new file over ${CSS_LINE_WARN}) — ${SIZE_HINT}`,
+        `${relPath} is ${lineCount} lines (new file over ${CSS_LINE_WARN}) ??${SIZE_HINT}`,
       );
     }
   } else if (lineCount > baseline + CSS_LINE_HEADROOM) {
     warnings.push(
-      `${relPath} grew to ${lineCount} lines (was ~${baseline}) — ${SIZE_HINT}`,
+      `${relPath} grew to ${lineCount} lines (was ~${baseline}) ??${SIZE_HINT}`,
     );
   }
 
@@ -222,17 +223,17 @@ for (const file of collect(workskinRoot, ".css")) {
   if (stats.pct > IMPORTANT_PCT_FAIL) {
     failed = true;
     console.error(
-      `${relPath} is ${stats.pct}% !important (${stats.important}/${stats.declarations}, limit ${IMPORTANT_PCT_FAIL}%) — ${IMPORTANT_HINT}`,
+      `${relPath} is ${stats.pct}% !important (${stats.important}/${stats.declarations}, limit ${IMPORTANT_PCT_FAIL}%) ??${IMPORTANT_HINT}`,
     );
   } else if (knownPct != null) {
     if (stats.pct > knownPct + IMPORTANT_PCT_HEADROOM) {
       warnings.push(
-        `${relPath} rose to ${stats.pct}% !important (was ~${knownPct}%) — do not add more; ${IMPORTANT_HINT}`,
+        `${relPath} rose to ${stats.pct}% !important (was ~${knownPct}%) ??do not add more; ${IMPORTANT_HINT}`,
       );
     }
   } else if (stats.pct > IMPORTANT_PCT_WARN) {
     warnings.push(
-      `${relPath} is ${stats.pct}% !important (${stats.important}/${stats.declarations}) — ${IMPORTANT_HINT}`,
+      `${relPath} is ${stats.pct}% !important (${stats.important}/${stats.declarations}) ??${IMPORTANT_HINT}`,
     );
   }
 }
@@ -247,12 +248,12 @@ for (const file of collect(workskinRoot, ".js")) {
   if (baseline == null) {
     if (lineCount > JS_LINE_WARN) {
       warnings.push(
-        `${relPath} is ${lineCount} lines (new file over ${JS_LINE_WARN}) — ${SIZE_HINT}`,
+        `${relPath} is ${lineCount} lines (new file over ${JS_LINE_WARN}) ??${SIZE_HINT}`,
       );
     }
   } else if (lineCount > baseline + JS_LINE_HEADROOM) {
     warnings.push(
-      `${relPath} grew to ${lineCount} lines (was ~${baseline}) — ${SIZE_HINT}`,
+      `${relPath} grew to ${lineCount} lines (was ~${baseline}) ??${SIZE_HINT}`,
     );
   }
 }

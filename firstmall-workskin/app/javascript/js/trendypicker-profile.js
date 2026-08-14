@@ -896,22 +896,27 @@
     #inAddress .trendypicker-address-contact-title { margin: 2px 0 -2px !important; color: #211b2c !important; font-size: 18px !important; line-height: 1.2 !important; font-weight: 800 !important; }
     #inAddress .resp_table_row .tr { display: grid !important; width: 100% !important; min-width: 0 !important; gap: 7px !important; margin: 0 !important; padding: 0 !important; border: 0 !important; }
     #inAddress .resp_table_row .th, #inAddress .resp_table_row .td { display: block !important; width: auto !important; margin: 0 !important; padding: 0 !important; border: 0 !important; color: #211b2c !important; background: transparent !important; font-size: 13px !important; line-height: 1.2 !important; font-weight: 800 !important; }
-    #inAddress .state-select-wrapper, #inAddress .country-select-wrapper { width: 100% !important; min-width: 0 !important; }
-    #inAddress .country-select-wrapper { position: relative !important; }
-    #inAddress .country-select-wrapper::after { content: "" !important; position: absolute !important; top: 50% !important; right: 15px !important; z-index: 2 !important; width: 12px !important; height: 8px !important; border: 0 !important; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat !important; transform: translateY(-50%) !important; transition: transform .2s ease !important; pointer-events: none !important; }
-    #inAddress .country-select-wrapper.is-open::after { transform: translateY(-50%) rotate(180deg) !important; }
+    #inAddress .state-select-wrapper, #inAddress .country-select-wrapper { position: relative !important; width: 100% !important; min-width: 0 !important; }
+    #inAddress .country-select-wrapper::after, #inAddress .state-select-wrapper::after { content: "" !important; position: absolute !important; top: 50% !important; right: 15px !important; z-index: 2 !important; width: 12px !important; height: 8px !important; border: 0 !important; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat !important; transform: translateY(-50%) !important; transition: transform .2s ease !important; pointer-events: none !important; }
+    #inAddress .country-select-wrapper.is-open::after, #inAddress .state-select-wrapper.is-open::after { transform: translateY(-50%) rotate(180deg) !important; }
+    #inAddress .state-select-wrapper.is-enhanced { display: none !important; }
+    #inAddress .state-select-wrapper.is-enhanced::after { display: none !important; }
     #inAddress input:not([type="checkbox"]), #inAddress select { box-sizing: border-box !important; width: 100% !important; height: 46px !important; margin: 0 !important; padding: 0 14px !important; border: 1px solid #d9c9ff !important; border-radius: 12px !important; color: #211b2c !important; background: #fbf8ff !important; font: 14px Pretendard, Arial, sans-serif !important; }
     #inAddress input:not([type="checkbox"])::placeholder { color: #9a91aa !important; opacity: 1 !important; }
-    #inAddress #countrySearchInput { padding-right: 38px !important; cursor: pointer !important; }
+    #inAddress #countrySearchInput, #inAddress #stateSearchInput { padding-right: 38px !important; cursor: pointer !important; }
     #inAddress #countryOptionsList { position: absolute !important; top: calc(100% - 1px) !important; right: 0 !important; left: 0 !important; z-index: 31 !important; box-sizing: border-box !important; display: block !important; width: 100% !important; max-height: 260px !important; margin: 0 !important; padding: 7px 6px 6px !important; overflow: auto !important; border: 1px solid #d9c9ff !important; border-top: 0 !important; border-radius: 0 0 10px 10px !important; background: #fff !important; box-shadow: 0 10px 28px rgba(18, 12, 26, .14) !important; list-style: none !important; scrollbar-width: thin !important; }
     #inAddress #countryOptionsList.country-options-hidden { display: none !important; }
-    #inAddress #countryOptionsList li { display: flex !important; align-items: center !important; gap: 8px !important; min-height: 38px !important; margin: 0 !important; padding: 8px 10px !important; overflow: hidden !important; border-radius: 8px !important; color: #111 !important; background: transparent !important; font: 14px/1.35 Pretendard, Arial, sans-serif !important; text-overflow: ellipsis !important; white-space: nowrap !important; cursor: pointer !important; }
-    #inAddress #countryOptionsList li:hover { color: #7b3fe4 !important; background: #f2ebff !important; }
-    #inAddress #countryOptionsList li img { flex: 0 0 auto !important; width: 20px !important; height: 14px !important; object-fit: cover !important; }
+    #inAddress #countryOptionsList li, #inAddress .country-options li { display: flex !important; align-items: center !important; gap: 8px !important; min-height: 38px !important; margin: 0 !important; padding: 8px 10px !important; overflow: hidden !important; border-radius: 8px !important; color: #111 !important; background: transparent !important; font: 14px/1.35 Pretendard, Arial, sans-serif !important; text-overflow: ellipsis !important; white-space: nowrap !important; cursor: pointer !important; }
+    #inAddress #countryOptionsList li:hover, #inAddress .country-options li:hover { color: #7b3fe4 !important; background: #f2ebff !important; }
+    #inAddress #countryOptionsList li img, #inAddress .country-options li img { flex: 0 0 auto !important; width: 20px !important; height: 14px !important; object-fit: cover !important; }
+    #inAddress .state-options { position: absolute !important; top: calc(100% - 1px) !important; right: 0 !important; left: 0 !important; z-index: 31 !important; box-sizing: border-box !important; display: block !important; width: 100% !important; max-height: 260px !important; margin: 0 !important; padding: 7px 6px 6px !important; overflow: auto !important; border: 1px solid #d9c9ff !important; border-top: 0 !important; border-radius: 0 0 10px 10px !important; background: #fff !important; box-shadow: 0 10px 28px rgba(18, 12, 26, .14) !important; list-style: none !important; scrollbar-width: thin !important; }
+    #inAddress .state-options.options-hidden { display: none !important; }
+    #inAddress .state-options li { display: flex !important; align-items: center !important; gap: 8px !important; min-height: 38px !important; margin: 0 !important; padding: 8px 10px !important; overflow: hidden !important; border-radius: 8px !important; color: #111 !important; background: transparent !important; font: 14px/1.35 Pretendard, Arial, sans-serif !important; text-overflow: ellipsis !important; white-space: nowrap !important; cursor: pointer !important; }
+    #inAddress .state-options li:hover, #inAddress .state-options li.is-selected { color: #7b3fe4 !important; background: #f2ebff !important; }
     #inAddress .trendypicker-native-select { position: relative !important; display: block !important; width: 100% !important; min-width: 0 !important; }
     #inAddress .trendypicker-native-select.is-unavailable { display: none !important; }
     #inAddress .trendypicker-native-select.is-open { z-index: 40 !important; }
-    #inAddress .trendypicker-native-select::after { content: "" !important; position: absolute !important; top: 23px !important; right: 14px !important; z-index: 2 !important; width: 12px !important; height: 8px !important; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat !important; transform: translateY(-50%) !important; transition: transform .2s ease !important; pointer-events: none !important; }
+    #inAddress .trendypicker-native-select::after { content: "" !important; position: absolute !important; top: 23px !important; right: 14px !important; z-index: 3 !important; width: 12px !important; height: 8px !important; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat !important; transform: translateY(-50%) !important; transition: transform .2s ease !important; pointer-events: none !important; }
     #inAddress .trendypicker-native-select.is-open::after { transform: translateY(-50%) rotate(180deg) !important; }
     #inAddress .trendypicker-native-select-trigger { box-sizing: border-box !important; display: flex !important; align-items: center !important; justify-content: flex-start !important; width: 100% !important; height: 46px !important; margin: 0 !important; padding: 0 36px 0 14px !important; overflow: hidden !important; border: 1px solid #d9c9ff !important; border-radius: 12px !important; color: #211b2c !important; background: #fbf8ff !important; font: 14px Pretendard, Arial, sans-serif !important; text-align: left !important; cursor: pointer !important; }
     #inAddress .trendypicker-native-select-value { display: block !important; min-width: 0 !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
@@ -1144,9 +1149,16 @@
         },
         true,
       );
-      countryOptions.addEventListener("click", () => {
-        window.setTimeout(() => setCountryMenuOpen(false));
-      });
+      countryOptions.addEventListener(
+        "click",
+        (event) => {
+          if (!event.target.closest("li")) return;
+          setCountryMenuOpen(false);
+          window.setTimeout(() => setCountryMenuOpen(false), 0);
+          window.setTimeout(() => setCountryMenuOpen(false), 80);
+        },
+        true,
+      );
       frameDocument.addEventListener("pointerdown", (event) => {
         if (!countryWrapper.contains(event.target)) setCountryMenuOpen(false);
       });
@@ -1326,6 +1338,13 @@
         stateCell?.appendChild(stateControl);
       }
       stateInput.classList.add("trendypicker-state-source");
+      stateInput.closest(".state-select-wrapper")?.classList.add("is-enhanced");
+      const normalizeStateLabel = (value) =>
+        String(value || "")
+          .replace(/\s*\([^)]*\)\s*$/, "")
+          .replace(/\s+/g, " ")
+          .trim()
+          .toLowerCase();
       const refreshStateOptions = () => {
         if (!stateSelectIsGenerated) {
           const hasNativeRegions = Array.from(stateSelect.options).some(
@@ -1361,12 +1380,14 @@
           option.textContent = region;
           stateSelect.appendChild(option);
         });
+        const currentKey = normalizeStateLabel(currentState);
         const matchingRegion = regions.find(
-          (region) => region.toLowerCase() === currentState.toLowerCase(),
+          (region) => normalizeStateLabel(region) === currentKey,
         );
         stateSelect.value = matchingRegion || "";
         stateControl?.classList.remove("is-unavailable");
         stateInput.classList.add("trendypicker-state-source");
+        stateSelect.dispatchEvent(new Event("change", { bubbles: true }));
       };
       refreshStateOptions();
       if (!stateSelectIsGenerated) {

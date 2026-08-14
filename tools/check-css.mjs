@@ -27,6 +27,12 @@ const isExternalUrl = (value) =>
 const files = collect(root);
 let failed = false;
 
+const isFirstmallLegacyBoardCss = (file) => {
+  const rel = relative(root, file).replace(/\\/g, "/");
+  // Firstmall board skin CSS references images that live outside this upload package.
+  return /(^|\/)board\.css$/.test(rel);
+};
+
 for (const file of files) {
   const css = readFileSync(file, "utf8");
   const open = (css.match(/\{/g) || []).length;
@@ -36,6 +42,8 @@ for (const file of files) {
     failed = true;
     console.error(`CSS brace mismatch: ${relative(root, file)} (${open} open, ${close} close)`);
   }
+
+  if (isFirstmallLegacyBoardCss(file)) continue;
 
   const urlRegex = /url\(([^)]+)\)/g;
   for (const match of css.matchAll(urlRegex)) {

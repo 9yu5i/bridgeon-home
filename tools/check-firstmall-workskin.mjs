@@ -132,12 +132,31 @@ const requiredOrdersTokens = [
   "orders-filter-tabs",
   "data-orders-search",
   "data-order-step",
-  "order_catalog?sc_date=0",
   "/app/javascript/js/trendypicker-mypage.js",
   "/app/javascript/js/trendypicker-orders.js",
 ];
 
 const forbiddenOrdersTokens = ["board_category2", 'class="order_tab"', "?v="];
+
+// Nav links live in mypage/mypage_lnb.html (loaded into [data-mypage-lnb]).
+// Do not require them on every page HTML after the LNB centralization.
+const requiredLnbTokens = [
+  'id="mypageLnbBasic"',
+  'class="subpage_lnb bo-account-nav"',
+  "/mypage/dashboard",
+  "/mypage/myinfo",
+  "/mypage/order_catalog?sc_date=0",
+  "/mypage/mygdreview_catalog",
+  "/mypage/wish",
+  "/mypage/coupon",
+  "/mypage/saved_posts",
+  "/mypage/membership",
+  "/mypage/emoney",
+  "/service/cs",
+  "/login_process/logout",
+];
+
+const forbiddenLnbTokens = ["/mypage/myshortform", "?v="];
 
 const requiredCartTokens = [
   "/data/skin/{skin}/css/redesign/trendypicker-cart.css",
@@ -203,10 +222,6 @@ const requiredDashboardTokens = [
   "{shortform_summary.saved_count}",
   "<!--{ @ wishlist_list }-->",
   "<!--{ @ recently_viewed_list }-->",
-  "/mypage/order_catalog",
-  "/mypage/wish",
-  "/mypage/dashboard",
-  "/login_process/logout",
   "mypage-avatar-modal",
   "data-mypage-avatar-open",
   "data-mypage-avatar-remove",
@@ -256,7 +271,7 @@ const requiredCssPatterns = [
   {
     label: "desktop My Page keeps the purple gradient backdrop",
     pattern:
-      /\.bo-mypage-shell::before\s*\{[^}]*height:\s*568px;[^}]*radial-gradient\([^}]*linear-gradient\(108deg,\s*#0b0326\s*0%,\s*#29106a\s*47%,\s*#ad42ea\s*100%\);/s,
+      /\.bo-mypage-shell::before\s*\{[^}]*height:\s*597px;[^}]*radial-gradient\([^}]*linear-gradient\(108deg,\s*#0b0326\s*0%,\s*#29106a\s*47%,\s*#ad42ea\s*100%\);/s,
   },
   {
     label: "profile avatar fallback uses a plain background",
@@ -316,7 +331,7 @@ const requiredCssPatterns = [
   {
     label: "desktop dashboard grid and profile sizing",
     pattern:
-      /\.bo-mypage-shell\s*\{[^}]*--bo-account-content-width:\s*1680px;[^}]*grid-template-columns:\s*clamp\(170px,\s*14vw,\s*196px\)\s+minmax\(0,\s*1fr\);[^}]*padding:\s*36px\s+clamp\(16px,\s*2vw,\s*28px\)\s+86px;[\s\S]*?\.bo-profile\s*\{[^}]*min-height:\s*clamp\(208px,\s*17\.5vw,\s*232px\);/s,
+      /\.bo-mypage-shell\s*\{[^}]*--bo-account-content-width:\s*1680px;[^}]*grid-template-columns:\s*clamp\(188px,\s*15\.5vw,\s*220px\)\s+minmax\(0,\s*1fr\);[^}]*padding:\s*36px\s+clamp\(16px,\s*2vw,\s*28px\)\s+86px;[\s\S]*?\.bo-profile\s*\{[^}]*min-height:\s*clamp\(208px,\s*17\.5vw,\s*232px\);/s,
   },
   {
     label: "all desktop My Page content shares the dashboard start line",
@@ -400,12 +415,7 @@ const requiredProfileTokens = [
   "fb-login-button-mbconnect-direct",
   "snsbuttondisconnectlay",
   "data-bo-sns-connect",
-  "/mypage/dashboard",
-  "/mypage/myinfo",
-  "/mypage/order_catalog",
-  "/mypage/wish",
   "/mypage/withdrawal",
-  "/login_process/logout",
   "membericonFile",
   "../member_process/membericonsave",
   "mypage-logout-modal",
@@ -588,6 +598,24 @@ const dashboardPath = resolve(workskinRoot, "mypage/dashboard.html");
 const profilePath = resolve(workskinRoot, "mypage/myinfo.html");
 const ordersPath = resolve(workskinRoot, "mypage/order_catalog.html");
 const helpPath = resolve(workskinRoot, "service/cs.html");
+const lnbPath = resolve(workskinRoot, "mypage/mypage_lnb.html");
+
+if (existsSync(lnbPath)) {
+  const lnb = readFileSync(lnbPath, "utf8");
+  for (const token of requiredLnbTokens) {
+    if (lnb.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed My Page LNB token: ${token}`);
+  }
+  for (const token of forbiddenLnbTokens) {
+    if (!lnb.includes(token)) continue;
+    failed = true;
+    console.error(`Forbidden My Page LNB token: ${token}`);
+  }
+} else {
+  failed = true;
+  console.error("Missing Firstmall work-skin file: mypage/mypage_lnb.html");
+}
 
 if (existsSync(ordersPath)) {
   const orders = readFileSync(ordersPath, "utf8");

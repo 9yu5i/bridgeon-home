@@ -1,5 +1,40 @@
 # TrendyPicker Decisions
 
+## 2026-08-14: Firstmall Footer Redesign Uses Scoped CSS Module
+
+Decision:
+
+- Footer redesign lives in `css/redesign/trendypicker-footer.css`, linked from
+  `layout_footer/standard.html` only.
+- Keep Firstmall structure (`#layout_footer`, `.logo_wrap`, `.footer_a1`–`.footer_d1`,
+  `.bottom_wrap`, floating menu, title accordion). Do not restyle Payment / copyright /
+  SNS in the redesign file unless needed — those stay on skin `user.css`.
+- Link copy matches the agreed four columns (MY ACCOUNT / ABOUT US / POLICIES / CONTACT US);
+  Join Us is omitted.
+
+Why:
+
+- Footer is global chrome. A dedicated redesign file avoids touching `common.css` /
+  `user.css` and keeps upload scope to two files.
+
+## 2026-08-14: Firstmall Edits Require Original Contrast Checklist
+
+Decision:
+
+- Before editing `firstmall-workskin/` HTML or page JS, open the matching file in the read-only
+  original skin and contrast includes, template tokens, form `name`/`id`, and live URLs.
+- Shared chrome stays in owning modules (e.g. My Account LNB only in `mypage/mypage_lnb.html`).
+  Do not paste `#mypageLnbBasic` into every page.
+- Saved posts links use `/mypage/saved_posts` (backend), not `/mypage/myshortform`.
+- Prefer `/data/skin/{skin}/app/javascript/js/trendypicker-*.js` so skin uploads are not masked
+  by a stale shared `/app/javascript/` copy.
+- Enforced via `.cursor/rules/firstmall-workskin.mdc`, `.agents/coding-rules.md`, and `AGENTS.md`.
+
+Why:
+
+- Inlining LNB and blanking `{members…}` values caused production regressions that look like
+  design work but break Firstmall's module system and commerce data binding.
+
 ## 2026-08-12: Firstmall New vs Modified Uses The 2026-07-30 Original Skin
 
 Decision:

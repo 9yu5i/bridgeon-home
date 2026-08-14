@@ -1,20 +1,33 @@
-		<div id="mypageLnbBasic">
-		<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
-		@@ 마이페이지 LNB 공통 @@
-		- 파일위치 : [스킨폴더]/mypage/mypage_lnb.html
-		++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-			<h2 class="title1"><a href="/mypage/dashboard" designElement="text">MY ACCOUNT</a></h2>
-			<ul class="lnb_sub">
-				<li><a href="/mypage/dashboard" designElement="text">My Dashboard</a></li>
-				<li><a href="/mypage/myinfo" designElement="text">Profile</a></li>
-				<li><a href="/mypage/order_catalog?sc_date=0" designElement="text">Orders</a></li>
-				<li><a href="/mypage/mygdreview_catalog" designElement="text">My Reviews</a></li>
-				<li><a href="/mypage/wish" designElement="text">Wishlist</a></li>
-				<li><a href="/mypage/coupon" designElement="text">Coupons</a></li>
-				<li><a href="/mypage/myshortform" designElement="text">Saved posts</a></li>
-				<li><a href="/mypage/membership" designElement="text">Membership</a></li>
-				<li><a href="/mypage/emoney" designElement="text">Points</a></li>
-				<li><a href="/service/cs" designElement="text">Help Center</a></li>
-				<li><a href="/login_process/logout" designElement="text">Log Out</a></li>
-			</ul>
-		</div>
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 마이페이지 LNB 공통 @@
+- 파일위치 : [스킨폴더]/mypage/mypage_lnb.html
+- 이 파일이 마이페이지 LNB 의 유일한 정의처입니다. 메뉴 항목/주소를
+  바꿀 때는 여기만 고치면 모든 페이지에 반영됩니다.
+- 각 페이지는 <aside class="bo-account-side" data-mypage-lnb></aside>
+  자리표시자만 두고, trendypicker-mypage.js 가 이 파일에서
+  #mypageLnbSource 안쪽을 읽어 넣습니다.
+  (원본 스킨의 common/mypage_ui.js 가 #subpageLNB 에
+   '../mypage/mypage_lnb #mypageLnbBasic' 을 load 하던 방식과 동일)
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<div id="mypageLnbSource">
+	<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+		<ul class="lnb_sub">
+			<li><a href="/mypage/dashboard" designElement="text">My Dashboard</a></li>
+			<li><a href="/mypage/myinfo" designElement="text">Profile</a></li>
+			<li><a href="/mypage/order_catalog?sc_date=0" designElement="text">Orders</a></li>
+			<li><a href="/mypage/mygdreview_catalog" designElement="text">My Reviews</a></li>
+			<li><a href="/mypage/wish" designElement="text">Wishlist</a></li>
+			<li><a href="/mypage/coupon" designElement="text">Coupons</a></li>
+			<li><a href="/mypage/saved_posts" designElement="text">Saved posts</a></li>
+			<li><a href="/mypage/membership" designElement="text">Membership</a></li>
+			<li><a href="/mypage/emoney" designElement="text">Points</a></li>
+			<li><a href="/service/cs" designElement="text">Help Center</a></li>
+			<li><a href="/login_process/logout" designElement="text">Log Out</a></li>
+		</ul>
+	</nav>
+	<article class="bo-invite">
+		<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+		<p>Share the love.<br />Earn exclusive rewards together.</p>
+		<a href="/mypage/myfbrecommend">INVITE NOW</a>
+	</article>
+</div>

@@ -24,6 +24,8 @@
   var FREE_SHIPPING = 48;
   var COUPON_KEY = "tpCartCoupon";
   var SELECTION_KEY = "tpCartUnselected";
+  var NATION_KEY = "tpCartNation";
+  var NATION_RETRY_KEY = "tpCartNationRetried";
 
   function text(el) {
     return el ? String(el.textContent || "").replace(/\s+/g, " ").trim() : "";
@@ -112,37 +114,6 @@
         : parseMoney(text(row.querySelector("[data-cart-line-total], .cart-item-total")));
     var discount = compare > unit && unit > 0 ? (compare - unit) * ea : 0;
     return { ea: ea, unit: unit, compare: compare, line: line, discount: discount };
-  }
-
-  function syncProductDiscount() {
-    var total = 0;
-    eachSelectedRow(function (row) {
-      total += readRowTotals(row).discount;
-    });
-    total = Math.round(total * 100) / 100;
-    var saleDd = document.getElementById("saleTotalPrice");
-    var saleSpan = document.getElementById("mobile_total_sale");
-    var saveEl = document.querySelector("[data-cart-save]");
-    var saleWrap = saleDd && saleDd.closest("div");
-
-    if (saleDd) {
-      saleDd.innerHTML =
-        (total > 0 ? "- " : "") +
-        '<span id="mobile_total_sale">' +
-        formatMoney(total) +
-        "</span>";
-    } else if (saleSpan) {
-      saleSpan.textContent = formatMoney(total);
-    }
-    if (saleWrap) {
-      if (total > 0) {
-        saleWrap.hidden = false;
-        saleWrap.removeAttribute("hidden");
-      } else {
-        saleWrap.hidden = true;
-      }
-    }
-    if (saveEl) saveEl.textContent = formatMoney(total);
   }
 
   function ready(fn) {
@@ -576,9 +547,28 @@
   // items the user unchecked — anything not in this list (including items
   // added to the cart later) stays checked by default, which is the
   // behavior a fresh page load already has.
+  //
+  // Keyed by goods_seq + the option text, not cart_option_seq: logging out
+  // and back in merges the guest/member cart server-side and reissues new
+  // cart_option_seq row ids, so a raw-seq key would silently stop matching
+  // any checkbox and every item would come back checked. goods_seq + the
+  // chosen option stays stable across that merge. Stored in localStorage
+  // (not sessionStorage) so it also survives the login-triggered navigation
+  // itself, not just same-tab reloads.
+  function rowIdentity(cb) {
+    var goodsSeq = cb.getAttribute("rel") || "";
+    var row = document.getElementById("cart_goods_" + cb.value);
+    var optionText = "";
+    if (row) {
+      var optEl = row.querySelector(".realtrend-select-value");
+      optionText = text(optEl);
+    }
+    return goodsSeq + "::" + optionText;
+  }
+
   function readUnselected() {
     try {
-      var raw = JSON.parse(sessionStorage.getItem(SELECTION_KEY) || "[]");
+      var raw = JSON.parse(localStorage.getItem(SELECTION_KEY) || "[]");
       return Array.isArray(raw) ? raw : [];
     } catch (err) {
       return [];
@@ -588,9 +578,9 @@
   function writeUnselected(list) {
     try {
       if (list.length) {
-        sessionStorage.setItem(SELECTION_KEY, JSON.stringify(list));
+        localStorage.setItem(SELECTION_KEY, JSON.stringify(list));
       } else {
-        sessionStorage.removeItem(SELECTION_KEY);
+        localStorage.removeItem(SELECTION_KEY);
       }
     } catch (err) {}
   }
@@ -599,7 +589,7 @@
     var boxes = page.querySelectorAll('input[name="cart_option_seq[]"]');
     var unselected = [];
     Array.prototype.forEach.call(boxes, function (cb) {
-      if (!cb.checked) unselected.push(cb.value);
+      if (!cb.checked) unselected.push(rowIdentity(cb));
     });
     writeUnselected(unselected);
   }
@@ -620,7 +610,7 @@
     var boxes = page.querySelectorAll('input[name="cart_option_seq[]"]');
     var anyRestored = false;
     Array.prototype.forEach.call(boxes, function (cb) {
-      if (!unselectedSet[cb.value] || !cb.checked) return;
+      if (!unselectedSet[rowIdentity(cb)] || !cb.checked) return;
       cb.checked = false;
       anyRestored = true;
       var row = document.getElementById("cart_goods_" + cb.value);
@@ -1136,7 +1126,46 @@
     if (next) label.textContent = "Shipping to " + next;
   }
 
+  // {ini_info.nation} is a server-side session value re-rendered on every
+  // load. Picking a country here does a real form POST (chg_shipping_nation)
+  // to persist it, but that session value doesn't reliably survive a trip to
+  // another page and back — the same native mechanism as the untouched
+  // Firstmall skin, just exposed more now that this button is easy to find.
+  // Remember the user's pick on this device and, if a fresh load shows a
+  // different nation than what they last chose, silently replay the same
+  // native call once (guarded via sessionStorage so a session that truly
+  // won't stick doesn't loop the page reload forever).
+  function storeNationPreference(nation) {
+    try {
+      if (nation) localStorage.setItem(NATION_KEY, nation);
+    } catch (err) {}
+  }
+
+  function readNationPreference() {
+    try {
+      return localStorage.getItem(NATION_KEY) || "";
+    } catch (err) {
+      return "";
+    }
+  }
+
+  function reapplyNationIfNeeded() {
+    var preferred = readNationPreference();
+    if (!preferred) return;
+    var hiddenNation = document.querySelector("form#cart_form input[name='nation']");
+    var current = hiddenNation ? String(hiddenNation.value || "").trim() : "";
+    if (!current || current === preferred) return;
+    try {
+      if (sessionStorage.getItem(NATION_RETRY_KEY) === preferred) return;
+      sessionStorage.setItem(NATION_RETRY_KEY, preferred);
+    } catch (err) {}
+    if (typeof window.chg_shipping_nation === "function") {
+      window.chg_shipping_nation(preferred);
+    }
+  }
+
   function bindCountry() {
+    reapplyNationIfNeeded();
     var dialog = document.getElementById("cart-country-dialog");
     var list = document.querySelector("[data-cart-country-list]");
     var search = document.querySelector("[data-cart-country-search]");
@@ -1228,6 +1257,7 @@
       );
       if (label) label.textContent = "Shipping to " + name;
       closeDialog();
+      if (nation) storeNationPreference(nation);
       if (typeof window.chg_shipping_nation === "function" && nation) {
         window.chg_shipping_nation(nation);
       }

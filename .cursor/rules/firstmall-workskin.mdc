@@ -1,5 +1,5 @@
 ---
-description: Firstmall skin mapping and redesign rules — edit existing HTML, add new CSS files, never mix into common.css/user.css
+description: Firstmall work-skin — compare original before edit; keep includes, tokens, form names; scoped CSS only
 globs: firstmall-workskin/**/*
 alwaysApply: false
 ---
@@ -12,62 +12,50 @@ Compare `firstmall-workskin/` against this folder only. Never edit it.
 
 `C:\Users\user\Desktop\(DONT CHANGE-20260730)Firstmall-original\responsive_food_mealkit_gl`
 
-- File exists there → **수정**
-- File does not exist there → **신규**
-- Do not use git status to decide new vs modified.
+- File exists there → **수정** / missing there → **신규**
+- Do not use git status for that classification.
 
-## URL → Template Mapping
+## Pre-Edit Checklist (mandatory)
 
-The public page URL usually maps to the skin HTML path:
+Before changing any work-skin HTML/JS, open the **same path** in the original skin and check:
 
-- `https://…/goods/view?no=92915` → `[skin]/goods/view.html`
-- `https://…/mypage/wish` → `[skin]/mypage/wish.html`
-- `https://…/mypage/order_catalog` → `[skin]/mypage/order_catalog.html`
+1. **Includes / modules** — `#subpageLNB`, `{#board_lnb}`, `{#form_member}`, `<!-- [스킨폴더]/… -->`, layout header/footer. Edit the **owning module**; do not paste its markup into every page.
+2. **Template tokens** — keep `{members…}`, `{member…}`, `{#paging}`, `{=…}` etc. Never blank them to `value=""` for “cleaner” markup.
+3. **Form contract** — preserve Firstmall `name` / `id` / required hiddens. Restyle with classes/wrappers; do not rename fields the core JS expects.
+4. **Live URLs** — links must match Firstmall routes/APIs (e.g. Saved posts → `/mypage/saved_posts`, not `/mypage/myshortform` or prototype paths).
+5. **Script path** — prefer `/data/skin/{skin}/app/javascript/js/trendypicker-*.js` so skin uploads are not masked by a stale shared `/app/javascript/...` copy. No `?v=` query strings.
 
-Skin root example: `/data/skin/responsive_food_mealkit_gl/`.
+### Shared chrome ownership
 
-## Multi-File Pages
+| Chrome | Own in | Not by |
+|--------|--------|--------|
+| My Account LNB | `mypage/mypage_lnb.html` only | Copying `<nav id="mypageLnbBasic">` into each page |
+| Customer board LNB | `_modules/common/board_lnb.html` / `{#board_lnb}` | Replacing with My Account nav unless product explicitly requires it |
+| Footer | `layout_footer/…` | Inlining full footer into page templates |
 
-Complex pages (especially product view) are composed of a main HTML file plus smaller included modules.
-Before changing a page:
+```html
+<!-- ❌ BAD: inline LNB on every My Page -->
+<aside><nav id="mypageLnbBasic">…</nav></aside>
 
-1. Open the entry template that matches the URL.
-2. Find every included/loaded module used by that page.
-3. Edit the owning module instead of dumping all markup into one file.
+<!-- ✅ GOOD: keep Firstmall include slot -->
+<div id="subpageLNB" class="subpage_lnb"><!-- [스킨폴더]/mypage/mypage_lnb.html --></div>
+```
 
-Do **not** rewrite a multi-module Firstmall page into a single giant HTML file.
+## URL → Template
 
-## HTML vs CSS Ownership
+Public URL maps to skin HTML (e.g. `/mypage/wish` → `mypage/wish.html`). Inspect entry + every included module before editing.
 
-When linking TrendyPicker design into Firstmall:
+## HTML vs CSS vs JS
 
 | Asset | Rule |
 |-------|------|
-| **HTML** | Edit the existing Firstmall skin HTML (and its modules). |
-| **CSS** | Add **new** scoped files (e.g. `css/redesign/trendypicker-*.css`) and link them from the HTML. |
-| **JS** | Prefer new focused files under `/app/javascript/js/trendypicker-*.js` when behavior is redesign-specific. |
+| **HTML** | Edit existing Firstmall templates/modules; keep multi-module split. |
+| **CSS** | New `css/redesign/trendypicker-*.css` only — never `common.css` / `user.css`. |
+| **JS** | Focused `trendypicker-*.js`; unbind/rebind carefully around Firstmall handlers. |
 
-### Never do this
-
-- Do **not** add TrendyPicker redesign styles into Firstmall's large legacy files:
-  - `[skin]/css/common.css`
-  - `[skin]/css/user.css`
-- Do **not** mix redesign patches into those files; they are already too complex.
-- Do **not** use CSS/JS `?v=` query strings on Firstmall links (they have broken asset loading).
-- Do **not** append a second block for a selector that already exists in the same file/media
-  context. Merge into the existing rule. `.a, .b` and `.b,.a` count as the same selector.
-- Do **not** add `!important` unless a Firstmall ID or legacy rule cannot be beaten with a
-  more specific page-scoped selector.
+Do not add `!important` unless a Firstmall ID/legacy rule cannot be beaten with specificity.
+Do not append a duplicate selector block in the same file/media context — merge instead.
 
 ## Validation
 
-After work-skin CSS/JS edits run `npm run check:firstmall` (work-skin validator plus
-`tools/check-css-style.mjs`). That check **fails** on duplicate selectors and on files
-whose `!important` ratio exceeds 25%. It **warns** when a file grows past its recorded
-baseline, or when `!important` use rises. Large page files are expected — do not split
-them to silence a size warning. After a legitimate size or `!important` cleanup, update
-the baselines in `tools/check-css-style.mjs`.
-
-## Work-Skin Package
-
-Keep upload-ready copies under `firstmall-workskin/`, mirroring skin-relative paths for HTML/CSS/images, and `app/javascript/js/` for shared application scripts.
+After work-skin edits: `npm run check:firstmall`. Fails on duplicate selectors and `!important` > 25%. Update baselines in `tools/check-css-style.mjs` only after legitimate size/`!important` cleanups.

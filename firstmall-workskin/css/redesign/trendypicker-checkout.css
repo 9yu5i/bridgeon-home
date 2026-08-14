@@ -303,6 +303,60 @@ body.is-checkout-page .checkout_mileage-row .emoney_cancel_button {
   border: 1px solid #7b3fe4;
 }
 
+body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .emoney_input_button,
+body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .emoney_all_input_button,
+body.is-checkout-page .checkout_mileage-row .emoney_input_button,
+body.is-checkout-page .checkout_mileage-row .emoney_all_input_button,
+body.is-checkout-page .checkout_mileage-row .emoney_input_button.hide,
+body.is-checkout-page .checkout_mileage-row .emoney_all_input_button.hide,
+body.is-checkout-page .checkout_mileage-row .emoney_input_button.dn,
+body.is-checkout-page .checkout_mileage-row .emoney_all_input_button.dn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-select-field::after,
+body.is-checkout-page #shipMessage .checkout-select-field::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  z-index: 2;
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%236f687d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: transform 0.2s ease;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-select-field.is-open::after,
+body.is-checkout-page #shipMessage.is-open .checkout-select-field::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+body.is-checkout-page .checkout-mileage-error {
+  margin: 8px 0 0;
+  color: #e11867;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+body.is-checkout-page .checkout-mileage-error[hidden] {
+  display: none;
+}
+
+body.is-checkout-page .checkout-mileage-card.is-error .od_sale_price {
+  border-color: #e11867;
+}
+
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main.order_payment_left .order_subsection .title1,
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main.order_payment_left .order_subsection .title3,
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main.order_payment_left .order_subsection .title3:first-child,
@@ -456,12 +510,14 @@ body.is-checkout-page .payment_method_select > li > div {
   overflow: hidden;
   border: 1px solid #ded8e8;
   border-radius: 12px;
-  background-color: #f6f3fb;
+  background-color: #f4f2f8;
+  box-shadow: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 body.is-checkout-page .payment_method_select > li > div:hover {
   border-color: #7b3fe4;
+  background-color: #efe9fa;
 }
 
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .payment_method_select > li > div > label,
@@ -473,7 +529,7 @@ body.is-checkout-page .payment_method_select > li > div > label {
   background-color: transparent;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 48px;
+  background-size: 44px;
 }
 
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .payment_method_select > li > div > label input[type="radio"],
@@ -490,9 +546,9 @@ body.is-checkout-page .payment_method_select > li > div > label input[type="radi
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .payment_method_select > li > div.active,
 body.is-checkout-page .payment_method_select > li > div.active,
 body.is-checkout-page .payment_method_select > li:has(input:checked) > div {
-  border-color: #7b3fe4;
-  background-color: #f3edff;
-  box-shadow: 0 0 0 1px #7b3fe4;
+  border-color: #171320;
+  background-color: #171320;
+  box-shadow: 0 0 0 2px #7b3fe4;
 }
 
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .payment_method_select > li > p,
@@ -642,11 +698,16 @@ body.is-checkout-page .settle_tab li a {
   text-decoration: none;
 }
 
-body.is-checkout-page .settle_tab li.current a,
-body.is-checkout-page .settle_tab li.on a {
+body.is-checkout-page .settle_tab li.current a {
   border-color: #7b3fe4;
   color: #fff;
   background: #7b3fe4;
+}
+
+body.is-checkout-page .settle_tab li:not(.current) a {
+  border-color: #ded8e8;
+  color: #171320;
+  background: #fff;
 }
 
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card > .title3,
@@ -731,12 +792,257 @@ body.is-checkout-page .checkout-consignee-card .settle_tab li a {
 }
 
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .settle_tab li.current a,
-body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .settle_tab li.on a,
-body.is-checkout-page .checkout-consignee-card .settle_tab li.current a,
-body.is-checkout-page .checkout-consignee-card .settle_tab li.on a {
+body.is-checkout-page .checkout-consignee-card .settle_tab li.current a {
   border-color: #7b3fe4;
   color: #fff;
   background: #7b3fe4;
+}
+
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .settle_tab li:not(.current) a,
+body.is-checkout-page .checkout-consignee-card .settle_tab li:not(.current) a {
+  border-color: #ded8e8;
+  color: #171320;
+  background: #fff;
+}
+
+body.is-checkout-page .ul_delivery {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+body.is-checkout-page #orderPaymentLayout .ul_delivery > li,
+body.is-checkout-page .ul_delivery > li {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #e8e3f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #6f687a;
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+body.is-checkout-page .ul_delivery > li.clearbox::after {
+  display: none;
+}
+
+body.is-checkout-page .ul_delivery > li:hover {
+  border-color: #b9a6e8;
+  background: #fcfbfe;
+}
+
+body.is-checkout-page .ul_delivery > li:has(input:checked) {
+  border-color: #7b3fe4;
+  background: #f7f2ff;
+  box-shadow: inset 0 0 0 1px #7b3fe4;
+}
+
+body.is-checkout-page .ul_delivery > li > label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+body.is-checkout-page .ul_delivery input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex: none;
+  border: 1.5px solid #c8c2d4;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+body.is-checkout-page .ul_delivery input[type="radio"]:checked {
+  border-color: #171320;
+  background-color: #171320;
+  box-shadow: inset 0 0 0 3px #fff;
+}
+
+body.is-checkout-page #orderPaymentLayout .ul_delivery .list,
+body.is-checkout-page .ul_delivery .list {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none;
+}
+
+body.is-checkout-page #orderPaymentLayout .ul_delivery .name_section,
+body.is-checkout-page .ul_delivery .name_section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px 10px;
+  width: 100%;
+  margin: 0;
+  padding: 0 !important;
+  text-align: left;
+}
+
+body.is-checkout-page #orderPaymentLayout .ul_delivery .name_section::after,
+body.is-checkout-page .ul_delivery .name_section::after {
+  display: none !important;
+  content: none !important;
+}
+
+body.is-checkout-page #orderPaymentLayout .ul_delivery .name_section .name_label,
+body.is-checkout-page .ul_delivery .name_section .name_label {
+  display: inline-flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  float: none;
+  text-align: left;
+}
+
+body.is-checkout-page #orderPaymentLayout .ul_delivery .name_section .btn_x1,
+body.is-checkout-page .ul_delivery .name_section .btn_x1 {
+  display: inline-flex;
+  flex: 0 0 auto;
+  float: none !important;
+  gap: 8px;
+  margin: 0 0 0 auto !important;
+  padding: 0;
+}
+
+body.is-checkout-page #orderPaymentLayout .ul_delivery .address_section,
+body.is-checkout-page #orderPaymentLayout .ul_delivery .call_section,
+body.is-checkout-page #orderPaymentLayout .ul_delivery .nation_section,
+body.is-checkout-page .ul_delivery .address_section,
+body.is-checkout-page .ul_delivery .call_section,
+body.is-checkout-page .ul_delivery .nation_section {
+  margin: 0;
+  padding: 0;
+  color: #6f687a;
+  font-size: 12px;
+  line-height: 1.45;
+  font-weight: 500;
+  text-align: left;
+}
+
+body.is-checkout-page #orderPaymentLayout .ul_delivery .name_section .name,
+body.is-checkout-page .ul_delivery .name_section .name {
+  color: #171320;
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 800;
+}
+
+body.is-checkout-page .ul_delivery .name_section .desc {
+  color: #8f86a0;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+body.is-checkout-page .ul_delivery .name_section .pointcolor {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: 999px;
+  color: #7b3fe4;
+  background: #efe7ff;
+  font-size: 10px;
+  line-height: 18px;
+  font-weight: 800;
+}
+
+body.is-checkout-page .ul_delivery .btn_x1 .btn_resp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #7b3fe4;
+  background: none;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+body.is-checkout-page .ul_delivery .btn_x1 .btn_resp:hover {
+  color: #5d28c3;
+  text-decoration: underline;
+}
+
+body.is-checkout-page .ul_delivery .address_section label,
+body.is-checkout-page .ul_delivery .call_section label,
+body.is-checkout-page .ul_delivery .nation_section label {
+  cursor: pointer;
+}
+
+body.is-checkout-page .ul_delivery .nation_section {
+  color: #8f86a0;
+  font-size: 11px;
+}
+
+body.is-checkout-page .delivery_often .paging_navigation,
+body.is-checkout-page .checkout-consignee-card .paging_navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+body.is-checkout-page .delivery_often .paging_navigation a,
+body.is-checkout-page .delivery_often .paging_navigation input,
+body.is-checkout-page .checkout-consignee-card .paging_navigation a,
+body.is-checkout-page .checkout-consignee-card .paging_navigation input {
+  min-width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 6px;
+  color: #6f687a;
+  background: none;
+  font-size: 13px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+body.is-checkout-page .delivery_often .paging_navigation a.on,
+body.is-checkout-page .checkout-consignee-card .paging_navigation a.on {
+  /* Beat Firstmall user.css purple current-page chip. */
+  display: none !important;
 }
 
 body.is-checkout-page .checkout-consignee-card .delivery_info_input .list_01.v2,
@@ -758,13 +1064,55 @@ body.is-checkout-page .checkout-consignee-card .checkout-field-row,
 body.is-checkout-page .checkout-consignee-card .double_input_row,
 body.is-checkout-page .checkout-consignee-card .four_input_row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 8px;
+  row-gap: 10px;
   width: 100%;
 }
 
+body.is-checkout-page .checkout-consignee-card .checkout-state-zip-row {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  column-gap: 8px;
+  row-gap: 10px;
+  width: 100%;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field,
+body.is-checkout-page .checkout-consignee-card .checkout-zip-field {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Firstmall toggles `.hide` on the state wrapper parent — keep it visible. */
+body.is-checkout-page .checkout-consignee-card .checkout-state-field.hide,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .state-select-wrapper.hide,
+body.is-checkout-page .checkout-consignee-card .state-select-wrapper {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field {
+  display: grid !important;
+  gap: 6px;
+}
+
 body.is-checkout-page .checkout-consignee-card .checkout-field-row-full {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-field-row > .checkout-field,
+body.is-checkout-page .checkout-consignee-card .double_input_row > .checkout-field,
+body.is-checkout-page .checkout-consignee-card .four_input_row > .checkout-field {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
 }
 
 body.is-checkout-page .checkout-consignee-card .checkout-field {
@@ -774,7 +1122,7 @@ body.is-checkout-page .checkout-consignee-card .checkout-field {
   margin: 0;
 }
 
-body.is-checkout-page .checkout-consignee-card .checkout-field > span,
+body.is-checkout-page .checkout-consignee-card .checkout-field > span:not(.state-select-wrapper):not(.country-select-wrapper):not(.checkout-phone-combo),
 body.is-checkout-page .checkout-consignee-card .checkout-field-label {
   color: #6f687a;
   font-size: 12px;
@@ -787,11 +1135,24 @@ body.is-checkout-page .checkout-consignee-card .checkout-field em {
   font-weight: 500;
 }
 
-body.is-checkout-page .checkout-consignee-card .checkout-field input,
+body.is-checkout-page .checkout-consignee-card .checkout-field input:not(#stateSearchInput):not(.checkout-state-source):not(.realtrend-select-native):not([name="international_county_text_input"]),
 body.is-checkout-page .checkout-consignee-card .checkout-field select,
 body.is-checkout-page .checkout-consignee-card .checkout-phone-combo input,
-body.is-checkout-page .checkout-consignee-card .checkout-phone-combo select {
+body.is-checkout-page .checkout-consignee-card .country-select-wrapper,
+body.is-checkout-page .checkout-consignee-card .state-select-wrapper,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-trigger {
+  box-sizing: border-box;
   width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-phone-combo select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
   margin: 0;
 }
 
@@ -831,9 +1192,9 @@ body.is-checkout-page .checkout-consignee-card .checkout-consignee-saves label {
 body.is-checkout-page .checkout-consignee-card .checkout-delivery-message {
   display: grid;
   gap: 6px;
-  margin: 12px 0 0;
-  padding: 12px 0 0;
-  border-top: 1px solid #ece7f3;
+  margin: 22px 0 0;
+  padding: 0;
+  border-top: 0;
 }
 
 body.is-checkout-page .checkout-consignee-card .checkout-select-field,
@@ -843,45 +1204,387 @@ body.is-checkout-page .checkout-consignee-card .country-select-wrapper {
   display: block;
   width: 100%;
   min-width: 0;
+  overflow: visible;
 }
 
-body.is-checkout-page .checkout-consignee-card .checkout-select-field::after,
-body.is-checkout-page .checkout-consignee-card .state-select-wrapper::after,
+body.is-checkout-page .checkout-consignee-card .country-select-wrapper.is-open {
+  z-index: 50;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-source,
+body.is-checkout-page .checkout-consignee-card .checkout-country-source,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field #stateSearchInput,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-native,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field:not(.is-text-mode) .checkout-state-text,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field:not(.is-text-mode) input[name="international_county_text_input"] {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  min-height: 0 !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  pointer-events: none !important;
+  display: block !important;
+}
+
 body.is-checkout-page .checkout-consignee-card .country-select-wrapper::after {
-  content: "";
+  content: none !important;
+  display: none !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .country-select-wrapper .checkout-select-chevron {
+  position: absolute !important;
+  top: 50% !important;
+  right: 12px !important;
+  left: auto !important;
+  z-index: 8 !important;
+  display: block !important;
+  width: 12px !important;
+  height: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  background-color: transparent !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%236f687d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  pointer-events: none !important;
+  transform: translateY(-50%) rotate(0deg);
+  transition: transform 0.2s ease;
+}
+
+body.is-checkout-page .checkout-consignee-card .country-select-wrapper.is-open .checkout-select-chevron {
+  transform: translateY(-50%) rotate(180deg) !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .country-select-wrapper.is-open #countryOptionsList,
+body.is-checkout-page .checkout-consignee-card .country-select-wrapper.is-open .country-options {
+  display: block !important;
+}
+
+body.is-checkout-page .checkout-consignee-card #countryOptionsList.country-options-hidden,
+body.is-checkout-page .checkout-consignee-card .country-options.country-options-hidden {
+  display: none !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .country-options li:hover,
+body.is-checkout-page .checkout-consignee-card #countryOptionsList li:hover,
+body.is-checkout-page .checkout-consignee-card .country-options li.is-selected,
+body.is-checkout-page .checkout-consignee-card #countryOptionsList li.is-selected {
+  color: #7b3fe4 !important;
+  background: #f2ebff !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-native-select {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-native-select.is-text-mode .realtrend-select-trigger,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select.is-text-mode .checkout-native-select-trigger,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select.is-text-mode .realtrend-select-menu,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select.is-text-mode .checkout-native-select-menu {
+  display: none !important;
+}
+
+/* Match `.bo-profile-form .profile-field .realtrend-select-trigger` */
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-wrap {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-wrap.is-open {
+  z-index: 40;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-wrap::after {
+  content: "" !important;
   position: absolute;
-  top: 20px;
-  right: 12px;
-  z-index: 2;
-  width: 12px;
+  top: 50%;
+  right: 16px;
+  z-index: 3;
+  display: block !important;
+  box-sizing: border-box;
+  width: 8px;
   height: 8px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%236f687d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  border-right: 1.5px solid #111;
+  border-bottom: 1.5px solid #111;
+  background: transparent !important;
+  background-image: none !important;
+  transform: translateY(-70%) rotate(45deg);
+  transform-origin: center;
+  transition: transform 0.2s ease;
   pointer-events: none;
 }
 
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-wrap.is-open::after {
+  content: "" !important;
+  transform: translateY(-20%) rotate(225deg);
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-wrap.is-text-mode::after {
+  display: none !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-wrap,
+body.is-checkout-page .checkout-consignee-card .checkout-state-zip-row {
+  overflow: visible !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-trigger {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 0 38px 0 14px;
+  border: 1px solid #e4dced;
+  border-radius: 10px;
+  color: #15131c;
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer !important;
+  outline: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-wrap.is-text-mode .realtrend-select-trigger {
+  display: none !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-trigger:focus-visible,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-wrap.is-open .realtrend-select-trigger {
+  border-color: #7b3fe4;
+  box-shadow: 0 0 0 3px rgba(123, 63, 228, 0.14);
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-value {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: #15131c;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-menu {
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 0;
+  z-index: 60;
+  box-sizing: border-box;
+  display: none !important;
+  width: 100%;
+  max-height: 220px;
+  margin: 0;
+  padding: 7px 6px;
+  overflow: auto;
+  border: 1px solid #e4dced;
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
+  list-style: none;
+  scrollbar-width: thin;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-wrap.is-open .realtrend-select-menu {
+  display: block !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-menu li {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #171320;
+  background: transparent;
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .checkout-state-field .realtrend-select-menu li:hover,
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .checkout-state-field .realtrend-select-menu li:focus,
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .checkout-state-field .realtrend-select-menu li.is-selected,
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .checkout-state-field .realtrend-select-menu li[aria-selected="true"],
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-menu li:hover,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-menu li:focus,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-menu li.is-selected,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field .realtrend-select-menu li[aria-selected="true"] {
+  color: #7b3fe4;
+  background: #f2ebff;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-native-select::after {
+  content: none;
+  display: none;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-trigger {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 0 36px 0 12px;
+  border: 1px solid #ded8e8;
+  border-radius: 6px;
+  color: #111;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-native-select.is-open .checkout-native-select-trigger,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-trigger:focus-visible {
+  border-color: #7b3fe4;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(123, 63, 228, 0.14);
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-value {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-text {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid #ded8e8;
+  border-radius: 6px;
+  color: #111;
+  background: #fff;
+  font-size: 14px;
+  line-height: 40px;
+  font-weight: 500;
+}
+
+body.is-checkout-page .checkout-consignee-card .checkout-state-field:not(.is-text-mode) .checkout-state-text,
+body.is-checkout-page .checkout-consignee-card .checkout-state-field:not(.is-text-mode) #stateSearchInput,
+body.is-checkout-page .checkout-consignee-card #stateOptionsList {
+  display: none !important;
+}
+
+body.is-checkout-page #orderPaymentLayout #countrySearchInput,
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card #countrySearchInput,
-body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card #stateSearchInput,
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .ship_message_txt,
 body.is-checkout-page .checkout-consignee-card #countrySearchInput,
-body.is-checkout-page .checkout-consignee-card #stateSearchInput,
 body.is-checkout-page .checkout-consignee-card .ship_message_txt {
+  position: relative;
+  z-index: 1;
   margin: 0;
-  padding-right: 36px;
+  padding: 0 36px 0 12px;
   cursor: pointer;
+  background: #fff !important;
+  background-image: none !important;
+  background-size: auto !important;
+}
+
+body.is-checkout-page .checkout-consignee-card .country-select-wrapper.is-open #countrySearchInput,
+body.is-checkout-page .checkout-consignee-card #countrySearchInput:focus {
+  border-color: #7b3fe4;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(123, 63, 228, 0.14);
+}
+
+body.is-checkout-page #orderPaymentLayout #countrySearchInput.pilsu,
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card #countrySearchInput.pilsu,
+body.is-checkout-page #orderPaymentLayout #shipMessage .ship_message_txt,
+body.is-checkout-page .checkout-consignee-card .dropdown_search_input.pilsu:not(#stateSearchInput),
+body.is-checkout-page #orderPaymentLayout #countrySearchInput,
+body.is-checkout-page #orderPaymentLayout #countrySearchInput.complete,
+body.is-checkout-page .checkout-consignee-card #countrySearchInput,
+body.is-checkout-page .checkout-consignee-card #countrySearchInput.complete,
+body.is-checkout-page .checkout-consignee-card #countrySearchInput.dropdown_search_input {
+  /* Beat Firstmall user.css `#countrySearchInput` / `.dropdown_search_input.pilsu` arrow bg. */
+  background: #fff !important;
+  background-image: none !important;
+  background-size: auto !important;
+  background-position: initial !important;
+  background-repeat: no-repeat !important;
+}
+
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .ship_message_txt,
+body.is-checkout-page .checkout-consignee-card .ship_message_txt,
+body.is-checkout-page #orderPaymentLayout #shipMessage .ship_message_txt,
+body.is-checkout-page #shipMessage .ship_message_txt {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 0 36px 0 12px;
+  border: 1px solid #ded8e8;
+  border-radius: 6px;
+  color: #111;
+  background-color: #fff;
   background-image: none;
+  font-size: 14px;
+  line-height: 40px;
+  font-weight: 500;
+}
+
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .ship_message_txt:focus,
+body.is-checkout-page .checkout-consignee-card .ship_message_txt:focus,
+body.is-checkout-page #shipMessage .ship_message_txt:focus {
+  border-color: #7b3fe4;
+  outline: none;
 }
 
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .country-options,
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .state-options,
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .add_message,
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .checkout-native-select-menu,
 body.is-checkout-page .checkout-consignee-card .country-options,
 body.is-checkout-page .checkout-consignee-card .state-options,
-body.is-checkout-page .checkout-consignee-card .add_message {
+body.is-checkout-page .checkout-consignee-card .add_message,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% - 1px);
   left: 0;
   z-index: 40;
   box-sizing: border-box;
@@ -889,37 +1592,50 @@ body.is-checkout-page .checkout-consignee-card .add_message {
   max-width: none;
   max-height: 220px;
   margin: 0;
-  padding: 6px 0;
+  padding: 7px 6px;
   overflow-x: hidden;
   overflow-y: auto;
-  border: 1px solid #ded8e8;
-  border-radius: 10px;
+  border: 1px solid #d9c9ff;
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
   background: #fff;
   box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
   list-style: none;
 }
 
 body.is-checkout-page .checkout-consignee-card .country-options-hidden,
-body.is-checkout-page .checkout-consignee-card .options-hidden {
+body.is-checkout-page .checkout-consignee-card .options-hidden,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu {
   display: none;
+}
+
+body.is-checkout-page #shipMessage .add_message {
+  display: none;
+}
+
+body.is-checkout-page #shipMessage.is-open .add_message,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select.is-open .checkout-native-select-menu {
+  display: block;
 }
 
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .country-options li,
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .state-options li,
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .add_message li,
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .checkout-native-select-menu li,
 body.is-checkout-page .checkout-consignee-card .country-options li,
 body.is-checkout-page .checkout-consignee-card .state-options li,
-body.is-checkout-page .checkout-consignee-card .add_message li {
+body.is-checkout-page .checkout-consignee-card .add_message li,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu li {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 40px;
+  min-height: 38px;
   margin: 0;
-  padding: 8px 12px !important;
+  padding: 8px 10px !important;
   border: 0;
-  border-radius: 0;
+  border-radius: 8px;
   color: #171320;
-  background: none;
+  background: transparent;
   font-size: 13px;
   line-height: 1.35;
   font-weight: 600;
@@ -931,9 +1647,12 @@ body.is-checkout-page .checkout-consignee-card .add_message li {
 
 body.is-checkout-page .checkout-consignee-card .country-options li:hover,
 body.is-checkout-page .checkout-consignee-card .state-options li:hover,
-body.is-checkout-page .checkout-consignee-card .add_message li:hover {
-  color: #171320;
-  background: #f3edff;
+body.is-checkout-page .checkout-consignee-card .add_message li:hover,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu li:hover,
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu li.is-selected,
+body.is-checkout-page #shipMessage .add_message li:hover {
+  color: #7b3fe4;
+  background: #f2ebff;
 }
 
 body.is-checkout-page .checkout-consignee-card .country-options li img {
@@ -1528,7 +2247,7 @@ body.is-checkout-page .cart_list .goods_name,
 body.is-checkout-page .cart_list .goods_name.v2,
 body.is-checkout-page .shipping_group_list .goods_name a {
   display: block;
-  margin: 0;
+  margin: -3px 0 0;
   color: #111;
   font-size: 14px;
   line-height: 1.25;
@@ -1662,9 +2381,14 @@ body.is-checkout-page .dn.goods_delivery_info {
   body.is-checkout-page .checkout-consignee-card .checkout-field-row,
   body.is-checkout-page .checkout-consignee-card .double_input_row,
   body.is-checkout-page .checkout-consignee-card .four_input_row,
+  body.is-checkout-page .checkout-consignee-card .checkout-state-zip-row,
   body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .checkout_mileage-row,
   body.is-checkout-page .checkout_mileage-row {
     grid-template-columns: 1fr;
+  }
+
+  body.is-checkout-page .checkout-consignee-card .checkout-state-zip-row {
+    grid-template-columns: 1fr !important;
   }
 
   body.is-checkout-page #orderPaymentLayout .cart_list .cgd_contents .block1 > ul > li.img_area,

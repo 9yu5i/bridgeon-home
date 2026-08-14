@@ -116,6 +116,12 @@ When working on the live Firstmall skin or `firstmall-workskin/`:
 - Complex pages load multiple smaller HTML modules into one entry template. Inspect the entry
   file and every included module before editing; do not collapse a multi-module page into one
   large HTML file.
+- Before any work-skin HTML/JS edit: contrast the same path in the original skin. Keep includes
+  (`#subpageLNB`, `{#…}`, layout modules), template tokens (`{members…}`), and form `name`/`id`
+  fields. Edit shared chrome in its owning file only (My Account LNB → `mypage/mypage_lnb.html`).
+  Match live routes (Saved posts → `/mypage/saved_posts`). Prefer skin-path
+  `trendypicker-*.js` links. Details: `.agents/coding-rules.md` and
+  `.cursor/rules/firstmall-workskin.mdc`.
 - **HTML:** edit the existing Firstmall skin templates/modules that own the page.
 - **CSS:** add new scoped redesign files (for example `css/redesign/trendypicker-*.css`) and link
   them from the HTML. Do **not** mix TrendyPicker styles into Firstmall
@@ -142,14 +148,19 @@ When working on the live Firstmall skin or `firstmall-workskin/`:
   Live URL: `/order/cart`. Promo uses `getPromotionJson?mode=cart`. Coupons are selected
   on cart and applied at checkout.
 - Checkout Firstmall files: `order/settle.html` (existing Firstmall template),
-  `order/_shipping_address.html`, `order/pop_delivery_address.html`,
-  `css/redesign/trendypicker-checkout.css`, `app/javascript/js/trendypicker-checkout.js`.
-  Live URL: `/order/settle` (cart `addsettle`). Match cart visual language. Keep
-  Firstmall discount/coupon fields in the template for apply JS; do not show the
-  Discount picker UI. Coupon comes from cart `tpCartCoupon`. Tax uses original
-  `state_tax_input` + `/order/get_state_ajax` + `order_price_calculate`. Standard
-  Shipping shows "Charged at customs"; Express (`ship_set_code=quick`) shows the
-  calculated tax amount.
+ `order/_shipping_address.html`, `order/pop_delivery_address.html`,
+ `css/redesign/trendypicker-checkout.css`, `app/javascript/js/trendypicker-checkout.js`.
+ Live URL: `/order/settle` (cart `addsettle`). Match cart visual language. Keep
+ Firstmall discount/coupon fields in the template for apply JS; do not show the
+ Discount picker UI. Coupon comes from cart `tpCartCoupon`. Tax uses original
+ `state_tax_input` + `/order/get_state_ajax` + `order_price_calculate`. Standard
+ Shipping shows "Charged at customs"; Express (`ship_set_code=quick`) shows the
+ calculated tax amount.
+- Footer Firstmall files: `layout_footer/standard.html` (existing Firstmall
+ template), `css/redesign/trendypicker-footer.css`. Link the redesign CSS from
+ the footer module only. Keep Firstmall ids/classes (`logo_wrap`, `footer_a1`–
+ `footer_d1`, `bottom_wrap`, floating menu, accordion click on `.title`). Do not
+ put footer redesign rules in `css/common.css` or `css/user.css`.
 
 ## Design Rules
 

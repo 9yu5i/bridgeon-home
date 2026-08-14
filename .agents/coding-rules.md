@@ -103,10 +103,29 @@ in `tools/check-css-style.mjs`. Do not raise a baseline just to silence leftover
   `css/redesign/trendypicker-orders.css`, `trendypicker-wishlist.css`) and link them from the
   owning HTML. Do not mix redesign rules into Firstmall's large `css/common.css` or `css/user.css`.
 - **JS:** add redesign-specific behavior in focused `trendypicker-*.js` files under
-  `/app/javascript/js/` when needed, instead of expanding legacy Firstmall scripts.
+  `app/javascript/js/` when needed, instead of expanding legacy Firstmall scripts. Prefer skin-path
+  script tags (`/data/skin/{skin}/app/javascript/js/…`) so uploads are not masked by a stale
+  shared `/app/javascript/…` file.
 - Do not add CSS/JS `?v=` query strings on Firstmall skin links.
 - Keep upload candidates under `firstmall-workskin/`. Mirror skin-owned HTML, CSS, and images by
   their skin-relative paths, and mirror shared JavaScript under `app/javascript/js/` for upload to
   Firstmall's application directory.
 - Validate with `npm run check:firstmall` (prefer this over full `npm run check` when only the
   work-skin changed). That command includes the redesign style check.
+
+### Pre-edit original contrast (required)
+
+Before editing any `firstmall-workskin/` HTML or page JS, open the same relative path in
+`C:\Users\user\Desktop\(DONT CHANGE-20260730)Firstmall-original\responsive_food_mealkit_gl`
+and verify:
+
+1. **Includes** — Keep `#subpageLNB` / `{#…}` / `<!-- [스킨폴더]/… -->` slots. Edit the owning
+   module (`mypage/mypage_lnb.html`, `_modules/common/board_lnb.html`, `layout_footer/…`,
+   `order/_shipping_address.html`, etc.). Do not paste shared chrome into every page.
+2. **Tokens** — Preserve `{members…}`, `{member…}`, `{#paging}`, `{=…}`. Never clear them to
+   empty `value=""` for markup cleanup.
+3. **Form contract** — Keep Firstmall `name` / `id` / required hiddens. Add classes/wrappers only.
+4. **URLs** — Match live Firstmall routes (Saved posts → `/mypage/saved_posts`, not
+   `/mypage/myshortform` or static-prototype paths).
+5. **My Account LNB** — Single source: `mypage/mypage_lnb.html`. Do not inline
+   `#mypageLnbBasic` on each My Page (or Help page) unless product explicitly overrides board LNB.

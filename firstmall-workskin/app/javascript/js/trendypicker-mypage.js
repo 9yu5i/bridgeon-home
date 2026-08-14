@@ -115,10 +115,12 @@
       return;
     }
 
+    // Start the request immediately: the browser keeps painting this document
+    // until the next one is ready, so the leave fade still plays. Waiting for
+    // the animation before navigating added a full transition of dead time to
+    // every account-page load.
     document.documentElement.classList.add("is-page-leaving");
-    window.setTimeout(() => {
-      window.location.href = url.href;
-    }, pageTransitionDuration);
+    window.location.href = url.href;
   };
 
   const isForwardPageLink = (link, event) => {
@@ -183,6 +185,100 @@
 
   consumeScrollTopOnLoad();
   initPageTransitions();
+
+  // ---- My Page LNB ---------------------------------------------------
+  // mypage/mypage_lnb.html is the single definition of the account nav.
+  // Pages carry only an empty <aside class="bo-account-side" data-mypage-lnb>
+  // placeholder and this fills it — the same shape as the stock skin's
+  // common/mypage_ui.js, which did
+  //   $('#subpageLNB').load('../mypage/mypage_lnb #mypageLnbBasic', ...)
+  // Firstmall's {#...} includes are a fixed set of built-in module names,
+  // so a server-side include of an arbitrary skin file is not available;
+  // client-side injection is how the stock skin solves this.
+  const mypageLnbUrl = "/mypage/mypage_lnb";
+  const mypageLnbCacheKey = "tp-mypage-lnb-v1";
+
+  // Help Center owns every /service and /board page plus the Q&A screens;
+  // this mirrors the active item each page hard-coded before.
+  const helpCenterPaths = /^\/(?:service|board)(?:\/|$)|^\/mypage\/myqna/;
+
+  const markActiveLnbLink = (root) => {
+    const path = window.location.pathname.replace(/\/+$/, "") || "/";
+    const links = [...root.querySelectorAll(".lnb_sub a")];
+    const hrefOf = (link) => (link.getAttribute("href") || "").split("?")[0];
+
+    let match = null;
+    if (helpCenterPaths.test(path)) {
+      match = links.find((link) => hrefOf(link) === "/service/cs") ?? null;
+    } else {
+      links.forEach((link) => {
+        const href = hrefOf(link);
+        if (!href || href === "/login_process/logout") return;
+        // Exact segment match only, so /mypage/emoney_exchange does not
+        // light up /mypage/emoney (the stock skin special-cased that pair).
+        if (path !== href && !path.startsWith(`${href}/`)) return;
+        if (!match || href.length > hrefOf(match).length) match = link;
+      });
+    }
+
+    if (!match) return;
+    match.classList.add("on");
+    match.setAttribute("aria-current", "page");
+    match.closest("li")?.classList.add("on");
+  };
+
+  const renderMypageLnb = (side, markup) => {
+    const parsed = new DOMParser().parseFromString(markup, "text/html");
+    const source = parsed.querySelector("#mypageLnbSource");
+    if (!source) return false;
+
+    side.innerHTML = source.innerHTML;
+    side.dataset.mypageLnbLoaded = "true";
+
+    // Entries cleared through the skin editor come back empty; the stock
+    // skin drops those rows rather than rendering a blank link.
+    side.querySelectorAll(".lnb_sub a").forEach((link) => {
+      if (!link.textContent.trim()) link.closest("li")?.remove();
+    });
+
+    markActiveLnbLink(side);
+    side
+      .querySelector(".lnb_sub a.on")
+      ?.scrollIntoView({ inline: "center", block: "nearest" });
+    window.dispatchEvent(new CustomEvent("tp:mypage-lnb-ready"));
+    return true;
+  };
+
+  const hydrateMypageLnb = async () => {
+    const side = document.querySelector("[data-mypage-lnb]");
+    if (!side || side.dataset.mypageLnbLoaded === "true") return;
+
+    try {
+      const cached = sessionStorage.getItem(mypageLnbCacheKey);
+      if (cached && renderMypageLnb(side, cached)) return;
+    } catch {
+      // Continue with the network request when session storage is unavailable.
+    }
+
+    try {
+      const response = await fetch(mypageLnbUrl, {
+        credentials: "same-origin",
+        cache: "force-cache",
+      });
+      if (!response.ok) return;
+      const markup = await response.text();
+      if (!renderMypageLnb(side, markup)) return;
+      try {
+        sessionStorage.setItem(mypageLnbCacheKey, markup);
+      } catch {
+        // The menu still works when storage is full or unavailable.
+      }
+    } catch {
+      // Leave the placeholder empty rather than breaking the rest of the page.
+    }
+  };
+
+  hydrateMypageLnb();
 
   const initDashboardReveal = () => {
     const revealTargets = Array.from(
@@ -1093,16 +1189,13 @@
     });
   }
 
-  const logoutTriggers = [
-    ...document.querySelectorAll(
-      '#mypageLnbBasic .lnb_sub a[href*="/login_process/logout"], .bo-mobile-service__grid a[href*="/login_process/logout"]',
-    ),
-  ];
+  const logoutTriggerSelector =
+    '#mypageLnbBasic .lnb_sub a[href*="/login_process/logout"], .bo-mobile-service__grid a[href*="/login_process/logout"]';
   const logoutDialog = document.getElementById("mypage-logout-dialog");
 
-  if (logoutTriggers.length && logoutDialog) {
+  if (logoutDialog) {
     const logoutConfirm = logoutDialog.querySelector("[data-mypage-logout-confirm]");
-    let activeLogoutTrigger = logoutTriggers[0];
+    let activeLogoutTrigger = null;
 
     const closeLogoutDialog = () => {
       logoutDialog.hidden = true;
@@ -1111,18 +1204,26 @@
       activeLogoutTrigger?.focus();
     };
 
-    const openLogoutDialog = (event) => {
-      event.preventDefault();
-      activeLogoutTrigger = event.currentTarget;
-      logoutDialog.hidden = false;
-      logoutDialog.setAttribute("aria-hidden", "false");
-      document.body.classList.add("is-mypage-logout-open");
-      logoutConfirm?.focus();
-    };
-
-    logoutTriggers.forEach((trigger) => {
-      trigger.addEventListener("click", openLogoutDialog);
-    });
+    // Delegated: the LNB (and its Log Out link) is injected from
+    // mypage_lnb.html after this runs, so there is nothing to bind to yet.
+    // Capture phase matters — initPageTransitions() registers its navigating
+    // click handler on document first, and it only backs off when the event
+    // is already defaultPrevented. A bubble listener here would run after it
+    // and the page would navigate straight to logout behind the dialog.
+    document.addEventListener(
+      "click",
+      (event) => {
+        const trigger = event.target?.closest?.(logoutTriggerSelector);
+        if (!trigger) return;
+        event.preventDefault();
+        activeLogoutTrigger = trigger;
+        logoutDialog.hidden = false;
+        logoutDialog.setAttribute("aria-hidden", "false");
+        document.body.classList.add("is-mypage-logout-open");
+        logoutConfirm?.focus();
+      },
+      true,
+    );
 
     logoutDialog.querySelectorAll("[data-mypage-logout-close]").forEach((button) => {
       button.addEventListener("click", closeLogoutDialog);

@@ -13,29 +13,47 @@
   if (!page) return;
 
   const CATEGORY_KEYS = ["beauty", "k-food", "lifestyle", "k-pop", "k-traditional"];
-  const FETCH_CONCURRENCY = 6;
+  const FETCH_CONCURRENCY = 4;
 
-  // The recently-viewed record has no category field of its own, so each
-  // card's category is only knowable by fetching its full product page and
-  // reading the breadcrumb (see readCategoryFromPage below) — that's what
-  // makes classification slow: it's N full-page fetches, not a cheap
-  // lookup. This cache makes repeat visits in the same tab/session instant
-  // by skipping the fetch entirely for a goods_seq already resolved once.
-  const CATEGORY_CACHE_KEY = "bo-category-cache-v1";
-  const readCategoryCache = () => {
+  // The recently-viewed record carries no category or brand, and Firstmall
+  // exposes no lookup for them, so the only source is the product page
+  // breadcrumb (see readCategoryFromPage below) — one ~200 kB document per
+  // card. Two things keep that cost off the shopper's back: this cache, and
+  // the partial read in fetchProductPage.
+  //
+  // localStorage rather than sessionStorage on purpose: a product's category
+  // and brand are the same on every visit, so the fetch should be paid once
+  // per product per browser, not once per tab. Shared with
+  // trendypicker-wishlist.js — same product catalog either way.
+  const PRODUCT_FACTS_KEY = "bo-product-facts-v1";
+  const PRODUCT_FACTS_LIMIT = 600;
+
+  const readProductFacts = () => {
     try {
-      return JSON.parse(sessionStorage.getItem(CATEGORY_CACHE_KEY) || "{}");
+      const stored = JSON.parse(localStorage.getItem(PRODUCT_FACTS_KEY) || "{}");
+      return stored && typeof stored === "object" ? stored : {};
     } catch {
       return {};
     }
   };
-  const categoryCache = readCategoryCache();
-  const writeCategoryCache = () => {
-    try {
-      sessionStorage.setItem(CATEGORY_CACHE_KEY, JSON.stringify(categoryCache));
-    } catch {
-      // Storage full/unavailable — the cache is a nice-to-have, not required.
-    }
+
+  const productFacts = readProductFacts();
+  let productFactsWrite = 0;
+
+  const writeProductFacts = () => {
+    window.clearTimeout(productFactsWrite);
+    productFactsWrite = window.setTimeout(() => {
+      try {
+        const keys = Object.keys(productFacts);
+        // Oldest-first trim: insertion order is resolve order.
+        keys.slice(0, Math.max(0, keys.length - PRODUCT_FACTS_LIMIT)).forEach((key) => {
+          delete productFacts[key];
+        });
+        localStorage.setItem(PRODUCT_FACTS_KEY, JSON.stringify(productFacts));
+      } catch {
+        // Storage full/unavailable — the cache is a nice-to-have, not required.
+      }
+    }, 200);
   };
 
   // Primary labels beat keyword guesses. Order only matters for equal scores.
@@ -243,22 +261,59 @@
     activeFilter = button.dataset.recentlyFilter || "all";
     syncTabs();
     applyFilters();
+    if (activeFilter !== "all") void ensureCardsHydrated();
   });
 
   const productRequests = new Map();
 
+  // Everything this file reads from a product page — the breadcrumb and the
+  // product name — sits in roughly the first half of the document, so the
+  // response is read as a stream and cancelled once both have arrived instead
+  // of downloading the tail (product description, reviews, related items).
+  const BREADCRUMB_MARKER = "navi_linemap";
+  const NAME_CLOSE_MARKER = "</h3>";
+  const PARTIAL_READ_LIMIT = 160000;
+
+  const readProductHtml = async (url, signal) => {
+    const response = await fetch(url, {
+      credentials: "same-origin",
+      headers: { Accept: "text/html" },
+      signal,
+    });
+    if (!response.ok) return "";
+    if (!response.body?.getReader) return response.text();
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let html = "";
+    let breadcrumbAt = -1;
+
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        html += decoder.decode(value, { stream: true });
+        if (breadcrumbAt < 0) breadcrumbAt = html.indexOf(BREADCRUMB_MARKER);
+        // The product name closes after the breadcrumb, so its closing tag is
+        // the point where nothing useful is left to read.
+        const complete = breadcrumbAt >= 0 && html.indexOf(NAME_CLOSE_MARKER, breadcrumbAt) >= 0;
+        if (complete || html.length > PARTIAL_READ_LIMIT) break;
+      }
+    } finally {
+      reader.cancel().catch(() => {});
+    }
+
+    return html;
+  };
+
   const fetchProductPage = (url) => {
     if (!url) return Promise.resolve(null);
     if (productRequests.has(url)) return productRequests.get(url);
-    const request = fetch(url, {
-      credentials: "same-origin",
-      headers: { Accept: "text/html" },
-    })
-      .then(async (response) => {
-        if (!response.ok) return null;
-        return new DOMParser().parseFromString(await response.text(), "text/html");
-      })
-      .catch(() => null);
+    const controller = new AbortController();
+    const request = readProductHtml(url, controller.signal)
+      .then((html) => (html ? new DOMParser().parseFromString(html, "text/html") : null))
+      .catch(() => null)
+      .finally(() => controller.abort());
     productRequests.set(url, request);
     return request;
   };
@@ -467,14 +522,19 @@
       seedCardCategory(card);
 
       const brand = card.querySelector(".bo-recently-card__brand");
-      const needsBrand = Boolean(brand && !brand.textContent.trim());
       const goodsSeq = card.dataset.goodsSeq || "";
-      const cachedCategory = goodsSeq ? categoryCache[goodsSeq] : undefined;
+      const cached = (goodsSeq && productFacts[goodsSeq]) || null;
+      let needsBrand = Boolean(brand && !brand.textContent.trim());
 
-      // Already resolved this goods_seq earlier in the session and don't
-      // need brand text either — skip the fetch entirely.
-      if (cachedCategory && !needsBrand) {
-        card.dataset.recentlyCategory = cachedCategory;
+      if (cached?.brand && needsBrand) {
+        brand.textContent = cached.brand;
+        needsBrand = false;
+      }
+
+      // Already resolved this goods_seq on an earlier visit and don't need
+      // brand text either — skip the fetch entirely.
+      if (cached?.category && !needsBrand) {
+        card.dataset.recentlyCategory = cached.category;
         applyFilters();
         return;
       }
@@ -488,30 +548,50 @@
       const documentPage = await fetchProductPage(productUrl);
       if (!documentPage) return;
 
+      const facts = goodsSeq ? productFacts[goodsSeq] || (productFacts[goodsSeq] = {}) : {};
+
       if (needsBrand) {
         const brandName = readBrandFromPage(documentPage);
-        if (brandName) brand.textContent = brandName;
+        if (brandName) {
+          brand.textContent = brandName;
+          facts.brand = brandName;
+        }
       }
 
       // Prefer product breadcrumbs/codes over seed keyword guesses (avoids Beauty false positives).
       const pageCategory =
-        cachedCategory || readCategoryFromPage(documentPage) || readCategoryFromCodes(documentPage);
+        cached?.category || readCategoryFromPage(documentPage) || readCategoryFromCodes(documentPage);
       if (pageCategory) {
         card.dataset.recentlyCategory = pageCategory;
-        if (goodsSeq) {
-          categoryCache[goodsSeq] = pageCategory;
-          writeCategoryCache();
-        }
+        facts.category = pageCategory;
         applyFilters();
       }
+
+      if (goodsSeq) writeProductFacts();
     });
 
     categoriesReady = true;
     applyFilters();
   };
 
+  // Thumbnails come first. Product-page reads are heavy enough that starting
+  // them mid-load leaves the grid showing empty image boxes, so hold them
+  // until the page has finished loading its own assets.
+  const afterPageLoad = () =>
+    document.readyState === "complete"
+      ? Promise.resolve()
+      : new Promise((resolve) => window.addEventListener("load", resolve, { once: true }));
+
+  let cardsHydrationPromise = null;
+  const ensureCardsHydrated = () => {
+    if (!cardsHydrationPromise) cardsHydrationPromise = afterPageLoad().then(hydrateCards);
+    return cardsHydrationPromise;
+  };
+
   cards.forEach(seedCardCategory);
   syncTabs();
   applyFilters();
-  hydrateCards();
+  // Keep the server-rendered "All" list immediately usable. Product pages are
+  // fetched only if the shopper asks for category filtering; eager N-page
+  // hydration competed with thumbnails and made the page feel slow.
 })();

@@ -5,6 +5,8 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+	// 카드 전체 클릭 선택은 trendypicker-checkout.js 에서 처리합니다.
+
 	// 해당 주소 최종 선택
 	$("input[name='select_address']").bind("click",function(){
 		var add_seq = $(this).val();
@@ -15,6 +17,8 @@ $(document).ready(function(){
 			success: function(data) {
 				$("input[name='address_group']").val(data.address_group);
 				$("input[name='address_seq']").val(add_seq);
+				$("input[name='address_description']").val(data.address_description || "");
+				$("input[name='address_description_input']").val(data.address_description || "");
 
 				if(data.defaults=='Y'){
 					$("input[name='save_delivery_address']").attr('checked',true);
@@ -96,7 +100,8 @@ $(document).ready(function(){
 				}
 
 				// 공통 부분 input values
-				$("input[name='address_description_input']").val(data.address_description);
+				$("input[name='address_description']").val(data.address_description || "");
+				$("input[name='address_description_input']").val(data.address_description || "");
 				$("input[name='recipient_input_user_name']").val(data.recipient_user_name);
 				let phone = (data.recipient_phone && data.recipient_phone !== '--'
 						? data.recipient_phone
@@ -113,9 +118,8 @@ $(document).ready(function(){
 				$(".phone").html(phone);
 				//$(".recipient_phone.data2").html(data.recipient_phone); // 주문배송내역
 
-				
-
-				address_close('delivery');
+				// Keep the saved-address cards open after selection so another
+				// address can be chosen directly with the radio buttons.
 			}
 		});
 	});
@@ -159,6 +163,8 @@ function delivery_modify(seq){
 			// input box 초기화
 			$(".delivery_input").find("input").not(".order_user_info input").val('');
 			$(".delivery_input").find("input[name='address_group_input']").val(data.address_group);
+			$(".delivery_input").find("input[name='address_description']").val(data.address_description || "");
+			$(".delivery_input").find("input[name='address_description_input']").val(data.address_description || "");
 
 			if(data.defaults=='Y'){
 				$(".delivery_input").find("input[name='save_delivery_address_input']").attr('checked',true);
@@ -168,7 +174,8 @@ function delivery_modify(seq){
 			chg_shipping_nation(data.nation);
 			if(data.nation == 'KOREA' || data.international == 'domestic'){
 				$(".delivery_input").find("select[name='nation_select']").val('KOREA');
-				$(".delivery_input").find("input[name='address_description_input']").val(data.address_description);
+				$(".delivery_input").find("input[name='address_description']").val(data.address_description || "");
+				$(".delivery_input").find("input[name='address_description_input']").val(data.address_description || "");
 				$(".delivery_input").find("input[name='recipient_input_user_name']").val(data.recipient_user_name);
 				$(".delivery_input").find("input[name='recipient_input_address_type']").val(data.recipient_address_type);
 				$(".delivery_input").find("input[name='recipient_input_address']").val(data.recipient_address);
@@ -178,7 +185,8 @@ function delivery_modify(seq){
 
 			}else{
 				$(".delivery_input").find("select[name='nation_select']").val(data.nation);
-				$(".delivery_input").find("input[name='address_description']").val(data.address_description);
+				$(".delivery_input").find("input[name='address_description']").val(data.address_description || "");
+				$(".delivery_input").find("input[name='address_description_input']").val(data.address_description || "");
 				$(".delivery_input").find("input[name='recipient_input_user_first_name']").val(data.recipient_user_name.split(" ")[0]);
 				$(".delivery_input").find("input[name='recipient_input_user_last_name']").val(data.recipient_user_name.split(" ")[1]);
 				$(".delivery_input").find("select[name='region']").val(data.region);
@@ -256,16 +264,10 @@ function getTaxRateForState(name, code) {
 	<!--{ @ add_loop }-->
 	<li class="{?.index_==0}clearbox{/}">
 		<label for="select_address_{.address_seq}">
-			<input type="radio" id="select_address_{.address_seq}" name="select_address" value="{.address_seq}" />
+			<input type="radio" id="select_address_{.address_seq}" name="select_address" value="{.address_seq}" {?.default=='Y'}checked="checked"{/} />
 		</label>
 		<ul class="list">
 			<li class="name_section">
-				<div class="btn_x1">
-					<a href="javascript:void(0)" class="btn_resp" onclick="delivery_modify('{.address_seq}');">Edit</a>
-					<!--{ ? .default != 'Y' }-->
-					<a href="javascript:void(0)" class="btn_resp" onclick="delivery_delete('{.address_seq}');">Delete</a>
-					<!--{ / }-->
-				</div>
 				<label class="name_label" for="select_address_{.address_seq}">
 					<span class="name">{.recipient_user_name}</span>
 					<!--{ ? .address_description }-->
@@ -275,6 +277,12 @@ function getTaxRateForState(name, code) {
 					<span class="pointcolor">&nbsp;Default</span>
 					<!--{ / }-->
 				</label>
+				<div class="btn_x1">
+					<a href="javascript:void(0)" class="btn_resp" onclick="delivery_modify('{.address_seq}');">Edit</a>
+					<!--{ ? .default != 'Y' }-->
+					<a href="javascript:void(0)" class="btn_resp" onclick="delivery_delete('{.address_seq}');">Delete</a>
+					<!--{ / }-->
+				</div>
 			</li>
 			<li class="address_section">
 				<label for="select_address_{.address_seq}">

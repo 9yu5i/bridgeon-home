@@ -47,6 +47,15 @@
   padding: 36px clamp(16px, 2vw, 28px) 86px;
 }
 
+/* Firstmall's MENU toggle opened #subpageLNB, which this redesign replaced.
+   Its handler lived in common/mypage_ui.js, a file this skin does not ship,
+   so the button is inert everywhere — and below 1120px there is no sidebar
+   left for it to open. */
+.bo-mypage-shell #subAllButton,
+.bo-mypage-shell .btn_sub_all {
+  display: none !important;
+}
+
 html:has(.bo-mypage-shell),
 body:has(.bo-mypage-shell) {
   overflow-x: hidden;

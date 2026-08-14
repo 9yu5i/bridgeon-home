@@ -554,6 +554,13 @@ body.is-cart-country-open {
 }
 
 .cart-items-card {
+  /* .cart-items-col sets justify-items:start (grid items align left
+     instead of stretching) so the empty-cart message, which has nothing
+     else to size against, was shrinking to its own content width instead
+     of filling the column — narrower than the recommendations card below
+     it. */
+  width: 100%;
+  box-sizing: border-box;
   overflow: visible;
   border: 1px solid #ded8e8;
   border-radius: 16px;
@@ -603,8 +610,8 @@ body.is-cart-country-open {
   padding: 32px 20px;
   color: #6f687a;
   text-align: center;
-  font-size: 18px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .cart-empty-message[hidden] {

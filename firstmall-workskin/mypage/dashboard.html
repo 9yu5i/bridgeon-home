@@ -7,27 +7,8 @@
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
 
 <div class="subpage_wrap bo-mypage-shell bo-dashboard-shell">
-	<aside class="bo-account-side">
-		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
-			<ul class="lnb_sub">
-				<li><a class="on" href="/mypage/dashboard">My Dashboard</a></li>
-				<li><a href="/mypage/myinfo">Profile</a></li>
-				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
-				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
-				<li><a href="/mypage/wish">Wishlist</a></li>
-				<li><a href="/mypage/coupon">Coupons</a></li>
-				<li><a href="/mypage/myshortform">Saved posts</a></li>
-				<li><a href="/mypage/membership">Membership</a></li>
-				<li><a href="/mypage/emoney">Points</a></li>
-				<li><a href="/service/cs">Help Center</a></li>
-				<li><a href="/login_process/logout">Log Out</a></li>
-			</ul>
-		</nav>
-		<article class="bo-invite">
-			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
-			<p>Share the love.<br />Earn exclusive rewards together.</p>
-			<a href="/mypage/myfbrecommend">INVITE NOW</a>
-		</article>
+	<aside class="bo-account-side" data-mypage-lnb>
+		<!-- 마이페이지 LNB 공통. 정의: [스킨폴더]/mypage/mypage_lnb.html -->
 	</aside>
 
 	<main class="subpage_container bo-mypage" aria-labelledby="bo-dashboard-title">
@@ -487,5 +468,4 @@
 	</section>
 </div>
 
-<script src="/data/skin/{skin}/common/mypage_ui.js"></script>
 <script src="/app/javascript/js/trendypicker-mypage.js"></script>

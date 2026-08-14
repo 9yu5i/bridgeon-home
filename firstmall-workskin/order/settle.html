@@ -137,7 +137,7 @@ if (document.body) {
 
 		<!--{ ? members }-->
 		<!--{ ? !_GET.person_seq || (_GET.person_seq > 0 && person_use_reserve) }-->
-		<div class="order_subsection v2 checkout-mileage-card">
+		<div class="order_subsection v2 checkout-mileage-card" data-available-emoney="{members.emoney}">
 			<h3 class="title3"><span designElement="text">Mileage</span></h3>
 			<p class="checkout-mileage-available"><span class="trendy-01">{=get_currency_price(members.emoney,2)}</span> available</p>
 			<div class="checkout_mileage-row">
@@ -147,11 +147,12 @@ if (document.body) {
 				<input type="hidden" name="emoney" value="0"/>
 				<input type="hidden" name="emoney_all" value=""/>
 				<div class="checkout-mileage-actions">
-					<button type="button" class="emoney_input_button btn_resp" onclick="use_emoney(); return false;">Use</button>
-					<button type="button" class="emoney_all_input_button btn_resp" onclick="use_all_emoney(); return false;">Use All</button>
-					<button type="button" class="emoney_cancel_button btn_resp" style="display:none" onclick="cancel_emoney(); return false;">Clear</button>
+					<button type="button" class="emoney_input_button btn_resp">Use</button>
+					<button type="button" class="emoney_all_input_button btn_resp">Use All</button>
+					<button type="button" class="emoney_cancel_button btn_resp" style="display:none">Clear</button>
 				</div>
 			</div>
+			<p class="checkout-mileage-error" hidden>You cannot use more than your available mileage.</p>
 		</div>
 		<!--{ / }-->
 		<!--{ / }-->

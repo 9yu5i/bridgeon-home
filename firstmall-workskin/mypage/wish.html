@@ -12,34 +12,13 @@
     .subpage_wrap .subpage_container .title_container {display:block;padding-top:0;}
     .search_nav {display:none;}
 }
-.item_img_area>a>img { aspect-ratio: 1 / 1; object-fit: cover; object-position: center; }
-.addToCartBtn { left: 84%; }
 </style>
 
 <div class="subpage_wrap bo-mypage-shell bo-wishlist-shell">
 
 	<!-- +++++ mypage LNB ++++ -->
-	<aside class="bo-account-side">
-		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
-			<ul class="lnb_sub">
-				<li><a href="/mypage/dashboard">My Dashboard</a></li>
-				<li><a href="/mypage/myinfo">Profile</a></li>
-				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
-				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
-				<li><a class="on" href="/mypage/wish" aria-current="page">Wishlist</a></li>
-				<li><a href="/mypage/coupon">Coupons</a></li>
-				<li><a href="/mypage/myshortform">Saved posts</a></li>
-				<li><a href="/mypage/membership">Membership</a></li>
-				<li><a href="/mypage/emoney">Points</a></li>
-				<li><a href="/service/cs">Help Center</a></li>
-				<li><a href="/login_process/logout">Log Out</a></li>
-			</ul>
-		</nav>
-		<article class="bo-invite">
-			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
-			<p>Share the love.<br />Earn exclusive rewards together.</p>
-			<a href="/mypage/myfbrecommend">INVITE NOW</a>
-		</article>
+	<aside class="bo-account-side" data-mypage-lnb>
+		<!-- 마이페이지 LNB 공통. 정의: [스킨폴더]/mypage/mypage_lnb.html -->
 	</aside>
 	<!-- +++++ //mypage LNB ++++ -->
 
@@ -191,20 +170,15 @@
 	<!-- +++++ //mypage contents ++++ -->
 
 </div>
-<script type="text/javascript" src="../common/mypage_ui.js"></script><!-- mypage ui 공통 -->
 
 <script type="text/javascript">
 	$(document).ready(function() {
 
-		// Normalize wishlist card thumbnails to background images.
-		$(".bo-wish-card__media").each(function() {
-			var $media = $(this);
-			var $img = $media.find("img").first();
-			if (!$img.length || !$img.attr("src")) return;
-			$media.css({
-				"background-image": "url('" + $img.attr("src") + "')"
-			});
-			$img.css({ opacity: 0, position: "absolute", inset: 0 }).attr("aria-hidden", "true");
+		// Offscreen thumbnails load on demand; the first rows stay eager so the
+		// grid paints immediately.
+		$(".bo-wish-card").slice(10).find(".bo-wish-card__media img").each(function() {
+			this.loading = "lazy";
+			this.decoding = "async";
 		});
 
 		// Select all
