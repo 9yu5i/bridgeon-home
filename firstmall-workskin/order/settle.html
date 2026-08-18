@@ -141,18 +141,20 @@ if (document.body) {
 			<h3 class="title3"><span designElement="text">Mileage</span></h3>
 			<p class="checkout-mileage-available"><span class="trendy-01">{=get_currency_price(members.emoney,2)}</span> available</p>
 			<div class="checkout_mileage-row">
-				<span class="od_sale_price bd nonw">
-					{=get_currency_price(0,2,'','<input type="text" name="emoney_view" class="onlyfloat save hsize_b od_m_box" value="_str_price_" />')}
-				</span>
-				<input type="hidden" name="emoney" value="0"/>
-				<input type="hidden" name="emoney_all" value=""/>
+				<div class="checkout-mileage-field">
+					<span class="od_sale_price bd nonw">
+						{=get_currency_price(0,2,'','<input type="text" name="emoney_view" class="onlyfloat save hsize_b od_m_box" value="_str_price_" />')}
+					</span>
+					<input type="hidden" name="emoney" value="0"/>
+					<input type="hidden" name="emoney_all" value=""/>
+				</div>
 				<div class="checkout-mileage-actions">
 					<button type="button" class="emoney_input_button btn_resp">Use</button>
 					<button type="button" class="emoney_all_input_button btn_resp">Use All</button>
 					<button type="button" class="emoney_cancel_button btn_resp" style="display:none">Clear</button>
 				</div>
 			</div>
-			<p class="checkout-mileage-error" hidden>You cannot use more than your available mileage.</p>
+			<p class="checkout-mileage-error">You cannot use more than your available mileage.</p>
 		</div>
 		<!--{ / }-->
 		<!--{ / }-->
@@ -288,14 +290,20 @@ if (document.body) {
                     <input type="text" name="depositor" value="" title="Depositor's Name" />
                 </li>
                 <li>
-                    <select name="bank">
-                        <option value="">Select Bank</option>
-                        <!--{ @ bank }-->
-                        <!--{ ? .accountUse == 'y' }-->
-                        <option value="{.bank} {.account} 예금주:{.bankUser}">{.bank} {.account} 예금주:{.bankUser}</option>
-                        <!--{ / }-->
-                        <!--{ / }-->
-                    </select>
+                    <div class="checkout-native-select realtrend-select-wrap" id="checkoutBankSelect">
+                        <button type="button" class="realtrend-select-trigger checkout-native-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="realtrend-select-value checkout-native-select-value">Select Bank</span>
+                        </button>
+                        <ul class="realtrend-select-menu checkout-native-select-menu" role="listbox"></ul>
+                        <select name="bank" tabindex="-1" aria-hidden="true">
+                            <option value="">Select Bank</option>
+                            <!--{ @ bank }-->
+                            <!--{ ? .accountUse == 'y' }-->
+                            <option value="{.bank} {.account} 예금주:{.bankUser}">{.bank} {.account} 예금주:{.bankUser}</option>
+                            <!--{ / }-->
+                            <!--{ / }-->
+                        </select>
+                    </div>
                 </li>
             </ul>
             <!--{ / }-->
@@ -492,7 +500,8 @@ if (document.body) {
                         
 						<div class="checkout-items-card">
 		<!-- 주문상품 :: START -->
-        <h2 class="title_od1 checkout-items-title"><span designElement="text">Items in order ({total_ea})</span><span class="arrow"></span></h2>
+        <h2 class="title_od1 checkout-items-title"><button type="button" class="checkout-items-toggle" data-checkout-items-toggle aria-expanded="false" aria-controls="checkoutItemsBody"><span designElement="text">Items in order ({total_ea})</span><span class="arrow"></span></button></h2>
+		<div class="checkout-items-body" id="checkoutItemsBody" hidden>
 		<!--{ ? shipping_group_list }-->
 		<div class="cart_contents">
 			<div class="cart_list">
@@ -733,6 +742,7 @@ if (document.body) {
 			</div>
 		</div>
 		<!--{ / }-->
+		</div>
 		<!-- 주문상품 :: END -->
 						</div>
 
@@ -749,7 +759,7 @@ if (document.body) {
 								<li class="td cart-free">+ {=get_currency_price(total_shipping_price,2,'','<span class="total_delivery_shipping_price">_str_price_</span>')}</li>
 							</ul>
 							<!--{ ? members }-->
-							<ul class="checkout-summary-mileage" hidden>
+							<ul class="checkout-summary-mileage cart-summary-coupon" hidden>
 								<li class="th">Mileage Applied</li>
 								<li class="td cart-discount pointcolor3">
 									<span>-</span>
@@ -844,6 +854,12 @@ if (document.body) {
 							<input type="button" value="PLACE ORDER -&gt;" name="button_pay" id="pay" class="btn_resp size_extra2 color2 Wmax checkout-pay" />
 							<span class="hide"><input type="button" value="장바구니로" class="btn_resp size_extra" onclick="document.location.href='cart';" /></span>
 						</div>
+						<!--{ ? payment.paypal }-->
+						<span class="cart-or">- OR -</span>
+						<button type="button" class="cart-paypal" aria-label="Pay with PayPal" data-checkout-paypal>
+							<img src="/data/skin/{skin}/images/cart/paypal.png" alt="PayPal" />
+						</button>
+						<!--{ / }-->
 						<small class="checkout-secure">
 							<img src="/data/skin/{skin}/images/cart/secure.png" alt="" aria-hidden="true" />Secure Checkout
 						</small>
@@ -1264,11 +1280,6 @@ $(function() {
 		}
 	});
 	*/
-    $(".title_od1 .arrow").on('click', function(){
-        $(this).toggleClass("on");
-        $(this).parent().next().toggle();
-    });
-
     var cart_seq	= $("button.btn_shipping_modify").attr('cart_seq');
     var prepay_info = $("button.btn_shipping_modify").attr('prepay_info');
     var nation		= $("button.btn_shipping_modify").attr('nation');
@@ -1326,10 +1337,152 @@ $(function() {
         $("#shipFrm > input[name='prepay_info']").val(prepay_info);
         $("#shipFrm > input[name='ship_set_code']").val(shipCode);
         $("#shipFrm").submit();
-        if (typeof order_price_calculate === "function") {
-            order_price_calculate();
-        }
     });
 });
 </script>
+<script>
+(function () {
+  if (window._tpMileageUi) return;
+  window._tpMileageUi = true;
+  var savedValue = "";
+
+  function mileageCard() {
+    return document.querySelector(".checkout-mileage-card");
+  }
+  function viewInput() {
+    return document.querySelector(".checkout-mileage-card input[name='emoney_view']");
+  }
+  function parseAmt(value) {
+    var num = parseFloat(String(value || "").replace(/[^0-9.]/g, ""));
+    return isNaN(num) ? 0 : num;
+  }
+  function availableMileage() {
+    var card = mileageCard();
+    if (card && card.getAttribute("data-available-emoney") != null) {
+      return parseAmt(card.getAttribute("data-available-emoney"));
+    }
+    var label = document.querySelector(".checkout-mileage-available .trendy-01");
+    return parseAmt(label && label.textContent);
+  }
+  function setMileageError(on) {
+    var card = mileageCard();
+    if (card) card.classList.toggle("is-error", !!on);
+  }
+  function isOverLimit(input) {
+    var raw = String((input && input.value) || "").trim();
+    if (!raw) return false;
+    return parseAmt(raw) > availableMileage() + 0.0001;
+  }
+
+  document.addEventListener("click", function (event) {
+    var box = event.target && event.target.closest && event.target.closest(".checkout-mileage-card .od_sale_price");
+    if (!box) return;
+    var input = box.querySelector("input[name='emoney_view']") || viewInput();
+    if (input) input.focus();
+  });
+  document.addEventListener("focusin", function (event) {
+    var input = event.target;
+    if (!input || input.name !== "emoney_view") return;
+    savedValue = input.value;
+    input.value = "";
+    setMileageError(false);
+    window.setTimeout(function () {
+      if (document.activeElement === input && String(input.value || "").trim() === String(savedValue || "").trim()) {
+        input.value = "";
+      }
+    }, 0);
+  });
+  document.addEventListener("focusout", function (event) {
+    var input = event.target;
+    if (!input || input.name !== "emoney_view") return;
+    if (!String(input.value || "").trim()) {
+      input.value = savedValue;
+      setMileageError(false);
+      return;
+    }
+    setMileageError(isOverLimit(input));
+  });
+  document.addEventListener("input", function (event) {
+    var input = event.target;
+    if (!input || input.name !== "emoney_view") return;
+    if (!String(input.value || "").trim()) {
+      setMileageError(false);
+      return;
+    }
+    setMileageError(isOverLimit(input));
+  });
+})();
+</script>
+<script>
+(function () {
+  function bindBankSelect() {
+    var wrap = document.getElementById("checkoutBankSelect");
+    if (!wrap || wrap._tpBankBound) return;
+    var trigger = wrap.querySelector(".checkout-native-select-trigger");
+    var menu = wrap.querySelector(".checkout-native-select-menu");
+    var valueEl = wrap.querySelector(".checkout-native-select-value");
+    var select = wrap.querySelector("select[name='bank']");
+    if (!trigger || !menu || !select) return;
+    wrap._tpBankBound = true;
+
+    function setOpen(open) {
+      wrap.classList.toggle("is-open", !!open);
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      menu.style.setProperty("display", open ? "block" : "none", "important");
+    }
+    wrap._tpSetOpen = setOpen;
+
+    function buildMenu() {
+      menu.innerHTML = "";
+      Array.prototype.forEach.call(select.options, function (opt) {
+        var item = document.createElement("li");
+        item.setAttribute("role", "option");
+        item.setAttribute("data-value", opt.value);
+        item.textContent = String(opt.text || "").replace(/\s+/g, " ").trim();
+        if (String(opt.value) === String(select.value)) item.className = "is-selected";
+        menu.appendChild(item);
+      });
+      var selected = select.options[select.selectedIndex];
+      if (valueEl) {
+        valueEl.textContent = selected
+          ? String(selected.text || "").replace(/\s+/g, " ").trim()
+          : "Select Bank";
+      }
+    }
+
+    buildMenu();
+    trigger.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      setOpen(!wrap.classList.contains("is-open"));
+    });
+    menu.addEventListener("click", function (event) {
+      var item = event.target && event.target.closest && event.target.closest("li");
+      if (!item || !menu.contains(item)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      select.value = item.getAttribute("data-value") || "";
+      if (window.jQuery) window.jQuery(select).trigger("change");
+      else select.dispatchEvent(new Event("change", { bubbles: true }));
+      if (valueEl) valueEl.textContent = String(item.textContent || "").replace(/\s+/g, " ").trim();
+      menu.querySelectorAll("li").forEach(function (li) {
+        li.classList.toggle("is-selected", li === item);
+      });
+      setOpen(false);
+    });
+    document.addEventListener("click", function (event) {
+      if (!wrap.classList.contains("is-open")) return;
+      if (wrap.contains(event.target)) return;
+      setOpen(false);
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bindBankSelect);
+  } else {
+    bindBankSelect();
+  }
+})();
+</script>
+<!-- JS lives at the app path, not under /data/skin/{skin}/ — that URL 404s.
+     Every other page in this skin loads its script this way. -->
 <script src="/app/javascript/js/trendypicker-checkout.js"></script>

@@ -190,26 +190,30 @@
   // syncPromoCoupon does for promo/coupon.
   function syncMileageSummary() {
     var row = document.querySelector(".checkout-summary-mileage");
+    if (!row) return;
     var srcEl = document.getElementById("use_emoney");
-    if (!row || !srcEl) return;
-    var amount = parseMoney(textOf(srcEl));
-    row.hidden = amount <= 0;
-    if (amount > 0) row.removeAttribute("hidden");
+    var hidden = document.querySelector(
+      ".checkout-mileage-card input[name='emoney']"
+    );
+    var amount = parseMoney(srcEl && textOf(srcEl));
+    if (!(amount > 0)) amount = parseMoney(hidden && hidden.value);
+    row.classList.remove("is-preview");
+    if (amount > 0) {
+      row.hidden = false;
+      row.removeAttribute("hidden");
+      return;
+    }
+    row.hidden = true;
   }
 
   function mileageCard() {
     return document.querySelector(".checkout-mileage-card");
   }
 
-  function mileageErrorEl() {
-    return document.querySelector(".checkout-mileage-error");
-  }
-
   function availableMileage() {
     var card = mileageCard();
     if (card && card.getAttribute("data-available-emoney") != null) {
-      var fromData = parseMoney(card.getAttribute("data-available-emoney"));
-      if (fromData > 0) return fromData;
+      return parseMoney(card.getAttribute("data-available-emoney"));
     }
     var label = document.querySelector(".checkout-mileage-available .trendy-01");
     return parseMoney(textOf(label));
@@ -217,17 +221,7 @@
 
   function setMileageError(message) {
     var card = mileageCard();
-    var err = mileageErrorEl();
     if (card) card.classList.toggle("is-error", !!message);
-    if (!err) return;
-    if (message) {
-      err.textContent = message;
-      err.hidden = false;
-      err.removeAttribute("hidden");
-      return;
-    }
-    err.textContent = "";
-    err.hidden = true;
   }
 
   function keepMileageButtonsVisible() {
@@ -236,11 +230,15 @@
         ".checkout_mileage-row .emoney_input_button, .checkout_mileage-row .emoney_all_input_button"
       )
       .forEach(function (btn) {
-        btn.classList.remove("hide", "dn");
-        btn.hidden = false;
-        btn.style.setProperty("display", "inline-flex", "important");
-        btn.style.removeProperty("visibility");
-        btn.style.removeProperty("opacity");
+        if (btn.classList.contains("hide") || btn.classList.contains("dn")) {
+          btn.classList.remove("hide", "dn");
+        }
+        if (btn.hidden) btn.hidden = false;
+        if (btn.style.getPropertyValue("display") !== "inline-flex") {
+          btn.style.setProperty("display", "inline-flex", "important");
+        }
+        if (btn.style.visibility) btn.style.removeProperty("visibility");
+        if (btn.style.opacity) btn.style.removeProperty("opacity");
       });
   }
 
@@ -262,14 +260,11 @@
     var row = document.querySelector(".checkout_mileage-row");
     if (!row || row._tpMileageWatch) return;
     row._tpMileageWatch = true;
-    if (!window.MutationObserver) return;
-    new MutationObserver(function () {
-      keepMileageButtonsVisible();
-    }).observe(row, {
-      attributes: true,
-      subtree: true,
-      attributeFilter: ["style", "class", "hidden"],
-    });
+    // Do not observe the button attributes. keepMileageButtonsVisible()
+    // changes those same attributes, so an observer can feed itself forever
+    // on browsers that report same-value style writes. The mileage action
+    // wrappers already call this after every native update.
+    keepMileageButtonsVisible();
   }
 
   function validateMileageInput(showError) {
@@ -291,23 +286,44 @@
       return false;
     }
     if (amount > available + 0.0001) {
-      var overMsg =
-        "You can use up to " + formatMoney(available) + " of your available mileage.";
-      setMileageError(overMsg);
+      setMileageError("You cannot use more than your available mileage.");
       return false;
     }
     setMileageError("");
     return true;
   }
 
-  function alertMileage(message) {
-    if (typeof window.openDialogAlert === "function") {
-      try {
-        window.openDialogAlert(message, "400", "140");
+  function bindMileageInput() {
+    if (window._tpMileageUi) return;
+    var view = document.querySelector(
+      ".checkout-mileage-card input[name='emoney_view']"
+    );
+    if (!view || view._tpMileageInput) return;
+    view._tpMileageInput = true;
+    var savedValue = view.value;
+
+    view.addEventListener("focus", function () {
+      savedValue = view.value;
+      view.value = "";
+      setMileageError("");
+    });
+
+    view.addEventListener("blur", function () {
+      if (!String(view.value || "").trim()) {
+        view.value = savedValue;
+        setMileageError("");
         return;
-      } catch (err) {}
-    }
-    window.alert(message);
+      }
+      validateMileageInput(true);
+    });
+
+    view.addEventListener("input", function () {
+      if (!String(view.value || "").trim()) {
+        setMileageError("");
+        return;
+      }
+      validateMileageInput(false);
+    });
   }
 
   function patchMileageActions() {
@@ -322,10 +338,6 @@
     function wrappedUse() {
       keepMileageButtonsVisible();
       if (!validateMileageInput(true)) {
-        var err = mileageErrorEl();
-        alertMileage(
-          (err && err.textContent) || "Please check the mileage amount."
-        );
         keepMileageButtonsVisible();
         return false;
       }
@@ -355,7 +367,6 @@
       if (!(available > 0)) {
         var emptyMsg = "No mileage available to use.";
         setMileageError(emptyMsg);
-        alertMileage(emptyMsg);
         keepMileageButtonsVisible();
         return false;
       }
@@ -459,6 +470,12 @@
     });
   }
 
+  var stateTaxBusy = false;
+  var stateTaxLastKey = null;
+  // Hard ceiling so a runaway can never lock the tab in a loading state.
+  var stateTaxCalls = 0;
+  var STATE_TAX_MAX_CALLS = 12;
+
   function refreshStateTax() {
     var taxInput =
       document.getElementById("stateTax") ||
@@ -475,6 +492,23 @@
     var match = name.match(/\(([^)]+)\)/);
     if (!code && match) code = match[1];
     if (!name && !code) return;
+
+    // Loop guard. setStateValue() calls this AND dispatches change events on
+    // #stateSearchInput, which the document listener turns into another call;
+    // order_price_calculate() below can re-render the field and start the
+    // cycle again. Left unguarded this fires state-tax requests forever — the
+    // page finishes loading but the tab keeps spinning and never settles.
+    var key = name + "|" + code;
+    if (stateTaxBusy || key === stateTaxLastKey) return;
+    if (stateTaxCalls >= STATE_TAX_MAX_CALLS) return;
+    stateTaxCalls += 1;
+    stateTaxBusy = true;
+    stateTaxLastKey = key;
+
+    var done = function () {
+      stateTaxBusy = false;
+    };
+
     requestStateTax(name, code)
       .then(function (res) {
         var tax = res && res[0] && res[0].tax != null ? res[0].tax : 0;
@@ -485,8 +519,9 @@
           } catch (err) {}
         }
         setTimeout(refreshSummary, 80);
+        done();
       })
-      .catch(function () {});
+      .catch(done);
   }
 
   function setSummaryRow(row, out, amount) {
@@ -596,7 +631,13 @@
     });
     tab.classList.add("current");
     var index = Array.prototype.indexOf.call(tabs, tab);
-    document.querySelectorAll(".delivery_selecter .settle_tab_contents").forEach(function (box, i) {
+    // Scope to this tab strip's own .delivery_selecter. settle.html also
+    // includes {#shipping_present_address}, which renders a second
+    // .delivery_selecter with its own .settle_tab_contents earlier in the
+    // DOM — a document-wide query put that panel at index 0 and shifted
+    // every tab by one, so Saved/New were effectively swapped.
+    var owner = tab.closest(".delivery_selecter") || document;
+    owner.querySelectorAll(".settle_tab_contents").forEach(function (box, i) {
       box.style.display = i === index ? "block" : "none";
     });
     window.setTimeout(bindCheckoutCountrySelect, 0);
@@ -813,9 +854,6 @@
       wrap.appendChild(chevron);
     }
 
-    if (input._tpCountryBound) return;
-    input._tpCountryBound = true;
-
     if (window.jQuery) {
       window.jQuery(input).off();
       window.jQuery(list).off();
@@ -830,6 +868,12 @@
       window.jQuery(document).off("input", "#countrySearchInput");
     }
 
+    if (input._tpCountryBound) {
+      restoreCountryOptions();
+      return;
+    }
+    input._tpCountryBound = true;
+
     list.setAttribute("role", "listbox");
     input.setAttribute("aria-haspopup", "listbox");
     input.setAttribute("autocomplete", "off");
@@ -841,6 +885,14 @@
       var span = item.querySelector("span");
       if (span) return String(span.textContent || "").trim();
       return String(item.textContent || "").replace(/\s+/g, " ").trim();
+    }
+
+    function restoreCountryOptions() {
+      list.querySelectorAll("li").forEach(function (item) {
+        item.hidden = false;
+        item.classList.remove("hide", "dn");
+        item.style.removeProperty("display");
+      });
     }
 
     function isOpen() {
@@ -866,6 +918,7 @@
 
     function setOpen(open) {
       open = !!open;
+      if (open) restoreCountryOptions();
       wrap.classList.toggle("is-open", open);
       input.classList.toggle("is-dropdown-open", open);
       list.classList.toggle("country-options-hidden", !open);
@@ -874,22 +927,9 @@
       input.setAttribute("aria-expanded", open ? "true" : "false");
       syncChevron(open);
 
-      if (open) {
-        document
-          .querySelectorAll(".checkout-native-select.is-open")
-          .forEach(function (openWrap) {
-            openWrap.classList.remove("is-open");
-          });
-        var shipRoot = document.getElementById("shipMessage");
-        if (shipRoot) {
-          shipRoot.classList.remove("is-open");
-          var shipField = shipRoot.querySelector(".checkout-select-field");
-          if (shipField) shipField.classList.remove("is-open");
-          var shipList = shipRoot.querySelector(".add_message");
-          if (shipList) shipList.style.setProperty("display", "none", "important");
-        }
-      }
+      if (open) closeOpenCheckoutDropdowns(wrap);
     }
+    wrap._tpSetOpen = setOpen;
 
     function syncValue(label, item, silent) {
       var next = String(label || "").trim();
@@ -1055,6 +1095,7 @@
       else list.style.setProperty("display", "none", "important");
       input.setAttribute("aria-expanded", open ? "true" : "false");
     }
+    root._tpSetOpen = setOpen;
 
     if (window.jQuery) {
       window.jQuery(input).off();
@@ -1390,18 +1431,7 @@
           event.stopPropagation();
           if (clicked.classList.contains("is-text-mode")) return;
           var willOpen = !clicked.classList.contains("is-open");
-          document
-            .querySelectorAll(
-              ".country-select-wrapper.is-open, #shipMessage.is-open"
-            )
-            .forEach(function (openEl) {
-              openEl.classList.remove("is-open");
-            });
-          document
-            .querySelectorAll(".checkout-native-select.is-open")
-            .forEach(function (other) {
-              if (other !== clicked) other.classList.remove("is-open");
-            });
+          if (willOpen) closeOpenCheckoutDropdowns(clicked);
           clicked._tpSetOpen(willOpen);
         },
         true
@@ -1480,17 +1510,29 @@
     window.setTimeout(refreshStateField, 1000);
   }
 
+  function isNewAddressTab(tab) {
+    if (!tab) return false;
+    if (tab.classList && tab.classList.contains("input_tab")) return true;
+    var tabs = document.querySelectorAll(".settle_tab.delivery_choice > li");
+    return Array.prototype.indexOf.call(tabs, tab) === 1;
+  }
+
   function resetNewAddressForm() {
-    var form = document.querySelector(".delivery_selecter .delivery_input");
+    if (!newAddressTabActive) return;
+    var form = getNewAddressForm();
     if (!form) return;
 
-    form.querySelectorAll("input").forEach(function (input) {
+    form.querySelectorAll("input, textarea, select").forEach(function (input) {
       // These hidden orderer fields are source data for "Same as orderer",
       // not values belonging to the new shipping address form.
       if (input.closest(".order_user_info")) return;
       // Page-level shipping config consumed by chg_shipping_nation.
       if (input.name === "default_address_nation") return;
+      if (input.id === "phonePrefix" || input.classList.contains("phone_prefix_select")) {
+        return;
+      }
 
+      input.classList.remove("complete");
       if (input.type === "checkbox" || input.type === "radio") {
         input.checked = false;
         return;
@@ -1510,19 +1552,50 @@
       item.removeAttribute("aria-selected");
     });
 
-    var stateValue = form.querySelector(".realtrend-select-value");
-    if (stateValue) stateValue.textContent = "Select state / province";
+    form.querySelectorAll(".realtrend-select-value").forEach(function (stateValue) {
+      stateValue.textContent = "Select state / province";
+    });
 
     var sameAsOrderer = document.getElementById("same_as_ordered_checkbox");
     if (sameAsOrderer) sameAsOrderer.checked = false;
+
+    var stateWrap = form.querySelector("[data-checkout-state-wrap]");
+    if (stateWrap && typeof stateWrap._tpRefreshState === "function") {
+      stateWrap._tpRefreshState();
+    }
   }
 
   var newAddressResetTimers = [];
+  var newAddressTabActive = false;
+
+  // settle.html includes {#shipping_present_address} (the gift recipient
+  // block) BEFORE {#shipping_address}, and both render
+  // `.delivery_selecter .delivery_input`. A plain querySelector therefore
+  // returns the hidden gift form, which is why clearing appeared to do
+  // nothing. Pick the selecter that owns the Saved/New address tabs — only
+  // the shipping-address include has them.
+  function getNewAddressForm() {
+    // Deliberately no :has() — an engine that does not support it makes
+    // querySelector throw, which would take out every caller of this
+    // function (the reset, the guard, the refill) in one go.
+    var tabs = document.querySelector(".settle_tab.delivery_choice");
+    var owner = tabs && tabs.closest(".delivery_selecter");
+    if (owner) {
+      var form = owner.querySelector(".delivery_input");
+      if (form) return form;
+    }
+
+    // Last resort: the field only the redesigned shipping form has.
+    var known = document.querySelector(
+      ".delivery_input input[name='recipient_input_user_first_name']"
+    );
+    return known ? known.closest(".delivery_input") : null;
+  }
 
   // Stop the deferred resets as soon as the shopper actually types, so a slow
   // legacy callback never wipes real input.
   function bindNewAddressResetGuard() {
-    var form = document.querySelector(".delivery_selecter .delivery_input");
+    var form = getNewAddressForm();
     if (!form || form._tpResetGuard) return;
     form._tpResetGuard = true;
     ["input", "change"].forEach(function (name) {
@@ -1538,19 +1611,56 @@
   // legacy handlers and their deferred callbacks have settled.
   function clearNewAddressResetTimers() {
     while (newAddressResetTimers.length) {
-      window.clearTimeout(newAddressResetTimers.pop());
+      var id = newAddressResetTimers.pop();
+      window.clearTimeout(id);
+      window.clearInterval(id);
     }
   }
 
+  // Selecting a saved address fires an ajax that writes the chosen address
+  // into this same form (it is the form the order posts). That response can
+  // land after a fixed set of timeouts has already run, which is why the
+  // fields came back filled. Watch instead of guessing: re-clear whenever
+  // something refills the form, until the shopper types or the window ends.
   function scheduleNewAddressReset() {
+    newAddressTabActive = true;
     clearNewAddressResetTimers();
     bindNewAddressResetGuard();
     resetNewAddressForm();
-    [0, 60, 200, 500].forEach(function (delay) {
-      newAddressResetTimers.push(
-        window.setTimeout(resetNewAddressForm, delay)
-      );
+
+    // Bounded one-shot timers only. A polling interval here re-cleared the
+    // form while native code was still writing to it, and the two fought
+    // hard enough to lock the page up.
+    [0, 30, 80, 200, 400, 800, 1600].forEach(function (delay) {
+      newAddressResetTimers.push(window.setTimeout(resetNewAddressForm, delay));
     });
+  }
+
+
+  function refillSelectedSavedAddress() {
+    newAddressTabActive = false;
+    clearNewAddressResetTimers();
+    var radio = document.querySelector(
+      ".delivery_often input[name='select_address']:checked"
+    );
+    if (!radio) return;
+    if (window.jQuery) window.jQuery(radio).trigger("click");
+    else radio.click();
+  }
+
+  function findSavedAddressCard(node) {
+    while (node && node !== document) {
+      if (
+        node.tagName === "LI" &&
+        node.parentNode &&
+        node.parentNode.classList &&
+        node.parentNode.classList.contains("ul_delivery")
+      ) {
+        return node;
+      }
+      node = node.parentNode;
+    }
+    return null;
   }
 
   // The saved-address list is re-rendered by ajax, so delegate from document
@@ -1561,38 +1671,274 @@
     document.addEventListener("click", function (event) {
       var target = event.target;
       if (!target || !target.closest) return;
-      var card = target.closest(".ul_delivery > li");
-      if (!card) return;
       // Edit and Delete keep their own actions.
       if (target.closest("a, button, .btn_x1")) return;
-      // A label or the radio itself already reaches the input natively.
-      if (target.closest("label, input")) return;
-
+      var card = findSavedAddressCard(target);
+      if (!card) return;
       var radio = card.querySelector("input[name='select_address']");
       if (!radio || radio.checked) return;
       radio.click();
     });
   }
 
-  function bindSettleTabs() {
-    var tabs = document.querySelectorAll(".settle_tab.delivery_choice > li");
-    if (!tabs.length) return;
-    tabs.forEach(function (tab) {
-      tab.addEventListener(
-        "click",
-        function () {
-          clearSavedTabTimers();
-          if (Array.prototype.indexOf.call(tabs, tab) === 1) {
-            scheduleNewAddressReset();
+  function closeOpenCheckoutDropdowns(except) {
+    document
+      .querySelectorAll(
+        ".country-select-wrapper.is-open, #shipMessage.is-open, [data-checkout-state-wrap].is-open, .checkout-native-select.is-open"
+      )
+      .forEach(function (openEl) {
+        if (openEl === except) return;
+        if (typeof openEl._tpSetOpen === "function") {
+          openEl._tpSetOpen(false);
+          return;
+        }
+        openEl.classList.remove("is-open");
+        if (openEl.id === "shipMessage") {
+          var shipField = openEl.querySelector(".checkout-select-field");
+          if (shipField) shipField.classList.remove("is-open");
+          var shipList = openEl.querySelector(".add_message");
+          if (shipList) {
+            shipList.style.setProperty("display", "none", "important");
           }
-          setSettleTab(tab);
-          window.setTimeout(function () {
-            setSettleTab(tab);
-          }, 0);
-        },
-        true
-      );
+        }
+      });
+  }
+
+  function enhanceCheckoutSelect(select) {
+    if (!select || select._tpEnhanced) return;
+    select._tpEnhanced = true;
+
+    var wrap = select.closest(".checkout-native-select");
+    if (!wrap) {
+      wrap = document.createElement("div");
+      wrap.className = "checkout-native-select realtrend-select-wrap";
+      select.parentNode.insertBefore(wrap, select);
+      wrap.appendChild(select);
+    }
+    if (wrap._tpBankBound) {
+      select._tpEnhanced = true;
+      return;
+    }
+
+    var trigger = wrap.querySelector(".checkout-native-select-trigger");
+    var valueEl = wrap.querySelector(".checkout-native-select-value");
+    var menu = wrap.querySelector(".checkout-native-select-menu");
+
+    if (!trigger) {
+      trigger = document.createElement("button");
+      trigger.type = "button";
+      trigger.className = "realtrend-select-trigger checkout-native-select-trigger";
+      trigger.setAttribute("aria-haspopup", "listbox");
+      trigger.setAttribute("aria-expanded", "false");
+      valueEl = document.createElement("span");
+      valueEl.className = "realtrend-select-value checkout-native-select-value";
+      trigger.appendChild(valueEl);
+      wrap.insertBefore(trigger, select);
+    }
+    trigger.disabled = !!select.disabled;
+    if (!valueEl) {
+      valueEl = trigger.querySelector(".checkout-native-select-value");
+      if (!valueEl) {
+        valueEl = document.createElement("span");
+        valueEl.className = "realtrend-select-value checkout-native-select-value";
+        trigger.appendChild(valueEl);
+      }
+    }
+    if (!menu) {
+      menu = document.createElement("ul");
+      menu.className = "realtrend-select-menu checkout-native-select-menu";
+      menu.setAttribute("role", "listbox");
+      wrap.insertBefore(menu, select);
+    }
+    menu.removeAttribute("hidden");
+
+    select.setAttribute("tabindex", "-1");
+    select.setAttribute("aria-hidden", "true");
+
+    function selectedLabel() {
+      var opt = select.options[select.selectedIndex];
+      if (!opt) return "";
+      return String(opt.text || "").replace(/\s+/g, " ").trim();
+    }
+
+    function syncLabel() {
+      valueEl.textContent = selectedLabel();
+      menu.querySelectorAll("li").forEach(function (item) {
+        var selected = item.getAttribute("data-value") === String(select.value);
+        item.classList.toggle("is-selected", selected);
+        item.setAttribute("aria-selected", selected ? "true" : "false");
+      });
+    }
+
+    function setOpen(open) {
+      if (select.disabled) return;
+      open = !!open;
+      wrap.classList.toggle("is-open", open);
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      menu.removeAttribute("hidden");
+      if (open) {
+        closeOpenCheckoutDropdowns(wrap);
+        menu.style.setProperty("display", "block", "important");
+      } else {
+        menu.style.removeProperty("display");
+      }
+    }
+    wrap._tpSetOpen = setOpen;
+
+    function buildMenu() {
+      while (menu.firstChild) menu.removeChild(menu.firstChild);
+      Array.prototype.forEach.call(select.options, function (opt) {
+        var item = document.createElement("li");
+        item.setAttribute("role", "option");
+        item.setAttribute("data-value", opt.value);
+        item.textContent = String(opt.text || "").replace(/\s+/g, " ").trim();
+        item.addEventListener("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          select.value = opt.value;
+          select.dispatchEvent(new Event("input", { bubbles: true }));
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+          if (window.jQuery) window.jQuery(select).trigger("change");
+          syncLabel();
+          setOpen(false);
+          trigger.focus();
+        });
+        menu.appendChild(item);
+      });
+      syncLabel();
+    }
+
+    select.addEventListener("change", syncLabel);
+    buildMenu();
+
+    // Payment-method changes call bindCheckoutNativeSelects() explicitly.
+    // Avoid a broad select observer during initial checkout rendering.
+  }
+
+  function isCheckoutNativeSelect(select) {
+    if (!select || select.tagName !== "SELECT") return false;
+    if (select.closest(".country-select-wrapper, [data-checkout-state-wrap]")) {
+      return false;
+    }
+    return !!(
+      select.getAttribute("name") === "bank" ||
+      select.classList.contains("phone_prefix_select") ||
+      select.closest(".bank") ||
+      select.closest(".order_payment_left .order_subsection")
+    );
+  }
+
+  function bindCheckoutNativeSelects() {
+    document
+      .querySelectorAll(
+        ".order_payment_left .order_subsection li select, .bank select, select[name='bank']"
+      )
+      .forEach(enhanceCheckoutSelect);
+
+    if (window._tpNativeSelectOutside) return;
+    window._tpNativeSelectOutside = true;
+    document.addEventListener(
+      "click",
+      function (event) {
+        var target = event.target;
+        if (!target || !target.closest) return;
+        var trigger = target.closest(".checkout-native-select-trigger");
+        if (trigger) {
+          var wrap = trigger.closest(".checkout-native-select");
+          if (!wrap || wrap._tpBankBound) return;
+          if (wrap.closest("[data-checkout-state-wrap], .country-select-wrapper")) {
+            return;
+          }
+          event.preventDefault();
+          event.stopPropagation();
+          if (typeof wrap._tpSetOpen === "function") {
+            wrap._tpSetOpen(!wrap.classList.contains("is-open"));
+          } else {
+            wrap.classList.toggle("is-open");
+          }
+          return;
+        }
+        var openWrap = document.querySelector(
+          ".order_payment_left .checkout-native-select.is-open, .bank .checkout-native-select.is-open, #checkoutBankSelect.is-open"
+        );
+        if (!openWrap || openWrap._tpBankBound) return;
+        if (openWrap.contains(target)) return;
+        if (typeof openWrap._tpSetOpen === "function") openWrap._tpSetOpen(false);
+      },
+      true
+    );
+    document.addEventListener(
+      "mousedown",
+      function (event) {
+        var target = event.target;
+        if (!target || target.tagName !== "SELECT") return;
+        if (!isCheckoutNativeSelect(target)) return;
+        event.preventDefault();
+        enhanceCheckoutSelect(target);
+        var wrap = target.closest(".checkout-native-select");
+        if (wrap && !wrap._tpBankBound && typeof wrap._tpSetOpen === "function") {
+          wrap._tpSetOpen(true);
+        }
+      },
+      true
+    );
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      document
+        .querySelectorAll(".checkout-native-select.is-open")
+        .forEach(function (openWrap) {
+          if (typeof openWrap._tpSetOpen === "function") openWrap._tpSetOpen(false);
+        });
     });
+  }
+
+  // Items in order starts collapsed so the summary and the form stay in view;
+  // the header doubles as the toggle.
+  function bindItemsInOrderToggle() {
+    if (window._tpItemsToggleBound) return;
+    window._tpItemsToggleBound = true;
+    document.addEventListener("click", function (event) {
+      var target = event.target;
+      if (!target || !target.closest) return;
+      var toggle = target.closest("[data-checkout-items-toggle]");
+      if (!toggle) return;
+      event.preventDefault();
+      var body = document.getElementById("checkoutItemsBody");
+      if (!body) return;
+      var open = body.hasAttribute("hidden");
+      if (open) body.removeAttribute("hidden");
+      else body.setAttribute("hidden", "hidden");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      var card = toggle.closest(".checkout-items-card");
+      if (card) card.classList.toggle("is-open", open);
+    });
+  }
+
+  function bindSettleTabs() {
+    if (window._tpSettleTabsBound) return;
+    window._tpSettleTabsBound = true;
+    document.addEventListener(
+      "click",
+      function (event) {
+        var target = event.target;
+        if (!target || !target.closest) return;
+        var tab = target.closest(".settle_tab.delivery_choice > li");
+        if (!tab) return;
+        clearSavedTabTimers();
+        // Firstmall also triggers these tabs from address_modify(); only a
+        // real click should wipe or restore the form.
+        if (event.isTrusted) {
+          if (isNewAddressTab(tab)) scheduleNewAddressReset();
+          else refillSelectedSavedAddress();
+        }
+        setSettleTab(tab);
+        window.setTimeout(function () {
+          setSettleTab(tab);
+          if (event.isTrusted && isNewAddressTab(tab)) resetNewAddressForm();
+        }, 0);
+      },
+      true
+    );
   }
 
   function refreshSummary() {
@@ -1601,22 +1947,6 @@
     syncMileageSummary();
     syncCartSave();
     normalizeCheckoutCurrency();
-  }
-
-  function calculateWhenReady(tries) {
-    tries = tries || 0;
-    if (typeof window.order_price_calculate === "function") {
-      try {
-        window.order_price_calculate();
-      } catch (err) {}
-      setTimeout(refreshSummary, 80);
-      return;
-    }
-    if (tries < 20) {
-      setTimeout(function () {
-        calculateWhenReady(tries + 1);
-      }, 150);
-    }
   }
 
   function ready(fn) {
@@ -1628,19 +1958,39 @@
   }
 
   ready(function () {
+    // Bound first and individually: if anything later in this block throws,
+    // the tabs and the items accordion must still work. That failure mode is
+    // exactly what left the page with no working buttons.
+    try {
+      bindSettleTabs();
+    } catch (err) {}
+    try {
+      bindItemsInOrderToggle();
+    } catch (err) {}
+    try {
+      scheduleSavedAddressTab();
+    } catch (err) {}
+
     refreshSummary();
     applyCartCoupon();
-    refreshStateTax();
-    calculateWhenReady(0);
+    /*
+     * 최초 페이지 로드에서는 state tax AJAX를 실행하지 않는다.
+     * 국가/주가 실제로 변경될 때만 change 이벤트에서 실행한다.
+     * (초기 호출이 order_price_calculate -> 재렌더 -> 재호출로 이어져
+     *  요청이 끝없이 쌓이고 탭이 로딩 상태에서 빠져나오지 못했다.)
+     */
     patchMileageActions();
     keepMileageButtonsVisible();
     watchMileageButtons();
+    bindMileageInput();
     patchAddressModify();
     bindSettleTabs();
+    bindItemsInOrderToggle();
     bindSavedAddressCards();
     bindAddressNameSync();
     bindCheckoutCountrySelect();
     bindCheckoutStateSelect();
+    bindCheckoutNativeSelects();
     bindDeliveryMessageToggle();
     scheduleSavedAddressTab();
     window.setTimeout(patchMileageActions, 300);
@@ -1650,6 +2000,7 @@
     window.setTimeout(bindAddressNameSync, 400);
     window.setTimeout(bindCheckoutCountrySelect, 400);
     window.setTimeout(bindCheckoutStateSelect, 400);
+    window.setTimeout(bindCheckoutNativeSelects, 400);
     window.setTimeout(bindDeliveryMessageToggle, 400);
     window.setTimeout(refreshSummary, 400);
     window.setTimeout(function () {
@@ -1681,17 +2032,7 @@
       bindCheckoutCountrySelect();
     }, 2000);
 
-    var viewInput = document.querySelector(
-      ".checkout-mileage-card input[name='emoney_view']"
-    );
-    if (viewInput) {
-      viewInput.addEventListener("input", function () {
-        validateMileageInput(false);
-      });
-      viewInput.addEventListener("change", function () {
-        validateMileageInput(true);
-      });
-    }
+    bindMileageInput();
 
     document.addEventListener("click", function (e) {
       var item = e.target && e.target.closest && e.target.closest(".payment_method_select > li");
@@ -1701,16 +2042,31 @@
       radio.click();
     });
 
+    // The PayPal button in the summary is a shortcut for picking PayPal in
+    // the payment list, then placing the order.
+    document.addEventListener("click", function (e) {
+      var button = e.target && e.target.closest && e.target.closest("[data-checkout-paypal]");
+      if (!button) return;
+      e.preventDefault();
+      var radio = document.querySelector(
+        ".payment_method_select input[name='payment'][value='paypal']"
+      );
+      if (radio && !radio.disabled && !radio.checked) radio.click();
+      var pay = document.getElementById("pay");
+      if (pay) window.setTimeout(function () { pay.click(); }, 80);
+    });
+
     document.addEventListener("change", function (e) {
       var input = e.target;
       if (!input) return;
+      if (input.name === "payment") {
+        window.setTimeout(bindCheckoutNativeSelects, 0);
+        return;
+      }
       if (input.name === "ship_set_list") {
         paintShippingFromSelectedMethod();
-        if (typeof window.order_price_calculate === "function") {
-          try {
-            window.order_price_calculate();
-          } catch (err) {}
-        }
+        // settle.html submits Firstmall's native #shipFrm for this change.
+        // Do not submit the separate calculation form at the same time.
         setTimeout(refreshSummary, 80);
         return;
       }
@@ -1728,51 +2084,18 @@
     var frame = document.querySelector("iframe[name='actionFrame']");
     if (frame) {
       frame.addEventListener("load", function () {
-        if (typeof window.order_price_calculate === "function") {
-          try {
-            window.order_price_calculate();
-          } catch (err) {}
-        }
+        // Firstmall uses actionFrame as the target of price-calculation and
+        // shipping forms. Calling order_price_calculate() from this load
+        // event submits to the same frame again and creates an endless load
+        // cycle. The native response has already updated the totals here;
+        // only repaint the redesigned summary.
         setTimeout(refreshSummary, 50);
       });
     }
 
-    var taxEl = document.querySelector(".checkout-summary-card .total_tax");
-    if (taxEl && window.MutationObserver) {
-      new MutationObserver(normalizeCheckoutCurrency).observe(taxEl, {
-        childList: true,
-        characterData: true,
-        subtree: true,
-      });
-    }
-
-    var emoneyEl = document.getElementById("use_emoney");
-    if (emoneyEl && window.MutationObserver) {
-      new MutationObserver(function () {
-        syncMileageSummary();
-        syncCartSave();
-        normalizeCheckoutCurrency();
-      }).observe(emoneyEl, { childList: true, characterData: true, subtree: true });
-    }
-
-    var summary = document.querySelector(".checkout-summary-card .order_price_total");
-    if (summary && window.MutationObserver) {
-      var timer = null;
-      new MutationObserver(function () {
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-          syncCartSave();
-          normalizeCheckoutCurrency();
-        }, 30);
-      }).observe(summary, { childList: true, characterData: true, subtree: true });
-    }
-
-    ["total_coupon_sale", "total_promotion_goods_sale"].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (!el || !window.MutationObserver) return;
-      new MutationObserver(function () {
-        setTimeout(refreshSummary, 30);
-      }).observe(el, { childList: true, characterData: true, subtree: true });
-    });
+    // Do not observe price DOM nodes. refreshSummary() writes into the same
+    // summary tree, which can create a MutationObserver feedback loop while
+    // Firstmall is rendering its calculation response. We refresh from the
+    // native actionFrame load and from the user actions above instead.
   });
 })();

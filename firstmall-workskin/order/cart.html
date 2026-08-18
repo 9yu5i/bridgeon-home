@@ -254,10 +254,6 @@ if (document.body) {
 							You save <strong data-cart-save>US$0.00</strong>
 						</p>
 						<input type="button" class="btn_resp size_e color2 btn_all_order cart-checkout" {? total_ea < 1 }onclick="openDialogAlert('Please select items to order.','400','140');return false;" {/} value="PROCEED TO CHECKOUT -&gt;" />
-						<span class="cart-or">- OR -</span>
-						<button type="button" class="cart-paypal" aria-label="PayPal" data-cart-paypal>
-							<img src="/data/skin/{skin}/images/cart/paypal.png" alt="PayPal" />
-						</button>
 						<div class="cart-paypal-slot hide" aria-hidden="true">
 							{navercheckout_tpl}
 							{talkbuyorder_tpl}
@@ -420,8 +416,10 @@ if (document.body) {
 
 		$(".btn_thisitem_del, .btn_this_delete").click(function() {
 			var selected_order = $(this).val();
-			$("input[name='cart_option_seq[]']").removeAttr("checked");
-			$("input[name='cart_option_seq[]'][value='"+selected_order+"']").attr("checked", true);
+			$("input[name='cart_option_seq[]']").removeAttr("checked").prop("checked", false);
+			$("input[name='cart_option_seq[]'][value='"+selected_order+"']")
+				.attr("checked", true)
+				.prop("checked", true);
 			$("form#cart_form").attr("action","del");
 			$("form#cart_form").attr("target","actionFrame");
 			$("form#cart_form")[0].submit();
@@ -476,7 +474,7 @@ if (document.body) {
 		$(".btn_select_del").click(function() {
 			var selected_order = '';
 			$("input[name='cart_option_seq[]']").each(function(e, el) {
-				if( $(el).attr('checked') == 'checked' ){
+				if( $(el).prop('checked') ){
 					selected_order += $(el).val() + ",";
 				}
 			});

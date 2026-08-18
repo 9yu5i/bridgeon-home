@@ -33,6 +33,15 @@ const isFirstmallLegacyBoardCss = (file) => {
   return /(^|\/)board\.css$/.test(rel);
 };
 
+const resolveCssAsset = (file, rawUrl) => {
+  const workSkinPrefix = "/data/skin/responsive_food_mealkit_gl/";
+  if (rawUrl.startsWith(workSkinPrefix)) {
+    return resolve(root, "firstmall-workskin", rawUrl.slice(workSkinPrefix.length));
+  }
+
+  return resolve(dirname(file), rawUrl);
+};
+
 for (const file of files) {
   const css = readFileSync(file, "utf8");
   const open = (css.match(/\{/g) || []).length;
@@ -50,7 +59,7 @@ for (const file of files) {
     const rawUrl = stripUrlDecorations(match[1]);
     if (!rawUrl || isExternalUrl(rawUrl)) continue;
 
-    const target = resolve(dirname(file), rawUrl);
+    const target = resolveCssAsset(file, rawUrl);
     if (!existsSync(target)) {
       failed = true;
       console.error(`Missing CSS asset: ${relative(root, file)} -> ${rawUrl}`);

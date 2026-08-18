@@ -1,0 +1,196 @@
+/* TrendyPicker global add-to-cart toast
+ *
+ * Shown on every page. Markup is injected by
+ * app/javascript/js/trendypicker-cart-toast.js, which fires whenever a
+ * goodsForm posts to /order/add — the single endpoint every add-to-cart
+ * path in this skin goes through (product view, quickview, recently
+ * viewed, wishlist, shared order form).
+ */
+
+:root {
+  --tp-cart-toast-purple: #7b3fe4;
+  --tp-cart-toast-ring: 119.38;
+  --tp-cart-toast-duration: 5s;
+}
+
+.realtrend-cart-toast {
+  position: fixed;
+  top: 36px;
+  right: 0;
+  z-index: 9999;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 56px;
+  gap: 12px;
+  align-items: center;
+  width: min(420px, calc(100vw - 32px));
+  margin: 0;
+  padding: 14px 16px 14px 36px;
+  border-radius: 12px 0 0 12px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgba(18, 12, 26, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s ease;
+  pointer-events: none;
+}
+
+.realtrend-cart-toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.realtrend-cart-toast.is-leaving {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.realtrend-cart-toast-close {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #8b8496;
+  background: transparent;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.realtrend-cart-toast-close:hover {
+  color: #171320;
+  background: rgba(123, 63, 228, 0.08);
+}
+
+.realtrend-cart-toast-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+}
+
+.realtrend-cart-toast-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.realtrend-cart-toast-ring circle {
+  fill: none;
+  stroke: var(--tp-cart-toast-purple);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: var(--tp-cart-toast-ring);
+  stroke-dashoffset: calc(var(--tp-cart-toast-ring) * -1);
+  transform-origin: 22px 22px;
+  transform: rotate(-90deg);
+}
+
+.realtrend-cart-toast-ring circle.is-animating {
+  animation: tp-cart-toast-ring var(--tp-cart-toast-duration) linear forwards;
+}
+
+@keyframes tp-cart-toast-ring {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.realtrend-cart-toast-check {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  color: var(--tp-cart-toast-purple);
+  transform: translate(-50%, -50%);
+}
+
+.realtrend-cart-toast-copy {
+  min-width: 0;
+}
+
+.realtrend-cart-toast-copy strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #111;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.realtrend-cart-toast-copy p {
+  margin: 0;
+  overflow: hidden;
+  color: #666;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* The name is the emphasised half of the sentence, and it is the part that
+   gets clipped: keeping it on one line with an ellipsis means the trailing
+   "has been added to your cart." always stays readable and the toast never
+   grows past two lines, however long the product name is. */
+.realtrend-cart-toast-product {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  color: #444;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.realtrend-cart-toast-thumb {
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #dff6ef, #9fd6c6);
+}
+
+.realtrend-cart-toast-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 640px) {
+  .realtrend-cart-toast {
+    top: 12px;
+    right: 8px;
+    width: calc(100vw - 16px);
+    padding: 12px 12px 12px 32px;
+    border-radius: 12px;
+  }
+
+  .realtrend-cart-toast-thumb {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .realtrend-cart-toast {
+    transition: none;
+  }
+
+  .realtrend-cart-toast-ring circle.is-animating {
+    animation: none;
+  }
+}

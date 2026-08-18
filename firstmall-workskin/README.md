@@ -160,7 +160,8 @@ Products stay on Firstmall `#searchedItemDisplay` (`searchMode=timedeal`). Uploa
 [test skin]/promotion/timedeal.html
 [test skin]/css/redesign/trendypicker-listing-cards.css
 [test skin]/css/redesign/trendypicker-timedeal.css
-[test skin]/app/javascript/js/trendypicker-timedeal.js
+/app/javascript/js/trendypicker-listing-cards.js
+/app/javascript/js/trendypicker-timedeal.js
 [test skin]/images/timedeal/clock_pink.png
 [test skin]/images/listing/wish_pink.png
 ```
@@ -175,12 +176,16 @@ Left filter stays Firstmall native. Hero, breadcrumbs, toolbar, sort dropdown, a
 Wish: `listing-card-wish-inline` (design_list cards) and `.goodsZzimBtn` both use `wish_pink` / `wish_hover`. Also upload `/data/design_list/redesign_goods_list_style.css` so the shared card CSS does not `scale()` the heart.
 
 ```text
+[test root]/data/design_list/categories_listing_style.html
+[test root]/data/design_list/redesign_goods_list_style.css
 [test skin]/goods/catalog.html
 [test skin]/css/redesign/trendypicker-listing-cards.css
 [test skin]/css/redesign/trendypicker-catalog.css
 [test skin]/app/javascript/js/trendypicker-catalog.js
 [test skin]/images/listing/wish_pink.png
 [test skin]/images/listing/wish_hover.png
+[test skin]/images/listing/cart.png
+[test skin]/images/listing/cart_hover.png
 ```
 
 `service/cs.html` maps the local `my-page/help-center.html` hero and directory design onto

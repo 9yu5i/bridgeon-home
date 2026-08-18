@@ -477,22 +477,6 @@ body.is-catalog-page .subpage_wrap .subpage_container {
     justify-content: center;
   }
 
-  .bo-catalog-grid .listing-card-wish,
-  .bo-catalog-grid .display_zzim,
-  .bo-catalog-grid .respGoodsZzim {
-    display: none !important;
-  }
-
-  .bo-catalog-grid .listing-card-actions--desktop {
-    display: grid;
-    grid-template-columns: 1fr 40px;
-    gap: 8px;
-    padding: 0 10px 10px;
-  }
-
-  .bo-catalog-grid .listing-card-cart {
-    display: none;
-  }
 }
 
 @media (max-width: 1120px) {

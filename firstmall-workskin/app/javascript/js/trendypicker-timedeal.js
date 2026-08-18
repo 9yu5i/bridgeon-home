@@ -282,8 +282,6 @@
 	}
 
 	function ensureCardChrome(card) {
-		var zzim = card.querySelector(".display_zzim, .respGoodsZzim, .listing-card-wish");
-
 		if (!card.querySelector(".listing-card-actions--desktop")) {
 			var actions = document.createElement("div");
 			actions.className = "listing-card-actions listing-card-actions--desktop";
@@ -297,13 +295,6 @@
 			wishBtn.className = "listing-card-wish-inline";
 			wishBtn.setAttribute("aria-label", "Add to wishlist");
 			wishBtn.setAttribute("aria-pressed", "false");
-			if (zzim) {
-				wishBtn.addEventListener("click", function (event) {
-					event.preventDefault();
-					event.stopPropagation();
-					zzim.click();
-				});
-			}
 
 			actions.appendChild(cartBtn);
 			actions.appendChild(wishBtn);
@@ -395,6 +386,8 @@
 			if (card.getAttribute("data-bo-ready") === "1") return;
 			card.setAttribute("data-bo-ready", "1");
 			card.classList.add("listing-card");
+			var goodsSeq = readGoodsSeq(card);
+			if (goodsSeq) card.setAttribute("data-goods-seq", goodsSeq);
 
 			var media =
 				card.querySelector(".listing-card-media") ||

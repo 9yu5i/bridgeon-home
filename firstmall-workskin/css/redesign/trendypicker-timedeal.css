@@ -701,7 +701,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   clear: none !important;
   overflow: hidden;
   border: 1px solid #ece7f4;
-  border-radius: 20px;
+  border-radius: 12px;
   background: #fff;
   cursor: pointer;
 }
@@ -821,7 +821,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 10px 12px 0;
+  padding: 12px 12px 0;
   margin: 0;
   list-style: none;
   background: #fff;
@@ -863,11 +863,11 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
 .bo-timedeal-shell .brand_name_area {
   display: block;
   order: 1;
-  margin: 0 0 1px;
+  margin: 0 0 4px;
   overflow: hidden;
   color: #8f86a0;
   font-size: 12px;
-  line-height: 1.2;
+  line-height: 1.35;
   font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -901,12 +901,12 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
 .bo-timedeal-shell .goods_name_area a,
 .bo-timedeal-shell .searched_item_display .item_info_area .goods_name_area a {
   display: -webkit-box;
-  min-height: 0;
-  margin: 0 0 2px;
+  min-height: 2.7em;
+  margin: 0 0 6px;
   overflow: hidden;
   color: #171320;
   font-size: 14px;
-  line-height: 1.25;
+  line-height: 1.35;
   font-weight: 600;
   text-align: left;
   text-decoration: none !important;
@@ -974,6 +974,7 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
+  margin-bottom: 10px;
   padding-top: 0;
 }
 
@@ -1038,7 +1039,9 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   display: grid;
   place-items: center;
   width: calc(100% - 20px);
-  height: 38px;
+  height: 35px;
+  min-height: 35px;
+  max-height: 35px;
   margin: 0 10px 10px;
   padding: 0;
   border: 1px solid var(--purple);
@@ -1398,14 +1401,14 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
     /* Use border (not outline): outline-offset:-1px is clipped by overflow:hidden on the thumb */
     border: 1px solid #ece7f4;
     outline: 0;
-    border-radius: 18px;
+    border-radius: 12px;
     grid-template-rows: auto 1fr auto;
   }
 
   .bo-timedeal-shell .listing-card-media,
   .bo-timedeal-shell .item_img_area,
   .bo-timedeal-shell .listing-card-image {
-    border-radius: 17px 17px 0 0;
+    border-radius: 11px 11px 0 0;
   }
 
   .bo-timedeal-shell .listing-card-image,
@@ -1423,6 +1426,13 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
 
   .bo-timedeal-shell .listing-card-cart {
     display: none;
+  }
+
+  .bo-timedeal-shell .listing-card-actions--desktop {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 8px;
+    margin: 0 10px 10px;
   }
 
   .bo-timedeal-shell .listing-card-title,

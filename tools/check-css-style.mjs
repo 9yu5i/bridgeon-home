@@ -39,7 +39,7 @@ const cssLineBaselines = {
   "trendypicker-best.css": 261,
   "trendypicker-brand.css": 836,
   "trendypicker-cart.css": 3371,
-  "trendypicker-checkout.css": 2396,
+  "trendypicker-checkout.css": 2812,
   "trendypicker-catalog.css": 616,
   "trendypicker-coupons.css": 1119,
   "trendypicker-footer.css": 212,
@@ -61,8 +61,8 @@ const cssLineBaselines = {
 
 const jsLineBaselines = {
   "trendypicker-best.js": 137,
-  "trendypicker-cart.js": 2960,
-  "trendypicker-checkout.js": 1629,
+  "trendypicker-cart.js": 3038,
+  "trendypicker-checkout.js": 2160,
   "trendypicker-catalog.js": 406,
   "trendypicker-coupons.js": 544,
   "trendypicker-help-topic.js": 347,

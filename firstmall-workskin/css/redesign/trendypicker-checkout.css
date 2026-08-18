@@ -223,8 +223,14 @@ body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .checkout_milea
 body.is-checkout-page .checkout_mileage-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: stretch;
+  align-items: center;
   gap: 8px;
+}
+
+body.is-checkout-page .checkout-mileage-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
 }
 
 body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .od_sale_price,
@@ -251,6 +257,8 @@ body.is-checkout-page .checkout_mileage-row .od_sale_price.bd {
   font-size: 14px;
   line-height: 1;
   font-weight: 700;
+  outline: none;
+  box-shadow: none;
 }
 
 body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .od_sale_price > input,
@@ -259,12 +267,17 @@ body.is-checkout-page .checkout_mileage-row input[type="text"],
 body.is-checkout-page .checkout_mileage-row input.od_m_box {
   display: block;
   box-sizing: border-box;
-  width: 100%;
+  flex: 1;
+  width: auto;
   min-width: 0;
   height: 42px;
   margin: 0;
   padding: 0;
   border: 0;
+  outline: none;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
   color: #111;
   background: none;
   font-size: 14px;
@@ -272,8 +285,25 @@ body.is-checkout-page .checkout_mileage-row input.od_m_box {
   font-weight: 700;
 }
 
+body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .od_sale_price > input:focus,
+body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .od_sale_price > input:focus-visible,
+body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .od_sale_price > input:active,
+body.is-checkout-page .checkout_mileage-row input[type="text"]:focus,
+body.is-checkout-page .checkout_mileage-row input[type="text"]:focus-visible,
+body.is-checkout-page .checkout_mileage-row input.od_m_box:focus,
+body.is-checkout-page .checkout_mileage-row input.od_m_box:focus-visible {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Buttons keep their row; the amount field is what gives up width. Without
+   nowrap the three buttons wrapped under the input on narrower cards. */
 body.is-checkout-page .checkout-mileage-actions {
   display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: 6px;
 }
 
@@ -282,10 +312,11 @@ body.is-checkout-page .checkout_mileage-row .btn_resp,
 body.is-checkout-page .checkout_mileage-row button {
   flex: none;
   box-sizing: border-box;
-  min-width: 72px;
+  min-width: 0;
   height: 44px;
   margin: 0;
-  padding: 0 14px;
+  padding: 0 13px;
+  white-space: nowrap;
   border: 0;
   border-radius: 8px;
   color: #fff;
@@ -318,6 +349,15 @@ body.is-checkout-page .checkout_mileage-row .emoney_all_input_button.dn {
   opacity: 1 !important;
 }
 
+body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .emoney_input_button:hover,
+body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .emoney_all_input_button:hover,
+body.is-checkout-page .checkout_mileage-row .emoney_input_button:hover,
+body.is-checkout-page .checkout_mileage-row .emoney_all_input_button:hover {
+  color: #fff;
+  background: #30136c;
+  border-color: #30136c;
+}
+
 body.is-checkout-page .checkout-consignee-card .checkout-select-field::after,
 body.is-checkout-page #shipMessage .checkout-select-field::after {
   content: "";
@@ -341,20 +381,28 @@ body.is-checkout-page #shipMessage.is-open .checkout-select-field::after {
   transform: translateY(-50%) rotate(180deg);
 }
 
+body.is-checkout-page .checkout-mileage-card {
+  overflow: visible;
+}
+
 body.is-checkout-page .checkout-mileage-error {
-  margin: 8px 0 0;
+  display: none;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 10px 0 0;
+  padding: 0;
   color: #e11867;
   font-size: 12px;
   line-height: 1.4;
   font-weight: 600;
 }
 
-body.is-checkout-page .checkout-mileage-error[hidden] {
-  display: none;
+body.is-checkout-page .checkout-mileage-card.is-error .checkout-mileage-error {
+  display: block;
 }
 
 body.is-checkout-page .checkout-mileage-card.is-error .od_sale_price {
-  border-color: #e11867;
+  border-color: #7b3fe4;
 }
 
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main.order_payment_left .order_subsection .title1,
@@ -411,6 +459,7 @@ body.is-checkout-page .payment_method_select {
   flex-wrap: wrap;
   gap: 12px 16px;
   margin-bottom: 15px;
+  margin-left: 1px;
   padding: 0;
   font-size: inherit;
   line-height: inherit;
@@ -817,14 +866,12 @@ body.is-checkout-page .ul_delivery {
 
 body.is-checkout-page #orderPaymentLayout .ul_delivery > li,
 body.is-checkout-page .ul_delivery > li {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  align-items: center;
-  column-gap: 10px;
+  position: relative;
+  display: block;
   box-sizing: border-box;
   width: 100%;
   margin: 0;
-  padding: 12px;
+  padding: 12px 12px 12px 40px;
   border: 1px solid #e8e3f0;
   border-radius: 10px;
   background: #fff;
@@ -851,12 +898,17 @@ body.is-checkout-page .ul_delivery > li:has(input:checked) {
   box-shadow: inset 0 0 0 1px #7b3fe4;
 }
 
+body.is-checkout-page #orderPaymentLayout .ul_delivery > li > label,
 body.is-checkout-page .ul_delivery > li > label {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  display: block;
+  width: auto;
+  height: auto;
   margin: 0;
   padding: 0;
   cursor: pointer;
@@ -866,14 +918,19 @@ body.is-checkout-page .ul_delivery input[type="radio"] {
   -webkit-appearance: none;
   appearance: none;
   box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  z-index: 2;
   width: 16px;
   height: 16px;
   margin: 0;
-  flex: none;
+  transform: translateY(-50%);
   border: 1.5px solid #c8c2d4;
   border-radius: 50%;
   background: #fff;
   cursor: pointer;
+  pointer-events: none;
 }
 
 body.is-checkout-page .ul_delivery input[type="radio"]:checked {
@@ -884,6 +941,8 @@ body.is-checkout-page .ul_delivery input[type="radio"]:checked {
 
 body.is-checkout-page #orderPaymentLayout .ul_delivery .list,
 body.is-checkout-page .ul_delivery .list {
+  position: relative;
+  z-index: 2;
   display: grid;
   gap: 3px;
   min-width: 0;
@@ -891,6 +950,7 @@ body.is-checkout-page .ul_delivery .list {
   margin: 0 !important;
   padding: 0 !important;
   list-style: none;
+  pointer-events: none;
 }
 
 body.is-checkout-page #orderPaymentLayout .ul_delivery .name_section,
@@ -928,12 +988,15 @@ body.is-checkout-page .ul_delivery .name_section .name_label {
 
 body.is-checkout-page #orderPaymentLayout .ul_delivery .name_section .btn_x1,
 body.is-checkout-page .ul_delivery .name_section .btn_x1 {
+  position: relative;
+  z-index: 3;
   display: inline-flex;
   flex: 0 0 auto;
   float: none !important;
   gap: 8px;
   margin: 0 0 0 auto !important;
   padding: 0;
+  pointer-events: auto;
 }
 
 body.is-checkout-page #orderPaymentLayout .ul_delivery .address_section,
@@ -979,6 +1042,8 @@ body.is-checkout-page .ul_delivery .name_section .pointcolor {
 }
 
 body.is-checkout-page .ul_delivery .btn_x1 .btn_resp {
+  position: relative;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -993,6 +1058,7 @@ body.is-checkout-page .ul_delivery .btn_x1 .btn_resp {
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
+  pointer-events: auto;
 }
 
 body.is-checkout-page .ul_delivery .btn_x1 .btn_resp:hover {
@@ -1003,6 +1069,8 @@ body.is-checkout-page .ul_delivery .btn_x1 .btn_resp:hover {
 body.is-checkout-page .ul_delivery .address_section label,
 body.is-checkout-page .ul_delivery .call_section label,
 body.is-checkout-page .ul_delivery .nation_section label {
+  display: block;
+  width: 100%;
   cursor: pointer;
 }
 
@@ -1167,7 +1235,13 @@ body.is-checkout-page .checkout-consignee-card .shipping-info-guidelines {
   display: none;
 }
 
+/* Needs to outrank `.delivery_info_input .list_01 > li { margin: 0 }` above,
+   which is (0,3,2) and otherwise cancels the pull-up. The parent list is a
+   10px-gap grid, so the negative margin is what tucks this note under the
+   field it describes. */
+body.is-checkout-page .checkout-consignee-card .delivery_info_input .list_01 > li.checkout-consignee-note,
 body.is-checkout-page .checkout-consignee-card .checkout-consignee-note {
+  margin: -6px 0 0;
   color: #8f86a0;
   font-size: 12px;
   line-height: 1.4;
@@ -1582,7 +1656,10 @@ body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout
 body.is-checkout-page .checkout-consignee-card .country-options,
 body.is-checkout-page .checkout-consignee-card .state-options,
 body.is-checkout-page .checkout-consignee-card .add_message,
-body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu {
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu,
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select-menu,
+body.is-checkout-page .bank .checkout-native-select-menu,
+body.is-checkout-page #checkoutBankSelect .checkout-native-select-menu {
   position: absolute;
   top: calc(100% - 1px);
   left: 0;
@@ -1605,7 +1682,10 @@ body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu {
 
 body.is-checkout-page .checkout-consignee-card .country-options-hidden,
 body.is-checkout-page .checkout-consignee-card .options-hidden,
-body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu {
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu,
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select-menu,
+body.is-checkout-page .bank .checkout-native-select-menu,
+body.is-checkout-page #checkoutBankSelect .checkout-native-select-menu {
   display: none;
 }
 
@@ -1614,8 +1694,12 @@ body.is-checkout-page #shipMessage .add_message {
 }
 
 body.is-checkout-page #shipMessage.is-open .add_message,
-body.is-checkout-page .checkout-consignee-card .checkout-native-select.is-open .checkout-native-select-menu {
+body.is-checkout-page .checkout-consignee-card .checkout-native-select.is-open .checkout-native-select-menu,
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select.is-open .checkout-native-select-menu,
+body.is-checkout-page .bank .checkout-native-select.is-open .checkout-native-select-menu,
+body.is-checkout-page #checkoutBankSelect.is-open .checkout-native-select-menu {
   display: block;
+  z-index: 80;
 }
 
 body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .country-options li,
@@ -1625,11 +1709,13 @@ body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout
 body.is-checkout-page .checkout-consignee-card .country-options li,
 body.is-checkout-page .checkout-consignee-card .state-options li,
 body.is-checkout-page .checkout-consignee-card .add_message li,
-body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu li {
+body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu li,
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select-menu li,
+body.is-checkout-page .bank .checkout-native-select-menu li,
+body.is-checkout-page #checkoutBankSelect .checkout-native-select-menu li {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 38px;
   margin: 0;
   padding: 8px 10px !important;
   border: 0;
@@ -1650,7 +1736,21 @@ body.is-checkout-page .checkout-consignee-card .state-options li:hover,
 body.is-checkout-page .checkout-consignee-card .add_message li:hover,
 body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu li:hover,
 body.is-checkout-page .checkout-consignee-card .checkout-native-select-menu li.is-selected,
-body.is-checkout-page #shipMessage .add_message li:hover {
+body.is-checkout-page #shipMessage .add_message li:hover,
+body.is-checkout-page #shipMessage .add_message li:hover span,
+body.is-checkout-page .ship_message .add_message > li:hover,
+body.is-checkout-page .ship_message .add_message > li:hover span,
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .add_message li:hover,
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .add_message > li:hover,
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .checkout-consignee-card .add_message > li:hover span,
+body.is-checkout-page #orderPaymentLayout .ship_message .add_message > li:hover,
+body.is-checkout-page #orderPaymentLayout .ship_message .add_message > li:hover span,
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select-menu li:hover,
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select-menu li.is-selected,
+body.is-checkout-page .bank .checkout-native-select-menu li:hover,
+body.is-checkout-page .bank .checkout-native-select-menu li.is-selected,
+body.is-checkout-page #checkoutBankSelect .checkout-native-select-menu li:hover,
+body.is-checkout-page #checkoutBankSelect .checkout-native-select-menu li.is-selected {
   color: #7b3fe4;
   background: #f2ebff;
 }
@@ -1693,6 +1793,143 @@ body.is-checkout-page .delivery_info_input input:focus,
 body.is-checkout-page .delivery_info_input select:focus {
   border-color: #7b3fe4;
   outline: none;
+}
+
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .order_subsection li:has(.checkout-native-select),
+body.is-checkout-page #orderPaymentLayout .bank.list_01,
+body.is-checkout-page #orderPaymentLayout .bank.list_01 > li,
+body.is-checkout-page .bank,
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select,
+body.is-checkout-page .bank .checkout-native-select,
+body.is-checkout-page #checkoutBankSelect,
+body.is-checkout-page .order_subsection:has(#checkoutBankSelect),
+body.is-checkout-page .order_subsection:has(.bank) {
+  position: relative;
+  overflow: visible;
+}
+
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select,
+body.is-checkout-page .bank .checkout-native-select {
+  z-index: 1;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 8px;
+}
+
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select.is-open,
+body.is-checkout-page .bank .checkout-native-select.is-open,
+body.is-checkout-page #checkoutBankSelect.is-open {
+  z-index: 50;
+}
+
+body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main .order_subsection li .checkout-native-select > select,
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select > select,
+body.is-checkout-page .bank .checkout-native-select > select,
+body.is-checkout-page .checkout-native-select > select[name="bank"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select .checkout-native-select-trigger,
+body.is-checkout-page .bank .checkout-native-select .checkout-native-select-trigger,
+body.is-checkout-page #checkoutBankSelect .checkout-native-select-trigger {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 0 36px 0 12px;
+  border: 1px solid #ded8e8;
+  border-radius: 6px;
+  color: #111;
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select.is-open .checkout-native-select-trigger,
+body.is-checkout-page .bank .checkout-native-select.is-open .checkout-native-select-trigger,
+body.is-checkout-page #checkoutBankSelect.is-open .checkout-native-select-trigger,
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select-trigger:focus-visible,
+body.is-checkout-page .bank .checkout-native-select-trigger:focus-visible,
+body.is-checkout-page #checkoutBankSelect .checkout-native-select-trigger:focus-visible {
+  border-color: #7b3fe4;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(123, 63, 228, 0.14);
+}
+
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select-value,
+body.is-checkout-page .bank .checkout-native-select-value {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select::after,
+body.is-checkout-page .bank .checkout-native-select::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  right: 16px;
+  z-index: 3;
+  display: block;
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid #111;
+  border-bottom: 1.5px solid #111;
+  background: transparent;
+  transform: translateY(-70%) rotate(45deg);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+body.is-checkout-page .order_payment_left .order_subsection .checkout-native-select.is-open::after,
+body.is-checkout-page .bank .checkout-native-select.is-open::after {
+  transform: translateY(-20%) rotate(225deg);
+}
+
+body.is-checkout-page .checkout-phone-combo .checkout-native-select {
+  margin: 0;
+}
+
+body.is-checkout-page .checkout-phone-combo .checkout-native-select-trigger {
+  padding: 0 22px 0 8px;
+  font-size: 13px;
+}
+
+body.is-checkout-page .checkout-phone-combo .checkout-native-select::after {
+  right: 10px;
+}
+
+body.is-checkout-page .checkout-phone-combo .checkout-native-select-menu li:hover,
+body.is-checkout-page .checkout-phone-combo .checkout-native-select-menu li:focus-visible {
+  color: #7b3fe4;
+  background: #f2ebff;
+}
+
+body.is-checkout-page .checkout-native-select-trigger:disabled {
+  cursor: default;
+  opacity: 0.7;
 }
 
 body.is-checkout-page .checkout-side .order_subsection,
@@ -1769,6 +2006,10 @@ body.is-checkout-page #orderPaymentLayout .checkout-summary-mileage {
   order: 6;
 }
 
+body.is-checkout-page .checkout-summary-mileage[hidden] {
+  display: none;
+}
+
 #orderPaymentLayout.checkout-layout .checkout-summary-tax,
 body.is-checkout-page #orderPaymentLayout .checkout-summary-tax {
   order: 7;
@@ -1829,8 +2070,10 @@ body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_to
 
 #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-promo,
 #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-coupon,
+#orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.checkout-summary-mileage,
 body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_total > ul.cart-summary-promo,
-body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_total > ul.cart-summary-coupon {
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_total > ul.cart-summary-coupon,
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_total > ul.checkout-summary-mileage {
   min-height: 38px;
   margin-bottom: 8px;
   padding: 0 12px;
@@ -1841,17 +2084,22 @@ body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_to
 
 #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-promo > li.th,
 #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-coupon > li.th,
+#orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.checkout-summary-mileage > li.th,
 body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_total > ul.cart-summary-promo > li.th,
-body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_total > ul.cart-summary-coupon > li.th {
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_total > ul.cart-summary-coupon > li.th,
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_total > ul.checkout-summary-mileage > li.th {
   color: #756d80;
 }
 
 #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-promo > li.td,
 #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-coupon > li.td,
+#orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.checkout-summary-mileage > li.td,
 body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-promo > li.td,
 body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-coupon > li.td,
+body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.checkout-summary-mileage > li.td,
 body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-promo > li.td.pointcolor3,
-body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-coupon > li.td.pointcolor3 {
+body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.cart-summary-coupon > li.td.pointcolor3,
+body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card .order_price_total > ul.checkout-summary-mileage > li.td.pointcolor3 {
   color: #e11867;
 }
 
@@ -1892,8 +2140,6 @@ body.is-checkout-page #orderPaymentLayout .checkout-summary-card .order_price_to
 
 #orderPaymentLayout.checkout-layout #total_goods_price,
 #orderPaymentLayout.checkout-layout #total_goods_price .num,
-#orderPaymentLayout.checkout-layout .checkout-summary-card #use_emoney,
-#orderPaymentLayout.checkout-layout .checkout-summary-card #use_emoney .num,
 #orderPaymentLayout.checkout-layout .checkout-summary-card .total_delivery_shipping_price,
 #orderPaymentLayout.checkout-layout .checkout-summary-card .total_delivery_shipping_price .num,
 #orderPaymentLayout.checkout-layout .checkout-summary-card .total_tax,
@@ -1920,9 +2166,13 @@ body.is-checkout-page #orderPaymentLayout .checkout-summary-card .num {
 #orderPaymentLayout.checkout-layout .checkout-summary-card #checkoutProductDiscount,
 #orderPaymentLayout.checkout-layout .checkout-summary-card #checkoutPromoDiscount,
 #orderPaymentLayout.checkout-layout .checkout-summary-card #checkoutCouponDiscount,
+#orderPaymentLayout.checkout-layout .checkout-summary-card #use_emoney,
+#orderPaymentLayout.checkout-layout .checkout-summary-card #use_emoney .num,
 body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card #checkoutProductDiscount,
 body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card #checkoutPromoDiscount,
-body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card #checkoutCouponDiscount {
+body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card #checkoutCouponDiscount,
+body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card #use_emoney,
+body.is-checkout-page #orderPaymentLayout.checkout-layout .checkout-summary-card #use_emoney .num {
   display: inline;
   position: static;
   bottom: auto;
@@ -2073,10 +2323,6 @@ body.is-checkout-page .title_od1 {
   color: #171320;
   font-size: 16px;
   font-weight: 900;
-}
-
-body.is-checkout-page .title_od1 .arrow {
-  display: none;
 }
 
 body.is-checkout-page .cart_contents,
@@ -2249,9 +2495,9 @@ body.is-checkout-page .shipping_group_list .goods_name a {
   display: block;
   margin: -3px 0 0;
   color: #111;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.25;
-  font-weight: 800;
+  font-weight: 700;
   text-decoration: none;
 }
 
@@ -2336,13 +2582,25 @@ body.is-checkout-page .dn.goods_delivery_info {
     position: static;
   }
 
+  body.is-checkout-page #orderPaymentLayout.order_payment .checkout-main.order_payment_left,
+  body.is-checkout-page #orderPaymentLayout.order_payment .checkout-side.order_payment_right {
+    width: 100%;
+    max-width: none;
+  }
+
+  /* Keep the back control on the right rather than dropping it below. */
   .checkout-heading {
-    display: block;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
     margin-bottom: 18px;
   }
 
   .checkout-heading .checkout-back {
-    margin-top: 12px;
+    flex: none;
+    margin-top: 0;
+    margin-left: auto;
   }
 }
 
@@ -2381,9 +2639,7 @@ body.is-checkout-page .dn.goods_delivery_info {
   body.is-checkout-page .checkout-consignee-card .checkout-field-row,
   body.is-checkout-page .checkout-consignee-card .double_input_row,
   body.is-checkout-page .checkout-consignee-card .four_input_row,
-  body.is-checkout-page .checkout-consignee-card .checkout-state-zip-row,
-  body.is-checkout-page #orderPaymentLayout .checkout-mileage-card .checkout_mileage-row,
-  body.is-checkout-page .checkout_mileage-row {
+  body.is-checkout-page .checkout-consignee-card .checkout-state-zip-row {
     grid-template-columns: 1fr;
   }
 
@@ -2398,5 +2654,131 @@ body.is-checkout-page .dn.goods_delivery_info {
     width: 74px;
     max-width: 74px;
     height: 74px;
+  }
+}
+
+/* PayPal express button, moved here from the cart summary. Styles mirror
+   .cart-paypal in trendypicker-cart.css, which is not loaded on checkout. */
+body.is-checkout-page .checkout-summary-card .cart-or {
+  display: block;
+  margin: 12px 0;
+  color: #8f86a0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+body.is-checkout-page .checkout-summary-card .cart-paypal {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 44px;
+  margin: 0 0 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background-color: #ffc229;
+  background-image: linear-gradient(to right, #af800e 50%, #ffc229 50%);
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  background-repeat: no-repeat;
+  transition: background-position 0.6s ease;
+  cursor: pointer;
+}
+
+body.is-checkout-page .checkout-summary-card .cart-paypal img {
+  display: block;
+  width: auto;
+  height: 22px;
+  object-fit: contain;
+}
+
+body.is-checkout-page .checkout-summary-card .cart-paypal:hover,
+body.is-checkout-page .checkout-summary-card .cart-paypal:focus-visible {
+  background-position: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.is-checkout-page .checkout-summary-card .cart-paypal {
+    transition: none;
+  }
+}
+
+
+/* Items in order: header acts as the collapse toggle, closed by default. */
+body.is-checkout-page .checkout-items-title .checkout-items-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+body.is-checkout-page .checkout-items-title .checkout-items-toggle .arrow {
+  position: relative;
+  display: block !important;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  visibility: visible;
+  border: 0 !important;
+  background: none !important;
+  opacity: 1;
+  transform: none !important;
+}
+
+body.is-checkout-page .checkout-items-title .checkout-items-toggle .arrow::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 8px;
+  content: "";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%236f687d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+
+body.is-checkout-page
+  .checkout-items-title
+  .checkout-items-toggle[aria-expanded="true"]
+  .arrow::before {
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+body.is-checkout-page .checkout-items-card .checkout-items-body[hidden] {
+  display: none;
+}
+
+body.is-checkout-page .checkout-items-card:not(.is-open) .checkout-items-title {
+  padding-bottom: 18px;
+}
+
+/* Keep the complete right-side card group visible while the longer checkout
+   form scrolls. The two cards must move as one column rather than sticking
+   independently and overlapping each other. */
+@media (min-width: 1121px) {
+  body.is-checkout-page #orderPaymentLayout .checkout-side {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+  }
+
+  body.is-checkout-page #orderPaymentLayout .checkout-side > .order_subsection,
+  body.is-checkout-page #orderPaymentLayout .checkout-side .right_flying_wrap3 {
+    position: static;
+    top: auto;
   }
 }

@@ -1,0 +1,436 @@
+@charset "utf-8";
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ ?좉퇋 ?곹뭹 紐⑸줉 ?붿옄??CSS @@
+- ?뚯씪?꾩튂 : /data/design_list/redesign_goods_list_style.css
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+/* ==========================================================
+   1. Card wrapper
+   ========================================================== */
+.listing-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #ece7f4;
+  border-radius: 20px;
+  background: #fff;
+}
+
+/* ==========================================================
+   2. Media area (image, rating badge, wish button, status)
+   ========================================================== */
+.listing-card-media {
+  position: relative;
+}
+
+.listing-card-image-link {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.listing-card-image {
+  position: relative;
+  z-index: 0;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  overflow: hidden;
+  background: #f4f1fb;
+  transition: transform 0.35s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.listing-card-image-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  box-shadow: inset 0 0 24px rgba(123, 63, 228, 0.18);
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.35s ease;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .listing-card-image-link:hover .listing-card-image {
+    transform: scale(1.06) translateZ(0);
+  }
+
+  .listing-card-image-link:hover::after {
+    opacity: 1;
+    transform: scale(1.06) translateZ(0);
+  }
+}
+
+.listing-card-rating-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  font-weight: 700;
+  color: #171320;
+  pointer-events: none;
+}
+
+.listing-card-rating-star {
+  display: block;
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  max-width: none;
+  object-fit: contain;
+}
+
+.listing-card-rating-count {
+  font-weight: 400;
+  color: #8f86a0;
+}
+
+.listing-card-wish {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+.listing-card-wish .heart-img,
+.listing-card-wish-inline .heart-img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  transform: none !important;
+  transition: opacity 0.2s ease;
+}
+
+.listing-card-wish .zzimOffImg,
+.listing-card-wish-inline .zzimOffImg {
+  opacity: 1;
+}
+
+.listing-card-wish .zzimOnImg,
+.listing-card-wish-inline .zzimOnImg,
+.listing-card-wish .zzim-hidden,
+.listing-card-wish-inline .zzim-hidden {
+  display: block !important;
+  opacity: 0;
+}
+
+.listing-card-wish .zzimOffImg.zzim-hidden,
+.listing-card-wish-inline .zzimOffImg.zzim-hidden {
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .listing-card-wish:hover .heart-img,
+  .listing-card-wish-inline:hover .heart-img,
+  .listing-card-wish:hover .heart-img:not(.zzim-hidden),
+  .listing-card-wish-inline:hover .heart-img:not(.zzim-hidden) {
+    transform: none !important;
+  }
+
+  .listing-card-wish:hover .zzimOffImg,
+  .listing-card-wish-inline:hover .zzimOffImg {
+    opacity: 0;
+  }
+
+  .listing-card-wish:hover .zzimOnImg,
+  .listing-card-wish-inline:hover .zzimOnImg,
+  .listing-card-wish[aria-pressed="true"] .zzimOnImg,
+  .listing-card-wish-inline[aria-pressed="true"] .zzimOnImg,
+  .listing-card-wish .zzimOnImg:not(.zzim-hidden),
+  .listing-card-wish-inline .zzimOnImg:not(.zzim-hidden) {
+    display: block !important;
+    opacity: 1;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================
+   3. Card body ??brand / title / price
+   ========================================================== */
+.listing-card-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 10px 10px 0;
+}
+
+.listing-card-brand {
+  display: block;
+  margin: 0 0 4px;
+  overflow: hidden;
+  color: #8f86a0;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .listing-card-brand:hover {
+    color: #7943e2;
+    text-decoration: none;
+  }
+}
+
+.listing-card-title-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.listing-card-title {
+  display: -webkit-box;
+  min-height: 2.7em;
+  margin: 0 0 6px;
+  overflow: hidden;
+  color: #171320;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 700;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  transition: color 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .listing-card-title-link:hover .listing-card-title {
+    color: #7943e2;
+  }
+}
+
+.listing-card-price {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0 0 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.listing-card-price strong,
+.listing-card-price .sale_price,
+.listing-card-price .sale_price .num {
+  flex: 0 0 auto;
+  color: var(--listing-price);
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.listing-card-price del {
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  color: #8f86a0;
+}
+
+.listing-card-price .discount_rate,
+.goods_price_area .discount_rate {
+  display: none !important;
+}
+
+/* ==========================================================
+   4. Desktop action row (cart + inline wish)
+   ========================================================== */
+.listing-card-actions--desktop {
+  display: none;
+}
+
+.listing-card-actions--desktop button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 35px;
+  min-height: 35px;
+  max-height: 35px;
+  padding: 0;
+  border: 1px solid #ded8e8;
+  border-radius: 10px;
+  color: var(--purple);
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.listing-card-wish-inline {
+  position: relative;
+}
+
+.listing-card-actions--desktop .listing-card-wish-inline {
+  width: 40px;
+  min-width: 40px;
+}
+
+.listing-card-actions--desktop button:not(.listing-card-wish-inline):hover {
+  border-color: #7943e2;
+  background-color: #7943e2;
+}
+
+.listing-card-actions--desktop .listing-card-wish-inline:hover {
+  border-color: #ded8e8;
+  background-color: #fff;
+}
+
+/* ==========================================================
+   5. Mobile cart button
+   ========================================================== */
+.listing-card-cart {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: calc(100% - 20px);
+  height: 38px;
+  margin: 0 10px 10px;
+  padding: 0;
+  border: 1px solid var(--purple);
+  border-radius: 10px;
+  color: var(--purple);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.listing-card-cart:hover {
+  border-color: #7943e2;
+  background-color: #7943e2;
+}
+
+/* ==========================================================
+   6. Icon pseudo-elements (cart hover-swap icons)
+   ========================================================== */
+
+.listing-card-cart::before,
+.listing-card-cart::after,
+.listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
+.listing-card-actions--desktop button:not(.listing-card-wish-inline)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 18px;
+  height: calc(18px * 24 / 22);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 18px auto;
+  transition: opacity 0.25s ease;
+}
+
+.listing-card-cart::before,
+.listing-card-actions--desktop button:not(.listing-card-wish-inline)::before {
+  background-image: url("/data/skin/responsive_food_mealkit_gl/images/listing/cart.png");
+  opacity: 1;
+}
+
+.listing-card-cart::after,
+.listing-card-actions--desktop button:not(.listing-card-wish-inline)::after {
+  background-image: url("/data/skin/responsive_food_mealkit_gl/images/listing/cart_hover.png");
+  opacity: 0;
+}
+
+.listing-card-cart:hover::before,
+.listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::before {
+  opacity: 0;
+}
+
+.listing-card-cart:hover::after,
+.listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::after {
+  opacity: 1;
+}
+
+/* ==========================================================
+   7. Responsive overrides
+   ========================================================== */
+@media (max-width: 374px) {
+  .listing-card-wish {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 760px) {
+  .listing-card-cart {
+    height: 34px;
+  }
+}
+
+@media (min-width: 1121px) {
+  .listing-card {
+    box-sizing: border-box;
+    width: var(--listing-card-width);
+    height: 100%;
+    outline: 1px solid #ece7f4;
+    outline-offset: -1px;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .listing-card-image {
+    width: var(--listing-card-width);
+    height: var(--listing-card-width);
+  }
+
+  .listing-card-wish {
+    display: none;
+  }
+
+  .listing-card-actions--desktop {
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    gap: 8px;
+    padding: 0 10px 10px;
+  }
+
+  .listing-card-cart {
+    display: none;
+  }
+
+  .listing-card-title {
+    min-height: 2.7em;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .listing-card-price strong,
+  .listing-card-price .sale_price,
+  .listing-card-price .sale_price .num {
+    font-size: 16px;
+  }
+}
+

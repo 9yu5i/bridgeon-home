@@ -139,41 +139,41 @@
 			<li class="row_address_name checkout-field-row checkout-field-row-full">
 				<label class="checkout-field">
 					<span>Address name <em>(optional)</em></span>
-					<input type="text" name="address_description" class="size_full" value="{members.default_address.address_description}" title="Address Name" placeholder="Home, Office, etc." maxlength="40" autocomplete="off" />
-					<input type="hidden" name="address_description_input" value="{members.default_address.address_description}" />
+					<input type="text" name="address_description" class="size_full" value="" title="Address Name" placeholder="Home, Office, etc." maxlength="40" autocomplete="off" />
+					<input type="hidden" name="address_description_input" value="" />
 				</label>
 			</li>
 			<li class="row_recipient_name double_input_row checkout-field-row">
 				<label class="checkout-field">
 					<span>First name</span>
-					<input type="text" name="recipient_input_user_first_name" class="full_size pilsu" value="{=str_split_arr(members.default_address.user_name,' ',0)}" title="First Name" required />
+					<input type="text" name="recipient_input_user_first_name" class="full_size pilsu" value="" title="First Name" required />
 				</label>
 				<label class="checkout-field">
 					<span>Last name</span>
-					<input type="text" name="recipient_input_user_last_name" class="pilsu" value="{=str_split_arr(members.default_address.user_name,' ',1)}" title="Last Name" required />
+					<input type="text" name="recipient_input_user_last_name" class="pilsu" value="" title="Last Name" required />
 				</label>
 			</li>
 			<!-- 국내 -->
 			<li class="domestic goods_delivery_info {?!is_goods}hide{/}">
-				<input type="hidden" name="recipient_input_address_type" value="{members.default_address.address_type}" class="hide" title="{=getAlert('os052')}" />
-				<input type="text" name="recipient_input_new_zipcode" value="{members.default_address.zipcode}" title="{=getAlert('os052')}" class="pilsu size_zip_all" readonly required />
+				<input type="hidden" name="recipient_input_address_type" value="" class="hide" title="{=getAlert('os052')}" />
+				<input type="text" name="recipient_input_new_zipcode" value="" title="{=getAlert('os052')}" class="pilsu size_zip_all" readonly required />
 				<button type="button" class="btn_resp size_b color4" onclick="openDialogZipcode_resp('morder');">검색</button>
 			</li>
 			<li class="domestic goods_delivery_info {?!is_goods}hide{/}">
-				<input type="text" name="recipient_input_address_street" value="{members.default_address.address_street}" class="pilsu size_address hide" title="도로명 주소" readonly />
-				<input type="text" name="recipient_input_address" value="{members.default_address.address}" class="pilsu size_address" title="{=getAlert('os053')}" readonly />
+				<input type="text" name="recipient_input_address_street" value="" class="pilsu size_address hide" title="도로명 주소" readonly />
+				<input type="text" name="recipient_input_address" value="" class="pilsu size_address" title="{=getAlert('os053')}" readonly />
 			</li>
 			<li class="domestic goods_delivery_info {?!is_goods}hide{/}">
-				<input type="text" name="recipient_input_address_detail" value="{members.default_address.address_detail}" class="pilsu size_address" title="{=getAlert('os054')}" required />
+				<input type="text" name="recipient_input_address_detail" value="" class="pilsu size_address" title="{=getAlert('os054')}" required />
 			</li>
 			<!-- 해외: profile address modal field order -->
 			<li class="international goods_delivery_info double_input_row hide checkout-field-row">
 				<div class="checkout-field">
 					<span class="checkout-field-label">Country / Region</span>
 					<span class="country-select-wrapper">
-						<input type="text" id="countrySearchInput" name="international_country_input" class="size_full pilsu dropdown_search_input" value="{members.default_address.international_country}" placeholder="Search country" autocomplete="off" readonly />
+						<input type="text" id="countrySearchInput" name="international_country_input" class="size_full pilsu dropdown_search_input" value="" placeholder="Search country" autocomplete="off" readonly />
 						<input type="hidden" id="taxBillingMethod" name="tax_billing_method" value="ddu" />
-						<input type="hidden" id="stateTax" name="state_tax_input" value="{members.default_address.international_county_tax}" />
+						<input type="hidden" id="stateTax" name="state_tax_input" value="" />
 						<input type="hidden" id="countrySearchInputHidden" name="international_country_code_input" name="searchValue" />
 						<span class="checkout-select-chevron" aria-hidden="true"></span>
 						<ul id="countryOptionsList" class="country-options country-options-hidden">
@@ -188,7 +188,7 @@
 				</div>
 				<label class="checkout-field">
 					<span>Address</span>
-					<input type="text" name="international_address_input" class="pilsu size_full" maxlength="35" value="{=str_split_arr(members.default_address.international_address,'|',0)}" title="Address 1" required />
+					<input type="text" name="international_address_input" class="pilsu size_full" maxlength="35" value="" title="Address 1" required />
 				</label>
 			</li>
 			<li class="international goods_delivery_info hide checkout-field-row checkout-field-row-full">
@@ -197,13 +197,13 @@
 			<li class="international goods_delivery_info double_input_row hide checkout-field-row">
 				<label class="checkout-field">
 					<span>Apt / suite <em>(optional)</em></span>
-					<input type="text" name="international_address_input_2" class="size_full" value="{=str_split_arr(members.default_address.international_address,'|',1)}" title="Address 2" />
+					<input type="text" name="international_address_input_2" class="size_full" value="" title="Address 2" />
 				</label>
 				<label class="checkout-field">
 					<span>City</span>
-					<input type="text" name="international_town_city_input" class="pilsu size_full" maxlength="15" value="{members.default_address.international_town_city}" title="{=getAlert('os059')}" oninput="this.value = this.value.replace(/,/g, '')" required />
+					<input type="text" name="international_town_city_input" class="pilsu size_full" maxlength="15" value="" title="{=getAlert('os059')}" oninput="this.value = this.value.replace(/,/g, '')" required />
 				</label>
-				<input type="hidden" name="international_address_input_3" value="{=str_split_arr(members.default_address.international_address,'|',2)}" title="Address 3" />
+				<input type="hidden" name="international_address_input_3" value="" title="Address 3" />
 			</li>
 			<li class="international goods_delivery_info double_input_row hide checkout-field-row checkout-state-zip-row">
 				<div class="checkout-field checkout-state-field">
@@ -213,30 +213,64 @@
 							<span class="realtrend-select-value">Select state / province</span>
 						</button>
 						<ul class="realtrend-select-menu state-options" role="listbox"></ul>
-						<input type="text" id="stateSearchInput" name="international_county_input" class="size_full pilsu dropdown_search_input checkout-state-source realtrend-select-native" value="{members.default_address.international_county}" placeholder="Select state / province" autocomplete="off" readonly tabindex="-1" aria-hidden="true" />
-						<input type="hidden" id="searchInputHidden" name="international_county_code_input" name="searchValue" value="{members.default_address.international_county_code}"/>
+						<input type="text" id="stateSearchInput" name="international_county_input" class="size_full pilsu dropdown_search_input checkout-state-source realtrend-select-native" value="" placeholder="Select state / province" autocomplete="off" readonly tabindex="-1" aria-hidden="true" />
+						<input type="hidden" id="searchInputHidden" name="international_county_code_input" name="searchValue" value=""/>
 						<ul id="stateOptionsList" class="state-options options-hidden" hidden></ul>
 					</div>
-					<input type="text" name="international_county_text_input" class="checkout-state-text hide size_full" maxlength="40" value="{members.default_address.international_county}" title="State / Province" placeholder="State / Province" oninput="this.value = this.value.replace(/,/g, '')" />
+					<input type="text" name="international_county_text_input" class="checkout-state-text hide size_full" maxlength="40" value="" title="State / Province" placeholder="State / Province" oninput="this.value = this.value.replace(/,/g, '')" />
 				</div>
 				<label class="checkout-field checkout-zip-field">
 					<span>ZIP / Postal Code</span>
-					<input type="text" name="international_postcode_input" class="pilsu" value="{members.default_address.international_postcode}" title="{=getAlert('os052')}" required />
+					<input type="text" name="international_postcode_input" class="pilsu" value="" title="{=getAlert('os052')}" required />
 				</label>
 			</li>
 			<li class="row_recipient_contact double_input_row checkout-field-row">
 				<label class="checkout-field">
 					<span>Phone</span>
 					<span class="checkout-phone-combo">
-						<select class="phone_prefix_select" id="phonePrefix" title="The country phone code depends on the selected shipping country." disabled >
-							<option value="+82">+82</option>
+						<select class="phone_prefix_select" id="phonePrefix" title="Select a country calling code">
+							<option value="+1">+1 US/CA</option>
+							<option value="+44">+44 GB</option>
+							<option value="+61">+61 AU</option>
+							<option value="+64">+64 NZ</option>
+							<option value="+81">+81 JP</option>
+							<option value="+82" selected>+82 KR</option>
+							<option value="+86">+86 CN</option>
+							<option value="+852">+852 HK</option>
+							<option value="+886">+886 TW</option>
+							<option value="+65">+65 SG</option>
+							<option value="+60">+60 MY</option>
+							<option value="+66">+66 TH</option>
+							<option value="+84">+84 VN</option>
+							<option value="+63">+63 PH</option>
+							<option value="+62">+62 ID</option>
+							<option value="+91">+91 IN</option>
+							<option value="+971">+971 AE</option>
+							<option value="+966">+966 SA</option>
+							<option value="+49">+49 DE</option>
+							<option value="+33">+33 FR</option>
+							<option value="+39">+39 IT</option>
+							<option value="+34">+34 ES</option>
+							<option value="+31">+31 NL</option>
+							<option value="+32">+32 BE</option>
+							<option value="+41">+41 CH</option>
+							<option value="+43">+43 AT</option>
+							<option value="+46">+46 SE</option>
+							<option value="+47">+47 NO</option>
+							<option value="+45">+45 DK</option>
+							<option value="+358">+358 FI</option>
+							<option value="+353">+353 IE</option>
+							<option value="+351">+351 PT</option>
+							<option value="+48">+48 PL</option>
+							<option value="+55">+55 BR</option>
+							<option value="+52">+52 MX</option>
 						</select>
-						<input type="text" name="recipient_input_phone" class="pilsu" onkeydown="onlyNumber(this)" value="{members.default_address.phone}" title="Local Phone" required />
+						<input type="text" name="recipient_input_phone" class="pilsu" onkeydown="onlyNumber(this)" value="" title="Local Phone" required />
 					</span>
 				</label>
 				<label class="checkout-field">
 					<span>Email</span>
-					<input type="email" name="recipient_input_email" class="pilsu" value="{members.email}" title="Email" required />
+					<input type="email" name="recipient_input_email" class="pilsu" value="" title="Email" required />
 				</label>
 			</li>
 			<li class="row_tax_id checkout-field-row checkout-field-row-full">
@@ -247,7 +281,7 @@
 			</li>
 			<!-- 이메일 -->
 			<li {?!is_coupon}class="hide"{/}>
-				<input type="email" name="recipient_email" value="{members.email}" class="size_email_full" title="{=getAlert('os050')}" />
+				<input type="email" name="recipient_email" value="" class="size_email_full" title="{=getAlert('os050')}" />
 			</li>
 
 			<li class="guidance checkout-consignee-note">

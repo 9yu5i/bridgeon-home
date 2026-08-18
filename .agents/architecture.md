@@ -129,6 +129,14 @@ presentation only and preserves native board collections, inquiry actions, and p
 Server-runtime Firstmall HTML is validated separately by
 `tools/check-firstmall-workskin.mjs`.
 
+Firstmall goods-display templates live outside the skin at `/data/design_list/`. Their upload
+sources are mirrored under `firstmall-workskin/design_list/`: `categories_listing_style.html`
+owns the shared catalog card markup, `timedeal_listing_style.html` owns Time Deal markup, and
+`redesign_goods_list_style.css` owns their desktop/mobile action-row switch. Page-scoped skin CSS
+may size the grid or badges, but must not replace these cart/wishlist controls.
+`app/javascript/js/trendypicker-listing-cards.js` keeps the visible mobile and desktop wish
+controls synchronized while Firstmall's `display_goods_zzim()` remains the server mutation owner.
+
 T.P Magazine on Firstmall is owned by `firstmall-workskin/main/magazine.html` (home shell +
 iframe), `board/magazine/gallery01/index.html` (list/Popular), `board/magazine/gallery01/view.html`
 (detail + Related), scoped styles in `css/redesign/trendypicker-magazine.css`, and behavior in

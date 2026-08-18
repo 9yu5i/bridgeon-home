@@ -8,12 +8,17 @@ Skin entry: `promotion/timedeal.html`
 
 ```text
 /data/design_list/timedeal_listing_style.html
+/data/design_list/redesign_goods_list_style.css
 [test skin]/promotion/timedeal.html
 [test skin]/css/redesign/trendypicker-listing-cards.css
 [test skin]/css/redesign/trendypicker-timedeal.css
-[test skin]/app/javascript/js/trendypicker-timedeal.js
+/app/javascript/js/trendypicker-listing-cards.js
+/app/javascript/js/trendypicker-timedeal.js
 [test skin]/images/timedeal/clock_pink.png
 [test skin]/images/listing/wish_pink.png
+[test skin]/images/listing/wish_hover.png
+[test skin]/images/listing/cart.png
+[test skin]/images/listing/cart_hover.png
 ```
 
 Do **not** add `?v=` query strings on skin CSS/JS links.

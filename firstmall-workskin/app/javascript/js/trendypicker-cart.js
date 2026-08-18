@@ -14,8 +14,13 @@
 
   document.documentElement.classList.add("is-cart-page");
   if (document.body) document.body.classList.add("is-cart-page");
+  // Remove keys left by the retired client-side duplicate-row merger. Cart
+  // rows and quantities must only be changed by Firstmall's native actions.
   try {
-    if (sessionStorage.getItem("tpCartSilentDelete")) window._tpCartSilentDelete = true;
+    sessionStorage.removeItem("tpCartSilentDelete");
+    sessionStorage.removeItem("tpCartOptionMergeDelete");
+    sessionStorage.removeItem("tpCartMergeBlockedV2");
+    sessionStorage.removeItem("tpCartMergeBlockedV3");
   } catch (err) {}
   if (page.classList.contains("is-cart-empty") && document.body) {
     document.body.classList.add("is-cart-empty");
@@ -2061,378 +2066,236 @@
     paintSelectionSummary();
   }
 
-  var MERGE_DELETE_KEY = "tpCartOptionMergeDelete";
-  var SILENT_DELETE_KEY = "tpCartSilentDelete";
-  var SILENT_DELETE_FRAME = "tpCartSilentFrame";
-
   function collectCartRows() {
     return Array.prototype.slice.call(
       (page || document).querySelectorAll("li.cart_goods.cart-item, li.cart_goods")
     );
   }
 
-  function getRowGoodsSeq(row) {
-    if (!row) return "";
-    var stored = row.getAttribute("data-cart-goods-seq");
-    if (stored) return stored;
-    var check = row.querySelector('input[name="cart_option_seq[]"]');
-    var rel = check && check.getAttribute("rel");
-    if (rel) {
-      row.setAttribute("data-cart-goods-seq", rel);
-      return rel;
-    }
-    var link = row.querySelector('a[href*="goods/view"]');
-    var href = (link && link.getAttribute("href")) || "";
-    var match = href.match(/[?&]no=(\d+)/i);
-    if (match) {
-      row.setAttribute("data-cart-goods-seq", match[1]);
-      return match[1];
-    }
-    return "";
-  }
+  var CART_CONSOLIDATION_KEY = "tpCartConsolidationV1";
 
-  function getRowProductKey(row) {
-    var seq = getRowGoodsSeq(row);
-    if (seq) return "g:" + seq;
-    var name = text(row.querySelector(".cart-item-name, .cart-item-info h2 a, .cart-item-info h2"));
-    return name ? "n:" + normalizeOptionKey(name) : "";
-  }
-
-  function getRowOptionSeq(row) {
+  function cartOptionSeq(row) {
     if (!row) return "";
     var check = row.querySelector('input[name="cart_option_seq[]"]');
-    return (check && check.value) || row.getAttribute("data-cart-option-seq") || "";
-  }
-
-  function getRowOptionLabel(row) {
-    return text(row && row.querySelector(".realtrend-select-value"));
-  }
-
-  function normalizeOptionKey(value) {
-    return String(value || "")
-      .replace(/\(\s*\+?\s*(?:US\$|\$)?\s*[\d.,]+\s*\)/gi, "")
-      .replace(/\s*\/\s*/g, "/")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase();
-  }
-
-  function optionKeysMatch(left, right) {
-    var a = normalizeOptionKey(left);
-    var b = normalizeOptionKey(right);
-    if (!a || !b) return false;
-    if (a === b) return true;
-    if (a.indexOf(b) !== -1 || b.indexOf(a) !== -1) return true;
-    var aPart = a.split("/")[0].trim();
-    var bPart = b.split("/")[0].trim();
-    return Boolean(aPart && bPart && aPart === bPart);
-  }
-
-  function findMergeTargetRow(sourceRow, optionLabel, optionValue) {
-    var sourceKey = getRowProductKey(sourceRow);
-    var sourceSeq = getRowOptionSeq(sourceRow);
-    if (!sourceKey || !sourceSeq) return null;
-    var found = null;
-    collectCartRows().forEach(function (row) {
-      if (found || row === sourceRow) return;
-      if (getRowProductKey(row) !== sourceKey) return;
-      if (String(getRowOptionSeq(row)) === String(sourceSeq)) return;
-      var label = getRowOptionLabel(row);
-      if (
-        optionKeysMatch(label, optionLabel) ||
-        optionKeysMatch(label, optionValue)
-      ) {
-        found = row;
-      }
-    });
-    return found;
-  }
-
-  function queueOptionMergeDelete(seq) {
-    try {
-      sessionStorage.setItem(MERGE_DELETE_KEY, String(seq || ""));
-    } catch (err) {}
-  }
-
-  function clearOptionMergeDelete(seq) {
-    try {
-      var stored = sessionStorage.getItem(MERGE_DELETE_KEY) || "";
-      if (!seq || stored === String(seq)) sessionStorage.removeItem(MERGE_DELETE_KEY);
-    } catch (err) {}
-  }
-
-  function isCartDeleteAlertMessage(msg) {
-    return /삭제\s*되었|deleted|removed from/i.test(
-      String(msg || "").replace(/<[^>]+>/g, " ")
+    if (check && check.value) return String(check.value);
+    return String(row.getAttribute("data-cart-option-seq") || row.id || "").replace(
+      /^cart_goods_/,
+      ""
     );
   }
 
-  function beginSilentCartDelete(seq) {
-    window._tpCartSilentDelete = true;
-    window._tpCartSilentDeleteSeq = String(seq || "");
-    try {
-      sessionStorage.setItem(SILENT_DELETE_KEY, String(seq || "1"));
-    } catch (err) {}
+  function cartRowSignature(row) {
+    if (!row || row.querySelector(".cart_suboptions li")) return "";
+    var goodsSeq = String(row.getAttribute("data-cart-goods-seq") || "");
+    var option = text(row.querySelector(".realtrend-select-value"))
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+    var group = row.closest("ul.shipping_group_list");
+    var groupIndex = Array.prototype.indexOf.call(
+      (page || document).querySelectorAll("ul.shipping_group_list"),
+      group
+    );
+    return goodsSeq ? [groupIndex, goodsSeq, option].join("|") : "";
   }
 
-  function endSilentCartDelete() {
-    window._tpCartSilentDelete = false;
-    window._tpCartSilentDeleteSeq = "";
-    try {
-      sessionStorage.removeItem(SILENT_DELETE_KEY);
-    } catch (err) {}
-  }
-
-  function shouldSilenceCartAlert(msg) {
-    var silent = Boolean(window._tpCartSilentDelete);
-    if (!silent) {
-      try {
-        silent = Boolean(sessionStorage.getItem(SILENT_DELETE_KEY));
-      } catch (err) {}
-    }
-    return silent && isCartDeleteAlertMessage(msg);
-  }
-
-  function finishSilentCartDelete() {
-    var seq = window._tpCartSilentDeleteSeq || "";
-    try {
-      seq = seq || sessionStorage.getItem(SILENT_DELETE_KEY) || "";
-    } catch (err) {}
-    endSilentCartDelete();
-    removeCartRowBySeq(seq);
-    dismissDeleteDialogs();
-  }
-
-  function dismissDeleteDialogs() {
-    var matched = false;
-    Array.prototype.forEach.call(document.querySelectorAll(".ui-dialog"), function (dialog) {
-      if (!isCartDeleteAlertMessage(dialog.textContent || "")) return;
-      matched = true;
-      if (window.jQuery) {
-        try {
-          window.jQuery(dialog).find(".ui-dialog-content").dialog("destroy");
-        } catch (err) {
-          try {
-            window.jQuery(dialog).remove();
-          } catch (err2) {}
-        }
-      } else if (dialog.parentNode) {
-        dialog.parentNode.removeChild(dialog);
-      }
+  function duplicateCartGroups() {
+    var byKey = Object.create(null);
+    collectCartRows().forEach(function (row) {
+      var key = cartRowSignature(row);
+      if (!key) return;
+      if (!byKey[key]) byKey[key] = [];
+      byKey[key].push(row);
     });
-    if (!matched) return;
-    Array.prototype.forEach.call(document.querySelectorAll(".ui-widget-overlay"), function (overlay) {
-      if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
-    });
+    return Object.keys(byKey)
+      .map(function (key) {
+        return byKey[key];
+      })
+      .filter(function (rows) {
+        return rows.length > 1;
+      });
   }
 
-  var alertPatchTries = 0;
+  function cartConsolidationFingerprint(groups) {
+    return groups
+      .map(function (rows) {
+        return rows.map(cartOptionSeq).sort().join(",");
+      })
+      .sort()
+      .join(";");
+  }
 
-  function wrapCartAlertFn(name) {
-    var original = window[name];
-    if (typeof original !== "function" || original._tpCartSilent) return false;
-    window[name] = function (msg) {
-      if (shouldSilenceCartAlert(msg)) {
-        finishSilentCartDelete();
+  function serializeForm(form) {
+    var body = new URLSearchParams();
+    Array.prototype.forEach.call(form.elements || [], function (field) {
+      if (!field.name || field.disabled) return;
+      if ((field.type === "checkbox" || field.type === "radio") && !field.checked) return;
+      if (field.tagName === "SELECT" && field.multiple) {
+        Array.prototype.forEach.call(field.options || [], function (option) {
+          if (option.selected) body.append(field.name, option.value);
+        });
         return;
       }
-      if (window._tpCartSilentDelete && name === "openDialogAlert") endSilentCartDelete();
-      return original.apply(this, arguments);
-    };
-    window[name]._tpCartSilent = true;
-    return true;
-  }
-
-  function patchCartAlertDialogs() {
-    wrapCartAlertFn("openDialogAlert");
-    wrapCartAlertFn("alert");
-    if (typeof window.openDialogAlert !== "function" && alertPatchTries < 40) {
-      alertPatchTries += 1;
-      window.setTimeout(patchCartAlertDialogs, 80);
-    }
-  }
-
-  function getSilentDeleteFrame() {
-    var frame = document.querySelector('iframe[name="' + SILENT_DELETE_FRAME + '"]');
-    if (frame) return frame;
-    frame = document.createElement("iframe");
-    frame.name = SILENT_DELETE_FRAME;
-    frame.setAttribute("name", SILENT_DELETE_FRAME);
-    frame.title = "cart merge";
-    frame.style.cssText =
-      "position:absolute;width:0;height:0;border:0;overflow:hidden;opacity:0;pointer-events:none;";
-    frame.addEventListener("load", function () {
-      if (!window._tpCartSilentDelete) return;
-      var html = "";
-      try {
-        var doc = frame.contentDocument || (frame.contentWindow && frame.contentWindow.document);
-        html = doc && doc.documentElement ? String(doc.documentElement.innerHTML || "") : "";
-      } catch (err) {}
-      if (isCartDeleteAlertMessage(html) || /openDialogAlert|location\.reload/i.test(html)) {
-        window.setTimeout(function () {
-          if (!window._tpCartSilentDelete) {
-            dismissDeleteDialogs();
-            return;
-          }
-          finishSilentCartDelete();
-        }, 30);
+      if (!/^(?:submit|button|image|reset|file)$/i.test(field.type || "")) {
+        body.append(field.name, field.value);
       }
     });
-    document.body.appendChild(frame);
-    return frame;
+    return body;
   }
 
-  function findCartRowBySeq(seq) {
-    if (!seq) return null;
-    var row = document.getElementById("cart_goods_" + seq);
-    if (row) return row;
-    var found = null;
-    collectCartRows().forEach(function (item) {
-      if (!found && String(getRowOptionSeq(item)) === String(seq)) found = item;
+  function postForm(form, fallbackAction) {
+    var action = form.getAttribute("action") || fallbackAction;
+    var url = new URL(action, window.location.href);
+    return fetch(url.pathname + url.search, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: serializeForm(form).toString(),
+    }).then(function (response) {
+      if (!response.ok) throw new Error("cart request failed");
+      return response.text();
     });
-    return found;
   }
 
-  function removeCartRowBySeq(seq) {
-    var row = findCartRowBySeq(seq);
-    if (row && row.parentNode) row.parentNode.removeChild(row);
-    if (typeof paintSelectionSummary === "function") paintSelectionSummary();
+  function saveMergedQuantity(row, quantity) {
+    var seq = cartOptionSeq(row);
+    return fetchOptionalChanges(seq).then(function (doc) {
+      var form = getOptionalChangesForm(doc);
+      if (!form) throw new Error("optional_changes form missing");
+      var inputs = form.querySelectorAll("input[name^='optionEa'], input.ea_change");
+      if (!inputs.length) throw new Error("quantity input missing");
+      inputs[0].value = String(quantity);
+      return postForm(form, "/order/optional_modify");
+    });
   }
 
-  function restoreCartFormTarget(form, action, target) {
-    if (!form) return;
-    form.setAttribute("action", action || "order");
-    form.setAttribute("target", target || "actionFrame");
-  }
-
-  function deleteCartOptionSeq(seq, useFrame, silent) {
-    var form = document.getElementById("cart_form");
-    if (!form || !seq) return Promise.reject(new Error("missing cart form"));
-
-    if (silent) {
-      patchCartAlertDialogs();
-      getSilentDeleteFrame();
-      beginSilentCartDelete(seq);
-    }
-
-    if (useFrame) {
-      var found = false;
-      Array.prototype.forEach.call(form.querySelectorAll('input[name="cart_option_seq[]"]'), function (box) {
-        var match = String(box.value) === String(seq);
-        box.checked = match;
-        if (match) {
-          found = true;
-          box.setAttribute("checked", "checked");
-        } else {
-          box.removeAttribute("checked");
-        }
-      });
-      if (!found) {
-        var extra = document.createElement("input");
-        extra.type = "hidden";
-        extra.name = "cart_option_seq[]";
-        extra.value = String(seq);
-        form.appendChild(extra);
-      }
-      var prevAction = form.getAttribute("action");
-      var prevTarget = form.getAttribute("target");
-      form.setAttribute("action", "del");
-      form.setAttribute("target", silent ? SILENT_DELETE_FRAME : "actionFrame");
-      form.submit();
-      window.setTimeout(function () {
-        restoreCartFormTarget(form, prevAction, prevTarget);
-      }, 0);
-      return Promise.resolve();
-    }
-
+  function deleteMergedRow(row) {
+    var seq = cartOptionSeq(row);
+    var cartForm = document.getElementById("cart_form");
+    if (!seq || !cartForm) return Promise.reject(new Error("cart row missing"));
     var body = new URLSearchParams();
-    Array.prototype.forEach.call(form.querySelectorAll("input[type='hidden']"), function (el) {
-      if (el && el.name) body.append(el.name, el.value);
-    });
-    body.append("cart_option_seq[]", String(seq));
+    Array.prototype.forEach.call(
+      cartForm.querySelectorAll("input[type='hidden']"),
+      function (field) {
+        if (field.name && field.name !== "cart_option_seq[]") {
+          body.append(field.name, field.value);
+        }
+      }
+    );
+    body.append("cart_option_seq[]", seq);
     return fetch("/order/del", {
       method: "POST",
       credentials: "same-origin",
       headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
       body: body.toString(),
-    }).then(function (res) {
-      if (!res.ok) throw new Error("delete failed");
-      return res;
+    }).then(function (response) {
+      if (!response.ok) throw new Error("cart delete failed");
+      return response.text();
     });
   }
 
-  function silentDeleteCartOptionSeq(seq) {
-    if (!seq) return Promise.resolve();
-    return deleteCartOptionSeq(seq, true, true);
+  function paintMergedQuantity(row, quantity) {
+    var wrap = row.querySelector("[data-cart-qty]");
+    var output = wrap && wrap.querySelector("[data-cart-qty-value]");
+    var input = wrap && wrap.querySelector("[data-cart-qty-input]");
+    if (output) output.textContent = String(quantity);
+    if (input) input.value = String(quantity);
+    row.setAttribute("data-cart-ea", String(quantity));
+    var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
+    var compare = parseMoney(row.getAttribute("data-cart-unit-compare"));
+    if (unit > 0) applyUnitPriceToRow(row, unit, compare);
   }
 
-  function flushQueuedOptionMergeDelete() {
-    var seq = "";
+  function consolidateDuplicateCartRows() {
+    var groups = duplicateCartGroups();
+    var fingerprint = cartConsolidationFingerprint(groups);
+    var previous = "";
     try {
-      seq = sessionStorage.getItem(MERGE_DELETE_KEY) || "";
+      previous = sessionStorage.getItem(CART_CONSOLIDATION_KEY) || "";
+      if (!fingerprint) sessionStorage.removeItem(CART_CONSOLIDATION_KEY);
     } catch (err) {}
-    if (!seq) return;
-    if (!findCartRowBySeq(seq)) {
-      clearOptionMergeDelete(seq);
-      return;
-    }
-    clearOptionMergeDelete(seq);
-    silentDeleteCartOptionSeq(seq);
-  }
+    if (!fingerprint || fingerprint === previous) return;
+    try {
+      sessionStorage.setItem(CART_CONSOLIDATION_KEY, fingerprint);
+    } catch (err) {}
 
-  function mergeCartOptionRows(sourceRow, targetRow) {
-    var sourceSeq = getRowOptionSeq(sourceRow);
-    var targetSeq = getRowOptionSeq(targetRow);
-    if (!sourceSeq || !targetSeq || sourceSeq === targetSeq) return Promise.resolve();
-    var nextEa = readRowQty(sourceRow) + readRowQty(targetRow);
-    var unit = parseMoney(targetRow.getAttribute("data-cart-unit-price"));
-    var compare = parseMoney(targetRow.getAttribute("data-cart-unit-compare"));
-    queueOptionMergeDelete(sourceSeq);
-    if (sourceRow) sourceRow.style.display = "none";
-    var qtyOut = targetRow.querySelector("[data-cart-qty-value]");
-    if (qtyOut) qtyOut.textContent = String(nextEa);
-    targetRow.setAttribute("data-cart-ea", String(nextEa));
-    if (unit > 0) applyUnitPriceToRow(targetRow, unit, compare);
-    else paintSelectionSummary();
+    page.setAttribute("data-cart-consolidating", "true");
+    var changed = false;
+    var chain = Promise.resolve();
 
-    return fetchOptionalChanges(targetSeq)
-      .then(function (doc) {
-        var form = getOptionalChangesForm(doc);
-        if (!form) throw new Error("optional_changes form missing");
-        var eaInputs = form.querySelectorAll("input[name^='optionEa']");
-        if (!eaInputs.length) eaInputs = form.querySelectorAll("input.ea_change");
-        if (!eaInputs.length) throw new Error("quantity input missing");
-        eaInputs[0].value = String(nextEa);
-        submitOptionalModify(form);
-        window.setTimeout(function () {
-          if (!findCartRowBySeq(sourceSeq)) {
-            clearOptionMergeDelete(sourceSeq);
-            return;
-          }
-          silentDeleteCartOptionSeq(sourceSeq);
-        }, 900);
+    groups.forEach(function (rows) {
+      var target = rows[0];
+      var current = readRowQty(target);
+      rows.slice(1).forEach(function (duplicate) {
+        chain = chain.then(function () {
+          var before = current;
+          var next = before + readRowQty(duplicate);
+          duplicate.hidden = true;
+          paintMergedQuantity(target, next);
+          return saveMergedQuantity(target, next)
+            .then(function () {
+              return deleteMergedRow(duplicate);
+            })
+            .then(function () {
+              current = next;
+              changed = true;
+              if (duplicate.parentNode) duplicate.parentNode.removeChild(duplicate);
+            })
+            .catch(function (error) {
+              duplicate.hidden = false;
+              paintMergedQuantity(target, before);
+              return saveMergedQuantity(target, before).catch(function () {}).then(function () {
+                throw error;
+              });
+            });
+        });
+      });
+    });
+
+    chain
+      .then(function () {
+        if (changed) window.location.reload();
+        else page.removeAttribute("data-cart-consolidating");
       })
       .catch(function () {
-        silentDeleteCartOptionSeq(sourceSeq);
+        page.removeAttribute("data-cart-consolidating");
+        window.location.reload();
       });
   }
 
-  function mergeDuplicateCartRowsOnLoad() {
-    var rows = collectCartRows().filter(function (row) {
-      return row && row.style.display !== "none";
+  // Newest first. cart_option_seq is issued in insertion order, so a bigger
+  // seq means it was added later. Sorting happens inside each shipping group
+  // so the server's grouping (and its per-group shipping rules) still holds.
+  function rowAddedOrder(row) {
+    if (!row) return 0;
+    var id = String(row.id || "");
+    var fromId = id.match(/cart_goods_(\d+)/);
+    if (fromId) return parseInt(fromId[1], 10) || 0;
+    var check = row.querySelector('input[name="cart_option_seq[]"]');
+    return check ? parseInt(check.value, 10) || 0 : 0;
+  }
+
+  function sortCartRowsNewestFirst() {
+    var groups = (page || document).querySelectorAll("ul.shipping_group_list");
+    Array.prototype.forEach.call(groups, function (group) {
+      var rows = Array.prototype.filter.call(group.children, function (el) {
+        return el.classList && el.classList.contains("cart_goods");
+      });
+      if (rows.length < 2) return;
+
+      var sorted = rows.slice().sort(function (a, b) {
+        return rowAddedOrder(b) - rowAddedOrder(a);
+      });
+
+      var same = sorted.every(function (row, index) {
+        return row === rows[index];
+      });
+      if (same) return;
+
+      sorted.forEach(function (row) {
+        group.appendChild(row);
+      });
     });
-    var i;
-    var j;
-    for (i = 0; i < rows.length; i += 1) {
-      for (j = i + 1; j < rows.length; j += 1) {
-        if (getRowProductKey(rows[i]) !== getRowProductKey(rows[j])) continue;
-        if (!getRowProductKey(rows[i])) continue;
-        if (!optionKeysMatch(getRowOptionLabel(rows[i]), getRowOptionLabel(rows[j]))) continue;
-        mergeCartOptionRows(rows[j], rows[i]);
-        return true;
-      }
-    }
-    return false;
   }
 
   function applySelectedOptionToForm(form, optionEl, ea) {
@@ -2638,13 +2501,6 @@
     function submitSelectedOption(wrap, optionValue, optionPrice, optionCompare) {
       var seq = wrap.getAttribute("data-cart-option-seq");
       var row = wrap.closest("li.cart_goods, .cart-item");
-      var optionLabel =
-        text(wrap.querySelector(".realtrend-select-value")) || optionValue;
-      var mergeRow = findMergeTargetRow(row, optionLabel, optionValue);
-      if (mergeRow) {
-        mergeCartOptionRows(row, mergeRow);
-        return;
-      }
       if (optionPrice > 0) applyUnitPriceToRow(row, optionPrice, optionCompare);
 
       fetchOptionalChanges(seq)
@@ -2940,7 +2796,6 @@
   patchSetCartPriceInfo();
 
   ready(function () {
-    patchCartAlertDialogs();
     endCartQvGuard(false);
     bindCartQuickviewClose();
     patchSetPriceInfoCheck();
@@ -2966,10 +2821,10 @@
     }
     bindPaypal();
     bindCountry();
-    flushQueuedOptionMergeDelete();
     bindOptionSelects();
     bindQty();
-    window.setTimeout(mergeDuplicateCartRowsOnLoad, 80);
+    sortCartRowsNewestFirst();
+    window.setTimeout(consolidateDuplicateCartRows, 80);
     if (window.requestIdleCallback) {
       window.requestIdleCallback(prefetchOptionalChanges, { timeout: 1200 });
     } else {
