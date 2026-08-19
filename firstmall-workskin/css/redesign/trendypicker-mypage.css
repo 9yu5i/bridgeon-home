@@ -237,8 +237,23 @@ html.is-page-entering body {
   background-image: url("../../images/mypage/help.png");
 }
 
-.bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(11) a::before {
+/* The last row is Log Out or Log In depending on the session, so both are
+   keyed on the href instead of :nth-child(11) like the rows above. Keeping
+   the position selector here would make the two rules fight on specificity,
+   and the nth-child one wins — which is how Log In first shipped wearing the
+   logout icon. */
+.bo-mypage-shell #mypageLnbBasic .lnb_sub a[href="/login_process/logout"]::before {
   background-image: url("../../images/mypage/logout.png");
+}
+
+.bo-mypage-shell #mypageLnbBasic .lnb_sub a[href="/member/login"]::before {
+  background-image: url("../../images/mypage/login.png");
+}
+
+.bo-mypage-shell #mypageLnbBasic .lnb_sub a[href="/member/login"]:hover::before,
+.bo-mypage-shell #mypageLnbBasic .lnb_sub a[href="/member/login"]:focus-visible::before,
+.bo-mypage-shell #mypageLnbBasic .lnb_sub a[href="/member/login"].on::before {
+  background-image: url("../../images/mypage/login_hover.png");
 }
 
 .bo-mypage-shell #mypageLnbBasic .lnb_sub a:hover,
@@ -309,8 +324,8 @@ html.is-page-entering body {
   background-image: url("../../images/mypage/help_hover.png");
 }
 
-.bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(11) a:hover::before,
-.bo-mypage-shell #mypageLnbBasic .lnb_sub li:nth-child(11) a:focus-visible::before {
+.bo-mypage-shell #mypageLnbBasic .lnb_sub a[href="/login_process/logout"]:hover::before,
+.bo-mypage-shell #mypageLnbBasic .lnb_sub a[href="/login_process/logout"]:focus-visible::before {
   background-image: url("../../images/mypage/logout_hover.png");
 }
 
@@ -2438,7 +2453,9 @@ body.is-mypage-logout-open {
     background-image: url("../../images/mypage/help.png");
   }
 
-  .bo-mobile-service__grid a:nth-child(6) .bo-mobile-icon {
+  /* Keyed on the href, not the position, for the same reason as the sidebar:
+     this tile is Log Out or Log In depending on the session. */
+  .bo-mobile-service__grid a[href="/login_process/logout"] .bo-mobile-icon {
     background-image: url("../../images/mypage/logout.png");
   }
 
@@ -2482,9 +2499,20 @@ body.is-mypage-logout-open {
     background-image: url("../../images/mypage/help_hover.png");
   }
 
-  .bo-mobile-service__grid a:nth-child(6):hover .bo-mobile-icon,
-  .bo-mobile-service__grid a:nth-child(6):focus-visible .bo-mobile-icon {
+  .bo-mobile-service__grid a[href="/login_process/logout"]:hover .bo-mobile-icon,
+  .bo-mobile-service__grid a[href="/login_process/logout"]:focus-visible .bo-mobile-icon {
     background-image: url("../../images/mypage/logout_hover.png");
+  }
+
+  /* Same last-tile swap as the sidebar above: Log In replaces Log Out when
+     the visitor is signed out, so it needs its own icon. */
+  .bo-mobile-service__grid a[href="/member/login"] .bo-mobile-icon {
+    background-image: url("../../images/mypage/login.png");
+  }
+
+  .bo-mobile-service__grid a[href="/member/login"]:hover .bo-mobile-icon,
+  .bo-mobile-service__grid a[href="/member/login"]:focus-visible .bo-mobile-icon {
+    background-image: url("../../images/mypage/login_hover.png");
   }
 
   .bo-mobile-activity__grid strong {
@@ -3046,4 +3074,14 @@ body.is-mypage-logout-open {
   .bo-mobile-service__grid strong {
     font-size: 13px;
   }
+}
+
+/* Hold the sidebar's height until the nav arrives.
+   mypage_lnb.html is now the single definition of the account nav, so the
+   <aside> ships empty and trendypicker-mypage.js fills it — which cannot run
+   until the page's own scripts have. Reserving the space stops the column
+   from popping in from nothing. Height = 11 nav rows x 44px + 1px borders. */
+.bo-mypage-shell > .bo-account-side[data-mypage-lnb]:not([data-mypage-lnb-loaded]),
+.bo-profile-shell > .bo-account-side[data-mypage-lnb]:not([data-mypage-lnb-loaded]) {
+  min-height: 486px;
 }

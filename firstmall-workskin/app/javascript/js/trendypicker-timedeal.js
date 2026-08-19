@@ -138,6 +138,173 @@
 		return list.querySelectorAll(":scope > li");
 	}
 
+	var BORROWED_KEY_PREFIX = "trendypicker-timedeal-borrowed:";
+	var fillingLastRow = false;
+
+	function listingFormParams(pageNumber) {
+		var nativeQuery = typeof window.searchParams === "function"
+			? window.searchParams()
+			: window.location.search;
+		var params = new URLSearchParams(String(nativeQuery || "").replace(/^\?/, ""));
+		params.set("page", String(pageNumber));
+		return params;
+	}
+
+	function normalizedQueryKey(params) {
+		var pairs = [];
+		params.forEach(function (value, key) {
+			if (key !== "auto" && key !== "_") pairs.push([key, value]);
+		});
+		pairs.sort(function (a, b) {
+			return a[0] === b[0] ? a[1].localeCompare(b[1]) : a[0].localeCompare(b[0]);
+		});
+		return BORROWED_KEY_PREFIX + pairs.map(function (pair) {
+			return encodeURIComponent(pair[0]) + "=" + encodeURIComponent(pair[1]);
+		}).join("&");
+	}
+
+	function extractGoodsSeq(item) {
+		var card = item.querySelector("[data-goods-seq]");
+		if (card && card.getAttribute("data-goods-seq")) {
+			return card.getAttribute("data-goods-seq");
+		}
+		var link = item.querySelector('a[href*="/goods/view?no="], a[href*="/goods/view/no/"]');
+		if (!link) return null;
+		var href = link.getAttribute("href") || "";
+		var match = /[?&]no=(\d+)/.exec(href) || /\/goods\/view\/no\/(\d+)/.exec(href);
+		return match ? match[1] : null;
+	}
+
+	function currentPageNumber() {
+		var formPage = document.querySelector("#goodsSearchForm input[name='page']");
+		var page = formPage ? parseInt(formPage.value, 10) : NaN;
+		if (page > 0) return page;
+		var active = document.querySelector(".paging_navigation .on");
+		page = active ? parseInt(active.textContent, 10) : NaN;
+		return page > 0 ? page : 1;
+	}
+
+	function hasNextPage() {
+		var nav = document.querySelector(".paging_navigation");
+		return !!(nav && nav.querySelector("a.next"));
+	}
+
+	function detectColumnCount(items) {
+		if (items.length < 2) return items.length;
+		var firstTop = Math.round(items[0].getBoundingClientRect().top);
+		var columns = 0;
+		for (var i = 0; i < items.length; i += 1) {
+			if (Math.round(items[i].getBoundingClientRect().top) !== firstTop) break;
+			columns += 1;
+		}
+		return columns || 1;
+	}
+
+	function stripAlreadyBorrowedItems() {
+		var display = document.getElementById("searchedItemDisplay");
+		var list = display && (display.querySelector(":scope > ul") || display.querySelector("ul"));
+		if (!list) return;
+
+		var raw;
+		try {
+			raw = window.sessionStorage.getItem(
+				normalizedQueryKey(listingFormParams(currentPageNumber()))
+			);
+		} catch (_err) {
+			return;
+		}
+		if (!raw) return;
+
+		var ids;
+		try {
+			ids = JSON.parse(raw);
+		} catch (_err) {
+			return;
+		}
+		if (!Array.isArray(ids) || !ids.length) return;
+
+		var idSet = {};
+		ids.forEach(function (id) {
+			idSet[id] = true;
+		});
+		Array.prototype.forEach.call(list.querySelectorAll(":scope > li"), function (item) {
+			var goodsSeq = extractGoodsSeq(item);
+			if (goodsSeq && idSet[goodsSeq]) item.remove();
+		});
+	}
+
+	function fillLastRow() {
+		if (fillingLastRow || !hasNextPage()) return;
+		var categories = document.querySelector(".timedeal-categories");
+		var activeCategory = categories && categories.getAttribute("data-active-category");
+		if (activeCategory && activeCategory !== "all") return;
+
+		var display = document.getElementById("searchedItemDisplay");
+		var list = display && (display.querySelector(":scope > ul") || display.querySelector("ul"));
+		if (!list) return;
+		var items = Array.prototype.slice.call(list.querySelectorAll(":scope > li"));
+		if (items.length < 2) return;
+
+		var columns = detectColumnCount(items);
+		if (columns < 2) return;
+		var remainder = items.length % columns;
+		if (!remainder) return;
+
+		var needed = columns - remainder;
+		var nextPage = currentPageNumber() + 1;
+		var params = listingFormParams(nextPage);
+		params.set("auto", "1");
+		params.set("_", String(Date.now()));
+		var borrowedFromKey = normalizedQueryKey(params);
+		var fetchUrl = new URL(window.location.href);
+		fetchUrl.pathname = "/goods/search_list";
+		fetchUrl.search = params.toString();
+
+		fillingLastRow = true;
+		fetch(fetchUrl.toString(), { credentials: "same-origin" })
+			.then(function (response) {
+				if (!response.ok) throw new Error("Time Deal next page request failed");
+				return response.text();
+			})
+			.then(function (html) {
+				var doc = new DOMParser().parseFromString(html, "text/html");
+				var nextItems = doc.querySelectorAll("li.timedeal_listing_style");
+				if (!nextItems.length) {
+					nextItems = doc.querySelectorAll("#searchedItemDisplay > ul > li, ul > li.timedeal_listing_style");
+				}
+				var borrowed = Array.prototype.slice.call(nextItems, 0, needed);
+				if (!borrowed.length) return;
+
+				var borrowedIds = [];
+				borrowed.forEach(function (item) {
+					item.setAttribute("data-trendypicker-borrowed", "1");
+					list.appendChild(item);
+					var goodsSeq = extractGoodsSeq(item);
+					if (goodsSeq) borrowedIds.push(goodsSeq);
+				});
+				if (!borrowedIds.length) return;
+
+				try {
+					var stored = window.sessionStorage.getItem(borrowedFromKey);
+					var existing = stored ? JSON.parse(stored) : [];
+					window.sessionStorage.setItem(
+						borrowedFromKey,
+						JSON.stringify(existing.concat(borrowedIds).filter(function (id, index, all) {
+							return all.indexOf(id) === index;
+						}))
+					);
+				} catch (_err) {
+					/* sessionStorage unavailable: filling still works for this page. */
+				}
+			})
+			.catch(function () {
+				/* Keep the native partial row when the next-page request fails. */
+			})
+			.then(function () {
+				fillingLastRow = false;
+			});
+	}
+
 	function syncCount() {
 		var raw = "";
 		// #filterResultCount reflects Firstmall's native search-form result count.
@@ -753,12 +920,14 @@
 		if (!display) return;
 
 		var run = function () {
+			stripAlreadyBorrowedItems();
 			enhanceListingCards();
 			var cats = document.querySelector(".timedeal-categories");
 			if (cats && typeof cats._reapplyCategoryFilter === "function") {
 				cats._reapplyCategoryFilter();
 			}
 			syncCount();
+			fillLastRow();
 		};
 
 		run();
@@ -788,6 +957,9 @@
 				}
 			});
 		}
+
+		window.setTimeout(run, 400);
+		window.setTimeout(run, 1200);
 	}
 
 	function unlockPageScroll() {

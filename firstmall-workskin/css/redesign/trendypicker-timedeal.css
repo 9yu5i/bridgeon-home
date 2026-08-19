@@ -989,13 +989,6 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   font-weight: 800;
 }
 
-.bo-timedeal-shell .sale_price::before,
-.bo-timedeal-shell .consumer_price::before,
-.bo-timedeal-shell .listing-card-price strong::before,
-.bo-timedeal-shell .listing-card-price del::before {
-  content: "US ";
-}
-
 .bo-timedeal-shell .goods_price_area .sale_price .num,
 .bo-timedeal-shell .searched_item_display .item_info_area .goods_price_area .sale_price .num {
   color: inherit !important;

@@ -130,13 +130,6 @@
   font-weight: 800;
 }
 
-.tp-listing-grid .sale_price::before,
-.tp-listing-grid .consumer_price::before,
-.tp-listing-grid .listing-card-price strong::before,
-.tp-listing-grid .listing-card-price del::before {
-  content: "US ";
-}
-
 .tp-listing-grid .consumer_price,
 .tp-listing-grid .goods_price_area del,
 .tp-listing-grid .listing-card-price del {

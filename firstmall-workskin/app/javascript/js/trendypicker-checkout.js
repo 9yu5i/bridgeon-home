@@ -1983,16 +1983,24 @@
     keepMileageButtonsVisible();
     watchMileageButtons();
     bindMileageInput();
+
+    try {
+      var intendedPayment = sessionStorage.getItem("trendypickerCheckoutPayment") || "";
+      if (intendedPayment) {
+        sessionStorage.removeItem("trendypickerCheckoutPayment");
+        var intendedRadio = document.querySelector(
+          ".payment_method_select input[name='payment'][value='" + intendedPayment + "']"
+        );
+        if (intendedRadio && !intendedRadio.disabled) intendedRadio.click();
+      }
+    } catch (err) {}
     patchAddressModify();
-    bindSettleTabs();
-    bindItemsInOrderToggle();
     bindSavedAddressCards();
     bindAddressNameSync();
     bindCheckoutCountrySelect();
     bindCheckoutStateSelect();
     bindCheckoutNativeSelects();
     bindDeliveryMessageToggle();
-    scheduleSavedAddressTab();
     window.setTimeout(patchMileageActions, 300);
     window.setTimeout(keepMileageButtonsVisible, 300);
     window.setTimeout(watchMileageButtons, 300);
@@ -2032,8 +2040,6 @@
       bindCheckoutCountrySelect();
     }, 2000);
 
-    bindMileageInput();
-
     document.addEventListener("click", function (e) {
       var item = e.target && e.target.closest && e.target.closest(".payment_method_select > li");
       if (!item || e.target.closest("input, a, button")) return;
@@ -2042,16 +2048,19 @@
       radio.click();
     });
 
-    // The PayPal button in the summary is a shortcut for picking PayPal in
-    // the payment list, then placing the order.
+    // Express buttons select their matching Firstmall payment method, then
+    // submit through the native order button so gateway validation is kept.
     document.addEventListener("click", function (e) {
-      var button = e.target && e.target.closest && e.target.closest("[data-checkout-paypal]");
+      var button =
+        e.target && e.target.closest && e.target.closest("[data-checkout-payment]");
       if (!button) return;
       e.preventDefault();
+      var payment = button.getAttribute("data-checkout-payment") || "";
       var radio = document.querySelector(
-        ".payment_method_select input[name='payment'][value='paypal']"
+        ".payment_method_select input[name='payment'][value='" + payment + "']"
       );
-      if (radio && !radio.disabled && !radio.checked) radio.click();
+      if (!radio || radio.disabled) return;
+      if (!radio.checked) radio.click();
       var pay = document.getElementById("pay");
       if (pay) window.setTimeout(function () { pay.click(); }, 80);
     });

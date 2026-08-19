@@ -22,7 +22,15 @@
 			<li><a href="/mypage/membership" designElement="text">Membership</a></li>
 			<li><a href="/mypage/emoney" designElement="text">Points</a></li>
 			<li><a href="/service/cs" designElement="text">Help Center</a></li>
+			<!--{? userInfo.member_seq }-->
 			<li><a href="/login_process/logout" designElement="text">Log Out</a></li>
+			<!--{:}-->
+			<li><a href="/member/login" designElement="text">Log In</a></li>
+			<!--{/}-->
+			<!-- 로그인 여부 판별은 원본 스킨 layout_header/standard.html 및
+			     _modules/common/layout_side.html 과 동일한 조건을 씁니다. -->
+			<!-- 로그아웃 확인창은 trendypicker-mypage.js 가 logout 주소를
+			     가진 링크에만 걸므로, 로그인 링크는 바로 이동합니다. -->
 		</ul>
 	</nav>
 	<article class="bo-invite">

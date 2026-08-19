@@ -253,20 +253,28 @@
     const side = document.querySelector("[data-mypage-lnb]");
     if (!side || side.dataset.mypageLnbLoaded === "true") return;
 
+    let cached = null;
     try {
-      const cached = sessionStorage.getItem(mypageLnbCacheKey);
-      if (cached && renderMypageLnb(side, cached)) return;
+      cached = sessionStorage.getItem(mypageLnbCacheKey);
     } catch {
       // Continue with the network request when session storage is unavailable.
     }
 
+    // Paint the cached menu first so the sidebar does not arrive late, then
+    // revalidate below.
+    const paintedFromCache = Boolean(cached) && renderMypageLnb(side, cached);
+
     try {
       const response = await fetch(mypageLnbUrl, {
         credentials: "same-origin",
-        cache: "force-cache",
+        // The last row is Log Out or Log In depending on the session, so a
+        // stored copy goes stale the moment the visitor signs in or out in
+        // this tab. Always revalidate; the cache above covered first paint.
+        cache: "no-cache",
       });
       if (!response.ok) return;
       const markup = await response.text();
+      if (paintedFromCache && markup === cached) return;
       if (!renderMypageLnb(side, markup)) return;
       try {
         sessionStorage.setItem(mypageLnbCacheKey, markup);

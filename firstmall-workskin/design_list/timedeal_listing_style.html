@@ -68,13 +68,13 @@
 			<p class="listing-card-price goods_price_area">
 				<strong class="sale_price">
 					<!--{ ? .sale_price >= 0 }-->
-						{=get_currency_price(.sale_price, 2, '', '<span class="num">_str_price_</span>')}
+						{=get_currency_price(.sale_price, 2, ' ', '<span class="num">_str_price_</span>')}
 					<!--{ : }-->
-						{=get_currency_price(.price, 2, '', '<span class="num">_str_price_</span>')}
+						{=get_currency_price(.price, 2, ' ', '<span class="num">_str_price_</span>')}
 					<!--{ / }-->
 				</strong>
 				<!--{ ? .consumer_price > .sale_price }-->
-				<del class="consumer_price">{=get_currency_price(.consumer_price, 2, '', '<span class="num">_str_price_</span>')}</del>
+				<del class="consumer_price">{=get_currency_price(.consumer_price, 2, ' ', '<span class="num">_str_price_</span>')}</del>
 				<!--{ / }-->
 			</p>
 			<!--{ / }-->

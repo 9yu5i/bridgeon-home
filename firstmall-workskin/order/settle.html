@@ -854,11 +854,20 @@ if (document.body) {
 							<input type="button" value="PLACE ORDER -&gt;" name="button_pay" id="pay" class="btn_resp size_extra2 color2 Wmax checkout-pay" />
 							<span class="hide"><input type="button" value="장바구니로" class="btn_resp size_extra" onclick="document.location.href='cart';" /></span>
 						</div>
-						<!--{ ? payment.paypal }-->
+						<!--{ ? payment.paypal || payment.eximbay }-->
 						<span class="cart-or">- OR -</span>
-						<button type="button" class="cart-paypal" aria-label="Pay with PayPal" data-checkout-paypal>
-							<img src="/data/skin/{skin}/images/cart/paypal.png" alt="PayPal" />
-						</button>
+						<div class="checkout-express-payments" aria-label="Express payment options">
+							<!--{ ? payment.paypal }-->
+							<button type="button" class="cart-paypal" aria-label="Pay with PayPal" data-checkout-payment="paypal">
+								<img src="/data/skin/{skin}/images/cart/paypal.png" alt="PayPal" />
+							</button>
+							<!--{ / }-->
+							<!--{ ? payment.eximbay }-->
+							<button type="button" class="cart-eximbay" aria-label="Pay with Eximbay" data-checkout-payment="eximbay">
+								<img src="/data/skin/{skin}/images/cart/eximbay.png" alt="Eximbay" />
+							</button>
+							<!--{ / }-->
+						</div>
 						<!--{ / }-->
 						<small class="checkout-secure">
 							<img src="/data/skin/{skin}/images/cart/secure.png" alt="" aria-hidden="true" />Secure Checkout
@@ -1306,7 +1315,7 @@ $(function() {
                     }
 
                     li_str += "<li><label><input type='radio' name='ship_set_list' value='"+$(this).val()+"' "+ (selected ? " checked='checked' ":"") + " ship_set_code='" + shipCode + "'/>"+$(this).text()+" <span class='checkout-ship-price'>"+($(this).attr("price") || "")+"</span>" +
-				"<img src='/data/skin/responsive_food_mealkit_gl/images/common/free_icon.png' class='free-shipping-icon hide"+ (!selected ? " dn" : "") + "' title='This purchase qualifies for free shipping' alt='Free shipping icon'></label></li>";
+				"<img src='/data/skin/{skin}/images/common/free_icon.png' class='free-shipping-icon hide"+ (!selected ? " dn" : "") + "' title='This purchase qualifies for free shipping' alt='Free shipping icon'></label></li>";
                 });
                 $(".shipping_inner_layer").html(form);
                 $(".shipping_radio").html(li_str);
@@ -1339,149 +1348,6 @@ $(function() {
         $("#shipFrm").submit();
     });
 });
-</script>
-<script>
-(function () {
-  if (window._tpMileageUi) return;
-  window._tpMileageUi = true;
-  var savedValue = "";
-
-  function mileageCard() {
-    return document.querySelector(".checkout-mileage-card");
-  }
-  function viewInput() {
-    return document.querySelector(".checkout-mileage-card input[name='emoney_view']");
-  }
-  function parseAmt(value) {
-    var num = parseFloat(String(value || "").replace(/[^0-9.]/g, ""));
-    return isNaN(num) ? 0 : num;
-  }
-  function availableMileage() {
-    var card = mileageCard();
-    if (card && card.getAttribute("data-available-emoney") != null) {
-      return parseAmt(card.getAttribute("data-available-emoney"));
-    }
-    var label = document.querySelector(".checkout-mileage-available .trendy-01");
-    return parseAmt(label && label.textContent);
-  }
-  function setMileageError(on) {
-    var card = mileageCard();
-    if (card) card.classList.toggle("is-error", !!on);
-  }
-  function isOverLimit(input) {
-    var raw = String((input && input.value) || "").trim();
-    if (!raw) return false;
-    return parseAmt(raw) > availableMileage() + 0.0001;
-  }
-
-  document.addEventListener("click", function (event) {
-    var box = event.target && event.target.closest && event.target.closest(".checkout-mileage-card .od_sale_price");
-    if (!box) return;
-    var input = box.querySelector("input[name='emoney_view']") || viewInput();
-    if (input) input.focus();
-  });
-  document.addEventListener("focusin", function (event) {
-    var input = event.target;
-    if (!input || input.name !== "emoney_view") return;
-    savedValue = input.value;
-    input.value = "";
-    setMileageError(false);
-    window.setTimeout(function () {
-      if (document.activeElement === input && String(input.value || "").trim() === String(savedValue || "").trim()) {
-        input.value = "";
-      }
-    }, 0);
-  });
-  document.addEventListener("focusout", function (event) {
-    var input = event.target;
-    if (!input || input.name !== "emoney_view") return;
-    if (!String(input.value || "").trim()) {
-      input.value = savedValue;
-      setMileageError(false);
-      return;
-    }
-    setMileageError(isOverLimit(input));
-  });
-  document.addEventListener("input", function (event) {
-    var input = event.target;
-    if (!input || input.name !== "emoney_view") return;
-    if (!String(input.value || "").trim()) {
-      setMileageError(false);
-      return;
-    }
-    setMileageError(isOverLimit(input));
-  });
-})();
-</script>
-<script>
-(function () {
-  function bindBankSelect() {
-    var wrap = document.getElementById("checkoutBankSelect");
-    if (!wrap || wrap._tpBankBound) return;
-    var trigger = wrap.querySelector(".checkout-native-select-trigger");
-    var menu = wrap.querySelector(".checkout-native-select-menu");
-    var valueEl = wrap.querySelector(".checkout-native-select-value");
-    var select = wrap.querySelector("select[name='bank']");
-    if (!trigger || !menu || !select) return;
-    wrap._tpBankBound = true;
-
-    function setOpen(open) {
-      wrap.classList.toggle("is-open", !!open);
-      trigger.setAttribute("aria-expanded", open ? "true" : "false");
-      menu.style.setProperty("display", open ? "block" : "none", "important");
-    }
-    wrap._tpSetOpen = setOpen;
-
-    function buildMenu() {
-      menu.innerHTML = "";
-      Array.prototype.forEach.call(select.options, function (opt) {
-        var item = document.createElement("li");
-        item.setAttribute("role", "option");
-        item.setAttribute("data-value", opt.value);
-        item.textContent = String(opt.text || "").replace(/\s+/g, " ").trim();
-        if (String(opt.value) === String(select.value)) item.className = "is-selected";
-        menu.appendChild(item);
-      });
-      var selected = select.options[select.selectedIndex];
-      if (valueEl) {
-        valueEl.textContent = selected
-          ? String(selected.text || "").replace(/\s+/g, " ").trim()
-          : "Select Bank";
-      }
-    }
-
-    buildMenu();
-    trigger.addEventListener("click", function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      setOpen(!wrap.classList.contains("is-open"));
-    });
-    menu.addEventListener("click", function (event) {
-      var item = event.target && event.target.closest && event.target.closest("li");
-      if (!item || !menu.contains(item)) return;
-      event.preventDefault();
-      event.stopPropagation();
-      select.value = item.getAttribute("data-value") || "";
-      if (window.jQuery) window.jQuery(select).trigger("change");
-      else select.dispatchEvent(new Event("change", { bubbles: true }));
-      if (valueEl) valueEl.textContent = String(item.textContent || "").replace(/\s+/g, " ").trim();
-      menu.querySelectorAll("li").forEach(function (li) {
-        li.classList.toggle("is-selected", li === item);
-      });
-      setOpen(false);
-    });
-    document.addEventListener("click", function (event) {
-      if (!wrap.classList.contains("is-open")) return;
-      if (wrap.contains(event.target)) return;
-      setOpen(false);
-    });
-  }
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bindBankSelect);
-  } else {
-    bindBankSelect();
-  }
-})();
 </script>
 <!-- JS lives at the app path, not under /data/skin/{skin}/ — that URL 404s.
      Every other page in this skin loads its script this way. -->

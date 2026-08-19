@@ -163,6 +163,72 @@
 		delete pendingByGoodsSeq[goodsSeq];
 	}
 
+
+	/*
+	  get_currency_price() wraps the amount with the shop's currency text, so
+	  a card renders as  "US " + <span class="num">19.87</span> + "USD".
+	  Neither piece is reachable from the design_list template (the function
+	  builds them) nor from CSS (they are text nodes), so normalise here — this
+	  script is loaded by every design_list style, which makes it the one place
+	  that covers Best, Time Deal, category and search grids alike.
+	*/
+	function normalizeCardPrice(el) {
+		// Rebuild rather than strip. The shop's currency text is not always a
+		// plain text node — it can be wrapped in its own element — so removing
+		// text nodes alone left the original "US" in place and produced
+		// "US US$389.70". The amount always lives in .num, so keep that and
+		// rewrite everything around it.
+		// Guard against the observer below: this function edits the DOM, and
+		// those edits would re-trigger the observer that called it. Marking the
+		// element first means each price is rewritten exactly once.
+		if (el.getAttribute("data-tp-price") === "1") return;
+
+		var num = el.querySelector(".num");
+		if (!num) return;
+
+		var amount = String(num.textContent || "").replace(/[^0-9.,]/g, "").trim();
+		if (!amount) return;
+
+		var rebuilt = document.createElement("span");
+		rebuilt.className = "num";
+		rebuilt.textContent = amount;
+
+		el.setAttribute("data-tp-price", "1");
+		while (el.firstChild) el.removeChild(el.firstChild);
+		el.appendChild(document.createTextNode("US$"));
+		el.appendChild(rebuilt);
+	}
+
+	function normalizeListingPrices(root) {
+		var scope = root && root.querySelectorAll ? root : document;
+		Array.prototype.forEach.call(
+			scope.querySelectorAll(
+				'.listing-card .sale_price:not([data-tp-price]), .listing-card .consumer_price:not([data-tp-price])'
+			),
+			normalizeCardPrice
+		);
+	}
+
+	function watchListingPrices() {
+		normalizeListingPrices(document);
+		if (!window.MutationObserver) return;
+		// Cards arrive from Firstmall's own ajax (paging, category tabs,
+		// infinite scroll), so re-run whenever nodes are added.
+		var pending = null;
+		new MutationObserver(function () {
+			window.clearTimeout(pending);
+			pending = window.setTimeout(function () {
+				normalizeListingPrices(document);
+			}, 60);
+		}).observe(document.documentElement, { childList: true, subtree: true });
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", watchListingPrices);
+	} else {
+		watchListingPrices();
+	}
+
 	document.addEventListener("click", handleClick, true);
 
 	if (window.jQuery) {

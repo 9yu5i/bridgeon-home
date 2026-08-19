@@ -1,0 +1,195 @@
+/* TrendyPicker header
+   Loaded from layout_header/standard.html.
+
+   Covers the two things the live header was missing against the prototype:
+   the always-visible search field and the cart count badge. The promo bar,
+   icons, search panel, category mega menu and shipping-country selector
+   already match and stay with Firstmall's common.css / user.css.
+
+   Values come from the prototype's styles/header-navigation.css. */
+
+/* ===== Dark header ======================================================
+   Prototype tokens: promo bar #101010, header body #202020, category bar
+   #1f1f1f with a hairline top border.
+
+   The stock header assets are drawn for a light background, so the markup
+   now uses the prototype's white icons and a text logo — there is no white
+   version of Bridge_on_logo.png. Swap the logo back to an <img> once one
+   exists; the .tp-logo rules below are all that would need removing. */
+/* The colour goes on #layout_header, which spans the viewport. The rows
+   inside it are the centred max-width containers, so painting those left
+   white margins down both sides — they are cleared instead. */
+.layout_header {
+  background: #202020;
+}
+
+.layout_header .top_header_banner {
+  background: #101010;
+}
+
+.layout_header .util_wrap,
+.layout_header .top_bar,
+.layout_header .resp_wrap,
+.layout_header .nav_wrap,
+.layout_header .nav_category_area,
+.layout_header .designCategoryNavigation {
+  background: transparent;
+}
+
+.layout_header .nav_wrap {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Category links go white; PROMOTION / TIME DEAL / MAGAZINE / MEMBERSHIP
+   keep the skin's accent classes, as the prototype also colours those. */
+.layout_header .nav_wrap .respCategoryList > li > a:not(.f_purple):not(.f_red),
+.layout_header .nav_wrap .respCategoryList > li > a:not(.f_purple):not(.f_red) em {
+  color: #fff;
+}
+
+/* Logo — prototype styling: name in white, second half in brand purple. */
+.layout_header .tp-logo,
+.layout_header .tp-logo a {
+  color: #fff;
+  font-size: 31px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.layout_header .tp-logo a span {
+  color: #9f61ff;
+}
+
+/* ===== Header row =======================================================
+   Prototype puts the logo, the search field and the icons on one line:
+   logo left, search filling the middle, icons right.
+
+   The stock skin centres the logo in .logo_wrap and keeps the icons in
+   .util_wrap, the row above, where they already overflow downwards. Rather
+   than move any markup, .logo_wrap becomes the row and the icon list is
+   nudged down into it — .util_wrap_menu2 stays in its own flow, so its
+   horizontal position is untouched and only its vertical offset changes.
+
+   Desktop only. Below 1024px Firstmall switches to its own responsive
+   header (hamburger + .resp_top_* controls), which is left alone. */
+.layout_header .tp-header-search {
+  display: none;
+}
+
+@media only screen and (min-width: 1024px) {
+  /* Prototype's .header-main is a 210px / 1fr / 210px grid with a 34px gap,
+     which puts the search at roughly 55% of the viewport. Same proportions
+     here, with the right column as padding since the icons live in the row
+     above and are pulled down rather than moved. */
+  .layout_header .logo_wrap {
+    display: flex;
+    align-items: center;
+    gap: 34px;
+    padding-right: 200px;
+  }
+
+  .layout_header .logo_wrap .logo_area {
+    flex: 0 0 210px;
+    margin: 0;
+  }
+
+  .layout_header .util_wrap_menu2 {
+    /* Relative, not absolute: the icons keep the exact horizontal position
+       the stock header gives them, and nothing reflows. */
+    position: relative;
+    top: 10px;
+  }
+
+  /* The magnifier is redundant next to the search field. Hidden rather than
+     removed from the markup: #btnSearchV2 inside it is what the fixed
+     bottom menu clicks to open the search overlay, and that is still the
+     control below 1024px, where the search field is not shown. */
+  .layout_header .util_wrap_menu2 .top_my_search {
+    display: none;
+  }
+
+  .layout_header .logo_wrap .tp-header-search {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px;
+    align-items: center;
+    flex: 1 1 auto;
+    width: auto;
+    height: 42px;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 999px;
+    box-shadow: 0 0 0 1px rgba(125, 63, 228, 0.18);
+  }
+
+  .layout_header .tp-header-search input[type="text"] {
+    -webkit-appearance: none;
+    appearance: none;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+    color: #333;
+    background: #fff;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .layout_header .tp-header-search button {
+    grid-column: 2;
+    justify-self: end;
+    align-self: center;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    margin: 4px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    /* Icon as a background, not an <img>: the server output was dropping
+       img tags placed here. */
+    background: #7f56d9 url("../../images/icon/tp-header-search.png") no-repeat
+      center / 20px 20px;
+    cursor: pointer;
+  }
+}
+
+/* ===== Cart count badge =================================================
+   The markup already renders {? push_count_cart} into .cart_cnt2, so the
+   badge shows only when the cart holds something. The stock rules sit it
+   beside the bag with negative margins; the prototype pins it to the
+   icon's top-right corner.
+
+   .resp_top_cart is deliberately left alone — it is display:none and
+   position:absolute on desktop, and overriding either breaks the mobile
+   header. Being absolute already makes it a positioning context, so the
+   badge inside it needs nothing extra. */
+/* position only — giving the anchor a display value changes the icon row's
+   height and drags the whole cluster out of line with the logo. */
+.layout_header .util_wrap_menu2 .top_my_cart > a {
+  position: relative;
+}
+
+.layout_header .util_wrap_menu2 .top_my_cart .cart_cnt2,
+.layout_header .resp_top_cart .cart_cnt2 {
+  position: absolute;
+  top: 5px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  width: auto;
+  height: 16px;
+  margin: 0;
+  padding: 0 4px;
+  border-radius: 999px;
+  color: #fff;
+  background: #9f61ff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}

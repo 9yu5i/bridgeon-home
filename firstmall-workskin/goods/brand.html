@@ -375,174 +375,242 @@ $(function () {
 		});
 	});
 
-	/* Category tabs = brand's 2nd-level categories from Firstmall filter */
-	var tabsRoot = document.querySelector("[data-brand-category-tabs]");
-	var stashRoot = document.querySelector("[data-brand-category-stash]");
-	var activeCategory = "all";
-	var drilledOnce = false;
-	var building = false;
+	/* Category tabs = the brand's 2nd-level categories.
 
-	function readFilterCategoryLinks() {
-		return Array.prototype.slice.call(
-			document.querySelectorAll(
-				".filter_category_section ul.filter_detail_item a[data-value]"
-			)
-		);
+	   Firstmall's /goods/brand route exposes no category list below the
+	   brand's top level and ignores a category= filter outright (verified
+	   live: the count stays at the brand total either way), so both the tabs
+	   and their filtering are built here.
+
+	   Every card carries its own category name in .goods_category_area, and
+	   the header menu carries the whole category tree. A 12-digit code is a
+	   3rd-level category whose first 8 digits are its 2nd-level parent;
+	   K-POP and K-Traditional stop at two levels, so their products sit on
+	   an 8-digit code that is already the 2nd level.
+
+	   The grid stays on the server's 40-per-page listing. The counts and the
+	   filtering come from a separate full-catalogue request, so a tab knows
+	   about every product in the brand, not just the ones on this page. */
+	var tabsRoot = document.querySelector("[data-brand-category-tabs]");
+	var productGrid = document.getElementById("searchedItemDisplay");
+	var activeCategory = "all";
+	var categoryIndex = null;
+	var brandCatalogue = null;
+	var basePageMarkup = null;
+	var selfRendering = false;
+	var catalogueRequested = false;
+
+	function normalizeName(value) {
+		return String(value || "").replace(/\s+/g, " ").trim().toLowerCase();
 	}
 
-	function syncBrandCount() {
-		var raw = ($("#filterResultCount").text() || "").replace(/[^0-9]/g, "");
-		if (!raw) return;
-		var formatted = Number(raw).toLocaleString("en-US");
+	function buildCategoryIndex() {
+		if (categoryIndex) return categoryIndex;
+		var codeByName = {};
+		var nameByCode = {};
+		Array.prototype.forEach.call(
+			document.querySelectorAll('#layout_header a[href*="code="]'),
+			function (link) {
+				var match = (link.getAttribute("href") || "").match(/code=([0-9]+)/);
+				if (!match) return;
+				var code = match[1];
+				var label = String(link.textContent || "").replace(/\s+/g, " ").trim();
+				if (!label) return;
+				var key = normalizeName(label);
+				/* Deeper code wins when a name sits at both levels; otherwise
+				   first one wins, as the menu repeats across breakpoints. */
+				if (code.length === 12) {
+					if (!codeByName[key] || codeByName[key].length < 12) codeByName[key] = code;
+				} else if (code.length === 8) {
+					if (!codeByName[key]) codeByName[key] = code;
+					if (!nameByCode[code]) nameByCode[code] = label;
+				}
+			}
+		);
+		categoryIndex = { codeByName: codeByName, nameByCode: nameByCode };
+		return categoryIndex;
+	}
+
+	function cardSecondLevel(card) {
+		var index = buildCategoryIndex();
+		var node = card.querySelector(".goods_category_area");
+		var code = index.codeByName[normalizeName(node && node.textContent)];
+		if (!code || code.length < 8) return null;
+		var parent = code.slice(0, 8);
+		return { id: parent, label: index.nameByCode[parent] || parent };
+	}
+
+	function currentSearchParams() {
+		if (typeof window.searchParams !== "function") return null;
+		try {
+			return String(window.searchParams() || "");
+		} catch (_error) {
+			return null;
+		}
+	}
+
+	/* One request for the brand's whole catalogue, used only as the data
+	   behind the tabs. The visible grid is left on its own paging. */
+	function loadBrandCatalogue(onReady) {
+		if (brandCatalogue) {
+			onReady();
+			return;
+		}
+		if (catalogueRequested) return;
+		var params = currentSearchParams();
+		if (!params) return;
+		catalogueRequested = true;
+
+		var query = params
+			.replace(/(^|&)per=\d+/, "$1per=200")
+			.replace(/(^|&)page=\d+/, "$1page=1");
+
+		$.ajax({
+			type: "get",
+			url: "/goods/search_list",
+			data: query,
+			dataType: "html",
+			cache: false,
+			success: function (markup) {
+				var parsed = new DOMParser().parseFromString(markup, "text/html");
+				brandCatalogue = Array.prototype.slice
+					.call(parsed.querySelectorAll(".categories_listing_style"))
+					.map(function (card) {
+						return { card: card, group: cardSecondLevel(card) };
+					});
+				onReady();
+			},
+			error: function () {
+				/* Leave the tabs hidden rather than showing partial counts. */
+				catalogueRequested = false;
+			}
+		});
+	}
+
+	function groupCatalogue() {
+		var counts = {};
+		var labels = {};
+		(brandCatalogue || []).forEach(function (entry) {
+			if (!entry.group) return;
+			counts[entry.group.id] = (counts[entry.group.id] || 0) + 1;
+			labels[entry.group.id] = entry.group.label;
+		});
+		return Object.keys(counts)
+			.sort(function (a, b) {
+				return labels[a].localeCompare(labels[b]);
+			})
+			.map(function (id) {
+				return { id: id, label: labels[id], count: counts[id] };
+			});
+	}
+
+	function showCount(value) {
+		var formatted = Number(value).toLocaleString("en-US");
 		var countNode = document.querySelector("[data-brand-count]");
 		var countMobile = document.querySelector("[data-brand-count-mobile]");
 		if (countNode) countNode.textContent = "(" + formatted + ")";
 		if (countMobile) countMobile.textContent = formatted + " Items";
 	}
 
-	function stashSecondLevelLinks(links) {
-		if (!stashRoot) return;
-		stashRoot.innerHTML = "";
-		links.forEach(function (link) {
-			var clone = document.importNode(link, true);
-			clone.setAttribute("href", "javascript:void(0)");
-			stashRoot.appendChild(clone);
-		});
-	}
+	function renderCategory(id) {
+		if (!productGrid) return;
+		activeCategory = id;
+		selfRendering = true;
 
-	function getStashedLinks() {
-		if (!stashRoot) return [];
-		return Array.prototype.slice.call(
-			stashRoot.querySelectorAll("a[data-value]")
-		);
-	}
-
-	function triggerCategoryLink(link, options) {
-		if (!link) return;
-		var opts = options || {};
-		if (opts.keepScroll === true) guardScrollBriefly();
-		if (typeof window.setFilterCategory === "function") {
-			window.setFilterCategory(link, false);
+		if (id === "all") {
+			if (basePageMarkup !== null) productGrid.innerHTML = basePageMarkup;
+			showCount((brandCatalogue || []).length);
 		} else {
-			link.click();
+			var matches = (brandCatalogue || []).filter(function (entry) {
+				return entry.group && entry.group.id === id;
+			});
+			/* The grid layout sits on the <ul>, not on #searchedItemDisplay,
+			   so the list element has to survive the swap — dropping it
+			   leaves the cards stacked one per row. */
+			var source = productGrid.querySelector("ul");
+			var list = source ? source.cloneNode(false) : document.createElement("ul");
+			matches.forEach(function (entry) {
+				list.appendChild(document.importNode(entry.card, true));
+			});
+			productGrid.innerHTML = "";
+			productGrid.appendChild(list);
+			showCount(matches.length);
 		}
+
+		/* The observer fires asynchronously, so clear the guard after it. */
+		window.setTimeout(function () {
+			selfRendering = false;
+		}, 120);
 	}
 
-	function renderCategoryTabs() {
+	function renderCategoryTabs(groups) {
 		if (!tabsRoot) return;
-		var links = getStashedLinks();
 		tabsRoot.innerHTML = "";
-
-		if (!links.length) {
+		if (!groups.length) {
 			tabsRoot.hidden = true;
 			return;
 		}
-
 		tabsRoot.hidden = false;
 
-		function addTab(id, label) {
+		function addTab(id, label, count) {
 			var button = document.createElement("button");
 			button.type = "button";
 			button.setAttribute("role", "tab");
 			button.setAttribute("data-brand-cat", id);
-			button.textContent = label;
+			button.textContent = label + " (" + count + ")";
 			var isActive = activeCategory === id;
 			button.className = isActive ? "is-active" : "";
 			button.setAttribute("aria-selected", isActive ? "true" : "false");
 			button.addEventListener("click", function (event) {
 				event.preventDefault();
-				event.stopPropagation();
-				activateCategory(id);
+				if (activeCategory === id) return;
+				renderCategory(id);
+				renderCategoryTabs(groups);
 			});
 			tabsRoot.appendChild(button);
 		}
 
-		addTab("all", "All");
-		links.forEach(function (link) {
-			var nameNode = link.querySelector(".name");
-			var label = ((nameNode && nameNode.textContent) || link.textContent || "")
-				.replace(/\s+/g, " ")
-				.trim();
-			var id = link.getAttribute("data-value") || "";
-			if (!label || !id) return;
-			addTab(id, label);
+		addTab("all", "All", (brandCatalogue || []).length);
+		groups.forEach(function (group) {
+			addTab(group.id, group.label, group.count);
 		});
 	}
 
-	function activateCategory(id) {
-		activeCategory = id;
-		renderCategoryTabs();
-
-		if (id === "all") {
-			var allLink = document.querySelector(
-				'.filter_category_section a.pc_all_cate, .filter_category_section a[data-searchname="all"]'
-			);
-			triggerCategoryLink(allLink, { keepScroll: true });
-			return;
-		}
-
-		var live = document.querySelector(
-			'.filter_category_section ul.filter_detail_item a[data-value="' + id + '"]'
-		);
-		var stashed = stashRoot
-			? stashRoot.querySelector('a[data-value="' + id + '"]')
-			: null;
-		triggerCategoryLink(live || stashed, { keepScroll: true });
+	function buildCategoryTabs() {
+		if (!tabsRoot || !productGrid) return;
+		if (!productGrid.querySelector(".categories_listing_style")) return;
+		loadBrandCatalogue(function () {
+			renderCategoryTabs(groupCatalogue());
+		});
 	}
 
-	function captureSecondLevelAndRender() {
-		var links = readFilterCategoryLinks();
-		if (!links.length) {
-			if (tabsRoot) tabsRoot.hidden = true;
-			return;
+	/* The grid is replaced over AJAX on every sort and page change. Those
+	   re-renders are the "All" listing again, so remember the new markup and
+	   drop back to All; our own re-renders are skipped via selfRendering. */
+	function watchProductGrid() {
+		if (!productGrid) return;
+
+		function onGridSettled() {
+			if (selfRendering) return;
+			if (!productGrid.querySelector(".categories_listing_style")) return;
+			basePageMarkup = productGrid.innerHTML;
+			activeCategory = "all";
+			buildCategoryTabs();
 		}
 
-		/*
-		  A single top-level category (e.g. BEAUTY) means the 2nd-level
-		  categories aren't in the DOM yet — Firstmall only renders them
-		  after that category is selected. Auto-click it once via
-		  Firstmall's native setFilterCategory() to reveal the 2nd level.
-		  Confirmed live: this AJAX call alone does not corrupt the page —
-		  the earlier scroll/truncation bug came from a fresh full-page
-		  request landing directly on the complex filter querystring
-		  (refresh), which ensureBrandCanonicalUrl() now prevents by
-		  redirecting back to a plain ?code=... URL on every load.
-		*/
-		if (!drilledOnce && links.length === 1) {
-			drilledOnce = true;
-			building = true;
-			triggerCategoryLink(links[0], { keepScroll: true });
-			return;
-		}
+		onGridSettled();
 
-		stashSecondLevelLinks(links);
-		building = false;
-		renderCategoryTabs();
-		syncBrandCount();
+		if (!window.MutationObserver) return;
+		var pending = null;
+		new MutationObserver(function () {
+			window.clearTimeout(pending);
+			pending = window.setTimeout(onGridSettled, 80);
+		}).observe(productGrid, { childList: true });
 	}
 
-	function bootCategoryTabs() {
-		captureSecondLevelAndRender();
-	}
-
-	/* Firstmall rebuilds filter HTML over AJAX after setFilterCategory */
-	$(document).on("ajaxComplete", function (_event, _xhr, settings) {
-		var url = (settings && settings.url) || "";
-		if (url && /goods|category|search|filter/i.test(String(url)) === false && !building) {
-			syncBrandCount();
-			return;
-		}
-		window.setTimeout(function () {
-			if (building || (drilledOnce && getStashedLinks().length === 0)) {
-				captureSecondLevelAndRender();
-			} else {
-				syncBrandCount();
-			}
-		}, 80);
-	});
-
-	window.setTimeout(bootCategoryTabs, 400);
-window.setTimeout(bootCategoryTabs, 1200);
+	watchProductGrid();
+	/* The first grid can land after this script runs. */
+	window.setTimeout(buildCategoryTabs, 1200);
 });
 </script>
 <script src="/app/javascript/js/trendypicker-listing-cards.js"></script>

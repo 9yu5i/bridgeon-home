@@ -1,0 +1,864 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 검색필터, 추천상품, 상품정렬 @@
+- 파일위치 : [스킨폴더]/goods/_search_form_light.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/redesign/search-filter.css" />
+
+<!--{=assignBrandBestIcon()}-->
+<!--{ ? uri_string()!='main/index' }-->
+<form name="goodsSearchForm" id="goodsSearchForm" method="get">
+<input type="hidden" name="osearchtext" value="{goodsSearchText}" />
+<input type="hidden" name="ship_grp_seq" value="{ship_grp_seq}" />
+<input type="hidden" name="event" value="{event}" />
+<input type="hidden" name="gift" value="{gift}" />
+<input type="hidden" name="page" value="{params.page}" />
+<input type="hidden" name="searchMode" value="{=end(explode('/',uri_string()))}" />
+<input type="hidden" name="timedeal" value="{params.timedeal}" />
+<!--{ ? params.searchLimit }-->
+<input type="hidden" name="searchLimit" value="{params.searchLimit}" />
+<!--{ / }-->
+<div id="filterResultCount">{totcount}</div>
+
+<div class="listing-filter-backdrop" data-listing-filter-close></div>
+
+<div class="listing-layout" data-ezmark="undo">
+
+	<!-- ===================== 필터 사이드바 ===================== -->
+	<aside class="listing-filters" id="listing-filters" aria-label="상품 필터">
+
+		<button type="button" class="listing-filter-close mobile-only" data-listing-filter-close aria-label="Close">&times;</button>
+
+		<div class="listing-filters-head">
+			<h2>FILTER</h2>
+			<button type="button" class="listing-clear-all" data-listing-clear-filters onclick="resetParams();">Clear all</button>
+		</div>
+
+		<div id="searchFilterSelected" class="search_filter_selected dn" style="display:none;">
+			<ul class="selected_item_area"></ul>
+		</div>
+
+		<div class="listing-filters-body" id="searchFilter">
+
+			<!--{ ? aFilterConfig.category }-->
+			<details class="listing-filter-group filter_section filter_category_section" open>
+				<summary class="menuThebogi">Category</summary>
+					<div class="message">카테고리가 없습니다.</div>
+					<div class="category_all_nav hide">
+						<!--{ ? end(explode('/',uri_string())) != 'catalog' }-->
+						<a href="javascript:void(0)" class="mobile_pre_cate" data-searchname="pre" onclick="setFilterCategory(this, false);">상위 카테고리</a>
+						<a href="javascript:void(0)" class="pc_all_cate" data-searchname="all" onclick="setFilterCategory(this, false);"><span class="name">전체</span></a>
+						<!--{ / }-->
+						<!--{ ? categoryData.category_code }-->
+						<a href="javascript:void(0)" class="mobile_pre_cate" data-searchname="pre" onclick="setFilterCategory(this, false);">상위 카테고리</a>
+						<a href="javascript:void(0)" data-searchname="navi_category_{categoryData.category_code}" data-value="c{categoryData.category_code}" onclick="setFilterCategory(this, false);"><span class="name">{categoryData.title}</span></a>
+						<!--{ / }-->
+						<!--{ ? filterCategoryList }-->
+						<span class="count_category">({=count(filterCategoryList)}개 카테고리)</span>
+						<!--{ / }-->
+					</div>
+					<ul class="listing-filter-list">
+						<!--{ @ filterCategoryList }-->
+							<!--{ ? .category_code }-->
+								<!--{ ? aSelectedSubcategory[.category_code] }-->
+						<li>
+							<label data-searchname="subcategory_{.category_code}" data-value="c{.category_code}" class="active">
+								<input type="checkbox" onclick="setFilterSubcategory(this, false);" checked />
+								<span class="name">{.category_name}</span>
+								<span class="desc">({.cnt})</span>
+							</label>
+						</li>
+								<!--{ : }-->
+						<li>
+							<label data-searchname="subcategory_{.category_code}" data-value="c{.category_code}">
+								<input type="checkbox" onclick="setFilterSubcategory(this, false);" />
+								<span class="name">{.category_name}</span>
+								<span class="desc">({.cnt})</span>
+							</label>
+						</li>
+								<!--{ / }-->
+							<!--{ / }-->
+						<!--{ / }-->
+					</ul>
+					<button type="button" class="listing-filter-more">Show more</button>
+			</details>
+			<!--{ / }-->
+
+			<!-- Category 바로 다음: Skin type / Skin concern 등 우선 노출 태그 그룹 -->
+			<!--{ ? aFilterConfig.tag && filterTagItemsPriority[0] }-->
+			<!--{ @ filterTagItemsPriority }-->
+				<!--{ ? .is_section_start }-->
+				<details class="listing-filter-group filter_section filter_tag_section" open>
+					<summary class="menuThebogi">{.group_label}</summary>
+						<div class="message">No tags.</div>
+						<ul class="listing-filter-list">
+				<!--{ / }-->
+							<!--{ ? .tag_name && .tag_name != tag }-->
+							<li>
+								<!--{ ? filterTagData[.tag_full] }-->
+								<label data-searchname="tag_{.tag_full}" data-cntindex="{.cnt}" data-value="{.tag_full}" class="active">
+									<input type="checkbox" onclick="setFilterTag(this, false);" checked/>
+								<!--{ : }-->
+								<label data-searchname="tag_{.tag_full}" data-cntindex="{.cnt}" data-value="{.tag_full}">
+									<input type="checkbox" onclick="setFilterTag(this, false);" />
+								<!--{ / }-->
+									<span class="name">{.tag_name}</span>
+									<span class="desc">({.cnt})</span>
+								</label>
+							</li>
+							<!--{ / }-->
+				<!--{ ? .is_section_end }-->
+						</ul>
+						<button type="button" class="listing-filter-more">Show more</button>
+				</details>
+				<!--{ / }-->
+			<!--{ / }-->
+			<!--{ / }-->
+
+			<!--{ ? aFilterConfig.location }-->
+			<details class="listing-filter-group filter_section filter_location_section" open>
+				<summary class="menuThebogi">Location</summary>
+					<div class="message">지역이 없습니다.</div>
+					<div class="location_all_nav">
+						<!--{ ? end(explode('/',uri_string())) != 'location' }-->
+						<a href="javascript:void(0)" class="mobile_pre_location" data-searchname="pre" onclick="setFilterLocation(this, false);">상위 지역</a>
+						<a href="javascript:void(0)" class="pc_all_location" data-searchname="all" onclick="setFilterLocation(this, false);"><span class="name">전체</span></a>
+						<!--{ / }-->
+						<!--{ ? locationData.location_code }-->
+						<a href="javascript:void(0)" class="mobile_pre_location" data-searchname="pre" onclick="setFilterLocation(this, false);">상위 지역</a>
+						<a href="javascript:void(0)" data-searchname="navi_location_{locationData.location_code}" data-value="l{locationData.location_code}" onclick="setFilterLocation(this, false);"><span class="name">{locationData.title}</span></a>
+						<span class="count_location"></span>
+						<!--{ / }-->
+						<!--{ ? filterLocationList }-->
+						<span class="count_location">({=count(filterLocationList)}개 지역)</span>
+						<!--{ / }-->
+					</div>
+					<ul class="listing-filter-list">
+						<!--{ @ filterLocationList }-->
+							<!--{ ? .location_code }-->
+						<li>
+							<label data-searchname="location_{.location_code}" data-value="l{.location_code}" onclick="setFilterLocation(this, false);">
+								<span class="name">{.location_name}</span>
+								<span class="desc">{.cnt}</span>
+							</label>
+						</li>
+							<!--{ / }-->
+						<!--{ / }-->
+					</ul>
+					<button type="button" class="listing-filter-more">Show more</button>
+			</details>
+			<!--{ / }-->
+
+			<!--{ ? aFilterConfig.brand }-->
+			<details class="listing-filter-group filter_section filter_brand_section" open>
+				<summary class="menuThebogi">Brand</summary>
+					<div class="message">브랜드가 없습니다.</div>
+
+					<label class="listing-filter-search">
+						<span class="sr-only">브랜드 검색</span>
+						<input type="search" placeholder="Search Brand" oninput="filterBrandListBySearch(this)" />
+					</label>
+
+					<div class="filter_section_sorting dn">
+						<label class="active"><input type="radio" name="sorting-brand" value="cntindex" checked />상품수</label>
+						<label><input type="radio" name="sorting-brand" value="nameindex" />가나다</label>
+					</div>
+					<ul class="listing-filter-list brandList">
+						<!--{ @ filterBrandList }-->
+							<!--{ ? .brand_code }-->
+						<li>
+								<!--{ ? .brand_code && aBrandInfo[.brand_code].category_code }-->
+							<label data-searchname="brand_{.brand_code}" data-cntindex="{.index_}" data-value="b{.brand_code}" class="active">
+								<input type="checkbox" onclick="setFilterBrand(this, false);" checked />
+								<!--{ : }-->
+							<label data-searchname="brand_{.brand_code}" data-cntindex="{.index_}" data-value="b{.brand_code}">
+								<input type="checkbox" onclick="setFilterBrand(this, false);" />
+								<!--{ / }-->
+									<span class="name">{.brand_name}</span>
+									<span class="desc">({.cnt})</span>
+									<!--{ ? .best == 'Y' && brand_best_icon }-->
+								<img class="icon" src="{brand_best_icon}" alt="best" onerror="this.src='/data/icon/goods/error/noimage_list.gif';" />
+									<!--{ / }-->
+							</label>
+						</li>
+							<!--{ / }-->
+						<!--{ / }-->
+					</ul>
+					<button type="button" class="listing-filter-more">Show more</button>
+			</details>
+			<!--{ / }-->
+
+			<!--{ ? aFilterConfig.seller && filterProviderList }-->
+			<details class="listing-filter-group filter_section filter_seller_section" open>
+				<summary class="menuThebogi">Seller</summary>
+					<div class="message">판매자가 없습니다.</div>
+					<div class="filter_section_sorting dn">
+						<label class="active"><input type="radio" name="sorting-seller" value="cntindex" checked />상품수</label>
+						<label><input type="radio" name="sorting-seller" value="nameindex" />가나다</label>
+					</div>
+					<ul class="listing-filter-list sellerList">
+						<!--{ @ filterProviderList }-->
+							<!--{ ? .provider_seq }-->
+						<li>
+								<!--{ ? params.provider == .provider_seq }-->
+							<label data-searchname="seller_{.provider_seq}" data-cntindex="{.index_}" data-value="{.provider_seq}" class="active">
+								<input type="radio" onclick="setFilterProvider(this, false);" checked />{.provider_name}
+							</label>
+								<!--{ : }-->
+							<label data-searchname="seller_{.provider_seq}" data-cntindex="{.index_}" data-value="{.provider_seq}">
+								<input type="radio" onclick="setFilterProvider(this, false);" />{.provider_name}
+							</label>
+								<!--{ / }-->
+						</li>
+							<!--{ / }-->
+						<!--{ / }-->
+					</ul>
+					<button type="button" class="listing-filter-more">Show more</button>
+			</details>
+			<!--{ / }-->
+
+			<!--{ ? aFilterConfig.price }-->
+			<details class="listing-filter-group filter_section filter_detail_section" open>
+				<summary class="menuThebogi">Price Range</summary>
+					<div class="listing-price-range price_area" data-price-max="{=filterMaxPrice}" data-price-min="{=params.min_price}" data-price-max-selected="{=params.max_price}">
+						<div class="listing-price-range-slider">
+							<span class="listing-price-range-value listing-price-range-value--min">US$0</span>
+							<span class="listing-price-range-value listing-price-range-value--max">US${=number_format(filterMaxPrice)}+</span>
+							<div class="listing-price-range-rail">
+								<div class="listing-price-range-fill"></div>
+							</div>
+							<!--{ ? params.min_price }-->
+							<input type="range" class="listing-price-range-input listing-price-range-input--min" min="0" max="{=filterMaxPrice}" step="1" value="{params.min_price}" aria-label="최소 가격" />
+							<!--{ : }-->
+							<input type="range" class="listing-price-range-input listing-price-range-input--min" min="0" max="{=filterMaxPrice}" step="1" value="0" aria-label="최소 가격" />
+							<!--{ / }-->
+							<!--{ ? params.max_price }-->
+							<input type="range" class="listing-price-range-input listing-price-range-input--max" min="0" max="{=filterMaxPrice}" step="1" value="{params.max_price}" aria-label="최대 가격" />
+							<!--{ : }-->
+							<input type="range" class="listing-price-range-input listing-price-range-input--max" min="0" max="{=filterMaxPrice}" step="1" value="{=filterMaxPrice}" aria-label="최대 가격" />
+							<!--{ / }-->
+						</div>
+						<div class="listing-price-range-labels">
+							<span>US$0</span>
+							<span>US${=number_format(filterMaxPrice)}+</span>
+						</div>
+						<!-- 슬라이더 값이 실제 검색 파라미터로 쓰이는 필드. priceApply()가 그대로 읽습니다. -->
+						<input class="input_sfilter listing-price-input-hidden dn" type="text" data-searchname="min_price" value="{params.min_price}" />
+						<input class="input_sfilter listing-price-input-hidden dn" type="text" data-searchname="max_price" value="{params.max_price}" />
+						<button type="button" class="btn_sfilter" id="priceApply">Apply</button>
+					</div>
+			</details>
+			<!--{ / }-->
+
+			<!--{ ? aFilterConfig.rating }-->
+			<details class="listing-filter-group filter_section filter_rating_section" open>
+				<summary class="menuThebogi">Ratings</summary>
+					<ul class="listing-filter-list listing-filter-ratings">
+						<li>
+							<!--{ ? in_array('4', params.rating) }-->
+							<label data-searchname="rating_4" data-value="4" class="active">
+								<input type="checkbox" onclick="setFilterRating(this, false);" checked />
+							<!--{ : }-->
+							<label data-searchname="rating_4" data-value="4">
+								<input type="checkbox" onclick="setFilterRating(this, false);" />
+							<!--{ / }-->
+								<span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4+
+							</label>
+						</li>
+						<li>
+							<!--{ ? in_array('3', params.rating) }-->
+							<label data-searchname="rating_3" data-value="3" class="active">
+								<input type="checkbox" onclick="setFilterRating(this, false);" checked />
+							<!--{ : }-->
+							<label data-searchname="rating_3" data-value="3">
+								<input type="checkbox" onclick="setFilterRating(this, false);" />
+							<!--{ / }-->
+								<span class="stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span> 3~4
+							</label>
+						</li>
+						<li>
+							<!--{ ? in_array('1', params.rating) }-->
+							<label data-searchname="rating_1" data-value="1" class="active">
+								<input type="checkbox" onclick="setFilterRating(this, false);" checked />
+							<!--{ : }-->
+							<label data-searchname="rating_1" data-value="1">
+								<input type="checkbox" onclick="setFilterRating(this, false);" />
+							<!--{ / }-->
+								<span class="stars">&#9733;&#9733;&#9734;&#9734;&#9734;</span> 1~3
+							</label>
+						</li>
+					</ul>
+			</details>
+			<!--{ / }-->
+
+			<!--{ ? aFilterConfig.rekeyword || (filterColors && aFilterConfig.color) }-->
+			<details class="listing-filter-group filter_section filter_detail_section">
+				<summary class="menuThebogi">Detail</summary>
+					<ul class="listing-filter-list">
+						<!--{ ? filterDelvieryCodes }-->
+						<li class="shipping_area hide">
+							<span class="detail_stitle">SHIPPING</span>
+							<!--{ @ filterDelvieryCodes }-->
+								<!--{ ? (aFilterConfig.freeship && .codecd == 'free') || (aFilterConfig.abroadship && .codecd == 'overseas') }-->
+									<!--{ ? in_array(.codecd, params.delivery) }-->
+							<label data-searchname="delivery_{.codecd}" class="btn_sfilter active" data-value="{.codecd}">
+								<input type="checkbox" onclick="setFilterDelivery(this, false);" checked />{.value}
+							</label>
+									<!--{ : }-->
+							<label data-searchname="delivery_{.codecd}" class="btn_sfilter" data-value="{.codecd}">
+								<input type="checkbox" onclick="setFilterDelivery(this, false);" />{.value}
+							</label>
+									<!--{ / }-->
+								<!--{ / }-->
+							<!--{ / }-->
+						</li>
+						<!--{ / }-->
+						<!--{ ? aFilterConfig.rekeyword }-->
+						<li class="reresearch_area">
+							<label><span class="detail_stitle">SEARCH KEYWORD</span> <input class="input_sfilter" type="text" data-searchname="re_search" value="{params.re_search}" /></label>
+							<button type="button" class="btn_sfilter" id="reSearchApply">Apply</button>
+						</li>
+						<!--{ / }-->
+						<!--{ ? filterColors && aFilterConfig.color }-->
+						<li class="color_area">
+							<span class="detail_stitle">COLOR</span>
+							<!--{ @ filterColors }-->
+								<!--{ ? in_array(.value_, params.color)}-->
+							<label data-searchname="color_{.index_}" style="background-color:#{.value_};" class="active" data-value="{.value_}"><input type="checkbox"  onclick="setFilterColor(this, false);" checked /></label>
+								<!--{ : }-->
+							<label data-searchname="color_{.index_}" style="background-color:#{.value_};" data-value="{.value_}"><input type="checkbox"  onclick="setFilterColor(this, false);" /></label>
+								<!--{ / }-->
+							<!--{ / }-->
+						</li>
+						<!--{ / }-->
+					</ul>
+			</details>
+			<!--{ / }-->
+
+			<!--{ ? aFilterConfig.tag && filterTagItems[0] }-->
+			<!--{ @ filterTagItems }-->
+				<!--{ ? .is_section_start }-->
+				<details class="listing-filter-group filter_section filter_tag_section" open>
+					<summary class="menuThebogi">{.group_label}</summary>
+						<div class="message">No tags.</div>
+						<ul class="listing-filter-list">
+				<!--{ / }-->
+							<!--{ ? .tag_name && .tag_name != tag }-->
+							<li>
+								<!--{ ? filterTagData[.tag_full] }-->
+								<label data-searchname="tag_{.tag_full}" data-cntindex="{.cnt}" data-value="{.tag_full}" class="active">
+									<input type="checkbox" onclick="setFilterTag(this, false);" checked/>
+								<!--{ : }-->
+								<label data-searchname="tag_{.tag_full}" data-cntindex="{.cnt}" data-value="{.tag_full}">
+									<input type="checkbox" onclick="setFilterTag(this, false);" />
+								<!--{ / }-->
+									<span class="name">{.tag_name}</span>
+									<span class="desc">({.cnt})</span>
+								</label>
+							</li>
+							<!--{ / }-->
+				<!--{ ? .is_section_end }-->
+						</ul>
+						<button type="button" class="listing-filter-more">Show more</button>
+				</details>
+				<!--{ / }-->
+			<!--{ / }-->
+			<!--{ / }-->
+
+		</div><!-- /.listing-filters-body -->
+
+		<button type="button" class="listing-filter-done mobile-only" data-listing-filter-close>Done</button>
+	</aside>
+	<!-- ===================== /필터 사이드바 ===================== -->
+
+	<!--{ ? end(explode('/',uri_string()))=='catalog' && categoryData.recommend_display_light_seq }-->
+	<div id="recommendResult">
+		{=showCategoryRecommendDisplay(categoryData.category_code)}
+	</div>
+	<!--{ / }-->
+	<!--{ ? end(explode('/',uri_string()))=='brand' && brandData.recommend_display_light_seq }-->
+	<div id="recommendResult">
+		{=showBrandRecommendDisplay(brandData.category_code)}
+	</div>
+	<!--{ / }-->
+	<!--{ ? end(explode('/',uri_string()))=='location' && locationData.recommend_display_light_seq }-->
+	<div id="recommendResult">
+		{=showLocationRecommendDisplay(locationData.location_code)}
+	</div>
+	<!--{ / }-->
+
+	<div class="listing-chips dn" role="list" hidden></div>
+
+	<!-- ===================== 검색된 상품 정렬/개수 ===================== -->
+	<ul id="filteredItemSorting" class="listing-toolbar filtered_item_sorting hide">
+		<li class="listing-count item_total">
+			<a href="javascript:void(0)" id="btnFilterOpen" class="total"><strong class="num">{=number_format(totcount)}</strong>개 상품</a>
+		</li>
+
+		<li class="listing-toolbar-actions">
+
+			<button type="button" class="listing-filter-open" data-listing-filter-open aria-label="필터 열기">
+				<svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+			</button>
+
+			<span class="item_display">
+				<!--{ ? params.filter_display != 'list' }-->
+				<label class="display display_lattice active"><input type="radio" name="filter_display" value="lattice" onclick="priceApply()" checked />격자 반응형</label>
+				<label class="display display_list"><input type="radio" name="filter_display" value="list" onclick="filterDisplay()" />리스트 반응형</label>
+				<!--{ : }-->
+				<label class="display display_lattice"><input type="radio" name="filter_display" value="lattice" onclick="filterDisplay()" />격자 반응형</label>
+				<label class="display display_list active"><input type="radio" name="filter_display" value="list" onclick="filterDisplay()" checked />리스트 반응형</label>
+				<!--{ / }-->
+			</span>
+
+			<span class="item_viewnum">
+				<select name="per">
+					<!--{ ? params.per == '20' }-->
+					<option value="20" selected>20개씩 보기</option>
+					<!--{ : }-->
+					<option value="20">20개씩 보기</option>
+					<!--{ / }-->
+					<!--{ ? params.per == '40' }-->
+					<option value="40" selected>40개씩 보기</option>
+					<!--{ : }-->
+					<option value="40">40개씩 보기</option>
+					<!--{ / }-->
+					<!--{ ? params.per == '100' }-->
+					<option value="100" selected>100개씩 보기</option>
+					<!--{ : }-->
+					<option value="100">100개씩 보기</option>
+					<!--{ / }-->
+					<!--{ ? params.per == '200' }-->
+					<option value="200" selected>200개씩 보기</option>
+					<!--{ : }-->
+					<option value="200">200개씩 보기</option>
+					<!--{ / }-->
+				</select>
+			</span>
+
+			<span class="listing-sort item_order">
+				<p id="mobileSortingSelected"></p>
+				<div class="realtrend-select-wrap" data-realtrend-select>
+					<button type="button" class="realtrend-select-trigger" data-realtrend-trigger>
+						<span class="realtrend-select-trigger-label"><!--{ ? end(explode('/',uri_string()))=='best' }-->판매량순<!--{ : end(explode('/',uri_string()))=='new_arrivals' }-->신규등록순<!--{ : params.sorting == 'ranking' || !params.sorting }-->랭킹순<!--{ : params.sorting == 'regist' }-->신규등록순<!--{ : params.sorting == 'low_price' }-->낮은가격순<!--{ : params.sorting == 'high_price' }-->높은가격순<!--{ : params.sorting == 'review' }-->상품평많은순<!--{ : params.sorting == 'sale' }-->판매량순<!--{ / }--></span>
+					</button>
+					<ul class="realtrend-select-menu list" data-realtrend-menu>
+						<!--{ ? end(explode('/',uri_string()))=='best' }-->
+						<li>
+							<!--{ ? params.sorting == 'sale' }-->
+							<label class="active"><input type="radio" name="sorting" value="sale" checked />판매량순</label>
+							<!--{ : }-->
+							<label><input type="radio" name="sorting" value="sale" />판매량순</label>
+							<!--{ / }-->
+						</li>
+						<!--{ : end(explode('/',uri_string()))=='new_arrivals' }-->
+						<li>
+							<label class="active"><input type="radio" name="sorting" value="regist" checked />신규등록순</label>
+						</li>
+						<!--{ : }-->
+						<li>
+							<!--{ ? params.sorting == 'ranking' }-->
+							<label class="active"><input type="radio" name="sorting" value="ranking" checked />랭킹순</label>
+							<!--{ : }-->
+							<label><input type="radio" name="sorting" value="ranking" />랭킹순</label>
+							<!--{ / }-->
+						</li>
+						<li>
+							<!--{ ? params.sorting == 'regist' }-->
+							<label class="active"><input type="radio" name="sorting" value="regist" checked />신규등록순</label>
+							<!--{ : }-->
+							<label><input type="radio" name="sorting" value="regist" />신규등록순</label>
+							<!--{ / }-->
+						</li>
+						<li>
+							<!--{ ? params.sorting == 'low_price' }-->
+							<label class="active"><input type="radio" name="sorting" value="low_price" checked />낮은가격순</label>
+							<!--{ : }-->
+							<label><input type="radio" name="sorting" value="low_price" />낮은가격순</label>
+							<!--{ / }-->
+						</li>
+						<li>
+							<!--{ ? params.sorting == 'high_price' }-->
+							<label class="active"><input type="radio" name="sorting" value="high_price" checked />높은가격순</label>
+							<!--{ : }-->
+							<label><input type="radio" name="sorting" value="high_price" />높은가격순</label>
+							<!--{ / }-->
+						</li>
+						<li>
+							<!--{ ? params.sorting == 'review' }-->
+							<label class="active"><input type="radio" name="sorting" value="review" checked />상품평많은순</label>
+							<!--{ : }-->
+							<label><input type="radio" name="sorting" value="review" />상품평많은순</label>
+							<!--{ / }-->
+						</li>
+						<li>
+							<!--{ ? params.sorting == 'sale' }-->
+							<label class="active"><input type="radio" name="sorting" value="sale" checked />판매량순</label>
+							<!--{ : }-->
+							<label><input type="radio" name="sorting" value="sale" />판매량순</label>
+							<!--{ / }-->
+						</li>
+						<!--{ / }-->
+					</ul>
+				</div>
+			</span>
+
+		</li>
+	</ul>
+	<!-- ===================== /검색된 상품 정렬 ===================== -->
+
+</div><!-- /.listing-layout -->
+</form>
+<script type="text/javascript">
+var brand_best_icon = "{brand_best_icon}";
+$(document).ready(function() {
+	filterDisplay();
+
+	/*{ ? totcount == 0 || aFilterConfig.searchFilterUse == '0' }*/
+	$("#searchFilterSelected").hide();
+	/*{ / }*/
+	// 상품 색상 코드값 디자인 white --> border
+	if ( $('.displaY_color_option').length > 0 ) {
+		$('.displaY_color_option .areA').filter(function() {
+			return ( $(this).css('background-color') == 'rgb(255, 255, 255)' );
+		}).addClass('border');
+	}
+	var aParams = {'category':'','brand':'','location':'','delivery':'','color':'','provider':'','re_search':'','min_price':'','max_price':'','tag':'','subcategory':'','rating':''};
+	/*{ ? params.category }*/
+	aParams['category']	= load_seleted_filter('category', 'category', 'category_{categoryData.category_code}', '{=params.category}', '{=categoryData.title}', 'category', '{=params.category}');
+	/*{ / }*/
+	/*{ ? params.brand }*/
+		/*{ @ aBrandInfo }*/
+	aParams['brand']	+= load_seleted_filter('checkbox', 'brand', 'brand_{.category_code}', 'b{.category_code}', '{.title}', 'brand[]', 'b{.category_code}');
+		/*{ / }*/
+	/*{ / }*/
+	/*{ ? params.ftag }*/
+		/*{ @ aTagInfo }*/
+	aParams['tag']	+= load_seleted_filter('checkbox', 'tag', 'tag_{.category_code}', '{.tag_name}', '{.tag_name}', 'ftag[]', '{.tag_name}');
+		/*{ / }*/
+	/*{ / }*/
+	/*{ ? params.subcategory }*/
+		/*{ @ filterCategoryList }*/
+			/*{ ? aSelectedSubcategory[.category_code] }*/
+	aParams['subcategory']	+= load_seleted_filter('checkbox', 'subcategory', 'subcategory_{.category_code}', 'c{.category_code}', '{=addslashes(.category_name)}', 'subcategory[]', 'c{.category_code}');
+			/*{ / }*/
+		/*{ / }*/
+	/*{ / }*/
+
+	/*{ ? params.location }*/
+	aParams['location']	= load_seleted_filter('location', 'location', 'navi_location_{params.location}', '{params.location}', '{locationData.title}', 'location', '{params.location}');
+	/*{ / }*/
+	/*{ ? params.delivery }*/
+		/*{ @ filterDelvieryCodes }*/
+			/*{ ? in_array(.codecd, params.delivery) }*/
+	aParams['delivery']		+= load_seleted_filter('checkbox', 'delivery', 'delivery_{.codecd}', '{.codecd}', '{.value}', 'delivery[]', '{.codecd}');
+			/*{ / }*/
+		/*{ / }*/
+	/*{ / }*/
+	/*{ ? params.color }*/
+		/*{ @ params.color }*/
+	aParams['color']		+= load_color_filter('{.index_}','{.value_}');
+		/*{ / }*/
+	/*{ / }*/
+	/*{ ? in_array('4', params.rating) }*/
+	aParams['rating'] += load_seleted_filter('checkbox', 'rating', 'rating_4', '4', '&#9733;&#9733;&#9733;&#9733;&#9733;', 'rating[]', '4');
+	/*{ / }*/
+	/*{ ? in_array('3', params.rating) }*/
+	aParams['rating'] += load_seleted_filter('checkbox', 'rating', 'rating_3', '3', '&#9733;&#9733;&#9733;&#9733;&#9734;', 'rating[]', '3');
+	/*{ / }*/
+	/*{ ? in_array('1', params.rating) }*/
+	aParams['rating'] += load_seleted_filter('checkbox', 'rating', 'rating_1', '1', '&#9733;&#9733;&#9734;&#9734;&#9734;', 'rating[]', '1');
+	/*{ / }*/
+	/*{ ? params.provider }*/
+	aParams['provider']		= load_seleted_filter('provider', 'provider', 'seller_{params.provider}', '', '{aProvider.provider_name}', 'provider', '{params.provider}');
+	/*{ / }*/
+	/*{ ? params.re_search }*/
+	aParams['re_search']	= load_seleted_filter('re_search', 're_search', 're_search', '{params.re_search}', '{params.re_search}', 're_search', '{params.re_search}');
+	/*{ / }*/
+	/*{ ? params.min_price }*/
+	aParams['min_price']	= load_seleted_filter('price', 'min_price', 'min_price', '{params.min_price}', '{params.min_price}', 'min_price', '{params.min_price}');
+	/*{ / }*/
+	/*{ ? params.max_price }*/
+	aParams['max_price']	= load_seleted_filter('price', 'max_price', 'max_price', '{params.max_price}', '{params.max_price}', 'max_price', '{params.max_price}');
+	/*{ / }*/
+	/*{ @params }*/
+		/*{ ? .key_ == 'category' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['category']);
+		/*{ / }*/
+		/*{ ? .key_ == 'brand' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['brand']);
+		/*{ / }*/
+		/*{ ? .key_ == 'location' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['location']);
+		/*{ / }*/
+		/*{ ? .key_ == 'delivery' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['delivery']);
+		/*{ / }*/
+		/*{ ? .key_ == 'color' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['color']);
+		/*{ / }*/
+		/*{ ? .key_ == 'rating' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['rating']);
+		/*{ / }*/
+		/*{ ? .key_ == 'provider' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['provider']);
+		/*{ / }*/
+		/*{ ? .key_ == 're_search' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['re_search']);
+		/*{ / }*/
+		/*{ ? .key_ == 'min_price' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['min_price']);
+		/*{ / }*/
+		/*{ ? .key_ == 'max_price' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['max_price']);
+		/*{ / }*/
+		/*{ ? .key_ == 'ftag' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['tag']);
+		/*{ / }*/
+		/*{ ? .key_ == 'subcategory' }*/
+	$('#searchFilterSelected .selected_item_area').append(aParams['subcategory']);
+		/*{ / }*/
+	/*{ / }*/
+
+	(function(){
+		var $chips = $('.listing-chips');
+		if ( !$chips.length ) { return; }
+
+		function chipLabel($li){
+			var $remove = $li.find('a.remove').first();
+			var text = $.trim($remove.text());
+			if ( text ) { return text; }
+
+			var type = $li.attr('data-type') || $li.attr('data-filtertype') || '';
+			return type ? (type.charAt(0).toUpperCase() + type.slice(1)) : $.trim($li.text());
+		}
+
+		function buildChip(inputId, label){
+			return $('<button type="button" class="listing-chip" role="listitem"></button>')
+				.attr('data-filter-input-id', inputId)
+				.append($('<span class="listing-chip-label"></span>').text(label))
+				.append(' ')
+				.append('<span aria-hidden="true">&times;</span>');
+		}
+
+		function syncListingChips(){
+			var $items = $('#searchFilterSelected .selected_item_area').children('li');
+			var chipData = [];
+			var priceMin = null, priceMax = null, priceLiIds = [];
+			$items.each(function(idx){
+				var $li = $(this);
+				if ( $li.attr('data-type') === 'category' ) { return; } // 현재 페이지(메인 카테고리)는 칩에 표시하지 않음
+				var inputId = $li.attr('id');
+				if ( !inputId ) {
+					inputId = 'listing-filter-input-' + idx;
+					$li.attr('id', inputId);
+				}
+				if ( $li.attr('data-type') === 'min_price' || $li.attr('data-type') === 'max_price' ) {
+					if ( $li.attr('data-type') === 'min_price' ) { priceMin = $li.attr('data-value'); }
+					if ( $li.attr('data-type') === 'max_price' ) { priceMax = $li.attr('data-value'); }
+					priceLiIds.push(inputId);
+					return;
+				}
+				chipData.push({ id: inputId, label: chipLabel($li) });
+			});
+			if ( priceLiIds.length ) {
+				var label;
+				if ( priceMin !== null && priceMax !== null ) {
+					label = 'Price range: US$' + priceMin + '-' + priceMax;
+				} else if ( priceMax !== null ) {
+					label = 'Price range: US$0-' + priceMax;
+				} else {
+					label = 'Price range: US$' + priceMin + '+';
+				}
+				chipData.push({ id: priceLiIds.join(','), label: label });
+			}
+			$chips.each(function(){
+				var $container = $(this);
+				var $visibilityScope = $container.closest('.listing-active-filters');
+				if ( !$visibilityScope.length ) { $visibilityScope = $container; }
+				$container.empty().removeAttr('hidden');
+				if ( !chipData.length ) {
+					$visibilityScope.attr('hidden', true);
+					return;
+				}
+				$visibilityScope.removeAttr('hidden');
+				chipData.forEach(function(d){
+					$container.append(buildChip(d.id, d.label));
+				});
+			});
+		}
+
+		$(document).on('click', '.listing-chip', function(e){
+			e.preventDefault();
+			var inputId = $(this).data('filter-input-id');
+			var ids = String(inputId).split(',');
+			var isPriceChip = ids.some(function(id){
+				return ['min_price', 'max_price'].indexOf($('#' + id).attr('data-type')) !== -1;
+			});
+			ids.forEach(function(id){
+				$('#' + id).find('a.remove').trigger('click');
+			});
+			if ( isPriceChip ) {
+				$('.listing-price-range').each(function(){
+					var $wrap = $(this);
+					var maxVal = parseInt($wrap.data('price-max'), 10) || 0;
+					var $minInput = $wrap.find('.listing-price-range-input--min');
+					var $maxInput = $wrap.find('.listing-price-range-input--max');
+					$minInput.val(0);
+					$maxInput.val(maxVal);
+					$minInput.trigger('change');
+				});
+			}
+		});
+
+		if ( window.MutationObserver ) {
+			var target = document.querySelector('#searchFilterSelected .selected_item_area');
+			if ( target ) {
+				new MutationObserver(syncListingChips).observe(target, { childList: true, subtree: true, characterData: true });
+			}
+		}
+
+		syncListingChips();
+	})();
+
+	set_classification('{categoryData.category_code}', '{locationData.location_code}');
+
+	displaySearchFilter();
+
+	goodsSearch('auto');
+
+	$(document).on('click', '[data-listing-filter-open]', function(e){
+		e.preventDefault();
+		$('.listing-main').addClass('is-filter-open');
+		$('.listing-filter-done').removeAttr('hidden');
+	});
+	$(document).on('click', '[data-listing-filter-close]', function(e){
+		e.preventDefault();
+		$('.listing-main').removeClass('is-filter-open');
+	});
+
+	$('.listing-filter-group').each(function(){
+		var $group = $(this);
+		var $list = $group.find('.listing-filter-list').first();
+		var $more = $group.find('.listing-filter-more');
+		if ( !$list.length || !$more.length ) { return; }
+
+		var total = $list.children('li').length;
+		if ( total <= 4 ) {
+			$more.hide();
+			return;
+		}
+		$list.addClass('is-collapsed');
+		$more.on('click', function(){
+			$list.toggleClass('is-collapsed');
+			$(this).text( $list.hasClass('is-collapsed') ? 'Show more' : 'Show less' );
+		});
+	});
+
+	$('.listing-price-range').each(function(){
+		var $wrap  = $(this);
+		var max    = parseInt($wrap.data('price-max'), 10) || 0;
+		var $min   = $wrap.find('.listing-price-range-input--min');
+		var $max   = $wrap.find('.listing-price-range-input--max');
+		var $fill  = $wrap.find('.listing-price-range-fill');
+		var $valMin = $wrap.find('.listing-price-range-value--min');
+		var $valMax = $wrap.find('.listing-price-range-value--max');
+		var $hiddenMin = $wrap.find('[data-searchname="min_price"]');
+		var $hiddenMax = $wrap.find('[data-searchname="max_price"]');
+
+		if ( !max ) { return; }
+
+		function render() {
+			var vMin = parseInt($min.val(), 10) || 0;
+			var vMax = parseInt($max.val(), 10) || max;
+
+			if ( vMin > vMax ) {
+				vMin = vMax;
+				$min.val(vMin);
+			}
+
+			var pctMin = (vMin / max) * 100;
+			var pctMax = (vMax / max) * 100;
+
+			$fill.css({ left: pctMin + '%', right: (100 - pctMax) + '%' });
+			$valMin.text('US$' + (vMin === 0 ? '0' : vMin.toLocaleString()));
+			$valMax.text('US$' + (vMax >= max ? max.toLocaleString() + '+' : vMax.toLocaleString()));
+
+			$hiddenMin.val(vMin === 0 ? '' : vMin);
+			$hiddenMax.val(vMax >= max ? '' : vMax);
+		}
+
+		$min.add($max).on('input change', render);
+		render();
+	});
+
+	$(document).on('click', '[data-realtrend-trigger]', function(e){
+		e.stopPropagation();
+		$(this).closest('.realtrend-select-wrap').toggleClass('is-open');
+	});
+	$(document).on('click', '.realtrend-select-menu label', function(){
+		var $wrap = $(this).closest('.realtrend-select-wrap');
+		$wrap.find('.realtrend-select-trigger-label').text($.trim($(this).text()));
+		$wrap.removeClass('is-open');
+	});
+	$(document).on('click', function(e){
+		if ( !$(e.target).closest('.realtrend-select-wrap').length ) {
+			$('.realtrend-select-wrap').removeClass('is-open');
+		}
+	});
+
+	window.filterBrandListBySearch = function(input) {
+		var keyword = $.trim($(input).val()).toLowerCase();
+		$('.brandList > li').each(function(){
+			var name = $(this).text().toLowerCase();
+			$(this).toggle(name.indexOf(keyword) !== -1);
+		});
+	};
+
+	(function(){
+		var header = document.getElementById('layout_header');
+		if (!header) return;
+
+		function updateStickyHeaderOffset(){
+			var isFixed = getComputedStyle(header).position === 'fixed';
+			var height = isFixed ? header.offsetHeight : 0;
+			document.documentElement.style.setProperty('--sticky-header-height', height + 'px');
+		}
+
+		updateStickyHeaderOffset();
+
+		if ( window.MutationObserver ) {
+			new MutationObserver(updateStickyHeaderOffset).observe(header, { attributes: true, attributeFilter: ['class', 'style'] });
+		}
+		window.addEventListener('resize', updateStickyHeaderOffset);
+	})();
+
+	window.setFilterRating = function(el, bSilent) {
+		var $label = $(el).closest('label');
+		var value = $label.data('value');
+		var searchname = $label.attr('data-searchname');
+		var ratingStars = {
+			'4': '\u2605 4+',
+			'3': '\u2605 3~4',
+			'1': '\u2605 1-3'
+		};
+		var isActive = $label.toggleClass('active').hasClass('active');
+		$label.find('input[type="checkbox"]').prop('checked', isActive);
+		if (isActive) {
+			if (!$('#searchFilterSelected .selected_item_area [data-filteritem="' + searchname + '"]').length && typeof load_seleted_filter === 'function') {
+				$('#searchFilterSelected .selected_item_area').append(
+					load_seleted_filter('checkbox', 'rating', searchname, value, ratingStars[value] || value, 'rating[]', value)
+				);
+			}
+		} else {
+			$('#searchFilterSelected .selected_item_area [data-filteritem="' + searchname + '"]').remove();
+		}
+		if (!bSilent && typeof goodsSearch === 'function') {
+			goodsSearch();
+		}
+	};
+
+});
+</script>
+<!--{ / }-->
+

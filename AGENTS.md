@@ -161,6 +161,14 @@ When working on the live Firstmall skin or `firstmall-workskin/`:
  the footer module only. Keep Firstmall ids/classes (`logo_wrap`, `footer_a1`–
  `footer_d1`, `bottom_wrap`, floating menu, accordion click on `.title`). Do not
  put footer redesign rules in `css/common.css` or `css/user.css`.
+- Home T.P Magazine Firstmall files: `main/index.html` (existing home template) and
+  `css/redesign/trendypicker-main-magazine.css`. Keep the existing magazine post links and
+  banner images in `.main_magazine`; the redesign file owns only their card layout and responsive
+  presentation.
+- Home T.P Magazine Firstmall files: `main/index.html` (existing home template) and
+  `css/redesign/trendypicker-main-magazine.css`. Keep the existing magazine post links and
+  banner images in `.main_magazine`; the redesign file owns only their card layout and responsive
+  presentation.
 
 ## Design Rules
 

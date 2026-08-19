@@ -1,0 +1,89 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 저장한 숏폼 콘텐츠 페이지 @@
+- 파일위치 : [스킨폴더]/mypage/saved_posts.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-saved-posts.css" />
+
+<div class="subpage_wrap bo-mypage-shell bo-saved-posts-shell">
+	<aside class="bo-account-side" data-mypage-lnb>
+		<!-- 마이페이지 LNB 공통. 정의: [스킨폴더]/mypage/mypage_lnb.html -->
+	</aside>
+
+	<main class="subpage_container bo-mypage bo-saved-posts-page" aria-labelledby="bo-saved-posts-title">
+		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
+
+		<div class="title_container bo-saved-posts-head">
+			<div>
+				<h2 id="bo-saved-posts-title"><span designElement="text">Saved Posts</span></h2>
+				<p>Real Trend videos you saved are collected here.</p>
+			</div>
+			<!--{ ? record }-->
+			<strong data-saved-posts-count>{=number_format(count(record))} reels</strong>
+			<!--{ : }-->
+			<strong data-saved-posts-count>0 reels</strong>
+			<!--{ / }-->
+		</div>
+
+		<section class="bo-saved-posts-content" aria-label="Saved Real Trend videos">
+
+			<!--{ ? record }-->
+			<div class="bo-saved-posts-grid" data-saved-posts-grid>
+				<!--{ @ record }-->
+				<article class="bo-saved-post-card" data-saved-post-card data-shortform-seq="{.shortform_seq}">
+					<a class="bo-saved-post-card__link" href="/shortform/feed?seq={.shortform_seq}#reel-{.shortform_seq}" aria-label="Open saved reel">
+						<span class="bo-saved-post-card__media">
+							<!--{ ? .video_type == 'file' }-->
+							<video src="{.video_file}" poster="{.poster}" muted playsinline preload="metadata"></video>
+							<!--{ : }-->
+							<img src="{.poster}" alt="" loading="lazy" />
+							<!--{ / }-->
+							<em>{.view_count}</em>
+							<i class="bo-saved-post-card__play" aria-hidden="true"></i>
+						</span>
+						<span class="bo-saved-post-card__copy">
+							<b>{=getstrcut(strip_tags(.title),50)}</b>
+						</span>
+					</a>
+					<button
+						type="button"
+						class="bo-saved-post-card__remove"
+						data-saved-post-remove
+						data-shortform-seq="{.shortform_seq}"
+						aria-label="Remove saved reel"
+					>
+						<img src="/data/skin/{skin}/images/mypage/saved_hover.png" alt="" aria-hidden="true" />
+					</button>
+				</article>
+				<!--{ / }-->
+			</div>
+
+			<div class="paging_navigation bo-saved-posts-pagination" data-saved-posts-pagination>
+				<!--{ ? page.prev }-->
+				<a href="saved_posts?page={page.prev}&amp;{page.querystring}" aria-label="Previous page"><span aria-hidden="true">‹</span></a>
+				<!--{ / }-->
+				<!--{ @ page.page }-->
+					<!--{ ? page.nowpage == .value_ }-->
+					<a class="on" aria-current="page">{.value_}</a>
+					<!--{ : }-->
+					<a href="saved_posts?page={.value_}&amp;{page.querystring}">{.value_}</a>
+					<!--{ / }-->
+				<!--{ / }-->
+				<!--{ ? page.next }-->
+				<a href="saved_posts?page={page.next}&amp;{page.querystring}" aria-label="Next page"><span aria-hidden="true">›</span></a>
+				<!--{ / }-->
+			</div>
+			<!--{ : }-->
+			<div class="bo-saved-posts-empty" data-saved-posts-empty>
+				<p>No saved Real Trend posts yet.</p>
+			</div>
+			<!--{ / }-->
+
+			<p class="bo-saved-posts-status" data-saved-posts-status role="status" aria-live="polite"></p>
+		</section>
+	</main>
+</div>
+
+<script src="/data/skin/{skin}/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/data/skin/{skin}/app/javascript/js/trendypicker-saved-posts.js"></script>

@@ -5,6 +5,9 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css" />
+{? _GET.home_widget}
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-main-magazine.css" />
+{/}
 
 <style type="text/css">
 #subpageLNB,
@@ -107,6 +110,9 @@ body:has(.magazine-main) #layout_body {
 <script>
 {? _GET.iframe}
 document.documentElement.className += (document.documentElement.className ? " " : "") + "bo-magazine-iframe";
+{? _GET.home_widget}
+document.documentElement.className += " tp-home-magazine-frame";
+{/}
 {:}
 document.documentElement.className += (document.documentElement.className ? " " : "") + "is-magazine-page";
 if (document.body) document.body.className += (document.body.className ? " " : "") + "is-magazine-page";
@@ -154,6 +160,58 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 </form>
 <!--{ / }-->
 
+{? _GET.home_widget}
+{? loop}
+<div class="bo-magazine-board tp-home-magazine-widget" data-home-magazine-widget>
+	<article class="tp-home-magazine-feature">
+		<button type="button" class="tp-home-magazine-feature__media magazine-image boad_view_btn{loop[0].isperm_read}" viewlink="{boardurl->view}{loop[0].seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{loop[0].seq}" board_id="{_GET.id}" aria-label="Read {=strip_tags(loop[0].subject_real)}">
+			{? loop[0].file_key_w && loop[0].uccdomain_thumbnail}
+			<img src="{loop[0].uccdomain_thumbnail}" alt="" fetchpriority="high" />
+			{: strstr(loop[0].filelist['realfile'],'http')}
+			<img src="http{=str_replace('http','',loop[0].filelist['realfile'])}" alt="" fetchpriority="high" />
+			{: strstr(loop[0].filelist['realfile'],'/data/editor/')}
+			<img src="{loop[0].filelist['realfile']}" alt="" fetchpriority="high" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
+			{:}
+			<img src="/data/board/{_GET.id}/{loop[0].filelist['realfile']}" alt="" fetchpriority="high" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
+			{/}
+		</button>
+		<div class="tp-home-magazine-feature__copy">
+			{? loop[0].category}<p class="tp-home-magazine-category">{=str_replace(']','',str_replace('[','',loop[0].category))}</p>{/}
+			<h3><button type="button" class="boad_view_btn{loop[0].isperm_read}" viewlink="{boardurl->view}{loop[0].seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{loop[0].seq}" board_id="{_GET.id}">{=strip_tags(loop[0].subject_real)}</button></h3>
+			{? loop[0].contentcut}<p class="tp-home-magazine-excerpt">{=strip_tags(loop[0].contentcut)}</p>{/}
+			<time datetime="{loop[0].date}">{=date('M d, Y',strtotime(loop[0].date))}</time>
+		</div>
+	</article>
+	<div class="tp-home-magazine-list">
+		{@ loop}
+		{? .index_ > 0 && .index_ <= 4}
+		<article class="tp-home-magazine-item">
+			<button type="button" class="tp-home-magazine-item__media magazine-image boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{_GET.id}" aria-label="Read {=strip_tags(.subject_real)}">
+				{? .file_key_w && .uccdomain_thumbnail}
+				<img src="{.uccdomain_thumbnail}" alt="" loading="lazy" />
+				{: strstr(.filelist['realfile'],'http')}
+				<img src="http{=str_replace('http','',.filelist['realfile'])}" alt="" loading="lazy" />
+				{: strstr(.filelist['realfile'],'/data/editor/')}
+				<img src="{.filelist['realfile']}" alt="" loading="lazy" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
+				{:}
+				<img src="/data/board/{_GET.id}/{.filelist['realfile']}" alt="" loading="lazy" onerror="this.src='/data/skin/{skin}/images/common/noimage.gif'" />
+				{/}
+			</button>
+			<div class="tp-home-magazine-item__copy">
+				{?.category}<p class="tp-home-magazine-category">{=str_replace(']','',str_replace('[','',.category))}</p>{/}
+				<h3><button type="button" class="boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{_GET.id}">{=strip_tags(.subject_real)}</button></h3>
+				{? .contentcut}<p class="tp-home-magazine-item__excerpt">{=strip_tags(.contentcut)}</p>{/}
+				<time datetime="{.date}">{=date('M d, Y',strtotime(.date))}</time>
+			</div>
+		</article>
+		{/}
+		{/}
+	</div>
+</div>
+{:}
+<div class="tp-home-magazine-empty">No magazine posts yet.</div>
+{/}
+{:}
 { ? loop }
 <div class="bo-magazine-board {? _GET.category == ''}is-home{:}is-category{/}" data-magazine-board>
 	{? _GET.category == ''}
@@ -379,6 +437,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 	</li>
 </ul>
 <!--{ / }-->
+{/}
 
 {? !_GET.iframe }
 		<section class="newsletter editors-newsletter magazine-newsletter" aria-labelledby="magazine-newsletter-title">

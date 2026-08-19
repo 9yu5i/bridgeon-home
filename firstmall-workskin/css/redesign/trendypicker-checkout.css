@@ -2659,7 +2659,7 @@ body.is-checkout-page .dn.goods_delivery_info {
 
 /* PayPal express button, moved here from the cart summary. Styles mirror
    .cart-paypal in trendypicker-cart.css, which is not loaded on checkout. */
-body.is-checkout-page .checkout-summary-card .cart-or {
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .cart-or {
   display: block;
   margin: 12px 0;
   color: #8f86a0;
@@ -2668,16 +2668,30 @@ body.is-checkout-page .checkout-summary-card .cart-or {
   font-weight: 700;
 }
 
-body.is-checkout-page .checkout-summary-card .cart-paypal {
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-paypal,
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-eximbay {
   display: grid;
   place-items: center;
   box-sizing: border-box;
+  min-width: 0;
   width: 100%;
-  height: 44px;
-  margin: 0 0 10px;
+  min-height: 44px;
+  height: 44px !important;
+  max-height: 44px;
+  margin: 0;
   padding: 0;
   border: 0;
   border-radius: 7px;
+  overflow: hidden;
+  appearance: none;
   background-color: #ffc229;
   background-image: linear-gradient(to right, #af800e 50%, #ffc229 50%);
   background-size: 200% 100%;
@@ -2687,20 +2701,42 @@ body.is-checkout-page .checkout-summary-card .cart-paypal {
   cursor: pointer;
 }
 
-body.is-checkout-page .checkout-summary-card .cart-paypal img {
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-paypal img,
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-eximbay img {
   display: block;
+  margin: 0 auto;
+  max-width: 78%;
   width: auto;
   height: 22px;
+  max-height: 28px;
   object-fit: contain;
 }
 
-body.is-checkout-page .checkout-summary-card .cart-paypal:hover,
-body.is-checkout-page .checkout-summary-card .cart-paypal:focus-visible {
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-eximbay img {
+  width: 58%;
+  max-width: none;
+  height: auto;
+  max-height: 22px;
+}
+
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-paypal:hover,
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-paypal:focus-visible {
+  background-position: 0 0;
+}
+
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-eximbay {
+  background-color: #0048fa;
+  background-image: linear-gradient(to right, #002fa8 50%, #0048fa 50%);
+}
+
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-eximbay:hover,
+body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-eximbay:focus-visible {
   background-position: 0 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body.is-checkout-page .checkout-summary-card .cart-paypal {
+  body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-paypal,
+  body.is-checkout-page #orderPaymentLayout .checkout-summary-card .checkout-express-payments > .cart-eximbay {
     transition: none;
   }
 }
@@ -2772,7 +2808,7 @@ body.is-checkout-page .checkout-items-card:not(.is-open) .checkout-items-title {
 @media (min-width: 1121px) {
   body.is-checkout-page #orderPaymentLayout .checkout-side {
     position: sticky;
-    top: 16px;
+    top: 172px;
     align-self: start;
   }
 

@@ -254,6 +254,15 @@ if (document.body) {
 							You save <strong data-cart-save>US$0.00</strong>
 						</p>
 						<input type="button" class="btn_resp size_e color2 btn_all_order cart-checkout" {? total_ea < 1 }onclick="openDialogAlert('Please select items to order.','400','140');return false;" {/} value="PROCEED TO CHECKOUT -&gt;" />
+						<span class="cart-or">- OR -</span>
+						<div class="cart-express-payments" aria-label="Express payment options">
+							<button type="button" class="cart-paypal" aria-label="Continue with PayPal" data-cart-payment="paypal">
+								<img src="/data/skin/{skin}/images/cart/paypal.png" alt="PayPal" />
+							</button>
+							<button type="button" class="cart-eximbay" aria-label="Continue with Eximbay" data-cart-payment="eximbay">
+								<img src="/data/skin/{skin}/images/cart/eximbay.png" alt="Eximbay" />
+							</button>
+						</div>
 						<div class="cart-paypal-slot hide" aria-hidden="true">
 							{navercheckout_tpl}
 							{talkbuyorder_tpl}

@@ -28,6 +28,10 @@
     );
   }
 
+  function isHomeWidgetDoc() {
+    return /(?:^|[?&])home_widget=1(?:&|$)/.test(window.location.search || "");
+  }
+
   function unlockIframeChrome() {
     if (!isIframeDoc()) return;
 
@@ -75,7 +79,11 @@
       document.body.style.setProperty("height", "auto", "important");
       document.body.style.setProperty("min-height", "0", "important");
       document.body.style.setProperty("overflow", "hidden", "important");
-      document.body.style.setProperty("padding", "0 32px 56px", "important");
+      document.body.style.setProperty(
+        "padding",
+        isHomeWidgetDoc() ? "0" : "0 32px 56px",
+        "important"
+      );
       document.body.style.setProperty("box-sizing", "border-box", "important");
     }
   }

@@ -441,3 +441,25 @@ Why:
 
 - The live site name is TrendyPicker.
 - Keeping one explicit brand name avoids shipping stale prototype naming into Firstmall.
+
+## 2026-08-19: Saved Posts Categories Need Real Metadata
+
+Decision:
+
+- Keep the Saved Posts page driven by Firstmall's existing `record` and `page` values and the
+  `/shortform/toggle_save` endpoint.
+- Do not infer reel categories from title keywords. Category tabs may return only after the
+  shortform response supplies a stable category value or supports a server-side category query.
+- Render saved media from the model's normalized `poster`, `video_type`, and `video_file` fields.
+- Render the home magazine block from the existing magazine board data using
+  `/board/?id=magazine&iframe=1&home_widget=1&perpage=5`.
+- Keep the home-only `1 featured + 4 compact stories` markup as a mode of the existing magazine
+  board template instead of duplicating article URLs, thumbnails, and copy in `main/index.html`.
+
+Why:
+
+- Keyword classification can silently put production content in the wrong category and only
+  filters the current pagination page.
+- The former home entries were composite banner images and did not expose title, excerpt, category,
+  or date fields. Reusing the magazine board loop provides those production fields and keeps the
+  home block current when editors publish new posts.

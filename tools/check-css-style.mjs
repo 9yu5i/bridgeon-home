@@ -49,7 +49,7 @@ const cssLineBaselines = {
   "trendypicker-login.css": 1201,
   "trendypicker-magazine.css": 1701,
   "trendypicker-membership.css": 556,
-  "trendypicker-mypage.css": 3036,
+  "trendypicker-mypage.css": 3059,
   "trendypicker-new.css": 692,
   "trendypicker-orders.css": 1730,
   "trendypicker-points.css": 427,
