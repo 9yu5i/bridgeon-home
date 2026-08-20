@@ -321,21 +321,21 @@ body:has(.magazine-main) #layout_body {
 */
 html.bo-magazine-iframe,
 html.bo-magazine-iframe body {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  height: auto !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  box-sizing: border-box !important;
-  background: transparent !important;
-  overflow: hidden !important;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: transparent;
+  overflow: hidden;
 }
 
 /* Bottom padding only — side padding misaligned nav (parent) vs feature image (iframe). */
 html.bo-magazine-iframe body {
-  padding: 0 0 56px !important;
+  padding: 0 0 56px;
 }
 
 html.bo-magazine-iframe #layout_wrap,
@@ -344,28 +344,28 @@ html.bo-magazine-iframe #boardlayout,
 html.bo-magazine-iframe .subpage_wrap,
 html.bo-magazine-iframe .subpage_container,
 html.bo-magazine-iframe #bbslist {
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  height: auto !important;
-  min-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  float: none !important;
-  left: auto !important;
-  right: auto !important;
-  position: static !important;
-  box-sizing: border-box !important;
-  background: transparent !important;
-  overflow: visible !important;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  float: none;
+  left: auto;
+  right: auto;
+  position: static;
+  box-sizing: border-box;
+  background: transparent;
+  overflow: visible;
 }
 
 html.bo-magazine-iframe #layout_header,
 html.bo-magazine-iframe #layout_footer,
 html.bo-magazine-iframe #subpageLNB,
 html.bo-magazine-iframe #subAllButton {
-  display: none !important;
+  display: none;
 }
 
 .bo-magazine-board,
@@ -1411,31 +1411,31 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
   body:has(.magazine-main) #layout_body,
   body:has(.magazine-detail-main) #layout_wrap,
   body:has(.magazine-detail-main) #layout_body {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .magazine-main,
   .magazine-detail-main {
-    align-items: stretch !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .magazine-shell,
   .magazine-detail-shell {
-    align-self: stretch !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
     margin-top: -38px;
-    margin-right: 0 !important;
-    margin-left: 0 !important;
+    margin-right: 0;
+    margin-left: 0;
     padding: 38px clamp(20px, 4vw, 40px) 61px;
     border-radius: 25px 25px 0 0;
   }
@@ -1474,7 +1474,7 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
 
   .bo-magazine-category-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    gap: 20px;
   }
 
   .bo-magazine-popular-grid {
@@ -1519,13 +1519,16 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
 
   .magazine-shell,
   .magazine-detail-shell {
-    align-self: stretch !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    align-self: stretch;
+    width: 100%;
+    max-width: 100%;
     margin-top: -25px;
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-    padding: 25px 14px 36px;
+    margin-right: 0;
+    margin-left: 0;
+    /* Narrow side padding: the shell is edge-to-edge here and the board
+       inside the iframe carries its own gutter, so a wide inset here just
+       squeezes the content. */
+    padding: 25px 8px 36px;
     border-radius: 22px 22px 0 0;
   }
 
@@ -1533,6 +1536,12 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
     justify-content: flex-start;
     gap: 22px;
     margin-bottom: 23px;
+  }
+
+  /* Single-column at this width, so the base padding-bottom just adds a gap
+     the stacked cards already provide. */
+  .bo-magazine-lead {
+    padding: 0;
   }
 
   .bo-magazine-feature-copy {
@@ -1653,33 +1662,18 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
   }
 }
 
-/* Narrow phones (<375): Latest as 2-up vertical cards */
+/* Narrow phones (<375): same one-column list with a horizontal card as every
+   other mobile width — only the spacing and type scale down. The layout used
+   to flip to a 2-up vertical grid here, which made Latest look like a
+   different component on small phones. */
 @media (max-width: 374px) {
   .bo-magazine-latest {
     padding: 14px 12px;
   }
 
-  .bo-magazine-latest-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px 10px;
-  }
-
   .bo-magazine-side-card {
-    grid-template-columns: 1fr;
-    align-items: start;
-    gap: 8px;
-    padding: 0;
-    border-top: 0;
-  }
-
-  .bo-magazine-side-card:first-of-type {
-    border-top: 0;
-  }
-
-  .bo-magazine-side-thumb {
-    width: 100%;
-    border-radius: 8px;
+    gap: 10px;
+    padding: 11px 0;
   }
 
   .bo-magazine-side-card h3 {

@@ -1,0 +1,63 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 카테고리 네비게이션 @@
+- 파일위치 : [스킨폴더]/_modules/category/category_gnb.html
+- 현재 3뎁스까지 노출 가능
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--{ @ category }-->
+	<li class="categoryDepth1">
+		<a class="categoryDepthLink designElement" designelement="category" href="/goods/catalog?code={.category_code}"><em>{.name}</em></a>
+		<!--{? !empty(.childs)}-->
+		<div class="categorySub">
+			<div class="categorySubWrap">
+				<ul class="categoryDepth2{? count(.childs) < 4} short{/}">
+					<!--{ @ .childs}-->
+                    <!--{? !empty(..childs) && count(.childs) < 10 && count(..childs) > 12}-->
+					<li class="categorySubDepth">
+						<a href="/goods/catalog?code={..category_code}">{..name}</a>
+						<!--{? !empty(..childs)}-->
+						<ul class="categoryDepth3">
+							<!--{ @ ..childs}-->
+                            <!--{? ...index_ % 2 == 0}-->
+							<li><a href="/goods/catalog?code={...category_code}">{...name}</a></li>
+                            <!--{ / }-->
+							<!--{ / }-->
+						</ul>
+						<!--{ / }-->
+					</li>
+					<li class="categorySubDepth">
+						<a href="/goods/catalog?code={..category_code}">&nbsp;</a>
+						<!--{? !empty(..childs)}-->
+						<ul class="categoryDepth3">
+							<!--{ @ ..childs}-->
+                            <!--{? ...index_ % 2 == 1}-->
+							<li><a href="/goods/catalog?code={...category_code}">{...name}</a></li>
+							<!--{ / }-->
+							<!--{ / }-->
+						</ul>
+						<!--{ / }-->
+					</li>
+                    <!--{:}-->
+					<li class="categorySubDepth">
+						<a href="/goods/catalog?code={..category_code}">{..name}</a>
+						<!--{? !empty(..childs)}-->
+						<ul class="categoryDepth3">
+							<!--{ @ ..childs}-->
+							<li><a href="/goods/catalog?code={...category_code}">{...name}</a></li>
+							<!--{ / }-->
+						</ul>
+						<!--{ / }-->
+					</li>
+                    <!--{ / }-->
+					<!--{ / }-->
+				</ul>
+				<!--{ ? .node_banner }-->
+				<div class="categorySubBanner">
+					{.node_banner}
+				</div>
+				<!--{ / }-->
+			</div>
+		</div>
+		<!--{ / }-->
+	</li>
+<!--{ / }-->

@@ -1,195 +1,950 @@
 /* TrendyPicker header
    Loaded from layout_header/standard.html.
 
-   Covers the two things the live header was missing against the prototype:
-   the always-visible search field and the cart count badge. The promo bar,
-   icons, search panel, category mega menu and shipping-country selector
-   already match and stay with Firstmall's common.css / user.css.
+   Adds the pieces the stock header lacked against the prototype: the dark
+   header, an always-visible search field, the cart count badge, and a
+   two-row mobile / tablet layout. The promo bar, category mega menu and
+   shipping-country selector already match and stay with Firstmall's
+   common.css / user.css.
 
    Values come from the prototype's styles/header-navigation.css. */
 
 /* ===== Dark header ======================================================
    Prototype tokens: promo bar #101010, header body #202020, category bar
-   #1f1f1f with a hairline top border.
+   with a hairline top border.
 
-   The stock header assets are drawn for a light background, so the markup
-   now uses the prototype's white icons and a text logo — there is no white
-   version of Bridge_on_logo.png. Swap the logo back to an <img> once one
-   exists; the .tp-logo rules below are all that would need removing. */
-/* The colour goes on #layout_header, which spans the viewport. The rows
-   inside it are the centred max-width containers, so painting those left
-   white margins down both sides — they are cleared instead. */
-.layout_header {
-  background: #202020;
-}
-
-.layout_header .top_header_banner {
-  background: #101010;
-}
-
-.layout_header .util_wrap,
-.layout_header .top_bar,
-.layout_header .resp_wrap,
-.layout_header .nav_wrap,
-.layout_header .nav_category_area,
-.layout_header .designCategoryNavigation {
-  background: transparent;
-}
-
-.layout_header .nav_wrap {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* Category links go white; PROMOTION / TIME DEAL / MAGAZINE / MEMBERSHIP
-   keep the skin's accent classes, as the prototype also colours those. */
-.layout_header .nav_wrap .respCategoryList > li > a:not(.f_purple):not(.f_red),
-.layout_header .nav_wrap .respCategoryList > li > a:not(.f_purple):not(.f_red) em {
-  color: #fff;
-}
-
-/* Logo — prototype styling: name in white, second half in brand purple. */
-.layout_header .tp-logo,
-.layout_header .tp-logo a {
-  color: #fff;
-  font-size: 31px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-  white-space: nowrap;
-}
-
-.layout_header .tp-logo a span {
-  color: #9f61ff;
-}
-
-/* ===== Header row =======================================================
-   Prototype puts the logo, the search field and the icons on one line:
-   logo left, search filling the middle, icons right.
-
-   The stock skin centres the logo in .logo_wrap and keeps the icons in
-   .util_wrap, the row above, where they already overflow downwards. Rather
-   than move any markup, .logo_wrap becomes the row and the icon list is
-   nudged down into it — .util_wrap_menu2 stays in its own flow, so its
-   horizontal position is untouched and only its vertical offset changes.
-
-   Desktop only. Below 1024px Firstmall switches to its own responsive
-   header (hamburger + .resp_top_* controls), which is left alone. */
-.layout_header .tp-header-search {
-  display: none;
-}
-
-@media only screen and (min-width: 1024px) {
-  /* Prototype's .header-main is a 210px / 1fr / 210px grid with a 34px gap,
-     which puts the search at roughly 55% of the viewport. Same proportions
-     here, with the right column as padding since the icons live in the row
-     above and are pulled down rather than moved. */
-  .layout_header .logo_wrap {
-    display: flex;
-    align-items: center;
-    gap: 34px;
-    padding-right: 200px;
+   The colour goes on #layout_header, which spans the viewport. The rows
+   inside it are centred max-width containers, so painting those would leave
+   white margins down both sides — they are cleared to transparent. */
+   .layout_header {
+    background: #202020;
+  }
+  
+  .layout_header .top_header_banner {
+    background: #101010;
+  }
+  
+  .layout_header .util_wrap,
+  .layout_header .top_bar,
+  .layout_header .resp_wrap,
+  .layout_header .nav_wrap,
+  .layout_header .nav_category_area,
+  .layout_header .designCategoryNavigation {
+    background: transparent;
+  }
+  
+  
+  /* Category links go white; the two accent items keep their own colour. */
+  .layout_header .nav_wrap .respCategoryList > li > a:not(.f_purple):not(.f_red):not(.tp_nav_warm):not(.tp_nav_accent),
+  .layout_header .nav_wrap .respCategoryList > li > a:not(.f_purple):not(.f_red):not(.tp_nav_warm):not(.tp_nav_accent) em {
+    color: #fff;
   }
 
-  .layout_header .logo_wrap .logo_area {
-    flex: 0 0 210px;
-    margin: 0;
+  /* Prototype accents: Time Deal amber, T.P Pick magenta. */
+  .layout_header .nav_wrap .respCategoryList > li > a.tp_nav_warm,
+  .layout_header .nav_wrap .respCategoryList > li > a.tp_nav_warm em {
+    color: #ffb300;
   }
 
-  .layout_header .util_wrap_menu2 {
-    /* Relative, not absolute: the icons keep the exact horizontal position
-       the stock header gives them, and nothing reflows. */
-    position: relative;
-    top: 10px;
+  .layout_header .nav_wrap .respCategoryList > li > a.tp_nav_accent,
+  .layout_header .nav_wrap .respCategoryList > li > a.tp_nav_accent em {
+    color: #f04dff;
   }
 
-  /* The magnifier is redundant next to the search field. Hidden rather than
-     removed from the markup: #btnSearchV2 inside it is what the fixed
-     bottom menu clicks to open the search overlay, and that is still the
-     control below 1024px, where the search field is not shown. */
-  .layout_header .util_wrap_menu2 .top_my_search {
+  /* Hover / current item turn purple, as in the prototype. The stock skin
+     instead greys the label and slides an underline out of em::after — both
+     are cancelled here so colour alone carries the state. */
+  .layout_header #cateSwiper .respCategoryList .categoryDepth1:hover .categoryDepthLink > em,
+  .layout_header #cateSwiper .respCategoryList .custom_nav_link:hover .categoryDepthLink > em,
+  .layout_header #cateSwiper .respCategoryList > li > a:hover em,
+  .layout_header #cateSwiper .respCategoryList > li > a:focus-visible em,
+  .layout_header #cateSwiper .respCategoryList > li.on > a em {
+    color: #9f61ff;
+  }
+
+  /* #cateSwiper in the selector: user.css writes these with the id, so a
+     class-only override loses on specificity. */
+  .layout_header #cateSwiper .respCategoryList .categoryDepthLink > em::after,
+  .layout_header #cateSwiper .respCategoryList .categoryAllBtn > em::after,
+  .layout_header #cateSwiper .respCategoryList .categoryDepth1:hover .categoryDepthLink > em::after,
+  .layout_header #cateSwiper .respCategoryList .custom_nav_link:hover .categoryDepthLink > em::after,
+  .layout_header #cateSwiper .respCategoryList > li.custom_nav_link:hover .categoryDepthLink.f_red > em::after,
+  .layout_header #cateSwiper .respCategoryList > li.on > .categoryDepthLink > em::after {
+    content: none;
     display: none;
   }
 
-  .layout_header .logo_wrap .tp-header-search {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 48px;
-    align-items: center;
-    flex: 1 1 auto;
-    width: auto;
-    height: 42px;
-    overflow: hidden;
-    background: #fff;
-    border-radius: 999px;
-    box-shadow: 0 0 0 1px rgba(125, 63, 228, 0.18);
-  }
-
-  .layout_header .tp-header-search input[type="text"] {
-    -webkit-appearance: none;
-    appearance: none;
-    min-width: 0;
-    height: 100%;
-    margin: 0;
-    padding: 0 24px;
+  .layout_header .nav_wrap .respCategoryList .categoryDepth1.on .categoryDepthLink,
+  .layout_header .nav_wrap .respCategoryList .custom_nav_link.on .categoryDepthLink,
+  .layout_header #cateSwiper .respCategoryList > li.on > .categoryDepthLink {
     border: 0;
-    border-radius: 0;
-    outline: none;
-    color: #333;
-    background: #fff;
-    font-size: 14px;
-    font-weight: 400;
+    border-bottom: 0;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
   }
 
-  .layout_header .tp-header-search button {
-    grid-column: 2;
-    justify-self: end;
-    align-self: center;
+  #layout_header.layout_header #cateSwiper .respCategoryList > li.on > .categoryDepthLink::before,
+  #layout_header.layout_header #cateSwiper .respCategoryList > li.on > .categoryDepthLink::after,
+  #layout_header.layout_header #cateSwiper .respCategoryList > li.on > .categoryDepthLink > em::before,
+  #layout_header.layout_header #cateSwiper .respCategoryList > li.on > .categoryDepthLink > em::after {
+    content: none;
+    display: none;
+  }
+  
+  /* Logo — text stand-in (no white Bridge_on_logo.png). White name, purple
+     second half, matching the prototype. Swap back to an <img> once a white
+     logo exists; only the .tp-logo rules would need removing. */
+  .layout_header .tp-logo,
+  .layout_header .tp-logo a {
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  
+  .layout_header .tp-logo a span {
+    color: #9f61ff;
+  }
+  
+  /* Hidden by default; each breakpoint below shows it in its own layout. */
+  .layout_header .tp-header-search {
+    display: none;
+  }
+  
+  /* ===== Wider content area ================================================
+     Stock rows cap at 1200px; widened here. box-sizing:border-box matters for
+     .top_header_menu, which the skin makes position:absolute with a width and
+     40px side padding — as content-box its padding adds on top of the width
+     and the icon cluster overflows the viewport (and gets clipped). border-box
+     folds the padding into the width. The same cap on all three rows keeps the
+     icons aligned with the category nav's right edge. */
+  .layout_header .resp_wrap:not(.top_header_menu),
+  .layout_header .util_wrap .top_header_menu {
+    box-sizing: border-box;
+    max-width: 1580px;
+  }
+  
+  .layout_header .util_wrap {
+    height: 23px;
+    max-width: 1500px;
+  }
+  
+  /* ===== Desktop container centring (>= 1121px) ===========================
+     Force the main header row and the utility row to share the same centred
+     viewport container. This overrides stock fixed widths without shifting the
+     logo/search row to either side. */
+  @media only screen and (min-width: 1121px) {
+    .layout_header > .resp_wrap,
+    .layout_header .util_wrap .top_header_menu {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 1500px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 38px;
+      padding-right: 38px;
+    }
+  }
+  
+  /* ===== Desktop header row (>= 1121px) ===================================
+     Logo left, search filling the middle, icons right. The stock skin centres
+     the logo in .logo_wrap and keeps the icons in .util_wrap, the row above,
+     where they already overflow downwards; .logo_wrap becomes the row and the
+     icon list is nudged down into it, so the icons keep their horizontal spot
+     and nothing reflows. */
+  @media only screen and (min-width: 1121px) {
+    .layout_header .tp-logo,
+    .layout_header .tp-logo a {
+      font-size: 26px;
+    }
+  
+    /* Right column reserved for the icon cluster in the row above. The icons
+       are ~128px wide plus their offset from the container edge, so anything
+       under 200px let the search bar run under them at narrower desktop
+       widths (measured: 24px overlap at 1100px with 158px). */
+    /* Keep the desktop row geometrically centred. The previous flex +
+       padding-right reservation shifted the row left because only the right
+       side carried the icon reserve. A 3-column grid reserves the same width
+       on both sides: logo | search | utility-icon space. */
+    .layout_header .resp_wrap .logo_wrap {
+      display: grid;
+      grid-template-columns: 175px minmax(0, 1fr) 175px;
+      align-items: center;
+      column-gap: 26px;
+      width: 100%;
+      padding: 0 0 23px 0;
+    }
+  
+    .layout_header .logo_wrap .logo_area {
+      grid-column: 1;
+      width: 175px;
+      margin: 0;
+    }
+  
+    /* The icons live in .util_wrap, the row above, and are pulled down to sit
+       on the search row's vertical centre. 14px lands them dead-centre with
+       the search bar (measured constant across 1024–1920). */
+    .layout_header .util_wrap .util_wrap_menu2 {
+      position: relative;
+    }
+  
+    /* .top_header_menu is position:absolute and overlaps the search bar below
+       it, so clicks on the upper half of the search field (and its magnifier)
+       landed on this empty container instead. Let clicks pass through it and
+       re-enable them on the actual icons. */
+    .layout_header .util_wrap .top_header_menu {
+      pointer-events: none;
+    }
+  
+    .layout_header .util_wrap_menu2,
+    .layout_header .util_wrap_menu2 > li {
+      pointer-events: auto;
+    }
+  
+    .layout_header .util_wrap_menu2 > li > a {
+      padding: 0 10px;
+    }
+  
+    /* object-fit so non-square icons (the heart is 30x26) keep their aspect
+       ratio inside the box instead of being squashed to a square. */
+    .layout_header .util_wrap_menu2 > li > a img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+  
+    /* The magnifier is redundant next to the search field. Hidden rather than
+       removed: #btnSearchV2 inside it is what the fixed bottom menu clicks to
+       open the search overlay below 1121px. */
+    .layout_header .util_wrap_menu2 .top_my_search {
+      display: none;
+    }
+  
+    .layout_header .logo_wrap .tp-header-search {
+      display: block;
+      position: relative;
+      grid-column: 2;
+      width: 100%;
+      height: 38px;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 999px;
+      box-shadow: 0 0 0 1px rgba(125, 63, 228, 0.18);
+    }
+  
+    .layout_header .tp-header-search input[type="text"] {
+      -webkit-appearance: none;
+      appearance: none;
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      margin: 0;
+      padding: 0 52px 0 20px;
+      border: 0;
+      border-radius: 999px;
+      outline: none;
+      color: #333;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 400;
+      cursor: text;
+    }
+  
+    .layout_header .tp-header-search button {
+      position: absolute;
+      top: 50%;
+      right: 2px;
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      margin: 0 2px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      /* Icon as a background, not an <img>: the server output was dropping img
+         tags placed here. */
+      background: #7f56d9 url("../../images/icon/tp-header-search.png") no-repeat
+        center / 20px 20px;
+      cursor: pointer;
+    }
+  }
+  
+  /* ===== Mobile & tablet header (<= 1120px) ===============================
+     Two rows: hamburger (left) / logo (centre) / account + cart (right) on
+     top, a full-width search field below.
+  
+     The skin already absolutely-positions .resp_top_hamburger and
+     .resp_top_cart on these widths, so those two stay out of flow; only the
+     logo and the search field are in flow (logo row 1, search row 2). The
+     account link is pinned next to the cart, and the hamburger is forced
+     visible so tablet matches the mobile design instead of the stock skin
+     swapping it for the desktop category bar alone. */
+  @media only screen and (max-width: 1120px) {
+    /* Firstmall switches several base header widths at 1024px. Because our
+       tablet layout intentionally continues through 1120px, force the main
+       header container back to a fluid tablet width in this overlap range. */
+    .layout_header > .resp_wrap {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  
+    /* The stock skin keeps the desktop icon row (.util_wrap: language +
+       account/wish/search/cart) visible down to 768px, which duplicated the
+       icons above the mobile layout. It is already hidden below 768px, so
+       hiding it through 1120px keeps the tablet header consistent. The promo
+       banner and category nav are separate elements and stay. */
+    .layout_header .util_wrap {
+      display: none;
+    }
+  
+    .layout_header .tp-logo,
+    .layout_header .tp-logo a {
+      font-size: 20px;
+    }
+  
+    .layout_header .logo_wrap {
+      position: relative;
+      /* Keep phone/tablet vertical rhythm identical through 1120px. */
+      padding: 18px 16px 18px;
+    }
+  
+    /* The skin gives .logo_area a fixed 56px height and makes its <a> a flex
+       container with the default justify-content, so text-align:center had no
+       effect — the logo sat hard left and the extra height pushed the search
+       bar down. Collapse the height and centre via flex on the anchor. */
+    .layout_header .logo_wrap h1.logo_area {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      line-height: 1;
+      text-align: center;
+    }
+  
+    .layout_header .logo_wrap h1.logo_area a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+      min-height: 0;
+      padding: 0;
+      font-size: 20px;
+    }
+
+
+    #layout_header.layout_header .resp_top_hamburger {
+      display: block;
+      position: absolute;
+      top: 18px;
+      left: 16px;
+      width: 24px;
+      height: 20px;
+      margin: 0;
+      background: transparent
+        url("../../images/mypage/hamburger_mobile.png")
+        no-repeat center / 24px 20px;
+      z-index: 3;
+    }
+
+    /* Keep the stock anchor as the click target, but hide its CSS-drawn bars.
+       opacity hides the anchor, its <b>, and all pseudo-elements together,
+       while the parent PNG remains visible and the link stays clickable. */
+    #layout_header.layout_header .resp_wrap .logo_wrap .resp_top_hamburger > a {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 24px;
+      height: 20px;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+  
+    .layout_header .resp_top_mypge {
+      display: block;
+      position: absolute;
+      top: 15px;
+      right: 70px;
+      left: auto;
+      width: 26px;
+      height: 26px;
+      margin: 0;
+      font-size: 0;
+      background: url("../../images/icon/tp-header-my.png") no-repeat center / 24px 24px;
+      z-index: 3;
+    }
+  
+    .layout_header .resp_top_cart {
+      display: block;
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      left: auto;
+      width: 26px;
+      height: 26px;
+      margin: 0;
+      font-size: 0;
+      background: url("../../images/icon/tp-header-cart.png") no-repeat center / 24px 24px;
+      z-index: 3;
+    }
+  
+    .layout_header .tp-header-search {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 38px;
+      margin-top: 14px;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 999px;
+    }
+  
+    .layout_header .tp-header-search input[type="text"] {
+      -webkit-appearance: none;
+      appearance: none;
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: 0;
+      height: 100%;
+      margin: 0;
+      padding: 0 52px 0 16px;
+      border: 0;
+      border-radius: 999px;
+      outline: none;
+      color: #333;
+      background: #fff;
+      font-size: 14px;
+      cursor: text;
+    }
+  
+    .layout_header .tp-header-search button {
+      position: absolute;
+      top: 50%;
+      right: 2px;
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      margin: 0 2px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      background: #7f56d9 url("../../images/icon/tp-header-search.png") no-repeat
+        center / 20px 20px;
+      cursor: pointer;
+    }
+  }
+  
+  
+  /* Category nav top divider — full viewport width */
+  .layout_header #cateSwiper.nav_wrap {
+    position: relative;
+    border-top: 0;
+  }
+
+  .layout_header #cateSwiper.nav_wrap::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100vw;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  /* ===== Category bar, desktop (>= 1121px) ================================
+     Matches the prototype's .category-nav: a centred 45px row with the links
+     spaced by a viewport-scaled gap, rather than the stock bar that stretches
+     items edge-to-edge with space-between and 16px/600 type.
+
+     Selector is deliberately long — the stock rules are written as
+     `#cateSwiper .designCategoryNavigation ul.respCategoryList`, so anything
+     shorter loses on specificity. Below 1121px the skin turns this list into
+     a Swiper track, so these rules stay out of that range. */
+  @media only screen and (min-width: 1121px) {
+    .layout_header .nav_wrap .nav_category_area,
+    .layout_header .nav_wrap .designCategoryNavigation {
+      width: 100%;
+      background: transparent;
+    }
+
+    .layout_header #cateSwiper .designCategoryNavigation ul.respCategoryList {
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      gap: clamp(24px, 3vw, 56px);
+      height: 40px;
+      padding: 0 36px;
+    }
+
+    .layout_header #cateSwiper .designCategoryNavigation ul.respCategoryList > li {
+      flex: 0 0 auto;
+      width: auto;
+      height: 100%;
+    }
+
+    .layout_header #cateSwiper .designCategoryNavigation ul.respCategoryList > li > a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 0;
+    }
+
+    .layout_header #cateSwiper .designCategoryNavigation ul.respCategoryList > li > a em {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-size: 13px;
+      font-weight: 500;
+      font-style: normal;
+      line-height: 1;
+      /* Prototype eases the colour rather than snapping it. */
+      transition: color 0.2s ease;
+    }
+
+    /* ===== Mega dropdown =================================================
+       Prototype .category-mega. The skin's markup maps onto it directly:
+       .categorySub is the panel, .categoryDepth2 the column row,
+       .categorySubDepth a column, .categoryDepth3 its link list. */
+    /* The stock panel is positioned against its own <li>, so it is only as
+       wide as the menu label. The prototype spans it across the header, so
+       the containing block moves up to .nav_category_area. */
+    .layout_header #cateSwiper .respCategoryList > li.categoryDepth1 {
+      position: static;
+    }
+
+    .layout_header #cateSwiper .nav_category_area {
+      position: relative;
+    }
+
+    /* The panel animates in, so it stays in the layout and is hidden with
+       opacity/visibility instead of display. standard.html toggles .is-open
+       rather than calling jQuery .show()/.hide(), which would set an inline
+       display and defeat the transition. */
+    #layout_header.layout_header #cateSwiper .categoryDepth1 > .categorySub {
+      box-sizing: border-box;
+      display: block;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      width: min(1620px, calc(100vw - 64px));
+      max-width: none;
+      height: 345px;
+      min-height: 345px;
+      margin: 0;
+      padding: 16px 20px 22px;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 22px 44px rgba(42, 24, 52, 0.18);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translate(-50%, -8px);
+      transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        visibility 0.22s ease;
+    }
+
+    #layout_header.layout_header #cateSwiper .categoryDepth1 > .categorySub.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+    }
+
+    /* user.css sets width:calc(100% - 30px) here, and that missing 30px all
+       came off the right side, so the centred column row sat left of centre. */
+    .layout_header #cateSwiper .categorySub .categorySubWrap {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+    }
+
+    /* Keep the generated category columns as one centred group. This matters
+       for categories with only a few columns: the group stays centred instead
+       of visually stretching across the full dropdown. */
+    .layout_header #cateSwiper .categorySub .categoryDepth2 {
+      display: grid;
+      grid-template-columns: minmax(110px, 0.9fr) repeat(auto-fit, minmax(96px, 1fr));
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      gap: 0;
+      list-style: none;
+    }
+
+    /* Prototype category-specific mega-menu column widths. */
+    .layout_header #cateSwiper .categoryDepth1:has(> .categoryDepthLink[href*="code=0010"]) > .categorySub .categoryDepth2 {
+      grid-template-columns: 150px repeat(4, minmax(130px, 150px));
+      justify-content: center;
+      width: auto;
+    }
+
+    .layout_header #cateSwiper .categoryDepth1:has(> .categoryDepthLink[href*="code=0011"]) > .categorySub .categoryDepth2 {
+      grid-template-columns: 150px repeat(5, minmax(130px, 150px));
+      justify-content: center;
+      width: auto;
+    }
+
+    .layout_header #cateSwiper .categoryDepth1:has(> .categoryDepthLink[href*="code=0012"]) > .categorySub .categoryDepth2 {
+      grid-template-columns: 150px repeat(8, minmax(96px, 126px));
+      justify-content: center;
+      width: auto;
+    }
+
+
+    /* T.P Pick uses the prototype's compact four-column layout rather than
+       the generic auto-fit grid. Keep the whole group centred in the wide card. */
+    .layout_header #cateSwiper .categoryDepth1:has(> .categoryDepthLink.tp_nav_accent) > .categorySub .categoryDepth2 {
+      grid-template-columns: 150px repeat(3, minmax(130px, 150px));
+      justify-content: center;
+      width: auto;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Feature cell: T.P Pick on the first line, Trendy Pick directly below. */
+    .layout_header #cateSwiper .categoryDepth1:has(> .categoryDepthLink.tp_nav_accent) > .categorySub .categorySubDepth:first-child > a {
+      width: 150px;
+      color: #9f61ff;
+      font-size: 15px;
+      line-height: 1.2;
+      text-wrap: nowrap;
+    }
+
+    .layout_header #cateSwiper .categoryDepth1:has(> .categoryDepthLink.tp_nav_accent) > .categorySub .categorySubDepth:first-child > a::after {
+      content: "Trendy Pick";
+      display: block;
+      margin-top: 4px;
+      color: #111;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    /* The remaining three TP Pick items are headings only, so remove the
+       generic heading bottom gap that is meant for a third-depth list. */
+    .layout_header #cateSwiper .categoryDepth1:has(> .categoryDepthLink.tp_nav_accent) > .categorySub .categorySubDepth:not(:first-child) > a {
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+
+    .layout_header #cateSwiper .categorySub .categorySubDepth {
+      box-sizing: border-box;
+      min-width: 0;
+      margin: 0;
+      padding: 2px 14px;
+      transition: opacity 0.2s ease;
+    }
+
+    .layout_header #cateSwiper .categorySub .categorySubDepth:first-child {
+      top: -4px;
+      position: relative;
+      align-self: start;
+    }
+
+    .layout_header #cateSwiper .categorySub .categorySubDepth:not(:first-child) {
+      position: relative;
+      top: -4px;
+    }
+
+
+    /* Column divider — the first column is the feature cell, like the
+       prototype's .mega-feature, so it carries no rule. */
+    .layout_header #cateSwiper .categorySub .categorySubDepth + .categorySubDepth {
+      border-left: 1px solid rgba(123, 63, 228, 0.16);
+    }
+
+    .layout_header #cateSwiper .categorySub .categorySubDepth > a {
+      display: block;
+      margin: 0 0 8px;
+      color: #111;
+      font-size: 15px;
+      line-height: 1.25;
+      font-weight: 700;
+      /* The stock heading is nowrap, so a long first column ("Beauty Trendy
+         Pick") ran under its neighbour. The prototype wraps it instead. */
+      white-space: normal;
+      overflow-wrap: anywhere;
+      transition: color 0.2s ease;
+    }
+
+    /* K-Traditional > Fashion&Accessories: exact two-line label. */
+    .layout_header #cateSwiper .categorySub .categorySubDepth > a[href*="code=00120004"] {
+      font-size: 0;
+      line-height: 1;
+      white-space: normal;
+      overflow-wrap: normal;
+    }
+
+    .layout_header #cateSwiper .categorySub .categorySubDepth > a[href*="code=00120004"]::before,
+    .layout_header #cateSwiper .categorySub .categorySubDepth > a[href*="code=00120004"]::after {
+      display: block;
+      color: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+
+    .layout_header #cateSwiper .categorySub .categorySubDepth > a[href*="code=00120004"]::before {
+      content: "Fashion&";
+    }
+
+    .layout_header #cateSwiper .categorySub .categorySubDepth > a[href*="code=00120004"]::after {
+      content: "Accessories";
+    }
+
+
+    /* First column is the feature cell (prototype .mega-feature): it has no
+       link list, and its label is the purple accent. */
+    .layout_header #cateSwiper .categorySub .categorySubDepth:first-child > a {
+      display: block;
+      width: 108px;
+      margin: 0;
+      color: #111;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.3;
+      white-space: normal;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      text-wrap: balance;
+    }
+
+    .layout_header #cateSwiper .categorySub .categorySubDepth:first-child > a::first-line {
+      color: #9f61ff;
+    }
+
+    .layout_header #cateSwiper .categorySub .tp-mega-category-name {
+      display: block;
+      color: #9f61ff;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .layout_header #cateSwiper .categorySub .tp-mega-trendy-pick {
+      display: block;
+      margin-top: 4px;
+      color: #111;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .layout_header #cateSwiper .categorySub .categoryDepth3 {
+      display: grid;
+      gap: 18px;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      list-style: none;
+    }
+
+    .layout_header #cateSwiper .categorySub .categoryDepth3 > li {
+      display: block;
+      height: auto;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      line-height: 1.15;
+    }
+
+    .layout_header #cateSwiper .categorySub .categoryDepth3 a {
+      display: block;
+      width: auto;
+      height: auto;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      color: rgba(17, 17, 17, 0.6);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.15;
+      transition: color 0.2s ease;
+    }
+
+    /* Hovering one column dims the rest, as in the prototype. The stock skin
+       instead nudges the hovered column sideways — that transform is
+       cancelled here so only the dimming reads. */
+    #layout_header.layout_header #cateSwiper .categorySub .categoryDepth2 > .categorySubDepth {
+      opacity: 1;
+    }
+
+    #layout_header.layout_header #cateSwiper .categorySub .categoryDepth2:hover > .categorySubDepth:not(:hover) {
+      opacity: 0.35;
+    }
+
+    #layout_header.layout_header #cateSwiper .categorySub .categorySubDepth,
+    #layout_header.layout_header #cateSwiper .categorySub .categorySubDepth:hover {
+      left: auto;
+      right: auto;
+      margin-left: 0;
+      margin-right: 0;
+      transform: none;
+      translate: none;
+      text-indent: 0;
+    }
+
+    #layout_header.layout_header #cateSwiper .categorySub .categoryDepth3 > li,
+    #layout_header.layout_header #cateSwiper .categorySub .categoryDepth3 > li:hover,
+    #layout_header.layout_header #cateSwiper .categorySub .categoryDepth3 > li > a,
+    #layout_header.layout_header #cateSwiper .categorySub .categoryDepth3 > li:hover > a {
+      left: auto;
+      right: auto;
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 0;
+      padding-right: 0;
+      transform: none;
+      translate: none;
+      text-indent: 0;
+    }
+
+    .layout_header #cateSwiper .categorySub .categorySubDepth:hover > a {
+      left: auto;
+      margin-left: 0;
+      transform: none;
+      translate: none;
+      color: #000;
+    }
+
+    .layout_header #cateSwiper .categorySub .categoryDepth3 a:hover {
+      color: #000;
+    }
+}
+
+  /* ===== Mobile/tablet nav spacing (0–1120px) ===============================
+     user.css adds padding-top:30px to .layout_header #cateSwiper around the
+     tablet breakpoint. #cateSwiper is the category nav directly below the
+     search field, so that padding appears as a sudden 30px gap. Override it
+     here rather than modifying the stock user.css. */
+  @media only screen and (max-width: 1120px) {
+    .layout_header #cateSwiper.nav_wrap {
+      margin-top: 0;
+      padding-top: 0;
+    }
+  }
+  
+  /* ===== Cart count badge =================================================
+     The markup renders {? push_count_cart} into .cart_cnt2, so the badge only
+     appears when the cart holds something. Pinned to the icon's top-right
+     corner (prototype), replacing the stock negative-margin placement.
+  
+     .resp_top_cart is already position:absolute, so the badge inside it needs
+     no extra positioning context. */
+  .layout_header .util_wrap_menu2 .top_my_cart > a {
+    position: relative;
+  }
+  
+  .layout_header .util_wrap_menu2 .top_my_cart .cart_cnt2,
+  .layout_header .resp_top_cart .cart_cnt2 {
+    position: absolute;
+    top: -3px;
+    right: -6px;
     display: grid;
     place-items: center;
-    width: 34px;
-    height: 34px;
-    margin: 4px;
+    width: auto;
+    padding: 0 4px;
+    border-radius: 999px;
+    color: #fff;
+    background: #9f61ff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  
+  /* Mobile / tablet: pull the cart count badge slightly inward from the
+     right edge of the cart icon. Keep the desktop utility badge unchanged. */
+  @media only screen and (max-width: 1120px) {
+    .layout_header .resp_top_cart .cart_cnt2 {
+      right: -2px;
+    }
+  }
+  
+  /* ===== Firstmall top_bar separator =======================================
+     standard.html keeps an empty .top_bar element and flyingTitleBar() reads
+     and rewrites only its top position. Keep the element in the DOM as the JS
+     anchor, but collapse its visual box so it cannot paint the grey separator.
+  
+     This selector deliberately includes #layout_header to beat the stock skin
+     by specificity, so no priority override is needed. */
+  #layout_header.layout_header > .top_bar {
+    height: 0;
+    min-height: 0;
+    margin: 0;
     padding: 0;
     border: 0;
-    border-radius: 50%;
-    /* Icon as a background, not an <img>: the server output was dropping
-       img tags placed here. */
-    background: #7f56d9 url("../../images/icon/tp-header-search.png") no-repeat
-      center / 20px 20px;
-    cursor: pointer;
+    background: transparent;
+    box-shadow: none;
+    overflow: hidden;
+    pointer-events: none;
   }
-}
+  
+  #layout_header.layout_header > .top_bar::before,
+  #layout_header.layout_header > .top_bar::after {
+    content: none;
+    display: none;
+  }
+  
+  /* ===== Desktop category nav spacing (>= 1121px) ==========================
+     user.css applies padding-top:30px to .layout_header #cateSwiper.
+     The redesigned desktop header does not use that stock spacing. */
+  @media only screen and (min-width: 1121px) {
+    .layout_header #cateSwiper.nav_wrap {
+      padding-top: 0;
+    }
+  }
 
-/* ===== Cart count badge =================================================
-   The markup already renders {? push_count_cart} into .cart_cnt2, so the
-   badge shows only when the cart holds something. The stock rules sit it
-   beside the bag with negative margins; the prototype pins it to the
-   icon's top-right corner.
+  /* ===== Explicit responsive logo sizing ===== */
+  @media only screen and (max-width: 767px) {
+    #layout_header.layout_header .logo_wrap h1.logo_area a {
+      font-size: 20px;
+    }
+  }
 
-   .resp_top_cart is deliberately left alone — it is display:none and
-   position:absolute on desktop, and overriding either breaks the mobile
-   header. Being absolute already makes it a positioning context, so the
-   badge inside it needs nothing extra. */
-/* position only — giving the anchor a display value changes the icon row's
-   height and drags the whole cluster out of line with the logo. */
-.layout_header .util_wrap_menu2 .top_my_cart > a {
-  position: relative;
-}
+  @media only screen and (min-width: 768px) and (max-width: 1120px) {
+    #layout_header.layout_header .logo_wrap h1.logo_area a {
+      font-size: 30px;
+    }
+  }
 
-.layout_header .util_wrap_menu2 .top_my_cart .cart_cnt2,
-.layout_header .resp_top_cart .cart_cnt2 {
-  position: absolute;
-  top: 5px;
-  right: -6px;
-  display: grid;
-  place-items: center;
-  width: auto;
-  height: 16px;
-  margin: 0;
-  padding: 0 4px;
-  border-radius: 999px;
-  color: #fff;
-  background: #9f61ff;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1;
-}
+  /* ===== Tablet icon vertical alignment (768–1120px) =====
+     The tablet logo is 30px tall, so the mobile top offsets place the
+     hamburger/account/cart icons too high. Shift only the tablet icons down
+     to align their visual centres with the brand name. */
+  @media only screen and (min-width: 768px) and (max-width: 1120px) {
+    #layout_header.layout_header .resp_top_hamburger {
+      top: 25px;
+    }
+
+    #layout_header.layout_header .resp_top_mypge,
+    #layout_header.layout_header .resp_top_cart {
+      top: 23px;
+    }
+  }

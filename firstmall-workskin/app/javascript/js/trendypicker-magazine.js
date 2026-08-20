@@ -79,9 +79,14 @@
       document.body.style.setProperty("height", "auto", "important");
       document.body.style.setProperty("min-height", "0", "important");
       document.body.style.setProperty("overflow", "hidden", "important");
+      /* Side gutter inside the iframe. It stacks with the shell's own
+         padding, so on narrow screens the fixed 32px left the board at about
+         half the viewport — taper it down as the frame gets smaller. */
+      var frameWidth = document.documentElement.clientWidth;
+      var sideGutter = frameWidth <= 480 ? 0 : frameWidth <= 760 ? 16 : 32;
       document.body.style.setProperty(
         "padding",
-        isHomeWidgetDoc() ? "0" : "0 32px 56px",
+        isHomeWidgetDoc() ? "0" : "0 " + sideGutter + "px 56px",
         "important"
       );
       document.body.style.setProperty("box-sizing", "border-box", "important");
@@ -181,18 +186,28 @@
     main.style.setProperty("transform", "none", "important");
     main.style.setProperty("background", "#202020", "important");
     main.style.setProperty("margin-left", "0px", "important");
-    main.style.setProperty("width", window.innerWidth + "px", "important");
+    main.style.setProperty("width", document.documentElement.clientWidth + "px", "important");
 
     var shift = -Math.round(main.getBoundingClientRect().left);
     main.style.setProperty("margin-left", shift + "px", "important");
-    main.style.setProperty("width", window.innerWidth + "px", "important");
+    main.style.setProperty("width", document.documentElement.clientWidth + "px", "important");
 
     var shell = main.querySelector(".magazine-shell, .magazine-detail-shell");
     if (!shell) return;
 
     resetShellInlineBox(shell);
 
-    var shellWidth = Math.min(1350, Math.max(280, window.innerWidth - 80));
+    /* Desktop insets the shell by 40px a side so the dark page background
+       frames it. Tablet and mobile want the shell edge-to-edge instead — the
+       CSS at <=1120px already asks for width:100%, but these inline
+       !important styles would otherwise win and leave dark bars down both
+       sides. */
+    var fullBleed = window.innerWidth <= 1120;
+    /* clientWidth, not innerWidth: innerWidth includes the scrollbar, and
+       using it edge-to-edge pushes the page into horizontal scroll. */
+    var shellWidth = fullBleed
+      ? document.documentElement.clientWidth
+      : Math.min(1350, Math.max(280, window.innerWidth - 80));
     shell.style.setProperty("box-sizing", "border-box", "important");
     shell.style.setProperty("display", "block", "important");
     shell.style.setProperty("flex", "0 0 auto", "important");
@@ -200,8 +215,8 @@
     shell.style.setProperty("max-width", "100%", "important");
     shell.style.setProperty("height", "auto", "important");
     shell.style.setProperty("min-height", "0", "important");
-    shell.style.setProperty("margin-left", "auto", "important");
-    shell.style.setProperty("margin-right", "auto", "important");
+    shell.style.setProperty("margin-left", fullBleed ? "0" : "auto", "important");
+    shell.style.setProperty("margin-right", fullBleed ? "0" : "auto", "important");
     shell.style.setProperty("margin-bottom", "0", "important");
     shell.style.setProperty("overflow", "visible", "important");
     shell.style.setProperty("position", "relative", "important");

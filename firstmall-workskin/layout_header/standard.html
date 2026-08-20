@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-header.css" />
 
 <div id="layout_header" class="layout_header">
-    <div class="top_header_banner"><a href="#" target="actionFrame" designElement="text">FREE SHIPPING ON $48+ US ORDERS</a></div>
+    <div class="top_header_banner"><a href="#" target="actionFrame" designElement="text">FREE SHIPPING ON $48+ US ORDERS</a></div>
     <div class="util_wrap">
         <div class="resp_wrap top_header_menu">
 			<!-- language -->
@@ -119,13 +119,30 @@
 								</ul>
 							</div>
 						</li>
+                        <!-- 프로토타입 .category-nav 순서: BEST / NEW / Brand 가
+                             관리자 카테고리 앞에 오고, Time Deal / T.P Pick 이 뒤에 옵니다. -->
+                        <li class="custom_nav_link"><a href="/goods/best" class="categoryDepthLink" designElement="text"><em>BEST</em></a></li>
+                        <li class="custom_nav_link"><a href="/goods/new_arrivals" class="categoryDepthLink" designElement="text"><em>NEW</em></a></li>
+                        <li class="custom_nav_link"><a href="/goods/brand_main" class="categoryDepthLink" designElement="text"><em>Brand</em></a></li>
                         {=showCategoryLightNavigation()}
                         <!-- //카테고리 네비게이션 -->
-                        <li class="custom_nav_link center_bar"><a href="#" class="categoryDepthLink"><em>&nbsp;<img g src="../images/icon/icon-bar.png" title="" alt="">&nbsp;</em></a></li>
-						<li class="custom_nav_link"><a href="/promotion/event" class="categoryDepthLink f_purple" designElement="text"><em>PROMOTION</em></a></li>
-						<li class="custom_nav_link"><a href="/promotion/timedeal" class="categoryDepthLink f_red" designElement="text"><em>TIME DEAL</em></a></li>
-						<li class="custom_nav_link"><a href="/main/magazine" class="categoryDepthLink f_purple" designElement="text"><em>MAGAZINE</em></a></li>
-						<li class="custom_nav_link"><a href="/main/membership" class="categoryDepthLink f_purple" designElement="text"><em>MEMBERSHIP</em></a></li>
+                        <li class="custom_nav_link"><a href="/promotion/timedeal" class="categoryDepthLink tp_nav_warm" designElement="text"><em>Time Deal &#128293;</em></a></li>
+                        <!-- T.P Pick: 관리자 카테고리가 아니라 고정 메뉴라 하위 목록도
+                             여기에 직접 둡니다. 클래스는 카테고리 드롭다운과 같은 것을
+                             써서 스타일·애니메이션을 그대로 받습니다. -->
+                        <li class="custom_nav_link categoryDepth1">
+                            <a href="/main/magazine" class="categoryDepthLink tp_nav_accent" designElement="text"><em>T.P Pick</em></a>
+                            <div class="categorySub">
+                                <div class="categorySubWrap">
+                                    <ul class="categoryDepth2">
+                                        <li class="categorySubDepth"><a href="/main/magazine">T.P Pick</a></li>
+                                        <li class="categorySubDepth"><a href="/main/magazine">Editor's Pick</a></li>
+                                        <li class="categorySubDepth"><a href="/main/magazine">T.P Magazine</a></li>
+                                        <li class="categorySubDepth"><a href="/shortform/feed">Real Trend</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
 					</ul>
 				</div>
 			</div>
@@ -486,9 +503,9 @@
         $('#layout_header .designCategoryNavigation .respCategoryList>li').eq(cateIndex).addClass('on');
         /* //카테고리 활성화 */
 
-        /* 카테고리 swiper 동작( 1024 미만인 경우 동작, 1024 이상인 경우 : 마우스 오버시 서브메뉴 노출 ) */
+        /* 카테고리 swiper 동작( 1121 미만인 경우 동작, 1121 이상인 경우 : 마우스 오버시 서브메뉴 노출 ) */
         var slideshowSwiper = undefined;
-        if ( window.innerWidth < 1024 && $('#cateSwiper .designCategoryNavigation').length > 0 ) {
+        if ( window.innerWidth < 1121 && $('#cateSwiper .designCategoryNavigation').length > 0 ) {
             $('#cateSwiper .designCategoryNavigation ul.respCategoryList>li').addClass('swiper-slide');
             slideshowSwiper = new Swiper('#cateSwiper .designCategoryNavigation', {
                 wrapperClass: 'respCategoryList',
@@ -498,13 +515,15 @@
         } else {
             $('#cateSwiper .designCategoryNavigation ul.respCategoryList>li').removeClass('swiper-slide');
             $('#layout_header .respCategoryList .categoryDepth1').hover(
-                function() { $(this).find('.categorySub').show(); },
-                function() { $(this).find('.categorySub').hide(); }
+                /* 클래스 토글: .show()/.hide() 는 인라인 display 를 직접 바꿔
+                   CSS transition 이 걸리지 않습니다( 프로토타입의 fade+slide ). */
+                function() { $(this).find('.categorySub').addClass('is-open'); },
+                function() { $(this).find('.categorySub').removeClass('is-open'); }
             );
         }
         $( window ).resize(function() {
             if ( window.innerWidth != WINDOWWIDTH ) {
-                if ( window.innerWidth < 1024 && $('#cateSwiper .designCategoryNavigation').length > 0 && slideshowSwiper == undefined ) {
+                if ( window.innerWidth < 1121 && $('#cateSwiper .designCategoryNavigation').length > 0 && slideshowSwiper == undefined ) {
                     $('#cateSwiper .designCategoryNavigation ul.respCategoryList>li').addClass('swiper-slide');
                     $('#layout_header .respCategoryList .categoryDepth1').off('hover');
                     slideshowSwiper = new Swiper('#cateSwiper .designCategoryNavigation', {
@@ -512,19 +531,19 @@
                         slidesPerView: 'auto'
                     });
                     slideshowSwiper.slideTo( (cateIndex-1), 800, false );
-                } else if ( window.innerWidth > 1023 && slideshowSwiper != undefined ) {
+                } else if ( window.innerWidth > 1120 && slideshowSwiper != undefined ) {
                     slideshowSwiper.slideTo( 0, 800, false );
                     $('#cateSwiper .designCategoryNavigation ul.respCategoryList>li').removeClass('swiper-slide');
                     slideshowSwiper.destroy();
                     slideshowSwiper = undefined;
                     $('#layout_header .respCategoryList .categoryDepth1').hover(
-                        function() { $(this).find('.categorySub').show(); },
-                        function() { $(this).find('.categorySub').hide(); }
+                        function() { $(this).find('.categorySub').addClass('is-open'); },
+                        function() { $(this).find('.categorySub').removeClass('is-open'); }
                     );
                 }
             }
         });
-        /* //카테고리 swiper 동작( 1024 미만인 경우 동작, 1024 이상인 경우 : 마우스 오버시 서브메뉴 노출 ) */
+        /* //카테고리 swiper 동작( 1121 미만인 경우 동작, 1121 이상인 경우 : 마우스 오버시 서브메뉴 노출 ) */
 
         //================= 카테고리 전체 네비게이션 START ====================
         $('.categoryAllBtn').click(function() {
