@@ -188,6 +188,7 @@
        the search bar (measured constant across 1024–1920). */
     .layout_header .util_wrap .util_wrap_menu2 {
       position: relative;
+      left: 18px;
     }
   
     /* .top_header_menu is position:absolute and overlaps the search bar below
@@ -210,8 +211,8 @@
     /* object-fit so non-square icons (the heart is 30x26) keep their aspect
        ratio inside the box instead of being squashed to a square. */
     .layout_header .util_wrap_menu2 > li > a img {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       object-fit: contain;
     }
   
@@ -226,7 +227,8 @@
       display: block;
       position: relative;
       grid-column: 2;
-      width: 100%;
+      justify-self: center;
+      width: calc(100% - 135px);
       height: 38px;
       overflow: hidden;
       background: #fff;
@@ -359,7 +361,7 @@
     .layout_header .logo_wrap {
       position: relative;
       /* Keep phone/tablet vertical rhythm identical through 1120px. */
-      padding: 18px 16px 18px;
+      padding: 18px 20px 18px;
     }
   
     /* The skin gives .logo_area a fixed 56px height and makes its <a> a flex
@@ -421,7 +423,7 @@
       display: block;
       position: absolute;
       top: 15px;
-      right: 65px;
+      right: 58px;
       left: auto;
       width: 26px;
       height: 26px;
@@ -435,7 +437,7 @@
       display: block;
       position: absolute;
       top: 16px;
-      right: 10px;
+      right: 12px;
       left: auto;
       width: 26px;
       height: 26px;
@@ -478,7 +480,7 @@
     .layout_header .tp-header-search button {
       position: absolute;
       top: 50%;
-      right: 2px;
+      right: 1px;
       z-index: 2;
       width: 32px;
       height: 32px;
@@ -488,7 +490,7 @@
       border-radius: 50%;
       transform: translateY(-50%);
       background: #7f56d9 url("../../images/icon/tp-header-search.png") no-repeat
-        center / 20px 20px;
+        center / 18px 18px;
       cursor: pointer;
     }
   }
@@ -976,6 +978,13 @@
   @media only screen and (max-width: 767px) {
     #layout_header.layout_header .logo_wrap h1.logo_area a {
       font-size: 20px;
+    }
+
+    /* Search bar 3px shorter on phones only. The input is height:100%, so
+       trimming the pill trims the field with it and keeps it centred; tablet
+       (768–1120px) stays at 42px. */
+    .layout_header .tp-header-search {
+      height: 39px;
     }
   }
 

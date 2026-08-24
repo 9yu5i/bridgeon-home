@@ -1199,3 +1199,23 @@ body.is-auth-page .bo-login-main--register .resp_member_join_wrap .resp_member_j
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== Sign-in page chrome =============================================
+   Scoped to body.is-login-page so only the sign-in screen is affected, not
+   register or find. The header's logo bar and category nav are dropped on a
+   phone so the whole .bo-login-shell fits in one screen without scrolling —
+   together they took 156px, more than the shell overran the viewport by. The
+   floating quick buttons go on phone and tablet both, per request. */
+@media (max-width: 760px) {
+  body.is-login-page .layout_header .logo_wrap,
+  body.is-login-page .layout_header #cateSwiper.nav_wrap {
+    display: none;
+  }
+}
+
+@media (max-width: 1120px) {
+  body.is-login-page #floating_over .ico_floating_top,
+  body.is-login-page #floating_over .ico_floating_talk {
+    display: none;
+  }
+}

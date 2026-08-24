@@ -12,664 +12,995 @@
    nodes through long class chains in common.css and user.css; the id outranks
    them without needing !important. */
 
-/* ===== Panel shell =====================================================
-   The skin drops this as a 460px menu pinned under the input (right:740px
-   against the 1200px .search_new). The prototype uses the full header width,
-   so releasing `right` lets it span its container instead of hard-coding a
-   width — the panel then tracks whatever width the header settles on. */
-   #searchVer2 .contetns_area {
-    color: #271820;
-    background: #fff;
-  }
-  
-  @media only screen and (min-width: 1121px) {
-    /* user.css treats anything under 1280px as a phone and turns the open
-       module into a full-height tinted overlay:
-  
-         .layout_header .resp_top_search .search_ver2.on
-           { height: 100vh; background-color: #f8f8f8 }
-  
-       Desktop here starts at 1121px, so between the two breakpoints that
-       overlay sat behind the dropdown as a white 100vh slab. The module goes
-       back to being a plain positioning context; only .contetns_area paints. */
-    #searchVer2.tp-search-open {
-      height: auto;
-      background: transparent;
-    }
-  
-    /* The prototype's panel is a fixed slab — tabs, a roomy body, then a footer
-       on the bottom edge — rather than something that shrinks to its content.
-       The height comes from the prototype; the footer is pinned against
-       #recentArea because .tab_contents is shown with an inline display:block
-       by the skin's tab script, which no flex rule here could survive. */
-    #searchVer2 .contetns_area {
-      right: 0;
-      width: auto;
-      height: clamp(460px, 46vw, 520px);
-      overflow: hidden;
-      border-radius: 14px;
-      box-shadow: 0 18px 42px rgba(52, 25, 100, 0.22);
-    }
-  
-    /* Prototype rows: 74px of tabs, the rest for the body, 72px of footer. */
-    #searchVer2 #recentArea {
-      box-sizing: border-box;
-      position: relative;
-      height: 100%;
-      padding-bottom: 0;
-    }
-  
-    #searchVer2 .tab_btns {
-      height: 74px;
-    }
-  
-    /* Keep both tab panes inside the fixed panel: the 74px tab row and 72px
-       footer are reserved up front, so neither pane needs its own vertical
-       scrollbar and the footer never gets pushed below the visible panel. */
-    #searchVer2 #recentArea > .tab_contents {
-      box-sizing: border-box;
-      height: calc(100% - 146px);
-      min-height: 0;
-      padding: 10px 24px 0;
-      overflow-x: hidden;
-      overflow-y: hidden;
-    }
-  
-    /* Use the parent id as part of the selector so the shared footer styling
-       later in this file cannot turn this back into a normal-flow element. */
-    #searchVer2 #recentArea > .tab_foot_menu {
-      position: absolute;
-      right: 26px;
-      bottom: 0;
-      left: 26px;
-      height: 72px;
-      margin: 0;
-      padding: 0;
-    }
-  
-    /* Trending rows share the available pane height instead of making the pane
-       taller. This keeps every ranked row visible at once without a y-scroll. */
-    #searchVer2 #trending-searched-list > ul.trending_list {
-      grid-auto-rows: minmax(0, 1fr);
-      gap: 4px;
-      height: 100%;
-    }
-  
-    #searchVer2
-      #trending-searched-list
-      > ul.trending_list
-      > li.trending_item {
-      min-height: 0;
-      height: 100%;
-    }
-  
-    /* trendypicker-search.js drives the module from the header's own search
-       field, so the module's built-in input bar would be a second, duplicate
-       box. It is hidden only while the script has the panel open — if the
-       script never runs, the skin's own bar is left exactly as it was. */
-    #searchVer2.tp-search-open .search_new > form .input_area {
-      display: none;
-    }
-  }
-  
-  /* ===== Tabs ============================================================
-     .tab_btns is the skin's row of Recent / Recently Viewed / Trending. The
-     prototype underlines the row and marks the active tab in purple; the rule
-     below draws that line once across the row so the tabs share it. */
-  /* minmax(0, 1fr) rather than 1fr: a bare 1fr keeps a min-content floor, and
-     the longest label ("Trending Searches") would then claim a wider column
-     than the other two. */
-  #searchVer2 .tab_btns {
-    position: relative;
-    display: grid;
-    grid-auto-columns: minmax(0, 1fr);
-    grid-auto-flow: column;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    list-style: none;
-  }
-  
-  /* The rule sits 20px above the row's bottom edge, not on it — that gap is
-     what gives the tabs their breathing room in the prototype. */
-  #searchVer2 .tab_btns::before {
-    content: "";
-    position: absolute;
-    right: 0;
-    bottom: 20px;
-    left: 0;
-    height: 2px;
-    background: rgba(39, 24, 32, 0.14);
-  }
-  
-  /* The skin gives each tab a fixed pixel width and height. `auto` on both
-     hands sizing back to the grid track and to the label — without it the
-     padding below pushed the anchor 34px past its own row, straight over the
-     list underneath. */
-  #searchVer2 .tab_btns > li {
-    width: auto;
+/* Kill the skin's own open-state overlay. user.css turns .search_ver2.on into
+   a full-height tinted sheet (height:100vh; background) under 1280px, which
+   flashed white over the page before this file's #searchVer2.tp-search-open
+   sheet took over — and stayed painted while a search navigated away. The
+   real sheet is drawn by #searchVer2.tp-search-open (higher specificity), so
+   this can be flattened everywhere with nothing lost. */
+   .layout_header .resp_top_search .search_ver2.on {
     height: auto;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-  }
-  
-  /* "Recently Viewed" is not part of the prototype's two-tab panel. The tab is
-     marked in layout_header/standard.html and hidden here rather than deleted,
-     so Firstmall's own tab script is untouched and the block comes back by
-     dropping one class. A hidden <li> is not a grid item, so the two remaining
-     tabs simply split the row. Its pane is hidden too — nothing can reach it
-     once the tab is gone. */
-  #searchVer2 .tab_btns > li.tp_hidden_tab,
-  #searchVer2 #recent-item-list {
-    display: none;
-  }
-  
-  /* Labels sit against the top of the row rather than centred in it, so the
-     rule underneath clears them by a fixed amount however tall the row is. */
-  #searchVer2 .tab_btns > li > a {
-    box-sizing: border-box;
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 10px;
-    height: 100%;
-    padding: 18px 4px 0;
-    border: 0;
-    color: rgba(39, 24, 32, 0.32);
-    background: none;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1.2;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  
-  #searchVer2 .tab_btns > li.on > a {
-    color: #160a10;
-  }
-  
-  #searchVer2 .tab_btns > li.on > a::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    bottom: 20px;
-    left: 0;
-    height: 3px;
-    background: #7f56d9;
-  }
-  
-  /* The skin puts a rising-arrow image inside the trending tab label. */
-  #searchVer2 .tab_btns > li > a > img.trending_arrow {
-    flex: 0 0 auto;
-    width: 20px;
-    height: 12px;
-    opacity: 0.32;
-    object-fit: contain;
-    transition: opacity 0.2s ease;
-  }
-  
-  #searchVer2 .tab_btns > li.on > a > img.trending_arrow {
-    opacity: 1;
-  }
-  
-  /* ===== Recent searches: pill chips ===================================== */
-  #searchVer2 .tab_contents {
-    padding: 18px 24px 0;
-  }
-  
-  #searchVer2 ul.searching_list {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    gap: 10px 14px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  
-  #searchVer2 ul.searching_list > li.recent_search_item {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    height: 33px;
-    margin: 0;
-    padding: 0 14px;
-    border: 0;
-    border-radius: 999px;
-    background: #f6f4ff;
-  }
-  
-  /* The clock glyph the prototype puts before each chip. */
-  #searchVer2 ul.searching_list > li.recent_search_item::before {
-    content: "";
-    flex: 0 0 auto;
-    width: 15px;
-    height: 15px;
-    background: url("../../images/icon/tp-search-history.png") no-repeat center /
-      contain;
-  }
-  
-  #searchVer2 ul.searching_list > li.recent_search_item > a.searched_item {
-    padding: 0;
-    border: 0;
-    color: rgba(39, 24, 32, 0.74);
-    background: none;
-    font-size: 13px;
-    font-weight: 400;
-    text-decoration: none;
-  }
-  
-  /* Firstmall labels the remove control with the word "Remove"; the prototype
-     uses a times sign, so the text is collapsed and redrawn.
-  
-     The skin also pins this absolutely to the top-right, which floated the glyph
-     outside the pill and stretched its box to 49px. `static` puts it back in the
-     chip's own flex row. */
-  #searchVer2 ul.searching_list > li.recent_search_item > a.searching_item_close {
-    position: static;
-    flex: 0 0 auto;
-    width: auto;
-    height: auto;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    color: transparent;
-    background: none;
-    font-size: 0;
-    line-height: 1;
-    text-decoration: none;
-    text-indent: 0;
-  }
-  
-  #searchVer2
-    ul.searching_list
-    > li.recent_search_item
-    > a.searching_item_close::before {
-    content: "\00d7";
-    display: block;
-    color: rgba(39, 24, 32, 0.55);
-    font-size: 17px;
-    font-weight: 400;
-    line-height: 1;
-  }
-  
-  /* ===== Trending searches: ranked rows ================================== */
-  #searchVer2 ul.trending_list {
-    display: grid;
-    gap: 8px;
-    width: min(76%, 830px);
-    margin: 0 auto;
-    padding: 0;
-    list-style: none;
-  }
-  
-  /* Rows rise into place one after another, as in the prototype. The skin swaps
-     tabs with display, and going from none to block restarts a CSS animation on
-     its own — so nothing has to toggle a class to replay this. */
-  @keyframes tp-trending-rise {
-    from {
-      opacity: 0;
-      transform: translateY(18px);
-    }
-  }
-  
-  #searchVer2 ul.trending_list > li.trending_item {
-    display: grid;
-    grid-template-columns: 42px minmax(0, 1fr) 44px;
-    align-items: center;
-    min-height: 40px;
-    margin: 0;
-    padding: 0 20px;
-    border: 0;
-    border-radius: 10px;
-    background: #f6f4ff;
-    font-size: 14px;
-    animation: tp-trending-rise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
-    transition: background 0.3s ease;
-  }
-  
-  #searchVer2 ul.trending_list > li.trending_item:nth-child(1) {
-    animation-delay: 0.02s;
-  }
-  
-  #searchVer2 ul.trending_list > li.trending_item:nth-child(2) {
-    animation-delay: 0.09s;
-  }
-  
-  #searchVer2 ul.trending_list > li.trending_item:nth-child(3) {
-    animation-delay: 0.16s;
-  }
-  
-  #searchVer2 ul.trending_list > li.trending_item:nth-child(4) {
-    animation-delay: 0.23s;
-  }
-  
-  #searchVer2 ul.trending_list > li.trending_item:nth-child(5) {
-    animation-delay: 0.3s;
-  }
-  
-  #searchVer2 ul.trending_list > li.trending_item:nth-child(n + 6) {
-    animation-delay: 0.37s;
-  }
-  
-  @media (prefers-reduced-motion: reduce) {
-    #searchVer2 ul.trending_list > li.trending_item {
-      animation: none;
-    }
-  }
-  
-  /* Only the background reacts. The skin bolds the row on hover, which reads as
-     the text growing and shifts everything beside it. */
-  #searchVer2 ul.trending_list > li.trending_item:hover {
-    background: #cec8eb;
-    font-weight: 400;
-  }
-  
-  #searchVer2 ul.trending_list > li.trending_item:hover .trending_keyword {
-    font-weight: 400;
-  }
-  
-  #searchVer2 ul.trending_list > li.trending_item:hover .trending_num {
-    font-weight: 600;
-  }
-  
-  #searchVer2 ul.trending_list .trending_num {
-    color: #7f56d9;
-    font-size: 20px;
-    font-weight: 600;
-  }
-  
-  /* The keyword reads from the left of its column, beside the rank — the skin
-     centres text in these rows, which pushed it into the middle of the panel. */
-  #searchVer2 ul.trending_list .trending_keyword {
-    justify-self: start;
-    min-width: 0;
-    max-width: 100%;
-    padding: 0;
-    overflow: hidden;
-    color: #271820;
-    font-size: 14px;
-    text-align: left;
-    text-decoration: none;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  #searchVer2 ul.trending_list img.trending_arrow {
-    justify-self: end;
-    width: 20px;
-    height: 12px;
-    object-fit: contain;
-  }
-  
-  /* ===== Footer ==========================================================
-     Firstmall's .tab_foot_menu already splits the way the prototype's
-     .search-panel-footer does — Clear All and the auto-save toggle on the left,
-     Close on the right — so it only needs the prototype's treatment: no panel
-     of its own, a hairline above, and the labels sitting under that line.
-  
-     The skin paints this strip grey; transparent lets the panel show through. */
-  #searchVer2 .tab_foot_menu {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin: 22px 0 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    list-style: none;
-  }
-  
-  #searchVer2 .tab_foot_menu::before {
-    content: "";
-    position: absolute;
-    top: 20px;
-    right: 0;
-    left: 0;
-    height: 2px;
-    background: rgba(123, 63, 228, 0.12);
-  }
-  
-  #searchVer2 .tab_foot_menu > li {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin: 0;
-    padding: 0;
-    border: 0;
+    min-height: 0;
     background: transparent;
   }
-  
-  /* Close keeps to the right edge even on the trending tab, where it is the
-     only item in the row and space-between would otherwise leave it at the
-     start. */
-  #searchVer2 .tab_foot_menu > li.search_close {
-    margin-left: auto;
-  }
-  
-  /* 20px of top padding clears the hairline, matching the prototype. */
-  #searchVer2 .tab_foot_menu a {
-    padding: 20px 0 0;
-    border: 0;
-    color: #271820;
-    background: transparent;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  
-  #searchVer2 .tab_foot_menu a:hover {
-    color: #7f56d9;
-  }
-  
-  /* ===== Empty states ==================================================== */
-  #searchVer2 .no_data {
-    padding: 22px 0;
-    color: rgba(39, 24, 32, 0.4);
-    font-size: 13px;
-  }
-  
-  /* ===== Autocomplete ====================================================
-     Same chip treatment as the recent list, so the panel does not change
-     character once the shopper starts typing. */
-  #searchVer2 #autoCompleteArea {
-    padding: 18px 24px 20px;
-  }
-  
-  #searchVer2 #autoCompleteList > li {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: none;
-  }
-  
-  #searchVer2 #autoCompleteList a.searched_item {
-    display: inline-flex;
-    align-items: center;
-    height: 33px;
-    padding: 0 14px;
-    border-radius: 999px;
-    color: rgba(39, 24, 32, 0.74);
-    background: #f6f4ff;
-    font-size: 13px;
-    text-decoration: none;
-  }
-  
-  #searchVer2 #autoCompleteBanner .title {
-    margin: 0 0 12px;
-    color: #160a10;
-    font-size: 15px;
-    font-weight: 700;
-  }
-  
-  /* ===== Tablet and phone ================================================
-     The skin already stacks the panel below 1121px; these keep the same visual
-     language at the narrower widths without re-laying anything out. */
-  @media only screen and (max-width: 1120px) {
-    #searchVer2 .tab_btns > li > a {
-      padding: 14px 2px 12px;
-      font-size: 14px;
-    }
-  
-    #searchVer2 .tab_contents {
-      padding: 14px 16px 0;
-    }
-  
-    #searchVer2 ul.trending_list {
-      width: 100%;
-    }
-  
-    #searchVer2 ul.trending_list > li.trending_item {
-      grid-template-columns: 30px minmax(0, 1fr) 30px;
-      padding: 0 14px;
-    }
-  
-    #searchVer2 ul.trending_list .trending_num {
-      font-size: 17px;
-    }
-  
-    #searchVer2 .tab_foot_menu {
-      margin-top: 16px;
-      padding: 14px 2px 16px;
-    }
-  
-    /* ===== Sheet mode ====================================================
-       The prototype turns the panel into a full-screen search on a phone: the
-       module's own field becomes the top bar, and both lists stack instead of
-       tabbing. trendypicker-search.js opens this from either the header field
-       or the side menu's field, and clears the tab script's inline display so
-       the two lists can show together. */
-    #searchVer2.tp-search-open {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 2100;
-      overflow: hidden;
+
+  /* ===== Panel shell =====================================================
+     The skin drops this as a 460px menu pinned under the input (right:740px
+     against the 1200px .search_new). The prototype uses the full header width,
+     so releasing `right` lets it span its container instead of hard-coding a
+     width — the panel then tracks whatever width the header settles on. */
+     #searchVer2 .contetns_area {
+      color: #271820;
       background: #fff;
     }
-  
-    #searchVer2.tp-search-open .search_new {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: hidden;
-    }
-  
-    #searchVer2.tp-search-open .search_new > form {
-      flex: 0 0 auto;
-    }
-  
-    /* width:auto clears whatever the dropdown left behind — a stale pixel width
-       from a desktop open is what pushed the lists past the right edge. */
-    #searchVer2.tp-search-open .contetns_area {
-      box-sizing: border-box;
-      position: static;
-      flex: 1 1 auto;
-      width: auto;
-      max-width: 100%;
-      min-height: 0;
-      height: auto;
+
+    @media only screen and (min-width: 1125px) {
+
+      #searchVer2.tp-search-open {
+        height: auto;
+        background: transparent;
+      }
+
+      /* The prototype's panel is a fixed slab — tabs, a roomy body, then a footer
+         on the bottom edge — rather than something that shrinks to its content.
+         The height comes from the prototype; the footer is pinned against
+         #recentArea because .tab_contents is shown with an inline display:block
+         by the skin's tab script, which no flex rule here could survive. */
+      #searchVer2 .contetns_area {
+        left: 50%;
+        right: auto;
+        width: min(1020px, calc(100vw - 284px));
+        z-index: 9999;
+    height: clamp(430px, 43vw, 490px);
+        overflow: hidden;
+        border-radius: 14px;
+        box-shadow: 0 18px 42px rgba(52, 25, 100, 0.22);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translate(-50%, -10px);
+        will-change: opacity, transform;
+        transition:
+          opacity 0.24s ease,
+          transform 0.24s ease,
+          visibility 0s linear 0.24s;
+      }
+
+      /* Prototype rows: 74px of tabs, the rest for the body, 72px of footer. */
+      #searchVer2 #recentArea {
+        box-sizing: border-box;
+        position: relative;
+        height: 100%;
+        padding-bottom: 0;
+      }
+
+      #searchVer2 .tab_btns {
+        height: 74px;
+      }
+
+      /* Keep both tab panes inside the fixed panel: the 74px tab row and 72px
+         footer are reserved up front, so neither pane needs its own vertical
+         scrollbar and the footer never gets pushed below the visible panel. */
+      #searchVer2 #recentArea > .tab_contents {
+        box-sizing: border-box;
+        height: calc(100% - 146px);
+        min-height: 0;
+        padding: 10px 24px 0;
+        overflow-x: hidden;
+        overflow-y: hidden;
+      }
+
+      /* Descendant, not child: the footer sits inside .tab_contents, so a child
+         combinator here matched nothing and the shared `position: relative`
+         further down won — which is what left it in the scrolling flow, pushed
+         below the fold on the trending tab. The parent id still outranks that
+         shared rule. */
+      #searchVer2 #recentArea .tab_foot_menu {
+        position: absolute;
+        right: 26px;
+        bottom: 0;
+        left: 26px;
+        height: 72px;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Trending rows keep the prototype's own height rather than stretching to
+         fill the pane. Stretching looked equivalent but leaned on 1fr tracks
+         shrinking below their content, which they do not: the rows stayed 61px,
+         overran the list by 4px and slid under the footer.
+
+         Seven rows at 44px plus gaps come to 356px against 364px of pane, so
+         the cap below is what guarantees the list always fits — however many
+         keywords the admin's data returns. Seven is already more than the
+         prototype shows. */
+      #searchVer2 #trending-searched-list > ul.trending_list {
+        height: auto;
+        gap: 8px;
+      }
+
+      #searchVer2
+        #trending-searched-list
+        > ul.trending_list
+        > li.trending_item:nth-child(n + 7) {
+        display: none;
+      }
+
+      /* trendypicker-search.js drives the module from the header's own search
+         field, so the module's built-in input bar would be a second, duplicate
+         box. It is hidden only while the script has the panel open — if the
+         script never runs, the skin's own bar is left exactly as it was. */
+}
+
+    /* ===== Tabs ============================================================
+       .tab_btns is the skin's row of Recent / Recently Viewed / Trending. The
+       prototype underlines the row and marks the active tab in purple; the rule
+       below draws that line once across the row so the tabs share it. */
+    /* minmax(0, 1fr) rather than 1fr: a bare 1fr keeps a min-content floor, and
+       the longest label ("Trending Searches") would then claim a wider column
+       than the other two. */
+    #searchVer2 .tab_btns {
+      position: relative;
+      display: grid;
+      grid-auto-columns: minmax(0, 1fr);
+      grid-auto-flow: column;
+      margin: 0;
       padding: 0;
-      overflow-x: hidden;
-      overflow-y: auto;
-      border-radius: 0;
-      box-shadow: none;
-      -webkit-overflow-scrolling: touch;
+      border: 0;
+      list-style: none;
     }
-  
-    /* No tabs on the sheet — each list gets its own heading instead. */
-    #searchVer2.tp-search-open .tab_btns,
-    #searchVer2.tp-search-open .tab_foot_menu {
+
+    /* The rule sits 20px above the row's bottom edge, not on it — that gap is
+       what gives the tabs their breathing room in the prototype. */
+    #searchVer2 .tab_btns::before {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 20px;
+      left: 0;
+      height: 2px;
+      background: rgba(39, 24, 32, 0.14);
+    }
+
+    /* The skin gives each tab a fixed pixel width and height. `auto` on both
+       hands sizing back to the grid track and to the label — without it the
+       padding below pushed the anchor 34px past its own row, straight over the
+       list underneath. */
+    #searchVer2 .tab_btns > li {
+      width: auto;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+    }
+
+    /* "Recently Viewed" is not part of the prototype's two-tab panel. The tab is
+       marked in layout_header/standard.html and hidden here rather than deleted,
+       so Firstmall's own tab script is untouched and the block comes back by
+       dropping one class. A hidden <li> is not a grid item, so the two remaining
+       tabs simply split the row. Its pane is hidden too — nothing can reach it
+       once the tab is gone. */
+    #searchVer2 .tab_btns > li.tp_hidden_tab,
+    #searchVer2 #recent-item-list {
       display: none;
     }
-  
-    #searchVer2.tp-search-open .search_new > form .input_area {
+
+    /* Labels sit against the top of the row rather than centred in it, so the
+       rule underneath clears them by a fixed amount however tall the row is. */
+    #searchVer2 .tab_btns > li > a {
       box-sizing: border-box;
-      height: 74px;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 10px;
+      height: 100%;
+      padding: 18px 4px 0;
+      border: 0;
+      color: rgba(39, 24, 32, 0.32);
+      background: none;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.2;
+      text-decoration: none;
+      white-space: nowrap;
     }
-  
-    #searchVer2.tp-search-open .tab_contents {
-      box-sizing: border-box;
+
+    #searchVer2 .tab_btns > li.on > a {
+      color: #160a10;
+    }
+
+    #searchVer2 .tab_btns > li.on > a::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 20px;
+      left: 0;
+      height: 3px;
+      background: #7f56d9;
+    }
+
+    /* The skin puts a rising-arrow image inside the trending tab label. */
+    #searchVer2 .tab_btns > li > a > img.trending_arrow {
+      flex: 0 0 auto;
+      width: 20px;
+      height: 12px;
+      opacity: 0.32;
+      object-fit: contain;
+      transition: opacity 0.2s ease;
+      margin-top: 5px;
+    }
+
+    #searchVer2 .tab_btns > li.on > a > img.trending_arrow {
+      opacity: 1;
+    }
+
+    /* ===== Recent searches: pill chips ===================================== */
+    #searchVer2 .tab_contents {
+      padding: 18px 24px 0;
+    }
+
+    #searchVer2 ul.searching_list {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 10px 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    #searchVer2 ul.searching_list > li.recent_search_item {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      height: 33px;
+      margin: 0;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 999px;
+      background: #f6f4ff;
+    }
+
+    /* Ten chips, newest first. Fewer stops being useful to someone comparing a
+       handful of products; more wraps past three rows on a phone and pushes
+       Trending off the first screen. Firstmall keeps its own history intact —
+       this only limits what the panel shows, so raising the number later costs
+       nothing. */
+    #searchVer2 ul.searching_list > li.recent_search_item:nth-child(n + 11) {
+      display: none;
+    }
+
+    /* The clock glyph the prototype puts before each chip. */
+    #searchVer2 ul.searching_list > li.recent_search_item::before {
+      content: "";
+      flex: 0 0 auto;
+      width: 15px;
+      height: 15px;
+      background: url("../../images/icon/tp-search-history.png") no-repeat center /
+        contain;
+    }
+
+    #searchVer2 ul.searching_list > li.recent_search_item > a.searched_item {
+      padding: 0;
+      border: 0;
+      color: rgba(39, 24, 32, 0.74);
+      background: none;
+      font-size: 13px;
+      font-weight: 400;
+      text-decoration: none;
+    }
+
+    /* Firstmall labels the remove control with the word "Remove"; the prototype
+       uses a times sign, so the text is collapsed and redrawn.
+
+       The skin also pins this absolutely to the top-right, which floated the glyph
+       outside the pill and stretched its box to 49px. `static` puts it back in the
+       chip's own flex row. */
+    #searchVer2 ul.searching_list > li.recent_search_item > a.searching_item_close {
+      position: static;
+      flex: 0 0 auto;
+      width: auto;
       height: auto;
-      padding: 20px 22px 0;
-      overflow: visible;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      color: transparent;
+      background: none;
+      font-size: 0;
+      line-height: 1;
+      text-decoration: none;
+      text-indent: 0;
     }
-  
-    /* The prototype separates the two blocks by 64px; the last one carries the
-       bottom padding so the list clears the edge of the sheet. */
-    #searchVer2.tp-search-open #trending-searched-list {
-      padding-top: 64px;
-      padding-bottom: 88px;
-    }
-  
-    #searchVer2.tp-search-open ul.trending_list {
-      width: 100%;
-    }
-  
-    #searchVer2.tp-search-open ul.trending_list > li.trending_item {
-      grid-template-columns: 42px minmax(0, 1fr) 28px;
-      min-height: 44px;
-      font-size: 16px;
-    }
-  
-    #searchVer2.tp-search-open ul.searching_list {
-      gap: 10px 12px;
-    }
-  
-    /* Phone type scale, taken from the prototype — a step up from the desktop
-       panel's, where the same 13/14px read as cramped on a handset. */
-    #searchVer2.tp-search-open ul.searching_list > li.recent_search_item {
-      height: 38px;
-      padding: 0 13px;
-    }
-  
-    #searchVer2.tp-search-open
-      ul.searching_list
-      > li.recent_search_item
-      > a.searched_item {
-      font-size: 16px;
-    }
-  
-    #searchVer2.tp-search-open
+
+    #searchVer2
       ul.searching_list
       > li.recent_search_item
       > a.searching_item_close::before {
-      font-size: 18px;
+      content: "\00d7";
+      display: block;
+      color: rgba(39, 24, 32, 0.55);
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1;
     }
-  
-    #searchVer2.tp-search-open ul.trending_list .trending_num {
-      font-size: 22px;
-      font-weight: 700;
+
+    /* ===== Trending searches: ranked rows ================================== */
+    #searchVer2 ul.trending_list {
+      display: grid;
+      gap: 8px;
+      width: min(76%, 830px);
+      margin: 0 auto;
+      padding: 0;
+      list-style: none;
     }
-  
-    #searchVer2.tp-search-open ul.trending_list .trending_keyword {
-      font-size: 16px;
+
+    /* Rows rise into place one after another, as in the prototype. The skin swaps
+       tabs with display, and going from none to block restarts a CSS animation on
+       its own — so nothing has to toggle a class to replay this. */
+    @keyframes tp-trending-rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
     }
-  
-    #searchVer2.tp-search-open #recent-searched-list::before,
-    #searchVer2.tp-search-open #trending-searched-list::before {
+
+    #searchVer2 ul.trending_list > li.trending_item {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) 44px;
+      align-items: center;
+      min-height: 40px;
+      margin: 0;
+      padding: 0 20px;
+      border: 0;
+      border-radius: 10px;
+      background: #f6f4ff;
+      font-size: 14px;
+      font-weight: 500;
+      animation: tp-trending-rise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+      transition: background 0.3s ease;
+      gap: 10px;
+    }
+
+    #searchVer2 ul.trending_list > li.trending_item:nth-child(1) {
+      animation-delay: 0.02s;
+    }
+
+    #searchVer2 ul.trending_list > li.trending_item:nth-child(2) {
+      animation-delay: 0.09s;
+    }
+
+    #searchVer2 ul.trending_list > li.trending_item:nth-child(3) {
+      animation-delay: 0.16s;
+    }
+
+    #searchVer2 ul.trending_list > li.trending_item:nth-child(4) {
+      animation-delay: 0.23s;
+    }
+
+    #searchVer2 ul.trending_list > li.trending_item:nth-child(5) {
+      animation-delay: 0.3s;
+    }
+
+    #searchVer2 ul.trending_list > li.trending_item:nth-child(n + 6) {
+      animation-delay: 0.37s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #searchVer2 ul.trending_list > li.trending_item {
+        animation: none;
+      }
+    }
+
+    /* Only the background reacts. The skin bolds the row on hover, which reads as
+       the text growing and shifts everything beside it. */
+    #searchVer2 ul.trending_list > li.trending_item:hover {
+      background: #cec8eb;
+      font-weight: 500;
+    }
+
+    #searchVer2 ul.trending_list > li.trending_item:hover .trending_keyword {
+      font-weight: 500;
+    }
+
+    #searchVer2 ul.trending_list > li.trending_item:hover .trending_num {
+      font-weight: 600;
+    }
+
+    #searchVer2 ul.trending_list .trending_num {
+      color: #7f56d9;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    /* The keyword reads from the left of its column, beside the rank — the skin
+       centres text in these rows, which pushed it into the middle of the panel. */
+    #searchVer2 ul.trending_list .trending_keyword {
+      justify-self: start;
+      min-width: 0;
+      max-width: 100%;
+      padding: 0;
+      overflow: hidden;
+      color: #271820;
+      font-size: 14px;
+      text-align: left;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #searchVer2 ul.trending_list img.trending_arrow {
+      justify-self: end;
+      width: 20px;
+      height: 12px;
+      object-fit: contain;
+    }
+
+    /* ===== Footer ==========================================================
+       Firstmall's .tab_foot_menu already splits the way the prototype's
+       .search-panel-footer does — Clear All and the auto-save toggle on the left,
+       Close on the right — so it only needs the prototype's treatment: no panel
+       of its own, a hairline above, and the labels sitting under that line.
+
+       The skin paints this strip grey; transparent lets the panel show through. */
+    #searchVer2 .tab_foot_menu {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 22px 0 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      list-style: none;
+    }
+
+    #searchVer2 .tab_foot_menu::before {
+      content: "";
+      position: absolute;
+      top: 20px;
+      right: 0;
+      left: 0;
+      height: 2px;
+      background: rgba(123, 63, 228, 0.12);
+    }
+
+    #searchVer2 .tab_foot_menu > li {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    /* Close keeps to the right edge even on the trending tab, where it is the
+       only item in the row and space-between would otherwise leave it at the
+       start. */
+    #searchVer2 .tab_foot_menu > li.search_close {
+      margin-left: auto;
+    }
+
+    /* 20px of top padding clears the hairline, matching the prototype. */
+    #searchVer2 .tab_foot_menu a {
+      padding: 20px 0 0;
+      border: 0;
+      color: #271820;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    #searchVer2 .tab_foot_menu a:hover {
+      color: #7f56d9;
+    }
+
+    /* ===== Empty states ==================================================== */
+    #searchVer2 .no_data {
+      padding: 22px 0;
+      color: rgba(39, 24, 32, 0.4);
+      font-size: 13px;
+    }
+
+    /* ===== Autocomplete ====================================================
+       Same chip treatment as the recent list, so the panel does not change
+       character once the shopper starts typing. */
+    #searchVer2 #autoCompleteArea {
+      padding: 18px 24px 20px;
+    }
+
+    #searchVer2 #autoCompleteList > li {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+    }
+
+    #searchVer2 #autoCompleteList a.searched_item {
+      display: inline-flex;
+      align-items: center;
+      height: 33px;
+      padding: 0 14px;
+      border-radius: 999px;
+      color: rgba(39, 24, 32, 0.74);
+      background: #f6f4ff;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    #searchVer2 #autoCompleteBanner .title {
+      margin: 0 0 12px;
       color: #160a10;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
     }
-  
-    #searchVer2.tp-search-open #recent-searched-list::before {
-      content: "Recent Searches";
+
+    /* ===== Tablet and phone ================================================
+       The skin already stacks the panel below 1121px; these keep the same visual
+       language at the narrower widths without re-laying anything out. */
+    @media only screen and (max-width: 1124px) {
+      #searchVer2 .tab_btns > li > a {
+        padding: 14px 2px 12px;
+        font-size: 14px;
+      }
+
+      #searchVer2 .tab_contents {
+        padding: 14px 16px 0;
+      }
+
+      #searchVer2 ul.trending_list {
+        width: 100%;
+      }
+
+      #searchVer2 ul.trending_list > li.trending_item {
+        grid-template-columns: 30px minmax(0, 1fr) 30px;
+        padding: 0 14px;
+      }
+
+      #searchVer2 ul.trending_list .trending_num {
+        font-size: 17px;
+      }
+
+      #searchVer2 .tab_foot_menu {
+        margin-top: 16px;
+        padding: 14px 2px 16px;
+      }
+
+      /* ===== Sheet mode ====================================================
+         The prototype turns the panel into a full-screen search on a phone: the
+         module's own field becomes the top bar, and both lists stack instead of
+         tabbing. trendypicker-search.js opens this from either the header field
+         or the side menu's field, and clears the tab script's inline display so
+         the two lists can show together. */
+      #searchVer2.tp-search-open {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 2100;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      #searchVer2.tp-search-open .search_new {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      #searchVer2.tp-search-open .search_new > form {
+        flex: 0 0 auto;
+      }
+
+      /* width:auto clears whatever the dropdown left behind — a stale pixel width
+         from a desktop open is what pushed the lists past the right edge. */
+      #searchVer2.tp-search-open .contetns_area {
+        box-sizing: border-box;
+        position: static;
+        flex: 1 1 auto;
+        width: auto;
+        max-width: 100%;
+        min-height: 0;
+        height: auto;
+        padding: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        border-radius: 0;
+        box-shadow: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* No tabs on the sheet — each list gets its own heading instead. */
+      #searchVer2.tp-search-open .tab_btns {
+        display: none;
+      }
+
+      /* Mobile sheet: reuse Firstmall's existing functional Close action at the
+         right edge of the top bar. Other footer actions stay hidden. */
+      #searchVer2.tp-search-open .tab_foot_menu {
+        position: fixed;
+        top: 12px;
+        right: 14px;
+        bottom: auto;
+        left: auto;
+        z-index: 2120;
+        display: block;
+        width: 28px;
+        height: 42px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        pointer-events: none;
+      }
+
+      #searchVer2.tp-search-open .tab_foot_menu::before {
+        display: none;
+      }
+
+      #searchVer2.tp-search-open .tab_foot_menu > li {
+        display: none;
+      }
+
+      #searchVer2.tp-search-open .tab_foot_menu > li.search_close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 42px;
+        margin: 0;
+        padding: 0;
+        pointer-events: auto;
+      }
+
+      #searchVer2.tp-search-open .tab_foot_menu > li.search_close > a {
+        position: relative;
+        display: block;
+        width: 30px;
+        height: 30px;
+        margin: 0;
+        padding: 0;
+        color: transparent;
+        background: transparent;
+        font-size: 0;
+        line-height: 0;
+      }
+
+      #searchVer2.tp-search-open .tab_foot_menu > li.search_close > a::before,
+      #searchVer2.tp-search-open .tab_foot_menu > li.search_close > a::after {
+        content: "";
+        position: absolute;
+        top: 14px;
+        left: 4px;
+        width: 22px;
+        height: 2px;
+        border-radius: 999px;
+        background: #160a10;
+      }
+
+      #searchVer2.tp-search-open .tab_foot_menu > li.search_close > a::before {
+        transform: rotate(45deg);
+      }
+
+      #searchVer2.tp-search-open .tab_foot_menu > li.search_close > a::after {
+        transform: rotate(-45deg);
+      }
+#searchVer2.tp-search-open .tab_contents {
+        box-sizing: border-box;
+        height: auto;
+        padding: 20px 22px 0;
+        overflow: visible;
+      }
+
+      /* The prototype separates the two blocks by 64px; the last one carries the
+         bottom padding so the list clears the edge of the sheet. */
+      #searchVer2.tp-search-open #trending-searched-list {
+        padding-top: 64px;
+        padding-bottom: 88px;
+      }
+
+      #searchVer2.tp-search-open ul.trending_list {
+        width: 100%;
+      }
+  #searchVer2.tp-search-open ul.trending_list > li.trending_item {
+        grid-template-columns: 42px minmax(0, 1fr) 28px;
+        min-height: 40px;
+        font-size: 16px;
+        gap: 10px;
+      }
+
+      #searchVer2.tp-search-open ul.searching_list {
+        gap: 10px 12px;
+      }
+
+      /* Phone type scale, taken from the prototype — a step up from the desktop
+         panel's, where the same 13/14px read as cramped on a handset. */
+      #searchVer2.tp-search-open ul.searching_list > li.recent_search_item {
+        height: 38px;
+        padding: 0 13px;
+      }
+
+      #searchVer2.tp-search-open
+        ul.searching_list
+        > li.recent_search_item
+        > a.searched_item {
+        font-size: 14px;
+      }
+
+      #searchVer2.tp-search-open
+        ul.searching_list
+        > li.recent_search_item
+        > a.searching_item_close::before {
+        font-size: 18px;
+      }
+
+      #searchVer2.tp-search-open ul.trending_list .trending_num {
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      #searchVer2.tp-search-open ul.trending_list .trending_keyword {
+        font-size: 16px;
+      }
+
+      /* Heading rows are real elements built by trendypicker-search.js: an icon,
+         the title, and — on Recent — the skin's own Clear All link moved up
+         beside it, since the sheet hides the footer that normally holds it. */
+      #searchVer2.tp-search-open .tp-search-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      #searchVer2.tp-search-open .tp-search-heading-text {
+        margin: 0;
+        color: #160a10;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      #searchVer2.tp-search-open .tp-search-heading-icon {
+        flex: 0 0 auto;
+        width: 18px;
+        height: 18px;
+        background: url("../../images/icon/tp-search-history.png") no-repeat
+          center / contain;
+      }
+
+      #searchVer2.tp-search-open
+        .tp-search-heading[data-tp-heading="trending"]
+        .tp-search-heading-icon {
+        width: 20px;
+        height: 14px;
+        background-image: url("../../images/icon/icon-up.png");
+      }
+
+      #searchVer2.tp-search-open .tp-search-clear {
+        margin-left: auto;
+        padding: 0;
+        border: 0;
+        color: rgba(39, 24, 32, 0.55);
+        background: transparent;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      #searchVer2.tp-search-open .tp-search-pill {
+        box-sizing: border-box;
+        position: relative;
+        z-index: 3;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 42px;
+        align-items: center;
+        width: 100%;
+        min-width: 0;
+        height: 42px;
+        margin: 0;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #f4f2f8;
+        pointer-events: auto;
+        touch-action: manipulation;
+      }
+
+      #searchVer2.tp-search-open .tp-search-pill label.search_box,
+      #searchVer2.tp-search-open .tp-search-pill .search_ver2_input_box,
+      #searchVer2.tp-search-open .tp-search-pill button.search {
+        pointer-events: auto;
+      }
+
+      /* width:100% so the label fills its grid column; without it the label
+         shrank to the input's intrinsic size and clipped the placeholder. */
+      #searchVer2.tp-search-open .tp-search-pill label.search_box {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+      }
+
+      #searchVer2.tp-search-open .search_ver2_input_box {
+        -webkit-appearance: none;
+        appearance: none;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        height: 100%;
+        margin: 0;
+        padding: 0 4px 0 14px;
+        border: 0;
+        outline: none;
+        color: #222;
+        background: transparent;
+        font-size: 14px;
+        text-overflow: ellipsis;
+      }
+
+      /* The search button is a sibling in Firstmall's markup, but it must occupy
+         the pill's reserved 42px right slot. Put it on the same center grid cell
+         as .tp-search-pill and overlay it on that slot, so visually and for hit
+         testing the input + magnifier behave as one pill. */
+      #searchVer2.tp-search-open .input_area button.search {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 5;
+        width: 32px;
+        height: 32px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: #7f56d9 url("../../images/icon/tp-header-search.png") no-repeat
+          center / 16px 16px;
+        font-size: 0;
+        cursor: pointer;
+        pointer-events: auto;
+      }
+
+      /* Back arrow (the skin's close button, moved to the front by the script).
+         The skin pins it absolutely; static drops it into the flex row at the
+         left, before the pill. A rotated chevron drawn from two borders is the
+         purple ‹ of the prototype. */
+      #searchVer2.tp-search-open .input_area button.close.tp-search-back {
+        position: absolute;
+        top: 21px;
+        left: 16px;
+        z-index: 5;
+        width: 24px;
+        height: 24px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        color: transparent;
+        background: transparent;
+        font-size: 0;
+        cursor: pointer;
+        pointer-events: auto;
+      }
+
+      #searchVer2.tp-search-open .input_area button.close.tp-search-back::before {
+        content: "";
+        display: block;
+        width: 11px;
+        height: 11px;
+        margin: 0 auto;
+        border-left: 3px solid #7f56d9;
+        border-bottom: 3px solid #7f56d9;
+        border-radius: 1px;
+        transform: rotate(45deg);
+      }
     }
-  
-    #searchVer2.tp-search-open #trending-searched-list::before {
-      content: "Trending Searches 🔥";
+
+  /* Firstmall search wrapper is not a visual/layout box on any page. */
+  .layout_header .resp_top_search .search_ver2 .search_new .input_area .cont {
+    display: contents;
+  }
+/* Mobile search icon final position. */
+  @media only screen and (max-width: 767px) {
+    #searchVer2.tp-search-open
+      .layout_header
+#searchVer2.tp-search-open
+      .layout_header
+      .resp_top_search
+      .search_ver2
+      .search_new
+      .input_area
+      .tp-search-pill {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      margin: 0;
+    }
+
+    #searchVer2.tp-search-open
+      .layout_header
+      .resp_top_search
+      .search_ver2
+      .search_new
+      .input_area
+      button.search {
+      position: absolute;
+      top: 13px;
+      right: 57px;
+      z-index: 6;
+      width: 32px;
+      height: 32px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: #7f56d9 url("../../images/icon/tp-header-search.png") no-repeat
+        center / 16px 16px;
+      font-size: 0;
+      cursor: pointer;
+      pointer-events: auto;
     }
   }
+
+@media only screen and (min-width: 1125px) {
+  .layout_header .resp_top_search .search_ver2 .search_new .recent_area {
+    box-sizing: border-box;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* ===== Search open: floating menu visibility + desktop panel transition ===== */
+
+@media only screen and (max-width: 1124px) {
+  body:has(#searchVer2.tp-search-open) #floating_over .fixed_menu {
+    display: none;
+  }
+}
+
+/* Firstmall toggles .contetns_area with JS. The helper script adds
+   .tp-search-panel-visible / .tp-search-panel-closing so opacity and transform
+   can finish before the stock display:none takes effect. */
+@media only screen and (min-width: 1125px) {
+#searchVer2 .contetns_area.tp-search-panel-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+    transition:
+      opacity 0.24s ease,
+      transform 0.24s ease,
+      visibility 0s linear 0s;
+  }
+
+  #searchVer2 .contetns_area.tp-search-panel-closing {
+    opacity: 0;
+    visibility: visible;
+    pointer-events: none;
+    transform: translate(-50%, -10px);
+  }
+}
+
+/* Mobile + tablet search sheet: show Trending Searches ranks 1–5 only. */
+@media only screen and (max-width: 1124px) {
+  #searchVer2.tp-search-open
+    ul.trending_list
+    > li.trending_item:nth-child(n + 6) {
+    display: none;
+  }
+
+  body:has(#searchVer2.tp-search-open) #floating_over .ico_floating_top,
+  body:has(#searchVer2.tp-search-open) #floating_over .ico_floating_talk {
+    display: none;
+  }
+}
