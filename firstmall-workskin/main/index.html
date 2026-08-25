@@ -9,6 +9,7 @@
 {=showDesignLightPopup(1)}
 <!-- //띠배너/팝업 -->
 
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-main-hero.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-main-magazine.css" />
 <script src="/app/javascript/js/trendypicker-main-magazine.js" defer></script>
 
@@ -19,33 +20,48 @@
         #wrap {overflow:hidden;}
     }
 </style>
-<div class="sliderA wide_visual_slider mobile frac_slider" id="main-slide-mo">
+<div class="sliderA wide_visual_slider mobile frac_slider tp-hero-reveal" id="main-slide-mo">
 	<ul class="swiper-wrapper" navigation="true">
+        <li class="swiper-slide full tp-hero-wide tp-hero-billboard"><img src="../images/main/exhero1-mob.png" alt="Glow Everyday K-Beauty" /></li>
         <li class="swiper-slide full"><img src="../images/main/main-slide-mo-1.png" alt="slide" /></li>
-        <li class="swiper-slide full"><img src="../images/main/main-slide-mo-2.png" alt="slide" /></li>
+        <li class="swiper-slide full tp-hero-wide"><img src="../images/main/banner_1_fin.jpg" alt="Aestura Atobarrier 365 Cream" /></li>
     </ul>
-    <div class="swiper-pagination-main"></div>
+    <div class="swiper-pagination-main hero-dots"></div>
 </div>
-<div class="sliderA wide_visual_slider pc frac_slider" id="main-slide">
+<div class="sliderA wide_visual_slider pc frac_slider tp-hero-reveal" id="main-slide">
 	<ul class="swiper-wrapper" navigation="true">
+        <li class="swiper-slide full"><img src="../images/main/exhero1.png" title="Glow Everyday K-Beauty" alt="Glow Everyday K-Beauty" /></li>
         <li class="swiper-slide full"><img src="../images/main/main-slide_fin.jpg" title="slide" alt="slide" /></li>
         <li class="swiper-slide full"><img src="../images/main/banner_1_fin.jpg" title="slide" alt="slide" /></li>
     </ul>
-    <div class="swiper-pagination-main"></div>
+    <div class="swiper-pagination-main hero-dots"></div>
 </div>
 <!-- //메인 슬라이드 배너 -->
-<div class="resp_wrap">
+<div class="resp_wrap tp-page-shell">
     <div class="main_category">
         <h3><span designElement="text">Shop by Category</span></h3>
         <p designElement="text">What are you shopping for today?</p>
         <ul>
-            <li><a href="/goods/catalog?code=0003"><a href='/goods/catalog?code=0008' target='_self'><img src="../images/main/shop-category1.png" title="" alt=""/></a><span designElement="text">BEAUTY</span></a></li>
-            <li><a href="/goods/catalog?code=0004"><a href='/goods/catalog?code=0009' target='_self'><img src="../images/main/shop-category2.png" title="" alt=""/></a><span designElement="text">FOOD</span></a></li>
-            <li><a href="/goods/catalog?code=0005"><a href='/goods/catalog?code=0010' target='_self'><img src="../images/main/shop-category3.png" title="" alt=""/></a><span designElement="text">TOYS & CARFT</span></a></li>
-            <li><a href="/goods/catalog?code=0006"><a href='/goods/catalog?code=0011' target='_self'><img src="../images/main/shop-category4.png" title="" alt=""/></a><span designElement="text">STATIONERY & OFFICE</span></a></li>
-            <li><a href="/goods/catalog?code=0007"><a href='/goods/catalog?code=0012' target='_self'><img src="../images/main/shop-category5.png" title="" alt=""/></a><span designElement="text">KITCHEN</span></a></li>
+            <li><a href="/goods/catalog?code=0008"><a href='/goods/catalog?code=0008' target='_self'><img src="../images/main/shop-category1.png" title="" alt=""/></a><span designElement="text">Beauty</span></a></li>
+            <li><a href="/goods/catalog?code=0009"><a href='/goods/catalog?code=0009' target='_self'><img src="../images/main/shop-category2.png" title="" alt=""/></a><span designElement="text">K-Food</span></a></li>
+            <li><a href="/goods/catalog?code=0010"><a href='/goods/catalog?code=0010' target='_self'><img src="../images/main/shop-category3.png" title="" alt=""/></a><span designElement="text">Lifestyle</span></a></li>
+            <li><a href="/goods/catalog?code=0011"><a href='/goods/catalog?code=0011' target='_self'><img src="../images/main/shop-category4.png" title="" alt=""/></a><span designElement="text">K-POP</span></a></li>
+            <li><a href="/goods/catalog?code=0012"><a href='/goods/catalog?code=0012' target='_self'><img src="../images/main/shop-category5.png" title="" alt=""/></a><span designElement="text">K-Traditional</span></a></li>
         </ul>
     </div>
+    <script type="text/javascript">
+        /* Move the mobile/tablet category before the browser can paint its
+           desktop source position. The full handler below still owns resize. */
+        (function () {
+            if (document.documentElement.clientWidth > 1120) return;
+            var script = document.currentScript;
+            var shell = script && script.parentElement;
+            var cat = shell && shell.querySelector('.main_category');
+            if (!cat || !shell.parentNode) return;
+            shell.parentNode.insertBefore(cat, shell);
+            cat.classList.add('tp-category-outside');
+        })();
+    </script>
     <div class="sliderA main_3way_slide frac_slider">
         <div class="swiper-wrapper">
             <div class="main_3way swiper-slide">
@@ -109,83 +125,7 @@
     </div>
         <!--<iframe id="lazy_index" frameborder="0" allowfullscreen></iframe>-->
     
-    <div class="main_newsletter full_banner" style="margin-top: 72px;">
-        <h2><span designElement="text">EXTRA 10% OFF & FREE SHIPPING</span></h2>
-        <p designElement="text">Register to get exclusive email offers!</p>
-        <input type="text" value="" name="news_letter" placeholder="Enter your email address" />
-        <button class="btn_resp" id="news-letter-btn">Register</button>
-        <label><input name="chk_news" type="checkbox"><span designElement="text">By clicking 'REGISTER,' you confirm that you are 18 years or older and<br> agree to our Privacy Policy and Terms of Use</span></label>
-	{=showNewsletterPopup()}
-    </div>
-
-    <h2 class="main_title">Recommended For You</h2>
-    <div class="show_display_col4 recommended_section" data-iconposition="left">
-        {=showDesignDisplay(10363)}
-    </div>
-
-    <div class="main_time_sale">
-        <img src="../images/main/time-sale.png" title="" alt="" class="full_banner pc" />
-        <img src="../images/main/time-sale-mobile.png" title="" alt="" class="full_banner mobile" />
-        <div class="show_display_col4" data-iconposition="left">
-            {=showDesignDisplay(10362)}
-        </div>
-    </div>
-    <a href="/promotion/timedeal" class="btn_more_view">VIEW MORE</a>
-
-    <h2 class="main_title">Popular Brands<a class="right_link" href="/goods/brand_main">VIEW MORE</a></h2>
-    <ul class="main_brand">
-        <li><a href="#" target='_self'><img src="../images/main/main-brand-1.png" title="" alt=""/></a></li>
-        <li><a href="#http://trendy-picker.co.kr/goods/brand?code=0002" target='_self'><img src="../images/main/main-brand-2.png" title="Hera_pbrand" alt="Hera_pbrand"/></a></li>
-        <li><a href="#" target='_self'><img src="../images/main/main-brand-3.png" title="" alt=""/></a></li>
-        <li><a href="#" target='_self'><img src="../images/main/main-brand-4.png" title="Dr.Althea" alt="Dr.Althea"/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-5.png" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-6.png" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-7.png" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-8.png" alt=""/></a></li>
-        <li><a href="#" target='_self'><img src="../images/main/main-brand-9.png" title="" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-10.png" alt=""/></a></li>
-        <li><a href="#" target='_self'><img src="../images/main/main-brand-11.png" title="" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-12.png" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-13.png" alt=""/></a></li>
-        <li><a href="#" target='_self'><img src="../images/main/main-brand-14.png" title="" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-15.png" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-16.png" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-17.png" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-18.png" alt=""/></a></li>
-        <li><a href="#"><img src="../images/main/main-brand-19.png" alt=""/></a></li>
-        <li><a href="#" target='_self'><img src="../images/main/main-brand-20.png" title="" alt=""/></a></li>
-    </ul>
-    <a href="/goods/brand_main" class="brand_btn">VIEW MORE</a>
-    
-    <div class="main_img_col3" data-index="1">
-        <h2 class="main_title">Best Brand</h2>
-        <div class="show_display_col3 main_best_tab main_best_brand_tab tab_image" data-iconposition="left">
-            <ul>
-                <li class="current"><a href="#http://trendy-picker.co.kr/goods/catalog?page=1&searchMode=catalog&category=c000300010008&per=40&sorting=ranking&filter_display=lattice&code=000300010008" target='_self'><img src="../images/main/B_1-1.jpg" title="" alt=""/></a></li>
-                <li><a href="#http://trendy-picker.co.kr/goods/catalog?page=1&searchMode=catalog&category=c000300050002&per=40&sorting=ranking&filter_display=lattice&code=000300050002" target='_self'><img src="../images/main/B_1-2.jpg" title="" alt=""/></a></li>
-                <li><a href="#http://trendy-picker.co.kr/goods/catalog?page=1&searchMode=catalog&category=c00030003&per=40&sorting=ranking&filter_display=lattice&code=00030003" target='_self'><img src="../images/main/B_1-3.jpg" title="" alt=""/></a></li>
-                <li><a href="#http://trendy-picker.co.kr/goods/catalog?page=1&searchMode=catalog&category=c000300070001&per=40&sorting=ranking&filter_display=lattice&code=000300070001" target='_self'><img src="../images/main/B_1-4.jpg" title="" alt=""/></a></li>
-                <li><a href="#http://trendy-picker.co.kr/goods/catalog?page=1&searchMode=catalog&category=c00030012&per=40&sorting=ranking&filter_display=lattice&code=00030012" target='_self'><img src="../images/main/B_1-5.jpg" title="" alt=""/></a></li>
-            </ul>
-            {=showDesignDisplay(10361)}
-        </div>
-    </div>
-
-    <div class="main_img_col3" data-index="2"> 
-        <h2 class="main_title">Best Brand</h2>
-        <div class="show_display_col3 main_best_tab main_best_brand_tab tab_image" data-iconposition="left">
-            <ul>
-                <li class="current"><a href="#" target='_self'><img src="../images/main/B_2-1.jpg" title="" alt=""/></a></li>
-                <li><a href="#" target='_self'><img src="../images/main/B_2-2.jpg" title="" alt=""/></a></li>
-                <li><a href="#" target='_self'><img src="../images/main/B_2-3.jpg" title="" alt=""/></a></li>
-                <li><a href="#" target='_self'><img src="../images/main/B_2-4.jpg" title="" alt=""/></a></li>
-                <li><a href="#" target='_self'><img src="../images/main/B_2-5.jpg" title="" alt=""/></a></li>
-            </ul>
-            {=showDesignDisplay(10003)}
-        </div>
-    </div>
-
-    <section class="magazine-block tp-main-magazine" aria-labelledby="tp-main-magazine-title">
+    <section class="content-section magazine-block tp-main-magazine" aria-labelledby="tp-main-magazine-title">
         <div class="tp-main-magazine__head">
             <h2 id="tp-main-magazine-title">T.P Magazine</h2>
             <a href="/main/magazine">VIEW ALL <span aria-hidden="true">→</span></a>
@@ -217,25 +157,118 @@
 
 </div>
 <script type="text/javascript">
+    /* On phone/tablet the category row sits above the content sheet, as in the
+       prototype (.mobile-cats is a sibling before .page-shell). Firstmall keeps
+       it inside .resp_wrap for desktop, so it is moved out above the shell
+       below 1121px and moved back in at desktop. Handlers survive the move. */
+    (function () {
+        function placeCategory() {
+            var shell = document.querySelector('.resp_wrap.tp-page-shell');
+            if (!shell) return;
+            var cat = document.querySelector('.main_category');
+            if (!cat) return;
+
+            if (document.documentElement.clientWidth <= 1120) {
+                if (cat.parentElement === shell) {
+                    shell.parentNode.insertBefore(cat, shell);
+                    cat.classList.add('tp-category-outside');
+                }
+            } else if (cat.parentElement !== shell) {
+                shell.insertBefore(cat, shell.firstChild);
+                cat.classList.remove('tp-category-outside');
+            }
+        }
+
+        placeCategory();
+        var timer;
+        window.addEventListener('resize', function () {
+            clearTimeout(timer);
+            timer = setTimeout(placeCategory, 150);
+        });
+    })();
+
+</script>
+<script type="text/javascript">
+function hero_swiper_control(slider, target){
+    if (!slider || !target) return;
+
+    const play = document.createElement('button');
+    const prev = document.createElement('button');
+    const next = document.createElement('button');
+    const counter = document.createElement('b');
+    const sliderRoot = target.closest('.wide_visual_slider');
+    const total = sliderRoot
+        ? sliderRoot.querySelectorAll('.swiper-slide:not(.swiper-slide-duplicate)').length
+        : 0;
+
+    target.innerHTML = '';
+    target.classList.remove('swiper-pagination-fraction');
+    target.classList.add('hero-dots');
+
+    play.type = 'button';
+    play.className = 'hero-toggle swiper-play';
+    play.setAttribute('aria-label', 'Pause hero');
+    play.setAttribute('aria-pressed', 'true');
+    prev.type = 'button';
+    prev.className = 'hero-prev prev';
+    prev.setAttribute('aria-label', 'Previous hero');
+    prev.onclick = function () { slider.slidePrev(); };
+    next.type = 'button';
+    next.className = 'hero-next next';
+    next.setAttribute('aria-label', 'Next hero');
+    next.onclick = function () { slider.slideNext(); };
+    counter.className = 'hero-counter';
+
+    function updateCounter() {
+        var current = Number(slider.realIndex || 0) + 1;
+        counter.textContent = current + ' / ' + total;
+    }
+
+    play.onclick = function () {
+        if (slider.autoplay && slider.autoplay.running) {
+            slider.autoplay.stop();
+            this.classList.add('active');
+            this.setAttribute('aria-label', 'Play hero');
+            this.setAttribute('aria-pressed', 'false');
+        } else {
+            slider.autoplay.start();
+            this.classList.remove('active');
+            this.setAttribute('aria-label', 'Pause hero');
+            this.setAttribute('aria-pressed', 'true');
+        }
+    };
+
+    target.appendChild(play);
+    target.appendChild(prev);
+    target.appendChild(next);
+    target.appendChild(counter);
+    slider.on('slideChange', updateCounter);
+    updateCounter();
+}
+
+/* Legacy fraction controls used by the promotion grid below the hero. */
 function swiper_control(slider, target){
+    if (!slider || !target) return;
+
     const prev = document.createElement('span');
     const next = document.createElement('span');
     const play = document.createElement('span');
 
-    prev.className = "prev"
+    prev.className = 'prev';
     prev.onclick = function () { slider.slidePrev(); };
-    next.className = "next"
+    next.className = 'next';
     next.onclick = function () { slider.slideNext(); };
-    play.className = "swiper-play"
-    play.onclick = function () { 
-        if(slider.autoplay.running){
+    play.className = 'swiper-play';
+    play.onclick = function () {
+        if (slider.autoplay.running) {
             slider.autoplay.stop();
-            this.className = "swiper-play active";
+            this.className = 'swiper-play active';
         } else {
             slider.autoplay.start();
-            this.className = "swiper-play";
+            this.className = 'swiper-play';
         }
     };
+
     target.prepend(prev);
     target.append(next);
     target.after(play);
@@ -255,66 +288,47 @@ function resizeIframe(iframeId) {
     }
 }
 
-function bindNewsletterForm($scope, $trigger) {
-    $trigger.on("click", function () {
-        if (!$scope.find("input[name='chk_news']").is(':checked')) {
-            openDialogAlert(getAlert('mb002'), '400', '140');
-            return false;
-        }
-        var email = $scope.find("input[name='news_letter']").val();
-        var regexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-        if (!regexp.test(email)) {
-            openDialogAlert(getAlert('mb052'), '400', '140');
-            return false;
-        }
-        $.ajax({
-            'url': '../newsletter_process/newsletter_regist',
-            'data': { 'email': email },
-            'type': 'post',
-            'dataType': 'json',
-            'success': function (res) {
-                if (res.result) {
-                    var d = new Date();
-                    d.setFullYear(d.getFullYear() + 1);
-                    document.cookie = 'np_subscribed=1; expires=' + d.toUTCString() + '; path=/; SameSite=Lax';
-
-                    openDialogAlert(res.msg, '400', '150');
-                    document.location.reload();
-                } else {
-                    openDialogAlert(res.msg, '400', '150');
-                }
-            }
-        });
-    });
-}
-    
 $(function() {
     // 반응형 변경
-    if($(window).width() > 1023){
+    var mobileTabletHero = document.documentElement.clientWidth <= 1120;
+    if(!mobileTabletHero){
         var view = 4;
-        var view2 = 3;
         var mainSlideObj = "#main-slide";
         var spaceBetween = 20;
     } else {
         var view = 2.2;
-        var view2 = 3;
         var mainSlideObj = "#main-slide-mo";
         var spaceBetween = 8;
     }
 
-    var mainSlideswiper = new Swiper(mainSlideObj, {
-        slidesPerView: 1,
+    var heroSpaceBetween = 0;
+    if (mobileTabletHero) {
+        var heroViewport = document.documentElement.clientWidth;
+        heroSpaceBetween = heroViewport <= 767
+            ? 1
+            : Math.min(20, Math.max(12, heroViewport * 0.018));
+    }
+
+    var mainHeroOptions = {
+        slidesPerView: mobileTabletHero ? 'auto' : 1,
+        centeredSlides: mobileTabletHero,
+        spaceBetween: heroSpaceBetween,
         autoplay: {delay: 2000},
         loop: true,
         mousewheel: false,
-        pagination: {
-            el: mainSlideObj +' .swiper-pagination-main',
-            type: "fraction",
-        },
-    });
+    };
+    if (mobileTabletHero) mainHeroOptions.loopedSlides = 2;
+
+    var mainSlideswiper = new Swiper(mainSlideObj, mainHeroOptions);
     const target = document.querySelector(mainSlideObj + ' .swiper-pagination-main');
-    swiper_control(mainSlideswiper, target);
+    hero_swiper_control(mainSlideswiper, target);
+
+    /* Keep the unpositioned slide hidden. Reveal it only after Swiper has
+       synchronously calculated the centred initial position. */
+    var mainHeroRoot = document.querySelector(mainSlideObj);
+    requestAnimationFrame(function () {
+        if (mainHeroRoot) mainHeroRoot.classList.add('is-inview');
+    });
     
     var swiper = new Swiper(".main_video", {
         slidesPerView: view,
@@ -360,19 +374,6 @@ $(function() {
         var best_seller = $(".best_seller").find(".displayTabContentsContainerWrap").eq(0);
         best_seller_slide(best_seller);
         
-        $('.main_time_sale ul.goods_list').addClass('swiper-wrapper');
-        $('.main_time_sale ul.goods_list > li').addClass('swiper-slide');
-        $('.main_time_sale ul.goods_list').find(".swiper-pagination").remove();
-        $('.main_time_sale ul.goods_list').after('<div class="swiper-pagination swiper-pagination-time"></div>');
-        var slideshowSwiper = new Swiper($('.main_time_sale').find('.display_responsible_class'), {
-            slidesPerView: 2,
-            loop: false,
-            mousewheel: true,
-            pagination: {
-                el: '.swiper-pagination-time',
-                type: "bullets",
-            },
-        });
         $('.main_channel ul > li').addClass('swiper-slide');
         var youtuveSwiper = new Swiper('.main_channel', {
             slidesPerView: 1.4,
@@ -391,51 +392,6 @@ $(function() {
         });
         
     }
-    var wrap;
-    var active_wrap = [,];
-
-    var img_col3_slide = function(wrap, idx){
-        if(active_wrap[idx]){
-            active_wrap[idx].destroy();
-        } 
-        wrap.closest(".main_img_col3").find('.swiper-pagination').remove();
-        wrap.closest(".main_img_col3").find('.swiper-notification').remove();
-        wrap.closest(".main_img_col3").find('.swiper-button-prev').remove();
-        wrap.closest(".main_img_col3").find('.swiper-button-next').remove();
-        wrap.find('.displayTabContentsContainerBox ul').addClass('swiper-wrapper');
-        wrap.find('.displayTabContentsContainerBox ul').after('<div class="swiper-button-prev"></div>');
-        wrap.find('.displayTabContentsContainerBox ul').after('<div class="swiper-button-next"></div>');
-        wrap.find('.displayTabContentsContainerBox ul').after('<div class="swiper-pagination swiper-pagination'+idx+'"></div>');
-        wrap.find('.displayTabContentsContainerBox ul > li').addClass('swiper-slide');
-        active_wrap[idx] = new Swiper(wrap.find('.displayTabContentsContainerBox'), {
-            slidesPerView: view2,
-            grabCursor: false,
-            loop: true,
-            spaceBetween: 0,
-            nextButton: wrap.find('.swiper-button-next'),
-            prevButton: wrap.find('.swiper-button-prev'),
-            pagination: {
-                el: '.swiper-pagination'+idx,
-                type: "bullets",
-                dynamicBullets: true,
-                dynamicMainBullets: 5,
-            },
-        });
-    };
-    
-    $(".main_img_col3 .displayTabContainer > li").on("click", function(){
-        $(this).closest(".main_img_col3").find(".tab_image > ul li").removeClass("current");
-        $(this).closest(".main_img_col3").find(".tab_image > ul li").eq($(this).index()).addClass("current");
-        var wrap = $(this).closest(".main_img_col3").find('.displayTabContentsContainerWrap.active');
-        setTimeout(function(){
-            img_col3_slide(wrap, wrap.closest('.main_img_col3').data("index"));
-        },500);
-    });
-    wrap = $('.main_img_col3').eq(0).find('.displayTabContentsContainerWrap').eq(0);
-    img_col3_slide(wrap, 1);
-    wrap = $('.main_img_col3').eq(1).find('.displayTabContentsContainerWrap').eq(0);
-    img_col3_slide(wrap, 2);
-
     var gridSwiper = new Swiper('.main_3way_slide', {
         slidesPerView: 1,
         autoplay: {
@@ -450,8 +406,6 @@ $(function() {
     });
     const way_target = document.querySelector('.swiper-pagination-way');
     swiper_control(gridSwiper, way_target);
-
-    bindNewsletterForm($(".main_newsletter"), $("#news-letter-btn"));
 
     $(".main_video .swiper-slide iframe").on("click", function(){
         $(this).find("iframe").style("pointer-events:initial;");

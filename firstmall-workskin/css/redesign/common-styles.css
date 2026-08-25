@@ -1,0 +1,218 @@
+@charset "utf-8";
+
+/* TrendyPicker shared presentation styles. */
+
+@import url("tokens.css");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Pretendard", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+.desktop-only {
+  display: none !important;
+}
+
+@media (min-width: 1121px) {
+  .desktop-only {
+    display: revert !important;
+  }
+
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+.content-section {
+  margin-top: var(--space-section);
+}
+
+.content-section.real-trend {
+  margin-top: 8px;
+}
+
+@media (min-width: 1121px) {
+  .content-section.real-trend {
+    margin-top: 48px;
+  }
+}
+
+@media (max-width: 760px) {
+  .content-section.real-trend {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 350px) {
+  .real-trend .trend-heading {
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .real-trend .trend-heading > div:first-child {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .real-trend .section-heading h2 {
+    font-size: 20px;
+    white-space: nowrap;
+  }
+
+  .real-trend .section-heading > a {
+    flex: 0 0 auto;
+    margin-left: auto;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-pill {
+  border-radius: 999px;
+}
+
+.btn-outline-purple {
+  border: 1px solid var(--purple);
+  color: var(--purple);
+  background: #fff;
+}
+
+.section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px clamp(34px, 3.5vw, 70px);
+  margin-bottom: 24px;
+  color: var(--ink);
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(22px, 4vw, 28px);
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.reviews-heading h2 {
+  color: var(--ink);
+}
+
+.section-heading p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.section-heading a {
+  align-self: flex-end;
+  color: var(--purple);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.inline-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.inline-heading p {
+  margin: 0;
+}
+
+.rail-wrap {
+  position: relative;
+  overflow: visible;
+  padding-inline: 22px;
+}
+
+.trend-section .rail-wrap,
+.seller-section .rail-wrap,
+.reviews-section .rail-wrap {
+  padding-inline: 0;
+}
+
+/* Global scroll-reveal shared across all sections. */
+html.scroll-reveal-pending [class*="scroll-reveal-"] {
+  transition: none !important;
+}
+
+.scroll-reveal-soft,
+.scroll-reveal-line {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-reveal-split-left {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-reveal-split-right {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-reveal-soft.is-inview,
+.scroll-reveal-line.is-inview,
+.scroll-reveal-split-left.is-inview,
+.scroll-reveal-split-right.is-inview {
+  opacity: 1;
+  transform: none;
+}
+
+.scroll-reveal-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: calc(var(--reveal-index, 0) * var(--reveal-stagger, 0.08s));
+}
+
+.scroll-reveal-stagger.is-inview .scroll-reveal-item {
+  opacity: 1;
+  transform: none;
+}
+
+.scroll-reveal-pop-item {
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: calc(var(--reveal-index, 0) * var(--reveal-stagger, 0.1s));
+}
+
+.scroll-reveal-stagger.is-inview .scroll-reveal-pop-item {
+  opacity: 1;
+  transform: none;
+}
+
+.scroll-reveal-slow-item {
+  transition-duration: 0.8s;
+}
+
+.scroll-reveal-hero {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.scroll-reveal-hero.is-inview {
+  opacity: 1;
+  transform: none;
+}

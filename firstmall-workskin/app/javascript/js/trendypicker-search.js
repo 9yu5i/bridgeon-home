@@ -29,6 +29,7 @@
 
   var MOBILE_TABLET_MAX = 1124;
   var mobileSheetUiApplied = false;
+  var MOBILE_NAV_RETURN_ATTRIBUTE = "data-tp-return-mobile-nav";
 
   var floatingObserver = null;
 
@@ -53,6 +54,169 @@
     if (!field || !pane || !proxy) return;
 
     var open = false;
+
+    /* showSearchRecent() can return saved keywords in a mixed order. Its
+       recent_seq increases whenever a new keyword is stored, so sort only the
+       rendered rows by that value and leave Firstmall's saved data untouched.
+       Rows without a sequence are fallback/popular keywords and stay after the
+       shopper's real history. */
+    function sortRecentSearches() {
+      var list = module.querySelector("#recentSearchedList");
+      if (!list) return;
+
+      var marker = null;
+      var rows = [];
+
+      Array.prototype.forEach.call(list.children, function (row, index) {
+        if (row.classList.contains("no_data")) marker = row;
+        if (row.classList.contains("recent_search_item")) {
+          var remove = row.querySelector(".searching_item_close[data-value]");
+          var sequence = remove
+            ? parseInt(remove.getAttribute("data-value"), 10)
+            : -1;
+
+          rows.push({
+            row: row,
+            index: index,
+            sequence: isNaN(sequence) ? -1 : sequence
+          });
+        }
+      });
+
+      rows.sort(function (a, b) {
+        if (a.sequence !== b.sequence) return b.sequence - a.sequence;
+        return a.index - b.index;
+      });
+
+      var seenKeywords = Object.create(null);
+      rows = rows.filter(function (item) {
+        var keywordElement = item.row.querySelector(".searched_item");
+        var keyword = keywordElement
+          ? (keywordElement.textContent || "").trim().toLocaleLowerCase()
+          : "";
+
+        if (!keyword || !seenKeywords[keyword]) {
+          if (keyword) seenKeywords[keyword] = true;
+          return true;
+        }
+
+        item.row.remove();
+        return false;
+      });
+
+      rows.forEach(function (item) {
+        list.insertBefore(item.row, marker);
+      });
+    }
+
+    /* On the search-results request Firstmall can render the header before it
+       commits that request's keyword to showSearchRecent(). Merge the current
+       query into the rendered list immediately; the next request will receive
+       the same row from Firstmall and the duplicate check below reuses it. */
+    function syncCurrentSearchHistory() {
+      if (window.location.pathname.indexOf("/goods/search") === -1) return;
+
+      var params = new URLSearchParams(window.location.search);
+      var keyword = (params.get("search_text") || "").trim();
+      if (!keyword) return;
+
+      var list = module.querySelector("#recentSearchedList");
+      if (!list) return;
+
+      var normalized = keyword.toLocaleLowerCase();
+      var rows = list.querySelectorAll("li.recent_search_item");
+      var currentRow = null;
+
+      Array.prototype.some.call(rows, function (row) {
+        var searchedItem = row.querySelector(".searched_item");
+        var rowKeyword = searchedItem
+          ? (searchedItem.textContent || "").trim().toLocaleLowerCase()
+          : "";
+
+        if (rowKeyword !== normalized) return false;
+        currentRow = row;
+        return true;
+      });
+
+      if (!currentRow) {
+        currentRow = document.createElement("li");
+        currentRow.className = "recent_search_item tp-current-search-history";
+
+        var searchedItem = document.createElement("a");
+        searchedItem.className = "searched_item";
+        searchedItem.href = "javascript:void(0)";
+        searchedItem.textContent = keyword;
+
+        var remove = document.createElement("a");
+        remove.className = "searching_item_close";
+        remove.href = "javascript:void(0)";
+        remove.title = "Remove";
+        remove.textContent = "Remove";
+        remove.addEventListener("click", function (event) {
+          event.preventDefault();
+          currentRow.remove();
+        });
+
+        currentRow.appendChild(searchedItem);
+        currentRow.appendChild(remove);
+      }
+
+      list.insertBefore(currentRow, list.firstChild);
+
+      var empty = list.querySelector("li.no_data");
+      if (empty) empty.style.display = "none";
+    }
+
+    /* Firstmall sometimes returns older saved keywords without recent_seq.
+       Those rows use the popular_search_item fallback branch in the header
+       template, which does not include the stock remove link. Keep every
+       visible history chip consistent by supplying a local remove control
+       only when the server did not render one. */
+    function ensureRecentSearchRemoveButtons() {
+      var list = module.querySelector("#recentSearchedList");
+      if (!list) return;
+
+      var rows = list.querySelectorAll("li.recent_search_item");
+
+      Array.prototype.forEach.call(rows, function (row) {
+        var searchedItem = row.querySelector(".searched_item");
+        var keyword = searchedItem
+          ? (searchedItem.textContent || "").trim()
+          : "";
+
+        /* Do not leave an empty clock-only pill when Firstmall returns a
+           fallback record without a keyword. */
+        if (!keyword) {
+          row.remove();
+          return;
+        }
+
+        if (row.querySelector(".searching_item_close")) return;
+
+        var remove = document.createElement("a");
+        remove.className = "searching_item_close tp-local-search-history-remove";
+        remove.href = "javascript:void(0)";
+        remove.title = "Remove";
+        remove.setAttribute("aria-label", "Remove " + keyword);
+        remove.textContent = "Remove";
+        remove.addEventListener("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          row.remove();
+
+          var empty = list.querySelector("li.no_data");
+          if (empty && !list.querySelector("li.recent_search_item")) {
+            empty.style.display = "";
+          }
+        });
+
+        row.appendChild(remove);
+      });
+    }
+
+    sortRecentSearches();
+    syncCurrentSearchHistory();
+    ensureRecentSearchRemoveButtons();
 
     /* The prototype's panel: centred, held off both edges, and capped. */
     var SIDE_GUTTER = 284;
@@ -400,6 +564,9 @@
     }
 
     function show() {
+      sortRecentSearches();
+      syncCurrentSearchHistory();
+      ensureRecentSearchRemoveButtons();
       if (open) return;
       open = true;
 
@@ -431,12 +598,74 @@
       }, 0);
     }
 
-    function hide() {
+    /* The side menu can't be covered by the sheet: it lives in a fixed,
+       z-index 2001 stacking context, while the sheet is trapped inside
+       #layout_header (z-index 200), so no z-index on the sheet can rise above
+       it. Instead of animating the menu closed and back open (which flickers),
+       it is hidden instantly on open and shown instantly on return — its
+       open state (position, scroll lock, close button) is left untouched, so
+       restoring is just un-hiding. */
+    var parkedNav = false;
+
+    function parkMobileNav() {
+      var side = document.getElementById("layout_side");
+      if (!side || getComputedStyle(side).display === "none") {
+        parkedNav = false;
+        return;
+      }
+      var bg = document.getElementById("layout_side_background");
+      parkedNav = true;
+      side.style.display = "none";
+      if (bg) bg.style.display = "none";
+    }
+
+    function restoreMobileNav() {
+      if (!parkedNav) return;
+      parkedNav = false;
+      var side = document.getElementById("layout_side");
+      var bg = document.getElementById("layout_side_background");
+      if (side) side.style.display = "block";
+      if (bg) bg.style.display = "block";
+    }
+
+    /* A parked menu that is not being returned to (a search was submitted, or
+       a suggestion tapped — both navigate away) is closed out in Firstmall's
+       terms so a later open animates in cleanly. The page usually reloads
+       right after, but this keeps state sane if it does not. */
+    function dismissParkedNav() {
+      if (!parkedNav) return;
+      parkedNav = false;
+      var side = document.getElementById("layout_side");
+      var bg = document.getElementById("layout_side_background");
+      var sideCloseBtn = document.getElementById("side_close");
+      if (side) {
+        side.style.display = "none";
+        side.style.left = "";
+      }
+      if (bg) bg.style.display = "none";
+      if (sideCloseBtn) sideCloseBtn.classList.remove("on");
+      if (window.jQuery) window.jQuery("html, body").css("overflow", "");
+      try {
+        window.layout_side_opened = false;
+      } catch (e) {}
+    }
+
+    /* restoreNav: true (default) brings a parked side menu straight back —
+       the shopper came from it, so any close returns there. Pass false only on
+       the navigating closes (submit, suggestion tap) so the menu is dismissed
+       instead. */
+    function hide(restoreNav) {
+      module.removeAttribute(MOBILE_NAV_RETURN_ATTRIBUTE);
       if (!open) return;
       open = false;
 
       setStacked(false);
       unlockScroll();
+
+      if (parkedNav) {
+        if (restoreNav === false) dismissParkedNav();
+        else restoreMobileNav();
+      }
 
       if (isDesktop()) {
         /*
@@ -499,11 +728,11 @@
         var input = event.target;
         if (!input.closest || !input.closest(".tp-mnav-search")) return;
 
-        /* Close the side menu first: the sheet replaces it rather than
-           stacking on top. */
-        var close = document.getElementById("side_close");
-        if (close && close.classList.contains("on")) close.click();
-
+        /* Park the side menu instantly (it outranks the sheet on z-index and
+           cannot be covered) and mark the origin so the back button restores
+           it just as instantly. */
+        parkMobileNav();
+        if (parkedNav) module.setAttribute(MOBILE_NAV_RETURN_ATTRIBUTE, "1");
         show();
       },
       true
@@ -542,7 +771,7 @@
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        hide();
+        hide(false);
 
         proxy.value = keyword;
         var form = document.getElementById("topSearchForm");
@@ -567,11 +796,20 @@
             (target.classList.contains("searchModuleClose") ||
               target.classList.contains("search_close"))
           ) {
-            if (isDesktop()) {
+            var returnToMobileNav =
+              isMobileTablet() &&
+              target.classList.contains("tp-search-back") &&
+              module.getAttribute(MOBILE_NAV_RETURN_ATTRIBUTE) === "1";
+
+            if (isDesktop() || returnToMobileNav) {
               event.preventDefault();
               event.stopImmediatePropagation();
             }
-            hide();
+
+            /* The back arrow returns to the parked menu; the footer "Close"
+               (and any other close control) dismisses everything, the menu
+               included. returnToMobileNav is already false for those. */
+            hide(returnToMobileNav);
             return;
           }
           target = target.parentElement;
@@ -598,7 +836,7 @@
           form.classList.contains("tp-header-search") ||
           action.indexOf("/goods/search") !== -1
         ) {
-          hide();
+          hide(false);
         }
       },
       true
@@ -634,7 +872,12 @@
       "mousedown",
       function (event) {
         if (!open) return;
-        if (pane.contains(event.target) || field.contains(event.target)) return;
+        /* Test the whole module, not just .contetns_area. The sheet's top bar
+           — including the back button — lives in .input_area, a sibling of the
+           pane; checking only the pane treated a mousedown on the back button
+           as an outside click and closed here first, so the button's own
+           click never ran its return-to-menu path (it just closed). */
+        if (module.contains(event.target) || field.contains(event.target)) return;
         /* The hamburger opens the side menu, which manages the panel on its
            own — closing here as well would fight it, so it is left alone. */
         if (event.target.closest && event.target.closest(".resp_top_hamburger")) {

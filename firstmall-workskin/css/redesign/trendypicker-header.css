@@ -23,6 +23,50 @@
   .layout_header .top_header_banner {
     background: #101010;
   }
+
+  .layout_header .top_header_banner > a {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(24px, 5vw, 64px);
+    min-height: 42px;
+    padding: 8px 16px;
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  .layout_header .top_header_banner .tp-top-benefit {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+
+  .layout_header .top_header_banner .tp-top-benefit img {
+    display: block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+
+  @media only screen and (max-width: 767px) {
+    .layout_header .top_header_banner > a {
+      gap: 16px;
+      min-height: 33px;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+
+    .layout_header .top_header_banner .tp-top-benefit {
+      gap: 5px;
+    }
+
+    .layout_header .top_header_banner .tp-top-benefit img {
+      width: 18px;
+      height: 18px;
+    }
+  }
   
   .layout_header .util_wrap,
   .layout_header .top_bar,

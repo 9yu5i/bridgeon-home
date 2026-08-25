@@ -1,0 +1,42 @@
+:root {
+  --black: #151515;
+  --header: #202020;
+  --ink: #171320;
+  --muted: #77717f;
+  --page: #f8f5ff;
+  --line: #e6ddf4;
+  --purple: #7b3fe4;
+  --purple-dark: #5422ba;
+  --purple-light: #f2efff;
+  --warm: #ffb000;
+  --placeholder: #888884;
+  --placeholder-dark: #30302f;
+
+  --listing-shell-radius: 24px;
+  --listing-chip-bg: #f2efff;
+  --listing-price: #e53935;
+  --listing-hero-inner-height: clamp(260px, 27vw, 520px);
+  --listing-shell-margin-top: -23px;
+  --rt-purple: var(--purple, #7b3fe4);
+
+  --max-width: 1770px;
+  --side-padding: 72px;
+  --card-radius: 18px;
+  --card-shadow: 0 10px 24px rgba(55, 34, 99, 0.14);
+
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 20px;
+  --space-lg: 32px;
+  --space-xl: 46px;
+  --space-section: 72px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  --transition-fast: 0.2s ease;
+
+  --trend-tab-gap: 24px;
+  --seller-rail-gap: 27px;
+}

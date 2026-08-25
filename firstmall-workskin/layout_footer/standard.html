@@ -16,7 +16,11 @@
                 <li class="footer_a1">
                     <h3 class="title"><span designElement="text">MY ACCOUNT</span></h3>
                     <ul class="menu">
+                        <!--{? userInfo.member_seq }-->
                         <li><a href="/mypage/dashboard" designElement="text">My Account</a></li>
+                        <!--{:}-->
+                        <li><a href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}" designElement="text">My Account</a></li>
+                        <!--{/}-->
                         <li><a href="/service/cs" designElement="text">Customer Service</a></li>
                         <li><a href="/mypage/order_catalog?sc_date=0" designElement="text">Order Tracking</a></li>
                     </ul>
@@ -92,20 +96,43 @@
 
 <!-- 플로팅 - BACK/TOP(대쉬보드) -->
 <div id="floating_over">
-    <div class="fixed_menu">
+    <div class="fixed_menu tp-fnav">
         <ul>
-            <li><a href="/" class="home"></a></li>
-            <li><a href="#" class="menu"></a></li>
-            <li><a href="#search" class="search"></a></li>
-            <li><a href="/mypage/wish" class="wish"></a></li>
-            <li><a href="/mypage/index" class="my"></a></li>
+            <li><a href="#category" onclick="side_menu_onoff();return false;" class="tp-fnav-link tp-fnav-menu"><span class="tp-fnav-ico"></span><span class="tp-fnav-label">Menu</span></a></li>
+            <li><a href="/shortform/feed" class="tp-fnav-link tp-fnav-tppick"><span class="tp-fnav-ico"></span><span class="tp-fnav-label">T.P Pick</span></a></li>
+            <li><a href="/" class="tp-fnav-link tp-fnav-home"><span class="tp-fnav-ico"></span><span class="tp-fnav-label">Home</span></a></li>
+            <li><a href="/order/cart" class="tp-fnav-link tp-fnav-cart"><span class="tp-fnav-ico">{? push_count_cart}<span class="tp-fnav-badge">{push_count_cart}</span>{/}</span><span class="tp-fnav-label">Cart</span></a></li>
+            <!--{? userInfo.member_seq }-->
+            <li><a href="/mypage/index" class="tp-fnav-link tp-fnav-my"><span class="tp-fnav-ico"></span><span class="tp-fnav-label">My</span></a></li>
+            <!--{:}-->
+            <li><a href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}" class="tp-fnav-link tp-fnav-my"><span class="tp-fnav-ico"></span><span class="tp-fnav-label">My</span></a></li>
+            <!--{/}-->
         </ul>
         <div class="fixed_bar"></div>
     </div>
+    <!-- Real Trend( /shortform/feed ) 에서만 하단바를 어둡게: 그 페이지에만 있는
+         .realtrend-page 컨테이너를 보고 클래스를 붙입니다. -->
+    <script>
+        (function () {
+            if (document.querySelector('.realtrend-page')) {
+                var bar = document.querySelector('.fixed_menu.tp-fnav');
+                if (bar) bar.classList.add('tp-fnav--dark');
+            }
+        })();
+    </script>
 	<!--<a href="javascript:history.back();" class="ico_floating_back" title="뒤로 가기"></a>
 	<a href="javascript:history.forward();" class="ico_floating_foward" title="앞으로 가기"></a>-->
-	<a href="javascript:void(0);" onclick="$('html,body').animate({scrollTop:0},'slow');" class="ico_floating_top" title="위로 가기"><img src="../images/icon/icon-scroll-top.png" alt=""></a>
-    <a href="#" class="ico_floating_talk" title="talk"><img src="../images/icon/icon-scroll-talk.png" alt=""></a>
+	<a href="javascript:void(0);" onclick="$('html,body').animate({scrollTop:0},'slow');" class="ico_floating_top float-button to-top" title="위로 가기" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+    </a>
+    <a href="#" class="ico_floating_talk float-button chat" title="talk" aria-label="Chat">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4c-5 0-9 3.2-9 7.2 0 2.2 1.2 4.2 3.2 5.5L5.4 20l3.4-1.8c1 .3 2.1.5 3.2.5 5 0 9-3.2 9-7.2S17 4 12 4Z" />
+            <circle cx="8.5" cy="11.5" r="1" />
+            <circle cx="12" cy="11.5" r="1" />
+            <circle cx="15.5" cy="11.5" r="1" />
+        </svg>
+    </a>
 	<!--{? (preg_match('/main\/index/',_SERVER.REQUEST_URI) || preg_match('/goods\/catalog/',_SERVER.REQUEST_URI) || preg_match('/goods\/brand/',_SERVER.REQUEST_URI) || preg_match('/goods\/location/',_SERVER.REQUEST_URI) || preg_match('/goods\/search/',_SERVER.REQUEST_URI) || preg_match('/bigdata\/catalog/',_SERVER.REQUEST_URI)) && dataRightQuicklist && !preg_match('/goods\/view/',_SERVER.REQUEST_URI) }-->
 	{? push_count_today_images}<a href="javascript:;" class="ico_floating_recently dn"><span designElement="text">최근본</span><br /><img src="{push_count_today_images}" onerror="this.src='../images/common/noimage.gif'"></a>{/}
 	<!--{ / }-->

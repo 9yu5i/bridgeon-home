@@ -7,11 +7,22 @@
 <!-- //띠배너 -->
 
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-header.css" />
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-search.css?v=20260824-1805" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-search.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mobile-nav.css?v=20260821-1550" />
 
 <div id="layout_header" class="layout_header">
-    <div class="top_header_banner"><a href="#" target="actionFrame" designElement="text">FREE SHIPPING ON $48+ US ORDERS</a></div>
+    <div class="top_header_banner">
+        <a href="#" target="actionFrame" designElement="text">
+            <span class="tp-top-benefit">
+                <img src="/data/skin/{skin}/images/main/top_banner_lefticon.png" alt="" />
+                <span>Free Shipping on US$48+ Orders</span>
+            </span>
+            <span class="tp-top-benefit">
+                <img src="/data/skin/{skin}/images/main/top_banner_righticon.png" alt="" />
+                <span>Ships From Korea</span>
+            </span>
+        </a>
+    </div>
     <div class="util_wrap">
         <div class="resp_wrap top_header_menu">
 			<!-- language -->
@@ -41,9 +52,13 @@
 				<!--{ / }-->
 				</ul>
 			</div>
-			<ul class="util_wrap_menu2">
+            <ul class="util_wrap_menu2">
                 <li class="top_my_person">
+                    <!--{? userInfo.member_seq }-->
                     <a href="/mypage/index"><img src="../images/icon/tp-header-my.png" title="" alt=""></a>
+                    <!--{:}-->
+                    <a href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}"><img src="../images/icon/tp-header-my.png" title="" alt=""></a>
+                    <!--{/}-->
                     <div class="sub_my_person">
                         <ul>
                         <!--{? userInfo.member_seq }-->
@@ -57,7 +72,7 @@
 				            <li><a href="/board/?id=notice">Customer Service</a></li>
 				            <li><a href="/login_process/logout" target= "actionFrame">Sign Out</a></li>
         				<!--{:}-->
-				            <li><a href="/member/login">Sign In</a></li>
+                            <li><a href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}">Sign In</a></li>
 				            <li class="bottom_bar"><a href="/member/register?join_type=member">Create Account</a></li>
                             <li><a href="/mypage/order_catalog">Order Tracking</a></li>
 				            <li><a href="/board/?id=notice">Customer Service</a></li>
@@ -96,7 +111,11 @@
 				<a href="#category"><b>aside menu</b></a>
 			</div>
 
+			<!--{? userInfo.member_seq }-->
 			<a href="/mypage/index" class="resp_top_mypge">마이페이지</a>
+			<!--{:}-->
+			<a href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}" class="resp_top_mypge">마이페이지</a>
+			<!--{/}-->
 
 			<!-- 장바구니( 1023px 이하에서 노출됨 ) -->
 			<a href="/order/cart" class="resp_top_cart">{? push_count_cart}<span class="cart_cnt2">{push_count_cart}</span>{/}</a>
@@ -627,6 +646,82 @@
             $('#language_wrap').hide();
         });
     });
+
+    /* The shared /app search script can remain cached after an upload. Bind the
+       category-return handoff from the skin template, which Firstmall refreshes
+       with this header. This listener is registered before the external search
+       script below, so it records the source before that script closes the side
+       panel. */
+    (function bindMobileCategorySearchReturn() {
+        var returnAttribute = 'data-tp-return-mobile-nav';
+
+        function isMobileTablet() {
+            return document.documentElement.clientWidth <= 1124;
+        }
+
+        function reopenCategoryPanel(attempt) {
+            var module = document.getElementById('searchVer2');
+            var sideClose = document.getElementById('side_close');
+            var opener = document.querySelector('.resp_top_hamburger > a');
+            var closeInProgress =
+                opener &&
+                opener.classList.contains('on') &&
+                (!sideClose || !sideClose.classList.contains('on'));
+
+            /* Firstmall removes the hamburger's on class after the slide-close
+               animation. Reopening before that timer finishes looks correct for
+               a moment, then the old timer hides the category panel again. */
+            if (closeInProgress && (attempt || 0) < 12) {
+                window.setTimeout(function() {
+                    reopenCategoryPanel((attempt || 0) + 1);
+                }, 50);
+                return;
+            }
+
+            if (module) module.removeAttribute(returnAttribute);
+            if (sideClose && sideClose.classList.contains('on')) return;
+            if (opener) opener.click();
+        }
+
+        document.addEventListener('focusin', function(event) {
+            if (!isMobileTablet()) return;
+
+            var target = event.target;
+            if (!target || !target.closest || !target.closest('.tp-mnav-search')) return;
+
+            var module = document.getElementById('searchVer2');
+            if (module) module.setAttribute(returnAttribute, '1');
+        }, true);
+
+        var module = document.getElementById('searchVer2');
+        if (module && window.MutationObserver) {
+            var wasOpen = module.classList.contains('tp-search-open');
+            var observer = new MutationObserver(function() {
+                var isOpen = module.classList.contains('tp-search-open');
+
+                if (
+                    wasOpen &&
+                    !isOpen &&
+                    module.getAttribute(returnAttribute) === '1'
+                ) {
+                    window.setTimeout(reopenCategoryPanel, 80);
+                }
+
+                wasOpen = isOpen;
+            });
+
+            observer.observe(module, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+        }
+
+        document.addEventListener('submit', function(event) {
+            var module = document.getElementById('searchVer2');
+            if (!module || !event.target || !module.contains(event.target)) return;
+            module.removeAttribute(returnAttribute);
+        }, true);
+    })();
 </script>
 <script src="/app/javascript/js/trendypicker-mobile-nav.js?v=20260821-1550"></script>
-<script src="/app/javascript/js/trendypicker-search.js?v=20260824-1805"></script>
+<script src="/app/javascript/js/trendypicker-search.js"></script>

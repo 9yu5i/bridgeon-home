@@ -1,0 +1,511 @@
+/* TrendyPicker main visual slider → prototype hero
+   Loaded from main/index.html. Reshapes the Firstmall main banner
+   (.wide_visual_slider .full img) to the prototype's hero frame: a tall,
+   full-bleed stage with the banner filling it via object-fit: cover.
+
+   Values from styles/hero.css — the desktop .hero-frame is 705px; used a touch shorter at 660px. The
+   banners are 1920x560, so cover crops them left/right on this taller frame;
+   that trade-off was chosen deliberately (option B). Purpose-cut 705px-tall
+   artwork would show edge-to-edge without cropping. */
+
+/* ===== Desktop hero (>= 1121px) ======================================== */
+@media only screen and (min-width: 1121px) {
+  /* The PC slider is the hero frame. Height is pinned on the swiper's own
+     boxes too, since it sizes the wrapper/slide itself. */
+  #main-slide.wide_visual_slider.pc,
+  #main-slide.wide_visual_slider.pc .swiper-wrapper,
+  #main-slide.wide_visual_slider.pc .swiper-slide.full {
+    height: 660px;
+  }
+
+  #main-slide.wide_visual_slider.pc {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile {
+    display: none;
+  }
+
+  #main-slide.wide_visual_slider.pc .swiper-slide.full img {
+    display: block;
+    width: 100%;
+    height: 640px;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+/* ===== Mobile / tablet (<= 1120px) =====================================
+   The prototype's mobile hero is a card-peek carousel: a centred card at full
+   size with the neighbours scaled down and peeking in from the sides, plus a
+   rounded counter pill. main/index.html initializes the mobile swiper with
+   centred, auto-width slides so this CSS can shape the cards; card width,
+   327/384 ratio, 9px radius and the 0.84 side-scale all come from the
+   prototype (responsive-hero.css). */
+@media only screen and (max-width: 1120px) {
+  #main-slide-mo.wide_visual_slider.mobile {
+    --tp-hero-card: clamp(300px, 82vw, 440px);
+    box-sizing: border-box;
+    display: block;
+    overflow: hidden;
+    padding-top: 20px;
+  }
+
+  #main-slide.wide_visual_slider.pc {
+    display: none;
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile .swiper-wrapper {
+    align-items: center;
+  }
+
+  /* Centred card at the CSS card width, with smaller neighbours peeking on
+     either side. Firstmall pins transform:none with an anti-flicker rule, so
+     this page-scoped override is required for the prototype's depth cue. */
+  #main-slide-mo.wide_visual_slider.mobile .swiper-slide.full {
+    box-sizing: border-box;
+    width: var(--tp-hero-card);
+    height: auto;
+    aspect-ratio: 327 / 384;
+    border-radius: 9px;
+    overflow: hidden;
+    transform: scale(0.84) !important;
+    transform-origin: center;
+    transition: transform 0.35s ease;
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile .swiper-slide.full.swiper-slide-prev {
+    transform-origin: right center;
+    filter: brightness(0.94);
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile .swiper-slide.full.swiper-slide-next {
+    transform-origin: left center;
+    filter: brightness(0.94);
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile .swiper-slide.full.swiper-slide-active {
+    z-index: 2;
+    transform: scale(1) !important;
+    filter: none;
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile .swiper-slide.full img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 9px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* The original second mobile file is visually empty. Reuse the live
+     Atobarrier banner and crop around its product group for the portrait card. */
+  #main-slide-mo.wide_visual_slider.mobile .swiper-slide.full.tp-hero-wide img {
+    width: calc(100% - 10px);
+    margin-inline: auto;
+    object-position: 72% center;
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile .swiper-slide.full.tp-hero-billboard img {
+    object-position: 60% center;
+  }
+
+  /* Keep the pause control centred and the counter at the active card's
+     bottom-right. The previous/next buttons remain available on desktop. */
+  #main-slide-mo.wide_visual_slider.mobile .hero-dots {
+    position: absolute;
+    right: 0;
+    bottom: 16px;
+    left: 0;
+    z-index: 4;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 24px;
+    padding: 0 calc((100% - var(--tp-hero-card)) / 2 + 12px);
+    background: transparent;
+    pointer-events: none;
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile .hero-dots > * {
+    pointer-events: auto;
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile .hero-toggle {
+    display: none;
+  }
+
+  #main-slide-mo.wide_visual_slider.mobile .hero-prev,
+  #main-slide-mo.wide_visual_slider.mobile .hero-next {
+    display: none;
+  }
+}
+
+/* ===== Hero controls (.hero-dots) ===================================== */
+#main-slide .hero-dots,
+#main-slide-mo .hero-dots {
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+#main-slide .hero-dots {
+  position: absolute;
+  right: max(24px, calc((100vw - 1770px) / 2 + 24px));
+  bottom: 170px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  padding: 4px;
+  border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.24);
+  visibility: visible;
+  opacity: 1;
+}
+
+#main-slide .hero-dots button,
+#main-slide-mo .hero-dots button {
+  appearance: none;
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.38);
+  opacity: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #main-slide .hero-dots button:hover,
+  #main-slide-mo .hero-dots button:hover {
+    background: #7037c5;
+  }
+}
+
+#main-slide .hero-dots .hero-prev::before,
+#main-slide-mo .hero-dots .hero-prev::before,
+#main-slide .hero-dots .hero-next::before,
+#main-slide-mo .hero-dots .hero-next::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
+
+#main-slide .hero-dots .hero-prev::before,
+#main-slide-mo .hero-dots .hero-prev::before {
+  transform: rotate(-135deg);
+}
+
+#main-slide .hero-dots .hero-next::before,
+#main-slide-mo .hero-dots .hero-next::before {
+  transform: rotate(45deg);
+}
+
+#main-slide .hero-dots .hero-toggle::before,
+#main-slide-mo .hero-dots .hero-toggle::before {
+  content: "";
+  width: 6px;
+  height: 9px;
+  border-right: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+}
+
+#main-slide .hero-dots .hero-toggle.active::before,
+#main-slide-mo .hero-dots .hero-toggle.active::before {
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  border: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 7px solid currentColor;
+}
+
+#main-slide .hero-dots .hero-prev::before,
+#main-slide .hero-dots .hero-next::before {
+  width: 7px;
+  height: 12px;
+  border: 0;
+  background: url("../../images/icon/next.png") center / contain no-repeat;
+}
+
+#main-slide .hero-dots .hero-prev::before {
+  transform: translateY(1px) rotate(180deg);
+}
+
+#main-slide .hero-dots .hero-next::before {
+  transform: none;
+}
+
+#main-slide .hero-dots .hero-toggle:not(.active)::before {
+  width: 8px;
+  height: 11px;
+  border: 0;
+  background: url("../../images/icon/pause.png") center / contain no-repeat;
+}
+
+#main-slide .hero-dots .hero-counter,
+#main-slide-mo .hero-dots .hero-counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 44px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.38);
+  background: rgba(0, 0, 0, 0.25);
+  font: inherit;
+  white-space: nowrap;
+  transform: translate(-4px, -14px);
+}
+
+@media only screen and (min-width: 1121px) {
+  #main-slide .hero-dots .hero-counter {
+    transform: none;
+  }
+}
+
+/* ===== Content sheet (.tp-page-shell) ==================================
+   The prototype wraps everything below the hero in .page-shell — a rounded
+   card that slides up over the hero's foot with a soft shadow. Applied to the
+   main page's single .resp_wrap (the block holding every section under the
+   banner). Values from styles/sections.css + responsive-sections.css; the
+   page tint is --page (#f8f5ff). */
+#layout_body .resp_wrap.tp-page-shell {
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  max-width: 1600px;
+  margin: -150px auto 0;
+  padding: 48px 130px 78px;
+  padding: 1px 130px 78px;
+  border-radius: 40px 40px 0 0;
+  background: #f8f5ff;
+  box-shadow: 0 -8px 24px rgba(123, 63, 228, 0.16);
+}
+
+#layout_body .tp-page-shell .main_3way_slide {
+  display: none;
+}
+
+/* The area the shell sits over — dark, so the light sheet reads as a card
+   floating on it (and the reduced-width shell shows this on both sides on a
+   wide screen). Only main/index.html loads this file, so scoping the rule to
+   #layout_body cannot tint any other page. */
+@media only screen and (min-width: 1121px) {
+  #layout_body {
+    background: #292626;
+  }
+
+  #layout_body .tp-page-shell .main_category {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 1120px) {
+  #layout_body .resp_wrap.tp-page-shell {
+    margin: -8px auto 0;
+    padding: 36px 24px 70px;
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  #layout_body .resp_wrap.tp-page-shell {
+    padding: 28px 18px 26px;
+  }
+}
+
+/* ===== Banner reveal ===================================================
+   The prototype fades its hero in on load — .scroll-reveal-hero .hero-frame
+   starts at opacity 0 / translateY(18px) and settles on .is-inview. scroll-
+   reveal.js only wires that to a .hero element, which Firstmall has none of,
+   so the same transition is put straight on the banner and a small script in
+   main/index.html adds .is-inview after paint. */
+.wide_visual_slider.tp-hero-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wide_visual_slider.tp-hero-reveal.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wide_visual_slider.tp-hero-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ===== Category above the shell (mobile / tablet) ======================
+   trendypicker-main-hero's script moves .main_category out above the sheet on
+   phone/tablet. It then sits on the page background between the hero and the
+   shell, so it carries its own spacing instead of the shell's padding. */
+@media only screen and (max-width: 1120px) {
+  .main_category.tp-category-outside {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 14px 18px 40px;
+    padding: 0px 18px 30px;
+  }
+
+  .main_category.tp-category-outside > h3,
+  .main_category.tp-category-outside > p {
+    display: none;
+  }
+}
+
+/* ===== Category tiles → prototype circles ==============================
+   Shop by Category restyled to the prototype's .mobile-cats: a lavender disc
+   holding the category's product image, with the label beneath.
+
+   Firstmall's markup nests two <a>s, which the browser splits into siblings:
+   an empty first link, a second link carrying the <img>, then the label span.
+   So the second link becomes the disc, the empty one is hidden, and the span
+   is the label. nth-of-type keeps this working without :has() or !important;
+   the id scope alone outranks user.css. */
+#layout_body .main_category > ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 4px;
+  margin: 0;
+  padding: 0;
+}
+
+#layout_body .main_category > ul > li {
+  box-sizing: border-box;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  width: clamp(84px, 16vw, 150px);
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The empty first link the parser leaves behind. */
+#layout_body .main_category > ul > li > a:first-of-type {
+  display: none;
+}
+
+/* Second link (wraps the image) = the lavender disc, product padded off the
+   curve. */
+#layout_body .main_category > ul > li > a:nth-of-type(2) {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  width: clamp(56px, 8vw, 92px);
+  height: clamp(56px, 8vw, 92px);
+  width: clamp(54px, 7.5vw, 88px);
+  height: clamp(54px, 7.5vw, 88px);
+  margin: 0;
+  padding: 8%;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #f0eaff;
+  text-decoration: none;
+}
+
+#layout_body .main_category > ul > li > a:nth-of-type(2) img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  object-fit: contain;
+  transform: translateX(2px) scale(1.28);
+}
+
+#layout_body
+  .main_category
+  > ul
+  > li:nth-child(3)
+  > a:nth-of-type(2)
+  img,
+#layout_body
+  .main_category
+  > ul
+  > li:nth-child(4)
+  > a:nth-of-type(2)
+  img {
+  transform: translateX(2px) scale(1.16);
+}
+
+#layout_body .main_category > ul > li > span {
+  display: block;
+  color: #5c556d;
+  font-size: 13px;
+  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  word-break: keep-all;
+}
+
+@media only screen and (max-width: 1120px) {
+  /* Exactly five columns on a phone, as in the prototype — flex-wrap left the
+     fifth tile a hair too wide and dropped it to a second row. */
+  #layout_body .main_category > ul {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px 2px;
+    width: clamp(327px, 50vw, 520px);
+    max-width: calc(100vw - 72px);
+    margin: 0 auto;
+    gap: 10px clamp(4px, 1.3vw, 10px);
+  }
+
+  #layout_body .main_category > ul > li {
+    width: auto;
+  }
+
+  #layout_body .main_category > ul > li > a:nth-of-type(2) {
+    width: clamp(50px, 16vw, 70px);
+    height: clamp(50px, 16vw, 70px);
+    width: clamp(50px, 15vw, 66px);
+    height: clamp(50px, 15vw, 66px);
+  }
+
+  #layout_body .main_category > ul > li > span {
+    font-size: 11px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  #layout_body .main_category > ul {
+    grid-template-columns: repeat(5, clamp(50px, 15vw, 66px));
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    column-gap: 10px;
+  }
+}

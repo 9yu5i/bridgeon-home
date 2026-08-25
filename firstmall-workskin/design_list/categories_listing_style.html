@@ -16,11 +16,10 @@
 				<img src="{.image}" onerror="this.src='/data/skin/{=skin}/images/common/noimage.gif';" alt="" class="listing-card-image square_display" aria-hidden="true"/>
 			</a>
 
-			<!--{ ? .review_count > 0 }-->
-			<div class="listing-card-rating-badge">
-				<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-review-star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12">
-				<span class="nuM">{=round(.review_sum/.review_count,1)}</span>
-				<span class="listing-card-rating-count">({.review_count})</span>
+			<!--{ ? !empty(.eventEnd) && .sale_per > 0 }-->
+			<div class="timedeal-card-deal" aria-label="{.sale_per}% OFF time deal">
+				<img class="timedeal-card-deal-clock" src="/data/skin/{=skin}/images/timedeal/clock_pink.png" alt="" width="22" height="22" aria-hidden="true" />
+				<span class="timedeal-card-deal-rate">{.sale_per}% OFF</span>
 			</div>
 			<!--{ / }-->
 
@@ -61,6 +60,14 @@
 				</a>
 			</div>
 			<!--{ / }-->
+
+			<div class="listing-card-rating">
+				<span class="listing-card-rating-star" aria-hidden="true">&#9733;</span>
+				<span class="nuM">
+					<!--{ ? .review_count > 0 }-->{=round(.review_sum/.review_count,1)}<!--{ : }-->0.0<!--{ / }-->
+				</span>
+				<span class="listing-card-rating-count">({=number_format(.review_count)})</span>
+			</div>
 
 			<!--{ ? .r_rank && .r_rank[0] }-->
 			<a href="/goods/best?ranking_category={.r_rank[0].category_code}&ranking_type={.r_rank[0].rank_type}" class="ranking_label dn">

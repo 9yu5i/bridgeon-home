@@ -442,7 +442,7 @@ input.pilsu:read-only {background-color:#d8d8d8;}
 #floating_over .ico_floating_foward {border:1px solid #ccc; background:#fff url('../images/design_resp/btn_foward.png') center no-repeat; background-size:cover;}
 #floating_over .ico_floating_top {background: none;padding:0;width:60px;height:60px;bottom:184px;right:16px;/*display:none; border:1px solid #ccc; background:#fff url('../images/design_resp/btn_up.png') center no-repeat; background-size:cover; text-indent:-9999px;*/}
 #floating_over .ico_floating_talk {position: absolute;bottom: 108px;right: 16px;line-height: 20px;text-align: center;}
-#floating_over .fixed_menu {width:100%;background-color:#FFF;border-top:1px solid #D8D8D8;padding-bottom:5px;display:none;}
+#floating_over .fixed_menu {width:100%;background-color:#FFF;border-top:1px solid #D8D8D8;display:none;}
 #floating_over .fixed_menu ul {padding:12px;font-size:0;}
 #floating_over .fixed_menu ul li {display:inline-block;width:20%;text-align:center;}
 #floating_over .fixed_menu ul li a {width:100%;height:46px;display:block;}
@@ -605,7 +605,7 @@ input[type=checkbox]:checked::after,
 .resp_login_wrap .login_real_area .ab_p {position:absolute;left:15px;top:1px;font-size:10px;pointer-events : none;}
 .resp_login_wrap .btn_resp.size_login1 {background-color:#7F56D9;color:#FFF;font-weight:600;border:none;font-size:16px;height:52px;}
 .resp_login_wrap .id_save {font-size:14px;color:#1d1d1d;line-height: 20px;padding:16px 0 20px;height:initial;}
-.resp_login_wrap .login_real_area .find_join {font-size:14px;color:#717171;line-height:20px;padding:20px 0 40px;font-weight:normal;}
+.resp_login_wrap .login_real_area .find_join {font-size:14px;color:#717171;line-height:20px;padding:20px 0 20px;font-weight:normal;}
 .resp_login_wrap .login_real_area .find_join>a {padding:0;color:#717171;text-decoration: underline;}
 .tab_basic>ul>li {border:none;font-size:16px;line-height:24px;background-color:#f0f0f0;color:#717171;height:48px;}
 .tab_basic>ul>li:last-child {border-right:none;}
@@ -664,7 +664,7 @@ input[type=checkbox]:checked::after,
 .basic_btn_area {text-align:center;}
 
 .top_header_banner {background-color:#000;text-align:center;}
-.top_header_banner a {font-size:12px;font-weight:700;color:#FFF;line-height:22px;padding:10px 0;display:block;}
+.top_header_banner a {font-size:13px;font-weight:600;color:#FFF;line-height:22px;padding:10px 0;display:block;}
 .top_header_menu {position:absolute;top:0;width:100%;}
 .layout_header .language {margin:30px 20px 0 0;}
 .layout_header .logo_wrap {text-align:center;}

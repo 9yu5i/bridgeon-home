@@ -210,3 +210,222 @@
     transform: translateY(-20%) rotate(225deg);
   }
 }
+
+/* ===== Floating top / chat buttons ===================================== */
+#floating_over .float-button {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid #d9c6ff;
+  border-radius: 50%;
+  color: #7f3ff2;
+  background: #fff;
+  font-size: 0;
+  line-height: 1;
+  opacity: 1;
+  box-shadow: 0 10px 30px rgba(31, 20, 52, 0.24);
+  transition:
+    color 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+#floating_over .float-button svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+#floating_over .float-button svg path {
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#floating_over .float-button.to-top {
+  bottom: 150px;
+}
+
+#floating_over .float-button.chat {
+  bottom: 96px;
+  color: #fff;
+  background: #7f3ff2;
+}
+
+#floating_over .float-button.chat svg {
+  width: 18px;
+  height: 18px;
+}
+
+#floating_over .float-button.chat svg circle {
+  fill: currentcolor;
+}
+
+@keyframes tp-floating-button-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #floating_over .float-button.to-top:hover {
+    color: #fff;
+    background: #7f3ff2;
+    border-color: #7f3ff2;
+    animation: tp-floating-button-bob 1.15s ease-in-out infinite;
+    box-shadow: 0 16px 34px rgba(31, 20, 52, 0.28);
+  }
+
+  #floating_over .float-button.chat:hover {
+    color: #7f3ff2;
+    background: #fff;
+    border-color: #d9c6ff;
+    box-shadow: 0 16px 34px rgba(31, 20, 52, 0.28);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #floating_over .float-button.to-top:hover {
+    animation: none;
+    transform: translateY(-2px);
+  }
+}
+
+/* ===== Mobile bottom nav (#floating_over .fixed_menu) ===================
+   Rebuilt from icon-only slots into the prototype's 5 labelled items —
+   Menu / T.P Pick / Home / Cart / My — each an icon over a caption. The
+   markup lives in layout_footer/standard.html; icons come from the workskin
+   (…-b.png = black). Black on every page; the Real Trend page adds
+   .tp-fnav--dark (set by the footer script) for a #262626 bar with white
+   icons and labels. */
+#floating_over .fixed_menu.tp-fnav {
+  background: #fff;
+}
+
+#floating_over .fixed_menu.tp-fnav ul {
+  padding: 8px 0 6px;
+}
+
+#floating_over .fixed_menu.tp-fnav ul li {
+  width: 20%;
+}
+
+/* Reset the skin's height + background-image icon; this link is a column. */
+#floating_over .fixed_menu.tp-fnav ul li a.tp-fnav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  height: auto;
+  padding: 4px 0;
+  background: none;
+  text-decoration: none;
+}
+
+#floating_over .fixed_menu.tp-fnav .tp-fnav-ico {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+#floating_over .fixed_menu.tp-fnav .tp-fnav-menu .tp-fnav-ico {
+  background-image: url("../../images/icon/hamburger-b.png");
+}
+
+#floating_over .fixed_menu.tp-fnav .tp-fnav-tppick .tp-fnav-ico {
+  background-image: url("../../images/icon/tppick.png");
+}
+
+#floating_over .fixed_menu.tp-fnav .tp-fnav-home .tp-fnav-ico {
+  background-image: url("../../images/icon/home-b.png");
+}
+
+#floating_over .fixed_menu.tp-fnav .tp-fnav-cart .tp-fnav-ico {
+  background-image: url("../../images/icon/cart-b.png");
+}
+
+#floating_over .fixed_menu.tp-fnav .tp-fnav-my .tp-fnav-ico {
+  background-image: url("../../images/icon/my-b.png");
+}
+
+#floating_over .fixed_menu.tp-fnav .tp-fnav-label {
+  color: #262626;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+}
+
+/* Cart count, mirroring the header badge. */
+#floating_over .fixed_menu.tp-fnav .tp-fnav-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  display: grid;
+  place-items: center;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  border-radius: 999px;
+  color: #fff;
+  background: #7f56d9;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ===== Real Trend page: dark bar, white icons ==========================
+   White artwork supplied as …-w.png (T.P Pick uses tppick2.png), swapped in
+   over the black icons on the dark bar. */
+#floating_over .fixed_menu.tp-fnav.tp-fnav--dark {
+  background: #262626;
+}
+
+#floating_over .fixed_menu.tp-fnav.tp-fnav--dark .tp-fnav-menu .tp-fnav-ico {
+  background-image: url("../../images/icon/menu-w.png");
+}
+
+#floating_over .fixed_menu.tp-fnav.tp-fnav--dark .tp-fnav-tppick .tp-fnav-ico {
+  background-image: url("../../images/icon/tppick2.png");
+}
+
+#floating_over .fixed_menu.tp-fnav.tp-fnav--dark .tp-fnav-home .tp-fnav-ico {
+  background-image: url("../../images/icon/home-w.png");
+}
+
+#floating_over .fixed_menu.tp-fnav.tp-fnav--dark .tp-fnav-cart .tp-fnav-ico {
+  background-image: url("../../images/icon/cart-w.png");
+}
+
+#floating_over .fixed_menu.tp-fnav.tp-fnav--dark .tp-fnav-my .tp-fnav-ico {
+  background-image: url("../../images/icon/my-w.png");
+}
+
+#floating_over .fixed_menu.tp-fnav.tp-fnav--dark .tp-fnav-label {
+  color: #fff;
+}
+
+/* The skin's grey home-indicator pill is decorative only; hidden here so the
+   labelled icon row is the whole of the bar. */
+#floating_over .fixed_menu.tp-fnav .fixed_bar {
+  display: none;
+}

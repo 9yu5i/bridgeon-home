@@ -12,6 +12,10 @@
 
 	var selector = ".listing-card-wish, .listing-card-wish-inline";
 	var pendingByGoodsSeq = {};
+	var currentTimeDeals = null;
+	var currentTimeDealsRequest = null;
+	var timeDealCacheKey = "trendypicker-current-timedeals";
+	var timeDealCacheMaxAge = 5 * 60 * 1000;
 
 	function closestCard(button) {
 		return button ? button.closest(".listing-card, .gl_item") : null;
@@ -167,8 +171,8 @@
 	/*
 	  get_currency_price() wraps the amount with the shop's currency text, so
 	  a card renders as  "US " + <span class="num">19.87</span> + "USD".
-	  Neither piece is reachable from the design_list template (the function
-	  builds them) nor from CSS (they are text nodes), so normalise here — this
+	  Neither piece is reachable from the design_list template (the currency
+	  helper creates them) nor from CSS (they are text nodes), so normalise here — this
 	  script is loaded by every design_list style, which makes it the one place
 	  that covers Best, Time Deal, category and search grids alike.
 	*/
@@ -209,8 +213,203 @@
 		);
 	}
 
-	function watchListingPrices() {
-		normalizeListingPrices(document);
+	/* Older cached design-list markup places this block over the thumbnail as
+	   .listing-card-rating-badge. Current markup already renders
+	   .listing-card-rating in the body. Normalise both forms so search results
+	   and AJAX-refreshed grids always show rating/reviews directly above price. */
+	function normalizeCardRating(card) {
+		var body = card.querySelector(".listing-card-body");
+		var rating = card.querySelector(
+			".listing-card-rating, .listing-card-rating-badge"
+		);
+		var price;
+
+		if (!body || !rating) return;
+
+		rating.classList.remove("listing-card-rating-badge");
+		rating.classList.add("listing-card-rating");
+		price = body.querySelector(".listing-card-price, .goods_price_area");
+
+		if (price && (rating.parentNode !== body || rating.nextElementSibling !== price)) {
+			body.insertBefore(rating, price);
+		} else if (!price && rating.parentNode !== body) {
+			body.appendChild(rating);
+		}
+	}
+
+	function normalizeListingRatings(root) {
+		var scope = root && root.querySelectorAll ? root : document;
+		Array.prototype.forEach.call(
+			scope.querySelectorAll(".listing-card"),
+			normalizeCardRating
+		);
+	}
+
+	function getSkinImageBase() {
+		var link = document.querySelector(
+			'link[href*="/css/redesign/trendypicker-listing-cards.css"]'
+		);
+		var href = link ? link.getAttribute("href") || "" : "";
+		var match = href.match(/^(.*?)\/css\/redesign\/trendypicker-listing-cards\.css/i);
+		return match ? match[1] : "/data/skin";
+	}
+
+	function readCardGoodsSeq(card) {
+		var goodsSeq = card ? card.getAttribute("data-goods-seq") : "";
+		var link;
+		var match;
+
+		if (goodsSeq) return String(goodsSeq);
+		if (!card) return "";
+
+		link = card.querySelector("a[href*='/goods/view']");
+		match = String((link && link.getAttribute("href")) || "").match(/[?&]no=(\d+)/);
+		if (match) return match[1];
+
+		match = String(card.innerHTML || "").match(
+			/(?:displayAddToCartQuickview2?|display_goods_zzim)\s*\([^,]+,\s*['\"]?(\d+)/
+		);
+		return match ? match[1] : "";
+	}
+
+	function readDiscountDigits(card) {
+		var rateNode = card && card.querySelector(
+			".discount_rate .num, .discount_rate b, .sale_per, .timedeal-card-deal-rate"
+		);
+		var digits = String((rateNode && rateNode.textContent) || "").replace(/[^0-9]/g, "");
+		return digits && Number(digits) > 0 ? digits : "";
+	}
+
+	function addTimeDealBadge(card, digits) {
+		var media = card.querySelector(".listing-card-media, .item_img_area");
+		var badge;
+		var clock;
+		var rate;
+
+		if (!media || !digits || card.querySelector(".timedeal-card-deal")) return;
+
+		badge = document.createElement("div");
+		badge.className = "timedeal-card-deal";
+		badge.setAttribute("aria-label", digits + "% OFF time deal");
+
+		clock = document.createElement("img");
+		clock.className = "timedeal-card-deal-clock";
+		clock.src = getSkinImageBase() + "/images/timedeal/clock_pink.png";
+		clock.alt = "";
+		clock.width = 22;
+		clock.height = 22;
+		clock.setAttribute("aria-hidden", "true");
+
+		rate = document.createElement("span");
+		rate.className = "timedeal-card-deal-rate";
+		rate.textContent = digits + "% OFF";
+
+		badge.appendChild(clock);
+		badge.appendChild(rate);
+		media.appendChild(badge);
+	}
+
+	/* Firstmall exposes .goods_event_time only inside the Time Deal response;
+	   ordinary search/category cards omit it. Match those cards against the
+	   current Time Deal response by goods_seq so a normal sale is never marked
+	   as a Time Deal merely because it has a discount rate. */
+	function normalizeTimeDealBadge(card) {
+		var eventTime = card.querySelector(".goods_event_time");
+		var goodsSeq = readCardGoodsSeq(card);
+		var digits;
+
+		if (card.querySelector(".timedeal-card-deal")) return;
+		digits = eventTime ? readDiscountDigits(card) : "";
+		if (!digits && goodsSeq && currentTimeDeals && currentTimeDeals[goodsSeq]) {
+			digits = currentTimeDeals[goodsSeq];
+		}
+		addTimeDealBadge(card, digits);
+	}
+
+	function parseCurrentTimeDeals(html) {
+		var parsed = new DOMParser().parseFromString(html, "text/html");
+		var deals = {};
+		var cards = parsed.querySelectorAll(
+			"li.goods_list_style5, li.timedeal_listing_style, .listing-card"
+		);
+
+		Array.prototype.forEach.call(cards, function (card) {
+			var goodsSeq = readCardGoodsSeq(card);
+			var digits = readDiscountDigits(card);
+			if (goodsSeq && digits) deals[goodsSeq] = digits;
+		});
+		return deals;
+	}
+
+	function readCachedTimeDeals() {
+		var raw;
+		var cached;
+		try {
+			raw = window.sessionStorage.getItem(timeDealCacheKey);
+			cached = raw ? JSON.parse(raw) : null;
+		} catch (_err) {
+			return null;
+		}
+		if (!cached || !cached.savedAt || !cached.deals) return null;
+		if (Date.now() - cached.savedAt > timeDealCacheMaxAge) return null;
+		return cached.deals;
+	}
+
+	function saveCurrentTimeDeals(deals) {
+		try {
+			window.sessionStorage.setItem(timeDealCacheKey, JSON.stringify({
+				savedAt: Date.now(),
+				deals: deals
+			}));
+		} catch (_err) {
+			/* The live lookup still works when sessionStorage is unavailable. */
+		}
+	}
+
+	function requestCurrentTimeDeals() {
+		var cached = readCachedTimeDeals();
+		var requestUrl =
+			"/goods/search_list?page=1&searchMode=timedeal&per=100&sorting=ranking&filter_display=lattice";
+
+		if (cached) {
+			currentTimeDeals = cached;
+			normalizeListingTimeDeals(document);
+			return;
+		}
+		if (currentTimeDealsRequest || typeof window.fetch !== "function") return;
+
+		currentTimeDealsRequest = window.fetch(requestUrl, { credentials: "same-origin" })
+			.then(function (response) {
+				if (!response.ok) throw new Error("Time Deal lookup failed");
+				return response.text();
+			})
+			.then(function (html) {
+				currentTimeDeals = parseCurrentTimeDeals(html);
+				saveCurrentTimeDeals(currentTimeDeals);
+				normalizeListingTimeDeals(document);
+			})
+			.catch(function () {
+				currentTimeDeals = {};
+			});
+	}
+
+	function normalizeListingTimeDeals(root) {
+		var scope = root && root.querySelectorAll ? root : document;
+		Array.prototype.forEach.call(
+			scope.querySelectorAll(".listing-card"),
+			normalizeTimeDealBadge
+		);
+	}
+
+	function normalizeListingCards(root) {
+		normalizeListingPrices(root);
+		normalizeListingRatings(root);
+		normalizeListingTimeDeals(root);
+	}
+
+	function watchListingCards() {
+		normalizeListingCards(document);
+		requestCurrentTimeDeals();
 		if (!window.MutationObserver) return;
 		// Cards arrive from Firstmall's own ajax (paging, category tabs,
 		// infinite scroll), so re-run whenever nodes are added.
@@ -218,15 +417,15 @@
 		new MutationObserver(function () {
 			window.clearTimeout(pending);
 			pending = window.setTimeout(function () {
-				normalizeListingPrices(document);
+				normalizeListingCards(document);
 			}, 60);
 		}).observe(document.documentElement, { childList: true, subtree: true });
 	}
 
 	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", watchListingPrices);
+		document.addEventListener("DOMContentLoaded", watchListingCards);
 	} else {
-		watchListingPrices();
+		watchListingCards();
 	}
 
 	document.addEventListener("click", handleClick, true);

@@ -90,12 +90,21 @@
         overflow-y: hidden;
       }
 
-      /* Descendant, not child: the footer sits inside .tab_contents, so a child
-         combinator here matched nothing and the shared `position: relative`
-         further down won — which is what left it in the scrolling flow, pushed
-         below the fold on the trending tab. The parent id still outranks that
-         shared rule. */
-      #searchVer2 #recentArea .tab_foot_menu {
+      /* Autocomplete replaces #recentArea while typing. Give that sibling the
+         same fixed panel height so its footer uses the same bottom edge as the
+         recent and trending tabs instead of following the short chip list. */
+      #searchVer2 #autoCompleteArea {
+        box-sizing: border-box;
+        position: relative;
+        height: 100%;
+        padding: 18px 24px 0;
+      }
+
+      /* Descendant, not child: each footer sits inside its active content pane,
+         so a child combinator here would match nothing and the shared
+         `position: relative` further down would leave it in the content flow. */
+      #searchVer2 #recentArea .tab_foot_menu,
+      #searchVer2 #autoCompleteArea .tab_foot_menu {
         position: absolute;
         right: 26px;
         bottom: 0;
@@ -110,20 +119,11 @@
          shrinking below their content, which they do not: the rows stayed 61px,
          overran the list by 4px and slid under the footer.
 
-         Seven rows at 44px plus gaps come to 356px against 364px of pane, so
-         the cap below is what guarantees the list always fits — however many
-         keywords the admin's data returns. Seven is already more than the
-         prototype shows. */
+         Five rows match the mobile sheet and guarantee the list always fits,
+         however many keywords the admin's data returns. */
       #searchVer2 #trending-searched-list > ul.trending_list {
         height: auto;
         gap: 8px;
-      }
-
-      #searchVer2
-        #trending-searched-list
-        > ul.trending_list
-        > li.trending_item:nth-child(n + 7) {
-        display: none;
       }
 
       /* trendypicker-search.js drives the module from the header's own search
@@ -261,15 +261,32 @@
       border: 0;
       border-radius: 999px;
       background: #f6f4ff;
+      transition: background-color 160ms ease;
     }
 
-    /* Ten chips, newest first. Fewer stops being useful to someone comparing a
-       handful of products; more wraps past three rows on a phone and pushes
-       Trending off the first screen. Firstmall keeps its own history intact —
-       this only limits what the panel shows, so raising the number later costs
-       nothing. */
-    #searchVer2 ul.searching_list > li.recent_search_item:nth-child(n + 11) {
+    #searchVer2 ul.searching_list > li.recent_search_item:hover,
+    #searchVer2 ul.searching_list > li.recent_search_item:focus-within {
+      background: #cec8eb;
+    }
+
+    /* Firstmall keeps its own history intact; the panel shows the newest 20 on
+       desktop and the newest 10 on mobile/tablet. */
+    #searchVer2 ul.searching_list > li.recent_search_item:nth-child(n + 21) {
       display: none;
+    }
+
+    @media only screen and (min-width: 1125px) {
+      #searchVer2 #recentSearchedList {
+        max-height: 119px;
+        overflow-y: auto;
+        scrollbar-gutter: stable;
+      }
+    }
+
+    @media only screen and (max-width: 1124px) {
+      #searchVer2 ul.searching_list > li.recent_search_item:nth-child(n + 11) {
+        display: none;
+      }
     }
 
     /* The clock glyph the prototype puts before each chip. */
@@ -385,6 +402,14 @@
 
     #searchVer2 ul.trending_list > li.trending_item:nth-child(n + 6) {
       animation-delay: 0.37s;
+    }
+
+    /* Firstmall may restore row display with an inline style after refreshing
+       trending data. Keep the open panel capped at five rows at every width. */
+    #searchVer2.tp-search-open
+      ul.trending_list
+      > li.trending_item:nth-child(n + 6) {
+      display: none !important;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -599,6 +624,18 @@
         flex: 0 0 auto;
       }
 
+      /* Firstmall hides this input wrapper in user.css. Restore it only while
+         the mobile/tablet search sheet is open. */
+      #searchVer2.tp-search-open .input_area {
+        box-sizing: border-box;
+        position: relative;
+        display: block;
+        flex: 0 0 auto;
+        height: 66px;
+        padding: 12px 56px 12px 64px;
+        background: #fff;
+      }
+
       /* width:auto clears whatever the dropdown left behind — a stale pixel width
          from a desktop open is what pushed the lists past the right edge. */
       #searchVer2.tp-search-open .contetns_area {
@@ -702,8 +739,8 @@
       /* The prototype separates the two blocks by 64px; the last one carries the
          bottom padding so the list clears the edge of the sheet. */
       #searchVer2.tp-search-open #trending-searched-list {
-        padding-top: 64px;
-        padding-bottom: 88px;
+        padding-top: 44px;
+        padding-bottom: 38px;
       }
 
       #searchVer2.tp-search-open ul.trending_list {
@@ -909,48 +946,6 @@
   .layout_header .resp_top_search .search_ver2 .search_new .input_area .cont {
     display: contents;
   }
-/* Mobile search icon final position. */
-  @media only screen and (max-width: 767px) {
-    #searchVer2.tp-search-open
-      .layout_header
-#searchVer2.tp-search-open
-      .layout_header
-      .resp_top_search
-      .search_ver2
-      .search_new
-      .input_area
-      .tp-search-pill {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-      margin: 0;
-    }
-
-    #searchVer2.tp-search-open
-      .layout_header
-      .resp_top_search
-      .search_ver2
-      .search_new
-      .input_area
-      button.search {
-      position: absolute;
-      top: 13px;
-      right: 57px;
-      z-index: 6;
-      width: 32px;
-      height: 32px;
-      margin: 0;
-      padding: 0;
-      border: 0;
-      border-radius: 50%;
-      background: #7f56d9 url("../../images/icon/tp-header-search.png") no-repeat
-        center / 16px 16px;
-      font-size: 0;
-      cursor: pointer;
-      pointer-events: auto;
-    }
-  }
-
 @media only screen and (min-width: 1125px) {
   .layout_header .resp_top_search .search_ver2 .search_new .recent_area {
     box-sizing: border-box;
@@ -991,14 +986,7 @@
   }
 }
 
-/* Mobile + tablet search sheet: show Trending Searches ranks 1–5 only. */
 @media only screen and (max-width: 1124px) {
-  #searchVer2.tp-search-open
-    ul.trending_list
-    > li.trending_item:nth-child(n + 6) {
-    display: none;
-  }
-
   body:has(#searchVer2.tp-search-open) #floating_over .ico_floating_top,
   body:has(#searchVer2.tp-search-open) #floating_over .ico_floating_talk {
     display: none;
