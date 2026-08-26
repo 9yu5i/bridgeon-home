@@ -45,7 +45,7 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   box-sizing: border-box;
   width: 100%;
   max-width: 1600px;
-  margin: 0 auto;
+  margin: 40px auto 0;
   padding: 28px 16px 88px;
   background: #fff;
   border-radius: 24px 24px 0 0;

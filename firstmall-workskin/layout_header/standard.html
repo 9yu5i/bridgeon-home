@@ -466,7 +466,6 @@
         var top_header_banner = $(".top_header_banner");
         var top_bar = $(".layout_header .top_bar").offset().top;
         var top_bar2 = $(".layout_header .top_bar").offset().top - top_header_banner.outerHeight();
-        var lastScroll = 0; // 초기 스크롤 위치
         $(document).scroll(function(){
             if ( ( $('.designPopupBand').is(':hidden') || $('.designPopupBand').length < 1 )  /*&& window.innerWidth < 480*/ ) {
                 if ( $("#layout_header .util_wrap").is(':hidden') ) {
@@ -488,15 +487,6 @@
                 $(".layout_header .top_bar").css("top", top_bar);
                 obj.removeClass('flying');
                 $("#layout_body").css("padding-top", 0);
-            }
-            if(window.innerWidth < 768){
-                var nowScroll = $(this).scrollTop(); // 현재 스크롤 위치
-                if (nowScroll > lastScroll) {
-                    $('.layout_header .logo_wrap').hide();
-                } else { 
-                    $('.layout_header .logo_wrap').show();
-                }
-                lastScroll = nowScroll;
             }
         });
     }
@@ -529,13 +519,21 @@
 
         /* 카테고리 swiper 동작( 1121 미만인 경우 동작, 1121 이상인 경우 : 마우스 오버시 서브메뉴 노출 ) */
         var slideshowSwiper = undefined;
+        function moveCategorySwiper(instance, index, speed) {
+            if (!instance) return;
+            if (typeof instance.slideTo === 'function') {
+                instance.slideTo(index, speed, false);
+            } else if (typeof instance.swipeTo === 'function') {
+                instance.swipeTo(index, speed, false);
+            }
+        }
         if ( window.innerWidth < 1121 && $('#cateSwiper .designCategoryNavigation').length > 0 ) {
             $('#cateSwiper .designCategoryNavigation ul.respCategoryList>li.custom_nav_link:not(.categoryDepth1)').addClass('swiper-slide');
             slideshowSwiper = new Swiper('#cateSwiper .designCategoryNavigation', {
                 wrapperClass: 'respCategoryList',
                 slidesPerView: 'auto'
             });
-            slideshowSwiper.slideTo(0, 0, false);
+            moveCategorySwiper(slideshowSwiper, 0, 0);
         } else {
             $('#cateSwiper .designCategoryNavigation ul.respCategoryList>li').removeClass('swiper-slide');
             $('#layout_header .respCategoryList .categoryDepth1').hover(
@@ -554,11 +552,13 @@
                         wrapperClass: 'respCategoryList',
                         slidesPerView: 'auto'
                     });
-                    slideshowSwiper.slideTo(0, 0, false);
+                    moveCategorySwiper(slideshowSwiper, 0, 0);
                 } else if ( window.innerWidth > 1120 && slideshowSwiper != undefined ) {
-                    slideshowSwiper.slideTo( 0, 800, false );
+                    moveCategorySwiper(slideshowSwiper, 0, 800);
                     $('#cateSwiper .designCategoryNavigation ul.respCategoryList>li').removeClass('swiper-slide');
-                    slideshowSwiper.destroy();
+                    if (typeof slideshowSwiper.destroy === 'function') {
+                        slideshowSwiper.destroy();
+                    }
                     slideshowSwiper = undefined;
                     $('#layout_header .respCategoryList .categoryDepth1').hover(
                         function() { $(this).find('.categorySub').addClass('is-open'); },

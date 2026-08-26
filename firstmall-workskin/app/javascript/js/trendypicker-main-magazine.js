@@ -50,6 +50,14 @@
       }
     }
 
+    function syncLayoutMode(widget) {
+      if (!widget) return;
+      widget.setAttribute(
+        "data-tp-layout",
+        document.documentElement.clientWidth >= 1121 ? "desktop" : "responsive"
+      );
+    }
+
     function revealCards(widget) {
       if (!widget || widget.classList.contains("is-inview")) return;
       // Two frames so the hidden state is painted before .is-inview lands.
@@ -105,11 +113,23 @@
 
     function onFrameReady() {
       var widget = getWidget();
-      if (widget) applyHeight(widget.getBoundingClientRect().height + 8);
+      if (widget) {
+        syncLayoutMode(widget);
+        applyHeight(widget.getBoundingClientRect().height + 8);
+      }
       // Reduced motion is handled in CSS, which keeps the fade and drops the
       // movement, so the cards are armed either way.
       armCards();
     }
+
+    window.addEventListener("resize", function () {
+      var widget = getWidget();
+      if (!widget) return;
+      syncLayoutMode(widget);
+      window.requestAnimationFrame(function () {
+        applyHeight(widget.getBoundingClientRect().height + 8);
+      });
+    });
 
     frame.addEventListener("load", onFrameReady);
 

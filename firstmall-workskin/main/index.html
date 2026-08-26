@@ -10,8 +10,11 @@
 <!-- //띠배너/팝업 -->
 
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-main-hero.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-deals.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-today-pick.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-main-magazine.css" />
 <script src="/app/javascript/js/trendypicker-main-magazine.js" defer></script>
+<script src="/app/javascript/js/trendypicker-deals.js" defer></script>
 
 <style type="text/css">
 	#layout_body { max-width:100%; padding-left:0; padding-right:0; }
@@ -34,6 +37,69 @@
         <li class="swiper-slide full"><img src="../images/main/main-slide_fin.jpg" title="slide" alt="slide" /></li>
         <li class="swiper-slide full"><img src="../images/main/banner_1_fin.jpg" title="slide" alt="slide" /></li>
     </ul>
+    <!-- Today's Pick overlay (desktop) — shares the 4 curated products with the
+         Special Deals grid below; driven by trendypicker-deals.js -->
+    <aside class="today-pick" aria-label="Today's pick">
+        <button type="button" class="today-pick-toggle" aria-label="Collapse today's pick" aria-expanded="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+        </button>
+        <div class="today-pick-panel">
+            <strong>This Week Pick</strong>
+            <div class="today-pick-viewport">
+                <div class="today-pick-track">
+                    <article class="today-pick-slide" data-goods="92928">
+                        <div class="mini-pick">
+                            <span class="mini-thumb"><img src="https://d1l1qu21r0179n.cloudfront.net/crawl/yesstyle/1136653506/300_list.jpg" alt="lilybyred Luv Beam Glow Veil" /></span>
+                            <div>
+                                <p>lilybyred<br />Luv Beam Glow Veil</p>
+                                <b>20% OFF</b>
+                                <em>US$16.20</em>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="today-pick-slide" data-goods="93172">
+                        <div class="mini-pick">
+                            <span class="mini-thumb"><img src="https://d1l1qu21r0179n.cloudfront.net/crawl/yesstyle/1114251519/300_list.jpg" alt="Ottogi Jin Ramen Multipack" /></span>
+                            <div>
+                                <p>Ottogi<br />Jin Ramen Multipack</p>
+                                <b>28% OFF</b>
+                                <em>US$12.90</em>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="today-pick-slide" data-goods="93082">
+                        <div class="mini-pick">
+                            <span class="mini-thumb"><img src="https://d1l1qu21r0179n.cloudfront.net/crawl/yesstyle/1136347992/300_list.jpg" alt="Kakao Friends Ryan Face Cushion" /></span>
+                            <div>
+                                <p>Kakao Friends<br />Ryan Face Cushion</p>
+                                <b>19% OFF</b>
+                                <em>US$34.00</em>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="today-pick-slide" data-goods="93343">
+                        <div class="mini-pick">
+                            <span class="mini-thumb"><img src="https://d1l1qu21r0179n.cloudfront.net/crawl/yesstyle/1133317070/300_list.jpg" alt="Osulloc Jeju Green Tea Gift Set" /></span>
+                            <div>
+                                <p>Osulloc<br />Jeju Green Tea Gift Set</p>
+                                <b>30% OFF</b>
+                                <em>US$28.00</em>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="today-pick-footer">
+                <small class="today-pick-sold" style="display:none"><span aria-hidden="true">&#128065;</span><span class="today-pick-sold-count">0</span> recently viewed</small>
+                <div class="today-pick-progress" role="tablist" aria-label="Today's pick slides">
+                    <button type="button" role="tab" class="is-active" aria-label="Slide 1" aria-selected="true"></button>
+                    <button type="button" role="tab" aria-label="Slide 2" aria-selected="false"></button>
+                    <button type="button" role="tab" aria-label="Slide 3" aria-selected="false"></button>
+                    <button type="button" role="tab" aria-label="Slide 4" aria-selected="false"></button>
+                </div>
+            </div>
+        </div>
+    </aside>
     <div class="swiper-pagination-main hero-dots"></div>
 </div>
 <!-- //메인 슬라이드 배너 -->
@@ -42,11 +108,11 @@
         <h3><span designElement="text">Shop by Category</span></h3>
         <p designElement="text">What are you shopping for today?</p>
         <ul>
-            <li><a href="/goods/catalog?code=0008"><a href='/goods/catalog?code=0008' target='_self'><img src="../images/main/shop-category1.png" title="" alt=""/></a><span designElement="text">Beauty</span></a></li>
-            <li><a href="/goods/catalog?code=0009"><a href='/goods/catalog?code=0009' target='_self'><img src="../images/main/shop-category2.png" title="" alt=""/></a><span designElement="text">K-Food</span></a></li>
-            <li><a href="/goods/catalog?code=0010"><a href='/goods/catalog?code=0010' target='_self'><img src="../images/main/shop-category3.png" title="" alt=""/></a><span designElement="text">Lifestyle</span></a></li>
-            <li><a href="/goods/catalog?code=0011"><a href='/goods/catalog?code=0011' target='_self'><img src="../images/main/shop-category4.png" title="" alt=""/></a><span designElement="text">K-POP</span></a></li>
-            <li><a href="/goods/catalog?code=0012"><a href='/goods/catalog?code=0012' target='_self'><img src="../images/main/shop-category5.png" title="" alt=""/></a><span designElement="text">K-Traditional</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0008" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category1.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">Beauty</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0009" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category2.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">K-Food</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0010" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category3.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">Lifestyle</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0011" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category4.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">K-POP</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0012" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category5.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">K-Traditional</span></a></li>
         </ul>
     </div>
     <script type="text/javascript">
@@ -117,6 +183,153 @@
     <div>
         {=showMainPageBestsellersSection()}
     </div>
+
+    <!-- Special Deals (Today's Pick + Flash Time Deal). Data + interactions in
+         trendypicker-deals.js; Today's Pick = 4 example curated products until a
+         Firstmall display group is wired via showDesignDisplay. -->
+    <section class="content-section deals-section" aria-label="Special deals">
+        <div class="section-heading deals-heading desktop-only">
+            <div class="inline-heading">
+                <h2>Special Deals</h2>
+                <p>The best picks and time-limited deals, all in one place.</p>
+            </div>
+            <a href="/promotion/timedeal">VIEW ALL DEALS &rarr;</a>
+        </div>
+        <h2 class="mobile-section-title">Special Deals</h2>
+        <div class="deal-grid">
+            <article class="deal-card special" data-deal-slider="special">
+                <div class="deal-copy">
+                    <div class="deal-top"><span><i aria-hidden="true">&#9733;</i> This Week Pick</span></div>
+                    <div class="deal-heading">
+                        <h3>Anua</h3>
+                        <p class="deal-product-name">PDRN Serum 30ml</p>
+                    </div>
+                    <blockquote class="deal-quote">
+                        <span class="deal-quote-mark" aria-hidden="true">&ldquo;</span>
+                        <p>Boosts skin elasticity and keeps skin looking plump all day.</p>
+                    </blockquote>
+                    <div class="deal-price">
+                        <strong>US$19.20</strong>
+                        <mark>20% OFF</mark>
+                        <del>US$24.00</del>
+                    </div>
+                    <div class="deal-actions">
+                        <button type="button" class="deal-shop-button">Discover This Pick <span aria-hidden="true">&rarr;</span></button>
+                        <button type="button" class="deal-share-button" aria-label="Add to wishlist" aria-pressed="false">
+                            <img src="../images/listing/wish_pink.png" alt="" aria-hidden="true">
+                        </button>
+                    </div>
+                </div>
+                <div class="deal-media">
+                    <img class="deal-media-image" src="https://d1l1qu21r0179n.cloudfront.net/crawl/yesstyle/1136653506/300_list.jpg" alt="Anua PDRN Serum 30ml">
+                </div>
+                <div class="deal-nav">
+                    <button type="button" class="deal-nav-btn prev" aria-label="Previous pick">
+                        <span class="deal-nav-status" aria-live="polite">1 / 4</span>
+                        <span class="deal-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                    </button>
+                    <button type="button" class="deal-nav-btn next" aria-label="Next pick">
+                        <span class="deal-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                    </button>
+                </div>
+            </article>
+
+            <article class="deal-pick-card" data-deal-pick-compact>
+                <header class="deal-pick-card-heading">
+                    <span class="deal-pick-card-eyebrow"><i aria-hidden="true">&#9733;</i> Curated daily</span>
+                    <h3 class="deal-pick-card-title">Today's Pick</h3>
+                </header>
+                <div class="deal-pick-thumbs" data-deal-pick-thumbs role="tablist" aria-label="Today's Pick products"></div>
+                <div class="deal-pick-detail-stack">
+                    <div class="deal-pick-detail" data-deal-pick-detail>
+                        <a class="deal-pick-detail-media" data-deal-pick-link href="/goods/catalog?code=0008">
+                            <span class="discount" data-deal-pick-discount>20%</span>
+                            <img class="deal-pick-detail-image" data-deal-pick-image src="https://d1l1qu21r0179n.cloudfront.net/crawl/yesstyle/1136653506/300_list.jpg" alt="Anua PDRN Serum 30ml">
+                        </a>
+                        <div class="deal-pick-detail-copy">
+                            <p class="deal-pick-detail-brand" data-deal-pick-brand>Anua</p>
+                            <h4 class="deal-pick-detail-title" data-deal-pick-title>PDRN Serum 30ml</h4>
+                            <div class="deal-pick-detail-footer">
+                                <div class="deal-pick-detail-price">
+                                    <del data-deal-pick-original>US$24.00</del>
+                                    <strong data-deal-pick-price>US$19.20</strong>
+                                </div>
+                                <button type="button" class="deal-pick-detail-cart" data-deal-pick-cart aria-label="Add to cart">
+                                    <img src="../images/listing/cart.png" alt="" aria-hidden="true">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="deal-pick-detail-reason" data-deal-pick-reason>Boosts skin elasticity and keeps skin looking plump all day.</p>
+                </div>
+                <div class="deal-pick-progress" aria-hidden="true"><span data-deal-pick-progress></span></div>
+            </article>
+
+            <article class="deal-card time" data-deal-slider="time" style="display: none;" aria-hidden="true">
+                <div class="deal-copy">
+                    <div class="deal-top"><span><i aria-hidden="true">&#9889;</i> FLASH TIME DEAL</span></div>
+                    <div class="deal-timer" aria-label="Time deal countdown">
+                        <span class="deal-timer-unit"><b>00</b><em>HRS</em></span>
+                        <span class="deal-timer-separator">:</span>
+                        <span class="deal-timer-unit"><b>00</b><em>MIN</em></span>
+                        <span class="deal-timer-separator">:</span>
+                        <span class="deal-timer-unit"><b>00</b><em>SEC</em></span>
+                    </div>
+                    <div class="deal-product">
+                        <p class="deal-brand"></p>
+                        <h3></h3>
+                    </div>
+                    <div class="deal-price">
+                        <strong></strong>
+                        <mark></mark>
+                        <del></del>
+                    </div>
+                    <div class="deal-actions">
+                        <button type="button" class="deal-shop-button">Shop This Deal <span aria-hidden="true">&rarr;</span></button>
+                        <button type="button" class="deal-share-button" aria-label="Add to wishlist" aria-pressed="false">
+                            <img src="../images/listing/wish_pink.png" alt="" aria-hidden="true">
+                        </button>
+                    </div>
+                </div>
+                <div class="deal-media">
+                    <img class="deal-media-image" alt="">
+                    <span class="deal-media-badge" data-deal-media-badge></span>
+                </div>
+                <div class="deal-nav">
+                    <button type="button" class="deal-nav-btn prev" aria-label="Previous deal">
+                        <span class="deal-nav-status" aria-live="polite">1 / 5</span>
+                        <span class="deal-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                    </button>
+                    <button type="button" class="deal-nav-btn next" aria-label="Next deal">
+                        <span class="deal-nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                    </button>
+                </div>
+            </article>
+
+            <div class="deal-time-compact" data-deal-time-compact style="display: none;" aria-hidden="true">
+                <article class="deal-time-banner" data-deal-time-banner>
+                    <div class="deal-time-banner-image" aria-hidden="true"></div>
+                    <div class="deal-time-banner-overlay">
+                        <span class="deal-time-banner-badge"><i aria-hidden="true"></i> ENDS SOON</span>
+                        <a class="deal-time-banner-shop" href="/promotion/timedeal">Shop All <span aria-hidden="true">&rarr;</span></a>
+                        <div class="deal-time-banner-center">
+                            <h3 class="deal-time-banner-title" data-deal-time-banner-title>Flash Time Deal</h3>
+                            <p class="deal-time-banner-copy">Today Only - Don't Miss Out!</p>
+                            <div class="deal-timer" data-deal-time-banner-timer aria-label="Time deal countdown">
+                                <span class="deal-timer-unit"><b>00</b><em>HRS</em></span>
+                                <span class="deal-timer-separator">:</span>
+                                <span class="deal-timer-unit"><b>00</b><em>MIN</em></span>
+                                <span class="deal-timer-separator">:</span>
+                                <span class="deal-timer-unit"><b>00</b><em>SEC</em></span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <div class="deal-time-rail" data-deal-time-rail aria-label="Time deal products"></div>
+                <div class="deal-time-dots" data-deal-time-dots role="tablist" aria-label="Time deal pages"></div>
+            </div>
+        </div>
+    </section>
 
     <!-- old bestsellers section -->
     <h2 class="main_title dn" style="margin-top: 72px;">BEST Sellers</h2>
@@ -212,26 +425,41 @@ function hero_swiper_control(slider, target){
     prev.type = 'button';
     prev.className = 'hero-prev prev';
     prev.setAttribute('aria-label', 'Previous hero');
-    prev.onclick = function () { slider.slidePrev(); };
+    prev.onclick = function () {
+        if (typeof slider.slidePrev === 'function') slider.slidePrev();
+        else if (typeof slider.swipePrev === 'function') slider.swipePrev();
+        window.setTimeout(updateCounter, 0);
+    };
     next.type = 'button';
     next.className = 'hero-next next';
     next.setAttribute('aria-label', 'Next hero');
-    next.onclick = function () { slider.slideNext(); };
+    next.onclick = function () {
+        if (typeof slider.slideNext === 'function') slider.slideNext();
+        else if (typeof slider.swipeNext === 'function') slider.swipeNext();
+        window.setTimeout(updateCounter, 0);
+    };
     counter.className = 'hero-counter';
 
     function updateCounter() {
-        var current = Number(slider.realIndex || 0) + 1;
+        var index = slider.realIndex;
+        if (typeof index !== 'number') index = slider.activeLoopIndex;
+        if (typeof index !== 'number') index = slider.activeIndex;
+        var current = (Number(index || 0) % Math.max(total, 1)) + 1;
         counter.textContent = current + ' / ' + total;
     }
 
     play.onclick = function () {
-        if (slider.autoplay && slider.autoplay.running) {
-            slider.autoplay.stop();
+        var modernAutoplay = slider.autoplay && typeof slider.autoplay.stop === 'function';
+        var running = modernAutoplay ? slider.autoplay.running : slider.autoplaying !== false;
+        if (running) {
+            if (modernAutoplay) slider.autoplay.stop();
+            else if (typeof slider.stopAutoplay === 'function') slider.stopAutoplay();
             this.classList.add('active');
             this.setAttribute('aria-label', 'Play hero');
             this.setAttribute('aria-pressed', 'false');
         } else {
-            slider.autoplay.start();
+            if (modernAutoplay) slider.autoplay.start();
+            else if (typeof slider.startAutoplay === 'function') slider.startAutoplay();
             this.classList.remove('active');
             this.setAttribute('aria-label', 'Pause hero');
             this.setAttribute('aria-pressed', 'true');
@@ -242,7 +470,14 @@ function hero_swiper_control(slider, target){
     target.appendChild(prev);
     target.appendChild(next);
     target.appendChild(counter);
-    slider.on('slideChange', updateCounter);
+    if (typeof slider.on === 'function') {
+        slider.on('slideChange', updateCounter);
+    } else if (sliderRoot && window.MutationObserver) {
+        var observer = new MutationObserver(updateCounter);
+        sliderRoot.querySelectorAll('.swiper-slide').forEach(function (slide) {
+            observer.observe(slide, { attributes: true, attributeFilter: ['class'] });
+        });
+    }
     updateCounter();
 }
 
@@ -288,18 +523,11 @@ function resizeIframe(iframeId) {
     }
 }
 
-$(function() {
-    // 반응형 변경
+function initMainHeroSlider() {
     var mobileTabletHero = document.documentElement.clientWidth <= 1120;
-    if(!mobileTabletHero){
-        var view = 4;
-        var mainSlideObj = "#main-slide";
-        var spaceBetween = 20;
-    } else {
-        var view = 2.2;
-        var mainSlideObj = "#main-slide-mo";
-        var spaceBetween = 8;
-    }
+    var mainSlideObj = mobileTabletHero ? "#main-slide-mo" : "#main-slide";
+    var mainHeroRoot = document.querySelector(mainSlideObj);
+    if (!mainHeroRoot || mainHeroRoot.getAttribute('data-tp-hero-ready') === 'true') return;
 
     var heroSpaceBetween = 0;
     if (mobileTabletHero) {
@@ -319,16 +547,43 @@ $(function() {
     };
     if (mobileTabletHero) mainHeroOptions.loopedSlides = 2;
 
-    var mainSlideswiper = new Swiper(mainSlideObj, mainHeroOptions);
-    const target = document.querySelector(mainSlideObj + ' .swiper-pagination-main');
-    hero_swiper_control(mainSlideswiper, target);
+    try {
+        var mainSlideswiper = new Swiper(mainSlideObj, mainHeroOptions);
+        var target = document.querySelector(mainSlideObj + ' .swiper-pagination-main');
+        mainHeroRoot.setAttribute('data-tp-hero-ready', 'true');
+        hero_swiper_control(mainSlideswiper, target);
+    } catch (error) {
+        mainHeroRoot.classList.add('is-inview');
+        return;
+    }
 
     /* Keep the unpositioned slide hidden. Reveal it only after Swiper has
        synchronously calculated the centred initial position. */
-    var mainHeroRoot = document.querySelector(mainSlideObj);
     requestAnimationFrame(function () {
         if (mainHeroRoot) mainHeroRoot.classList.add('is-inview');
     });
+}
+
+(function bootMainHero(attempt) {
+    if (typeof Swiper === 'function') {
+        initMainHeroSlider();
+        return;
+    }
+    if (attempt < 20) {
+        window.setTimeout(function () { bootMainHero(attempt + 1); }, 50);
+        return;
+    }
+    var fallback = document.querySelector(
+        document.documentElement.clientWidth <= 1120 ? '#main-slide-mo' : '#main-slide'
+    );
+    if (fallback) fallback.classList.add('is-inview');
+})(0);
+
+$(function() {
+    // 반응형 변경
+    var mobileTabletHero = document.documentElement.clientWidth <= 1120;
+    var view = mobileTabletHero ? 2.2 : 4;
+    var spaceBetween = mobileTabletHero ? 8 : 20;
     
     var swiper = new Swiper(".main_video", {
         slidesPerView: view,

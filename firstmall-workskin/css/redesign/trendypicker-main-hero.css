@@ -338,11 +338,9 @@
 }
 
 /* ===== Banner reveal ===================================================
-   The prototype fades its hero in on load — .scroll-reveal-hero .hero-frame
-   starts at opacity 0 / translateY(18px) and settles on .is-inview. scroll-
-   reveal.js only wires that to a .hero element, which Firstmall has none of,
-   so the same transition is put straight on the banner and a small script in
-   main/index.html adds .is-inview after paint. */
+   Keep the hero visible by default because Firstmall has several legacy ready
+   handlers before the slider initializer. A failure in one of those handlers
+   must not leave the main banner permanently transparent. */
 .wide_visual_slider.tp-hero-reveal {
   opacity: 0;
   transform: translateY(18px);
@@ -384,14 +382,8 @@
 }
 
 /* ===== Category tiles → prototype circles ==============================
-   Shop by Category restyled to the prototype's .mobile-cats: a lavender disc
-   holding the category's product image, with the label beneath.
-
-   Firstmall's markup nests two <a>s, which the browser splits into siblings:
-   an empty first link, a second link carrying the <img>, then the label span.
-   So the second link becomes the disc, the empty one is hidden, and the span
-   is the label. nth-of-type keeps this working without :has() or !important;
-   the id scope alone outranks user.css. */
+   The valid single-link structure keeps the icon and label together across
+   Safari and Chromium instead of relying on browser repair of nested links. */
 #layout_body .main_category > ul {
   display: flex;
   flex-wrap: wrap;
@@ -403,9 +395,6 @@
 
 #layout_body .main_category > ul > li {
   box-sizing: border-box;
-  display: grid;
-  justify-items: center;
-  gap: 10px;
   flex: 0 0 auto;
   width: clamp(84px, 16vw, 150px);
   max-width: none;
@@ -413,31 +402,28 @@
   padding: 0;
 }
 
-/* The empty first link the parser leaves behind. */
-#layout_body .main_category > ul > li > a:first-of-type {
-  display: none;
+#layout_body .main_category > ul > li > .tp-category-link {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
 }
 
-/* Second link (wraps the image) = the lavender disc, product padded off the
-   curve. */
-#layout_body .main_category > ul > li > a:nth-of-type(2) {
+#layout_body .main_category .tp-category-icon {
   box-sizing: border-box;
   display: grid;
   place-items: center;
-  width: clamp(56px, 8vw, 92px);
-  height: clamp(56px, 8vw, 92px);
   width: clamp(54px, 7.5vw, 88px);
   height: clamp(54px, 7.5vw, 88px);
   margin: 0;
-  padding: 8%;
   padding: 0;
   overflow: hidden;
   border-radius: 50%;
   background: #f0eaff;
-  text-decoration: none;
 }
 
-#layout_body .main_category > ul > li > a:nth-of-type(2) img {
+#layout_body .main_category .tp-category-icon img {
   display: block;
   width: 100%;
   height: 100%;
@@ -450,22 +436,21 @@
   .main_category
   > ul
   > li:nth-child(3)
-  > a:nth-of-type(2)
+  .tp-category-icon
   img,
 #layout_body
   .main_category
   > ul
   > li:nth-child(4)
-  > a:nth-of-type(2)
+  .tp-category-icon
   img {
   transform: translateX(2px) scale(1.16);
 }
 
-#layout_body .main_category > ul > li > span {
+#layout_body .main_category .tp-category-label {
   display: block;
   color: #5c556d;
   font-size: 13px;
-  font-weight: 500;
   font-weight: 600;
   line-height: 1.3;
   text-align: center;
@@ -489,15 +474,22 @@
     width: auto;
   }
 
-  #layout_body .main_category > ul > li > a:nth-of-type(2) {
-    width: clamp(50px, 16vw, 70px);
-    height: clamp(50px, 16vw, 70px);
+  #layout_body .main_category .tp-category-icon {
     width: clamp(50px, 15vw, 66px);
     height: clamp(50px, 15vw, 66px);
   }
 
-  #layout_body .main_category > ul > li > span {
+  #layout_body .main_category .tp-category-label {
     font-size: 11px;
+  }
+
+  #layout_body
+    .main_category
+    > ul
+    > li:nth-child(5)
+    .tp-category-label {
+    font-size: 10px;
+    white-space: nowrap;
   }
 }
 

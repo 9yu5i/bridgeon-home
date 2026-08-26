@@ -717,6 +717,12 @@ body.is-timedeal-page .subpage_wrap .subpage_container {
   position: relative;
 }
 
+.bo-timedeal-shell .listing-card-wish,
+.bo-timedeal-shell .respGoodsZzim.listing-card-wish {
+  left: auto;
+  right: 10px;
+}
+
 .bo-timedeal-shell .listing-card-image,
 .bo-timedeal-shell .item_img_area {
   position: relative;

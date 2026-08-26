@@ -343,8 +343,10 @@
 			card.querySelector(".discount_rate b") ||
 			card.querySelector(".sale_per") ||
 			card.querySelector(".listing-card-badge");
-		if (!rateNode) return "";
-		var digits = String(rateNode.textContent || "").replace(/[^0-9]/g, "");
+		var digits = String((rateNode && rateNode.textContent) || "").replace(/[^0-9]/g, "");
+		if (!digits) {
+			digits = String(card.getAttribute("data-sale-per") || "").replace(/[^0-9]/g, "");
+		}
 		return digits ? digits + "% OFF" : "";
 	}
 
@@ -352,8 +354,18 @@
 		return node ? String(node.textContent || "").replace(/\s+/g, " ").trim() : "";
 	}
 
+	function isOnSaleNowView() {
+		var mode = new URLSearchParams(window.location.search).get("display_mode");
+		return !mode || mode === "current";
+	}
+
 	function ensureDealBadge(card, media) {
-		if (!media || card.querySelector(".timedeal-card-deal")) return;
+		var existing = card.querySelector(".timedeal-card-deal");
+		if (!isOnSaleNowView()) {
+			if (existing) existing.remove();
+			return;
+		}
+		if (!media || existing) return;
 		// Real Time Deal products always carry a discount rate — only show the
 		// badge when one is present, instead of falling back to a generic label.
 		var rateText = readDiscountText(card);

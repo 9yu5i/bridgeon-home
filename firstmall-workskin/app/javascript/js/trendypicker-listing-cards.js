@@ -14,7 +14,7 @@
 	var pendingByGoodsSeq = {};
 	var currentTimeDeals = null;
 	var currentTimeDealsRequest = null;
-	var timeDealCacheKey = "trendypicker-current-timedeals";
+	var timeDealCacheKey = "trendypicker-current-timedeals-v2";
 	var timeDealCacheMaxAge = 5 * 60 * 1000;
 
 	function closestCard(button) {
@@ -277,6 +277,9 @@
 			".discount_rate .num, .discount_rate b, .sale_per, .timedeal-card-deal-rate"
 		);
 		var digits = String((rateNode && rateNode.textContent) || "").replace(/[^0-9]/g, "");
+		if (!digits && card) {
+			digits = String(card.getAttribute("data-sale-per") || "").replace(/[^0-9]/g, "");
+		}
 		return digits && Number(digits) > 0 ? digits : "";
 	}
 
@@ -309,19 +312,22 @@
 		media.appendChild(badge);
 	}
 
-	/* Firstmall exposes .goods_event_time only inside the Time Deal response;
-	   ordinary search/category cards omit it. Match those cards against the
-	   current Time Deal response by goods_seq so a normal sale is never marked
-	   as a Time Deal merely because it has a discount rate. */
+	/* A card is marked only when its goods_seq exists in Firstmall's current
+	   (ON SALE NOW) Time Deal response. eventEnd / goods_event_time alone also
+	   exists on upcoming or ended deals, so it is not an active-state signal. */
 	function normalizeTimeDealBadge(card) {
-		var eventTime = card.querySelector(".goods_event_time");
 		var goodsSeq = readCardGoodsSeq(card);
-		var digits;
+		var badge = card.querySelector(".timedeal-card-deal");
+		var digits = "";
 
-		if (card.querySelector(".timedeal-card-deal")) return;
-		digits = eventTime ? readDiscountDigits(card) : "";
-		if (!digits && goodsSeq && currentTimeDeals && currentTimeDeals[goodsSeq]) {
+		/* Wait for the active lookup before changing server-rendered cards. */
+		if (currentTimeDeals === null) return;
+		if (goodsSeq && currentTimeDeals[goodsSeq]) {
 			digits = currentTimeDeals[goodsSeq];
+		}
+		if (!digits) {
+			if (badge) badge.remove();
+			return;
 		}
 		addTimeDealBadge(card, digits);
 	}
@@ -369,7 +375,7 @@
 	function requestCurrentTimeDeals() {
 		var cached = readCachedTimeDeals();
 		var requestUrl =
-			"/goods/search_list?page=1&searchMode=timedeal&per=100&sorting=ranking&filter_display=lattice";
+			"/goods/search_list?page=1&searchMode=timedeal&display_mode=current&per=100&sorting=ranking&filter_display=lattice";
 
 		if (cached) {
 			currentTimeDeals = cached;

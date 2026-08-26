@@ -364,9 +364,12 @@
     }
 
     #searchVer2 ul.trending_list > li.trending_item {
+      box-sizing: border-box;
       display: grid;
       grid-template-columns: 42px minmax(0, 1fr) 44px;
       align-items: center;
+      width: 100%;
+      min-width: 0;
       min-height: 40px;
       margin: 0;
       padding: 0 20px;

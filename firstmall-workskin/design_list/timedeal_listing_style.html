@@ -10,20 +10,13 @@
 
 <!--{ @ record }-->
 <li class="timedeal_listing_style">
-	<article class="listing-card gl_item" data-goods-seq="{= .goods_seq}">
+	<article class="listing-card gl_item" data-goods-seq="{= .goods_seq}" data-sale-per="{.sale_per}">
 		<!--{? !issample }-->
 		<div class="listing-card-media item_img_area">
 
 			<a href="/goods/view?no={.goods_seq}" class="listing-card-image-link">
 				<img src="{.image}" onerror="this.src='/data/skin/{=skin}/images/common/noimage.gif';" alt="" class="listing-card-image square_display" aria-hidden="true"/>
 			</a>
-
-			<!--{ ? .sale_per > 0 }-->
-			<div class="timedeal-card-deal" aria-label="{.sale_per}% OFF time deal">
-				<img class="timedeal-card-deal-clock" src="/data/skin/{=skin}/images/timedeal/clock_pink.png" alt="" width="22" height="22" aria-hidden="true" />
-				<span class="timedeal-card-deal-rate">{.sale_per}% OFF</span>
-			</div>
-			<!--{ / }-->
 
 			<button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="{? .wish == 1}true{:}false{/}" onclick="display_goods_zzim(this, {= .goods_seq})">
 				<img src="/data/skin/{=skin}/images/listing/wish_pink.png" onerror="this.src='/data/icon/goodsdisplay/zzim/{decorations.image_zzim}'" class="heart-img zzimOffImg {? .wish == 1}zzim-hidden{/}" alt="Add to Wishlist" title="Add to Wishlist" />

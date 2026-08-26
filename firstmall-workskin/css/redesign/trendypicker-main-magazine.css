@@ -209,7 +209,7 @@ html.tp-home-magazine-frame body {
   font-size: 14px;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1120px) {
   .tp-home-magazine-list .tp-home-magazine-item:nth-child(n + 4) {
     display: none;
   }
@@ -244,6 +244,43 @@ html.tp-home-magazine-frame body {
 
   .tp-home-magazine-item__excerpt {
     -webkit-line-clamp: 2;
+  }
+
+  /* The home cards render inside an iframe. Near the desktop breakpoint the
+     iframe itself can be narrower than 1121px even though the parent page is
+     desktop, so parent JS marks the widget and keeps the desktop composition. */
+  .tp-home-magazine-widget[data-tp-layout="desktop"] {
+    grid-template-columns: minmax(0, 1.36fr) minmax(360px, 1fr);
+    gap: 28px;
+  }
+
+  .tp-home-magazine-widget[data-tp-layout="desktop"]
+    .tp-home-magazine-list {
+    grid-template-columns: none;
+    gap: 20px;
+  }
+
+  .tp-home-magazine-widget[data-tp-layout="desktop"]
+    .tp-home-magazine-list
+    .tp-home-magazine-item:nth-child(4) {
+    display: grid;
+  }
+
+  .tp-home-magazine-widget[data-tp-layout="desktop"]
+    .tp-home-magazine-item {
+    display: grid;
+    grid-template-columns: minmax(136px, 180px) minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .tp-home-magazine-widget[data-tp-layout="desktop"]
+    .tp-home-magazine-item__copy {
+    padding-top: 0;
+  }
+
+  .tp-home-magazine-widget[data-tp-layout="desktop"]
+    .tp-home-magazine-item__excerpt {
+    -webkit-line-clamp: 1;
   }
 }
 
