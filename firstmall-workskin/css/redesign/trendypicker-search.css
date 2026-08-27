@@ -787,7 +787,8 @@
       }
 
       #searchVer2.tp-search-open ul.trending_list .trending_keyword {
-        font-size: 16px;
+        font-size: 15px;
+        font-weight: 450;
       }
 
       /* Heading rows are real elements built by trendypicker-search.js: an icon,

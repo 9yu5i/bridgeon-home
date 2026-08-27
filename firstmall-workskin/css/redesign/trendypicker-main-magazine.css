@@ -121,6 +121,7 @@ html.tp-home-magazine-frame body {
 .tp-home-magazine-category {
   margin: 0 0 7px;
   color: var(--purple, #7b2de2);
+  cursor: pointer;
   font-size: 12px;
   font-weight: 800;
   line-height: 1.2;
@@ -143,6 +144,7 @@ html.tp-home-magazine-frame body {
   overflow: hidden;
   margin: 6px 0 0;
   color: #62596f;
+  cursor: pointer;
   font-size: 15px;
   line-height: 1.45;
   -webkit-box-orient: vertical;
@@ -194,6 +196,7 @@ html.tp-home-magazine-frame body {
   overflow: hidden;
   margin: 5px 0 0;
   color: #62596f;
+  cursor: pointer;
   font-size: 13px;
   line-height: 1.4;
   -webkit-box-orient: vertical;

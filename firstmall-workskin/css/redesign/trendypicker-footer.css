@@ -400,6 +400,12 @@
   background: #262626;
 }
 
+#floating_over .fixed_menu.tp-fnav.tp-fnav--dark .tp-fnav-ico {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
 #floating_over .fixed_menu.tp-fnav.tp-fnav--dark .tp-fnav-menu .tp-fnav-ico {
   background-image: url("../../images/icon/menu-w.png");
 }
@@ -428,4 +434,72 @@
    labelled icon row is the whole of the bar. */
 #floating_over .fixed_menu.tp-fnav .fixed_bar {
   display: none;
+}
+
+@media (max-width: 1124px) {
+  /* Keep the footer's original 40px closing space, then add the fixed menu
+     height and the device safe area. At the end of the page .footer_comp can
+     therefore scroll completely above the navigation instead of sitting
+     behind it. */
+
+  #floating_over,
+  #floating_over .fixed_menu.tp-fnav {
+    display: block;
+  }
+
+  /* Full-screen pages such as Real Trend can establish their own viewport
+     containing block. Pin the navigation itself so its icon row cannot be
+     pushed below the visible screen. */
+  #floating_over .fixed_menu.tp-fnav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    min-height: 61px;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    overflow: visible;
+  }
+
+  #floating_over .fixed_menu.tp-fnav ul {
+    display: flex;
+    align-items: center;
+    min-height: 47px;
+    margin: 0;
+  }
+
+  #floating_over .fixed_menu.tp-fnav .tp-fnav-ico {
+    flex: 0 0 24px;
+  }
+
+  #floating_over .float-button {
+    display: none;
+  }
+}
+
+/* The fixed bottom nav overlays the viewport, so the footer needs a real
+   flow spacer after its content. Using an ::after block keeps the final company
+   info/SNS area scrollable completely above the nav without changing body height
+   during scroll. Apply this to both phone and tablet. */
+@media only screen and (max-width: 1124px) {
+  body.tp-has-fnav #layout_footer::after {
+    content: "";
+    display: block;
+    height: calc(76px + env(safe-area-inset-bottom, 0px));
+    background: #161616;
+  }
+}
+
+/* Product detail (goods/view): the fixed bottom nav is removed on phone and
+   tablet, so drop the bar and the footer spacer it would otherwise reserve.
+   The id + extra class raise specificity over the base nav rule (no !important).
+   Desktop is untouched. */
+@media only screen and (max-width: 1120px) {
+  body.is-goods-view #floating_over .fixed_menu.tp-fnav {
+    display: none;
+  }
+
+  body.is-goods-view.tp-has-fnav #layout_footer::after {
+    display: none;
+  }
 }

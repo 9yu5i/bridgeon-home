@@ -1,0 +1,771 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* **************************************************************************************
+* 숏폼 콘텐츠 메인 페이지 목록 CSS
+Creation Date : 2026-08-05
+************************************************************************************** */
+
+/* ===== Component root / spacing ===== */
+
+.trend-section {
+  --trend-tab-gap: 24px;
+  --reel-card-height: 388px;
+  --trend-rail-card-max-width: calc(var(--reel-card-height) * 9 / 16);
+  --trend-gap: clamp(12px, 1.6vw, 30px);
+  position: relative;
+}
+
+.content-section + .content-section {
+  margin-top: 72px;
+}
+
+/* ===== Section heading / trend heading ===== */
+
+.trend-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 70px;
+  margin-bottom: 46px;
+}
+
+.trend-heading h2 {
+  margin: 0;
+  color: var(--purple);
+  font-size: clamp(22px, 4vw, 28px);
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.trend-heading p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.trend-heading a {
+  align-self: flex-end;
+  color: var(--purple);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.trend-heading > a:hover .arrow {
+  transform: translateX(3px);
+}
+
+@media (min-width: 761px) {
+  .trend-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 24px clamp(34px, 3.5vw, 70px);
+    margin-bottom: var(--trend-tab-gap);
+  }
+
+  .trend-heading > div:first-child {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .trend-section .section-heading a {
+    position: static;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: center;
+    flex-shrink: 0;
+  }
+}
+
+/* ===== Rail wrap + nav arrows ===== */
+
+.rail-wrap {
+  position: relative;
+  overflow: visible;
+  padding-inline: 22px;
+}
+
+.trend-section .rail-wrap {
+  padding-inline: 0;
+}
+
+.rail-arrow {
+  position: absolute;
+  top: 45%;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid #d7c4ff;
+  border-radius: 50%;
+  color: var(--purple);
+  background: #fff;
+  font-size: 24px;
+  box-shadow:
+    0 4px 12px rgba(83, 42, 159, 0.16),
+    0 0 0 3px rgba(215, 196, 255, 0.45),
+    0 0 18px rgba(183, 148, 255, 0.28);
+  transform: translateY(-50%);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.rail-arrow svg {
+  width: 22px;
+  height: 22px;
+}
+
+.rail-arrow svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rail-arrow:hover {
+  border-color: #7037c5;
+  color: #fff;
+  background: #7037c5;
+  box-shadow:
+    0 6px 16px rgba(83, 42, 159, 0.24),
+    0 0 0 4px rgba(215, 196, 255, 0.55),
+    0 0 22px rgba(123, 63, 228, 0.38);
+}
+
+.rail-arrow.prev {
+  left: -20px;
+}
+
+.rail-arrow.next {
+  right: -20px;
+}
+
+@media (max-width: 1120px) {
+  .rail-arrow {
+    display: none;
+  }
+}
+
+/* ===== Rail viewport / card rail / trend rail ===== */
+
+.rail-viewport {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  overflow: visible;
+  clip-path: inset(-34px 0 -34px 0);
+}
+
+.card-rail {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+
+.card-rail .reel-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.card-rail .is-loop-clone {
+  pointer-events: none;
+}
+
+.trend-rail {
+  gap: var(--trend-gap);
+  overflow: visible;
+  scroll-snap-type: none;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+  will-change: transform;
+}
+
+.trend-rail.is-dragging {
+  cursor: grabbing;
+}
+
+.trend-rail .reel-card {
+  flex: 0 0 clamp(140px, calc((100% - (var(--trend-gap) * 5)) / 6), var(--trend-rail-card-max-width));
+  max-height: var(--reel-card-height);
+}
+
+@media (min-width: 1121px) {
+  .trend-rail {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .trend-rail .reel-card {
+    flex: 0 0 calc((100% - (var(--trend-gap) * 5)) / 6);
+    width: calc((100% - (var(--trend-gap) * 5)) / 6);
+    max-width: calc((100% - (var(--trend-gap) * 5)) / 6);
+    max-height: var(--reel-card-height);
+  }
+}
+
+/* ===== Reel card ===== */
+
+.reel-card {
+  --reel-product-height: 80px;
+  --reel-title-offset: 10px;
+  position: relative;
+  display: grid;
+  width: 100%;
+  max-height: var(--reel-card-height);
+  grid-template-rows: minmax(0, 1fr) var(--reel-product-height);
+  aspect-ratio: 9 / 16;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #111;
+  box-shadow: 0 10px 24px rgba(31, 20, 52, 0.16);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.reel-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 45%,
+    rgba(0, 0, 0, 0.9) 70%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.35s ease;
+}
+
+.reel-card:hover::after {
+  opacity: 0;
+}
+
+.reel-card:has(.reel-hover-catcher:hover)::after,
+.reel-card:has(.reel-product:hover)::after {
+  opacity: 1;
+}
+
+.reel-click-catcher {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: var(--reel-product-height);
+  z-index: 3;
+}
+
+.reel-card .views {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 00;
+}
+
+.reel-card .views::before {
+  background-image: url("../../images/icon/icon-eye.png");
+  background-size: 15px 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+  content: "";
+  display: inline-block;
+  width: 15px;
+  height: 10px;
+  margin-right: 6px;
+}
+
+.reel-media {
+  min-height: 0;
+}
+
+/* NOTE (pre-existing): selector targets ".rt-play-icon" but the play icon in the markup
+   uses class "reel-play-icon" — as written this hover rule never matches. Left as-is
+   rather than guessing which side is wrong; flagging for you to confirm. */
+.reel-media:hover .rt-play-icon {
+  opacity: 0;
+}
+
+.reel-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+
+.reel-media > strong {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: calc(var(--reel-product-height) + var(--reel-title-offset));
+  z-index: 2;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+.reel-title {
+  transition: opacity 0.35s ease;
+}
+
+.reel-card:hover .reel-title {
+  opacity: 0;
+}
+
+.reel-card:has(.reel-hover-catcher:hover) .reel-title,
+.reel-card:has(.reel-product:hover) .reel-title {
+  opacity: 1;
+}
+
+.rt-video,
+.rt-yt-poster,
+.rt-yt-preview-frame,
+.rt-tt-preview-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+.reel-hover-catcher {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--reel-product-height);
+  z-index: 1;
+}
+
+.reel-product {
+  --reel-cart-size: 25px;
+  --reel-cart-offset: 6px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 5px;
+  padding: 8px;
+  color: #fff;
+  background: #111;
+  z-index: 2;
+  transition: transform 0.35s ease;
+}
+
+.reel-card:hover .reel-product {
+  transform: translateY(85%);
+}
+
+.reel-card:has(.reel-hover-catcher:hover) .reel-product,
+.reel-card:has(.reel-product:hover) .reel-product {
+  transform: translateY(0);
+}
+
+.reel-product .rt-product-img {
+  grid-row: 1;
+  width: 40px;
+  height: 42px;
+  justify-self: center;
+  border-radius: 50% 50% 9px 9px;
+  box-shadow: 0 7px 18px rgba(0, 0, 0, 0.32);
+}
+
+.reel-product-info {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.reel-product p {
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  color: #fff;
+  line-height: 1.15;
+}
+
+.reel-product p b,
+.reel-product p span {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.reel-product p b {
+  font-weight: 500;
+  padding-right: var(--reel-cart-inset);
+}
+
+.reel-product p span {
+  font-weight: 300;
+}
+
+.product-title {
+  color: #fff;
+}
+
+.reel-price {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 5px;
+  padding-right: calc(var(--reel-cart-size) + var(--reel-cart-inset));
+}
+
+.rt-cart-btn {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--reel-cart-size);
+  height: var(--reel-cart-size);
+  border: 1px solid #d7c4ff;
+  border-radius: 4px;
+  color: var(--purple);
+  font-style: normal;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  background-image: url(../../images/icon/icon-cart-reel.png);
+  background-size: 15px 16px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-origin: border-box;
+}
+
+.rt-cart-btn:hover {
+    color: #fff;
+    background-color: #7037c5;
+    border-color: #7037c5;
+    background-image: url(../../images/icon/icon-cart-2.png);
+    background-size: 15px 15px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+
+/* ===== Scroll-reveal (component-scoped only) ===== */
+
+html.scroll-reveal-pending .content-section .section-heading {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .section-heading h2,
+html.scroll-reveal-pending .inline-heading h2 {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .trend-section .inline-heading p,
+html.scroll-reveal-pending .trend-section .section-heading > a {
+  opacity: 0;
+  transition: none !important;
+}
+
+html.scroll-reveal-pending .trend-rail .reel-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: none !important;
+}
+
+.scroll-reveal-rail:not(.is-inview) .inline-heading p,
+.scroll-reveal-rail:not(.is-inview) .section-heading > a {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scroll-reveal-rail.is-inview .inline-heading p,
+.scroll-reveal-rail.is-inview .section-heading > a {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ===== Responsive overrides ===== */
+
+@media (max-width: 1120px) {
+  .reel-product {
+    gap: 12px;
+  }
+
+  .trend-rail {
+    width: 100%;
+    max-width: min(100%, 960px);
+    margin-inline: auto;
+  }
+
+  .trend-section .rail-viewport {
+    display: flex;
+    justify-content: center;
+    overflow-x: hidden;
+    clip-path: inset(-34px 0 -34px 0);
+  }
+}
+
+@media (max-width: 760px) {
+  .section-heading p {
+    display: none;
+  }
+
+  .trend-section .trend-heading {
+    margin-bottom: 20px;
+  }
+
+  .trend-section .section-heading h2::after {
+    width: 14px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 2px;
+  }
+
+  .trend-rail .reel-card {
+    flex-basis: clamp(128px, 37vw, 160px);
+  }
+
+  .reel-card {
+    --reel-product-height: 37px;
+    --reel-title-offset: 5px;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 140 / 241;
+    border-radius: 7px;
+    background: #111;
+  }
+
+  .reel-media {
+    background: linear-gradient(180deg, #30302f 0 54%, #575755 73%, #111 100%);
+  }
+
+  .reel-card .views {
+    top: 10px;
+    right: 12px;
+    font-size: 12px;
+  }
+
+  /* NOTE (pre-existing): selector is ".reel-card > strong" — the title <strong> is actually
+     inside .reel-media (not a direct child of .reel-card). Left as-authored; the same
+     ">strong" pattern repeats in the two tablet/desktop breakpoints below. */
+  .reel-card > strong {
+    left: 12px;
+    right: 7px;
+    bottom: calc(var(--reel-product-height) + var(--reel-title-offset) + 6px);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .reel-product {
+    --reel-cart-size: 14px;
+    --reel-cart-gap: 6px;
+    --reel-cart-offset: 3px;
+    grid-template-columns: 30px minmax(0, 1fr);
+    column-gap: 6px;
+    margin-top: -5px;
+    padding: 0px 10px 0px;
+    color: #fff;
+    background: #111;
+  }
+
+  .reel-product-info {
+    grid-column: 2;
+    gap: 1px;
+    width: 100%;
+  }
+
+  .reel-product p {
+    width: 100%;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .reel-product p b,
+  .reel-product p span {
+    padding-right: 0;
+  }
+
+  .reel-price {
+    display: none;
+  }
+
+  .reel-product .rt-product-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 60% 60% 5px 5px;
+  }
+
+  .rt-cart-btn {
+    display: none;
+  }
+
+  .product-title {
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .trend-rail .reel-card {
+    --reel-product-height: 88px;
+    --reel-title-offset: 9px;
+    flex-basis: clamp(128px, calc((100% - (var(--trend-gap) * 2)) / 3), 190px);
+  }
+
+  .trend-rail .reel-card .views {
+    top: 13px;
+    right: 13px;
+    font-size: 15px;
+  }
+
+  .trend-rail .reel-card .views::before {
+    width: 14px;
+    height: 9px;
+    margin-right: 5px;
+    background-size: 14px 9px;
+  }
+
+  .trend-rail .reel-card > strong {
+    left: 15px;
+    right: 15px;
+    font-size: 16px;
+  }
+
+  .trend-rail .reel-product {
+    --reel-cart-size: 24px;
+    --reel-cart-inset: 11px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    column-gap: 7px;
+    padding: 7px 11px 11px;
+  }
+
+  .trend-rail .reel-product-info {
+    gap: 7px;
+  }
+
+  .trend-rail .reel-product p {
+    font-size: 15px;
+  }
+
+  .trend-rail .reel-price {
+    font-size: 15px;
+    margin-top: 4px;
+  }
+}
+
+@media (min-width: 1121px) and (max-width: 1500px) {
+  .trend-section {
+    --reel-card-height: 340px;
+    --trend-rail-card-max-width: calc(340px * 9 / 16);
+  }
+
+  .trend-rail .reel-card {
+    --reel-product-height: 84px;
+    --reel-title-offset: 8px;
+    --reel-cart-size: 24px;
+  }
+
+  .trend-rail .reel-card .views {
+    top: 12px;
+    right: 12px;
+    font-size: 14px;
+  }
+
+  .trend-rail .reel-card .views::before {
+    width: 13px;
+    height: 9px;
+    margin-right: 5px;
+    background-size: 13px 9px;
+  }
+
+  .trend-rail .reel-card > strong {
+    left: 14px;
+    right: 14px;
+    font-size: 15px;
+  }
+
+  .trend-rail .reel-product {
+    --reel-cart-size: clamp(18px, 1.6vw, 22px);
+    --reel-cart-inset: clamp(8px, 0.7vw, 10px);
+    grid-template-columns: clamp(32px, 2.5vw, 36px) minmax(0, 1fr);
+    column-gap: clamp(5px, 0.45vw, 6px);
+    padding: 6px var(--reel-cart-inset) 10px;
+  }
+
+  .trend-rail .reel-product .rt-product-img {
+    width: clamp(30px, 2.3vw, 34px);
+    height: clamp(32px, 2.5vw, 36px);
+  }
+
+  .trend-rail .reel-product-info {
+    gap: 6px;
+  }
+
+  .trend-rail .reel-product p {
+    font-size: 14px;
+  }
+
+  .trend-rail .reel-price {
+    padding-right: calc(var(--reel-cart-size) + 6px);
+    font-size: clamp(11px, 1vw, 14px);
+    margin-top: 4px;
+    white-space: nowrap;
+  }
+
+  .trend-rail .rt-cart-btn {
+    right: var(--reel-cart-inset);
+    bottom: 10px;
+    width: var(--reel-cart-size);
+    height: var(--reel-cart-size);
+    background-size: clamp(10px, 0.9vw, 12px);
+  }
+}
+
+.trend-rail a,
+.trend-rail img,
+.trend-rail video {
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+}

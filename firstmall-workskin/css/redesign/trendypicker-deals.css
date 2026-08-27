@@ -191,6 +191,7 @@
   border: 0;
   border-radius: 50%;
   background: #eee2ff;
+  cursor: pointer;
   transition: background 0.3s ease;
   overflow: hidden;
 }
@@ -204,7 +205,7 @@
   height: var(--deal-share-icon-size);
   transform: translate(-50%, -50%);
   opacity: 0;
-  background: url("../../images/listing/wish_pink.png") center / contain no-repeat;
+  background: url("../../images/listing/wish_hover.png") center / contain no-repeat;
   transition: opacity 0.2s ease;
 }
 
@@ -1326,7 +1327,7 @@ body.is-deal-share-open {
   left: auto;
   inset: auto;
   z-index: auto;
-  margin: 0;
+  margin: 0 0 8px;
   flex: 0 0 auto;
 }
 
@@ -2189,17 +2190,17 @@ border-color: #ff4d63;
     align-self: flex-start;
     width: auto;
     min-height: 42px;
-    margin-top: auto;
+    margin-top: 0;
     gap: 10px;
   }
 
   .deals-section .deal-card.special .deal-actions {
-    margin-top: auto;
+    margin-top: 0;
   }
 
   .deals-section .deal-card.time .deal-actions {
     min-height: 42px;
-    margin-top: auto;
+    margin-top: 0;
     gap: 10px;
     padding-top: 0;
   }
@@ -2287,7 +2288,9 @@ border-color: #ff4d63;
 
   .deals-section .deal-card.time .deal-nav {
     right: clamp(18px, 1.4vw, 26px);
-    bottom: calc(clamp(18px, 1.4vw, 24px) + 2px);
+    /* Match the special card's nav so both sit at the same spot as the cards
+       shrink on desktop. */
+    bottom: calc(clamp(22px, 1.45vw, 28px) + 2px);
     transform: none;
     transform-origin: center;
   }
@@ -2390,7 +2393,7 @@ border-color: #ff4d63;
 
   .deals-section .deal-pick-card-heading {
     display: grid;
-    gap: 6px;
+    gap: 13px;
     justify-items: start;
     text-align: left;
   }
@@ -4607,7 +4610,7 @@ align-self: start;
   /* Larger badge + Shop link on wide (tablet) banners. */
   .deals-section .deal-time-banner-badge {
     gap: 8px;
-    min-height: 40px;
+    min-height: 35px;
     padding: 0 20px;
     font-size: 15px;
   }

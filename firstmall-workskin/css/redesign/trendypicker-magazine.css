@@ -423,6 +423,7 @@ html.bo-magazine-iframe #subAllButton {
   background: #fff;
   box-shadow: 0 13px 27px rgba(64, 47, 88, 0.08);
   animation: magazineFeatureReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
+  cursor: pointer;
 }
 
 .bo-magazine-feature.magazine-scroll-reveal,
@@ -500,6 +501,7 @@ html.bo-magazine-iframe #subAllButton {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
+  cursor: pointer;
 }
 
 .bo-magazine-side-card > div > p {
@@ -581,6 +583,7 @@ html.bo-magazine-iframe #subAllButton {
   border-top: 1px solid var(--magazine-line);
   opacity: 0;
   animation: magazineFeatureReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  cursor: pointer;
 }
 
 .bo-magazine-side-card:first-of-type {
@@ -621,6 +624,7 @@ html.bo-magazine-iframe #subAllButton {
   background: #fff;
   box-shadow: 0 13px 27px rgba(64, 47, 88, 0.08);
   padding-bottom: 15px;
+  cursor: pointer;
 }
 
 .bo-magazine-post-image {
@@ -941,7 +945,7 @@ html.bo-magazine-iframe #subAllButton {
   color: var(--magazine-purple);
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -984,7 +988,7 @@ html.bo-magazine-iframe #subAllButton {
 .magazine-article-editor {
   margin: 0;
   color: var(--magazine-muted);
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1.4;
   font-weight: 700;
 }
@@ -1185,6 +1189,7 @@ html.bo-magazine-iframe #subAllButton {
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  cursor: pointer;
 }
 
 /* Detail action buttons */
@@ -1528,7 +1533,7 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
     /* Narrow side padding: the shell is edge-to-edge here and the board
        inside the iframe carries its own gutter, so a wide inset here just
        squeezes the content. */
-    padding: 25px 8px 36px;
+    padding: 25px 20px 36px;
     border-radius: 22px 22px 0 0;
   }
 

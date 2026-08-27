@@ -1,0 +1,71 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Bestsellers Section - Main Page @@
+- 파일위치 : [스킨폴더]/goods/main_page_bestsellers.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/redesign/bestsellers-main-list.css" />
+<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/design/bestsellers_goods_style.css" />
+<section class="content-section seller-section">
+	{= cardStyles}
+	<div class="section-heading seller-heading">
+		<h2>Best Sellers <span aria-hidden="true">🔥</span></h2>
+		<div class="tag-tabs" role="tablist" aria-label="Best Sellers categories">
+			<!--{@ best_tabs}-->
+			<button type="button" class="{? .is_active}is-active{/}" role="tab" aria-selected="{? .is_active}true{:}false{/}" data-tab="{= .category_code}">{= .label}</button>
+			<!--{/}-->
+		</div>
+		<a href="/goods/best">VIEW ALL</a>
+	</div>
+
+	<div class="rail-wrap">
+		<button class="rail-arrow prev" data-scroll="best-seller-rail" data-direction="-1" aria-label="Previous best sellers">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+		</button>
+		<div class="rail-viewport">
+			<!--{@ best_tabs}-->
+			<div class="tab-panel {? .is_active}{:}hide{/}" data-tab-panel="{= .category_code}">
+				<!--{ ? .totcount > 0 }-->
+				<ul class="card-rail seller-rail best-seller-rail">
+					{= .panel_html}
+				</ul>
+				<!--{ : }-->
+				<div class="no_data_area2 Mt20">
+					{= errorMessage}
+				</div>
+				<!--{ / }-->
+			</div>
+			<!--{/}-->
+		</div>
+		<button class="rail-arrow next" data-scroll="best-seller-rail" data-direction="1" aria-label="Next best sellers">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+		</button>
+	</div>
+	<a class="view-button mobile-only" href="/goods/best">VIEW MORE</a>
+</section>
+
+<script>
+(function () {
+	var section = document.currentScript.previousElementSibling; 
+	if (!section) return;
+
+	var tabButtons = section.querySelectorAll('.tag-tabs button');
+	var panels     = section.querySelectorAll('[data-tab-panel]');
+
+	tabButtons.forEach(function (btn) {
+		btn.addEventListener('click', function () {
+			var target = btn.getAttribute('data-tab');
+
+			tabButtons.forEach(function (b) {
+				var active = b === btn;
+				b.classList.toggle('is-active', active);
+				b.setAttribute('aria-selected', active ? 'true' : 'false');
+			});
+
+			panels.forEach(function (panel) {
+				panel.classList.toggle('hide', panel.getAttribute('data-tab-panel') !== target);
+			});
+		});
+	});
+})();
+</script>
+<script type="text/javascript" src="/app/javascript/js/best-rail.js"></script>

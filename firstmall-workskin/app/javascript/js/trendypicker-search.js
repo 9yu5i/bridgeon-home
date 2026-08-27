@@ -7,11 +7,12 @@
  * opener (#btnSearchV2). Both of those collapse to 0x0 in this skin, so the
  * module — and with it the recent and trending lists — had no way to open.
  *
- * Rather than rebuild any of it, this drives the module from the visible
- * field: focusing it opens the module's dropdown, typing is mirrored into
- * #searchVer2InputBox so Firstmall's own autocomplete still runs, and closing
- * goes back through the skin's own .searchModuleClose handler. Everything the
- * panel shows is still server-rendered by the skin.
+ * Rather than rebuild any of it, this drives the module from the visible field
+ * on home and the compact magnifier on subpages. Focusing the field opens the
+ * module's dropdown, typing is mirrored into #searchVer2InputBox so Firstmall's
+ * own autocomplete still runs, and closing goes back through the skin's own
+ * .searchModuleClose handler. Everything the panel shows is still
+ * server-rendered by the skin.
  */
 (function () {
   "use strict";
@@ -319,8 +320,22 @@
       list.insertBefore(row, list.firstChild);
     }
 
+    function visibleTrigger() {
+      var triggers = header.querySelectorAll(".tp-header-search-trigger");
+
+      for (var i = 0; i < triggers.length; i += 1) {
+        var rect = triggers[i].getBoundingClientRect();
+        if (rect.width && rect.height) return triggers[i];
+      }
+
+      return null;
+    }
+
     function place() {
-      var f = field.getBoundingClientRect();
+      var anchor = field;
+      var f = anchor.getBoundingClientRect();
+      var trigger = visibleTrigger();
+      if (!f.width && !f.height && trigger) f = trigger.getBoundingClientRect();
       var host = pane.offsetParent || module;
       var base = host.getBoundingClientRect();
       var viewport = document.documentElement.clientWidth;
@@ -690,6 +705,16 @@
 
     field.addEventListener("focus", show);
     field.addEventListener("click", show);
+
+    Array.prototype.forEach.call(
+      header.querySelectorAll(".tp-header-search-trigger"),
+      function (trigger) {
+        trigger.addEventListener("click", function (event) {
+          event.preventDefault();
+          show();
+        });
+      }
+    );
 
     window.setTimeout(function () {
       if (

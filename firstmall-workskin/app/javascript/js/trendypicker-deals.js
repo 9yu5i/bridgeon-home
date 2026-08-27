@@ -9,6 +9,68 @@
     const match = String(item?.detailUrl || "").match(/[?&]no=(\d+)/);
     return match ? match[1] : "";
   };
+  const dealWishlistState = new Map();
+  const pendingDealWishlist = new Map();
+  const setDealWishlistButtonState = (button, active) => {
+    if (!button) return;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    button.setAttribute(
+      "aria-label",
+      active ? "Remove from wishlist" : "Add to wishlist",
+    );
+  };
+  const readGoodsNoFromRequest = (settings) => {
+    const data = settings?.data;
+    if (!data) return "";
+    if (typeof data === "object" && data.goods_seq) return String(data.goods_seq);
+    const match = String(data).match(/(?:^|&)goods_seq=([^&]+)/);
+    return match ? decodeURIComponent(match[1].replace(/\+/g, " ")) : "";
+  };
+  const reconcileDealWishlist = (settings, response) => {
+    if (!String(settings?.url || "").includes("/mypage/wish_add_ajax_toggle")) return;
+
+    const goodsNo = readGoodsNoFromRequest(settings);
+    const pending = pendingDealWishlist.get(goodsNo);
+    if (!pending) return;
+
+    const result = response?.result;
+    const active = result === "add" ? true : result === "del" ? false : pending.previous;
+    dealWishlistState.set(goodsNo, active);
+    if (pending.button.dataset.goodsNo === goodsNo) {
+      setDealWishlistButtonState(pending.button, active);
+      pending.button.disabled = false;
+    }
+    window.clearTimeout(pending.timeout);
+    pendingDealWishlist.delete(goodsNo);
+  };
+  const requestDealWishlistToggle = (button, goodsNo) => {
+    if (typeof window.display_goods_zzim === "function") {
+      window.display_goods_zzim(button, goodsNo);
+      return true;
+    }
+    if (!window.jQuery) return false;
+    window.jQuery.ajax({
+      url: "/mypage/wish_add_ajax_toggle",
+      data: { goods_seq: goodsNo },
+      dataType: "json",
+      global: true,
+    });
+    return true;
+  };
+
+  if (window.jQuery) {
+    window.jQuery(document).on(
+      "ajaxSuccess.trendypickerDealWishlist",
+      (_event, xhr, settings, data) => {
+        reconcileDealWishlist(settings, data || xhr?.responseJSON);
+      },
+    );
+    window.jQuery(document).on(
+      "ajaxError.trendypickerDealWishlist",
+      (_event, _xhr, settings) => reconcileDealWishlist(settings, null),
+    );
+  }
   const openCartQuickview = (button, goodsNo, event) => {
     if (!goodsNo) return;
     event?.preventDefault();
@@ -131,6 +193,7 @@
     const priceDel = card.querySelector(".deal-price del");
     const mediaBadge = card.querySelector("[data-deal-media-badge]");
     const shopButton = card.querySelector(".deal-shop-button");
+    const wishlistButton = card.querySelector(".deal-share-button");
     const counter = card.querySelector(".deal-nav-status");
     const prevButton = card.querySelector(".deal-nav-btn.prev");
     const nextButton = card.querySelector(".deal-nav-btn.next");
@@ -211,7 +274,15 @@
       }
       if (counter) counter.textContent = `${index + 1} / ${slides.length}`;
       card.dataset.productDetailLink = getCurrentDetailUrl();
-      window.TrendyPicker?.wishlist?.syncButtons?.(card);
+      if (sliderKey === "special" && wishlistButton) {
+        const goodsNo = getGoodsNo(item);
+        wishlistButton.dataset.goodsNo = goodsNo;
+        wishlistButton.disabled = !goodsNo || pendingDealWishlist.has(goodsNo);
+        setDealWishlistButtonState(
+          wishlistButton,
+          goodsNo ? dealWishlistState.get(goodsNo) === true : false,
+        );
+      }
     };
 
     const goToSlide = (nextIndex) => {
@@ -262,6 +333,41 @@
     // Today's Pick: clicking anywhere on the card opens the product detail —
     // except the slider arrows and the wishlist toggle.
     if (sliderKey === "special") {
+      wishlistButton?.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const goodsNo = wishlistButton.dataset.goodsNo || "";
+        if (!goodsNo || pendingDealWishlist.has(goodsNo)) return;
+
+        const previous = wishlistButton.getAttribute("aria-pressed") === "true";
+        dealWishlistState.set(goodsNo, !previous);
+        setDealWishlistButtonState(wishlistButton, !previous);
+        wishlistButton.disabled = true;
+        const timeout = window.setTimeout(() => {
+          const pending = pendingDealWishlist.get(goodsNo);
+          if (!pending) return;
+          dealWishlistState.set(goodsNo, previous);
+          if (wishlistButton.dataset.goodsNo === goodsNo) {
+            setDealWishlistButtonState(wishlistButton, previous);
+            wishlistButton.disabled = false;
+          }
+          pendingDealWishlist.delete(goodsNo);
+        }, 10000);
+        pendingDealWishlist.set(goodsNo, { button: wishlistButton, previous, timeout });
+
+        try {
+          if (!requestDealWishlistToggle(wishlistButton, goodsNo)) {
+            throw new Error("Wishlist request is unavailable");
+          }
+        } catch (_error) {
+          window.clearTimeout(timeout);
+          dealWishlistState.set(goodsNo, previous);
+          setDealWishlistButtonState(wishlistButton, previous);
+          wishlistButton.disabled = false;
+          pendingDealWishlist.delete(goodsNo);
+        }
+      });
       card.style.cursor = "pointer";
       card.addEventListener("click", (event) => {
         if (event.target.closest(".deal-nav, .deal-nav-btn, .deal-share-button")) return;

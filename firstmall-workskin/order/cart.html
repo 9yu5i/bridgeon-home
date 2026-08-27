@@ -283,17 +283,7 @@ if (document.body) {
 			</div>
 		</form>
 
-		<section class="cart-newsletter cart-scroll-reveal" aria-labelledby="cart-newsletter-title">
-			<div>
-				<h2 id="cart-newsletter-title">Be the first to know</h2>
-				<p>Get trend updates, exclusive offers, and more!</p>
-			</div>
-			<form action="/member_process/newsletter" method="post">
-				<label class="sr-only" for="cart-newsletter-email">Email</label>
-				<input id="cart-newsletter-email" name="email" type="email" placeholder="Enter Your Email" />
-				<button type="submit">SUBSCRIBE</button>
-			</form>
-		</section>
+		{=showNewsletterSection()}
 	</div>
 </main>
 

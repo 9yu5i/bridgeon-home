@@ -2,7 +2,7 @@
 @@ #LAYOUT_FOOTER @@
 - 파일위치 : [스킨폴더]/layout_footer/standard.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-footer.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-footer.css?v=20260827-1" />
 <!-- 장바구니 담기 토스트 (전 페이지 공통). 마크업은 스크립트가 주입합니다. -->
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-cart-toast.css" />
 
@@ -110,11 +110,24 @@
         </ul>
         <div class="fixed_bar"></div>
     </div>
-    <!-- Real Trend( /shortform/feed ) 에서만 하단바를 어둡게: 그 페이지에만 있는
-         .realtrend-page 컨테이너를 보고 클래스를 붙입니다. -->
+    <!-- Real Trend( /shortform/feed ) 에서만 하단바를 어둡게 표시합니다.
+         서버 출력에 .realtrend-page가 없는 경우도 있어 URL을 함께 확인합니다. -->
     <script>
         (function () {
-            if (document.querySelector('.realtrend-page')) {
+            /* This script lives inside #floating_over, so it only runs on pages
+               that render the fixed bottom nav. Flag the body so the footer can
+               reserve space for it without relying on :has() (older browsers). */
+            if (document.body) document.body.classList.add('tp-has-fnav');
+            /* On the product detail page the fixed bottom nav is removed for
+               phone/tablet, so mark the body for the CSS that hides it and
+               drops the footer spacer there. */
+            if (document.body &&
+                /^\/goods\/view(?:\/|$)/.test(window.location.pathname)) {
+                document.body.classList.add('is-goods-view');
+            }
+            var isRealTrend = document.querySelector('.realtrend-page') ||
+                /^\/shortform\/feed(?:\/|$)/.test(window.location.pathname);
+            if (isRealTrend) {
                 var bar = document.querySelector('.fixed_menu.tp-fnav');
                 if (bar) bar.classList.add('tp-fnav--dark');
             }

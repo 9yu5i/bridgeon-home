@@ -1,0 +1,2725 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 상품 상세 @@
+- 파일위치 : [스킨폴더]/goods/view.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+{is_file_facebook_tag}
+<script type="text/javascript">
+	var gl_goods_price = 0;
+	var gl_event_sale_unit = 0;
+	var gl_cutting_sale_price = 0;
+	var gl_cutting_sale_action = "{config_system.cutting_sale_action}";
+	var gl_multi_discount_use 	= "{goods.multi_discount_use}";
+	var gl_multi_discount_unit = "{goods.multi_discount_unit}";
+	var gl_multi_discount 		= 0;
+	var gl_multi_discount_ea 	= 0;
+	var gl_option_view_type = "{goods.option_view_type}";
+	var gl_options_count = {=count(options)};
+	var gl_opttag = '<tr class="quanity_row">';
+	var gl_min_purchase_limit = '{goods.min_purchase_limit}';
+	var gl_min_purchase_ea = 0;
+	var gl_max_purchase_limit = '{goods.max_purchase_limit}';
+	var gl_max_purchase_ea = 0;
+	var gl_member_seq = "{sessionMember.member_seq}";
+	var gl_request_uri = "{=urlencode(_SERVER.REQUEST_URI)}";
+	var gl_goods_seq = 0;
+	var gl_option_divide_title_count = {=count(goods.option_divide_title)};
+	var gl_skin = "{skin}";
+	var gl_string_price_use = "";
+	var gl_string_button_use = "";
+
+	{ ? is_array(options_n0) }
+	var gl_option_n0 = {=json_encode(options_n0)};
+	{ / }
+
+	{ ? is_array(gl_options_join) }
+	var gl_options_join = {=json_encode(options_join)};
+	{ / }
+
+	{ ? goods.price }
+	gl_goods_price = {goods.sale_price};
+	{ / }
+	{ ? goods.event.event_sale_unit }
+	gl_event_sale_unit = {goods.event.event_sale_unit};
+	{ / }
+	{? is_numeric(config_system.cutting_sale_price) && config_system.cutting_sale_use !='none'}
+	gl_cutting_sale_price = {config_system.cutting_sale_price};
+	{ / }
+	{ ? goods.multi_discount }
+	gl_multi_discount 		= {goods.multi_discount};
+	{ / }
+	{ ? goods.multi_discount_ea }
+	gl_multi_discount_ea 	= {goods.multi_discount_ea};
+	{ / }
+	{ ? goods.min_purchase_ea }
+	gl_min_purchase_ea = {goods.min_purchase_ea};
+	{ / }
+	{ ? goods.max_purchase_ea }
+	gl_max_purchase_ea = {goods.max_purchase_ea};
+	{ / }
+	{ ? goods.goods_seq }
+	gl_goods_seq = {goods.goods_seq};
+	{ / }
+	{ ? goods.string_price_use }
+	gl_string_price_use = {goods.string_price_use};
+	{/}
+	{ ? goods.string_button_use }
+	gl_string_button_use = {goods.string_button_use};
+	{/}
+
+	var preload_flag = false;
+	var commonpreload_flag = false;
+	var get_preload_func = function(){
+		if	(preload_flag === true) { 
+			return; 
+		}
+		preload_flag = true;
+		$.ajax({
+			url: "/goods/view_contents?no={goods.goods_seq}&zoom=1&view_preload=1&is_lazyload=y",
+			type: "get",
+			success : function(e){
+				$('.goods_view_contents').html(e);
+				preload_flag = false;
+			}
+		});
+	};
+
+	var get_commonpreload_func = function(){
+		if	(commonpreload_flag === true) {
+			 return; 
+		}
+		commonpreload_flag = true;
+		$.ajax({
+			url: "/goods/view_common_contents?no={goods.goods_seq}&zoom=1&view_preload=1&is_lazyload=y",
+			type: "get",
+			success : function(e){
+				$('.goods_common_contents').html(e);
+				commonpreload_flag = false;
+			}
+		});
+	};
+
+	$(document).ready(function(){
+		/*
+		if	(window.location.hash == '#goods_review') {
+			$('#goods_review_frame,#goods_qna_frame').load(function(){
+				$('.goods_information_tabs li:eq(1)').click();
+				$('html,body').animate({scrollTop:$('html,body').height()+500},'fast');
+			});
+		}
+		*/
+
+		{? eventEnd}
+		timeInterval{goods.goods_seq} = setInterval(function(){
+			var time{goods.goods_seq} = showClockTime('text', '{eventEnd.year}', '{eventEnd.month}', '{eventEnd.day}', '{eventEnd.hour}', '{eventEnd.min}', '{eventEnd.second}', 'soloday', 'solohour', 'solomin', 'solosecond', '{goods.goods_seq}');
+			var time_tmp = showClockTime('text', '{eventEnd.year}', '{eventEnd.month}', '{eventEnd.day}', '{eventEnd.hour}', '{eventEnd.min}', '{eventEnd.second}', 'soloday{goods.goods_seq}', 'solohour{goods.goods_seq}', 'solomin{goods.goods_seq}', 'solosecond{goods.goods_seq}', '{goods.goods_seq}');
+			if(time{goods.goods_seq} == 0){
+				clearInterval(timeInterval{goods.goods_seq});
+				//단독이벤트가 종료되었습니다.
+				alert(getAlert('gv002'));
+				document.location.reload();
+			}
+		},1000);
+		{/}
+
+		$("select[name='viewOptions[]']").last().bind("change",function(){
+			gl_opttag = '<td class="quantity_cell option_text">';
+			<!--{ @options[0].option_divide_title }-->
+			var opt = $(this).find('option:selected').attr('opt{.key_+1}');
+			if(!opt) return false;
+			var opt_value = `{.value_}`;
+			gl_opttag += opt_value + ' : '+opt+'<input type="hidden" name="option[{.key_}][]" value="'+opt+'" />';
+			gl_opttag += '<input type="hidden" name="optionTitle[{.key_}][]" value="'+opt_value+'" />';
+			<!--{ ? .size_ != .key_+1 }-->
+			gl_opttag += '<br />';
+			<!--{ / }-->
+			<!--{ / }-->
+		});
+
+		// 관련상품 옵션/수량변경 클릭시
+		$("button.btn_option_modify").bind("click",function() {
+			var id	= $(this).attr("id");
+			option_open(id);
+		});
+
+		// 관련상품 장바구니 클릭시
+		$("button.goodscart").bind("click",function() {
+			var id	= $(this).attr("id");
+			id = id.replace("goodscart_","");
+
+			if($("div#optional_changes_area_"+id).html() == ""){
+				option_open(id);
+			}else{
+				if(check_option(this)){
+					$("#optional_changes_form_"+id).submit();
+				}
+			}
+		});
+
+		{? wish_seq}
+			$('.wishimg').attr('usewish','y');
+			$('.wishimg').addClass('usewish');
+			$('.wishimg').addClass('is-active');
+		{/}
+
+		{?preload}
+			$(".set_preload").one('inview',get_preload_func);
+		{/}
+
+		{? commonpreload }
+			$(".set_preload").one('inview',get_commonpreload_func);
+		{/}
+
+		var shipping_set_seq = $("select[name='shipping_method'] option:selected").val();
+		getShippingInfo(shipping_set_seq);
+	});
+
+	function detail_contents_toggle(btn,contents){
+		if($("#"+contents).is(":hidden")){
+			$("#"+contents).show();
+			if($(btn).is('.btn_open_small')) $(btn).addClass('btn_close_small');
+		}else{
+			$("#"+contents).hide();
+			if($(btn).is('.btn_close_small')) $(btn).removeClass('btn_close_small');
+		}
+	}
+
+	// 배송정보 변경 :: 2016-07-15 lwh
+	function view_delivery_cost(){
+		// 희망배송일 레이어 닫기 및 초기화
+		$(".hopCalendarLayer").hide();
+		$("#hop_select_date").val('');
+
+		var set_seq = $("select[name='shipping_method']").val();
+		var prepay_info = $("select[name='shipping_method'] option:selected").attr('prepay_info');
+		var hop_date = $("select[name='shipping_method'] option:selected").attr('hop_date');
+
+		// 배송비 결제 정보
+		if(prepay_info == 'delivery' || prepay_info == 'all'){
+			$("#shipping_prepay_info").val('delivery');
+		}else{
+			$("#shipping_prepay_info").val('postpaid');
+		}
+		if	(prepay_info)	chg_prepayinfo(prepay_info);			// 선착불 변경
+		if	(hop_date)		$("#hop_select_date").val(hop_date);	// 희망배송일 자동지정
+
+		$(".set_lay").hide();
+		$(".shipping_set_area").find(".set_"+set_seq).show();
+
+		getShippingInfo(set_seq);
+        
+        /* 배송정보 custom justin */
+        var shipping_method = $("select[name='shipping_method'] option:selected");
+        $(".delivery_info .delivery_nation").text(shipping_method.attr('nation'));
+        $(".delivery_info .shipping_set_name").text(shipping_method.attr('shipping_set_name'));
+        $(".delivery_info .delivery_std_input").text(shipping_method.attr('delivery_std_input').split('<')[0]);
+	}
+
+	// 자세히보기 배송비 안내에서 배송정보 변경 :: 2016-08-10 lwh
+	function chg_delivery_info(ship_set_seq,store_seq,prepay_info){
+		$("select[name='shipping_method']").val(ship_set_seq).trigger('change');
+		if (prepay_info){
+			$("#shipping_prepay_info").val(prepay_info);
+			chg_prepayinfo(prepay_info);
+		}
+		if(store_seq)		$("#shipping_store_seq").val(store_seq);
+		closeDialog('shipping_detail_lay');
+	}
+
+	// 선착불 여부 변경
+	function chg_prepayinfo(prepay_info){
+		// 배송비 결제 정보
+		var res_msg	= '';
+		var msg		= getAlert('sy004') == undefined ? '선불' : getAlert('sy004');
+		var msg2	= getAlert('sy003') == undefined ? '착불' : getAlert('sy003');
+
+		if			(prepay_info == 'all'){
+			$("#shipping_prepay_info").val('delivery'); // 선불
+			res_msg = msg;
+		}else if	(prepay_info == 'delivery'){
+			$("#shipping_prepay_info").val('delivery'); // 선불
+			res_msg = msg;
+		}else if	(prepay_info == 'postpaid'){
+			$("#shipping_prepay_info").val('postpaid'); // 착불
+			res_msg = msg2;
+		}
+
+		var selected_method = $("select[name='shipping_method'] option:selected").attr('prepay_info');
+		if(selected_method == 'all'){
+			// 선택 배송 결제 방법 색상 처리 :: 2019-01-30 lwh
+			var sel_prepay_info = $("#shipping_prepay_info").val();
+			$('.prepay_info_area').removeClass('on');
+			$('.prepay_info_'+sel_prepay_info).addClass('on');
+			$("#shipping_prepay_txt").html('('+res_msg+')');
+		}else{
+			$("#shipping_prepay_txt").html('');
+		}
+
+		var shipping_set_code = $("select[name='shipping_method'] option:selected").attr('shipping_set_code');
+		if(shipping_set_code == 'direct_store'){
+			$("#shipping_prepay_txt").html('');
+		}
+	}
+
+	// 컬러 옵션 클릭시 상품상세컷 연결 leewh
+	function clickSelectColor(color) {
+		$("img[id^=dot_]").each(function(){
+			if ($(this).attr('color')==color) {
+					$(this).trigger("click");
+					return false;
+			}
+		});
+	}
+
+	var old_id = "";
+	function option_open(id){
+		var url = "recently_option?no="+id;
+		var area_obj = $("div#optional_changes_area_"+id);
+
+		// 닫기 옵션
+		if(old_id == id){ $(".optional_area").slideUp(500); old_id = ""; $(".optional_area").html(""); return; }
+		else			{ $(".optional_area").slideUp(500); $(".optional_area").html(""); }
+
+		$.get(url, function(data) {
+			area_obj.html(data);
+			area_obj.slideDown(500);
+			old_id = id;
+		});
+	}
+
+	var alert_timer = null;
+	function wish_chg(){
+		if(!gl_member_seq){
+			//회원만 사용가능합니다.\n로그인하시겠습니까?
+			if(confirm(getAlert('gv009'))){
+				var url = "/member/login?return_url={_SERVER['REQUEST_URI']}";
+				top.document.location.href = url;
+				return;
+			}else{
+				return;
+			}
+		}
+		$.ajax({
+			'url' : $('.wishimg').attr('usewish') == 'n' ? '/mypage/wish_add?seqs[]={goods.goods_seq}' : '/mypage/wish_del?seqs={goods.goods_seq}',
+			'type' : 'get',
+			'success' : function(res){
+				if($('.wishimg').attr('usewish') == 'n'){
+					$('.wishimg').attr('usewish','y');
+					$('.wishimg').addClass('usewish');
+					$('.wishimg').addClass('is-active');
+					$("#wish_alert .wa_on").show();
+					$("#wish_alert .wa_off").hide();
+					$("#wish_alert .wa_msg").html(getAlert('gv056'));
+				}else{
+					$('.wishimg').attr('usewish','n');
+					$('.wishimg').removeClass('usewish');
+					$('.wishimg').removeClass('is-active');
+					$("#wish_alert .wa_on").hide();
+					$("#wish_alert .wa_off").show();
+					$("#wish_alert .wa_msg").html(getAlert('gv057'));
+				}
+				$("#wish_alert").stop(true,true).show();
+				clearInterval(alert_timer);
+				alert_timer = setInterval(function(){
+					clearInterval(alert_timer);
+					$("#wish_alert").stop(true,true).show().fadeOut('slow');
+				},1000);
+			}
+		});
+	}
+</script>
+<script type="text/javascript" src='../common/minishop.js'></script>
+<script type="text/javascript" src="/app/javascript/js/goods-view.js?dummy={=date('YmdHis')}"></script>
+<script type="text/javascript" src="/app/javascript/js/goods-display.js?v={=date('Ymd')}"></script>
+<script type="text/javascript" src="/app/javascript/js/goods-display_mobile.js?v={=date('Ymd')}"></script>
+<script type="text/javascript">
+(function () {
+	function hasSelectableProductOptions() {
+		return !!document.querySelector(
+			'#goodsOptionBuySection select[name="viewOptions[]"], ' +
+			'#goodsOptionBuySection .viewInputLay input:not([type="hidden"]), ' +
+			'#goodsOptionBuySection .viewInputTextareaLay textarea'
+		);
+	}
+
+	document.addEventListener('click', function (event) {
+		var target = event.target;
+		var mobileCartButton = target && target.closest ? target.closest('#buy_btn') : null;
+
+		if (!mobileCartButton || hasSelectableProductOptions()) return;
+
+		event.preventDefault();
+		event.stopImmediatePropagation();
+
+		if (window.jQuery) {
+			window.jQuery('#addCart').trigger('click');
+		}
+	}, true);
+})();
+</script>
+<script type="text/javascript" src="/app/javascript/plugin/lazy/jquery.lazyload.min.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/jquery.inview.js"></script>
+
+<style type="text/css">
+@media only screen and (max-width:767px) {
+	/* 플로팅 - BACK/TOP(대쉬보드) */
+	/*#floating_over .ico_floating_back {bottom:73px !important;}
+	#floating_over .ico_floating_top {bottom:73px !important;}
+	#floating_over .ico_floating_foward {bottom:73px !important;}
+	#floating_over .ico_floating_zoom {bottom:115px !important;}*/
+}
+</style>
+
+<link rel="stylesheet" type="text/css" href="/data/skin/responsive_food_mealkit_gl/css/redesign/goods-view.css?dummy={=date('YmdHis')}">
+
+<div id="goods_view" class="product-detail-page">
+
+	<!--{ ? !_GET.quickview }-->
+	<!-- 현재 상품의 카테고리 라인맵( 스킨단에서 html 수정 불가. CSS로만 수정하세요. ) -->
+	{=showCategoryLight(goods.category_code[count(goods.category_code)-1])}
+	<!--{ / }-->
+
+
+	<section class="goods_thumbs_spec product-overview">
+		<!-- ++++++++++++++++++++++++ 상품 이미지 ++++++++++++++++++++++++ -->
+		<div id="goods_thumbs" class="product-gallery">
+			<!--{ ? count(images)>=1 }-->
+			<div class="pagination_wrap{?count(images)==1} single-image{/}" aria-label="Product gallery thumbnails">
+				<div class="count">
+					<a href="javascript:void(0)" class="prev" title="이전"></a>
+					<div class="pagination_area">
+						<ul class="pagination product-thumbnails">
+						<!--{ @ images }-->
+							<!--{?.thumbView.image}-->
+							<li><a href="javascript:void(0)"><img src="{.thumbView.image}" width="{goodsImageSize.thumbView.width}" onerror="this.src='../images/common/noimage_list.gif'" {? .thumbView.match_color } color="{.thumbView.match_color}"{/} /></a></li>
+							<!--{ / }-->
+						<!--{ / }-->
+						</ul>
+					</div>
+					<a href="javascript:void(0)" class="next" title="다음"></a>
+				</div>
+			</div>
+			<!--{ / }-->
+            
+            <div id="goods_preview" class="dn">{=strip_tags(goods.mobile_contents, '<img>')}</div>
+			<div class="slides_container" style="position:relative;">
+				<!--{ @ images }-->
+					<!--{?.view.image}-->
+					<div class="viewImgWrap product-stage">
+						{? .view.image_type == 'video'}
+							<!--{? is_mobile_agent}-->
+							<iframe src="{.view.image}" width="{? goods.video_size_mobile0 }{goods.video_size_mobile0}{:}100%{/}" height="{? goods.video_size_mobile1 }{goods.video_size_mobile1}{:}250{/}" frameborder="0"></iframe>
+							<!--{:}-->
+							<iframe src="{.view.image}" width="{? goods.video_size0 }{goods.video_size0}{:}100%{/}" height="{? goods.video_size1 }{goods.video_size1}{:}300{/}" frameborder="0"></iframe>
+							<!--{/}-->
+						{:}
+							<img src="{.view.image}" onerror="this.src='../images/common/noimage_wide.gif'" title="{images.large.label}" {? goods_view_image_alt}alt="{goods_view_image_alt}"{/} class="square_display"/>
+						{/}
+					</div>
+					<!--{ / }-->
+				<!--{ / }-->
+                <a class="btn_zoom_view dn" id="goods_detail_info" href="#">View Gallery</a>
+				<!--<a id="btn_zoom_view" href="javascript:popup('zoom?no={goods.goods_seq}&popup=1',{=(goodsImageSize.large.width + 17)}, document.body.clientHeight,'yes')"></a>-->
+
+			</div>
+
+			<script type="text/javascript">
+				//$("#goods_thumbs .pagination").hide().width('{=goodsImageSize.view.width-60}').show();
+				var setGoodsThumbsPaginationScroll = function(){
+					var paginationWidth = $("#goods_thumbs .pagination").width();
+					var currentWidth = $("#goods_thumbs .pagination>li.current").outerWidth();
+					var currentLeft = $("#goods_thumbs .pagination>li.current").position().left;
+
+					var gap = ($("#goods_thumbs .pagination").scrollLeft()+currentLeft+(currentWidth/2))-(paginationWidth/2);
+
+					$("#goods_thumbs .pagination").stop(true,true).animate({'scrollLeft':gap});
+				};
+				$("#goods_thumbs .slides_container>.viewImgWrap:gt(0)").hide();
+				$("#goods_thumbs .pagination>li:eq(0)").addClass('current');
+				$("#goods_thumbs .slides_container").show();
+				$("#goods_thumbs .pagination>li").bind('click',function(){
+					var i = $("#goods_thumbs .pagination>li").index(this);
+					$("#goods_thumbs .slides_container>.viewImgWrap").hide().eq(i).show();
+					$("#goods_thumbs .pagination>li").removeClass('current').eq(i).addClass('current');
+					setGoodsThumbsPaginationScroll();
+					return false;
+				});
+
+				$("#goods_thumbs .pagination>li").bind('mouseenter',function(){
+					var i = $("#goods_thumbs .pagination>li").index(this);
+					$("#goods_thumbs .slides_container>.viewImgWrap").hide().eq(i).show();
+				});
+				$("#goods_thumbs .pagination").bind('mouseleave',function(){
+					var curIndex = $("#goods_thumbs .pagination>li").index($("#goods_thumbs .pagination>li.current"));
+					$("#goods_thumbs .slides_container>.viewImgWrap").hide().eq(curIndex).show();
+				});
+
+				$("#goods_thumbs .prev").bind('click',function(){
+					var i = $("#goods_thumbs .slides_container>.viewImgWrap").index($("#goods_thumbs .slides_container>.viewImgWrap:visible"));
+					if(i<=0) i = $("#goods_thumbs .slides_container>.viewImgWrap").length-1;
+					else i--;
+					$("#goods_thumbs .slides_container>.viewImgWrap").hide().eq(i).show();
+					$("#goods_thumbs .pagination>li").removeClass('current').eq(i).addClass('current');
+					setGoodsThumbsPaginationScroll();
+					return false;
+				});
+				$("#goods_thumbs .next").bind('click',function(){
+					var i = $("#goods_thumbs .slides_container>.viewImgWrap").index($("#goods_thumbs .slides_container>.viewImgWrap:visible"));
+					if(i>=$("#goods_thumbs .slides_container>.viewImgWrap").length-1) i = 0;
+					else i++;
+					$("#goods_thumbs .slides_container>.viewImgWrap").hide().eq(i).show();
+					$("#goods_thumbs .pagination>li").removeClass('current').eq(i).addClass('current');
+					setGoodsThumbsPaginationScroll();
+					return false;
+				});
+			</script>
+		</div>
+		<!-- ++++++++++++++++++++++++ //상품 이미지 ++++++++++++++++++++++++ -->
+
+
+		<!-- ++++++++++++++++++++++++ 상품 스펙 ++++++++++++++++++++++++ -->
+		<div id="goods_spec" class="product-summary">
+		<form name="goodsForm" method="post" enctype="multipart/form-data" action="../order/add" target="actionFrame" class="goods-form">
+		<div class="close-btn">close</div>
+		<input type="hidden" name="goodsSeq" value="{goods.goods_seq}" />
+		<input type="hidden" name="goodsViewVersion" value="2" />
+
+		<div class="product-summary-head">
+			<!--{ ? goods.r_rank && goods.r_rank[0] }-->
+			<a href="/goods/best?ranking_category={goods.r_rank[0].category_code}&ranking_type={goods.r_rank[0].rank_type}" class="ranking_label">
+				<span class="rank">#{goods.r_rank[0].rank_no} {=strtoupper(str_replace('_', ' ', goods.r_rank[0].rank_type))} {goods.r_rank[0].category_title}</span>
+			</a>
+			<!--{ / }-->
+
+
+			<div class="sns_wish">
+				<!-- SNS 공유 -->
+				<a href="javascript:void(0)" id="btnSnsShare" class="sns_share" title="SNS 공유"><img src="../images/icon/icon-product-share.png" alt=""></a>
+				<div id="snsListDetail" class="snsbox_area dn" style="display:none;">
+					{=snslinkurl('goods', goods.goods_name)}
+				</div>
+				<a href="#" id="couponDownload" class="sns_bell dn"><img src="../images/icon/icon-bell-on.png" alt=""></a>
+			</div>
+		</div>
+
+
+		<div class="product-title-area">
+			<span class="product-brand"><!--{ ? goods.brand }-->{view_brand}<!--{ / }--></span>
+			<h1 class="product-title">{goods.goods_name}</h1>
+		</div>
+                
+		<!-- hidden legacy parts -->
+		<p class="summary dn">
+			{goods.summary}
+			<span class="detail_icons">
+				<!--{ @ icons }-->
+				<img src="/data/icon/goods/{.codecd}.gif" alt="">
+				<!--{ / }-->
+			</span>
+		</p>
+		<p class="seq_num Hide">상품번호 : {goods.goods_seq}</p>
+
+		<div class="rating-info">
+			<!--{ ? goods.review_count }-->
+				<img class="product-rating-star" src="../images/icon/icon_star_yellow.gif" alt="" aria-hidden="true" width="16" height="16">
+				<span class="product-rating-score">{=round(goods.review_divide,1)}</span>
+				<span class="product-rating-reviews">({=number_format(goods.review_count)} reviews)</span>
+			<!--{ / }-->
+
+			<!--{ ? goods.purchase_num && goods.purchase_num >= 5 }-->
+				<span class="product-rating-sep" aria-hidden="true">|</span>
+				<span class="sold_num">{goods.purchase_num} Sold</span>
+			<!--{ / }-->
+		</div>
+
+		<div class="product-price">
+			<!--{ ? goods.org_price > goods.sale_price }-->
+				<del class="org_price old-price">
+					<span class="dst_th_size">{=get_currency_price(goods.org_price,2,'','<s><span class="num">_str_price_</span></s>')}</span>
+				</del>
+			<!--{ / }-->
+
+			<div class="product-price-current">
+				<!--{? goods.string_price_use }-->
+					<strong class="sale_price">{goods.string_price}</strong>
+				<!--{ : }-->
+					<strong class="sale_price">
+						{? goods.sale_price > 0 }
+							{=get_currency_price(goods.sale_price,2,'','<span class="num">_str_price_</span>','price_won')}
+						{:}
+							{=get_currency_price(0,2,'','<span class="num">_str_price_</span>','price_won')}
+						{/}
+					</strong>
+				<!--{ / }-->
+
+				{? goods.sale_rate}
+					{ ? goods.org_price != 0 && goods.sale_price != 0 }
+						<mark>{=number_format(goods.sale_rate)}% OFF</mark>
+					{/}
+				{/}
+			</div>
+		</div>
+
+			<ul class="goods_spec_sections set_preload">
+
+                <!-- 오프라인 쿠폰 -->
+                <div class="coupon_area">
+                    <!-- 쿠폰 템플릿. 파일위치 : _modules/display/coupon_display_detail_light.html -->
+                    {=showCoupons('all','detail')}
+                    <!-- //쿠폰 템플릿 -->
+                </div>
+                <!-- //오프라인 쿠폰 -->
+
+
+                <!-- ~~~~~ 단독 이벤트 ~~~~~ -->
+				{? eventEnd}
+				<li class="spec_solo_event hide">
+					<ul class="list">
+						<li class="buy_num"><strong class="num">{=number_format(goods.event.event_order_ea)}</strong><span designElement="text"> items being purchased</span></li>
+						<li class="remain_time">
+							<span class="title"></span>
+							<div class="event_datetime_box">
+								<span class="num2" id="soloday{goods.goods_seq}">00</span><span class="day" designElement="text">일</span>
+								<span class="num2" id="solohour{goods.goods_seq}">00</span> :
+								<span class="num2" id="solomin{goods.goods_seq}">00</span> :
+								<span class="num2" id="solosecond{goods.goods_seq}">00</span>
+							</div>
+						</li>
+					</ul>
+				</li>
+				{/}
+				<!-- ~~~~~ //단독 이벤트 ~~~~~ -->
+
+				<!-- ~~~~~ 퍼스트몰 라이브 알림 ~~~~~ -->
+				<!--{? braodcastData }-->
+				<li>
+					<div class="cast_notice">
+						<!--{ ? braodcastData.status == 'live'}-->
+						<img class="status" src="../images/broadcast/i_live.png" alt="방송 중">
+						<p class="notice_text">{braodcastData.start_date} 현재 방송 중</p>
+						<a class="btn_resp no_border" href="/broadcast/player?no={braodcastData.bs_seq}" target="_blank"><img src="../images/broadcast/btn_live_go.png" alt="시청하기"></a>
+						<!--{ : }-->
+						<img class="status" src="../images/broadcast/reserve_live.png" alt="방송 예정 LIVE">
+						<a href="/broadcast/player?no={braodcastData.bs_seq}" class="notice_text" target="_blank">{braodcastData.start_date} 라이브 쇼핑으로 만나보세요.</a>
+						<!--{ / }-->
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ 퍼스트몰 라이브 알림 ~~~~~ -->
+
+				<!-- ~~~~~ 가격, 할인율, 할인내역 ~~~~~ -->
+				<li class="deatil_price_area">
+
+					<!--{ ? (array_sum(sales.sale_list) - sales.sale_list.basic) > 0 }-->
+					<button type="button" class="btn_open_small btn_resp B" onclick="detail_contents_toggle(this,'priceDetail')"><span designElement="text">혜택보기</span></button>
+					<div id="priceDetail" class="detail_option_list hide">
+						<ul>
+						<!--{ @ sales.sale_list }-->
+							<!--{ ? .value_ > 0 }-->
+							<li>
+								<span class="title">{sales.title_list[.key_]}</span>
+								<span class="detail">{=get_currency_price(.value_,2)}</span>
+							</li>
+							<!--{ / }-->
+						<!--{ / }-->
+						</ul>
+					</div>
+					<!--{ / }-->
+				</li>
+				<!-- ~~~~~ //가격, 할인율, 할인내역 ~~~~~ -->
+
+				<!-- ~~~~~ 상품번호 ~~~~~ -->
+				<li class="goods_spec_number hide">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">상품번호</span></li>
+						<li class="td">{goods.goods_seq}</li>
+					</ul>
+				</li>
+				<!-- ~~~~~ //상품번호 ~~~~~ -->
+
+				<!-- ~~~~~ 판매중지 ~~~~~ -->
+				<!--{ ? goods.goods_status == 'unsold' }-->
+				<li class="goods_spec_unsold">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">상태</span></li>
+						<li class="td sell_stop"><span designElement="text">판매중지</span></li>
+					</ul>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //판매중지 ~~~~~ -->
+
+				<!-- ~~~~~ 대량구매 ~~~~~ -->
+				<!--{ ? sales.mtext_list['multi'] }-->
+				<li class="goods_spec_large_purchase">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">대량구매</span></li>
+						<li>
+							{sales.mtext_list['multi']}
+						</li>
+						<li class="btn_area1">
+							<button type="button" class="btn_open_small btn_resp no_border" onclick="detail_contents_toggle(this,'multi')"><span designElement="text">자세히</span></button>
+						</li>
+					</ul>
+					<div id="multi" class="detail_option_list hide">
+						<ul>
+							<!-- { @goods.multi_discount_policy.policyList } -->
+							{? .discountAmount > 0}
+							<li>{.discountOverQty}개 이상{?.discountUnderQty} ~ {.discountUnderQty}개 미만 {/}: 1개당 {.discountAmount}{?goods.multi_discount_policy.discountUnit == 'PER'}%{:}원{/} 할인</li>
+							{/}
+							<!-- { / } -->
+							<!-- { ?goods.multi_discount_policy.discountMaxAmount } -->
+							<li>{goods.multi_discount_policy.discountMaxOverQty}개 이상 : 1개당 {goods.multi_discount_policy.discountMaxAmount}{?goods.multi_discount_policy.discountUnit == 'PER'}%{:}원{/} 할인</li>
+							<!-- { / } -->
+						</ul>
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //대량구매 ~~~~~ -->
+
+				<!-- ~~~~~ 회원등급 ~~~~~ -->
+				<!--{ ? sales.mtext_list['member'] }-->
+				<li class="goods_spec_member_grade">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">회원등급</span></li>
+						<li>{sales.mtext_list['member']}</li>
+						<!--{ ? goods.group_benifits }-->
+						<li class="btn_area1">
+							<button type="button" class="btn_open_small btn_resp no_border" onclick="detail_contents_toggle(this,'memberBenefitDetail')"><span designElement="text">자세히</span></button>
+						</li>
+						<!--{ / }-->
+					</ul>
+					<div id="memberBenefitDetail" class="detail_option_list hide">
+						<ul>
+							<!--{@goods.group_benifits}-->
+							<!--{?.group_seq && (.sale_price > 0 || .reserve_price > 0 || .point_price > 0) }-->
+							<li>
+								<p class="e_title">{.group_name}</p>
+								<!--{ ? .sale_price > 0 }-->
+								<div class="e_content">
+									<!--{ ? .sale_price_type == 'PER' }-->
+									{=floor(.sale_price)}% 추가할인<br />
+									<!--{ : }-->
+									{=get_currency_price(.sale_price,2)} 추가할인<br />
+									<!--{ / }-->
+									<!--{ ? .sale_use == 'Y' && .sale_limit_price > 0 }-->
+									({=get_currency_price(.sale_limit_price,2)} 이상 구매 시)<br />
+									<!--{ / }-->
+								</div>
+								<!--{ / }-->
+
+								<!--{ ? .sale_price > 0 && (.reserve_price > 0 || .point_price > 0) }-->
+								<!--{ / }-->
+
+								<!--{ ? .reserve_price > 0 }-->
+								<div class="e_content">
+									<!--{ ? .reserve_price_type == 'PER' }-->
+									마일리지 {=floor(.reserve_price)}% 추가적립<br />
+									<!--{ : }-->
+									마일리지 {=get_currency_price(.reserve_price,2)} 추가적립<br />
+									<!--{ / }-->
+									<!--{ ? .reserve_price > 0 || .point_price > 0 }-->
+										<!--{ ? .point_use == 'Y' && .point_limit_price > 0 }-->
+										({=get_currency_price(.point_limit_price,2)} 이상 구매 시)<br />
+										<!--{ / }-->
+									<!--{ / }-->
+								</div>
+								<!--{ / }-->
+
+								<!--{ ? .point_price > 0 }-->
+								<div class="e_content">
+									<!--{ ? .point_price_type == 'PER' }-->
+									포인트 {=floor(.point_price)}% 추가적립<br />
+									<!--{ : }-->
+									포인트 {.point_price}P 추가적립<br />
+									<!--{ / }-->
+									<!--{ ? .reserve_price > 0 || .point_price > 0 }-->
+										<!--{ ? .point_use == 'Y' && .point_limit_price > 0 }-->
+										({=get_currency_price(.point_limit_price,'')} 이상 구매 시)<br />
+										<!--{ / }-->
+									<!--{ / }-->
+								</div>
+								<!--{ / }-->
+							</li>
+							<!--{ / }-->
+							<!--{ / }-->
+						</ul>
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //회원등급 ~~~~~ -->
+
+				<!-- ~~~~~ 쿠폰 ~~~~~ -->
+				<!--{ ? sales.mtext_list['coupon'] }-->
+				<li class="goods_spec_coupon hide">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">쿠폰</span></li>
+						<li>
+							{sales.mtext_list['coupon']}
+						</li>
+						<li class="btn_area1">
+							<button type="button" class="btn_resp ico_down resStyle">쿠폰받기</button>
+						</li>
+					</ul>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //쿠폰 ~~~~~ -->
+
+				<!-- ~~~~~ 할인코드 ~~~~~ -->
+				<!--{ ? sales.mtext_list['code'] }-->
+				<li class="goods_spec_sales_code">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">할인코드</span></li>
+						<li>
+							{sales.mtext_list['code']}
+						</li>
+						<li class="btn_area1">
+							<button type="button" id="codeSaleView" class="btn_resp no_border resStyle"><span designElement="text">자세히</span></button>
+						</li>
+					</ul>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //할인코드 ~~~~~ -->
+
+				<!-- ~~~~~ 좋아요 ~~~~~ -->
+				<!--{ ? sales.mtext_list['like'] && APP_USE == 'f' && APP_LIKE_TYPE != 'NO' }-->
+				<li class="goods_spec_like">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">좋아요</span></li>
+						<li>
+							<div>{sales.mtext_list['like']}</div>
+							<!--{ ? APP_USE == 'f' && APP_LIKE_TYPE != 'NO' }-->
+							<div>{=snsLikeButton(goods.goods_seq,'button_count')}</div>
+							<!--{ / }-->
+						</li>
+						<li class="btn_area1">
+							<button type="button" class="btn_open_small btn_resp no_border" onclick="detail_contents_toggle(this,'fblikeDetail')"><span designElement="text">자세히</span></button>
+						</li>
+					</ul>
+					<div id="fblikeDetail" class="detail_option_list hide">
+						<ul>
+							<!--{@fblikesale.result}-->
+							<li>
+								<p class="e_title" ><span designElement="text">좋아요 + </span>{=get_currency_price(.price1,2)}<span designElement="text"> 이상 구매시</span></p>
+								<div class="e_content">
+									{?count(.result)>1}
+										<ul class="basic_lr_style">
+											<li>최대</li>
+											<li>
+												{?.sale_price_max}<p class="style"><span class="pointcolor">{=number_format(.sale_price_max)}%</span> 추가할인</p>{/}
+												{?.sale_emoney_max}<p class="style">{?.sale_price_max}{/} 마일리지 <span class="pointcolor">{=number_format(.sale_emoney_max)}%</span> 추가적립</p>{/}
+												{?.sale_point_max}<p class="style">{?.sale_price_max || .sale_emoney_max}{/} 포인트 <span class="pointcolor">{=number_format(.sale_point_max)}%</span> 추가적립</p>{/}
+											</li>
+										</ul>
+									{:}
+										{?.sale_price}<p class="style"><span class="pointcolor">{=number_format(.sale_price)}%</span> 추가할인</p>{/}
+										{?.sale_emoney}<p class="style">{?.sale_price}{/} 마일리지 <span class="pointcolor">{=number_format(.sale_emoney)}%</span> 추가적립</p>{/}
+										{?.sale_point}<p class="style">{?.sale_price || .sale_emoney}{/} 포인트 <span class="pointcolor">{=number_format(.sale_point)}%</span> 추가적립</p>{/}
+									{/}
+								</div>
+							</li>
+							<!--{ / }-->
+						</ul>
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //좋아요 ~~~~~ -->
+
+				<!-- ~~~~~ 모바일 ~~~~~ -->
+				<!--{ ? sales.mtext_list['mobile'] }-->
+				<li class="goods_spec_mobile">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">모바일</span></li>
+						<li>
+							{sales.mtext_list['mobile']}
+						</li>
+						<li class="btn_area1">
+							<button type="button" class="btn_open_small btn_resp no_border" onclick="detail_contents_toggle(this,'mobileDetail')"><span designElement="text">자세히</span></button>
+						</li>
+					</ul>
+					<div id="mobileDetail" class="detail_option_list hide">
+						<ul>
+							<!--{@ mobilesale.result}-->
+							<li>
+								<p class="e_title"><span designElement="text">모바일 + </span>{=get_currency_price(.price1,2)}<span designElement="text"> 이상 구매시</span></p>
+								<div class="e_content">
+									{?count(.result)>1}
+										<ul class="basic_lr_style">
+											<li>최대</li>
+											<li>
+												<p class="style"><span class="pointcolor">{=number_format(.sale_price_max)}%</span> 추가할인</p>
+												{?.sale_emoney_max}<p class="style">마일리지 <span class="pointcolor">{=number_format(.sale_emoney_max)}%</span> 추가적립</p>{/}
+												{?.sale_point_max}<p class="style">포인트 <span class="pointcolor">{=number_format(.sale_point_max)}%</span> 추가적립</p>{/}
+											</li>
+										</ul>
+									{:}
+										<p class="style"><span class="pointcolor">{=number_format(.sale_price)}%</span> 추가할인</p>
+										{?.sale_emoney}<p class="style">마일리지 <span class="pointcolor">{=number_format(.sale_emoney)}%</span> 추가적립</p>{/}
+										{?.sale_point}<p class="style">포인트 <span class="pointcolor">{=number_format(.sale_point)}%</span> 추가적립</p>{/}
+									{/}
+								</div>
+							</li>
+							<!--{ / }-->
+						</ul>
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //모바일 ~~~~~ -->
+
+				<!-- ~~~~~ 무이자할부( common.css에서 display:none 처리 - 190320 sjg ) ~~~~~ -->
+				<li class="goods_spec_halbu">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">무이자할부</span></li>
+						<li><span class="gray_06" designElement="text">우측 '자세히' 참조</span></li>
+						<li class="btn_area1">
+							<button type="button" class="btn_resp no_border" onclick="detail_contents_toggle(this,'goodsInterest')"><span designElement="text">자세히</span></button>
+						</li>
+					</ul>
+					<div id="goodsInterest" class="Relative hide">
+						<div class="layer_simple_basic px p_right">
+							<table class="detail_option_table card" cellpadding="0" cellspacing="0">
+								<tbody>
+								<tr>
+									<th><img src="../images/common/interest/Interest_img_bc.gif"></th>
+									<td><span designElement="text">3~12개월</span></td>
+									<td><span designElement="text">5만원이상</span></td>
+								</tr>
+								<tr>
+									<th><img src="../images/common/interest/Interest_img_ct.gif"></th>
+									<td><span designElement="text">3~12개월</span></td>
+									<td><span designElement="text">5만원이상</span></td>
+								</tr>
+								<tr>
+									<th><img src="../images/common/interest/Interest_img_hd.gif"></th>
+									<td><span designElement="text">3~12개월</span></td>
+									<td><span designElement="text">5만원이상</span></td>
+								</tr>
+								<tr>
+									<th><img src="../images/common/interest/Interest_img_hn.gif"></th>
+									<td><span designElement="text">3~12개월</span></td>
+									<td><span designElement="text">5만원이상</span></td>
+								</tr>
+								<tr>
+									<th><img src="../images/common/interest/Interest_img_kb.gif"></th>
+									<td><span designElement="text">3~12개월</span></td>
+									<td><span designElement="text">5만원이상</span></td>
+								</tr>
+								<tr>
+									<th><img src="../images/common/interest/Interest_img_lt.gif"></th>
+									<td><span designElement="text">3~12개월</span></td>
+									<td><span designElement="text">5만원이상</span></td>
+								</tr>
+								<tr>
+									<th><img src="../images/common/interest/Interest_img_sh.gif"></th>
+									<td><span designElement="text">3~12개월</span></td>
+									<td><span designElement="text">5만원이상</span></td>
+								</tr>
+								<tr>
+									<th><img src="../images/common/interest/Interest_img_ss.gif"></th>
+									<td><span designElement="text">3~12개월</span></td>
+									<td><span designElement="text">5만원이상</span></td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</li>
+				<!-- ~~~~~ //무이자할부 ~~~~~ -->
+
+				<!-- ~~~~~ 유입경로 ~~~~~ -->
+				<!--{ ? goods.referer_sale.referersale_seq }-->
+				<li class="goods_spec_referersale_seq">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">유입경로</span></li>
+						<li>
+							{sales.text_list['referer']}
+						</li>
+					</ul>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //유입경로 ~~~~~ -->
+
+				<!-- ~~~~~ 적립혜택 ~~~~~ -->
+				<li class="goods_spec_saving_benefit hide">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">적립혜택</span></li>
+						<li>
+							<span designElement="text">구매</span>
+							<!--{? goods.string_price_use }-->
+							{goods.string_price}
+							<!--{ : }-->
+							{=get_currency_price(goods.reserve,2)}
+								<!--{? goods.point > 0 }-->
+								({=number_format(goods.point)}P)
+								<!--{ / }-->
+							<!--{ / }-->
+
+							<!--{ ? (cfg_reserve.autoemoney_video > 0 || cfg_reserve.autopoint_video > 0 || cfg_reserve.autoemoney_photo > 0 || cfg_reserve.autopoint_photo > 0 || cfg_reserve.autoemoney_review > 0 || cfg_reserve.autopoint_review > 0 || (cfg_reserve.bbs_start_date  && cfg_reserve.bbs_end_date)) && isplusfreenot  // }-->
+							&nbsp;<span class="gray_07">|</span>&nbsp; <span designElement="text">후기</span> <span class="Dib gray_06" designElement="text">우측 '자세히' 참조</span>
+							<!--{ / }-->
+						</li>
+						<!--{ ? (cfg_reserve.autoemoney_video > 0 || cfg_reserve.autopoint_video > 0 || cfg_reserve.autoemoney_photo > 0 || cfg_reserve.autopoint_photo > 0 || cfg_reserve.autoemoney_review > 0 || cfg_reserve.autopoint_review > 0 || (cfg_reserve.bbs_start_date  && cfg_reserve.bbs_end_date)) && isplusfreenot  // }-->
+						<li class="btn_area1">
+							<button type="button" class="btn_resp no_border" onclick="detail_contents_toggle(this,'reviewDetail')"><span designElement="text">자세히</span></button>
+						</li>
+						<!--{ / }-->
+					</ul>
+					<div id="reviewDetail" class="detail_option_list hide">
+						<ul>
+							{? cfg_reserve.autoemoney_review > 0 ||  cfg_reserve.autopoint_review > 0 }
+							<li>
+								<p class="e_title" designElement="text">일반 상품후기</p>
+								<div class="e_content">
+									{? cfg_reserve.autoemoney_review > 0 }마일리지 {=get_currency_price(cfg_reserve.autoemoney_review,2)} 적립{/}
+									{? cfg_reserve.autopoint_review > 0 }, 포인트 {=number_format(cfg_reserve.autopoint_review)}P 적립{/}
+								</div>
+							</li>
+							{/}
+							{? cfg_reserve.autoemoney_photo > 0 ||  cfg_reserve.autopoint_photo > 0 }
+							<li>
+								<p class="e_title" designElement="text">포토 상품후기</p>
+								<div class="e_content">
+									{? cfg_reserve.autoemoney_photo > 0 }마일리지 {=get_currency_price(cfg_reserve.autoemoney_photo,2)} 적립{/}
+									{? cfg_reserve.autopoint_photo > 0 }, 포인트 {=number_format(cfg_reserve.autopoint_photo)}P 적립{/}
+								</div>
+							</li>
+							{/}
+							{? cfg_reserve.autoemoney_video > 0 ||  cfg_reserve.autopoint_video > 0 }
+							<li>
+								<p class="e_title" designElement="text">동영상 상품후기</p>
+								<div class="e_content">
+									{? cfg_reserve.autoemoney_video > 0 }마일리지 {=get_currency_price(cfg_reserve.autoemoney_video,2)} 적립{/}
+									{? cfg_reserve.autopoint_video > 0 }, 포인트 {=number_format(cfg_reserve.autopoint_video)}P 적립{/}
+								</div>
+							</li>
+							{/}
+							{? cfg_reserve.bbs_start_date  &&  cfg_reserve.bbs_end_date }
+							<li>
+								<p class="e_title" designElement="text">기타 상품후기</p>
+								<div class="e_content">
+									{? cfg_reserve.emoneyBbs_limit > 0 }마일리지 {=get_currency_price(cfg_reserve.emoneyBbs_limit,2)} 적립{/}
+									{? cfg_reserve.pointBbs_limit > 0 }, 포인트 {=number_format(cfg_reserve.pointBbs_limit)}P 적립{/}
+								</div>
+							</li>
+							{/}
+						</ul>
+					</div>
+				</li>
+				<!-- ~~~~~ //적립혜택 ~~~~~ -->
+
+				<!-- ~~~~~ 네이버 마일리지 ~~~~~ -->
+				<!--{ ? in_array(naver_mileage_yn,array('y','t')) }-->
+				<li class="goods_spec_naver_mileage">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">네이버 마일리지</span></li>
+						<li>
+							{=showNaverMileageButton('view')}
+						</li>
+					</ul>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //네이버 마일리지 ~~~~~ -->
+
+				<!-- ~~~~~ 배송 ~~~~~ -->
+			<!-- old legacy part -->
+			<div class="dn">
+				<!--{? goods.goods_kind == 'coupon' }-->
+				<li class="goods_spec_coupon2" style="display:none;">
+					<select name="shipping_method">
+						<!--{ @ shipping_set }-->
+						<option value='{.shipping_set_seq}' selected grp_seq="{.shipping_group_seq}" nation="{.delivery_nation}" prepay_info="{.prepay_info}" >{.shipping_set_name}({.prepay_txt})</option>
+						<!--{ / }-->
+					</select>
+					<input type="hidden" name="shipping_prepay_info" value="delivery" />
+				</li>
+				<!--{ : }-->
+				<li class="goods_spec_shipping">
+					<ul class="detail_spec_table">
+						<li class="th">
+							<span designElement="text">배송</span>
+							<!--{ ? goods.option_international_shipping_status == 'y'}-->
+							<img src="../images/common/icon_inter_ship.png" class="icon_global" alt="" />
+							<!--{ / }-->
+						</li>
+						<li>
+							<!--{ ? goods.option_international_shipping_status == 'y'}-->
+							<ul class="detail_spec_table sub">
+								<li><span designElement="text">해외구매대행 상품, 개인통관고유부호</span></li>
+								<li class="btn_area1"><button type="button" class="btn_resp no_border" onclick="detail_contents_toggle(this,'customsDetail')"><span designElement="text">자세히</span></button></li>
+							</ul>
+							<!--{ / }-->
+
+							<!--{ ? shipping_set }-->
+							<ul class="detail_spec_table sub">
+								<li style="width:90%;">
+                                    <div class="delivery_info">
+                                        <!--{ @ shipping_set }-->
+                                        <!--{?.default_yn=='Y'}-->
+                                        <p class="custom_sub2 B600 Pb4">Shipping to <span class="delivery_nation">{.delivery_nation}</span></p>
+                                        <p class="custom_sub2"><span class="shipping_set_name">{.shipping_set_name}</span> <span class="delivery_std_input" style="font-weight:bold;">{=str_split_arr(.delivery_std_input,'<',0)}</span></p>
+                                        <!--{ / }-->
+                                        <!--{ / }-->
+                                    </div>
+									<select class="M hide" name="shipping_method" onchange="view_delivery_cost();" {?count(shipping_set)==1}style="display:none"{/}>
+										<!--{ @ shipping_set }-->
+										<option value='{.shipping_set_seq}' {?.default_yn=='Y'}selected{/} 
+                                                grp_seq="{.shipping_group_seq}" 
+                                                nation="{.delivery_nation}" 
+                                                prepay_info="{.prepay_info}"
+                                                shipping_set_name = "{.shipping_set_name}"
+                                                delivery_std_input = "{.delivery_std_input}"
+                                                shipping_set_code="{.shipping_set_code}" {?.hopeday_required=='Y'}hop_date="{.hop_date}"{/}>{.shipping_set_name}{?.shipping_set_code!='direct_store'}({.prepay_txt}){/}</option>
+										<!--{ / }-->
+									</select>
+									<script>$(function(){view_delivery_cost()});</script>
+									<!--{ ? count(shipping_set) == 1 }-->
+										<!--{ @ shipping_set }-->
+									<span>{=.shipping_set_name}{?.shipping_set_code!='direct_store'}(<span class="gray_06">{.prepay_txt}</span>){/}</span>
+										<!--{ / }-->
+									<!--{ : }-->
+									<span id="shipping_prepay_txt" class="gray_01 hide"></span>
+									<!--{ / }-->
+									<input type="hidden" name="shipping_prepay_info" id="shipping_prepay_info" value="" alt="선/착불정보" />
+									<input type="hidden" name="shipping_store_seq" id="shipping_store_seq" value="" alt="수령매장정보" />
+								</li>
+								<li class="btn_area1">
+									<button type="button" class="btn_resp no_border" id="shipping_detail_info_resp"></button>
+								</li>
+							</ul>
+							<!--{ / }-->
+
+							<!--{ ? goods.goods_kind != 'coupon' // 배송비안내 :: START }-->
+							<ul class="detail_spec_table sub shipping_set_area dn">
+								<li>
+									<!--{ @ shipping_set }-->
+									<div class="set_lay set_{.shipping_set_seq} hide">
+										<!--{ ? .delivery_std_input }-->
+										<div class="std">
+											{.delivery_std_input}
+										</div>
+										<!--{ / }-->
+										<!--{ ? .delivery_add_input }-->
+										<div class="add">
+											<span designElement="text">추가배송비</span> {.delivery_add_input}
+										</div>
+										<!--{ / }-->
+										<!--{ ? .delivery_hop_input && !goods.reserve_ship_flag // 예약배송과 중복안됨. }-->
+										<div class="hop">
+											<span designElement="text">희망배송일</span> {.delivery_hop_input}
+											<button type="button" value="" class="btn_resp calendarBtn" grp_seq="{.shipping_group_seq}" set_seq="{.shipping_set_seq}" onclick="detail_contents_toggle(this,'deliverydateDetail');"><span designElement="text">희망배송일</span></button>
+											<span class="hop_view_date">(미선택)</span>
+										</div>
+										<!--{ / }-->
+									</div>
+									<!--{ / }-->
+									<input type="hidden" name="hop_select_date" id="hop_select_date" value="" />
+									<script>view_delivery_cost();</script>
+								</li>
+							</ul>
+							<!--{ / // 배송비안내 :: END }-->
+
+							<!--{ ? goods.reserve_ship_flag // 예약발송 :: START }-->
+							<ul class="detail_spec_table sub">
+								<li><span designElement="text">예약판매 :</span> {goods.reserve_ship_txt}</li>
+							</ul>
+							<!--{ / // 예약발송 :: END }-->
+						</li>
+					</ul>
+
+					<div id="deliverydateDetail" class="Relative hide">
+						<div class="hopCalendarLayer layer_simple_basic"><span designElement="text">달력</span></div>
+					</div>
+
+					<div id="customsDetail" class="detail_option_list hide">
+						<ul>
+							<li>
+								<p class="e_title" designElement="text">해외구매대행 상품이란?</p>
+								<p class="e_content" designElement="text">
+									해외에서 수입하여 판매하는 상품으로 배송, 반품, 교환이 일반상품과 다를 수 있습니다. 또한 관세청 수입통관 신고 시 구매자의 개인통관고유부호가 필요하기 때문에 주문 시 구매자로부터 개인통관고유부호를 수집하게 됩니다.
+								</p>
+							</li>
+							<li>
+								<p class="e_title" designElement="text">개인통관고유부호란?</p>
+								<p class="e_content" designElement="text">
+									관세청에서는 개인정보 유출을 방지하기 위하여 개인물품 수입신고 시 주민등록번호를 대신 활용할 수 있는 개인통관고유부호 제도를 운영합니다. 개인통관고유부호는 <a href="https://p.customs.go.kr" class="Und" target="_blank" title="새창" designElement="text">관세청 사이트</a>에서 신청 즉시 부여되며, 계속 같은 번호로 사용이 가능합니다. 분실하면 관세청 사이트에서 조회 가능합니다. 부호 체계는 P로 시작하고 13자리입니다.
+								</p>
+							</li>
+						</ul>
+					</div>
+
+					<div id="eachDeliveryDetail" class="detail_option_list hide">
+						<ul>
+							<li>
+								<p class="e_title" designElement="text">포장최대단위</p>
+								<div class="e_content">
+									상품 {=number_format(goods.limit_shipping_ea)}개
+								</div>
+							</li>
+							<li>
+								<p class="e_title" designElement="text">포장단위별 배송비</p>
+								<div class="e_content">
+									{=get_currency_price(goods.limit_shipping_price,2)}
+								</div>
+							</li>
+							<li>
+								<p class="e_title" designElement="text">포장단위별 추가배송비</p>
+								<div class="e_content">
+									{=get_currency_price(goods.limit_shipping_subprice,2)}
+								</div>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<!--{ / }-->
+			</div>
+				<!-- ~~~~~ //배송 ~~~~~ -->
+
+				<!-- ~~~~~ 해외배송 ~~~~~ -->
+				<!--{ ? ship_summary.gl_shipping_yn == 'Y' }-->
+				<li class="goods_spec_international_shipping hide">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">해외배송</span> <img src="../images/common/plane.png" height="15" alt="해외배송" /></li>
+						<li>
+							<span class="gray_06" designElement="text">우측 '자세히' 참조</span>
+							<div class="hide">
+								이 상품은 해외에서 국내로 배송되는 상품이므로 배송,반품,교환이 일반 상품과 다를 수 있습니다.
+							</div>
+						</li>
+						<li class="btn_area1">
+							<button type="button" class="btn_resp no_border" onclick="detail_contents_toggle(this,'countryDetail')"><span designElement="text">자세히</span></button>
+						</li>
+					</ul>
+					<div id="countryDetail" class="Relative hide">
+						<div class="layer_simple_basic px country_list">
+							<table class="detail_option_table" cellpadding="0" cellspacing="0">
+								<tbody>
+								<!--{ @ ship_gl_list }-->
+									<tr>
+										<th scope="row" class="L">
+											<img src="/admin/skin/default/images/common/icon/nation/{.gl_nation}.png" height="20" alt="">
+											{.gl_nation}
+										</th>
+										<td class="L">{.kr_nation}</td>
+									</tr>
+								<!--{ / }-->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //해외배송 ~~~~~ -->
+
+				<!-- ~~~~~ 상품정보 ~~~~~ -->
+				<!--{ ? goods.sub_info_desc.subInfo }-->
+				<li class="goods_spec_sub_info hide">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">상품정보</span></li>
+						<li><span class="gray_06" designElement="text">우측 '자세히' 참조</span></li>
+						<li class="btn_area1">
+							<button type="button" class="btn_resp no_border" onclick="showCenterLayer('#infoDetail')"><span designElement="text">자세히</span></button>
+						</li>
+					</ul>
+					<div id="infoDetail" class="resp_layer_pop hide">
+						<h4 class="title"><span designElement="text">상품 정보 제공 고시</span></h4>
+						<div class="y_scroll_auto2">
+							<div class="layer_pop_contents v5">
+								<div class="resp_1line_table">
+									<!-- { @ goods.sub_info_desc.subInfo } -->
+									<ul>
+										<li class="th size1"><p>{.title}</p></li>
+										<li class="td">{.desc}</li>
+									</ul>
+									<!-- { / } -->
+								</div>
+							</div>
+						</div>
+						<div class="layer_bottom_btn_area2">
+							<button type="button" class="btn_resp size_c color5 Wmax" onclick="hideCenterLayer()">확인</button>
+						</div>
+						<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //상품정보 ~~~~~ -->
+
+				<!-- ~~~~~ 브랜드 ~~~~~ -->
+				<!--{ ? goods.brand }-->
+				<li class="goods_spec_brand hide">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">브랜드</span></li>
+						<li>
+							<!--{view_brand}-->
+						</li>
+					</ul>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //브랜드 ~~~~~ -->
+
+				<!-- ~~~~~ 추가정보 ~~~~~ -->
+				<!--{@ additions }-->
+				<li class="goods_spec_brand">
+					<ul class="detail_spec_table">
+						<li class="th">{.name}</li>
+						<li>
+							{.contents}
+						</li>
+					</ul>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //추가정보 ~~~~~ -->
+
+				<!-- ~~~~~ 청약철회 ~~~~~ -->
+				<!--{ ? goods.cancel_type == '1' }-->
+				<li class="goods_spec_cancel">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">청약철회</span></li>
+						<li>
+							<span designElement="text">불가</span>
+						</li>
+					</ul>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //청약철회 ~~~~~ -->
+
+				<!-- ~~~~~ 판매자 ~~~~~ -->
+				<!--{ ? provider.provider_seq }-->
+				<li class="goods_spec_provider hide">
+					<ul class="detail_spec_table">
+						<li class="th"><span designElement="text">판매자</span></li>
+						<li>
+							<a href="/mshop?m={provider.provider_seq}" target="_blank" title="새창">{provider.provider_name}</a>
+							<a href="javascript:void(0)" class="reg_minishop v2 {?provider.thisshop=='y'}on{/}" title="{?provider.thisshop=='n'}단골 등록{/}" data-shop='{provider.provider_seq}' onclick="mshopadd(this, '{=sessionMember.member_seq}');"></a>
+						</li>
+						<li class="btn_area1">
+							<button type="button" class="btn_resp no_border" onclick="showCenterLayer('#sellerInfo')"><span designElement="text">자세히</span></button>
+						</li>
+					</ul>
+					<div id="sellerInfo" class="resp_layer_pop hide">
+						<h4 class="title"><span designElement="text">판매자 정보</span></h4>
+						<div class="y_scroll_auto">
+							<div class="layer_pop_contents">
+								<div class="resp_1line_table">
+									<!--{?provider.provider_seq=='1'}-->
+										<!--{ ? config_basic.companyName }-->
+										<ul>
+											<li class="th size2"><p designElement="text">상호명</p></li>
+											<li class="td">{config_basic.companyName}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? config_basic.ceo }-->
+										<ul>
+											<li class="th size2"><p designElement="text">대표자</p></li>
+											<li class="td">{config_basic.ceo}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? config_basic.businessLicense }-->
+										<ul>
+											<li class="th size2"><p designElement="text">사업자등록번호</p></li>
+											<li class="td">{config_basic.businessLicense}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? config_basic.mailsellingLicense }-->
+										<ul>
+											<li class="th size2"><p designElement="text">통신판매신고번호</p></li>
+											<li class="td">{config_basic.mailsellingLicense}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? config_basic.companyPhone }-->
+										<ul>
+											<li class="th size2"><p designElement="text">연락처</p></li>
+											<li class="td">{config_basic.companyPhone}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? config_basic.companyAddress }-->
+										<ul>
+											<li class="th size2"><p designElement="text">사업장 소재지</p></li>
+											<li class="td">{config_basic.companyAddress} {config_basic.companyAddressDetail}</li>
+										</ul>
+										<!--{ / }-->
+									<!--{ : }-->
+										<!--{ ? provider.info_name }-->
+										<ul>
+											<li class="th size2"><p designElement="text">상호명</p></li>
+											<li class="td">{provider.info_name}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? provider.info_ceo }-->
+										<ul>
+											<li class="th size2"><p designElement="text">대표자</p></li>
+											<li class="td">{provider.info_ceo}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? provider.info_num }-->
+										<ul>
+											<li class="th size2"><p designElement="text">사업자등록번호</p></li>
+											<li class="td">{provider.info_num}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? provider.info_selling_license }-->
+										<ul>
+											<li class="th size2"><p designElement="text">통신판매신고번호</p></li>
+											<li class="td">{provider.info_selling_license}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? provider.info_phone }-->
+										<ul>
+											<li class="th size2"><p designElement="text">연락처</p></li>
+											<li class="td">{provider.info_phone}{?provider.info_email} / {provider.info_email}{/}</li>
+										</ul>
+										<!--{ / }-->
+										<!--{ ? provider.info_address2 }-->
+										<ul>
+											<li class="th size2"><p designElement="text">사업장 소재지</p></li>
+											<li class="td">
+												<!--{ ? provider.info_address1_street }-->
+													{provider.info_address1_street}
+												<!--{ : }-->
+													{provider.info_address1}
+												<!--{ / }-->
+												{provider.info_address2}
+											</li>
+										</ul>
+										<!--{ / }-->
+									<!--{ / }-->
+								</div>
+								<div class="layer_bottom_btn_area">
+									<button type="button" class="btn_resp size_c color5 Wmax" onclick="hideCenterLayer()">확인</button>
+								</div>
+							</div>
+						</div>
+						<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //판매자 ~~~~~ -->
+			</ul>
+
+			<!-- ~~~~~~~~~~~ 구매하기 열기 섹션( 모바일 전용 ) ~~~~~~~~~~~ -->
+			<div id="goodsBuyOpenSection" class="goods_buy_open_sections">
+				<a href="javascript:void(0);" id="btnSectionOpen" class="btn_section_open off dn">열기</a>
+				<ul class="goods_buttons_section">
+					<!--{ ? goods.goods_status == 'normal' && !goods.string_price_use && !goods.string_button_use}-->
+					<li>
+						<ul class="basic_btn_area">
+							{? talkbuyorder_tpl }
+							<li class="talkbuy_area" style="display:none;"><button type="button" id="kpay_btn" class="btn_resp size_c"></button></li>
+							{/}
+							{? navercheckout_tpl }
+							<li class="npay_area" style="display:none;"><button type="button" id="npay_btn" class="btn_resp size_c"></button></li>
+							{/}
+							<!-- Add To Cart-->
+							<button name="addCart" id="buy_btn" type="button" class="product-add-cart">
+								<img src="../images/icon/icon-cart-white.png" alt="Add To Cart icon" aria-hidden="true">
+								<span class="product-add-cart-label">Add to Cart</span>
+							</button>
+							<!-- Add To Wishlist -->
+							<button type="button" class="product-wish wishimg" usewish="n" aria-label="Add to wishlist" aria-pressed="false" onclick="wish_chg();">
+								<img class="product-wish-icon-default" src="../images/icon/icon-wish.png" alt="Add To Cart icon" aria-hidden="true">
+								<img class="product-wish-icon-hover" src="../images/icon/icon-wish-hover.png" alt="Added To Cart icon" aria-hidden="true">
+							</button>
+							<!--{? goods.present_usable}-->
+							<li class="list_present"><button type="button" class="btn_resp btn_present addPresent"></button></li>
+							<!--{ / }-->
+						</ul>
+					</li>
+					<!--{ : goods.string_button_use }-->
+					<li>{goods.string_button}</li>
+					<!--{ : }-->
+						<!--{ ? goods.goods_status == 'runout'}-->
+						<li>
+							<!--{ ? goods.restock_notify_use }-->
+							<!--{ : }-->
+							<!--{ / }-->
+							<p class="text_soldout NpayNo" designElement="text">품절</p>
+						</li>
+						<!--{ / }-->
+						<!--{ ? goods.goods_status == 'purchasing'}-->
+						<li><button type="button" style="width:100%;" class="btn_resp size_c NpayNo"><span designElement="text">재고확보 중</span></button></li>
+						<!--{ / }-->
+						<!--{ ? (goods.goods_status == 'purchasing' && serviceLimit('H_NFR')) || (goods.goods_status == 'runout' && goods.restock_notify_use)}-->
+						<li><button type="button" style="width:100%;" class="restockOpenBtn btn_resp size_c color4 NpayNo"><span designElement="text">재입고알림 신청</span></button></li>
+						<!--{ / }-->
+						<!--{ ? goods.goods_status == 'unsold'}-->
+						<li><button type="button" style="width:100%;" class="btn_resp size_c color3 NpayNo"><span designElement="text">판매중지</span></button></li>
+						<!--{ / }-->
+					<!--{ / }-->
+
+					<!--{? sns.ntalk_connect == 'Y' && sns.ntalk_use == 'Y' && sns.ntalk_use_mobile_product == 'Y'}-->
+					<li>
+						<button type="button" class="btn_naver_talk" onclick="window.open('https://talk.naver.com/{sns.ntalk_connect_id}{? sns.ntalk_use_sniffet == 'Y'}?ref='+encodeURIComponent(location.href)+'#nafullscreen'{:}#nafullscreen'{/}, 'talktalk', 'width=471, height=640'); return false;"><span designElement="text">쇼핑할땐</span> &nbsp;<img src="../images/icon/icon_talk.png" align="absmiddle" alt="네이버톡톡" />&nbsp; <span designElement="text">톡톡하세요</span></button>
+					</li>
+					<!--{/}-->
+				</ul>
+			</div>
+			<!-- ~~~~~~~~~~~ 구매하기 열기 섹션( 모바일 전용 ) ~~~~~~~~~~~ -->
+
+			<!-- ~~~~~~~~~~~ 구매하기 ~~~~~~~~~~~ -->
+			<div id="goodsOptionBuySection" class="goods_buy_sections">
+				<a href="javascript:void(0);" id="btnSectionClose" class="btn_section_close">닫기</a>
+
+				<!--{? !goods.string_price_use }-->
+				<div class="goods_option_select_area">
+				<!-- 상품 옵션 인클루드. 파일위치 : [스킨폴더]/goods/_select_options.html -->
+				{ #OPTION_SELECT }
+				<!-- //상품 옵션 인클루드 -->
+				</div>
+				<!--{ / }-->
+
+				<!-- 총 상품 금액 표기 시작-->
+				<!--{ ? !goods.string_price_use && select_option_mode != 'optional_change' }-->
+				<div class="goods_price_area">
+					<table width="100%" cellpadding="0" cellspacing="0" border="0">
+					<tr>
+						<!-- 단일옵션일 경우 수량 -->
+						<!--{ ? !(count(options) > 0 && options[0].option_title) && !goods.string_price_use }-->
+						<td class="num_single_area product-quantity">
+							<span>Quantity</span>
+							<input type="hidden" name="option[0][0]" class="selected_options" type="hidden" value="" opt_seq="0" opt_group="0" />
+							<input type="hidden" name="optionTitle[0][0]" class="selected_options_title" type="hidden" value="" opt_seq="0" opt_group="0" />
+							<!--{ ? cart_options[0]['cart_option_seq'] > 0}-->
+							<input type="hidden" name="exist_option_seq[]" class="cart_option_seq" value="{cart_options[0]['cart_option_seq']}" />
+							<!--{ / }-->
+							<div class="product-qty-control">
+								<button type="button" class="btn_graybox eaMinus">-</button>
+								<input type="number" name="optionEa[0]" readonly value="{?cart_options[0]['ea']>0}{cart_options[0]['ea']}{:}1{/}" class="onlynumber ea_change" />
+								<button type="button" class="btn_graybox eaPlus">+</button>
+							</div>
+							<div style="display:none" class="optionPrice">{goods.org_basic_price}</div>
+						</td>
+						<!--{ : }-->
+						<!--{ / }-->
+						<td class="total_goods_price" style="display:none;">
+							<span class="total_goods_tit" designElement="text">TOTAL PRICE</span>
+							<strong class="total-price">
+							<!--{ ? (goods.price > goods.sale_price) || (goods.consumer_price > goods.sale_price && goods.event.target_sale == 1 ) }-->
+								{? goods.sale_price > 0 }
+									{=get_currency_price(goods.sale_price,2,'','<span id="total_goods_price">_str_price_</span> ')}
+								{:}
+									{=get_currency_price(0,2,'','<span id="total_goods_price">_str_price_</span> ')}
+								{/}
+							<!--{ : }-->
+								{=get_currency_price(goods.price,2,'','<span id="total_goods_price">_str_price_</span> ')}
+							<!--{ / }-->
+							</strong>
+						</td>
+					</tr>
+					</table>
+				</div>
+				<!--{ / }-->
+				<!-- 총 상품 금액 표기 끝-->
+
+<!-- 총 상품 금액(TOTAL PRICE) 노출 조건 제어 :: 수량이 2개 이상이거나 옵션이 추가된 경우에만 노출 -->
+<script type="text/javascript">
+(function($){
+
+	// 옵션없는 단일상품의 수량이 2개 이상인지, 혹은 옵션(색상스와치/필수옵션/추가구성/입력옵션)이 하나라도 추가되었는지 확인
+	function totalPriceShouldShow() {
+		var qty = parseInt($('.num_single_area .ea_change').val(), 10);
+		if (!qty || qty < 1) qty = 1;
+
+		var hasOptionRows = $('.goods_quantity_table_container .goods_quantity_table tr.quanity_row').length > 0;
+
+		return (qty > 1) || hasOptionRows;
+	}
+
+	function toggleTotalPriceArea() {
+		var $area = $('.total_goods_price');
+		if (!$area.length) return;
+
+		if (totalPriceShouldShow()) {
+			if (!$area.is(':visible')) $area.stop(true, true).fadeIn(150);
+		} else {
+			if ($area.is(':visible')) $area.stop(true, true).fadeOut(150);
+		}
+	}
+
+	$(document).ready(function(){
+		// 기본 상태 : 숨김 -> 조건 충족시에만 노출
+		$('.total_goods_price').hide();
+		toggleTotalPriceArea();
+
+		// 옵션없는 단일상품의 수량 변경 감지
+		$(document).on('change input', '.num_single_area .ea_change', toggleTotalPriceArea);
+		$(document).on('click', '.num_single_area .eaMinus, .num_single_area .eaPlus', function(){
+			setTimeout(toggleTotalPriceArea, 0);
+		});
+
+		// 옵션/추가구성/입력옵션이 추가/삭제되어 목록에 행이 생기고 사라지는 것을 감지
+		var $qtyContainer = $('.goods_quantity_table_container');
+		if ($qtyContainer.length) {
+			var totalPriceObserver = new MutationObserver(function(){
+				toggleTotalPriceArea();
+			});
+			totalPriceObserver.observe($qtyContainer.get(0), {
+				attributes: true,
+				attributeFilter: ['style'],
+				childList: true,
+				subtree: true
+			});
+		}
+	});
+
+})(jQuery);
+</script>
+
+				<div class="goods_buttons_area">
+				<!--{ ? goods.string_button_use }-->
+					{goods.string_button}
+				<!--{ : }-->
+					<ul class="goods_buttons_section">
+						<!--{ ? goods.goods_status == 'normal' && !goods.string_price_use && !goods.string_button_use }-->
+						<li>
+							<ul class="basic_btn_area product-actions">
+								<!-- Add To Cart-->
+								<button name="addCart" id="addCart" type="button" class="product-add-cart">
+									<img src="../images/icon/icon-cart-white.png" alt="Add To Cart icon" aria-hidden="true">
+									<span class="product-add-cart-label">Add to Cart</span>
+								</button>
+								<!-- Add To Wishlist -->
+								<button type="button" class="product-wish wishimg" usewish="n" aria-label="Add to wishlist" aria-pressed="false" onclick="wish_chg();">
+									<img class="product-wish-icon-default" src="../images/icon/icon-wish.png" alt="Add To Cart icon" aria-hidden="true">
+									<img class="product-wish-icon-hover" src="../images/icon/icon-wish-hover.png" alt="Added To Cart icon" aria-hidden="true">
+								</button>
+								<!--{ ? ship_summary.kr_direct_store_yn == 'Y' || ship_summary.gl_direct_store_yn == 'Y' }-->
+								<li>
+									<button type="button" id="direct_store" class="btn_resp size_extra2 NpayNo"><span designElement="text">매장픽업</span></button>
+								</li>
+								<!--{ / }-->
+								<li class="list_buy_now dn"><button type="button" id="buy" class="btn_resp size_extra2 color2 NpayNo"><span designElement="text">구매하기</span></button></li>
+								<!--{? goods.present_usable}-->
+								<li class="list_present"><button type="button" class="btn_resp btn_present addPresent" /></li>
+								<!--{ / }-->
+							</ul>
+						</li>
+						<!--{ / }-->
+						<!--{ ? goods.goods_status == 'runout'}-->
+						<li>
+							<!--{ ? goods.restock_notify_use }-->
+							<!--{ : }-->
+							<!--{ / }-->
+							<p class="text_soldout NpayNo" designElement="text">품절</p>
+						</li>
+						<!--{ / }-->
+						<!--{ ? goods.goods_status == 'purchasing'}-->
+						<li>
+							<button type="button" class="btn_resp size_c color3 Cd NpayNo"><span designElement="text">재고확보 중</span></button>
+						</li>
+						<!--{ / }-->
+						<!--{ ? (goods.goods_status == 'purchasing' && serviceLimit('H_NFR')) || (goods.goods_status == 'runout' && goods.restock_notify_use)}-->
+						<li>
+							<button type="button" class="restockOpenBtn btn_resp size_c color4 NpayNo"><span designElement="text">재입고알림 신청</span></button>
+						</li>
+						<!--{ / }-->
+						<!--{ ? goods.goods_status == 'unsold'}-->
+						<li>
+							<button type="button" class="btn_resp size_c color3 NpayNo"><span designElement="text">판매중지</span></button>
+						</li>
+						<!--{ / }-->
+					</ul>
+				<!--{ / }-->
+
+					{? navercheckout_tpl }
+						<div class="goods_npay" style="display:none;">
+							<div class="goods_npay_inner">{navercheckout_tpl}</div>
+						</div>
+					{/}
+
+					{? talkbuyorder_tpl }
+						<div class="goods_talkbuy" style="display:none;">
+							<div class="goods_talkbuy_inner">{talkbuyorder_tpl}</div>
+						</div>
+					{/}
+
+					<!--{? sns.ntalk_connect == 'Y' && sns.ntalk_use == 'Y' && sns.ntalk_use_mobile_product == 'Y'}-->
+					<div class="goods_naver_talk_pc">
+						<button type="button" class="btn_naver_talk" onclick="window.open('https://talk.naver.com/{sns.ntalk_connect_id}{? sns.ntalk_use_sniffet == 'Y'}?ref='+encodeURIComponent(location.href)+'#nafullscreen'{:}#nafullscreen'{/}, 'talktalk', 'width=471, height=640'); return false;"><span designElement="text">쇼핑할땐</span> &nbsp;<img src="../images/icon/icon_talk.png" align="absmiddle" alt="네이버톡톡" />&nbsp; <span designElement="text">톡톡하세요</span></button>
+					</div>
+					<!--{/}-->
+				</div>
+			</div>
+			<div class="goods_bg"></div>
+			<!-- ~~~~~~~~~~~ //구매하기 ~~~~~~~~~~~ -->
+
+			<ul class="goods_event_gift_area hide">
+				<!-- ~~~~~ 이벤트 ~~~~~ -->
+				<!--{ ? sales.mtext_list['event'] }-->
+				<li class="goods_spec_event">
+					<ul class="detail_event_area" onclick="detail_contents_toggle(this,'eventDetail'); if( $('#eventDetail').is(':hidden') ) $(this).removeClass('up'); else $(this).addClass('up');">
+						<li class="th"><span designElement="text">Event</span></li>
+						<li>
+							{ sales.subject_list['event'] }
+						</li>
+					</ul>
+					<div id="eventDetail" class="detail_option_list x1 hide">
+						<ul>
+							<li>
+								<p class="e_title">{ sales.subject_list['event'] }</p>
+								<div class="e_period">
+									{ sales.evtPeriod['event'] }
+									<!--{ ? sales.alertEnd['event'] }-->
+									<span class="pointcolor">({sales.alertEnd['event']})</span>
+									<!--{ / }-->
+								</div>
+								<div class="e_content">
+									<!--{ ? sales.descPopup['event'] }-->
+									{sales.descPopup['event']}
+									<!--{ : }-->
+									{sales.text_list['event']}
+									<!--{ / }-->
+								</div>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //이벤트 ~~~~~ -->
+
+				<!-- ~~~~~ 사은품 ~~~~~ -->
+				<!--{ ? goods.gift && goods.gift.benifits }-->
+				<li class="goods_spec_gift">
+					<ul class="detail_event_area" onclick="detail_contents_toggle(this,'giftInterest'); if( $('#giftInterest').is(':hidden') ) $(this).removeClass('up'); else $(this).addClass('up');">
+						<li class="th"><span designElement="text">사은품</span></li>
+						<li>
+							{goods.gift.title} ({goods.gift.start_date} ~ {goods.gift.end_date}{?goods.gift.alertEnd} <span class="pointcolor">{goods.gift.alertEnd}</span>{/})
+						</li>
+					</ul>
+					<div id="giftInterest" class="detail_option_list x1 hide">
+						<ul>
+							<!--{ @ goods.gift.benifits }-->
+							<li>
+								<p class="e_title">{goods.gift.title}</p>
+								<div class="e_period">
+									{goods.gift.start_date} ~ {goods.gift.end_date}
+									{?goods.gift.alertEnd} <span class="pointcolor">{goods.gift.alertEnd}</span>{/}
+								</div>
+								<div class="e_content">
+								<!--{ ? goods.gift.goods_desc_popup }-->
+									{goods.gift.goods_desc_popup}
+								<!--{ : }-->
+									<!--{ ? goods.gift.gift_rule == 'default' }-->
+									{=get_currency_price(.sprice,2)} 이상 구매 시 사은품 증정
+									<!--{ : goods.gift.gift_rule == 'price' }-->
+									{=get_currency_price(.sprice,2)}{?.eprice > 0} ~ {=get_currency_price(.eprice,2)}{ / } 구매 시 사은품 증정
+									<!--{ : goods.gift.gift_rule == 'quantity' }-->
+									{=get_currency_price(.sprice,2)}{?.eprice > 0} ~ {=get_currency_price(.eprice,2)}{ / } 구매 시 사은품 {.ea}개 증정
+									<!--{ / }-->
+								<!--{ / }-->
+								</div>
+							</li>
+							<!--{ / }-->
+						</ul>
+					</div>
+				</li>
+				<!--{ / }-->
+				<!-- ~~~~~ //사은품 ~~~~~ -->
+			</ul>
+
+            <div id="sns-share-mo">
+                <p>Share</p>
+                <button type="button" id="btnShareClose"><img src="../images/icon/icon-delete.png" alt="close"></button>
+                <ul class="login_sns_icon">
+                    <li><img src="../images/icon/icon-sns-insta.png" alt="google" /></li>
+                    <li><img src="../images/icon/icon-sns-facebook.png" alt="facebook" /></li>
+                    <li><img src="../images/icon/icon-sns-twitter.png" alt="apple" /></li>
+                    <li><img src="../images/icon/icon-sns-link.png" alt="twitter" /></li>
+                </ul>
+            </div>
+            <div class="sns_bg"></div>
+		</form>
+
+		<!--div id="shipping_detail_lay" class="resp_layer_pop hide"></div-->
+		<div id="shipping_detail_lay" class="resp_layer_pop hide">
+			<h4 class="title"><span designElement="text">배송비 안내</span></h4>
+			<div class="y_scroll_auto2">
+				<div class="layer_pop_contents v5"></div>
+			</div>
+			<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+		</div>
+
+	<!-- old legacy parts -->
+<div class="dn">
+        <div class="goods_col">
+            <p>Editor’s Note<span class=""></span></p>
+            <div class="goods_col_desc">{=goods.custom_note}</div>
+        </div>
+        <div class="goods_col">
+            <p>Major Ingredients<span class=""></span></p>
+            <div class="goods_col_desc">{=goods.custom_major}</div>
+        </div>
+        <div class="goods_col" id="detail_contents">
+            <p>Details<span class=""></span></p>
+            <div class="goods_col_desc {=goods.details_type}">
+                <!-- { @ goods.sub_info_desc.subInfo } -->
+                <ul>
+                    <li class="th">{.title}</li>
+                    <li class="td">{.desc}</li>
+                </ul>
+                <!-- { / } -->
+                {goods.common_contents}
+            </div>
+        </div>
+	{? goods.custom_filter }
+        <div class="goods_col" id="keyword_tags">
+            <p>Tags<span class=""></span></p>
+            <div class="goods_col_desc" id="keyword_list"></div>
+        </div>
+	{/}
+</div>
+
+	<script>
+		var customFilter = '{=goods.custom_filter}';
+
+		function isNumericTag(tag) {
+			return /^\d+$/.test(tag.trim());
+		}
+
+		if (customFilter) {
+			var plainTags = [];
+			var typedTags = {};
+			var typedOrder = [];
+
+			try {
+				var filters = JSON.parse(customFilter);
+				filters.forEach(function(filter) {
+					var groupLabel = filter.title.trim();
+					var values = filter.values.split(',');
+
+					if (groupLabel === 'Tag') {
+						values.forEach(function(val) {
+							val = val.trim();
+							if (val && !isNumericTag(val)) {
+								plainTags.push(val);
+							}
+						});
+					} else {
+						if (!typedTags[groupLabel]) {
+							typedTags[groupLabel] = [];
+							typedOrder.push(groupLabel);
+						}
+						values.forEach(function(val) {
+							val = val.trim();
+							if (val && !isNumericTag(val)) {
+								typedTags[groupLabel].push(val);
+							}
+						});
+					}
+				});
+			} catch(e) {
+				console.error('custom_filter parse error', e);
+			}
+
+			// 일반 태그 출력
+			if (plainTags.length > 0) {
+				var container = document.getElementById('keyword_list');
+				container.innerHTML = ''; // clear existing content
+				plainTags.forEach(function(tag) {
+					var a = document.createElement('a');
+					a.className = 'keyword_tag';
+					a.href = './search?searchMode=tag&tag=' + encodeURIComponent(tag);
+					a.textContent = tag;
+					container.appendChild(a);
+				});
+			} else {
+				var tagsSection = document.getElementById('keyword_tags');
+				if (tagsSection) tagsSection.style.display = 'none';
+			}
+
+			// 그룹이 지정된 태그 출력
+			if (typedOrder.length > 0) {
+				var container = document.getElementById('keyword_tags');
+				typedOrder.forEach(function(groupLabel) {
+					var groupDiv = document.createElement('div');
+					groupDiv.className = 'goods_col groupped_tags';
+
+					var p = document.createElement('p');
+					p.appendChild(document.createTextNode(groupLabel));
+					var span = document.createElement('span');
+					span.className = '';
+					p.appendChild(span);
+					groupDiv.appendChild(p);
+
+					var descDiv = document.createElement('div');
+					descDiv.className = 'goods_col_desc';
+
+					typedTags[groupLabel].forEach(function(val) {
+						var a = document.createElement('a');
+						a.className = 'keyword_tag';
+						a.href = './search?searchMode=tag&tag=' + encodeURIComponent(groupLabel + ': ' + val);
+						a.textContent = val;
+						descDiv.appendChild(a);
+					});
+
+					groupDiv.appendChild(descDiv);
+					container.parentNode.insertBefore(groupDiv, container.nextSibling);
+				});
+			}
+		}
+	</script>
+            
+        </div>
+		<!-- ++++++++++++++++++++++++ //상품 스펙 ++++++++++++++++++++++++ -->
+	</section>
+
+
+	<section class="product-detail-lower" aria-label="Product details and recommendations">
+  <article class="product-info-panel">
+    <div class="product-tabs" role="tablist" aria-label="Product detail tabs">
+      <!-- {? goods.how_to_use} -->
+      <button type="button" class="is-active" role="tab" aria-selected="true" aria-controls="panel-use" id="tab-use" data-detail-tab="use">How to use</button>
+      <!-- {/} -->
+      <!-- {? goods.sub_info_desc.subInfo || goods.common_contents} -->
+      <button type="button" role="tab" aria-selected="false" aria-controls="panel-details" id="tab-details" data-detail-tab="details">Details</button>
+      <!-- {/} -->
+      <!-- {? goods.custom_major} -->
+      <button type="button" role="tab" aria-selected="false" aria-controls="panel-ingredients" id="tab-ingredients" data-detail-tab="ingredients">Ingredients</button>
+      <!-- {/} -->
+      <button type="button" role="tab" aria-selected="false" aria-controls="panel-reviews" id="tab-reviews" data-detail-tab="reviews">Reviews<span class="product-reviews-count"> ({=number_format(goods.review_count)})</span></button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="panel-qa" id="tab-qa" data-detail-tab="qa">Q&amp;A</button>
+    </div>
+    <div class="product-tab-panels">
+      <!-- {? goods.how_to_use} -->
+      <div id="panel-use" role="tabpanel" aria-labelledby="tab-use" data-detail-panel="use">
+        {goods.how_to_use}
+      </div>
+      <!-- {/} -->
+      <!-- {? goods.sub_info_desc.subInfo || goods.common_contents} -->
+      <div id="panel-details" role="tabpanel" aria-labelledby="tab-details" data-detail-panel="details" hidden>
+        <!-- { @ goods.sub_info_desc.subInfo } -->
+        <ul>
+          <li class="th">{.title}</li>
+          <li class="td">{.desc}</li>
+        </ul>
+        <!-- { / } -->
+        {goods.common_contents}
+      </div>
+      <!-- {/} -->
+      <div id="panel-ingredients" role="tabpanel" aria-labelledby="tab-ingredients" data-detail-panel="ingredients" hidden>
+        {=goods.custom_major}
+      </div>
+      <div id="panel-reviews" role="tabpanel" aria-labelledby="tab-reviews" data-detail-panel="reviews" hidden></div>
+      <div id="panel-qa" role="tabpanel" aria-labelledby="tab-qa" data-detail-panel="qa" hidden></div>
+    </div>
+  </article>
+
+<!--{ ? related_goods }-->
+<div class="product-recommendations-wrap">
+  <aside class="product-recommendations" aria-label="Recommended products">
+    <h2>You May Also Love</h2>
+    <div class="product-recommendation-list" tabindex="0" aria-label="Recommended products, swipe for more">
+      <!--{ @ related_goods }-->
+      <article class="product-rec-card">
+        <button type="button" aria-label="Add to cart" class="product-rec-quickadd" data-goods-seq="{.goods_seq}" onclick="displayAddToCartQuickview(this, {= .goods_seq}, event);">+</button>
+        <a href="/goods/view?no={.goods_seq}">
+          <img class="product-rec-image" style="background-image:url('{.image}');" aria-hidden="true" />
+          <p>{.brand_title}</p>
+          <h3>{.goods_name}</h3>
+          <div class="product-rec-price">
+            <!--{ ? .org_price > .sale_price }-->
+            <del>{=get_currency_price(.org_price,2)}</del>
+            <!--{ / }-->
+            <strong>{=get_currency_price(.sale_price,2)}</strong>
+          </div>
+        </a>
+      </article>
+      <!--{ / }-->
+    </div>
+  </aside>
+</div>
+<!--{ / }-->
+
+	</section>
+
+<script type="text/javascript">
+$(function(){
+    (() => {
+  /* ---------------------------------------------------------
+     1) Tab switching — product-info-panel
+  --------------------------------------------------------- */
+const tabButtons = document.querySelectorAll("[data-detail-tab]");
+const panels = document.querySelectorAll("[data-detail-panel]");
+
+const tabContentUrls = {
+  reviews: "/board/?id=goods_review&goods_seq=" + gl_goods_seq + "&iframe=1&gdviewer=1",
+  qa: "/board/?id=goods_qna&goods_seq=" + gl_goods_seq + "&iframe=1&gdviewer=1",
+};
+
+function loadTabContent(key) {
+  const url = tabContentUrls[key];
+  if (!url) return;
+  const panel = document.getElementById('panel-' + key);
+  if (!panel || panel.dataset.loaded) return;
+  panel.innerHTML = '<iframe name="' + key + '_frame" id="' + key + '_frame" src="' + url +
+    '" width="100%" height="0" frameborder="0" scrolling="no" allowTransparency="true"></iframe>';
+  panel.dataset.loaded = 'true';
+  const iframe = document.getElementById(key + '_frame');
+  iframe.addEventListener('load', function () {
+    const frameDoc = iframe.contentDocument;
+    if (!frameDoc) return;
+    const resize = function () {
+      const body = frameDoc.body;
+      const docEl = frameDoc.documentElement;
+      const height = Math.max(
+        body ? body.scrollHeight : 0,
+        docEl ? docEl.scrollHeight : 0
+      );
+      iframe.style.height = height + 'px';
+    };
+    resize();
+    if (typeof ResizeObserver === 'function') {
+      const observer = new ResizeObserver(resize);
+      observer.observe(frameDoc.body);
+      observer.observe(frameDoc.documentElement);
+    }
+    if (key === 'reviews') animateReviewsBars();
+	const syncName = 'sync' + key.charAt(0).toUpperCase() + key.slice(1) + 'FrameHeight';
+	window[syncName] = resize;
+  });
+}
+
+tabButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const key = button.dataset.detailTab;
+    tabButtons.forEach((tab) => {
+      const isActive = tab === button;
+      tab.classList.toggle("is-active", isActive);
+      tab.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+    panels.forEach((panel) => {
+      panel.hidden = panel.dataset.detailPanel !== key;
+    });
+    loadTabContent(key);
+    if (key === 'reviews') {
+      requestAnimationFrame(function () {
+        animateReviewsBars();
+      });
+    }
+  });
+});
+
+// If the default-active tab ("How to use") wasn't rendered because its
+// content was empty, activate whichever tab ended up first instead.
+const hasActiveTab = Array.from(tabButtons).some((tab) => tab.classList.contains("is-active"));
+if (!hasActiveTab && tabButtons.length) {
+  const firstTab = tabButtons[0];
+  firstTab.classList.add("is-active");
+  firstTab.setAttribute("aria-selected", "true");
+  const firstKey = firstTab.dataset.detailTab;
+  panels.forEach((panel) => {
+    panel.hidden = panel.dataset.detailPanel !== firstKey;
+  });
+  loadTabContent(firstKey);
+}
+
+  /* ---------------------------------------------------------
+     2) Group recommendation cards into pages of 6
+  --------------------------------------------------------- */
+  const PER_PAGE = 6;
+  const recommendationList = document.querySelector(".product-recommendation-list");
+
+  if (recommendationList) {
+    const cards = recommendationList.querySelectorAll(".product-rec-card");
+    if (cards.length) {
+      const pages = [];
+      cards.forEach((card, i) => {
+        const pageIndex = Math.floor(i / PER_PAGE);
+        if (!pages[pageIndex]) {
+          pages[pageIndex] = document.createElement("div");
+          pages[pageIndex].className = "product-recommendation-page";
+          recommendationList.appendChild(pages[pageIndex]);
+        }
+        pages[pageIndex].appendChild(card);
+      });
+    }
+  }
+
+  /* ---------------------------------------------------------
+     3) Drag-to-scroll + swipe-snap through the recommendation
+     carousel. Adapted from your mock: the mock snapped to the
+     nearest CARD, but your markup groups cards into
+     .product-recommendation-page "screens" — so this version
+     snaps to the nearest PAGE instead.
+  --------------------------------------------------------- */
+  const recommendationMobileQuery = window.matchMedia("(max-width: 760px)");
+  let recDragActive = false;
+  let recDragStartX = 0;
+  let recDragScrollLeft = 0;
+  let recDragMoved = false;
+  let suppressRecommendationClick = false;
+
+  const getRecommendationPageStride = () => {
+    if (!recommendationList) return 1;
+    const page = recommendationList.querySelector(".product-recommendation-page");
+    if (!page) return recommendationList.clientWidth || 1;
+    const styles = getComputedStyle(recommendationList);
+    const gap = parseFloat(styles.columnGap || styles.gap || "0") || 0;
+    return page.getBoundingClientRect().width + gap;
+  };
+
+  const snapRecommendationList = () => {
+    if (!recommendationList || !recommendationMobileQuery.matches) return;
+    const stride = getRecommendationPageStride();
+    const nearestPage = Math.round(recommendationList.scrollLeft / stride);
+    recommendationList.scrollTo({
+      left: nearestPage * stride,
+      behavior: "smooth",
+    });
+  };
+
+  recommendationList?.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (event.target.closest("button, a")) return;
+
+    recDragActive = true;
+    recDragMoved = false;
+    suppressRecommendationClick = false;
+    recDragStartX = event.clientX;
+    recDragScrollLeft = recommendationList.scrollLeft;
+    recommendationList.setPointerCapture(event.pointerId);
+    recommendationList.classList.add("is-dragging");
+  });
+
+  recommendationList?.addEventListener("pointermove", (event) => {
+    if (!recDragActive) return;
+    const dragOffset = event.clientX - recDragStartX;
+    if (Math.abs(dragOffset) > 6) {
+      recDragMoved = true;
+      suppressRecommendationClick = true;
+    }
+    recommendationList.scrollLeft = recDragScrollLeft - dragOffset;
+  });
+
+  const endRecDrag = (event) => {
+    if (!recDragActive) return;
+    recDragActive = false;
+    recommendationList.classList.remove("is-dragging");
+    if (recommendationList.hasPointerCapture(event.pointerId)) {
+      recommendationList.releasePointerCapture(event.pointerId);
+    }
+
+    if (recommendationMobileQuery.matches) {
+      snapRecommendationList();
+    }
+
+    if (recDragMoved) {
+      window.setTimeout(() => {
+        suppressRecommendationClick = false;
+      }, 0);
+    }
+  };
+
+  recommendationList?.addEventListener("pointerup", endRecDrag);
+  recommendationList?.addEventListener("pointercancel", endRecDrag);
+
+  // Prevent the card's <a> from navigating when the "click" was actually a drag
+  recommendationList?.addEventListener("click", (event) => {
+    if (suppressRecommendationClick) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+})();
+});
+
+function ensureReviewsBarAnimationStyles(frameDoc) {
+  if (!frameDoc || frameDoc.getElementById('trendypicker-review-bar-animation')) return;
+
+  const style = frameDoc.createElement('style');
+  style.id = 'trendypicker-review-bar-animation';
+  style.textContent = [
+    '.product-reviews-bar i::before {',
+    '  width: 0;',
+    '  transition: width 0.72s cubic-bezier(0.22, 1, 0.36, 1);',
+    '}',
+    '.product-reviews-bars.is-animating .product-reviews-bar i::before {',
+    '  width: var(--bar, 0%);',
+    '}',
+    '.product-reviews-bars.is-animating .product-reviews-bar:nth-child(2) i::before { transition-delay: 0.06s; }',
+    '.product-reviews-bars.is-animating .product-reviews-bar:nth-child(3) i::before { transition-delay: 0.12s; }',
+    '.product-reviews-bars.is-animating .product-reviews-bar:nth-child(4) i::before { transition-delay: 0.18s; }',
+    '.product-reviews-bars.is-animating .product-reviews-bar:nth-child(5) i::before { transition-delay: 0.24s; }',
+    '@media (prefers-reduced-motion: reduce) {',
+    '  .product-reviews-bar i::before { transition: none; }',
+    '}'
+  ].join('\n');
+  (frameDoc.head || frameDoc.documentElement).appendChild(style);
+}
+
+function animateReviewsBars() {
+  const frame = document.getElementById('reviews_frame');
+  const frameDoc = frame && frame.contentDocument;
+  const bars = frameDoc && frameDoc.querySelector('.product-reviews-bars');
+  if (!bars) return;
+
+  ensureReviewsBarAnimationStyles(frameDoc);
+  bars.classList.remove('is-animating');
+  void bars.offsetWidth; // force reflow so the class removal actually takes effect before re-adding
+  requestAnimationFrame(function () {
+    bars.classList.add('is-animating');
+  });
+}
+
+</script>
+   
+	
+</div>
+
+<div id="couponDownloadDialog" class="hide"></div>
+
+<!-- 재입고 알림 레이어 -->
+<div id="restockNotifyApply" class="resp_layer_pop hide">
+	<h4 class="title"><span designElement="text">재입고 알림</span></h4>
+	<div class="y_scroll_auto">
+		<div class="layer_pop_contents v3">
+		</div>
+	</div>
+	<a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+<!--<div id="restock_notify_apply" class="hide"></div>-->
+
+<!-- 회원등급별 혜택 안내 -->
+<div id="memberBenefitDetailDialog" class="hide">
+	<table class="ddlTable" width="100%">
+	<col width="100" />
+	<!--{@goods.group_benifits}-->
+		<!--{?.group_seq && (.sale_price > 0 || .reserve_price > 0 || .point_price > 0)}-->
+	<tr>
+		<th>{.group_name}</th>
+		<td>
+			<!--{ ? .sale_price > 0 }-->
+				<!--{ ? .sale_price_type == 'PER' }-->
+			{=floor(.sale_price)}% 추가할인
+				<!--{ : }-->
+			{=get_currency_price(.sale_price,2)} 추가할인
+				<!--{ / }-->
+				<!--{ ? .sale_use == 'Y' && .sale_limit_price > 0 }-->
+			({=get_currency_price(.sale_limit_price,2)} 이상 구매 시)
+				<!--{ / }-->
+			<!--{ / }-->
+			<!--{ ? .sale_price > 0 && (.reserve_price > 0 || .point_price > 0) }-->
+			<br />
+			<!--{ / }-->
+			<!--{ ? .reserve_price > 0 }-->
+				<!--{ ? .reserve_price_type == 'PER' }-->
+			{floor(.reserve_price)}%추가적립
+				<!--{ : }-->
+			{=get_currency_price(.reserve_price,2)} 추가적립
+				<!--{ / }-->
+			<!--{ / }-->
+
+			<!--{ ? .point_price > 0 }-->
+				<!--{ ? .point_price_type == 'PER' }-->
+			{floor(.point_price)}%추가포인트
+				<!--{ : }-->
+			{=get_currency_price(.point_price)}P 추가포인트
+				<!--{ / }-->
+			<!--{ / }-->
+
+			<!--{ ? .reserve_price > 0 || .point_price > 0 }-->
+				<!--{ ? .point_use == 'Y' && .point_limit_price > 0 }-->
+			({=get_currency_price(.point_limit_price,2)} 이상 구매 시)
+				<!--{ / }-->
+			<!--{ / }-->
+		</td>
+	</tr>
+		<!--{ / }-->
+	<!--{ / }-->
+	</table>
+</div>
+
+<!-- 위시 클릭시 레이어창 -->
+<div id="wish_alert">
+	<div class="wa_on"></div>
+	<div class="wa_off"></div>
+	<div class="wa_msg"></div>
+</div>
+
+<!-- 즐겨찾기 레이어 -->
+<div id="myshop_favorite_alert" class="myshop_favorite_alert">
+	<div class="cfa_on"></div>
+	<div class="cfa_off"></div>
+	<div class="cfa_msg"></div>
+</div>
+
+<div id="goods_detail_layer" class="resp_layer_pop hide">
+    <div class="y_scroll_auto" style="">{=goods.mobile_contents}</div>
+    <a href="javascript:void(0)" class="btn_pop_close" onclick="hideCenterLayer()"></a>
+</div>
+<!-- 해외배송 안내 콘텐츠. 파일위치 : [스킨폴더]/goods/_international_shipping_info.html -->
+{ #INTERNATIONAL_SHIPPING_INFO }
+<!-- //해외배송 안내 콘텐츠 -->
+
+<!-- // 리뷰 상세 레이어 -->
+<div class="review_detail_wrap" style="display:none;">
+    <p>PHOTO REVIEW<a href="javascript:void(0)" class="review_close_mo"><img src="../images/icon/icon-close-14.png" alt="close"></a></p>
+    <a href="javascript:void(0)" class="review_close"><img src="../images/icon/icon-close-white.png" alt="close"></a>
+</div>
+
+<div class="product-inquiry-dialog" id="product-inquiry-dialog" aria-hidden="true" hidden>
+  <button type="button" class="product-inquiry-backdrop" aria-label="Close inquiry form"></button>
+  <form class="product-inquiry-modal" role="dialog" aria-modal="true" aria-labelledby="product-inquiry-title"
+        name="writeform" id="writeform" method="post" action="../board_process" enctype="multipart/form-data" target="actionFrame">
+    <input type="hidden" name="mode" value="board_write">
+    <input type="hidden" name="board_id" value="goods_qna">
+    <input type="hidden" name="reply" value="">
+    <input type="hidden" name="returnurl" value="{=htmlspecialchars(_SERVER['REQUEST_URI'])}">
+    <input type="hidden" name="popup" value="">
+    <input type="hidden" name="iframe" value="1">
+    <input type="hidden" name="goods_seq" value="{goods.goods_seq}">
+    <input type="hidden" name="backtype" value="list">
+    <input type="hidden" name="oldpw" value="{=htmlspecialchars(sessionMember.password)}">
+    <input type="hidden" name="displayGoods[]" value="{goods.goods_seq}">
+
+    <button type="button" class="product-inquiry-close" aria-label="Close inquiry form">&times;</button>
+    <div class="product-inquiry-product">
+      <img class="product-inquiry-thumb" id="product-inquiry-thumb" aria-hidden="true" alt="" />
+      <h2 id="product-inquiry-title">Product name</h2>
+    </div>
+    <input id="product-inquiry-name" name="name" class="product-inquiry-field" value="{=htmlspecialchars(sessionMember.user_name)}" readonly />
+    <input id="product-inquiry-email" name="email" type="email" class="product-inquiry-field" value="{=htmlspecialchars(sessionMember.email)}" placeholder="Please enter your email" />
+    <label class="product-inquiry-private">
+      <input type="checkbox" name="hidden" value="1" checked>
+      <span>Make this a private question</span>
+    </label>
+    <select name="category" id="product-inquiry-category" class="product-inquiry-field">
+      <option value="" selected>Select a category</option>
+      <option value="General Enquiry">General Enquiry</option>
+      <option value="Order Placement">Order Placement</option>
+      <option value="Shipment Related">Shipment Related</option>
+      <option value="Product Related">Product Related</option>
+      <option value="Payment Related">Payment Related</option>
+    </select>
+    <input id="product-inquiry-subject" name="subject" class="product-inquiry-field" placeholder="Please enter the subject" />
+    <label class="sr-only" for="product-inquiry-message">Product inquiry</label>
+    <textarea id="product-inquiry-message" name="contents" class="product-inquiry-field" placeholder="Please enter your inquiry"></textarea>
+    <p>Your answer will be sent to the email address above, so please make sure it's correct.<br>You can also find our response under My Page &gt;<br>Product Q&amp;A.</p>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<div id="product-share-dialog" class="deal-share-dialog" hidden aria-hidden="true">
+  <button type="button" class="deal-share-backdrop" data-share-close aria-label="Close share dialog"></button>
+  <section class="deal-share-modal" role="dialog" aria-modal="true" aria-labelledby="product-share-title" tabindex="-1">
+    <button type="button" class="deal-share-close" data-share-close aria-label="Close share dialog">&times;</button>
+    <p class="deal-share-eyebrow">Share</p>
+    <h2 id="product-share-title">Share this product</h2>
+    <p class="deal-share-product">{goods.goods_name}</p>
+    <label class="deal-share-link-field">
+      <span class="sr-only">Product link</span>
+      <input type="text" id="productShareInput" readonly>
+      <button type="button" class="deal-share-copy" data-share-copy>Copy Link</button>
+    </label>
+
+    <button type="button" class="deal-share-native" data-share-native hidden>
+      <span>Share…</span>
+    </button>
+
+    <div class="deal-share-social" aria-label="Share on social" data-share-social>
+      <button type="button" class="deal-share-social-button" data-share-channel="sms" aria-label="Share via Messages">
+        <img src="../images/icon/icon-messages.png" alt="" aria-hidden="true">
+        <span>Messages</span>
+      </button>
+      <button type="button" class="deal-share-social-button" data-share-channel="facebook" aria-label="Share on Facebook">
+        <img src="../images/icon/icon-facebook.png" alt="" aria-hidden="true">
+        <span>Facebook</span>
+      </button>
+      <button type="button" class="deal-share-social-button" data-share-channel="twitter" aria-label="Share on X">
+        <img src="../images/icon/icon-twitter.png" alt="" aria-hidden="true">
+        <span>X</span>
+      </button>
+      <button type="button" class="deal-share-social-button" data-share-channel="instagram" aria-label="Share on Instagram">
+        <img src="../images/icon/icon-instagram.png" alt="" aria-hidden="true">
+        <span>Instagram</span>
+      </button>
+    </div>
+
+    <span class="dn" id="share-sns-fa">{=snslinkurl('goods', goods.goods_name, 'fa')}</span>
+    <span class="dn" id="share-sns-tw">{=snslinkurl('goods', goods.goods_name, 'tw')}</span>
+
+    <p class="deal-share-status" data-share-status aria-live="polite"></p>
+  </section>
+</div>
+
+
+<script>
+(function () {
+  var dialog = document.getElementById('product-inquiry-dialog');
+  if (!dialog) return;
+  var thumb = document.getElementById('product-inquiry-thumb');
+  var title = document.getElementById('product-inquiry-title');
+  window.submitck = window.submitck || function () {};
+  window.openProductInquiryDialog = function () {
+    if (!gl_member_seq) {
+      if (confirm(getAlert('gv009'))) {
+        location.href = "/member/login?return_url={_SERVER['REQUEST_URI']}";
+      }
+      return;
+    }
+    if (thumb) {
+      var mainImg = document.querySelector('#goods_thumbs .pagination img');
+      if (mainImg) thumb.src = mainImg.src;
+    }
+    if (title) {
+      var nameEl = document.querySelector('.product-title');
+      if (nameEl) title.textContent = nameEl.textContent.trim();
+    }
+    dialog.hidden = false;
+    dialog.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-product-inquiry-open');
+  };
+  window.closeProductInquiryDialog = function () {
+    dialog.hidden = true;
+    dialog.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('is-product-inquiry-open');
+  };
+  dialog.querySelector('.product-inquiry-backdrop').addEventListener('click', window.closeProductInquiryDialog);
+  dialog.querySelector('.product-inquiry-close').addEventListener('click', window.closeProductInquiryDialog);
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && !dialog.hidden) window.closeProductInquiryDialog();
+  });
+
+/* ---------------------------------------------------------
+   Share dialog
+--------------------------------------------------------- */
+const shareDialog = document.getElementById("product-share-dialog");
+if (shareDialog) {
+  const shareModal = shareDialog.querySelector(".deal-share-modal");
+  const shareInput = shareDialog.querySelector("#productShareInput");
+  const shareCopyBtn = shareDialog.querySelector("[data-share-copy]");
+  const shareStatus = shareDialog.querySelector("[data-share-status]");
+  const shareCloseEls = shareDialog.querySelectorAll("[data-share-close]");
+  const shareChannelBtns = shareDialog.querySelectorAll("[data-share-channel]");
+  const socialRow = shareDialog.querySelector("[data-share-social]");
+  const nativeShareBtn = shareDialog.querySelector("[data-share-native]");
+  const canNativeShare = typeof navigator.share === "function";
+  let shareLastTrigger = null;
+
+  function onShareKeydown(event) {
+    if (event.key === "Escape") closeShareDialog();
+  }
+  function openShareDialog(trigger) {
+    shareLastTrigger = trigger || null;
+    shareInput.value = window.location.href;
+    shareStatus.textContent = "";
+    shareStatus.classList.remove("is-success");
+    shareDialog.hidden = false;
+    shareDialog.setAttribute("aria-hidden", "false");
+    document.body.classList.add("is-deal-share-open");
+    shareModal.focus();
+    document.addEventListener("keydown", onShareKeydown);
+  }
+  function closeShareDialog() {
+    shareDialog.hidden = true;
+    shareDialog.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("is-deal-share-open");
+    document.removeEventListener("keydown", onShareKeydown);
+    if (shareLastTrigger && typeof shareLastTrigger.focus === "function") {
+      shareLastTrigger.focus();
+    }
+    shareLastTrigger = null;
+  }
+
+  document.querySelectorAll("#btnSnsShare").forEach((btn) => {
+    btn.addEventListener("click", () => openShareDialog(btn));
+  });
+  shareCloseEls.forEach((el) => el.addEventListener("click", closeShareDialog));
+
+  shareCopyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(shareInput.value);
+    } catch (err) {
+      shareInput.select();
+      document.execCommand("copy");
+    }
+    shareStatus.textContent = "Link copied!";
+    shareStatus.classList.add("is-success");
+  });
+
+  if (nativeShareBtn) {
+    nativeShareBtn.hidden = !canNativeShare;
+    nativeShareBtn.addEventListener("click", async () => {
+      try {
+        await navigator.share({
+          title: document.title,
+          text: document.querySelector(".product-title")?.textContent.trim() || document.title,
+          url: window.location.href,
+        });
+      } catch (err) {
+        if (err && err.name !== "AbortError") {
+          shareStatus.textContent = "Unable to share right now.";
+        }
+      }
+    });
+  }
+  if (socialRow) {
+    socialRow.hidden = canNativeShare;
+  }
+
+  shareChannelBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const channel = btn.dataset.shareChannel;
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent(document.title);
+      switch (channel) {
+        case "sms":
+          window.location.href = `sms:?&body=${title}%20${url}`;
+          break;
+        case "facebook":
+          document.querySelector("#share-sns-fa img")?.click();
+          break;
+        case "twitter":
+          document.querySelector("#share-sns-tw img")?.click();
+          break;
+        case "instagram":
+          navigator.clipboard?.writeText(window.location.href);
+          shareStatus.textContent = "Link copied — paste it into Instagram.";
+          shareStatus.classList.add("is-success");
+          break;
+      }
+    });
+  });
+}
+
+})();
+</script>
+
+<script type="text/javascript">
+$(function() {
+
+	// 재입고 알림
+	$('.restockOpenBtn').on('click', function() {
+		$.get('restock_notify_apply?goods_seq={goods.goods_seq}', function(data) {
+			$('#restockNotifyApply .layer_pop_contents').html(data);
+			showCenterLayer('#restockNotifyApply');
+		});
+	});
+
+	$('#btnSnsShare, .sns_bg, #btnShareClose').click(function() {
+        if($(window).width() > 767){
+            if ( $('#snsListDetail').is(':hidden') ) {
+                $('#snsListDetail').show();
+            } else {
+                $('#snsListDetail').hide();
+            }
+        } else {
+            if ( $('#sns-share-mo').is(':hidden') ) {
+                $('#sns-share-mo').show();
+                $(".sns_bg").show();
+                $('body').css('overflow', 'hidden');
+            } else {
+                $('#sns-share-mo').hide();
+                $(".sns_bg").hide();
+                $('body').css('overflow', 'auto');
+            }
+        }
+	});
+
+	$('#goodsReviewLoad').one('click', function() {
+		$("div#goods_review_frame_div").html('<iframe name="goods_review_frame" id="goods_review_frame" src="/board/?id=goods_review&goods_seq={goods.goods_seq}&iframe=1&gdviewer=1" width="100%" height="500" frameborder="0" scrolling="no" allowTransparency="true"></iframe>');
+	});
+	$('#goodsQnaLoad').one('click', function() {
+		$("div#goods_qna_frame_div").html('<iframe name="goods_qna_frame" id="goods_qna_frame" src="/board/?id=goods_qna&goods_seq={goods.goods_seq}&iframe=1&gdviewer=1" width="100%" height="500" frameborder="0" scrolling="no" allowTransparency="true"></iframe>');
+	});
+    
+    $(".goods_col p").on('click', function(){
+        $(this).find("span").toggleClass("on");
+        $(this).parent().find(".goods_col_desc").toggle();
+    });
+    if($("#detail_contents .goods_col_desc").height() < 100){
+        $("#detail_contents > p span").addClass("on");
+        $("#detail_contents .goods_col_desc").show();
+    }
+    
+    $("#goods_detail_info").bind("click",function(){
+        showCenterLayer('#goods_detail_layer');
+    });
+    $(".right_check > button").bind("click",function(){
+        if(!gl_member_seq){
+			//회원만 사용가능합니다.\n로그인하시겠습니까?
+			if(confirm(getAlert('gv009'))){
+				var url = "/member/login?return_url={_SERVER['REQUEST_URI']}";
+				top.document.location.href = url;
+				return;
+			}else{
+				return;
+			}
+		} else {
+            if($(this).data("write") == "goods_review"){
+                $('#goods_review_frame').attr("src","/board/write?id=goods_review&goods_seq={goods.goods_seq}&iframe=1");
+            } else {
+                $('#goods_qna_frame').attr("src","/board/write?id=goods_qna&goods_seq={goods.goods_seq}&iframe=1");
+
+            }
+        }
+    });
+    $(".review_close, .review_close_mo").bind("click",function(){
+        $('.review_detail_wrap').hide();
+        $('body').css('overflow', 'auto');
+    });
+    
+    $(".right_check .toggle_switch").bind("click",function(){
+        if($(this).find("input").is(':checked')){
+            $('#goods_review_frame').contents().find(".korean_review_wrap").hide();
+            $(this).find("input").prop('checked',false);
+        } else {
+            $(this).find("input").prop('checked',true);
+            $('#goods_review_frame').contents().find(".korean_review_wrap").show();
+        }
+        
+    });
+    $(document).on("click", ".review_detail_wrap .review_pic", function(){
+        $('#goods_review_frame').contents().find(".photo-"+$(this).data("seq")).click();
+    });
+    
+});
+</script>
+<script>
+        var slideListener = function (){
+
+        // 기존 인스턴스가 존재하면 삭제
+        if (parent.descSwiper && parent.descSwiper.destroy) {
+            parent.descSwiper.destroy(true, true);
+        }
+        if (parent.thumbSwiper && parent.thumbSwiper.destroy) {
+            parent.thumbSwiper.destroy(true, true);
+        }
+
+        var thumbEl = $(parent.document).find('.btm .review_detail_thumb')[0];
+        var thumbSwiper = new Swiper(thumbEl, {
+            slidesPerView: 'auto',
+            spaceBetween: 4,
+            //centeredSlides: true,
+            touchRatio: 0.2,
+            slideToClickedSlide: true,
+//            scrollbar: '.swiper-scrollbar',
+//            scrollbarHide:false,
+
+        });
+
+        var descEl = $(parent.document).find('.review_detail_slide')[0];
+        var descSwiper = new Swiper(descEl, {
+            slidesPerView: 1,
+            navigation: false,
+            pagination: {
+                el: '.swiper-pagination',
+                type: "bullets",
+            }
+        });
+
+        descSwiper.params.control = thumbSwiper;
+        thumbSwiper.params.control = descSwiper;
+        parent.descSwiper = descSwiper;
+        parent.thumbSwiper = thumbSwiper;
+
+//        $(".review_detail_slide .swiper-button-prev").on("click",function(){
+//            descSwiper.slidePrev();
+//        });
+//        $(".review_detail_slide .swiper-button-next").on("click",function(){
+//            descSwiper.slideNext();
+//        });
+    };
+
+</script>
+<script>
+(function () {
+  function bindCouponTriggers() {
+    var triggers = document.querySelectorAll('#couponDownload, #mbox, .couponDownload');
+    Array.prototype.forEach.call(triggers, function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        var memberSeq = window.gl_member_seq;
+        if (!memberSeq) {
+          var returnUrl = window.gl_request_uri || window.location.href;
+          window.location.href = '/member/login?return_url=' + encodeURIComponent(returnUrl);
+          return;
+        }
+
+        window.openCouponModal(window.gl_goods_seq);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindCouponTriggers);
+  } else {
+    bindCouponTriggers();
+  }
+
+  var modalId = 'couponDownloadModal';
+
+  function ensureModal() {
+    var modal = document.getElementById(modalId);
+    if (modal) return modal;
+
+    if (!document.getElementById('coupon-modal-styles')) {
+      document.head.insertAdjacentHTML('beforeend',
+        '<style id="coupon-modal-styles">' +
+        '.coupon-modal{position:fixed;inset:0;z-index:99998;display:grid;place-items:center;}' +
+        '.coupon-modal[hidden]{display:none;}' +
+        '.coupon-modal-backdrop{position:absolute;inset:0;background:rgba(15,12,20,.72);}' +
+        '.coupon-modal-dialog{position:relative;z-index:1;width:min(680px,92vw);max-height:82vh;display:flex;flex-direction:column;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(15,12,20,.28);}' +
+        '.coupon-modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #ece5f7;}' +
+        '.coupon-modal-head h3{margin:0;font-size:18px;font-weight:800;color:#0f0c14;}' +
+        '.coupon-modal-close{width:32px;height:32px;border:0;border-radius:50%;cursor:pointer;background:#f2ebff;color:#7b3fe4;font-size:20px;line-height:1;}' +
+        '.coupon-modal-close:hover{background:#e4d5fb;}' +
+        '.coupon-modal-body{padding:20px 24px 24px;overflow-y:auto;color:#1d1922;font-size:14px;}' +
+        '.coupon-modal-body .coupon-modal-status{padding:32px 0;text-align:center;color:#6d6678;}' +
+        '@media (max-width:520px){.coupon-modal{align-items:flex-end;}.coupon-modal-dialog{width:100%;max-height:86vh;border-radius:20px 20px 0 0;}}' +
+        '</style>');
+    }
+
+    document.body.insertAdjacentHTML('beforeend',
+      '<div class="coupon-modal" id="' + modalId + '" hidden>' +
+        '<div class="coupon-modal-backdrop" data-coupon-close></div>' +
+        '<div class="coupon-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="couponModalTitle">' +
+          '<div class="coupon-modal-head">' +
+            '<h3 id="couponModalTitle"></h3>' +
+            '<button type="button" class="coupon-modal-close" data-coupon-close aria-label="Close">&times;</button>' +
+          '</div>' +
+          '<div class="coupon-modal-body"></div>' +
+        '</div>' +
+      '</div>');
+
+    modal = document.getElementById(modalId);
+    modal.addEventListener('click', function (e) {
+      if (e.target.closest('[data-coupon-close]')) window.closeCouponModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (!modal.hidden && e.key === 'Escape') window.closeCouponModal();
+    });
+    return modal;
+  }
+
+  window.closeCouponModal = function () {
+    var modal = document.getElementById(modalId);
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.style.overflow = '';
+  };
+
+  window.openCouponModal = function (goodsSeq, couponSeq) {
+    var modal = ensureModal();
+    var title = modal.querySelector('#couponModalTitle');
+    var body = modal.querySelector('.coupon-modal-body');
+    title.textContent = (typeof getAlert === 'function') ? getAlert('gv015') : 'Download Coupon';
+    body.innerHTML = '<div class="coupon-modal-status">Loading coupons…</div>';
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+
+    var url = '../coupon/goods_coupon_list?no=' + encodeURIComponent(goodsSeq) +
+      '&return_url=' + encodeURIComponent(window.location.href) +
+      (couponSeq ? '&coupon=' + encodeURIComponent(couponSeq) : '');
+
+    fetch(url, { credentials: 'same-origin' })
+      .then(function (res) { return res.text(); })
+      .then(function (html) {
+        body.innerHTML = html;
+        if (window.echo && typeof window.echo.init === 'function') {
+          window.echo.init({ offset: 100, throttle: 250, unload: false });
+        }
+      })
+      .catch(function () {
+        body.innerHTML = '<div class="coupon-modal-status">Unable to load coupons. Please try again.</div>';
+      });
+  };
+})();
+</script>

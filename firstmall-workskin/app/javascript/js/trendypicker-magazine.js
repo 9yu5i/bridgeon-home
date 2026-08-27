@@ -289,12 +289,75 @@
     return null;
   }
 
+  function findMagazineCardButton(target) {
+    var node = target;
+    while (node && node !== document && node !== window) {
+      if (
+        node.classList &&
+        (
+          node.classList.contains("bo-magazine-feature") ||
+          node.classList.contains("bo-magazine-side-card") ||
+          node.classList.contains("bo-magazine-post-card") ||
+          node.classList.contains("tp-home-magazine-feature") ||
+          node.classList.contains("tp-home-magazine-item")
+        )
+      ) {
+        return node.querySelector(".boad_view_btn[viewlink]");
+      }
+      node = node.parentNode;
+    }
+    return null;
+  }
+
+  function findMagazineCategoryLabel(target) {
+    var node = target;
+    var selector = [
+      ".bo-magazine-feature-copy > p:not(.bo-magazine-excerpt)",
+      ".bo-magazine-side-card > div > p",
+      ".bo-magazine-post-card > p:first-of-type:not(.bo-magazine-post-excerpt)",
+      ".tp-home-magazine-category"
+    ].join(", ");
+
+    while (node && node !== document && node !== window) {
+      if (node.matches && node.matches(selector)) return node;
+      node = node.parentNode;
+    }
+    return null;
+  }
+
+  function openMagazineCategory(label) {
+    var category = String(label && label.textContent || "").trim();
+    if (!category) return false;
+
+    var targetUrl =
+      "/board/?id=magazine&category=" +
+      encodeURIComponent(category) +
+      "&perpage=12";
+    if (window.top && window.top !== window) {
+      window.top.location.assign(targetUrl);
+    } else {
+      window.location.assign(targetUrl);
+    }
+    return true;
+  }
+
   /* Open post detail in the top window — never navigate the magazine iframe. */
   function bindMagazineOpenInTop() {
     document.addEventListener(
       "click",
       function (event) {
-        var btn = findMagazineViewButton(event.target);
+        var categoryLabel = findMagazineCategoryLabel(event.target);
+        if (categoryLabel) {
+          event.preventDefault();
+          event.stopPropagation();
+          if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          openMagazineCategory(categoryLabel);
+          return;
+        }
+
+        var btn =
+          findMagazineViewButton(event.target) ||
+          findMagazineCardButton(event.target);
         if (!btn) return;
 
         var viewlink = btn.getAttribute("viewlink");

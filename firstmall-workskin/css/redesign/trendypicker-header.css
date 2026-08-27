@@ -266,7 +266,7 @@
     .layout_header .util_wrap_menu2 .top_my_search {
       display: none;
     }
-  
+
     .layout_header .logo_wrap .tp-header-search {
       display: block;
       position: relative;
@@ -279,7 +279,7 @@
       border-radius: 999px;
       box-shadow: 0 0 0 1px rgba(125, 63, 228, 0.18);
     }
-  
+
     .layout_header .tp-header-search input[type="text"] {
       -webkit-appearance: none;
       appearance: none;
@@ -476,6 +476,32 @@
       background: url("../../images/icon/tp-header-my.png") no-repeat center / 24px 24px;
       z-index: 3;
     }
+
+    .layout_header.tp-header-subpage .resp_top_mypge {
+      background-image: url("../../images/icon/tp-header-search.png");
+      background-size: 22px 22px;
+    }
+
+    /* Subpage hamburger becomes a back arrow. The stock PNG is dropped and a
+       white chevron is drawn with a rotated square border, matching the white
+       icons on the #202020 header. The anchor inside stays the click target.
+       The id prefix matches the base rule's specificity so the PNG is dropped
+       without !important. */
+    #layout_header.layout_header.tp-header-subpage .resp_top_hamburger {
+      background-image: none;
+    }
+
+    #layout_header.layout_header.tp-header-subpage .resp_top_hamburger::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 5px;
+      width: 10px;
+      height: 10px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: translateY(-50%) rotate(45deg);
+    }
   
     .layout_header .resp_top_cart {
       display: block;
@@ -500,6 +526,10 @@
       overflow: hidden;
       background: #fff;
       border-radius: 999px;
+    }
+
+    .layout_header.tp-header-subpage .tp-header-search {
+      display: none;
     }
   
     .layout_header .tp-header-search input[type="text"] {
@@ -945,6 +975,15 @@
       height: 42px;
       min-height: 0;
       box-sizing: border-box;
+    }
+
+    /* Direction-aware compact header: the shared header-scroll script keeps the
+       header fixed and toggles only the logo/search row. The category nav
+       remains in normal flow inside the fixed header, so it is the only row
+       visible while the page is moving down. */
+    #layout_header.layout_header.tp-mobile-scrolled .top_header_banner,
+    #layout_header.layout_header.tp-mobile-scroll-logo-hidden .logo_wrap {
+      display: none;
     }
   }
   
