@@ -9,7 +9,9 @@ Editorial Section (maon page) JS
   const viewport = slider.querySelector(".editor-card-viewport");
   const track = slider.querySelector(".editor-card-track");
   const tabsWrap = slider.querySelector("[data-editor-card-tabs]");
-  const sharedEditors = Array.isArray(window.BridgeOn?.editorData) ? window.BridgeOn.editorData : [];
+  const sharedEditors = Array.isArray(window.TrendyPicker?.editorData)
+    ? window.TrendyPicker.editorData
+    : [];
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const editorCardThemes = ["nara", "mila", "jules", "pim", "ava"];
 

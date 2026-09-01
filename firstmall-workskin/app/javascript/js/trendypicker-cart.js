@@ -1163,10 +1163,14 @@
 
   function reapplyNationIfNeeded() {
     var preferred = readNationPreference();
-    if (!preferred) return;
     var hiddenNation = document.querySelector("form#cart_form input[name='nation']");
     var current = hiddenNation ? String(hiddenNation.value || "").trim() : "";
-    if (!current || current === preferred) return;
+    if (!current) return;
+    if (!preferred) {
+      storeNationPreference(current);
+      return;
+    }
+    if (current === preferred) return;
     try {
       if (sessionStorage.getItem(NATION_RETRY_KEY) === preferred) return;
       sessionStorage.setItem(NATION_RETRY_KEY, preferred);

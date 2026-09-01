@@ -60,11 +60,16 @@
 
     function revealCards(widget) {
       if (!widget || widget.classList.contains("is-inview")) return;
-      // Two frames so the hidden state is painted before .is-inview lands.
-      // Without this the cards go from armed to revealed within a single
-      // paint and the transition never runs.
-      window.requestAnimationFrame(function () {
-        window.requestAnimationFrame(function () {
+      // The widget lives in the board iframe, which only paints once it scrolls
+      // into view. The parent window's rAF fires independently of the iframe's
+      // paint, so the hidden (opacity:0) state was not committed inside the
+      // iframe before .is-inview landed and the reveal snapped instead of
+      // animating. Drive the two frames off the IFRAME's own window (and flush
+      // its layout first) so the hidden state paints there before revealing.
+      var win = widget.ownerDocument.defaultView || window;
+      win.requestAnimationFrame(function () {
+        void widget.getBoundingClientRect();
+        win.requestAnimationFrame(function () {
           widget.classList.add("is-inview");
         });
       });

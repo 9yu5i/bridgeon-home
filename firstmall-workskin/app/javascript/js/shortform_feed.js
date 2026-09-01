@@ -2,7 +2,7 @@
  * 숏폼 콘텐츠 Feed JS
  */
 (() => {
-	const navigateWithPageTransition = window.BridgeOn?.navigateWithPageTransition || ((href) => {
+	const navigateWithPageTransition = window.TrendyPicker?.navigateWithPageTransition || ((href) => {
 		window.location.href = href;
 	});
 	const PRODUCT_DETAIL_URL =
@@ -546,7 +546,7 @@ const toggleSave = async (button) => {
 
 	const getShareReelName = () =>
 		getActiveSlide()?.querySelector(".realtrend-mobile-product-copy h3")?.textContent?.trim() ||
-		"BridgeOn Real Trend";
+		"TrendyPicker Real Trend";
 
 	const getShareReelUrl = () => {
 		const url = new URL(window.location.href);
@@ -644,12 +644,12 @@ const toggleSave = async (button) => {
 			button.addEventListener("click", async () => {
 				const channel = button.dataset.dealShareChannel;
 				const input = shareDialog.querySelector("[data-deal-share-input]");
-				const name = shareDialog.querySelector("[data-deal-share-name]")?.textContent || "BridgeOn Real Trend";
+				const name = shareDialog.querySelector("[data-deal-share-name]")?.textContent || "TrendyPicker Real Trend";
 				const url = input?.value || window.location.href;
 
 				if (channel === "facebook" || channel === "twitter" || channel === "whatsapp") {
 					const snsChannel = channel === "facebook" ? "fa" : channel === "twitter" ? "tw" : "wa";
-					const enc_tit = encodeURIComponent(`${name} - Bridge on`);
+					const enc_tit = encodeURIComponent(`${name} - TrendyPicker`);
 					const enc_sbj = encodeURIComponent(name);
  					const enc_url = encodeURIComponent(url);
 					snsWin(snsChannel, enc_tit, enc_sbj, "", enc_url, isMobile.any());
@@ -657,7 +657,7 @@ const toggleSave = async (button) => {
 				}
 
 				if (channel === "sms") {
-					const encodedText = encodeURIComponent(`Check out ${name} on BridgeOn\n${url}`);
+					const encodedText = encodeURIComponent(`Check out ${name} on TrendyPicker\n${url}`);
 					window.location.href = `sms:?&body=${encodedText}`;
 					return;
 				}
@@ -725,7 +725,7 @@ const toggleSave = async (button) => {
 		dialog.querySelector(".deal-share-copy")?.focus();
 	};
 
-	window.BridgeOn?.savedPosts?.syncButtons?.(document);
+	window.TrendyPicker?.savedPosts?.syncButtons?.(document);
 
 	window.addEventListener("resize", () => {
 		updateTrack(activeIndex, { animate: false });

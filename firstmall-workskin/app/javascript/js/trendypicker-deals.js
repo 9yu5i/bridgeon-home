@@ -1104,12 +1104,26 @@
     if (!desktopQuery.matches) return;
     if (event.target.closest("button, a")) return;
 
-    const target = document.querySelector(".deal-card.special .deal-copy");
+    const target = document.querySelector(".deals-section");
     if (!target) return;
 
-    target.scrollIntoView({
+    // Land the deals heading just below the header. scrollIntoView overshoots
+    // here: the header pins on downward scroll and drops out of flow, shifting
+    // the content up by its own height, and scrollIntoView keeps re-targeting
+    // to compensate. Use a fixed scrollTo instead. Reserve one header height to
+    // clear the pinned bar, plus another to absorb the flow shift when the
+    // header has not pinned yet.
+    const header = document.getElementById("layout_header");
+    const headerH = header ? header.getBoundingClientRect().height : 60;
+    const pinnedAlready = header ? header.classList.contains("flying") : false;
+    const offset = headerH + (pinnedAlready ? 0 : headerH);
+    const y = Math.max(
+      0,
+      window.scrollY + target.getBoundingClientRect().top - offset
+    );
+    window.scrollTo({
+      top: y,
       behavior: reduceMotionQuery.matches ? "auto" : "smooth",
-      block: "center",
     });
   });
 

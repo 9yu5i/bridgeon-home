@@ -291,7 +291,7 @@ const requiredCssPatterns = [
   {
     label: "mobile logout icon",
     pattern:
-      /\.bo-mobile-service__grid\s+a:nth-child\(6\)\s+\.bo-mobile-icon\s*\{[^}]*background-image:\s*url\("\.\.\/\.\.\/images\/mypage\/logout\.png"\);/s,
+      /\.bo-mobile-service__grid\s+a\[href="\/login_process\/logout"\]\s+\.bo-mobile-icon\s*\{[^}]*background-image:\s*url\("\.\.\/\.\.\/images\/mypage\/logout\.png"\);/s,
   },
   {
     label: "order timeline icon line mask",

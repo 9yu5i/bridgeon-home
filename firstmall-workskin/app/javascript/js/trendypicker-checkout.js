@@ -11,6 +11,21 @@
   if (document.body) document.body.classList.add("is-checkout-page");
 
   var COUPON_KEY = "tpCartCoupon";
+  var NATION_KEY = "tpCartNation";
+
+  function readCartNationPreference() {
+    try {
+      return localStorage.getItem(NATION_KEY) || "";
+    } catch (err) {
+      return "";
+    }
+  }
+
+  function storeCartNationPreference(nation) {
+    try {
+      if (nation) localStorage.setItem(NATION_KEY, nation);
+    } catch (err) {}
+  }
 
   function parseMoney(value) {
     var raw = String(value || "").replace(/[^0-9.]/g, "");
@@ -944,6 +959,11 @@
         ".delivery_input input[name='international_country']"
       );
       if (countryHidden) countryHidden.value = next;
+      if (!silent && item) {
+        storeCartNationPreference(
+          item.getAttribute("data-nation") || code
+        );
+      }
       list.querySelectorAll("li").forEach(function (li) {
         var selected = li === item || labelOf(li) === next;
         li.classList.toggle("is-selected", selected);
@@ -958,12 +978,27 @@
       }
     }
 
+    var preferredNation = readCartNationPreference();
+    var preferredRegion = resolveCheckoutRegionKey(preferredNation);
     var current = String(input.value || "").trim();
     var matched = null;
     list.querySelectorAll("li").forEach(function (li) {
-      if (labelOf(li).toLowerCase() === current.toLowerCase()) matched = li;
+      var nation = String(li.getAttribute("data-nation") || "").trim();
+      var key = String(li.getAttribute("data-key") || "").trim();
+      var label = labelOf(li);
+      var labelRegion = resolveCheckoutRegionKey(label);
+      if (
+        preferredNation &&
+        (nation.toLowerCase() === preferredNation.toLowerCase() ||
+          key.toLowerCase() === preferredNation.toLowerCase() ||
+          labelRegion === preferredRegion)
+      ) {
+        matched = li;
+        return;
+      }
+      if (!matched && label.toLowerCase() === current.toLowerCase()) matched = li;
     });
-    syncValue(current, matched, true);
+    syncValue(matched ? labelOf(matched) : current, matched, true);
     setOpen(false);
 
     // Toggle on pointerdown so a second press always closes.
@@ -1949,6 +1984,58 @@
     normalizeCheckoutCurrency();
   }
 
+  function syncGuestOrdererFields() {
+    if (window.gl_member_seq) return;
+
+    [
+      ["recipient_input_user_first_name", "order_user_first_name"],
+      ["recipient_input_user_last_name", "order_user_last_name"],
+      ["recipient_input_phone", "order_user_phone"],
+      ["recipient_input_email", "order_email"]
+    ].forEach(function (names) {
+      var source = document.querySelector("input[name='" + names[0] + "']");
+      var target = document.querySelector("input[name='" + names[1] + "']");
+      if (!source || !target) return;
+      target.value = source.value;
+      target.classList.toggle("complete", Boolean(source.value));
+    });
+  }
+
+  function bindGuestOrdererSync() {
+    if (window.gl_member_seq) return;
+
+    [
+      "recipient_input_user_first_name",
+      "recipient_input_user_last_name",
+      "recipient_input_phone",
+      "recipient_input_email"
+    ].forEach(function (name) {
+      var field = document.querySelector("input[name='" + name + "']");
+      if (!field || field._tpGuestOrdererSync) return;
+      field._tpGuestOrdererSync = true;
+      field.addEventListener("input", syncGuestOrdererFields);
+      field.addEventListener("change", syncGuestOrdererFields);
+    });
+
+    // Firstmall validates the hidden orderer fields from its click handlers,
+    // before the order form submit event. Capture the payment click first so
+    // the visible consignee values are already present for every gateway.
+    document.addEventListener(
+      "click",
+      function (event) {
+        var target = event.target;
+        if (!target || !target.closest) return;
+        if (!target.closest("#pay, [data-checkout-payment]")) return;
+        syncGuestOrdererFields();
+      },
+      true
+    );
+
+    var orderForm = document.getElementById("orderFrm");
+    if (orderForm) orderForm.addEventListener("submit", syncGuestOrdererFields, true);
+    syncGuestOrdererFields();
+  }
+
   function ready(fn) {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", fn);
@@ -1997,6 +2084,7 @@
     patchAddressModify();
     bindSavedAddressCards();
     bindAddressNameSync();
+    bindGuestOrdererSync();
     bindCheckoutCountrySelect();
     bindCheckoutStateSelect();
     bindCheckoutNativeSelects();

@@ -347,7 +347,7 @@
         // Fired by the tab-switch handler below (on both the outgoing and
         // incoming rail) - clears clones, resyncs the tracked card order,
         // and stops this rail's auto-loop timer.
-        rail.addEventListener("bridgeon:railfilterchange", () => {
+        rail.addEventListener("trendypicker:railfilterchange", () => {
             rail.querySelectorAll(".is-loop-clone").forEach((clone) => clone.remove());
             originalCards = Array.from(rail.children).filter(
                 (card) => !card.classList.contains("is-loop-clone")

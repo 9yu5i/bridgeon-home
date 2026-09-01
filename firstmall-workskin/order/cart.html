@@ -497,43 +497,42 @@ if (document.body) {
 			});
 		});
 
-		// PROCEED TO CHECKOUT only carries the checked items — this mirrors the
-		// original's "선택 주문" (Order Selected) handler, not "전체 주문" (Order
-		// All): addsettle?mode=choice + only the checked cart_option_seq[]
-		// values, instead of plain addsettle (which always sends everything
-		// regardless of checkbox state).
+		// Keep Firstmall's native checkout hand-off. In particular, guest
+		// checkout relies on addsettle responding through actionFrame so the
+		// platform can route to its sign-in / Guest Order flow safely.
 		$(".btn_all_order").bind("click",function() {
-			var selected_order = '';
-			var ship_possible = true;
-			// .prop("checked") reads the live checkbox state. .attr("checked")
-			// (what the original's equivalent handler uses) only reflects the
-			// checked="checked" markup from page load and never updates when a
-			// user toggles an individual checkbox — that stale read is what let
-			// every item through to checkout regardless of selection.
-			$("input[name='cart_option_seq[]']").each(function(e, el) {
-				if( $(el).prop('checked') ){
-					if( $(el).attr('stat') != 'Y' ){
-						ship_possible = false;
-						return false;
-					}
-					selected_order += $(el).val() + ",";
+			var $cartForm = $("form#cart_form");
+
+			// The live server redirects a guest to a return_url beginning with
+			// "../order/settle". Its security layer rejects that encoded ../ as
+			// a traversal pattern and replaces the login page with a 403. Run the
+			// native addsettle hand-off first so its cart session is prepared, then
+			// continue directly to the guest checkout sheet. This is the same
+			// destination as Firstmall's Guest Order button, without the extra
+			// sign-in-page step.
+			if(typeof gl_member_seq === "undefined" || !gl_member_seq){
+				var nation = $cartForm.find("input[name='nation']").val() || "";
+				var settleUrl = "/order/settle?mode=cart";
+				if(nation){
+					settleUrl += "&nation=" + encodeURIComponent(nation);
 				}
-			});
+				var $checkoutButton = $(this).prop("disabled", true);
 
-			if(!ship_possible){
-				openDialogAlert(getAlert('os142'),'400','140');
+				$.ajax({
+					url: "addsettle",
+					type: "post",
+					data: $cartForm.serialize(),
+					complete: function(){
+						$checkoutButton.prop("disabled", false);
+						window.location.href = settleUrl;
+					}
+				});
 				return false;
 			}
 
-			if(!selected_order){
-				openDialogAlert(getAlert('oc042'),'400','140');
-				return false;
-			}
-
-			$("form#cart_form").attr("action","addsettle?mode=choice");
-			$("form#cart_form").attr("target","");
-			$("form#cart_form")[0].submit();
-			$("form#cart_form").attr("target","actionFrame");
+			$cartForm.attr("action","addsettle");
+			$cartForm.attr("target","actionFrame");
+			$cartForm[0].submit();
 		});
 
 		$("input[name='cart_option_seq[]']").bind("click",function(){

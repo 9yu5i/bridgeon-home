@@ -259,6 +259,112 @@
       height: 22px;
       object-fit: contain;
     }
+
+    /* Account menu: keep Firstmall's login-state markup and hover behavior,
+       but present it as the same rounded, purple-accented UI used elsewhere
+       in the TrendyPicker header. */
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person {
+      top: 46px;
+      left: 50%;
+      box-sizing: border-box;
+      width: 236px;
+      padding: 10px;
+      overflow: visible;
+      border: 1px solid #ebe4fb;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 16px 36px rgba(25, 16, 45, 0.2);
+      transform: translateX(-50%);
+      z-index: 220;
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person::after {
+      content: "";
+      position: absolute;
+      top: -13px;
+      left: 0;
+      width: 100%;
+      height: 13px;
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person::before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      border-top: 1px solid #ebe4fb;
+      border-left: 1px solid #ebe4fb;
+      background: #fff;
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person:focus-within .sub_my_person {
+      display: block;
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person li {
+      box-sizing: border-box;
+      margin: 2px 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person li.person_bg {
+      margin: 0 0 8px;
+      padding: 13px 14px;
+      border-radius: 11px;
+      color: #fff;
+      background: linear-gradient(135deg, #7f3fe4, #a66cff);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person li.bottom_bar {
+      margin: 2px 0 8px;
+      padding: 0 0 8px;
+      border-bottom: 1px solid #eee8f8;
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person li a {
+      position: relative;
+      box-sizing: border-box;
+      min-height: 38px;
+      padding: 10px 32px 10px 12px;
+      border-radius: 10px;
+      color: #302b38;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 18px;
+      transition: color 160ms ease, background-color 160ms ease,
+        transform 160ms ease;
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person li a::after {
+      content: "\203A";
+      position: absolute;
+      top: 50%;
+      right: 13px;
+      color: #b6a6d6;
+      font-size: 20px;
+      font-weight: 400;
+      transform: translateY(-53%);
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person li a:hover,
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person li a:focus-visible {
+      color: #7135d2;
+      background: #f3edff;
+      outline: none;
+      transform: translateX(2px);
+    }
+
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person li a:hover::after,
+    .layout_header .util_wrap_menu2 .top_my_person .sub_my_person li a:focus-visible::after {
+      color: #7f3fe4;
+    }
   
     /* The magnifier is redundant next to the search field. Hidden rather than
        removed: #btnSearchV2 inside it is what the fixed bottom menu clicks to
@@ -577,11 +683,11 @@
     content: "";
     position: absolute;
     top: 0;
-    left: 50%;
-    width: 100vw;
+    right: 0;
+    left: 0;
+    width: auto;
     height: 1px;
     background: rgba(255, 255, 255, 0.08);
-    transform: translateX(-50%);
     pointer-events: none;
   }
 

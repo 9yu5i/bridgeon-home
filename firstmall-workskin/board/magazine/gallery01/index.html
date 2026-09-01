@@ -203,7 +203,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 			</button>
 			<div class="tp-home-magazine-item__copy">
 				{?.category}<p class="tp-home-magazine-category">{=str_replace(']','',str_replace('[','',.category))}</p>{/}
-				<h3><button type="button" class="boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{_GET.id}">{=strip_tags(.subject_real)}</button></h3>
+				<h3><button type="button" class="boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{_GET.id}"><span class="tp-home-magazine-item__title-text">{=strip_tags(.subject_real)}</span></button></h3>
 				{? .contentcut}<p class="tp-home-magazine-item__excerpt">{=strip_tags(.contentcut)}</p>{/}
 				<time datetime="{.date}">{=date('M d, Y',strtotime(.date))}</time>
 			</div>

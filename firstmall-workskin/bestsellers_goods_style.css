@@ -88,10 +88,10 @@
   background: #fff;
 }
 
-.product-card p {
+.seller-section .product-card p {
   margin: 14px 10px 4px;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 700;
   min-height: 15px;
 }
 
@@ -475,9 +475,9 @@
 
   .seller-section .product-card p {
     margin: 8px 0 5px;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.08;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .seller-section .product-card h3 {

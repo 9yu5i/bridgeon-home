@@ -36,6 +36,10 @@
   pointer-events: none;
 }
 
+.realtrend-cart-toast[hidden] {
+  display: none;
+}
+
 .realtrend-cart-toast.is-visible {
   opacity: 1;
   visibility: visible;
@@ -174,7 +178,8 @@
   .realtrend-cart-toast {
     top: 12px;
     right: 8px;
-    width: calc(100vw - 16px);
+    left: 8px;
+    width: auto;
     padding: 12px 12px 12px 32px;
     border-radius: 12px;
   }

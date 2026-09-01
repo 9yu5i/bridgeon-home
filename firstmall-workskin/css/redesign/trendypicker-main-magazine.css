@@ -154,6 +154,7 @@ html.tp-home-magazine-frame body {
   line-height: 1.45;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  font-weight: 500;
 }
 
 .tp-home-magazine-widget time {
@@ -187,13 +188,24 @@ html.tp-home-magazine-frame body {
 }
 
 .tp-home-magazine-item h3 button {
-  display: -webkit-box;
+  display: block;
+  width: 100%;
   overflow: hidden;
   font-size: 17px;
   font-weight: 800;
   line-height: 1.3;
+}
+
+.tp-home-magazine-item__title-text {
+  display: -webkit-box;
+  max-height: 2.6em;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  word-break: break-word;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .tp-home-magazine-item__excerpt {
@@ -206,6 +218,7 @@ html.tp-home-magazine-frame body {
   line-height: 1.4;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
+  font-weight: 500;
 }
 
 .tp-home-magazine-empty {
