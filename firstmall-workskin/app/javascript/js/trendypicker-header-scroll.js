@@ -171,8 +171,8 @@
    * On every page except the main page the header carries the
    * `tp-header-subpage` class (added inline in layout_header/standard.html).
    * There the mobile/tablet My Page icon becomes a search trigger and the
-   * hamburger becomes a back button. The icons themselves are swapped in CSS;
-   * this only rewires what the two controls do when tapped.
+   * left control becomes Back. The Back listener runs in the capture phase and
+   * stops Firstmall's category drawer handler before it can open the panel.
    */
   function bindSubpageControls() {
     var header = document.getElementById("layout_header");
@@ -196,15 +196,22 @@
       ".resp_wrap .logo_wrap .resp_top_hamburger > a"
     );
     if (backButton) {
+      backButton.setAttribute("href", "/main/index");
       backButton.setAttribute("aria-label", "Back");
-      backButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        if (window.history.length > 1) {
-          window.history.back();
-        } else {
-          window.location.href = "/main/index";
-        }
-      });
+      backButton.addEventListener(
+        "click",
+        function (event) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+
+          if (document.referrer && window.history.length > 1) {
+            window.history.back();
+          } else {
+            window.location.href = "/main/index";
+          }
+        },
+        true
+      );
     }
   }
 

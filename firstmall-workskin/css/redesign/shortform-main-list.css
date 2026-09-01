@@ -1,5 +1,4 @@
 @charset "utf-8";
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 /* **************************************************************************************
 * 숏폼 콘텐츠 메인 페이지 목록 CSS
@@ -14,6 +13,12 @@ Creation Date : 2026-08-05
   --trend-rail-card-max-width: calc(var(--reel-card-height) * 9 / 16);
   --trend-gap: clamp(12px, 1.6vw, 30px);
   position: relative;
+  font-family: var(
+    --tp-font-family,
+    "Pretendard Variable",
+    Pretendard,
+    sans-serif
+  );
 }
 
 .content-section + .content-section {
@@ -333,7 +338,7 @@ Creation Date : 2026-08-05
   color: #fff;
   font-size: 15px;
   line-height: 1.2;
-  font-weight: 400;
+  font-weight: 700;
 }
 
 .reel-title {

@@ -137,6 +137,7 @@ Creation Date : 2026-08-03
   min-height: 0;
   padding: 16px 16px 13px;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .reviewer {
@@ -774,4 +775,9 @@ Creation Date : 2026-08-03
   .review-rail.is-marquee {
     animation: none;
   }
+}
+
+.share-pick a:hover {
+    background-color: var(--purple);
+    color: #fff;
 }

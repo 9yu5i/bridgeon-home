@@ -482,11 +482,8 @@
       background-size: 22px 22px;
     }
 
-    /* Subpage hamburger becomes a back arrow. The stock PNG is dropped and a
-       white chevron is drawn with a rotated square border, matching the white
-       icons on the #202020 header. The anchor inside stays the click target.
-       The id prefix matches the base rule's specificity so the PNG is dropped
-       without !important. */
+    /* On subpages the left control is Back only. Its capture listener blocks
+       the stock Firstmall category drawer before the drawer can open. */
     #layout_header.layout_header.tp-header-subpage .resp_top_hamburger {
       background-image: none;
     }
@@ -502,7 +499,7 @@
       border-bottom: 2px solid #fff;
       transform: translateY(-50%) rotate(45deg);
     }
-  
+
     .layout_header .resp_top_cart {
       display: block;
       position: absolute;

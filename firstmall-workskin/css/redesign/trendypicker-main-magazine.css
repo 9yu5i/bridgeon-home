@@ -65,7 +65,12 @@ html.tp-home-magazine-frame body {
   gap: 28px;
   width: 100%;
   color: #171321;
-  font-family: Pretendard, sans-serif;
+  font-family: var(
+    --tp-font-family,
+    "Pretendard Variable",
+    Pretendard,
+    sans-serif
+  );
   box-sizing: border-box;
 }
 
@@ -208,7 +213,12 @@ html.tp-home-magazine-frame body {
   min-height: 300px;
   place-items: center;
   color: #766b84;
-  font-family: Pretendard, sans-serif;
+  font-family: var(
+    --tp-font-family,
+    "Pretendard Variable",
+    Pretendard,
+    sans-serif
+  );
   font-size: 14px;
 }
 

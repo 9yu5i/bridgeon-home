@@ -693,10 +693,29 @@ const initTrendProductSheet = () => {
 
   reviewRail?.addEventListener("click", (event) => {
     const reviewCartButton = event.target.closest(".review-card footer .review-cart-button");
-    if (!reviewCartButton || !reviewRail.contains(reviewCartButton)) return;
+    if (reviewCartButton && reviewRail.contains(reviewCartButton)) {
+      event.preventDefault();
+      event.stopPropagation();
+      openTrendProductSheet(reviewCartButton.closest(".review-card"));
+      return;
+    }
+
+    const productTarget = event.target.closest(".review-img, .review-body");
+    if (!productTarget || !reviewRail.contains(productTarget)) return;
     event.preventDefault();
-    event.stopPropagation();
-    openTrendProductSheet(reviewCartButton.closest(".review-card"));
+    navigateWithPageTransition(
+      getSellerCardDetailHref(productTarget.closest(".review-card")),
+    );
+  });
+
+  reviewRail?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const productTarget = event.target.closest(".review-img, .review-body");
+    if (!productTarget || !reviewRail.contains(productTarget)) return;
+    event.preventDefault();
+    navigateWithPageTransition(
+      getSellerCardDetailHref(productTarget.closest(".review-card")),
+    );
   });
 
   sellerRail?.addEventListener(

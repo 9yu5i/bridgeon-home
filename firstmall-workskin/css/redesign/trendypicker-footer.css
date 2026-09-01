@@ -214,11 +214,13 @@
 /* ===== Floating top / chat buttons ===================================== */
 #floating_over .float-button {
   box-sizing: border-box;
+  position: absolute;
   display: grid;
   place-items: center;
   right: 24px;
-  width: 44px;
-  height: 44px;
+  z-index: 3;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border: 2px solid #d9c6ff;
   border-radius: 50%;
@@ -236,9 +238,14 @@
 }
 
 #floating_over .float-button svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   display: block;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  transform: translate(-50%, -50%);
 }
 
 #floating_over .float-button svg path {
@@ -250,18 +257,18 @@
 }
 
 #floating_over .float-button.to-top {
-  bottom: 150px;
+  bottom: 160px;
 }
 
 #floating_over .float-button.chat {
-  bottom: 96px;
+  bottom: 106px;
   color: #fff;
   background: #7f3ff2;
 }
 
 #floating_over .float-button.chat svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 #floating_over .float-button.chat svg circle {
@@ -437,6 +444,12 @@
 }
 
 @media (max-width: 1124px) {
+  /* Real Trend reserves this value below its full-screen reel. Keep it equal
+     to the actual fixed navigation height so no black strip remains above it. */
+  body.is-realtrend {
+    --rt-floating-footer-h: calc(61px + env(safe-area-inset-bottom, 0px));
+  }
+
   /* Keep the footer's original 40px closing space, then add the fixed menu
      height and the device safe area. At the end of the page .footer_comp can
      therefore scroll completely above the navigation instead of sitting
@@ -445,6 +458,13 @@
   #floating_over,
   #floating_over .fixed_menu.tp-fnav {
     display: block;
+  }
+
+  /* Firstmall writes display:none inline when an iPhone emits an initial
+     scroll/resize event at scrollTop 0. Keep the mobile floating layer alive;
+     search and modal states still hide the individual controls when needed. */
+  #floating_over {
+    display: block !important;
   }
 
   /* Full-screen pages such as Real Trend can establish their own viewport
@@ -473,7 +493,17 @@
   }
 
   #floating_over .float-button {
-    display: none;
+    display: grid;
+    right: 16px;
+    right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  #floating_over .float-button.to-top {
+    bottom: calc(136px + env(safe-area-inset-bottom, 0px));
+  }
+
+  #floating_over .float-button.chat {
+    bottom: calc(82px + env(safe-area-inset-bottom, 0px));
   }
 }
 

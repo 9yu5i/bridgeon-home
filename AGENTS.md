@@ -44,6 +44,8 @@ High-level ownership:
 - `styles.css` is the home/global page entry file.
 - `styles/tokens.css` owns shared custom properties.
 - `styles/base.css` owns document defaults and page shell helpers.
+- `firstmall-workskin/css/redesign/trendypicker-fonts.css` owns the shared Firstmall
+  Pretendard font stack and legacy font-family overrides.
 - `styles/header-navigation.css` owns promo bar, header, search panel, category navigation, and mobile menu base styles.
 - `styles/hero.css` owns the main hero carousel and desktop hero Today's Pick panel.
 - `styles/sections.css` owns section headings, tabs, and generic section layout.

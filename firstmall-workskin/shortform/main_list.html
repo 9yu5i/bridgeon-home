@@ -1,0 +1,129 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 숏폼 콘텐츠 메인 페이 List @@
+- 파일위치 : [스킨폴더]/shortform/main_list.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/redesign/common-styles.css?v=20260901" />
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/redesign/shortform-main-list.css" />
+<section class="real-trend content-section trend-section">
+	<div class="section-heading trend-heading">
+		<div class="inline-heading">
+			<h2>Real Trend? <span aria-hidden="true">&#128248;</span></h2>
+			<p>Real people. Real reviews. Real trends.</p>
+		</div>
+		<a href="/shortform/feed" class="rt-viewall" target="_top">VIEW ALL REELS <span class="arrow">&rarr;</span></a>
+	</div>
+
+	<div class="rail-wrap">
+		<button class="rail-arrow prev" data-scroll="trend-rail" data-direction="-1" aria-label="Previous trends">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+		</button>
+
+		<div class="rail-viewport">
+			<div class="card-rail trend-rail" id="trend-rail">
+				<!--{ @ list }-->
+				<article class="reel-card" data-category="beauty" data-reel-index="1" data-seq="{.shortform_seq}">
+						<div class="reel-hover-catcher"></div>
+						<span class="views">{.view_count}</span>
+						<div class="reel-media">
+							<!--{ ? .video_type == 'link' }-->
+								<!--{ ? .platform == 'youtube' }-->
+								<div class="rt-video rt-video--yt-preview" data-youtube-id="{.youtube_id}">
+									<img class="rt-yt-poster" src="{.poster}" alt="" loading="eager">
+								</div>
+								<!--{ : .platform == 'tiktok' }-->
+								<div class="rt-video rt-video--tt-preview" data-tiktok-id="{.tiktok_id}">
+									<img class="rt-yt-poster" src="{.poster}" alt="" loading="eager">
+								</div>
+								<!--{ : }-->
+								<img class="rt-video rt-video--poster" src="{.poster}" alt="" loading="eager">
+								<!--{ / }-->
+							<!--{ : }-->
+								<video class="rt-video" <!--{ ? .poster }-->poster="{.poster}"<!--{ / }--> src="{.video_file}" muted loop playsinline preload="metadata"></video>
+							<!--{ / }-->
+							<a href="/shortform/feed?seq={.shortform_seq}" target="_top" class="reel-click-catcher"></a>
+							<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-video-play3.png" class="reel-play-icon" alt="Play" />
+							<strong class="reel-title">{=getstrcut(strip_tags(.title),50)}</strong>
+						</div>
+						<div class="reel-product">
+							<!--{ ? .goods }-->
+							<a href="/goods/view?no={.goods.goods_seq}" target="_parent">
+								<img src="{=viewImg(.goods.goods_seq,'thumbView')}" alt="{.goods.goods_name}" class="rt-product-img" />
+							</a>
+							<div class="reel-product-info">
+								<p>
+									<b>{.goods.brand}</b>
+									<a href="/goods/view?no={.goods.goods_seq}" target="_parent">
+										<span class="product-title">{=getstrcut(strip_tags(.goods.goods_name),30)}</span>
+									</a>
+								</p>
+								<span class="reel-price">{=get_currency_price(.goods.price,2)}</span>
+							</div>
+							<a onclick="parent.displayAddToCartQuickview(this, {= .goods.goods_seq}, event); this.blur(); return false;" class="rt-cart-btn" aria-label="View Product" tabindex="-1">
+								<img src="../images/icon/icon-cart-reel.png" class="rt-cart-btn-icon" alt="Add to cart"/>
+							</a>
+							<!--{ : }-->
+							<span class="rt-no-products">No products linked.</span>
+							<!--{ / }-->
+						</div>
+
+				</article>
+				<!--{ / }-->
+			</div>
+		</div>
+
+		<button class="rail-arrow next" data-scroll="trend-rail" data-direction="1" aria-label="Next trends">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+		</button>
+	</div>
+</section>
+
+<script>
+(function fillReelPosters() {
+    /* showMainPageShortformSection() does not return the poster field for
+       uploaded-video reels, so each video renders with no poster. iOS Safari
+       will not paint a non-playing video's first frame, so those thumbnails
+       come up blank on iPhone. Derive the poster from the video filename
+       ( .../shortform/video/videoN.mp4  ->  .../shortform/poster/reelN.jpg )
+       and apply it, plus inline-playback attributes. Only fills a poster that
+       is missing, so a server-supplied poster still wins. */
+    var vids = document.querySelectorAll('.trend-rail .reel-media video');
+    Array.prototype.forEach.call(vids, function (v) {
+        v.setAttribute('playsinline', '');
+        v.setAttribute('webkit-playsinline', '');
+        if (!v.getAttribute('poster')) {
+            var src = v.getAttribute('src') || '';
+            var poster = src
+                .replace('/video/video', '/poster/reel')
+                .replace(/\.mp4$/, '.jpg');
+            if (poster && poster !== src) v.setAttribute('poster', poster);
+        }
+    });
+})();
+</script>
+
+<script>
+(function loadShortformScripts() {
+    function loadScripts() {
+        [
+            '/app/javascript/js/quickview.js?mm={=date("Ymd")}',
+            '/app/javascript/js/shortform.js'
+        ].forEach(function(src) {
+            var script = document.createElement('script');
+            script.src = src;
+            document.body.appendChild(script);
+        });
+    }
+
+    if (window.jQuery) {
+        loadScripts();
+    } else {
+        window.addEventListener('load', loadScripts);
+    }
+})();
+</script>
+<script type="text/javascript" src="/app/javascript/js/reel-rail.js"></script>
+<script>
+if (window.initScrollReveal) {
+    window.initScrollReveal();
+}
+</script>

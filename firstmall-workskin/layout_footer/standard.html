@@ -2,7 +2,7 @@
 @@ #LAYOUT_FOOTER @@
 - 파일위치 : [스킨폴더]/layout_footer/standard.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-footer.css?v=20260827-1" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-footer.css" />
 <!-- 장바구니 담기 토스트 (전 페이지 공통). 마크업은 스크립트가 주입합니다. -->
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-cart-toast.css" />
 
@@ -128,6 +128,7 @@
             var isRealTrend = document.querySelector('.realtrend-page') ||
                 /^\/shortform\/feed(?:\/|$)/.test(window.location.pathname);
             if (isRealTrend) {
+                if (document.body) document.body.classList.add('is-realtrend');
                 var bar = document.querySelector('.fixed_menu.tp-fnav');
                 if (bar) bar.classList.add('tp-fnav--dark');
             }

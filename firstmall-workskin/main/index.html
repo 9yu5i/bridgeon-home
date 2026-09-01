@@ -108,11 +108,11 @@
         <h3><span designElement="text">Shop by Category</span></h3>
         <p designElement="text">What are you shopping for today?</p>
         <ul>
-            <li><a class="tp-category-link" href="/goods/catalog?code=0008" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category1.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">Beauty</span></a></li>
-            <li><a class="tp-category-link" href="/goods/catalog?code=0009" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category2.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">K-Food</span></a></li>
-            <li><a class="tp-category-link" href="/goods/catalog?code=0010" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category3.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">Lifestyle</span></a></li>
-            <li><a class="tp-category-link" href="/goods/catalog?code=0011" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category4.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">K-POP</span></a></li>
-            <li><a class="tp-category-link" href="/goods/catalog?code=0012" target="_self"><span class="tp-category-icon"><img src="../images/main/shop-category5.png" title="" alt=""/></span><span class="tp-category-label" designElement="text">K-Traditional</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0008" target="_self"><span class="tp-category-icon"><img src="/data/skin/{skin}/images/main/shop-category1.png?v=20260831" title="" alt=""/></span><span class="tp-category-label" designElement="text">Beauty</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0009" target="_self"><span class="tp-category-icon"><img src="/data/skin/{skin}/images/main/shop-category2.png?v=20260831" title="" alt=""/></span><span class="tp-category-label" designElement="text">K-Food</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0010" target="_self"><span class="tp-category-icon"><img src="/data/skin/{skin}/images/main/shop-category3.png?v=20260831" title="" alt=""/></span><span class="tp-category-label" designElement="text">Lifestyle</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0011" target="_self"><span class="tp-category-icon"><img src="/data/skin/{skin}/images/main/shop-category4.png?v=20260831" title="" alt=""/></span><span class="tp-category-label" designElement="text">K-POP</span></a></li>
+            <li><a class="tp-category-link" href="/goods/catalog?code=0012" target="_self"><span class="tp-category-icon"><img src="/data/skin/{skin}/images/main/shop-category5.png?v=20260831" title="" alt=""/></span><span class="tp-category-label" designElement="text">K-Traditional</span></a></li>
         </ul>
     </div>
     <script type="text/javascript">
@@ -337,7 +337,12 @@
         {=showDesignDisplay(10371)}
     </div>
         <!--<iframe id="lazy_index" frameborder="0" allowfullscreen></iframe>-->
-    
+
+    <!-- Editorial Section ( 파일위치 : [스킨폴더]/editor/editorial_section.html ) -->
+    <div>
+	{=showMainPageEditorial()}
+    </div>
+
     <section class="content-section magazine-block tp-main-magazine" aria-labelledby="tp-main-magazine-title">
         <div class="tp-main-magazine__head">
             <h2 id="tp-main-magazine-title">T.P Magazine</h2>
@@ -366,6 +371,16 @@
     <!-- Customer Real Picks ( 파일위치 : [스킨폴더]/board/goods_review/_goods_review/main_page_reviews.html ) -->
     <div>
         {=showMainPageReviews()}
+    </div>
+
+    <!-- Newsletter Section ( 파일위치 : [스킨폴더]/_modules/common/newsletter_section.html ) -->
+    <div>
+	{=showNewsletterSection()}
+    </div>
+
+    <!-- Newsletter Popup ( 파일위치 : [스킨폴더]/main/_newsletter_popup.html ) -->
+    <div>
+	{=showNewsletterPopup()}
     </div>
 
 </div>

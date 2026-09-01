@@ -585,6 +585,8 @@
       if (open) return;
       open = true;
 
+      if (isDesktop()) header.classList.add("tp-search-panel-active");
+
       lockScroll();
 
       module.classList.add("on");
@@ -691,6 +693,7 @@
         hideDesktopPanel(function () {
           module.classList.remove("on");
           module.classList.remove("tp-search-open");
+          header.classList.remove("tp-search-panel-active");
           clearPlacement(true);
           pane.style.display = "none";
         });
@@ -699,6 +702,7 @@
 
       module.classList.remove("on");
       module.classList.remove("tp-search-open");
+      header.classList.remove("tp-search-panel-active");
       setMobileSheetUi(false);
       clearPlacement();
     }
@@ -916,11 +920,13 @@
     window.addEventListener("resize", function () {
       if (!open) return;
       if (isDesktop()) {
+        header.classList.add("tp-search-panel-active");
         setMobileSheetUi(false);
         setStacked(false);
         place();
         return;
       }
+      header.classList.remove("tp-search-panel-active");
       setStacked(true);
       setMobileSheetUi(true);
     });

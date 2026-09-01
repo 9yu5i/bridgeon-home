@@ -34,6 +34,36 @@
     observer.observe(grid, { childList: true });
   }
 
+  /*
+    get_currency_price() renders the amount as
+    "<span class="num">18.40</span>USD" — the trailing "USD" is a text node
+    CSS cannot reach, and the "US$" prefix is missing, so the grid reads
+    "US 18.40USD". Normalise both. Runs after every page append because the
+    infinite scroll brings in fresh, unprocessed markup.
+  */
+  function normalizeListingPrices(root) {
+    if (!root) return;
+    root
+      /* Broad on purpose: BEST cards come from whichever list skin the
+         Firstmall admin selects, so .item_info_area / .goods_price_area are
+         not guaranteed to be present. */
+      .querySelectorAll(".sale_price, .consumer_price")
+      .forEach((el) => {
+        el.childNodes.forEach((node) => {
+          if (node.nodeType !== 3) return;
+          if (!/US/i.test(node.nodeValue)) return;
+          /* Strips "US$", "USD" and a bare "US" prefix — the markup already
+             carries one, so adding US$ blindly produced "US US$389.70". */
+          node.nodeValue = node.nodeValue.replace(/US\$|USD|US/gi, "").trim();
+        });
+
+        if (/US\$/.test(el.textContent || "")) return;
+        const num = el.querySelector(".num");
+        if (!num || !num.parentNode) return;
+        num.parentNode.insertBefore(document.createTextNode("US$"), num);
+      });
+  }
+
   function init(list) {
     let currentPage = Number(new URL(window.location.href).searchParams.get("page")) || 1;
     let totalPages = null;
@@ -107,12 +137,14 @@
         newItems.forEach((li) => list.appendChild(document.importNode(li, true)));
         currentPage = next;
         applyRanks();
+        normalizeListingPrices(list);
 
         if (totalPages !== null && currentPage >= totalPages) done = true;
       });
     }
 
     applyRanks();
+    normalizeListingPrices(list);
 
     const sentinel = document.createElement("div");
     sentinel.className = "bo-best-sentinel";

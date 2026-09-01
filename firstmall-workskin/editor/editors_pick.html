@@ -1,0 +1,180 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 숏폼 콘텐츠 메인 페이 List @@
+- 파일위치 : [스킨폴더]/editor/editors_pick.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/redesign/editors-pick.css" />
+
+<div class="editors-page">
+<div class="editors-main">
+  <section class="editors-hero" aria-label="Editor&rsquo;s Page introduction">
+    <nav class="editors-breadcrumb desktop-only" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span aria-hidden="true">&gt;</span>
+      <span>Editor&rsquo;s Pick</span>
+    </nav>
+
+    <div class="editors-product editors-product--blue" aria-hidden="true"></div>
+    <div class="editors-product editors-product--yellow" aria-hidden="true"></div>
+    <div class="editors-product editors-product--white" aria-hidden="true"></div>
+    <div class="editors-hero-copy">
+      <p>EDITOR&rsquo;S</p>
+      <h1>PAGE<span>+</span></h1>
+      <span>Meet our editors, explore their curated picks,<br>and discover their magazine stories.</span>
+    </div>
+    <div class="editors-hero-cards desktop-only" aria-hidden="true">
+      <article><b>1</b><strong>OUR EDITORS</strong><span>Get to know<br>the minds behind<br>the picks.</span></article>
+      <article><b>2</b><strong>EDITOR&rsquo;S PICKS</strong><span>Handpicked skincare<br>essentials our<br>editors love.</span></article>
+      <article><b>3</b><strong>EDITORIAL MAGAZINE</strong><span>Read stories, tips<br>and trends from<br>our editors.</span></article>
+    </div>
+  </section>
+
+  <div class="editors-shell">
+    <section class="editors-intro" aria-labelledby="editors-title">
+      <h2 id="editors-title">Meet Our Editors</h2>
+      <p>Select an editor to see their picks</p>
+      <div class="editor-tabs" role="tablist" aria-label="Editors">
+        <!--{ @ editors }-->
+        <button type="button"<!--{ ? .editor_seq == current_seq }--> class="is-active"<!--{ / }--> role="tab" aria-selected="<!--{ ? .editor_seq == current_seq }-->true<!--{ : }-->false<!--{ / }-->" data-editor-tab="{.editor_seq}" data-seq="{.editor_seq}">
+          <span class="editor-avatar"><img src="{.profile_image}" alt="{.name}" loading="lazy"></span>
+          <!--{ ? .flag_image }-->
+          <b class="flag" aria-hidden="true"><img src="{.flag_image}" alt="" loading="lazy"></b>
+          <!--{ / }-->
+          <strong>{.name}</strong>
+        </button>
+        <!--{ / }-->
+      </div>
+    </section>
+
+    <div class="editor-profile-carousel" data-editor-profile-carousel>
+      <div class="editor-profile-track" data-editor-profile-track>
+        <!--{ @ editors }-->
+        <article class="editor-profile<!--{ ? .editor_seq == current_seq }--> is-active<!--{ / }-->" data-editor-index="{.editor_seq}" aria-label="{.name}">
+          <div class="editor-profile-main">
+            <div class="editor-profile-avatar">
+              <span class="editor-avatar"><img src="{.profile_image}" alt="{.name}" loading="lazy"></span>
+              <!--{ ? .flag_image }-->
+              <b class="flag" aria-hidden="true"><img src="{.flag_image}" alt="" loading="lazy"></b>
+              <!--{ / }-->
+              <h3>{.name}</h3>
+            </div>
+            <div class="editor-profile-copy">
+              <div class="editor-profile-heading">
+                <div class="editor-profile-title">
+                  <h3>{.name}</h3>
+                  <ul class="editor-facts">
+                    <!--{ ? .location }-->
+                    <li><img src="../images/icon/icon-editor-location.png" alt="" aria-hidden="true">{.location}</li>
+                    <!--{ / }-->
+                    <!--{ ? .age }-->
+                    <li><img src="../images/icon/icon-editor-birth.png" alt="" aria-hidden="true">{.age} years old</li>
+                    <!--{ / }-->
+                    <!--{ ? .skin_type }-->
+                    <li><img src="../images/icon/icon-editor-skin.png" alt="" aria-hidden="true">{.skin_type}</li>
+                    <!--{ / }-->
+                  </ul>
+                </div>
+              </div>
+              <strong class="editor-role">{.job_title}</strong>
+              <p class="editor-bio">{.bio}</p>
+              <div class="editor-tags">{.tags_html}</div>
+            </div>
+          </div>
+          <aside class="editor-note">
+            <h3>Editor&rsquo;s Note</h3>
+            <p>{.editor_note}</p>
+            <strong>{.name} <span aria-hidden="true">&#9829;</span></strong>
+          </aside>
+        </article>
+        <!--{ / }-->
+      </div>
+    </div>
+    <div class="editor-profile-dots" aria-hidden="true">
+      <!--{ @ editors }-->
+      <span<!--{ ? .editor_seq == current_seq }--> class="is-active"<!--{ / }-->></span>
+      <!--{ / }-->
+    </div>
+
+    <!--{ @ current_editor }-->
+    <section class="editor-picks" aria-labelledby="editor-picks-title">
+      <div class="editor-section-heading">
+        <h2 id="editor-picks-title">{.name}&rsquo;s Picks <span>({.pick_cnt} items)</span></h2>
+      </div>
+      <div class="editor-category-tabs" role="tablist" aria-label="Pick categories"></div>
+
+      <div class="editor-pick-rail">
+        <div class="editor-pick-viewport">
+          <div class="editor-pick-list" data-editor-pick-list>
+            <!-- Loops the current editor's linked_picks (flat, priority-ordered).
+                 Each pick's data-pick-category comes straight from
+                 editorsmodel::getEditorsPickList()'s per-pick 'category' field
+                 (goodsmodel category_goods_code) - editors-pick.js matches it
+                 against the active .editor-category-tabs button's
+                 data-pick-filter to show/hide cards. -->
+            <!--{ @ .linked_picks }-->
+            <article class="editor-pick-card" data-pick-category="{.category}">
+              <div class="editor-pick-image" aria-hidden="true">
+                <a href="/goods/view?no={.goods_seq}"><img src="{.goods_img}" alt="{.goods_name}" loading="lazy"></a>
+              </div>
+
+              <div class="editor-pick-product">
+                <p>{.brand}</p>
+                <h3><a href="/goods/view?no={.goods_seq}">{.goods_name_display}</a></h3>
+                <div class="editor-price"><strong>{.price_display}</strong></div>
+                <div class="editor-pick-actions">
+                  <button type="button" class="editor-cart" aria-label="Add to cart" onclick="parent.displayAddToCartQuickview(this, {= .goods_seq}, event); this.blur(); return false;"><img src="../images/icon/icon-cart-white.png" alt="" aria-hidden="true"></button>
+                  <button type="button" class="editor-wish" aria-label="Add to wishlist" aria-pressed="false" data-goods-seq="{.goods_seq}"></button>
+                </div>
+              </div>
+              <aside class="editor-pick-note">
+                <div class="editor-pick-note-copy">
+                  <h4><span aria-hidden="true"></span> Why I Picked It!</h4>
+                  <p>{.pick_reason}</p>
+                  <div class="editor-pick-tags">{.tags_html}</div>
+                </div>
+              </aside>
+            </article>
+            <!--{ / }-->
+          </div>
+        </div>
+        <div class="editor-pick-meter" data-pick-meter>
+          <div class="editor-pick-meter-track" aria-hidden="true"><span data-pick-meter-fill></span></div>
+          <p class="editor-pick-meter-label" data-pick-meter-label>1 / {.pick_cnt}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="editor-magazine" aria-labelledby="editor-mag-title">
+      <div class="editor-magazine-heading">
+        <h2 id="editor-mag-title">From {.name}&rsquo;s Magazine</h2>
+        <a href="/main/magazine">VIEW ALL -&gt;</a>
+      </div>
+      <!-- Magazine cards kept as static placeholder content per your answer — no article data source wired in yet. -->
+      <div class="editor-magazine-grid" data-editor-magazine>
+        <!--{ @ .magazine_articles }-->
+        <article class="editor-magazine-card" data-magazine-seq="{.seq}" onclick="location.href='{.url}'">
+          <div class="editor-magazine-image" style="background-image:url('{.thumbnail}')" aria-hidden="true"></div>
+          <h3>{.title}</h3>
+          <p>{.excerpt}</p>
+          <small>{.date} &middot; {.category}</small>
+        </article>
+        <!--{ / }-->
+        <!--{ ? !.magazine_articles }-->
+        <p class="editor-empty-message">No magazine articles yet.</p>
+        <!--{ / }-->
+      </div>
+      <div class="editor-magazine-dots" aria-hidden="true">
+        <span class="is-active"></span><span></span><span></span>
+      </div>
+    </section>
+    <!--{ / }-->
+
+    {=showNewsletterSection()}
+  </div>
+
+  <!--{ @ editors_json }-->
+  <script>window.__EDITORS_PICK_DATA__ = {.json};</script>
+  <!--{ / }-->
+</div>
+</div>
+
+<script type="text/javascript" src="/app/javascript/js/editors-pick.js"></script>

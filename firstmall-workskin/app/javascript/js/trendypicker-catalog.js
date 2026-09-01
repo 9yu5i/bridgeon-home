@@ -67,7 +67,7 @@
 	}
 
 	function enhanceSortSelect() {
-		var nativeSelect = document.querySelector("#catalog_page #catalog_filter");
+		var nativeSelect = document.querySelector("#catalog_filter");
 		if (!nativeSelect || nativeSelect.closest(".realtrend-select-wrap")) return;
 
 		nativeSelect.classList.add("realtrend-select-native");

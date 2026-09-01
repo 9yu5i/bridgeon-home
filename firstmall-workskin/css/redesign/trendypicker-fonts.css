@@ -1,0 +1,56 @@
+/* TrendyPicker global typeface
+   Pretendard Variable is loaded from the official Pretendard CDN link in
+   layout_header/standard.html. Keep one stack across desktop and iOS so the
+   same numeric weight resolves to the same font rather than a device fallback. */
+
+:root {
+  --tp-font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea,
+table,
+th,
+td,
+pre {
+  font-family: var(--tp-font-family);
+}
+
+/* Firstmall's user.css pins chrome to Inter, while home modules and the
+   magazine iframe can load their own font rules after this file. Keep every
+   requested site surface on the same variable family regardless of load
+   order. This is the single legacy override point for font-family. */
+.layout_header .util_wrap a,
+.layout_header .nav_wrap .respCategoryList .categoryAllBtn,
+.layout_header .nav_wrap .respCategoryList .categoryDepthLink,
+.layout_footer .title,
+.layout_footer .menu > li,
+.layout_footer .menu2 > li,
+.layout_footer .menu3 > li,
+.layout_footer .copyright,
+.layout_side .aside_navigation_wrap ul.menu li.mitem.category a.mitem_goodsview,
+.layout_side .aside_cs_phone,
+.layout_side .title_sub3,
+.rightQuickMenuWrap2 h3,
+.rightQuickMenuWrap2 .right_menu1 .phone,
+.real-trend,
+.real-trend button,
+.seller-section,
+.seller-section button,
+.tp-main-magazine,
+.tp-main-magazine button,
+.tp-home-magazine-widget,
+.tp-home-magazine-widget button {
+  font-family: var(--tp-font-family) !important;
+}
+
+.wide_visual_slider .text1,
+.wide_visual_slider .text3 {
+  font-family: var(--tp-font-family);
+}

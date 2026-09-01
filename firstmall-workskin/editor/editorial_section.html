@@ -1,0 +1,30 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 숏폼 콘텐츠 메인 페이 List @@
+- 파일위치 : [스킨폴더]/editor/editorial_section.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/redesign/editorial-section.css" />
+
+<section class="content-section editorial-section section-title">
+  <h2 class="editorial-section-title">Editorial &amp; Discovery</h2>
+  <div class="editorial-grid">
+    <h2 class="editor-card-title">T.P Pick</h2>
+    <div class="editor-card-carousel" data-editor-card-slider>
+      <div class="editor-card-tabs" role="tablist" aria-label="Choose editor picks" data-editor-card-tabs></div>
+      <div class="editor-card-viewport">
+        <div class="editor-card-track"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--{ @ editors_json }-->
+<script>
+(function () {
+  window.BridgeOn = window.BridgeOn || {};
+  window.BridgeOn.editorData = {.json};
+})();
+</script>
+<!--{ / }-->
+
+<script type="text/javascript" src="/app/javascript/js/editorial.js"></script>
+

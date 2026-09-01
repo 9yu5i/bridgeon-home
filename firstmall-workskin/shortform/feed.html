@@ -1,0 +1,228 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 숏폼 콘텐츠 상세 @@
+- 파일위치 : [스킨폴더]/shortform/feed.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/redesign/shortform-feed.css" />
+<div class="realtrend-page">
+<nav class="realtrend-breadcrumb desktop-only" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a>
+        <span aria-hidden="true">&gt;</span>
+        <a href="#">T.P Pick</a>
+        <span aria-hidden="true">&gt;</span>
+        <span aria-current="page">Real Trend</span>
+      </nav>
+<!--{ ? shortforms }-->
+<div class="realtrend-layout">
+	<div class="realtrend-player-wrap" >
+		<div class="realtrend-shortform">
+			<section class="realtrend-stage" aria-label="Trend reel player">
+				<div class="realtrend-feed" id="realtrend-feed">
+					<div class="realtrend-track" id="realtrend-track">
+						<!--{@shortforms}-->
+						<article class="realtrend-slide<!--{ ? .shortform_seq == current_seq }--> is-active<!--{ / }-->" id="reel-{.shortform_seq}" data-seq="{.shortform_seq}" >
+							<!--{ ? .linked_goods }-->
+								<script type="application/json" class="realtrend-linked-goods-data">{=json_encode(.linked_goods)}</script>
+							<!--{ / }-->
+							<div class="realtrend-media" data-reel-media aria-label="">
+								<!--{ ? .video_type == 'link' }-->
+								<!--{ ? .platform == 'youtube' }-->
+								<div class="sf-reel__embed sf-reel__embed--youtube reel-video">
+									<iframe
+										class="sf-reel__yt-frame"
+										src="https://www.youtube.com/embed/{.youtube_id}?enablejsapi=1&autoplay=1&mute=1&playsinline=1&loop=1&playlist={.youtube_id}&rel=0&controls=0&modestbranding=1&disablekb=1&fs=0&iv_load_policy=3"
+										allow="autoplay; encrypted-media; picture-in-picture"
+										allowfullscreen
+										frameborder="0">
+									</iframe>
+									<button type="button" class="sf-reel__embed-overlay" data-embed-toggle="youtube" aria-label="Play or pause video"></button>
+								</div>
+								<!--{ : .platform == 'tiktok' }-->
+								<div class="sf-reel__embed sf-reel__embed--tiktok reel-video">
+									<iframe
+										class="sf-reel__tt-frame"
+										src="https://www.tiktok.com/player/v1/{.tiktok_id}?loop=1&autoplay=1&muted=1&controls=0&music_info=0&description=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&rel=0&native_context_menu=0&closed_caption=0"
+										allow="autoplay; fullscreen"
+										frameborder="0">
+									</iframe>
+									<button type="button" class="sf-reel__embed-overlay" data-embed-toggle="tiktok" aria-label="Play or pause video"></button>
+								</div>
+								<!--{ : }-->
+								<div class="sf-reel__embed sf-reel__embed--social reel-video" data-platform="{.platform}">
+									{.embed_html}
+								</div>
+								<!--{ / }-->
+								<!--{ : }-->
+								<video
+									class="sf-reel__video reel-video"
+									<!--{ ? .poster_image }-->poster="{.poster_image}"<!--{ / }-->
+									src="{.video_file}"
+									muted
+									autoplay
+									playsinline
+									loop
+									preload="metadata">
+								</video>
+								<!--{ / }-->
+
+								<span class="sf-reel__live">
+									<!--{ ? .platform == 'instagram' }-->
+									INSTAGRAM
+									<!--{ : .platform == 'tiktok' }-->
+									TIKTOK
+									<!--{ : .platform == 'youtube' }-->
+									SHORTS
+									<!--{ : }-->
+									TRENDY PICKER
+									<!--{ / }-->
+								</span>
+
+								<!--{ ? .video_type == 'file' }-->
+								<a class="sf-reel__source-icon<!--{ ? !.video_link }--> is-disabled<!--{ / }-->"
+									href="<!--{ ? .video_link }-->{.video_link}<!--{ : }-->javascript:;<!--{ / }-->"
+									target="_blank"
+									rel="noopener noreferrer"
+									data-platform="{.platform}"
+									aria-label="View original on {.platform}">
+									<!--{ ? .platform == 'youtube' }-->
+									<svg viewBox="0 0 24 24" width="30" height="30"><path d="M21.6 7.2c-.25-1-1-1.75-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5c-1 .25-1.75 1-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8c.25 1 1 1.75 2 2 1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5c1-.25 1.75-1 2-2C22 15.1 22 12 22 12s0-3.1-.4-4.8z" fill="currentColor"/><path d="M10 15.2V8.8L15.8 12z" fill="#000"/></svg>
+									<!--{ : .platform == 'tiktok' }-->
+									<svg viewBox="0 0 24 24" width="30" height="30"><path d="M16.5 2h-3v13.5a2.7 2.7 0 11-2.7-2.7c.24 0 .47.02.7.07V9.8a5.7 5.7 0 105.7 5.7V8.9a6.8 6.8 0 004 1.3V7.2a3.9 3.9 0 01-4.7-3.3V2z" fill="currentColor"/></svg>
+									<!--{ : .platform == 'instagram' }-->
+									<svg viewBox="0 0 24 24" width="30" height="30"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg>
+									<!--{ : }-->
+									<svg viewBox="0 0 24 24" width="30" height="30"><path d="M14 3h7v7M21 3l-9 9M10 5H5a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+									<!--{ / }-->
+								</a>
+								<!--{ / }-->
+
+								<!--{ ? .show_social_actions }-->
+								<div class="realtrend-social sf-reel__side-actions">
+									<button type="button" class="reel-like-btn sf-reel__iconbtn<!--{ ? .user_has_liked }--> is-active<!--{ / }-->">
+										<span class="sf-reel__icon-stack">
+											<img class="sf-reel__icon-default" src="../images/icon/icon-reel-like.png" alt="" aria-hidden="true" />
+											<img class="sf-reel__icon-active" src="../images/icon/icon-reel-liked.png" alt="" aria-hidden="true" />
+										</span>
+										<span class="sf-reel__iconcount"><!--{ ? .likes_count > 0 }-->{.likes_count}<!--{ / }--></span>
+									</button>
+									<button type="button" class="reel-save-btn sf-reel__iconbtn<!--{ ? .user_has_saved }--> is-active<!--{ / }-->">
+										<span class="sf-reel__icon-stack">
+											<img class="sf-reel__icon-default" src="../images/icon/icon-reel-save.png" alt="" aria-hidden="true" />
+											<img class="sf-reel__icon-active" src="../images/icon/icon-reel-saved.png" alt="" aria-hidden="true" />
+										</span>
+										<span class="sf-reel__iconcount"><!--{ ? .save_count > 0 }-->{.save_count}<!--{ / }--></span>
+									</button>
+									<button type="button" class="reel-share-btn sf-reel__iconbtn">
+										<span class="sf-reel__icon-stack">
+											<img class="sf-reel__icon-default" src="../images/icon/icon-reel-share.png" alt="" aria-hidden="true" />
+										</span>
+										<span class="sf-reel__iconcount"><!--{ ? .share_count > 0 }-->{.share_count}<!--{ / }--></span>
+									</button>
+								</div>
+								<!--{ / }-->
+
+								<div class="sf-reel__caption">
+									<div class="sf-reel__author">
+										<span class="sf-reel__handle"><!--{ ? .creator_name }-->@{.creator_name}<!--{ / }--></span>
+									</div>
+									<p class="sf-reel__desc">{.description}</p>
+								</div>
+								<button type="button" class="realtrend-play-toggle" aria-label="Pause reel" aria-pressed="true">
+									<svg class="realtrend-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12" /></svg>
+									<svg class="realtrend-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10l8-5-8-5Z" /></svg>
+								</button>
+							</div>
+
+							<!--{ ? .linked_goods }-->
+							<section class="realtrend-mobile-product realtrend-mobile-only" aria-label="Products in this reel">
+								<div class="realtrend-mobile-product-head">
+									<img src="../images/icon/icon-product.png" alt="" aria-hidden="true" />
+									<h2>Products in this reel</h2>
+									<span class="realtrend-mobile-product-count"></span>
+								</div>
+								<div class="realtrend-mobile-product-viewport">
+									<button type="button" class="realtrend-mobile-product-nav-btn" data-mobile-product-nav="-1" aria-label="Previous product" hidden>
+										<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+									</button>
+									<div class="realtrend-mobile-product-track">
+										<!--{ @ .linked_goods }-->
+										<article class="realtrend-mobile-product-card" data-goods-seq="{..goods_seq}">
+											<img class="realtrend-mobile-product-thumb" src="{..image}" aria-hidden="true"/>
+											<div class="realtrend-mobile-product-copy">
+												<a class="realtrend-brand" href="/goods/brand?code={..brand_code}">{..view_brand}</a>
+												<h3>{..goods_name}</h3>
+												<p class="realtrend-mobile-price"><strong>{=get_currency_price(..price,2)}</strong></p>
+											</div>
+											<button type="button" class="realtrend-mobile-add">Add to Cart</button>
+										</article>
+										<!--{ / }-->
+									</div>
+									<button type="button" class="realtrend-mobile-product-nav-btn" data-mobile-product-nav="1" aria-label="Next product" hidden>
+										<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+									</button>
+								</div>
+							</section>
+							<!--{ / }-->
+
+						</article>
+						<!--{/}-->
+					</div>
+					<button type="button" class="realtrend-mute-toggle" id="realtrend-mute-toggle" aria-label="Mute" aria-pressed="false">
+						<svg class="realtrend-icon-muted" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M4 9v6h4l5 5V4L8 9H4Z" fill="currentColor"/>
+							<path d="M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+						<svg class="realtrend-icon-unmuted" viewBox="0 0 24 24" aria-hidden="true">
+							<path d="M4 9v6h4l5 5V4L8 9H4Z" fill="currentColor"/>
+							<path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+						</svg>
+					</button>
+					<div class="realtrend-progress desktop-only" id="realtrend-progress-desktop" role="slider" aria-label="Reel progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+						<span class="realtrend-progress-fill"></span>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<nav class="realtrend-nav-arrows desktop-only" aria-label="Reel navigation">
+			<button type="button" class="realtrend-arrow" data-reel-direction="-1" aria-label="Previous reel">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6" /></svg>
+			</button>
+			<button type="button" class="realtrend-arrow" data-reel-direction="1" aria-label="Next reel">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+			</button>
+		</nav>
+        </div>
+	<!--{ ? current_shortform.linked_goods }-->
+	<div class="realtrend-panel desktop-only" aria-label="Product details" data-seq="{current_shortform.shortform_seq}">
+		<div class="realtrend-product-nav" id="realtrend-product-nav" hidden>
+			<button type="button" class="realtrend-product-nav-btn" data-product-nav="-1" aria-label="Previous product">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+			</button>
+			<span class="realtrend-product-nav-count" id="realtrend-product-nav-count"></span>
+			<button type="button" class="realtrend-product-nav-btn" data-product-nav="1" aria-label="Next product">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+			</button>
+		</div>
+		<div class="realtrend-product-sheet-wrap">
+			<button type="button" class="realtrend-product-sheet-close realtrend-mobile-only" aria-label="Close product details">
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7 17 17M17 7 7 17" /></svg>
+			</button>
+			<article class="realtrend-product-card"></article>
+		</div>
+	</div>
+	<!--{ / }-->
+</div>
+<div class="realtrend-progress realtrend-progress--dock realtrend-mobile-only" id="realtrend-progress-mobile" role="slider" aria-label="Reel progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+	<span class="realtrend-progress-fill"></span>
+</div>
+<!--{ : }-->
+	<div class="sf-empty">The content can not be found.</div>
+<!--{ / }-->
+</div>
+
+
+<script type="text/javascript" src="/app/javascript/plugin/lazy/jquery.lazyload.min.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/jquery.inview.js"></script>
+<script type="text/javascript" src="/app/javascript/js/common-function.js"></script>
+<script type="text/javascript" src="/app/javascript/js/shortform_feed.js"></script>

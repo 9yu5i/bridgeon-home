@@ -318,6 +318,8 @@
     background: #292626;
   }
 
+  /* Category shortcuts belong to the mobile/tablet home layout only. Hide the
+     entire source block on desktop so it does not leave an empty shell gap. */
   #layout_body .tp-page-shell .main_category {
     display: none;
   }
@@ -480,7 +482,20 @@
   }
 
   #layout_body .main_category .tp-category-label {
-    font-size: 11px;
+    font-size: 13px;
+  }
+
+  /* "K-Traditional" is wider than its 5th column. Keep the tile from growing
+     (which pushed the whole icon+label to the right) and let the one-line
+     label overflow evenly on both sides so it stays centred under the icon.
+     12px (vs 13px) keeps a safe margin from the screen edge down to 320px. */
+  #layout_body
+    .main_category
+    > ul
+    > li:nth-child(5)
+    .tp-category-link {
+    width: 100%;
+    min-width: 0;
   }
 
   #layout_body
@@ -488,7 +503,11 @@
     > ul
     > li:nth-child(5)
     .tp-category-label {
-    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    font-size: 12px;
     white-space: nowrap;
   }
 }
@@ -499,5 +518,9 @@
     width: max-content;
     max-width: calc(100vw - 24px);
     column-gap: 10px;
+    /* The 5th label (K-Traditional) overflows its column to the right, so the
+       centred icon grid reads as right-heavy. Nudge the whole row 4px left to
+       balance the visible block (icons + that label). */
+    transform: translateX(-4px);
   }
 }

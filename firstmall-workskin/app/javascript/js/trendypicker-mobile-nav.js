@@ -414,6 +414,28 @@
     return build(side);
   }
 
+  function bindHamburgerLink() {
+    var hamburger = document.querySelector(
+      "#layout_header.layout_header .resp_wrap .logo_wrap .resp_top_hamburger > a"
+    );
+    if (!hamburger || hamburger.dataset.tpMobileNavHashBound === "true") return;
+
+    hamburger.dataset.tpMobileNavHashBound = "true";
+    hamburger.addEventListener(
+      "click",
+      function (event) {
+        var header = document.getElementById("layout_header");
+        if (header && header.classList.contains("tp-header-subpage")) return;
+
+        // Firstmall opens the side panel from this click. Its #category href
+        // must not also trigger a fragment jump, which briefly shifts the page
+        // horizontally before the panel animation returns it.
+        if (isMobile()) event.preventDefault();
+      },
+      true
+    );
+  }
+
   function watch() {
     var side = document.getElementById("layout_side");
     if (!side) return;
@@ -442,5 +464,8 @@
     callback();
   }
 
-  ready(watch);
+  ready(function () {
+    bindHamburgerLink();
+    watch();
+  });
 })();
