@@ -1,0 +1,58 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 상품 상세 설명 - 공용정보 원본 보기 @@
+- 파일위치 : [스킨폴더]/goods/view_common_contents.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--{? ! commonpreload }-->
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"  xmlns:fb="http://ogp.me/ns/fb#"  xmlns:og="http://ogp.me/ns#" >
+<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# {? APP_NAMES && APP_TYPE }{APP_NAMES}{:}website{/}: {? APP_NAMES  && APP_TYPE }http://ogp.me/ns/fb/{APP_NAMES}{:}http://ogp.me/ns/fb/website{/}#">
+<meta charset="utf-8">
+<meta name="viewport" content="width=400px">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<title>{?shopTitle}{=strip_tags(shopTitle)}{:subject}{=strip_tags(subject)}{:goods.goods_name}{=strip_tags(goods.goods_name)}{:config_basic.shopName}{=strip_tags(config_basic.shopName)}{/}</title>
+<link rel="stylesheet" type="text/css" href="../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../css/buttons.css" />
+<script type="text/javascript" src="/app/javascript/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/app/javascript/jquery/jquery-ui.min.js"></script>
+<style type="text/css">
+#goods_view_contents_title { padding:0 10px; height:40px; background-color:#616775; }
+#goods_view_contents_title h2 { font-size:14px; font-weight:500; line-height:40px; padding-left:36px; color:#fff; background:url(../images/design/hand_zoom.png) 0 50% no-repeat; background-size:24px; }
+#goods_view_contents_title .close { position: absolute; right: 0px; top: 0px; background: url(../images/design/btn_close.png) no-repeat center center; background-size: 39px 39px; width: 39px; height: 39px; box-sizing: border-box; overflow:hidden; text-indent:-999px; }
+#goods_view_contents {z-index:5; }
+#goods_view_contents_top {z-index:10; position:fixed; right:10px; bottom:10px; width:37px;}
+#goods_view_contents_top img {max-width:100%;}
+.goods_desc_contents img {max-width:100%;}
+.goods_description ul {list-style-type:disc; padding-left: 20px;}
+</style>
+</head>
+<body>
+
+<!-- title, close -->
+<div id="goods_view_contents_title">
+	<h2>이미지 확대/축소가 가능합니다.</h2>
+	<a href="javascript:void(0)" class="close" onclick="history.back();">닫기</a>
+</div>
+
+<!-- to top -->
+<div id="goods_view_contents_top">
+	<a href="#"><img src="../images/design/btn_floating_top.png" /></a>
+</div>
+
+
+<div class="goods_desc_contents goods_description">
+	{goods.common_contents}
+</div>
+
+</body>
+</html>
+<!--{:}-->
+<script type="text/javascript">
+	view_lazyload();
+</script>
+<div class="goods_desc_contents goods_description">
+	{goods.common_contents}
+</div>
+<!--{/}-->

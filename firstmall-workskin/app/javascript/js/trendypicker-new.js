@@ -216,7 +216,7 @@
           observer.unobserve(entry.target);
         });
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.14 }
+      { rootMargin: "0px 0px -4% 0px", threshold: 0.05 }
     );
 
     targets.forEach((target) => observer.observe(target));

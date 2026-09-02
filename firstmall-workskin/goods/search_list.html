@@ -1,0 +1,164 @@
+<!--{ ? totcount > 0 }-->
+<ul>
+	<!--{ @ record }-->
+	<li>
+		<div class="item_img_area">
+			<a href="/goods/view?no={.goods_seq}"><img src="{.image}" onerror="this.src='../images/common/noimage.gif';" alt="" /></a>
+			<div class="display_zzim">
+				<!--{ ? .wish }-->
+				<img src="/data/icon/goodsdisplay/preview/thumb_zzim_off.png" class="zzimOffImg"  alt="찜하기" style="display:none" data-member="{aParams.member_seq}" data-goods="{.goods_seq}" data-wish="{.wish}" onclick="setWish(this)">
+				<img src="/data/icon/goodsdisplay/preview/thumb_zzim_on.png" class="zzimOnImg" alt="찜하기" data-member="{aParams.member_seq}" data-goods="{.goods_seq}" data-wish="{.wish}" onclick="setWish(this)">
+				<!--{ : }-->
+				<img src="/data/icon/goodsdisplay/preview/thumb_zzim_off.png" class="zzimOffImg" alt="찜하기" data-member="{aParams.member_seq}" data-goods="{.goods_seq}" data-wish="{.wish}" onclick="setWish(this)">
+				<img src="/data/icon/goodsdisplay/preview/thumb_zzim_on.png" class="zzimOnImg" alt="찜하기" style="display:none" data-member="{aParams.member_seq}" data-goods="{.goods_seq}" data-wish="{.wish}" onclick="setWish(this)">
+				<!--{ / }-->
+			</div>
+			<!-- 상품 상태 표시 -->
+			<!--{ ? .goods_status != 'normal' }-->
+			<div class="respGoodsStatus">
+				<a href="/goods/view?no={.goods_seq}" class="area">
+					<!--{ ? .goods_status == 'runout' }-->
+					<span class="status_style type1"><em>SOLD OUT!</em></span>
+					<!--{ : .goods_status == 'purchasing' }-->
+					<span class="status_style type2"><em>재고확보중</em></span>
+					<!--{ : .goods_status == 'unsold' }-->
+					<span class="status_style type3"><em>판매중지</em></span>
+					<!--{/}-->
+				</a>
+			</div>
+			<!--{/}-->
+		</div>
+		<ul class="item_info_area">
+			<!--{? .color_pick}-->
+			<li class="displaY_color_option">
+				<!--{ @ explode(',', .color_pick) }-->				
+				<span class="areA" style="background-color:#{..value_};"></span>
+				<!--{ / }-->
+			</li>
+			<!--{ / }-->
+			<li class="goods_name_area">
+				<!--{ ? aParams.searchMode != 'brand' && .brand_title }-->
+				<span class="brand_name">{.brand_title}</span>
+				<!--{ / }-->
+				<a href="/goods/view?no={.goods_seq}"><span class="name">{.goods_name}</span></a>
+			</li>
+			<li class="goods_desc_area">
+				{.summary}
+			</li>
+
+			<!-- 비회원 대체문구 -->
+			<!--{ ? .string_price }-->
+			<li class="goods_price_area">
+				<span class="warning_text">{=.string_price}</span>
+			</li>
+			<!--{ : }-->
+			<li class="goods_price_area">
+				<span class="sale_price">
+				<!--{ ? .sale_price >= 0 }-->					
+					{=get_currency_price(.sale_price, 2, '', '<b class="num">_str_price_</b>')}
+				<!--{ : }-->					
+					{=get_currency_price(.price, 2, '', '<b class="num">_str_price_</b>')}
+				<!--{ / }-->
+				</span>
+
+				<!--{ ? .consumer_price > .sale_price }-->
+				<span class="consumer_price">					
+					{=get_currency_price(.consumer_price, 2, '', '<span class="num">_str_price_</span>')}
+				</span>
+				<!--{ / }-->
+				
+				<!--{ ? .sale_per > 0 }-->
+				<span class="discount_rate">
+					<b class="num">{.sale_per}</b>%
+				</span>
+				<!--{ / }-->
+			</li>
+			<!--{ / }-->
+
+			<!--{ ? aParams.searchMode != 'catalog' }-->
+			<li class="goods_category_area">
+				<ul class="cate">
+					<li>{.category}</li>
+				</ul>
+			</li>
+			<!--{ / }-->
+			<!--{ ? .free_delivery || .free_overseas }-->
+			<li class="goods_besong_area">
+				<!--{ ? .free_delivery }-->
+				<span class="besong">무료배송</span>
+				<!--{ / }-->
+				<!--{ ? .free_overseas }-->
+				<!--<span class="besong">해외배송</span>-->
+				<!--{ / }-->
+			</li>
+			<!--{ / }-->
+
+			<!--{ ? .purchase_ea > 0 || .review_count > 0 || .wish_count > 0 }-->
+			<li class="goods_sold_area">
+				<!--{ ? .purchase_ea > 0 }-->
+				<span class="sold"><b class="num">{=number_format(.purchase_ea)}</b> sold</span>
+				<!--{ / }-->
+				<!--{ ? .review_count > 0 }-->
+				<span class="review">리뷰 <b class="num">{=number_format(.review_count)}</b></span>
+				<!--{ / }-->
+				<!--{ ? .wish_count > 0 }-->
+				<span class="zzim">찜 <b class="num">{=number_format(.wish_count)}</b></span>
+				<!--{ / }-->
+			</li>
+			<!--{ / }-->
+
+			<!--{ ? serviceLimit('H_AD') }-->
+				<!--{ ? aParams.searchMode != 'mshop' }-->
+				<li class="goods_seller_area">
+					<span class="name">{.provider_name}</span>
+					<span class="rank">
+						<!--{?.pgroup_icon }-->
+						<img src="{.pgroup_icon}" class="rank_img" alt= "" />
+						<!--{ / }-->
+						<!--{?.pgroup_name }-->
+						({.pgroup_name})
+						<!--{ / }-->
+					</span>
+				</li>
+				<!--{ / }-->
+			<!--{ / }-->
+
+			<!--{ ? .today_icon }-->			
+			<!-- 아이콘 모음 -->			
+			<li class="goods_icon_area">
+				<!--{ @ explode(',', .today_icon) }-->
+				<img src="/data/icon/goods/{=..value_}.gif" alt="" />
+				<!--{ / }-->
+			</li>
+			<!--{ / }-->
+		</ul>
+	</li>
+	<!--{ / }-->
+</ul>
+<!--{ : }-->
+<div class="no_data_area2 Mt20">
+	{errorMessage}
+</div>
+<!--{ / }-->
+
+<!--{ ? page.totalpage > 1 }-->
+<div class="paging_navigation">
+	<!--{ ? page.first }--><a href="?page={page.first}&amp;{page.querystring}" class="first">◀ 처음</a><!--{ / }-->
+	<!--{ ? page.prev }--><a href="?page={page.prev}&amp;{page.querystring}" class="prev">◀ 이전</a><!--{ / }-->
+	<!--{ @ page.page }-->
+		<!--{ ? page.nowpage ==  .value_ }-->
+			<a href="?page={.value_}&amp;{page.querystring}" class="on">{.value_ }</a>
+		<!--{ : }-->
+			<a href="?page={.value_}&amp;{page.querystring}">{.value_ }</a>
+		<!--{ / }-->
+	<!--{ / }-->
+	<!--{ ? page.next }--><a href="?page={page.next}&amp;{page.querystring}" class="next">다음 ▶</a><!--{ / }-->
+	<!--{ ? page.last }--><a href="?page={page.last}&amp;{page.querystring}" class="last">마지막 ▶</a><!--{ / }-->
+</div>
+<!--{ / }-->
+
+<script>
+	$("a.total span.num").html('{=number_format(totcount)}');
+	$("[data-catalog-count]").html('({=number_format(totcount)})');
+	$("[data-catalog-count-mobile]").html('{=number_format(totcount)} Items');
+</script>

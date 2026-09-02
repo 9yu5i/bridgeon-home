@@ -1,0 +1,41 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ "상품리스트 페이지" 상품 영역 @@
+- 파일위치 : [스킨폴더]/goods/search_list_template.html
+- 관련 페이지들 : 카테고리, 지역, 브랜드, 검색결과, 신상품, 베스트, 이벤트, 사은품 이벤트, 미니샵
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--{ ? totcount > 0 }-->
+<ul>
+	{ #goods_info_template }
+</ul>
+<!--{ : }-->
+<div class="no_data_area2 Mt20">
+	{errorMessage}
+</div>
+<!--{ / }-->
+
+<!--{ ? page.totalpage > 1 }-->
+<div class="paging_navigation">
+	<!--{ ? page.first }--><a href="javascript:goodsSearchPage({page.first})" class="first">◀ 처음</a>
+	<!--{ / }-->
+	<!--{ ? page.prev }--><a href="javascript:goodsSearchPage({page.prev})" class="prev">◀ 이전</a>
+	<!--{ / }-->
+	<!--{ @ page.page }-->
+	<!--{ ? page.nowpage ==  .value_ }-->
+	<a href="javascript:goodsSearchPage({.value_})" class="on">{.value_ }</a>
+	<!--{ : }-->
+	<a href="javascript:goodsSearchPage({.value_})">{.value_ }</a>
+	<!--{ / }-->
+	<!--{ / }-->
+	<!--{ ? page.next }--><a href="javascript:goodsSearchPage({page.next})" class="next">다음 ▶</a>
+	<!--{ / }-->
+	<!--{ ? page.last }--><a href="javascript:goodsSearchPage({page.last})" class="last">마지막 ▶</a>
+	<!--{ / }-->
+</div>
+<!--{ / }-->
+
+<script>
+	$("a.total span.num").html('{=number_format(totcount)}');
+	$("[data-catalog-count]").html('({=number_format(totcount)})');
+	$("[data-catalog-count-mobile]").html('{=number_format(totcount)} Items');
+</script>

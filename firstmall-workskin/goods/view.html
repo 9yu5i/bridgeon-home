@@ -329,8 +329,7 @@
 </script>
 <script type="text/javascript" src='../common/minishop.js'></script>
 <script type="text/javascript" src="/app/javascript/js/goods-view.js?dummy={=date('YmdHis')}"></script>
-<script type="text/javascript" src="/app/javascript/js/goods-display.js?v={=date('Ymd')}"></script>
-<script type="text/javascript" src="/app/javascript/js/goods-display_mobile.js?v={=date('Ymd')}"></script>
+<script type="text/javascript" src="/app/javascript/js/quickview.js?v={=date('Ymd')}"></script>
 <script type="text/javascript">
 (function () {
 	function hasSelectableProductOptions() {
@@ -1987,11 +1986,6 @@ tabButtons.forEach((button) => {
       panel.hidden = panel.dataset.detailPanel !== key;
     });
     loadTabContent(key);
-    if (key === 'reviews') {
-      requestAnimationFrame(function () {
-        animateReviewsBars();
-      });
-    }
   });
 });
 
@@ -2119,37 +2113,12 @@ if (!hasActiveTab && tabButtons.length) {
 })();
 });
 
-function ensureReviewsBarAnimationStyles(frameDoc) {
-  if (!frameDoc || frameDoc.getElementById('trendypicker-review-bar-animation')) return;
-
-  const style = frameDoc.createElement('style');
-  style.id = 'trendypicker-review-bar-animation';
-  style.textContent = [
-    '.product-reviews-bar i::before {',
-    '  width: 0;',
-    '  transition: width 0.72s cubic-bezier(0.22, 1, 0.36, 1);',
-    '}',
-    '.product-reviews-bars.is-animating .product-reviews-bar i::before {',
-    '  width: var(--bar, 0%);',
-    '}',
-    '.product-reviews-bars.is-animating .product-reviews-bar:nth-child(2) i::before { transition-delay: 0.06s; }',
-    '.product-reviews-bars.is-animating .product-reviews-bar:nth-child(3) i::before { transition-delay: 0.12s; }',
-    '.product-reviews-bars.is-animating .product-reviews-bar:nth-child(4) i::before { transition-delay: 0.18s; }',
-    '.product-reviews-bars.is-animating .product-reviews-bar:nth-child(5) i::before { transition-delay: 0.24s; }',
-    '@media (prefers-reduced-motion: reduce) {',
-    '  .product-reviews-bar i::before { transition: none; }',
-    '}'
-  ].join('\n');
-  (frameDoc.head || frameDoc.documentElement).appendChild(style);
-}
-
 function animateReviewsBars() {
   const frame = document.getElementById('reviews_frame');
   const frameDoc = frame && frame.contentDocument;
   const bars = frameDoc && frameDoc.querySelector('.product-reviews-bars');
   if (!bars) return;
 
-  ensureReviewsBarAnimationStyles(frameDoc);
   bars.classList.remove('is-animating');
   void bars.offsetWidth; // force reflow so the class removal actually takes effect before re-adding
   requestAnimationFrame(function () {
@@ -2686,6 +2655,28 @@ $(function() {
     document.addEventListener('keydown', function (e) {
       if (!modal.hidden && e.key === 'Escape') window.closeCouponModal();
     });
+
+    modal.addEventListener('click', function (e) {
+      var btn = e.target.closest("button[name='couponDownloadButton']");
+      if (!btn) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (btn.disabled) return;
+
+      btn.disabled = true;
+      var goods = btn.getAttribute('goods');
+      var coupon = btn.getAttribute('coupon');
+
+      fetch('../coupon/download?goods=' + encodeURIComponent(goods) + '&coupon=' + encodeURIComponent(coupon), { credentials: 'same-origin' })
+        .then(function () {
+          // Re-fetch the coupon list so this row now reflects "Issue completion".
+          window.openCouponModal(modal.dataset.goodsSeq);
+        })
+        .catch(function () {
+          btn.disabled = false;
+        });
+    }, true);
+
     return modal;
   }
 
@@ -2698,6 +2689,7 @@ $(function() {
 
   window.openCouponModal = function (goodsSeq, couponSeq) {
     var modal = ensureModal();
+    modal.dataset.goodsSeq = goodsSeq;
     var title = modal.querySelector('#couponModalTitle');
     var body = modal.querySelector('.coupon-modal-body');
     title.textContent = (typeof getAlert === 'function') ? getAlert('gv015') : 'Download Coupon';

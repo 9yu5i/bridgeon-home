@@ -1,0 +1,218 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 상품 검색 - 검색된 상품 리스트 @@
+- 파일위치 : [스킨폴더]/goods/user_select_list.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<head>
+<title>{ title }</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" href="/admin/skin/default/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/admin/skin/default/css/layout.css" />
+<link rel="stylesheet" type="text/css" href="/admin/skin/default/css/buttons.css" />
+<link rel="stylesheet" type="text/css" href="/admin/skin/default/css/board.css" />
+<link rel="stylesheet" type="text/css" href="/admin/skin/default/css/page.css" />
+<link rel="stylesheet" type="text/css" href="/admin/skin/default/css/jqueryui/black-tie/jquery-ui-1.8.16.custom.css" />
+<link rel="stylesheet" type="text/css" href="/admin/skin/default/css/poshytip/style.css" />
+<link rel="stylesheet" type="text/css" href="/app/javascript/plugin/editor/css/editor.css" />
+<link rel="stylesheet" type="text/css" href="../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../css/user.css" />
+<style>
+body { min-width:auto;}
+html {overflow:hidden;}
+</style>
+<!--{ ? config_system.favicon }-->
+<!-- 파비콘 -->
+<link rel="shortcut icon" href="{ config_system.favicon}" />
+<!--{ / }-->
+
+
+<!-- 자바스크립트 [순서변경하지마세요] -->
+<script type="text/javascript" src="/app/javascript/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/app/javascript/jquery/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/jquery.hotkeys.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/jquery.poshytip.min.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/jquery.activity-indicator-1.0.0.min.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/jquery.cookie.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/custom-select-box.js"></script>
+<script type="text/javascript" src="/app/javascript/js/dev-tools.js"></script>
+<script type="text/javascript" src="/app/javascript/js/selleradmin-layout.js?dummy={=date('YmdHis')}&krdomain=//{config_system.subDomain}"></script>
+<script type="text/javascript" src="/data/js/language/L10n_{config_system.language}.js?dummy={=date('YmdHis')}"></script>
+<script type="text/javascript" src="/app/javascript/js/common.js"></script>
+<script type="text/javascript" src="/app/javascript/js/admin-layout.js?dummy={=date('YmdH')}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//$('#select_{_GET.displayId}',parent.document).height($('#sourceList').height()+80);
+	//$("div#{_GET.displayId}", parent.document).height($(parent.document).height());
+});
+</script>
+</head>
+
+
+<body>
+<script type="text/javascript">
+function apply_layer(){
+	var iObj = $("div#{_GET.inputGoods}",parent.document);
+	var tag = "";iObj.html( tag );
+	$("div#{_GET.displayId} div.targetGoods",parent.document).each(function(){
+		var goodsSeq = $(this).attr('id');
+		var img = $(this).find(".img_area").html();
+		var goodsName = $(this).find("div.name").html();
+		var goodsPrice = $(this).find("div.price").html();
+
+		tag += "<div class='goods_loop_area v2'>";
+		tag += "	<ul class='goods_area'>";
+		tag += "		<li class='img_area'>"+img+"</li>";
+		tag += "		<li class='info_area'>";
+		{? _GET.bulkorder }
+		tag += "			<div class='name'>"+goodsName+"</div>";
+		{:}
+		tag += "			<div class='name'>"+goodsName+"</div>";
+		{/}
+		tag += "			<div class='price'>"+goodsPrice+"</div>";
+		tag += "		</li>";
+		tag += "	</ul>";
+        tag += "    <textarea name='contentsMulti[]' class='size3 Mt12' placeholder='Responses to your inquiries will be sent to the email address you provide.&#13;&#10;Please ensure it is accurate.' ></textarea>";
+		tag += "	<input type='hidden' name='{_GET.inputGoods}[]' value='"+goodsSeq+"' />";
+		{? _GET.bulkorder }
+		var goodscont = $(this).attr('cont');
+		tag += "	<textarea name='{_GET.inputGoods}_cont[]' id='{_GET.inputGoods}_cont_"+goodsSeq+"' title='옵션과 수량정보 입력' cont='" + goodscont + "' /></textarea>";
+		{/}
+		tag += "</div>";
+
+		this.onclick=function(){parent.targetGoods_click($(this));};
+		{? _GET.goods_review }parent.goodslistclose('{_GET.displayId}',goodsSeq);{/}
+	});
+	iObj.html( tag );
+
+	{? _GET.bulkorder }
+	$("textarea[name='{_GET.inputGoods}_cont[]']",parent.document).each(function(){
+		var goodscont = $(this).attr('cont');
+		if(eval('goodscont') != 'undefined' ) {
+			$(this).val(goodscont);
+		}
+	});
+	{/}
+}
+$(function() {
+	$("#sourceList .sourceGoods").live("click",function(){
+		var cObj = $(this).clone();
+		var tObj = $("div#{_GET.displayId} div#targetList",parent.document);
+		cObj.removeClass("sourceGoods").addClass("targetGoods");
+		{? _GET.goods_review }tObj.empty();{/}
+		if( ! tObj.find("div#"+cObj.attr('id')).length ) tObj.append(cObj);
+		apply_layer();
+		
+		{? _GET.goods_review }
+		$('.resp_layer_pop', parent.document).hide();
+		$('.resp_layer_bg', parent.document).remove();
+		$('body', parent.document).css('overflow', 'auto');
+		{/}
+	});
+	// 등록된 상품 선택된 상태로
+	$("div#{_GET.inputGoods} div.goods",parent.document).each(function(){
+		var clone = $("div#sourceList div.sourceGoods").eq(0).clone();
+		var img = $(this).find(".img_area").html();
+		var name = $(this).find("div.name").html();
+		var price = $(this).find("div.price").html();
+		var seq = $(this).find("input[name='{_GET.inputGoods}[]']").val();
+		var goodsSeqsel = false;
+		$("div#{_GET.displayId} div.targetGoods",parent.document).each(function(){
+			var goodsSeq = $(this).attr('id');
+			if( goodsSeq == seq ) {
+				goodsSeqsel = true;
+				return false;//break;
+			}
+		});
+
+		if( goodsSeqsel == false ) {//선택되지 않은상품만추가
+			var tObj = $("div#{_GET.displayId} div#targetList",parent.document);
+			clone.attr('id',seq);
+			{? _GET.bulkorder }
+			var goodscont = $(this).find("textarea[name='{_GET.inputGoods}_cont[]']").val();
+			clone.attr('cont',goodscont);
+			{/}
+			clone.find(".img_area").html(img);
+			clone.find("div.name").html(name);
+			clone.find("div.price").html(price);
+			clone.removeClass("sourceGoods").addClass("targetGoods");
+			clone[0].onclick=function(){parent.targetGoods_click(clone);};
+			tObj.append(clone);
+		}
+	});
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//$(document).resize(function(){iframeset();}).resize();
+	setInterval(function(){
+		iframeset();
+	},1000);
+});
+function iframeset(){
+	$('#orderlist',parent.document).height($('#sourceList').height());
+	$('#select_{_GET.displayId}',parent.document).height($('#sourceList').height()+80);
+}
+</script>
+<div id="sourceList">
+	<div class="board_goods_select_display v2">
+		<!--{ @ record }-->
+		<div id="{.goods_seq}" class="sourceGoods goods_loop_area">
+			<ul class="goods_area">
+				<li class="img_area"><img src="{.image}" class="goodsThumbView goods_img" alt="{.label}" /></li>
+				<li class="info_area">
+					<div class="name">{.goods_name}</div>
+					<div class="price">
+					{?.string_price_use}
+						{.string_price}
+					{:}
+						{? .consumer_price > 0 && .consumer_price < .price }{=number_format(.consumer_price)} →{/} {=get_currency_price(number_format(.price),2)}
+					{/}
+					</div>
+				</li>
+			</ul>
+			<input type='hidden' name='displayGoods[]' value='{.goods_seq}' />
+		</div>
+		<!--{ : }-->
+		<div>
+			<p class="center" style="padding:30px;">검색된 상품 리스트가 없습니다.</p>
+		</div>
+		<!--{ / }-->
+	</div>
+
+	<!-- 페이징 -->
+	<div class="paging_navigation">
+		<!--{ ? page.first }-->
+		<a href="user_select_list?page={page.first}&amp;{page.querystring}" class="first">처음</a>
+		<!--{ / }-->
+		<!--{ ? page.prev }-->
+		<a href="user_select_list?page={page.prev}&amp;{page.querystring}" class="prev">이전</a>
+		<!--{ / }-->
+		<!--{ @ page.page }-->
+		<!--{ ? page.nowpage ==  .value_ }-->
+		<a href="javascript:void(0)" class="on">{.value_ }</a>
+		<!--{ : }-->
+		<a href="user_select_list?page={.value_}&amp;{page.querystring}">{.value_ }</a>
+		<!--{ / }-->
+		<!--{ / }-->
+		<!--{ ? page.next }-->
+		<a href="user_select_list?page={page.next}&amp;{page.querystring}" class="next">다음</a>
+		<!--{ / }-->
+		<!--{ ? page.last }-->
+		<a href="user_select_list?page={page.last}&amp;{page.querystring}" class="last">끝</a>
+		<!--{ / }-->
+		<!--{ ?! record }-->
+		<a href="javascript:void(0)" class="on">1</a>
+		<!--{ / }-->
+	</div>
+</div>
+
+</body>
+</html>

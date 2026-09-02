@@ -460,11 +460,18 @@
     display: block;
   }
 
-  /* Firstmall writes display:none inline when an iPhone emits an initial
-     scroll/resize event at scrollTop 0. Keep the mobile floating layer alive;
-     search and modal states still hide the individual controls when needed. */
+  /* At scrollTop 0 Firstmall's stock script repeatedly hides #floating_over
+     (jQuery fadeOut → animates inline opacity, then display:none). We keep the
+     fixed bottom nav inside #floating_over, so forcing it visible made the two
+     fight and the whole layer (nav + scroll-top/chat buttons) flickered at the
+     top of the page. Lock display AND opacity AND visibility so the stock fade
+     has no visible effect — the inline opacity it sets each frame is overridden
+     and the flicker stops. Search/modal states still hide individual controls
+     via their own display:none on the buttons, which this does not touch. */
   #floating_over {
     display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   /* Full-screen pages such as Real Trend can establish their own viewport
@@ -479,6 +486,8 @@
     min-height: 61px;
     padding-bottom: env(safe-area-inset-bottom, 0);
     overflow: visible;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   #floating_over .fixed_menu.tp-fnav ul {
@@ -496,6 +505,8 @@
     display: grid;
     right: 16px;
     right: max(16px, env(safe-area-inset-right, 0px));
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   #floating_over .float-button.to-top {

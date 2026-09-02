@@ -1,0 +1,386 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 상품 퀵뷰 (팝업) @@
+- 파일위치 : [스킨폴더]/goods/quickview.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<style>
+#floating_over {display:none !important;}
+</style>
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/redesign/goods-quickview.css" />
+<script type="text/javascript">
+	var gl_goods_price = 0;
+	var gl_event_sale_unit = 0;
+	var gl_cutting_sale_price = 0;
+	var gl_cutting_sale_action = "{config_system.cutting_sale_action}";
+	var gl_multi_discount_use 	= "{goods.multi_discount_use}";
+	var gl_multi_discount_unit = "{goods.multi_discount_unit}";
+	var gl_multi_discount 		= 0;
+	var gl_multi_discount_ea 	= 0;
+	var gl_option_view_type = "{goods.option_view_type}";
+	var gl_options_count = {=count(options)};
+	var gl_opttag = '<tr class="quanity_row">';
+	var gl_min_purchase_limit = '{goods.min_purchase_limit}';
+	var gl_min_purchase_ea = 0;
+	var gl_max_purchase_limit = '{goods.max_purchase_limit}';
+	var gl_max_purchase_ea = 0;
+	var gl_member_seq = "{sessionMember.member_seq}";
+	var gl_goods_seq = {goods.goods_seq};
+	var gl_option_divide_title_count = {=count(goods.option_divide_title)};
+	var gl_skin = "{skin}";
+	var gl_string_price_use = "";
+	var gl_string_button_use = "";
+
+	{ ? is_array(options_n0) }
+	var gl_option_n0 = {=json_encode(options_n0)};
+	{ / }
+	{ ? is_array(gl_options_join) }
+	var gl_options_join = {=json_encode(options_join)};
+	{ / }
+	{ ? goods.price }
+	gl_goods_price = {goods.sale_price};
+	{ / }
+	{ ? goods.event.event_sale_unit }
+	gl_event_sale_unit = {goods.event.event_sale_unit};
+	{ / }
+	{? is_numeric(config_system.cutting_sale_price) && config_system.cutting_sale_use !='none'}
+	gl_cutting_sale_price = {config_system.cutting_sale_price};
+	{ / }
+	{ ? goods.multi_discount }
+	gl_multi_discount 		= {goods.multi_discount};
+	{ / }
+	{ ? goods.multi_discount_ea }
+	gl_multi_discount_ea 	= {goods.multi_discount_ea};
+	{ / }
+	{ ? goods.min_purchase_ea }
+	gl_min_purchase_ea = {goods.min_purchase_ea};
+	{ / }
+	{ ? goods.max_purchase_ea }
+	gl_max_purchase_ea = {goods.max_purchase_ea};
+	{ / }
+	{ ? goods.string_price_use }
+	gl_string_price_use = {goods.string_price_use};
+	{/}
+	{ ? goods.string_button_use }
+	gl_string_button_use = {goods.string_button_use};
+	{/}
+
+	$(document).ready(function(){
+		$('.qv_brand_link a').attr('target', '_parent');
+
+		$(document).off('click.qvQty').on('click.qvQty', '.qv_num_single_area .eaPlus, .qv_num_single_area .eaMinus', function (e) {
+			e.preventDefault();
+			var $wrap = $(this).closest('.qv_num_single_area');
+			var $eaObj = $wrap.find("input[name='optionEa[0]']");
+			var val = parseInt($eaObj.val(), 10) || 0;
+			if ($(this).hasClass('eaPlus')) { val += 1; } else { val -= 1; }
+			if (val < 1) val = 1;
+			$eaObj.val(val);
+			if (typeof calculate_goods_price === 'function') { calculate_goods_price(); }
+			return false;
+		});
+		$('.qv-love-section-title').on('click', function () {
+			var $note = $(this).closest('.qv-love');
+			var $desc = $note.find('.qv_section_desc');
+			$desc.stop(true, true).slideToggle(250, function () {
+				if (window.frameElement && window.parent.resizeQuickviewIframe) {
+					window.parent.resizeQuickviewIframe(window.frameElement);
+				}
+			});
+			$note.toggleClass('open');
+			$note.find('.toggle_icon').text($note.hasClass('open') ? '−' : '+');
+		});
+		var $selectOptionLay = $('#select_option_lay');
+		if ($selectOptionLay.length && window.MutationObserver) {
+			var sbResizeRaf = null;
+			var sbMo = new MutationObserver(function (mutations) {
+				if (sbResizeRaf) cancelAnimationFrame(sbResizeRaf);
+				sbResizeRaf = requestAnimationFrame(function () {
+					if ( $('#select_option_lay .sbOptions:visible').length === 0 ) {
+						$('#select_option_lay .goods_option_area').css('min-height', '0');
+					}
+					if (window.frameElement && window.parent.resizeQuickviewIframe) {
+						window.parent.resizeQuickviewIframe(window.frameElement);
+					}
+				});
+			});
+			sbMo.observe($selectOptionLay[0], { attributes: true, attributeFilter: ['style'], subtree: true });
+		}
+
+		var $qtyContainer = $('.goods_quantity_table_container');
+		if ($qtyContainer.length && window.MutationObserver) {
+			var resizeRaf = null;
+			var mo = new MutationObserver(function () {
+				if (resizeRaf) cancelAnimationFrame(resizeRaf);
+				resizeRaf = requestAnimationFrame(function () {
+					if (window.frameElement && window.parent.resizeQuickviewIframe) {
+						window.parent.resizeQuickviewIframe(window.frameElement);
+					}
+				});
+			});
+			mo.observe($qtyContainer[0], { childList: true, subtree: true });
+		}
+
+		$(document).on('click', '.sbToggle, .sbOptions li, .sbOptions a', function(e){
+			requestAnimationFrame(function () {
+				requestAnimationFrame(function () {
+					if ( $('#select_option_lay .sbOptions:visible').length === 0 ) {
+						$('#select_option_lay .goods_option_area').css('min-height', '0');
+					}
+					if (window.frameElement && window.parent.resizeQuickviewIframe) {
+						window.parent.resizeQuickviewIframe(window.frameElement);
+					}
+				});
+			});
+		});
+
+		$("select[name='viewOptions[]']").last().bind("change",function(){
+			gl_opttag = '<td class="quantity_cell option_text">';
+			<!--{ @options[0].option_divide_title }-->
+			var opt = $(this).find('option:selected').attr('opt{.key_+1}');
+			if(!opt) return false;
+			var opt_value = `{.value_}`;
+			gl_opttag += opt_value + ' : '+opt+'<input type="hidden" name="option[{.key_}][]" value="'+opt+'" />';
+			gl_opttag += '<input type="hidden" name="optionTitle[{.key_}][]" value="'+opt_value+'" />';
+			<!--{ ? .size_ != .key_+1 }-->
+			gl_opttag += '<br />';
+			<!--{ / }-->
+			<!--{ / }-->
+		});
+
+		{? wish_seq}
+			$('.wishimg').attr('usewish','y').addClass('usewish');
+			$('.qv-wish').addClass('is-active');
+		{/}
+	});
+
+	var alert_timer = null;
+
+	function wish_chg(){
+		if(!gl_member_seq){
+			if(confirm(getAlert('gv009'))){
+				var url = "/member/login?return_url=" + encodeURIComponent(top.location.href);
+				top.document.location.href = url;
+				return;
+			}else{
+				return;
+			}
+		}
+		$('.wishimg').addClass('is-hover-suppressed');
+		$.ajax({
+			'url' : $('.wishimg').attr('usewish') == 'n' ? '/mypage/wish_add?seqs[]={goods.goods_seq}' : '/mypage/wish_del?seqs={goods.goods_seq}',
+			'type' : 'get',
+			'success' : function(res){
+				if($('.wishimg').attr('usewish') == 'n'){
+					$('.wishimg').attr('usewish','y').addClass('usewish');
+					$('.qv-wish').addClass('is-active');
+					$("#wish_alert .wa_on").show();
+					$("#wish_alert .wa_off").hide();
+					$("#wish_alert .wa_msg").html('Added to Wishlist!');
+				}else{
+					$('.wishimg').attr('usewish','n').removeClass('usewish');
+					$('.qv-wish').removeClass('is-active');
+					$("#wish_alert .wa_on").hide();
+					$("#wish_alert .wa_off").show();
+					$("#wish_alert .wa_msg").html('Removed from Wishlist.');
+				}
+				$("#wish_alert").stop(true,true).show();
+				clearInterval(alert_timer);
+				alert_timer = setInterval(function(){
+					clearInterval(alert_timer);
+					$("#wish_alert").stop(true,true).show().fadeOut('slow');
+				},1000);
+			}
+		});
+	}
+
+	$(document).on('mouseleave', '.qv-wish', function(){
+		$(this).removeClass('is-hover-suppressed'); // NEW
+	});
+
+	function detail_contents_toggle(btn,contents){
+		if($("#"+contents).is(":hidden")){ $("#"+contents).show(); } else { $("#"+contents).hide(); }
+	}
+</script>
+<script type="text/javascript" src="/app/javascript/js/goods-view.js?dummy=1"></script>
+
+<div id="goods_view_quickview">
+	<div class="qv-product-card">
+
+		<!-- 카테고리 -->
+		<span class="qv-kbeauty-tag">{=showCategoryTop(goods.category_code[count(goods.category_code)-1])}</span>
+
+		<div class="qv-product-head">
+			<!-- 썸네일 -->
+			<div class="qv-product-thumb">
+				<!--{ @ images }-->
+					<!--{ ? .view.image }-->
+						<a href="/goods/view?no={goods.goods_seq}" target="_parent">
+							<img src="{.view.image}" onerror="this.src='../images/common/noimage_wide.gif'" class="square_display" />
+						</a>
+					<!--{ / }-->
+				<!--{ / }-->
+			</div>
+
+			<div class="qv-product-meta">
+				<div class="qv-brand-row qv_brand_link">
+					<!--{ ? goods.brand }-->
+					{=view_brand}
+					<!--{ / }-->
+					<!--{ ? goods.r_rank && goods.r_rank[0] }-->
+					<a href="/goods/best?ranking_category={goods.r_rank[0].category_code}&ranking_type={goods.r_rank[0].rank_type}" class="qv-best">#{goods.r_rank[0].rank_no} {=strtoupper(str_replace('_', ' ', goods.r_rank[0].rank_type))}</a>
+					<!--{ / }-->
+				</div>
+
+				<h2 class="qv-product-name">
+					<a href="/goods/view?no={goods.goods_seq}" target="_parent">{goods.goods_name}</a>
+				</h2>
+
+				<!--{ ? goods.review_count }-->
+				<p class="qv-rating">
+					<img src="../images/icon/icon-review-star.png" alt="" />
+					<span>{=number_format(goods.review_divide,1)} | {=number_format(goods.review_count)} reviews</span>
+				</p>
+				<!--{ / }-->
+
+				<div class="qv-price">
+					<!--{? goods.string_price_use }-->
+						<strong>{goods.string_price}</strong>
+					<!--{ : }-->
+						<strong>
+							{? goods.sale_price > 0 }
+								{=get_currency_price(goods.sale_price,2,'','_str_price_','price_won')}
+							{:}
+								{=get_currency_price(0,2,'','_str_price_','price_won')}
+							{/}
+						</strong>
+						<!--{ ? goods.org_price > goods.sale_price }-->
+						<del>{=get_currency_price(goods.org_price,2,'','_str_price_')}</del>
+						<!--{ / }-->
+						<!--{? goods.sale_rate}-->
+							<!--{ ? goods.org_price != 0 && goods.sale_price != 0 }-->
+							<mark>{=number_format(goods.sale_rate)}% OFF</mark>
+							<!--{ / }-->
+						<!--{ / }-->
+					<!--{ / }-->
+				</div>
+
+				<!--{? goods.sale_price_compare && goods.sale_price > 0 && !goods.string_price_use }-->
+				<div class="hide">{=goods.sale_price_compare}</div>
+				<!--{ / }-->
+
+				<!--{ ? (array_sum(sales.sale_list) - sales.sale_list.basic) > 0 }-->
+				<button type="button" class="qv-benefits-toggle btn_open_small btn_resp B" onclick="detail_contents_toggle(this,'priceDetail')">View Benefits</button>
+				<div id="priceDetail" class="detail_option_list hide">
+					<ul>
+					<!--{ @ sales.sale_list }-->
+						<!--{ ? .value_ > 0 }-->
+						<li>
+							<span class="title">{sales.title_list[.key_]}</span>
+							<span class="detail">{=get_currency_price(.value_,2)}</span>
+						</li>
+						<!--{ / }-->
+					<!--{ / }-->
+					</ul>
+				</div>
+				<!--{ / }-->
+			</div>
+		</div>
+
+		<form name="goodsForm" method="post" enctype="multipart/form-data" action="../order/add" target="actionFrame" class="goods-form">
+			<input type="hidden" name="goodsSeq" value="{goods.goods_seq}" />
+			<input type="hidden" name="goodsViewVersion" value="2" />
+
+			<div class="qv-options-row">
+				<!--{? !goods.string_price_use }-->
+				<div class="qv-field goods_option_select_area" id="select_option_lay">
+				{ #OPTION_SELECT }
+				</div>
+				<!--{ / }-->
+
+				<!--{ ? !(count(options) > 0 && options[0].option_title) && !goods.string_price_use }-->
+				<div class="qv-qty-block qv_num_single_area">
+					<span>Quantity</span>
+					<div class="qv-qty">
+						<input type="hidden" name="option[0][0]" class="selected_options" value="" opt_seq="0" opt_group="0" />
+						<input type="hidden" name="optionTitle[0][0]" class="selected_options_title" value="" opt_seq="0" opt_group="0" />
+						<!--{ ? cart_options[0]['cart_option_seq'] > 0}-->
+						<input type="hidden" name="exist_option_seq[]" class="cart_option_seq" value="{cart_options[0]['cart_option_seq']}" />
+						<!--{ / }-->
+						<button type="button" class="btn_graybox eaMinus" aria-label="Decrease quantity">-</button>
+						<input type="number" name="optionEa[0]" value="{?cart_options[0]['ea']>0}{cart_options[0]['ea']}{:}1{/}" class="onlynumber ea_change qv-qty-value" />
+						<button type="button" class="btn_graybox eaPlus" aria-label="Increase quantity">+</button>
+						<div style="display:none" class="optionPrice">{goods.org_basic_price}</div>
+					</div>
+				</div>
+				<!--{ / }-->
+			</div>
+
+			<div class="qv-cta-row">
+				<!--{ ? goods.goods_status == 'normal' && !goods.string_price_use && !goods.string_button_use }-->
+				<button type="button" name="addCart" id="addCart" class="qv-add-cart">Add To Cart</button>
+				<a href="javascript:void(0)" class="qv-wish wishimg ico_wish btn_resp" usewish="n" onclick="wish_chg();" title="Add to Wishlist">
+					<img class="qv-wish-icon-default" src="../images/icon/icon-wish.png" alt="" aria-hidden="true" />
+					<img class="qv-wish-icon-hover" src="../images/icon/icon-wish-hover.png" alt="" aria-hidden="true" />
+				</a>
+				<!--{ : goods.string_button_use }-->
+				{goods.string_button}
+				<!--{ : }-->
+					<!--{ ? goods.goods_status == 'runout'}-->
+					<p class="text_soldout">Sold Out</p>
+					<!--{ / }-->
+					<!--{ ? goods.goods_status == 'purchasing'}-->
+					<button type="button" class="btn_resp size_c color3 Cd">Restocking</button>
+					<!--{ / }-->
+					<!--{ ? goods.goods_status == 'unsold'}-->
+					<button type="button" class="btn_resp size_c color3">Discontinued</button>
+					<!--{ / }-->
+				<!--{ / }-->
+			</div>
+		</form>
+
+		<!--{ ? goods.custom_note }-->
+		<section class="qv-love open">
+			<div class="qv-love-section-title">
+				<h3>Why you'll love it</h3>
+				<span class="toggle_icon">+</span>
+			</div>
+			<div class="qv-love-desc qv_section_desc">
+				{=goods.custom_note}
+			</div>
+			</section>
+		<!--{ / }-->
+
+		<!--{ ? goods.review_count }-->
+		<section class="qv-reviews">
+			<div class="qv-reviews-head">
+				<h3>Reviews({=number_format(goods.review_count)})</h3>
+				<a href="/board/?id=goods_review&goods_seq={goods.goods_seq}" target="_parent">VIEW ALL -&gt;</a>
+			</div>
+			<!--{ ? reviews }-->
+			<ul class="qv-review-list">
+				<!--{ @ reviews }-->
+				<li class="qv-review-item">
+					<!--{ ? .profile_image }-->
+					<img class="qv-avatar" src="{.profile_image}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'qv-avatar qv-avatar--fallback'}))" alt="" aria-hidden="true" />
+					<!--{ : }-->
+					<span class="qv-avatar qv-avatar--fallback" aria-hidden="true"></span>
+					<!--{ / }-->
+					<div class="qv-review-copy">
+						<strong>{.name}</strong>
+						<p>{=strip_tags(.contents)}</p>
+					</div>
+					<span class="qv-stars" aria-label="{.score} out of 5 stars">
+						<b style="width:{.score/5*100}%"></b>
+					</span>
+				</li>
+				<!--{ / }-->
+			</ul>
+			<!--{ / }-->
+		</section>
+		<!--{ / }-->
+	</div>
+		<div id="wish_alert">
+		<div class="wa_on"></div>
+		<div class="wa_off"></div>
+		<div class="wa_msg"></div>
+	</div>
+</div>

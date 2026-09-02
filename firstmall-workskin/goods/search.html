@@ -1,12 +1,12 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
-@@ Category catalog / TrendyPicker
-- Path: [skin]/goods/catalog.html
-- URL: /goods/catalog
-- Design: listing/beauty.html
+@@ "검색결과" 리스트 페이지 @@
+- 파일위치 : [스킨폴더]/goods/search.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<link rel="stylesheet" href="/data/skin/{=skin}/css/redesign/trendypicker-listing-cards.css" />
-<link rel="stylesheet" href="/data/skin/{=skin}/css/redesign/trendypicker-catalog.css" />
+<link rel="stylesheet" href="../css/redesign/trendypicker-listing-cards.css" />
+<link rel="stylesheet" href="../css/redesign/trendypicker-catalog.css" />
 <style>
+.layout_header .resp_top_search {height:initial;}
+
 body.is-catalog-page .search_nav,
 body.is-catalog-page .title_container,
 body.is-catalog-page .structure_nav,
@@ -14,6 +14,84 @@ body.is-catalog-page #subpageLNB,
 body.is-catalog-page #subAllButton,
 body.is-catalog-page .filtered_item_sorting {
 	display: none !important;
+}
+
+.listing-search-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.listing-search-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: var(--purple);
+  background: rgba(123, 63, 228, 0.1);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.listing-search-query {
+  position: relative;
+  margin: 0;
+  max-width: min(100%, 18em);
+  color: var(--ink);
+  font-size: clamp(28px, 6.2vw, 46px);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  word-break: break-word;
+}
+
+.listing-search-query::after {
+  content: "";
+  display: block;
+  width: 42px;
+  height: 3px;
+  margin: 16px auto 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--purple) 0%, #c9b0ff 100%);
+}
+
+@media (min-width: 761px) {
+  .listing-search-head {
+    margin-bottom: 42px;
+    gap: 16px;
+  }
+
+  .listing-search-label {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .listing-search-query::after {
+    width: 52px;
+    margin-top: 18px;
+  }
+}
+
+.listing-page--search .listing-hero {
+  background: radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.7) 0 5%, transparent 18%), radial-gradient(circle at 84% 18%, rgba(255, 255, 255, 0.42) 0 4%, transparent 16%), linear-gradient(
+180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.02)), linear-gradient(
+135deg, #cbb6ff 0%, #e4d7ff 48%, #f2efff 100%);
+}
+
+.listing-hero-inner {
+    display: grid;
+    place-content: center;
+    min-height: var(--listing-hero-inner-height);
+    padding: 28px 20px;
+    text-align: center;
+    box-sizing: border-box;
 }
 </style>
 <script>
@@ -25,20 +103,42 @@ if (document.body) {
 
 <div id="itemstmplayer" class="hide"></div>
 
-<main class="bo-catalog-main listing-main" id="catalog_page" data-category-title="{categoryData.title}">
-	<section class="bo-catalog-hero" aria-label="Category promotion">
-		<div class="bo-catalog-hero-inner">
-			<p class="bo-catalog-hero-kicker" data-catalog-kicker>Shop by category</p>
-			<h1 class="bo-catalog-hero-title">{categoryData.title}</h1>
-		</div>
-	</section>
+<main class="bo-catalog-main listing-main listing-page--search" id="search_result_page">
+	<section class="bo-catalog-hero listing-hero listing-hero--search" aria-label="Search hero"></section>
 
 	<div class="bo-catalog-shell">
 		<nav class="bo-catalog-breadcrumbs" aria-label="Breadcrumb">
 			<a href="/main">Home</a>
 			<span aria-hidden="true">&gt;</span>
-			<span>{categoryData.title}</span>
+			<!--{ ? goodsSearchText }-->
+			<span>Search results</span>
+			<!--{ : }-->
+			<!--{ ? tag }-->
+			<span>Tag: {tag}</span>
+			<!--{ : }-->
+			<span>Search</span>
+			<!--{ / }-->
+			<!--{ / }-->
 		</nav>
+
+		<!--{ ? goodsSearchText }-->
+		<div class="listing-search-head">
+			<p class="listing-search-label" designElement="text">Search results</p>
+			<h1 class="listing-search-query" data-search-query>{goodsSearchText}</h1>
+		</div>
+		<!--{ : }-->
+		<!--{ ? tag }-->
+		<div class="listing-search-head">
+			<p class="listing-search-label">Tag search</p>
+			<h1 class="listing-search-query" data-search-query>{tag}</h1>
+		</div>
+		<!--{ : }-->
+		<div class="listing-search-head">
+			<p class="listing-search-label" designElement="text">Search results</p>
+			<h1 class="listing-search-query" data-search-query><span designElement="text">Search</span></h1>
+		</div>
+		<!--{ / }-->
+		<!--{ / }-->
 
 		<div class="bo-catalog-layout listing-layout">
 			<aside class="bo-catalog-filters listing-filters search_left" aria-label="Product filters">
@@ -53,15 +153,9 @@ if (document.body) {
 			</aside>
 
 			<section class="bo-catalog-results listing-results catalog_right" aria-label="Product results">
-				<!--{ ? categoryData.top_html }-->
-				<div class="category_edit_area mobile_img_adjust">
-					{categoryData.top_html}
-				</div>
-				<!--{ / }-->
-
 				<div class="bo-catalog-toolbar listing-toolbar">
 					<p class="bo-catalog-count">
-						<span class="bo-catalog-count-desktop">All Products </span>
+						<span class="bo-catalog-count-desktop">Results </span>
 						<strong data-catalog-count>({=number_format(totcount)})</strong>
 						<span class="bo-catalog-count-mobile" data-catalog-count-mobile>
 							{=number_format(totcount)} Items
@@ -115,6 +209,12 @@ if (document.body) {
 <script src="/app/javascript/js/trendypicker-catalog.js"></script>
 <script type="text/javascript">
 $(function () {
+	var tag = "{tag}";
+	// 검색 페이지 -> 디폴트 검색박스 open
+	if (!tag) {
+		$('.search_ver2').addClass('on');
+	}
+
 	colorFilter_white("#searchFilterSelected .color_type");
 
 	$("#catalog_filter").on("change", function () {
@@ -143,10 +243,20 @@ $(function () {
 	$(".category_filter_mo").on("click", function () {
 		$(".search_left").addClass("on");
 	});
-	$("#catalog_page .filter_title a, .fixed_bottom > button").on("click", function () {
+	$("#search_result_page .filter_title a, .fixed_bottom > button").on("click", function () {
 		$(".search_left").removeClass("on");
 	});
+
+	// 모바일 필터 재생성
 	window.setTimeout(function () {
+		$(".catalog_category").append($(".filter_category_section .filter_detail_item").clone());
+		if (window.innerWidth < 1024 && $("#search_result_page .catalog_category").length > 0) {
+			$("#search_result_page .catalog_category ul > li").addClass("swiper-slide");
+			slideshowSwiper = new Swiper("#search_result_page .catalog_category", {
+				wrapperClass: "filter_detail_item",
+				slidesPerView: "auto"
+			});
+		}
 		$(".catalog_filter").append($(".search_filter_selected .selected_item_area").clone());
 	}, 1000);
 });

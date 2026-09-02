@@ -1,0 +1,682 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 상품 옵션 @@
+- 파일위치 : [스킨폴더]/goods/_select_options_color_swatch.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+<script type="text/javascript" src="/app/javascript/plugin/jquery.fmupload.js"></script>
+<link rel="stylesheet" type="text/css" href="/data/skin/{skin}/css/buttons.css" />
+<link rel="stylesheet" type="text/css" href="../css/redesign/goods-options.css" />
+<script type="text/javascript" src="/app/javascript/js/goods.option.0.2.js"></script>
+<script type="text/javascript" src="/app/javascript/js/goods-options.js"></script>
+<script type="text/javascript">
+var $scope;
+var swatchSwiper = null;
+gl_option_select_ver = '0.1';
+
+$(document).ready(function(){
+	$scope = $('#select_option_lay').last();
+	gl_option_select_ver	= $scope.find("input[name='gl_option_select_ver']").val();
+
+	var optObj			= new jscls_option_select();
+	optObj.set_init('{=count(goods.option_divide_title)}',
+					'{goods.goods_seq}',
+					'{ ? goods.price > goods.sale_price }{goods.sale_price}{ : goods.price }{goods.price}{ : }0{ / }',
+					'{ ? goods.string_price_use }{goods.string_price_use}{/}',
+					'{skin}',
+					true,
+					'{goods.min_purchase_ea}',
+					'{goods.max_purchase_ea}',
+					'{sessionMember.member_seq}',
+					'{sessionMember.group_seq}',
+					'{goods.option_view_type}',
+					'{goods.suboption_layout_group}',
+					'{goods.suboption_layout_position}',
+					'{goods.inputoption_layout_group}',
+					'{goods.inputoption_layout_position}',
+					'{basic_currency}', 
+					'{basic_currency_info.currency_symbol}', 
+					'{basic_currency_info.currency_symbol_position}',
+					'{ ? goods.string_button_use }{goods.string_button_use}{/}');
+
+	{ ? goods.event_sale_unit }
+	optObj.set_event_sale('{goods.sales.event_event_sale}','{goods.sales.event_target_sale}');
+	{ / }
+
+	{ ? goods.member_sale_unit }
+	optObj.set_member_sale('{goods.sales.member_sale_price}','{goods.sales.member_sale_type}');
+	{ / }
+
+	policyList = new Array();
+	{ @ goods.multi_discount_policy.policyList }
+		policyList.push('{.discountOverQty}/{.discountUnderQty}/{.discountAmount}');
+	{ / }
+
+	{ ? goods.multi_discount_policy }
+	optObj.set_multi_sale(policyList, '{goods.multi_discount_policy.discountMaxOverQty}', '{goods.multi_discount_policy.discountMaxAmount}', '{goods.multi_discount_policy.discountUnit}');
+	{ / }
+
+	{ ? is_numeric(config_system.cutting_sale_price) && config_system.cutting_sale_use != 'none' }
+	optObj.set_cutting_sale_price('{config_system.cutting_sale_price}', '{config_system.cutting_sale_action}');
+	{ / }
+
+	{ ? cart_options }
+	optObj.set_option_change_type(true);
+		{ ? count(options) > 0 && options[0].option_title }
+	optObj.set_apply_option_seq('{=count(cart_options)}');
+		{ / }
+	{ / }
+
+	{ ? goods.inputoption_layout_position == 'down' }
+	var inputoptionData	= {=json_encode(inputs)};
+	optObj.set_inputoption_data(inputoptionData);
+	{ / }
+
+	optObj.set_bind_option();
+	apply_input_style();
+	initFmSelectDropdowns();
+
+	initColorSwatchesArea();
+});
+
+function hasAnyColorSwatch() {
+	return $scope.find('.color_swatch_selection_area .swatch-item[data-has-swatch="1"]').length > 0;
+}
+
+function initColorSwatchesArea() {
+
+	if (hasAnyColorSwatch()) {
+		$scope.find('.color_swatch_wrapper').show();
+		$scope.find('.options_required_label').show();
+	} else {
+		return; // 스와치가 없으면 select를 그대로 보여준다 (기본 드롭다운)
+	}
+
+	var $select = $scope.find('select[name="viewOptions[]"]').first();
+
+	// select 값이 바뀌면(=옵션 로직이 값을 세팅하면) 그에 맞는 스와치를 active 표시
+	function syncSwatchActiveState() {
+		var value = $select.val();
+		$scope.find('.color_swatch_selection_area .swatch-item').removeClass('active');
+		if (value) {
+			$scope.find('.color_swatch_selection_area .swatch-item[data-value="' + value + '"]').addClass('active');
+		}
+	}
+	syncSwatchActiveState();
+
+	$scope.off('click.swatchSelect', '.color_swatch_selection_area .swatch-item').on('click.swatchSelect', '.color_swatch_selection_area .swatch-item', function () {
+		if ($(this).hasClass('soldout')) return;
+
+		var value = $(this).data('value');
+
+		if ($(this).hasClass('active')) {
+			$(this).removeClass('active');
+			$scope.find('.option_tr').each(function () {
+				var rowValue = $(this).find('input.selected_options').val();
+				if (rowValue == value) {
+					$(this).find('.removeOption').trigger('click');
+				}
+			});
+			$select.val('');
+			var render = $select.data('fmSelectRender');
+			if (render) render();
+			return;
+		}
+
+		$(this).addClass('active');
+
+		$select.val(value).trigger('change');
+	});
+
+	$scope.off('mousedown.swatchMenu', '#select_option_lay .realtrend-select-menu li').on('mousedown.swatchMenu', '#select_option_lay .realtrend-select-menu li', function () {
+		if ($(this).hasClass('is-sold-out')) return;
+		var value = $(this).attr('data-value');
+		if (value) {
+			$scope.find('.color_swatch_selection_area .swatch-item[data-value="' + value + '"]').addClass('active');
+		}
+	});
+
+	$scope.off('click.swatchRemove', '.removeOption').on('click.swatchRemove', '.removeOption', function (e) {
+		e.stopPropagation();
+		var optionText = $(this).closest('.option_tr').find('.option_text').first().text();
+		var value = optionText.split(':').pop().trim();
+
+		$scope.find('.color_swatch_selection_area .swatch-item').each(function () {
+			if ($(this).data('value') == value) {
+				$(this).removeClass('active');
+			}
+		});
+	});
+
+	mountSwatchSwiper();
+
+	// .goods-form.fixed 토글 시 스와치가 숨겨졌다 다시 보일 때 Swiper 치수 재계산
+	var $goodsForm = document.querySelector('.goods-form');
+	if ($goodsForm) {
+		var wasFixed = $goodsForm.classList.contains('fixed');
+		var formObserver = new MutationObserver(function () {
+			var isFixed = $goodsForm.classList.contains('fixed');
+			if (wasFixed && !isFixed && swatchSwiper) {
+				requestAnimationFrame(function () {
+					swatchSwiper.update();
+				});
+			}
+			wasFixed = isFixed;
+		});
+		formObserver.observe($goodsForm, { attributes: true, attributeFilter: ['class'] });
+	}
+}
+
+function mountSwatchSwiper(retryCount) {
+	retryCount = retryCount || 0;
+
+	var swatchEl = $scope.find('.color_swatch_selection_area.swatch-swiper')[0];
+	if (!swatchEl) return;
+
+	var hasSlides = swatchEl.querySelectorAll('.swiper-wrapper > .swiper-slide').length > 0;
+	if (!hasSlides) return;
+
+	if (typeof Swiper === 'undefined' || typeof Swiper !== 'function') {
+		if (retryCount > 20) {
+			console.warn('Swiper library failed to load for color swatches after retrying.');
+			return;
+		}
+		setTimeout(function () { mountSwatchSwiper(retryCount + 1); }, 100);
+		return;
+	}
+
+	if (swatchSwiper) {
+		try {
+			swatchSwiper.destroy(true, true);
+		} catch (e) {}
+		swatchSwiper = null;
+	}
+
+	var prevBtn = swatchEl.parentElement.querySelector('.swatch-swiper-prev');
+	var nextBtn = swatchEl.parentElement.querySelector('.swatch-swiper-next');
+
+	try {
+		if (typeof Swiper.use === 'function') {
+			var modulesToUse = [Swiper.FreeMode, Swiper.Navigation, Swiper.Mousewheel].filter(Boolean);
+			if (modulesToUse.length) Swiper.use(modulesToUse);
+		}
+
+		swatchSwiper = new Swiper(swatchEl, {
+			slidesPerView: 'auto',
+			spaceBetween: 5,
+			freeMode: { enabled: true, momentum: true },
+			grabCursor: true,
+			watchOverflow: true,
+			mousewheel: { forceToAxis: true },
+			navigation: { nextEl: nextBtn, prevEl: prevBtn },
+		});
+	} catch (err) {
+		console.error('Swiper init failed for color swatches:', err);
+	}
+
+	if (swatchSwiper) {
+		var forceUpdate = function () {
+			if (swatchSwiper) swatchSwiper.update();
+		};
+		window.addEventListener('load', forceUpdate);
+		setTimeout(forceUpdate, 300);
+		setTimeout(forceUpdate, 1000);
+		swatchEl.querySelectorAll('img.swatch-img').forEach(function (img) {
+			if (!img.complete) img.addEventListener('load', forceUpdate, { once: true });
+		});
+	}
+
+}
+</script>
+
+<div id="select_option_lay">
+	<!--{ ? count(options) > 0 && options[0].option_title }--><span class="options_main_title">Select options</span><!--{ / }--><span class="options_required_label">Required</span>
+	<input type="hidden" name="option_select_goods_seq" value="{goods.goods_seq}" />
+	<input type="hidden" name="option_select_provider_seq" value="{goods.provider_seq}" />
+	<input type="hidden" name="gl_option_select_ver" value="0.1" />
+	<!--{ ? (count(options) > 0 && options[0].option_title) && ( suboptions || inputs ) }-->
+	<input type="hidden" name="use_add_action_button" value="y" />
+	<!--{ : }-->
+	<input type="hidden" name="use_add_action_button" value="n" />
+	<!--{ / }-->
+
+	<div class="color_swatch_wrapper">
+		<div class="color_swatch_selection_area swatch-swiper">
+			<div class="swiper-wrapper">
+				<!--{ @ option_data }-->
+					<!--{ ? .options && .index_ == 0 }-->
+						<!--{ @ .options }-->
+						<div class="swiper-slide swatch-item {..chk_stock_class}" 
+							data-value="{..opt}" 
+							data-seq="{..index_}"
+							data-has-swatch="<!--{ ? ..custom_color_swatch }-->1<!--{ : }-->0<!--{ / }-->"
+							title="{..opt_string}">
+							<!--{ ? ..custom_color_swatch }-->
+							<img src="{..custom_color_swatch}" class="swatch-img" alt="{..opt}" />
+							<!--{ : }-->
+							<img src="/data/skin/{skin}/images/common/color_swatch_default_icon.png" class="swatch-img" alt="{..opt}" />
+							<!--{ / }-->
+							<img src="/data/skin/{skin}/images/common/check_icon_purple.png" class="swatch-tick" alt="" />
+							<span class="swatch-label">{..opt}</span>
+						</div>
+						<!--{ / }-->
+					<!--{ / }-->
+				<!--{ / }-->
+			</div>
+		</div>
+		<div class="swatch-swiper-prev swatch-swiper-btn" aria-label="Previous">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+				<polyline points="15 18 9 12 15 6"></polyline>
+			</svg>
+		</div>
+		<div class="swatch-swiper-next swatch-swiper-btn" aria-label="Next">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+				<polyline points="9 18 15 12 9 6"></polyline>
+			</svg>
+		</div>
+	</div>
+
+	<div class="goods_option_area">
+		<!--{ ? !(count(options) > 0 && options[0].option_title) && !goods.string_price_use && !goods.string_button_use }-->
+		<input type="hidden" name="option[0][0]" class="selected_options" type="hidden" value="" opt_seq="0" opt_group="0" />
+		<input type="hidden" name="optionTitle[0][0]" class="selected_options_title" type="hidden" value="" opt_seq="0" opt_group="0" />
+			<!--{ ? cart_options[0]['cart_option_seq'] > 0}-->
+		<input type="hidden" name="exist_option_seq[]" class="cart_option_seq" value="{cart_options[0]['cart_option_seq']}" />
+			<!--{ / }-->
+			<!--{ ? select_option_mode == 'optional_change' }-->
+		<table align="left" border="0" cellpadding="1" cellspacing="0">
+		<tr>
+			<td class="single_num_change">
+				<span class="tle">EA :</span>
+				<button type="button" class="btn_graybox eaMinus">-</button><input type="text" name="optionEa[0]" value="{?cart_options[0]['ea']>0}{cart_options[0]['ea']}{:}1{/}" class="onlynumber ea_change" /><button type="button" class="btn_graybox eaPlus">+</button>
+				<div style="display:none" class="optionPrice">{goods.sale_price}</div>
+				<div style="display:none" class="consumer_price">{goods.consumer_price}</div>
+			</td>
+		</tr>
+		</table>
+			<!--{ / }-->
+		<!--{ / }-->
+		<!--{ ? (count(options) > 0 && options[0].option_title) || suboptions || inputs }-->
+		<table class="goods_option_table" width="100%" cellpadding="0" cellspacing="0" border="0">
+		
+
+			<!-- 필수옵션 시작 -->
+			<!--{ ? count(options) > 0 && options[0].option_title }-->
+				<!--{ ? !minimize }-->
+		<tr>
+			<th colspan="2"><span designElement="text">상품옵션</span></th>
+		</tr>
+				<!--{ / }-->
+			<!--{ / }-->
+			<!--{ @ option_data }-->
+		<tr class="optionTr">
+			<td colspan="2">
+				<span class="optionTitle hide">{.title}</span>
+				<select name="viewOptions[]" id="{.key_}" opttype="{.newtype}" class="fm-select">
+					<option value="">- Select {.title} -</option>
+				<!--{ ? .options && .index_ == 0 }-->
+				<!--{ @ .options }-->
+					<option value="{..opt}"
+						price="{..org_basic_price}" 
+						consumer_price="{..consumer_price}" 
+						opt1="{..option1}" 
+						opt2="{..option2}" 
+						opt3="{..option3}" 
+						opt4="{..option4}" 
+						opt5="{..option5}" 
+						infomation="{..infomation}" 
+						class="{..chk_stock_class}" 
+						seq="{..index_}" 
+						{? ..chk_stock_class == 'soldout' }disabled{/}>
+						{..opt_string}
+					</option>
+				<!--{ / }-->
+				<!--{ / }-->
+				</select>
+				<!--{ ? .newtype && .newtype == 'color' && goods.option_view_type == 'divide' }-->
+				<div class="viewOptionsspecialays {.newtype}">
+					<!--{ @ .options }-->
+						<!--{ ? ..chk_stock }-->
+					<span class="{..color}"><span name="viewOptionsspecialbtn" class="viewOptionsspecialbtn hand bbs_btn {..color}"  style="color:{..color};"  value="{..opt}"  optvalue="{..opt}" price="{..org_price}" opt1="{..option1}" opt2="{..option2}" opt3="{..option3}" opt4="{..option4}" opt5="{..option5}" infomation="{..infomation}"  eqindex='0'><font style="background-color:{..color};">■</font></span></span>
+						<!--{ : }-->
+					<span class="{..color}"><span name="" class="viewOptionsspecialbtnDisable hand bbs_btn {..color}"  style="color:{..color};"  value="{..opt}"  optvalue="{..opt}" price="{..org_basic_price}" consumer_price="{..consumer_price}" opt1="{..option1}" opt2="{..option2}" opt3="{..option3}" opt4="{..option4}" opt5="{..option5}" infomation="{..infomation}"  eqindex='0'><font style="background-color:{..color};">■</font><b class="out">품절</b></span></span>
+						<!--{ / }-->
+					<!--{ / }-->
+				</div>
+				<!--{ / }-->
+			</td>
+		</tr>
+			<!--{ / }-->
+		<tr id="viewoptionsInfoTr" class="hide">
+			<td id="viewOptionsInfo" class="center" colspan="2"></td>
+		</tr>
+			<!-- 필수옵션 끝 -->
+
+			<!-- 입력옵션 시작 -->
+			<!--{ ? inputs && goods.inputoption_layout_position != 'down' }-->
+				<!--{ ? !minimize }-->
+		<tr>
+			<th colspan="2"><span designElement="text">입력옵션</span></th>
+		</tr>
+				<!--{ / }-->
+				<!--{ ? !(count(options) > 0 && options[0].option_title) && cart_options }-->
+					<!--{ @ cart_options[0].cart_inputs }-->
+		<tr class="inputoptionTr">
+			<td colspan="2">
+				<span class="inputsTitle hide">{.title}</span>
+				<input type="hidden" name="viewInputsTitle[]" value="{.input_title}" />
+						<!--{ ? .type == 'edit' }-->
+				<div class="viewInputTextareaLay"><textarea name="viewInputs[]" rows="4" class="inputlimit"  inputlimit="{.input_limit}" limit="{.input_limit}" {?.input_require}isrequired="y"{/} title="{.title}을 입력하세요 {? .input_require && .input_limit>0} (필수, {.input_limit}자 이내){: .input_require }(필수) {/}">{.input_value}</textarea></div>
+						<!--{ : .type == 'text' }-->
+				<div class="viewInputLay"><input type="text" name="viewInputs[]" class="inputlimit"  inputlimit="{.input_limit}" limit="{.input_limit}" {?.input_require}isrequired="y"{/} title="{.title}을 입력하세요{? .input_require && .input_limit>0} (필수, {.input_limit}자 이내){: .input_require }(필수) {/}" value="{.input_value}" /></div>
+						<!--{ : .type == 'file' }-->
+				<table class="upload-tb" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="title_dd">{.title}</td>
+					<td><div class="inputsUploadButton" id="fmupload_{.index_}" uploadType="fmupload"></div></td>
+					<!--{ ? .input_value }-->
+					<td><img src="/data/order/{.input_value}" id="prevImg" style="height:20px;" /></td>
+					<!--{ : }-->
+					<td><img src="about:blank;" class="prevImg" style="display:none;height:20px;" /></td>
+					<!--{ / }-->
+					<td><span class="prevTxt"></span></td>
+				</tr>
+				<input type="hidden" name="viewInputs[]" class="fmuploadInputs" {?.input_require}isrequired="y"{/} value="{.input_value}" />
+				</table>
+						<!--{ / }-->
+			</td>
+		</tr>
+					<!--{ / }-->
+				<!--{ : }-->
+					<!--{ @ inputs }-->
+		<tr class="inputoptionTr">
+			<td colspan="2">
+				<span class="inputsTitle hide">{.input_name}</span>
+				<input type="hidden" name="viewInputsTitle[]" value="{.input_name}" />
+						<!--{ ? .input_form == 'edit' }-->
+				<div class="viewInputTextareaLay"><textarea name="viewInputs[]" rows="4" class="inputlimit"  inputlimit="{.input_limit}"  limit="{.input_limit}" {?.input_require}isrequired="y"{/} title="{.input_name}을 입력하세요{? .input_require && .input_limit>0} (필수, {.input_limit}자 이내){: .input_require }(필수) {/}"></textarea></div>
+						<!--{ : .input_form == 'text' }-->
+				<div class="viewInputLay"><input type="text" name="viewInputs[]" class="inputlimit"  inputlimit="{.input_limit}"  limit="{.input_limit}" {?.input_require}isrequired="y"{/} title="{.input_name}을 입력하세요{? .input_require && .input_limit>0} (필수, {.input_limit}자 이내){: .input_require }(필수) {/}" /></div>
+						<!--{ : .input_form == 'file' }-->
+				<table class="upload-tb" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td class="title_dd">{.input_name}</td>
+					<td><div class="inputsUploadButton" id="fmupload_{.index_}" uploadType="fmupload"></div></td>
+					<td><img src="about:blank;" class="prevImg" style="display:none;height:20px;" /></td>
+					<td><span class="prevTxt"></span></td>
+				</tr>
+				<input type="hidden" name="viewInputs[]" class="fmuploadInputs" {?.input_require}isrequired="y"{/}  />
+				</table>
+						<!--{ / }-->
+			</td>
+		</tr>
+					<!--{ / }-->
+				<!--{ / }-->
+			<!--{ / }-->
+			<!-- 입력옵션 끝 -->
+
+
+			<!-- 추가옵션 시작 -->
+			<!--{ ? suboptions && goods.suboption_layout_group != 'first' }-->
+				<!--{ ? !minimize }-->
+		<tr>
+			<th colspan="2"><span designElement="text">추가구성</span></th>
+		</tr>
+				<!--{ / }-->
+				<!--{ @ suboptions }-->
+					<!--{?.value_[0].sub_required=='y'}-->
+		<input type="hidden" name="suboption_title_required[]" value="{.value_[0].suboption_title}" />
+					<!--{ / }-->
+		<tr class="suboptionTr" subGroupIdx="{.index_}">
+			<td { ? count(options) > 0 && options[0].option_title }{ : }colspan="2"{ / }>
+				<span class="suboptionTitle hide">{.value_[0].suboption_title}</span>
+				<select name="viewSuboption[]" requiredgroup="{.index_}" {?.value_[0].sub_required=='y'}isrequired="y"{/} class="fm-select">
+					<option value="">- {.value_[0].suboption_title} 선택{?.value_[0].sub_required=='y'} (필수){/} -</option>
+					<!--{ @ .value_ }-->
+						<!--{ ? ..chk_stock }-->
+							<!--{ ? ..price > 0 }-->
+						<option value="{..suboption}" price="{..price}" seq="{..index_}">{..suboption} (추가 {=get_currency_price(..price,2)})</option>
+							<!--{ : }-->
+						<option value="{..suboption}" price="0" seq="{..index_}">{..suboption}</option>
+							<!--{ / }-->
+						<!--{ : }-->
+						<option value="{..suboption}" price="0" disabled>{..suboption} (품절)</option>
+						<!--{ / }-->
+					<!--{ / }-->
+				</select>
+					<!--{ ? .value_[0].newtype == 'color' }-->
+				<div class="viewSubOptionsspecialays">
+						<!--{ @ .value_ }-->
+							<!--{ ? ..newtype == 'color' }-->
+								<!--{ ? ..chk_stock }-->
+					<span  class="{..color}"><span name="viewSubOptionsspecialbtn" opspecialtype="color" class="viewSubOptionsspecialbtn hand bbs_btn {..color}" style="color:{..color};"  value="{..suboption}"  suboptvalue="{..suboption}" price="{..price}" eqindex="{.index_}" opspecial_location="1"><font style="background-color:{..color};">■</font></span></span>
+								<!--{ : }-->
+					<span  class="{..color}"><span name="" opspecialtype="color" class="viewSubOptionsspecialbtnDisable hand bbs_btn {..color}" style="color:{..color};" value="{..suboption}" suboptvalue="{..suboption}" price="{..price}" eqindex="{.index_}" opspecial_location="1"><font style="background-color:{..color};">■</font><b class="out">품절</b></span></span>
+								<!--{ / }-->
+							<!--{ / }-->
+						<!--{ / }-->
+				</div>
+					<!--{ / }-->
+			</td>
+					<!--{ ? count(options) > 0 && options[0].option_title }-->
+			<td class="btn_pm_td">
+				<button class="btn_add_suboption btn_graybox" type="button">+</button>
+			</td>
+					<!--{ / }-->
+		</tr>
+				<!--{ / }-->
+			<!--{ / }-->
+			<!-- 추가옵션 끝 -->
+
+			<!--{ ? (count(options) > 0 && options[0].option_title) && ( ( suboptions && goods.suboption_layout_group != 'first' ) || ( inputs && goods.inputoption_layout_position != 'down' ) ) }-->
+		<tr>
+			<td colspan="2" align="center" style="padding-top:10px; padding-bottom:10px;">
+				<button type="button" class="viewOptionsApply btn_resp size_c color6" style="width:100%"><span designElement="text">위의 정보로 선택</span></button>
+			</td>
+		</tr>
+			<!--{ / }-->
+
+		</table>
+		<!--{ / }-->
+		<!-- 옵션 선택 영역 끝 -->
+
+		<!-- 추가옵션 시작 -->
+		<!--{ ? goods.suboption_layout_group == 'first' }-->
+		<table class="goods_option_table" width="100%" cellpadding="0" cellspacing="5" border="0">
+		<colgroup>
+			<col />
+			<col width="15" />
+		</colgroup>
+			<!--{ ? !minimize }-->
+		<tr>
+			<th colspan="2"><span designElement="text">추가구성</span></th>
+		</tr>
+			<!--{ / }-->
+			<!--{ @ suboptions }-->
+				<!--{?.value_[0].sub_required=='y'}-->
+		<input type="hidden" name="suboption_title_required[]" value="{.value_[0].suboption_title}" />
+				<!--{ / }-->
+		<tr class="suboptionTr" subGroupIdx="{.index_}">
+			<td { ? count(options) > 0 && options[0].option_title }{ : }colspan="2"{ / }>
+				<span class="suboptionTitle hide">{.value_[0].suboption_title}</span>
+				<select name="viewSuboption[]" requiredgroup="{.index_}" {?.value_[0].sub_required=='y'}isrequired="y"{/} class="fm-select">
+					<option value="">- {.value_[0].suboption_title} 선택{?.value_[0].sub_required=='y'} (필수){/} -</option>
+				<!--{ @ .value_ }-->
+					<!--{ ? ..chk_stock }-->
+						<!--{ ? ..price > 0 }-->
+						<option value="{..suboption}" price="{..price}">{..suboption} (추가 {=get_currency_price(..price,2)})</option>
+						<!--{ : }-->
+						<option value="{..suboption}" price="0">{..suboption}</option>
+						<!--{ / }-->
+					<!--{ : }-->
+						<option value="{..suboption}" price="0" disabled>{..suboption} (품절)</option>
+					<!--{ / }-->
+				<!--{ / }-->
+				</select>
+				<!--{ ? .value_[0].newtype == 'color' }-->
+				<div class="viewSubOptionsspecialays">
+					<!--{ @ .value_ }-->
+						<!--{ ? ..newtype == 'color' }-->
+							<!--{ ? ..chk_stock }-->
+					<span  class="{..color}"><span name="viewSubOptionsspecialbtn" opspecialtype="color" class="viewSubOptionsspecialbtn hand bbs_btn {..color}" style="color:{..color};"  value="{..suboption}"  suboptvalue="{..suboption}" price="{..price}" eqindex="{.index_}" opspecial_location="1"><font style="background-color:{..color};">■</font></span></span>
+							<!--{ : }-->
+					<span  class="{..color}"><span name="" opspecialtype="color" class="viewSubOptionsspecialbtnDisable hand bbs_btn {..color}" style="color:{..color};" value="{..suboption}" suboptvalue="{..suboption}" price="{..price}" eqindex="{.index_}" opspecial_location="1"><font style="background-color:{..color};">■</font><b class="out">품절</b></span></span>
+							<!--{ / }-->
+						<!--{ / }-->
+					<!--{ / }-->
+				</div>
+				<!--{ / }-->
+			</td>
+		</tr>
+			<!--{ / }-->
+		</table>
+		<!--{ / }-->
+		<!-- 추가옵션 끝 -->
+
+
+
+
+		<!-- 선택된 옵션 노출 영역 시작( 장바구니에 해당 ) -->
+		<!--{ ? !goods.string_price_use && !goods.string_button_use }-->
+		<div class="goods_quantity_table_container" { ? !cart_options } style="display:none"{ / }>
+			<table class="goods_quantity_table" cellpadding="0" cellspacing="0">
+			<!--{ ? cart_options }-->
+				<!--{ @ cart_options }-->
+				<input type="hidden" name="exist_option_seq[{.index_}]" class="cart_option_seq" value="{.cart_option_seq}" />
+					<!--{ ? count(options) > 0 && options[0].option_title }-->
+				<tr class="quanity_row option_tr" opt_group="{.index_}">
+					<td class="quantity_cell option_col_text">
+						<!--{ ? .option1 }-->
+							<div class="option_text"><img src="/images/icon/icon-check-purple.png" class="option-title-icon" alt="" /> {.option1}</div>
+							<input name="option[{.index_}][0]" class="selected_options" type="hidden" value="{.option1}" opt_seq="0" opt_group="{.index_}" />
+							<input name="optionTitle[{.index_}][0]" class="selected_options_title" type="hidden" value="{.title1}" opt_seq="0" opt_group="{.index_}" />
+						<!--{ / }-->
+						<!--{ ? .option2 }-->
+							<div class="option_text"><img src="/images/icon/icon-check-purple.png" class="option-title-icon" alt="" /> {.option2}</div>
+							<input name="option[{.index_}][1]" class="selected_options" type="hidden" value="{.option2}" opt_seq="1" opt_group="{.index_}" />
+							<input name="optionTitle[{.index_}][1]" class="selected_options_title" type="hidden" value="{.title2}" opt_seq="1" opt_group="{.index_}" />
+						<!--{ / }-->
+						<!--{ ? .option3 }-->
+							<div class="option_text"><img src="/images/icon/icon-check-purple.png" class="option-title-icon" alt="" /> {.option3}</div>
+							<input name="option[{.index_}][2]" class="selected_options" type="hidden" value="{.option3}" opt_seq="2" opt_group="{.index_}" />
+							<input name="optionTitle[{.index_}][2]" class="selected_options_title" type="hidden" value="{.title3}" opt_seq="2" opt_group="{.index_}" />
+						<!--{ / }-->
+						<!--{ ? .option4 }-->
+							<div class="option_text"><img src="/images/icon/icon-check-purple.png" class="option-title-icon" alt="" /> {.option4}</div>
+							<input name="option[{.index_}][3]" class="selected_options" type="hidden" value="{.option4}" opt_seq="3" opt_group="{.index_}" />
+							<input name="optionTitle[{.index_}][3]" class="selected_options_title" type="hidden" value="{.title4}" opt_seq="3" opt_group="{.index_}" />
+						<!--{ / }-->
+						<!--{ ? .option5 }-->
+							<div class="option_text"><img src="/images/icon/icon-check-purple.png" class="option-title-icon" alt="" /> {.option5}</div>
+							<input name="option[{.index_}][4]" class="selected_options" type="hidden" value="{.option5}" opt_seq="4" opt_group="{.index_}" />
+							<input name="optionTitle[{.index_}][4]" class="selected_options_title" type="hidden" value="{.title5}" opt_seq="4" opt_group="{.index_}" />
+						<!--{ / }-->
+						
+						<ul class="num_price">
+							<li><button type="button" class="btn_graybox eaMinus">-</button><input type="text" name="optionEa[{.index_}]" class="onlynumber ea_change" value="{.ea}" /><button type="button" class="btn_graybox eaPlus">+</button></li>
+							<li class="option_col_price">
+								<span class="optionPrice hide">{=get_currency_price(.price,'')}</span>
+								{=get_currency_price(.price * .ea,null,'','<strong class="out_option_price">_str_price_</strong>')} 
+								<img src="../images/common/icon_close_gray.png" class="removeOption" />
+							</li>
+						</ul>
+					</td>
+				</tr>
+
+						<!--{ @ .cart_inputs }-->
+							<!--{ ? goods.inputoption_layout_position == 'down' }-->
+								<!--{ ? ..type == 'file' }-->
+				<tr class="quanity_row inputoption_tr" opt_group="{.index_}">
+					<td class="quantity_cell option_text" style="border-top:none;">
+						<input name="inputsTitle[{.index_}][{..index_}]" class="selected_inputs_title" type="hidden" value="{ ..input_title }" opt_seq="{..index_}" opt_group="{.index_}" />
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td style="width:{=(strlen(..input_title * 10 + 20)}px;max-width:200px;">
+								{ ..input_title }
+							</td>
+							<td>
+								<table class="upload-tb" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td><div class="inputsUploadButton" id="fmupload_{.index_}_{..index_}" uploadType="fmupload"></div></td>
+												<!--{ ? ..input_value }-->
+									<td><img src="/data/order/{..input_value}" class="prevImg" style="height:20px;" /></td>
+												<!--{ : }-->
+									<td><img src="about:blank;" class="prevImg" style="display:none;height:20px;" /></td>
+												<!--{ / }-->
+									<td><span class="prevTxt">{ ..input_value }</span><input type="hidden" name="inputsValue[{.index_}][{..index_}]" class="selected_inputs fmuploadInputs" type="hidden" value="{ ..input_value }" opt_seq="{..index_}" opt_group="{.index_}" /></td>
+								</tr>
+								</table>
+							</td>
+						</tr>
+						</table>
+					</td>
+				</tr>
+								<!--{ : }-->
+				<tr class="quanity_row inputoption_tr" opt_group="{.index_}">
+					<td class="quantity_cell option_text" style="border-top:none;">
+						<input name="inputsTitle[{.index_}][{..index_}]" class="selected_inputs_title" type="hidden" value="{ ..input_title }" opt_seq="{..index_}" opt_group="{.index_}" />
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td>{ ..input_title }</td>
+							<td style="text-align:right;color:#6c6c6c;{?..input_limit > 0}{:}display:none;{/}"><span class="inputByte_{.index_}_{..index_}">0</span>/{..input_limit}</td>
+						</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr class="quanity_row inputoption_tr" opt_group="{.index_}">
+					<td class="quantity_cell option_text" style="border-top:none;">
+										<!--{ ? ..type == 'edit' }-->
+						<div class="viewInputTextareaLay"><textarea rows="4" name="inputsValue[{.index_}][{..index_}]" class="selected_inputs inputlimit" inputlimit="{..input_limit}"  {?..input_require}isrequired="y" title="(필수)"{/}>{..input_value}</textarea></div>
+										<!--{ : }-->
+						<div class="viewInputLay" style="width:100%;"><input type="text" name="inputsValue[{.index_}][{..index_}]" class="selected_inputs inputlimit" inputlimit="{..input_limit}" {?..input_require}isrequired="y" title="(필수)"{/}  opt_seq="{..index_}" opt_group="{.index_}" value="{..input_value}"  style="width:100%;"/></div>
+										<!--{ / }-->
+					</td>
+				</tr>
+								<!--{ / }-->
+							<!--{ : }-->
+				<tr class="quanity_row inputoption_tr" opt_group="{.index_}">
+					<td class="quantity_cell option_text" style="border-top:none;">
+						{ ..input_title } : { ..input_value } 
+						<!--{ ? ..input_value && ..type == 'file' }-->
+						<img src="/data/order/{..input_value}" class="prevImg" style="height:20px;" />
+						<!--{ : }-->
+						<img src="about:blank;" class="prevImg" style="display:none;height:20px;" />
+						<!--{ / }-->
+						<input name="inputsTitle[{.index_}][{..index_}]" class="selected_inputs_title" type="hidden" value="{ ..input_title }" opt_seq="{..index_}" opt_group="{.index_}" />
+						<input name="inputsValue[{.index_}][{..index_}]" class="selected_inputs" type="hidden" value="{ ..input_value }" opt_seq="{..index_}" opt_group="{.index_}" />
+					</td>
+				</tr>
+							<!--{ / }-->
+						<!--{ / }-->
+					<!--{ / }-->
+
+					<!--{ @ .cart_suboptions }-->
+				<tr class="quanity_row suboption_tr" opt_group="{.index_}">
+					<td class="quantity_cell_sub">
+						<div class="option_text">
+							- {..suboption_title} : {..suboption}
+							<input name="suboption[{.index_}][{..index_}]" class="suboption selected_suboptions" type="hidden" value="{..suboption}" opt_seq="{..index_}" opt_group="{.index_}" />
+							<input name="suboptionTitle[{.index_}][{..index_}]" class="selected_suboptions_title" type="hidden" value="{..suboption_title}" opt_seq="{..index_}" opt_group="{.index_}" />
+						</div>
+						<ul class="num_price">
+							<li>
+								<button type="button" class="btn_graybox eaMinus">-</button><input type="text" name="suboptionEa[{.index_}][{..index_}]" class="onlynumber ea_change" value="{..ea}" /><button type="button" class="btn_graybox eaPlus">+</button>
+							</li>
+							<li class="option_col_price">
+								<span class="suboptionPrice hide">{=get_currency_price(..price,'')}</span>
+								{=get_currency_price(..price * ..ea, null,'','<strong class="out_suboption_price">_str_price_</strong>')}
+								<img src="../images/common/icon_close_gray.png" class="removeOption" />
+							</li>
+						</ul>
+					</td>
+				</tr>
+					<!--{ / }-->
+				<!--{ / }-->
+			<!--{ / }-->
+			</table>
+		</div>
+		<!--{ / }-->
+		<!-- 선택된 옵션 노출 영역 끝 -->
+	</div>
+</div>

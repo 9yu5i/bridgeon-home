@@ -8,6 +8,9 @@
 
   var BREAKPOINT = 1120;
   var DIRECTION_THRESHOLD = 6;
+  var TOP_ACTIVATION_Y = 24;
+  var TOP_RESET_Y = 2;
+  var MAIN_HERO_HOLD_RATIO = 0.35;
 
   function isMobileOrTablet() {
     return window.innerWidth <= BREAKPOINT;
@@ -21,6 +24,9 @@
 
     var layoutBody = document.getElementById("layout_body");
     var promo = header.querySelector(".top_header_banner");
+    var mainHero = document.getElementById("main-slide-mo");
+    var isMainPage =
+      !header.classList.contains("tp-header-subpage") && !!mainHero;
     var initialBodyPadding = layoutBody ? layoutBody.style.paddingTop : "";
     var initialLogoDisplay = logo.style.getPropertyValue("display");
     var initialLogoDisplayPriority = logo.style.getPropertyPriority("display");
@@ -32,8 +38,10 @@
       : "";
     var directionAnchor = window.scrollY || window.pageYOffset || 0;
     var expandedHeaderHeight = 0;
+    var mainHeroHoldY = 0;
     var frame = 0;
     var logoHidden = false;
+    var scrollActivated = false;
     var addedFlyingClass = false;
 
     function restoreInlineDisplay(node, value, priority) {
@@ -86,6 +94,14 @@
         header.classList.add("tp-mobile-scroll-logo-hidden");
       }
       syncHeaderRows(hadScrolledClass, hadHiddenClass);
+
+      if (isMainPage) {
+        var heroHeight = Math.ceil(mainHero.getBoundingClientRect().height);
+        mainHeroHoldY = Math.max(
+          120,
+          Math.min(240, Math.round(heroHeight * MAIN_HERO_HOLD_RATIO))
+        );
+      }
     }
 
     function restoreDesktopState() {
@@ -96,6 +112,7 @@
       if (addedFlyingClass) header.classList.remove("flying");
       addedFlyingClass = false;
       logoHidden = false;
+      scrollActivated = false;
       syncHeaderRows(false, false);
       if (layoutBody) layoutBody.style.paddingTop = initialBodyPadding;
     }
@@ -110,7 +127,11 @@
 
       var currentY = Math.max(0, window.scrollY || window.pageYOffset || 0);
 
-      if (currentY <= 2) {
+      if (
+        currentY <= TOP_RESET_Y ||
+        (!scrollActivated && currentY <= TOP_ACTIVATION_Y)
+      ) {
+        if (currentY <= TOP_RESET_Y) scrollActivated = false;
         logoHidden = false;
         directionAnchor = 0;
         header.classList.remove(
@@ -121,6 +142,31 @@
         addedFlyingClass = false;
         syncHeaderRows(false, false);
         if (layoutBody) layoutBody.style.paddingTop = initialBodyPadding;
+        return;
+      }
+
+      scrollActivated = true;
+
+      /* Keep the complete home header visible through the opening portion of
+         the hero. This avoids exposing the expanded-header spacer as a blank
+         band when an iPhone reports its first small scroll movement. */
+      if (isMainPage && currentY < mainHeroHoldY) {
+        logoHidden = false;
+        directionAnchor = currentY;
+        header.classList.remove(
+          "tp-mobile-scrolled",
+          "tp-mobile-scroll-logo-hidden"
+        );
+        syncHeaderRows(false, false);
+
+        if (!header.classList.contains("flying")) {
+          header.classList.add("flying");
+          addedFlyingClass = true;
+        }
+
+        if (layoutBody && expandedHeaderHeight > 0) {
+          layoutBody.style.paddingTop = expandedHeaderHeight + "px";
+        }
         return;
       }
 

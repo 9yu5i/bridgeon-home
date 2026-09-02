@@ -46,7 +46,7 @@
    prototype (responsive-hero.css). */
 @media only screen and (max-width: 1120px) {
   #main-slide-mo.wide_visual_slider.mobile {
-    --tp-hero-card: clamp(300px, 82vw, 440px);
+    --tp-hero-card: clamp(310px, 86vw, 480px);
     box-sizing: border-box;
     display: block;
     overflow: hidden;

@@ -360,12 +360,13 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  /* Keep Firstmall overlay if present; soften for redesign hero */
+  /* Keep the copy readable without covering the brand artwork in black. */
   background: linear-gradient(
     to right,
-    rgba(23, 19, 32, 0.55) 0%,
-    rgba(23, 19, 32, 0.28) 35%,
-    transparent 70%
+    rgba(37, 22, 62, 0.46) 0%,
+    rgba(73, 43, 112, 0.22) 36%,
+    rgba(73, 43, 112, 0.06) 60%,
+    transparent 78%
   ) !important;
 }
 
@@ -380,15 +381,17 @@ body.is-brand-detail-page .subpage_wrap .subpage_container {
   max-width: 1600px;
   margin: 0 auto;
   padding: 48px 20px 56px;
-  color: #171320;
+  color: #fff;
+  text-shadow: 0 3px 20px rgba(25, 14, 43, 0.34);
 }
 
 .bo-brand-detail-eyebrow {
   margin: 0;
-  color: #7b3fe4;
+  color: #f1e8ff;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.14em;
+  text-shadow: 0 2px 12px rgba(25, 14, 43, 0.42);
   text-transform: uppercase;
 }
 

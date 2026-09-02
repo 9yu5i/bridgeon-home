@@ -1,0 +1,22 @@
+	<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+	@@ 카테고리 selectbox 라인맵 @@
+	- 파일위치 : [스킨폴더]/goods/navi.html
+	++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	
+	<a class="" href="/main/index">HOME</a>
+<!--{ @ navi }-->
+	<span class="navi_linemap">
+		<select name="navi_{.index_}" class="navi-select" onchange="link_navi(this, '{link}');">
+		<!--{ ? .key_ > 0 }-->
+			<option value="{= .key_}" selected>&nbsp;선택&nbsp;</option>
+		<!--{ / }-->
+		<!--{ @ .value_ }-->
+			<!--{ ? ..selected }-->
+			<option value="{..category_code}" selected>&nbsp;{..title}&nbsp;</option>
+			<!--{ : }-->
+			<option value="{..category_code}">&nbsp;{..title}&nbsp;</option>
+			<!--{ / }-->
+		<!--{ / }-->
+		</select>
+	</span>
+<!--{ / }-->

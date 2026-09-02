@@ -1,0 +1,70 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ "태그" 리스트 페이지 @@
+- 파일위치 : [스킨폴더]/goods/tag_search.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<div class="subpage_wrap">
+    <div id="tag_page" class="subpage_container">
+    <!--<div class="search_nav"></div>-->
+
+    <!-- 타이틀 -->
+    <div class="title_container">
+        <p style="color: gray; font-size: 15px;">Tag Search: </p>
+        <h2>{add_meta_info.tag}</h2>
+    </div>
+
+    <!--[ 상단 꾸미기 HTML ]-->
+    <!--{? brandData.top_html }-->
+    <div class="category_edit_area mobile_img_adjust">
+    {tagData.top_html}
+    </div>
+    <!--{ / }-->
+
+    <span class="filter_count">{=number_format(totcount)} Items</span>
+        <select class="filter_select" id="catalog_filter">
+            <option value="regist">New</option>
+            <option value="sale">Sale</option>
+            <option value="ranking">Ranking</option>
+            <option value="low_price">Low Price</option>
+            <option value="high_price">High Price</option>
+            <option value="review">Review</option>
+        </select>
+    <div class="catalog_mo">
+        <div class="catalog_filter"></div>
+    </div>
+    
+    <!-- ------- 검색필터, 추천상품, 상품정렬( 파일위치 : [스킨폴더]/goods/_search_form_light.html ) ------- -->
+    {=showGoodsSearchFormLight()}
+    <!-- ------- //검색필터, 추천상품, 상품정렬 ------- -->
+
+    <!-- ------- 상품 영역( data-displaytype : "lattice", "list" ), 파일위치 : [스킨폴더]/goods/search_list_template.html ------- -->
+    <div id="searchedItemDisplay" class="searched_item_display" data-displaytype="lattice"></div>
+    <!-- ------- //상품 영역 ------- -->
+</div>
+
+</div>
+
+<div id="wish_alert">
+    <div class="wa_on"></div>
+    <div class="wa_off"></div>
+    <div class="wa_msg"></div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+    // 검색 페이지 -> 디폴트 검색박스 open
+    /*$('#searchModule #searchVer2').show();*/
+
+    // 컬러 필터 - 255, 255, 255 --> border
+    colorFilter_white( '#searchFilterSelected .color_type' );
+    
+    $("#catalog_filter").on("change", function(){
+        var sort = $(this).val();
+        $("#filteredItemSorting li.item_order ul.list li label input").each(function(){
+            if($(this).val() == sort){
+                $(this).click();
+            }
+        });
+    });
+
+});
+</script>

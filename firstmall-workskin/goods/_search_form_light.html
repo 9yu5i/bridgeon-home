@@ -40,7 +40,7 @@
 
 		<div class="listing-filters-body" id="searchFilter">
 
-			<!--{ ? aFilterConfig.category }-->
+			<!--{ ? aFilterConfig.category && filterCategoryList }-->
 			<details class="listing-filter-group filter_section filter_category_section" open>
 				<summary class="menuThebogi">Category</summary>
 					<div class="message">카테고리가 없습니다.</div>
@@ -755,7 +755,16 @@ $(document).ready(function() {
 		});
 	});
 
-	$('.listing-price-range').each(function(){
+	window.refreshPriceRangeMax = function(newMax) {
+		newMax = parseInt(newMax, 10);
+		if (!newMax || newMax <= 0) { return; }
+		$('.listing-price-range').each(function() {
+			var updateMax = $(this).data('updateMax');
+			if (typeof updateMax === 'function') { updateMax(newMax); }
+		});
+	};
+
+	$('.listing-price-range').each(function() {
 		var $wrap  = $(this);
 		var max    = parseInt($wrap.data('price-max'), 10) || 0;
 		var $min   = $wrap.find('.listing-price-range-input--min');
@@ -766,13 +775,13 @@ $(document).ready(function() {
 		var $hiddenMin = $wrap.find('[data-searchname="min_price"]');
 		var $hiddenMax = $wrap.find('[data-searchname="max_price"]');
 
-		if ( !max ) { return; }
+		if (!max) { return; }
 
 		function render() {
 			var vMin = parseInt($min.val(), 10) || 0;
 			var vMax = parseInt($max.val(), 10) || max;
 
-			if ( vMin > vMax ) {
+			if (vMin > vMax) {
 				vMin = vMax;
 				$min.val(vMin);
 			}
@@ -788,9 +797,34 @@ $(document).ready(function() {
 			$hiddenMax.val(vMax >= max ? '' : vMax);
 		}
 
+		function updateMax(newMax) {
+			if (newMax === max) { return; }
+			max = newMax;
+			$wrap.data('price-max', max);
+			$min.attr('max', max);
+			$max.attr('max', max);
+
+			var hasActiveMin = !!parseInt($hiddenMin.val(), 10);
+			var hasActiveMax = !!parseInt($hiddenMax.val(), 10);
+
+			if (hasActiveMin || hasActiveMax) {
+				if ((parseInt($min.val(), 10) || 0) > max) { $min.val(max); }
+				if ((parseInt($max.val(), 10) || max) > max) { $max.val(max); }
+			} else {
+				$min.val(0);
+				$max.val(max);
+			}
+
+			$wrap.find('.listing-price-range-labels span').last().text('US$' + max.toLocaleString() + '+');
+			render();
+		}
+
+		$wrap.data('updateMax', updateMax);
+
 		$min.add($max).on('input change', render);
 		render();
 	});
+
 
 	$(document).on('click', '[data-realtrend-trigger]', function(e){
 		e.stopPropagation();
@@ -830,7 +864,11 @@ $(document).ready(function() {
 		if ( window.MutationObserver ) {
 			new MutationObserver(updateStickyHeaderOffset).observe(header, { attributes: true, attributeFilter: ['class', 'style'] });
 		}
+		if ( window.ResizeObserver ) {
+			new ResizeObserver(updateStickyHeaderOffset).observe(header);
+		}
 		window.addEventListener('resize', updateStickyHeaderOffset);
+		window.addEventListener('load', updateStickyHeaderOffset);
 	})();
 
 	window.setFilterRating = function(el, bSilent) {

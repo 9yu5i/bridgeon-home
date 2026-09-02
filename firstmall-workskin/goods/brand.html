@@ -127,11 +127,13 @@ if (document.body) {
 <script type="text/javascript">
 (function () {
 	function hydrateBrandTopHtml() {
+		var brandCode = new URLSearchParams(window.location.search).get("code");
+		var intro = document.querySelector("[data-brand-intro]");
+
 		var source = document.querySelector("[data-brand-top-source]");
 		if (!source) return;
 
 		var hero = document.querySelector("[data-brand-hero-media]");
-		var intro = document.querySelector("[data-brand-intro]");
 		var area = source.querySelector(".brand_top_area") || source;
 		var banner = area.querySelector("img.banner");
 		var overlay = area.querySelector(".banner_overlay");
@@ -139,8 +141,79 @@ if (document.body) {
 
 		if (hero) {
 			var bannerSrc = banner && (banner.getAttribute("src") || banner.src);
+			var mobileBannerSrc = bannerSrc;
+			var usesDefaultBeautyBanner =
+				!bannerSrc || /default_beauty_brand_banner\.png(?:$|[?#])/i.test(bannerSrc);
+			if (
+				brandCode === "0071" &&
+				usesDefaultBeautyBanner
+			) {
+				bannerSrc = "/data/skin/{skin}/images/brand/abib-brand.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0633" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/abouttone-brand.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0014" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/aestura-brand.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0010" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/ahc-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0033" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/alternative-stereo-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0034" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/anua-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0122" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/amuse-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0125" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/anillo-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0129" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/aplb-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0131" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/aprilskin-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0132" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/arencia-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0136" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/aromatica-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0143" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/atopalm-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0145" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/axis-y-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0627" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/athe-brand-desktop.png";
+				mobileBannerSrc = bannerSrc;
+			} else if (brandCode === "0635" && usesDefaultBeautyBanner) {
+				bannerSrc = "/data/skin/{skin}/images/brand/aou-brand-desktop-v2.png";
+				mobileBannerSrc = bannerSrc;
+			}
 			if (bannerSrc) {
-				hero.style.backgroundImage = 'url("' + bannerSrc.replace(/"/g, '\\"') + '")';
+				var mobileBannerQuery = window.matchMedia("(max-width: 760px)");
+				var applyResponsiveBanner = function () {
+					var responsiveBannerSrc = mobileBannerQuery.matches
+						? mobileBannerSrc
+						: bannerSrc;
+					hero.style.backgroundImage =
+						'url("' + responsiveBannerSrc.replace(/"/g, '\\"') + '")';
+				};
+
+				applyResponsiveBanner();
+				if (mobileBannerSrc !== bannerSrc) {
+					if (mobileBannerQuery.addEventListener) {
+						mobileBannerQuery.addEventListener("change", applyResponsiveBanner);
+					} else if (mobileBannerQuery.addListener) {
+						mobileBannerQuery.addListener(applyResponsiveBanner);
+					}
+				}
 				hero.className += (hero.className ? " " : "") + "has-banner";
 			}
 			if (overlay && overlay.parentNode !== hero) {
