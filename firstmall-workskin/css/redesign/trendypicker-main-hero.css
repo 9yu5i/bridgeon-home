@@ -325,6 +325,15 @@
   }
 }
 
+/* Between desktop and tablet the shell's side gutters shrink 130px -> 70px,
+   matching the prototype (responsive-sections.css). Must precede the 1120px
+   rule so the narrower tablet gutter still wins at <=1120px. */
+@media only screen and (max-width: 1500px) {
+  #layout_body .resp_wrap.tp-page-shell {
+    padding-inline: 70px;
+  }
+}
+
 @media only screen and (max-width: 1120px) {
   #layout_body .resp_wrap.tp-page-shell {
     margin: -8px auto 0;

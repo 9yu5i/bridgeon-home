@@ -155,14 +155,13 @@
         const img =
           doc.querySelector(".brand_top_area img.banner") ||
           doc.querySelector("img.banner");
-        let src = "";
-        if (img) src = img.getAttribute("src") || img.src || "";
-        if (!src) {
-          const media = doc.querySelector("[data-brand-hero-media]");
-          const style = (media && media.getAttribute("style")) || "";
-          const match = style.match(/url\(["']?([^"')]+)["']?\)/);
-          if (match) src = match[1];
-        }
+        const rawSrc = img ? img.getAttribute("src") || img.src || "" : "";
+        // Same resolver the brand detail hero uses (trendypicker-brand-banner.js),
+        // so the New Arrivals banner shows the identical image per brand.
+        const src =
+          typeof window.tpResolveBrandBanner === "function"
+            ? window.tpResolveBrandBanner(code, rawSrc)
+            : rawSrc;
         if (!src) return;
         banner.style.setProperty(
           "--bo-new-banner-image",

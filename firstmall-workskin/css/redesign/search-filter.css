@@ -221,6 +221,23 @@ Creation Date : 2026-08-14
   cursor: pointer;
 }
 
+/* Match the prototype's plain native checkbox. Two skin defaults fight this:
+   common.css sizes every checkbox to 20x20 (too chunky), and user.css forces
+   `appearance:none` on :checked checkboxes, which kills the native rounded box
+   and its check mark (leaving a square, color-less box). Restore the native
+   control here — the prototype uses the browser default too, so this gives the
+   same rounded corners and checked color. No !important needed: this selector
+   out-specifies the global rules. */
+.listing-filter-list label input[type="checkbox"],
+.listing-filter-list label input[type="checkbox"]:checked {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  flex-shrink: 0;
+  -webkit-appearance: auto;
+  appearance: auto;
+}
+
 .listing-filter-list label .name {
   flex: 1;
   min-width: 0;
@@ -879,7 +896,9 @@ Creation Date : 2026-08-14
 
   .listing-layout {
     display: grid;
-    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    /* 0.9x of 220/280 — the prototype renders this sidebar under html{zoom:0.9}
+       at >=1121px; we bake that 0.9 into real px instead of scaling. */
+    grid-template-columns: minmax(198px, 252px) minmax(0, 1fr);
     gap: 0;
     align-items: start;
   }
@@ -887,10 +906,114 @@ Creation Date : 2026-08-14
   .listing-filters {
     position: sticky;
     top: calc(var(--sticky-header-height, 0px) + 24px);
+    /* Pin the panel and scroll INSIDE it so the lower filter groups are reachable
+       without scrolling the whole page. The scrollbar is kept thin and subtle
+       (not the chunky default). */
     max-height: calc(100vh - var(--sticky-header-height, 0px) - 48px);
     overflow-y: auto;
     overflow-x: hidden;
-    padding-right: 32px;
+    padding-right: 26px;
+    scrollbar-width: thin;
+    scrollbar-color: #d9d2ea transparent;
+  }
+
+  .listing-filters::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .listing-filters::-webkit-scrollbar-thumb {
+    background: #d9d2ea;
+    border-radius: 999px;
+  }
+
+  .listing-filters::-webkit-scrollbar-thumb:hover {
+    background: #c3b7de;
+  }
+
+  .listing-filters::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Desktop-only 0.9x of the base filter metrics, matching the prototype's
+     html{zoom:0.9} at >=1121px. Reduced as real px (not transform/zoom); the
+     mobile off-canvas panel below 1121px keeps the base sizes, as in the
+     prototype (its zoom is desktop-only too). */
+  .listing-filters-head {
+    margin-bottom: 16px;
+  }
+  .listing-filters-head h2 {
+    font-size: 16px;
+  }
+  .listing-clear-all {
+    font-size: 12px;
+  }
+  .listing-filter-group {
+    padding: 13px 0;
+  }
+  .listing-filter-group summary {
+    font-size: 14px;
+  }
+  .listing-filter-group summary::after {
+    font-size: 13px;
+  }
+  .listing-filter-group[open] summary {
+    margin-bottom: 11px;
+  }
+  .listing-filter-group .message {
+    font-size: 12px;
+  }
+  .category_all_nav a,
+  .location_all_nav a,
+  .count_category,
+  .count_location {
+    font-size: 11px;
+  }
+  .listing-filter-list {
+    gap: 9px;
+  }
+  .listing-filter-list.brandList:not(.is-collapsed) {
+    max-height: 252px;
+  }
+  .listing-filter-list label {
+    gap: 9px;
+    font-size: 13px;
+  }
+  .listing-filter-list label .desc {
+    font-size: 11px;
+  }
+  .listing-filter-ratings .stars {
+    font-size: 12px;
+  }
+  .listing-filter-search {
+    margin-bottom: 11px;
+  }
+  .listing-filter-search input {
+    height: 34px;
+    margin-bottom: 11px;
+    font-size: 13px;
+  }
+  .listing-filter-more,
+  .listing-filter-less {
+    font-size: 12px;
+  }
+  .filter_section_sorting {
+    gap: 11px;
+    font-size: 11px;
+  }
+  .listing-price-range-slider {
+    height: 47px;
+  }
+  .listing-price-range-value {
+    bottom: 25px;
+    font-size: 11px;
+  }
+  .listing-price-range-labels {
+    font-size: 11px;
+  }
+  .btn_sfilter,
+  .input_sfilter {
+    height: 32px;
+    font-size: 12px;
   }
 
   /* .listing-main,

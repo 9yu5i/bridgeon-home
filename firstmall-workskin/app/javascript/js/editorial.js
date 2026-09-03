@@ -71,7 +71,7 @@ Editorial Section (maon page) JS
         <a class="editor-product-link" href="${detailUrl}">
           <span class="editor-product-thumb">${thumb}</span>
           <span class="editor-product-copy">
-            ${brand ? `<small>${brand}</small>` : ""}
+            <small>${brand}</small>
             <strong>${productName}</strong>
             <span class="editor-product-price"><em>${price}</em>${originalPrice ? `<del>${originalPrice}</del>` : ""}</span>
           </span>

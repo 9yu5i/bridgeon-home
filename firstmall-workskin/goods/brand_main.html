@@ -75,6 +75,43 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 
 <script type="text/javascript">
 $(document).ready(function() {
+	// 브랜드 데이터가 같은 category_code를 이름만 다르게 중복으로 내려주는 경우가 있어
+	// (예: Dr.Althea / Dr. Althea) 같은 code는 하나만 남기고 나머지 li를 제거한다.
+	// 남길 후보는 "제대로 표기된 이름"을 우선: 띄어쓰기 많음 > 대문자 많음 > 길이 긴 것.
+	function dedupeBrands() {
+		function countMatches(str, re) {
+			var m = String(str).match(re);
+			return m ? m.length : 0;
+		}
+		function betterName(a, b) {
+			// b가 a보다 나은 이름이면 true
+			var sa = countMatches(a, /\s/g), sb = countMatches(b, /\s/g);
+			if (sb !== sa) return sb > sa;
+			var ua = countMatches(a, /[A-Z]/g), ub = countMatches(b, /[A-Z]/g);
+			if (ub !== ua) return ub > ua;
+			return b.length > a.length;
+		}
+		var kept = {}; // code -> 남겨둔 a element
+		$(".bo-brand-directory a[data-brand-code]").each(function() {
+			var $a = $(this);
+			var code = $a.attr("data-brand-code");
+			if (!code) return;
+			var name = $.trim($a.text());
+			if (!kept[code]) {
+				kept[code] = { a: this, name: name };
+				return;
+			}
+			// 이미 같은 code가 있으면 더 나은 이름 쪽만 남기고 다른 li를 제거
+			if (betterName(kept[code].name, name)) {
+				$(kept[code].a).closest("li").remove();
+				kept[code] = { a: this, name: name };
+			} else {
+				$a.closest("li").remove();
+			}
+		});
+	}
+	dedupeBrands();
+
 	function filterBrands(keyword) {
 		var kw = $.trim(keyword).toLowerCase();
 		var anyVisible = false;

@@ -204,6 +204,14 @@
   display: none;
 }
 
+/* Slightly taller action buttons on the seller rail only, desktop only
+   (bestseller cards and the flattened mobile layout keep their heights). */
+@media (min-width: 1121px) {
+  .seller-rail .product-card .card-actions button {
+    height: 34px;
+  }
+}
+
 /* ---------- Tablet + mobile (<=1120px): grid layout, flattened card ---------- */
 
 @media (max-width: 1120px) {

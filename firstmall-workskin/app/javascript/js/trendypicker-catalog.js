@@ -385,9 +385,93 @@
 		enhanceSortSelect();
 		refreshDynamicUI();
 
+		// Selecting a filter makes Firstmall scroll to the very top *immediately on
+		// click* (well before its re-search AJAX finishes ~1s later). So we can't
+		// wait for ajaxComplete to restore — by then the user has stared at the top
+		// for a second. Instead, LOCK the scroll position the moment a filter is
+		// clicked and hold it (correcting on every scroll event + each frame) right
+		// through the AJAX, releasing when the results re-render or the user scrolls.
+		var lockY = 0;
+		var lockActive = false;
+		var lockRAF = null;
+		var lockSafety = null;
+
+		function stopScrollLock() {
+			lockActive = false;
+			if (lockRAF) {
+				window.cancelAnimationFrame(lockRAF);
+				lockRAF = null;
+			}
+			if (lockSafety) {
+				window.clearTimeout(lockSafety);
+				lockSafety = null;
+			}
+		}
+
+		function pinToLock() {
+			if (!lockActive) return;
+			var current = window.scrollY || window.pageYOffset || 0;
+			if (Math.abs(current - lockY) > 1) window.scrollTo(0, lockY);
+		}
+
+		function scrollLockStep() {
+			if (!lockActive) return;
+			pinToLock();
+			lockRAF = window.requestAnimationFrame(scrollLockStep);
+		}
+
+		function startScrollLock(y) {
+			stopScrollLock();
+			lockY = y;
+			lockActive = true;
+			if (window.jQuery) window.jQuery("html, body").stop(true);
+			lockRAF = window.requestAnimationFrame(scrollLockStep);
+			// Never hold forever if the AJAX never reports back.
+			lockSafety = window.setTimeout(stopScrollLock, 3000);
+		}
+
+		// Correct Firstmall's programmatic scroll the instant it happens (the
+		// scroll event fires before paint, so this keeps the jump invisible).
+		window.addEventListener("scroll", pinToLock, { passive: true });
+
+		// A real scroll gesture from the user releases the lock first (these fire
+		// before the resulting scroll event), so we never fight their scrolling.
+		["wheel", "touchmove", "keydown"].forEach(function (evt) {
+			window.addEventListener(evt, stopScrollLock, { passive: true });
+		});
+
+		// Lock on the click itself (capture phase = before the input's inline
+		// onclick=setFilter* that triggers Firstmall's scroll-to-top).
+		document.addEventListener(
+			"click",
+			function (event) {
+				var target = event.target;
+				if (!target || !target.closest) return;
+				var isFilterCtrl =
+					target.closest(".listing-filters, .search_left, #searchFilter") &&
+					!target.closest(
+						".listing-filter-more, .listing-filter-less, summary"
+					);
+				var isClear = target.closest(
+					".listing-clear-all, [data-listing-clear-filters], .selected_clear"
+				);
+				if (!isFilterCtrl && !isClear) return;
+				startScrollLock(window.scrollY || window.pageYOffset || 0);
+			},
+			true
+		);
+
 		if (window.jQuery) {
-			window.jQuery(document).on("ajaxComplete", function () {
+			window.jQuery(document).on("ajaxComplete", function (_e, _xhr, settings) {
 				window.setTimeout(refreshDynamicUI, 50);
+				// Release shortly after the search results re-render, letting the
+				// post-render layout settle while still pinned.
+				if (lockActive) {
+					var url = (settings && settings.url) || "";
+					if (/search_list|goods\/search/i.test(String(url))) {
+						window.setTimeout(stopScrollLock, 150);
+					}
+				}
 			});
 		}
 

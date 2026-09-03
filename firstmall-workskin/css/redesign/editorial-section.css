@@ -671,6 +671,12 @@ Creation Date : 2026-08-28
   font-weight: 600;
 }
 
+/* Products with no brand keep the brand line's space so every card in the row
+   stays the same height (empty slot instead of a shorter card). */
+.editor-product-copy small:empty::before {
+  content: "\00a0";
+}
+
 .editor-product-copy strong {
   display: -webkit-box;
   min-height: 0;

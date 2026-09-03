@@ -1155,6 +1155,12 @@ body.is-deal-share-open {
   text-overflow: ellipsis;
 }
 
+/* No brand: keep the brand line's space so the name, price and button below
+   stay in place instead of shifting up. */
+.deals-section .deal-card.time .deal-brand:empty::before {
+  content: "\00a0";
+}
+
 .deals-section .deal-card.time .deal-copy h3,
 .deals-section .deal-card.time .deal-product h3 {
   margin: 0;
@@ -2027,6 +2033,7 @@ border-color: #ff4d63;
     padding: 0 13px;
     font-size: 11px;
     box-shadow: 0 8px 18px rgba(70, 40, 120, 0.08);
+    font-weight: 800;
   }
 
   .deals-section .deal-card.special .deal-top span {

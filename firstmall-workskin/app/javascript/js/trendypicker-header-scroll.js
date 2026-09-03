@@ -114,7 +114,8 @@
       logoHidden = false;
       scrollActivated = false;
       syncHeaderRows(false, false);
-      if (layoutBody) layoutBody.style.paddingTop = initialBodyPadding;
+      // Desktop padding is owned by bindFlyingSpacer() (Firstmall toggles
+      // `.flying` there); don't reset it here or it fights that spacer.
     }
 
     function update() {
@@ -261,8 +262,45 @@
     }
   }
 
+  /**
+   * Desktop (> BREAKPOINT): Firstmall's own script toggles `.flying` on the
+   * header (position:fixed) once you scroll a little, but nothing reserves the
+   * space the header used to occupy — so the page content jumps up by the
+   * header's height the moment it goes fixed. Reserve that height on
+   * #layout_body while `.flying` is on, keeping the content perfectly still.
+   * (The mobile/tablet path manages its own spacer inside
+   * bindDirectionalHeader, so this only acts above the breakpoint.)
+   */
+  function bindFlyingSpacer() {
+    var header = document.getElementById("layout_header");
+    var layoutBody = document.getElementById("layout_body");
+    if (!header || !layoutBody) return;
+    var initialPad = layoutBody.style.paddingTop;
+
+    function sync() {
+      if (window.innerWidth <= BREAKPOINT) return;
+      if (header.classList.contains("flying")) {
+        layoutBody.style.paddingTop = header.offsetHeight + "px";
+      } else {
+        layoutBody.style.paddingTop = initialPad;
+      }
+    }
+
+    // Class changes fire synchronously before paint, so the spacer appears in
+    // the same frame the header goes fixed — no visible jump.
+    if (window.MutationObserver) {
+      new MutationObserver(sync).observe(header, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+    }
+    window.addEventListener("resize", sync);
+    sync();
+  }
+
   function init() {
     bindDirectionalHeader();
+    bindFlyingSpacer();
     bindSubpageControls();
   }
 

@@ -1,0 +1,790 @@
+@charset "utf-8";
+
+/* **************************************************************************************
+* 상품 퀵뷰 (팝업) CSS
+Creation Date : 2026-08-06
+************************************************************************************** */
+
+/* ============================================================
+   1. TOKENS & CARD SURFACE
+   ============================================================ */
+#goods_view_quickview {
+  --qv-purple: #7b3fe4;
+  --qv-purple-dark: #5422ba;
+  --qv-card-surface:
+    radial-gradient(circle at 8% 0%, rgba(255, 198, 224, 0.42) 0%, transparent 46%),
+    radial-gradient(circle at 96% 6%, rgba(176, 152, 255, 0.34) 0%, transparent 44%),
+    radial-gradient(circle at 70% 100%, rgba(255, 220, 210, 0.28) 0%, transparent 42%),
+    linear-gradient(168deg, #fff9fc 0%, #f4eefc 52%, #ebe3f8 100%);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.qv-product-card {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: 8px;
+  background: var(--qv-card-surface);
+}
+
+/* ============================================================
+   2. CATEGORY TAG
+   ============================================================ */
+.qv-kbeauty-tag {
+  display: inline-flex;
+  margin-bottom: 16px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #fff;
+  background: var(--qv-purple);
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   3. HEAD: THUMB + META
+   ============================================================ */
+.qv-product-head {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.qv-product-thumb {
+  display: grid;
+  place-items: center;
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #dff6ef, #9fd6c6);
+}
+
+.qv-product-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.qv-product-thumb,
+.qv-product-name {
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: 0px;
+  transition: color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, outline-color 0.2s ease;
+}
+
+.qv-product-thumb:hover,
+.qv-product-thumb:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(55, 34, 99, 0.14);
+  outline-color: rgba(123, 63, 228, 0.28);
+  outline-offset: 0px;
+}
+
+.qv-product-meta {
+  min-width: 0;
+}
+
+.qv-brand-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 0 4px;
+  gap: 8px;
+}
+
+.qv-brand {
+  color: #8b8496;
+  font-size: 15px;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.qv-brand:hover {
+  color: var(--qv-purple);
+}
+
+.qv-best {
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: var(--qv-purple);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  line-height: normal;
+}
+
+.qv-product-name {
+  margin: 0 0 8px;
+  color: #111;
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+.qv-product-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.qv-product-name a:hover {
+  color: var(--qv-purple);
+}
+
+.qv-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.qv-rating img {
+  width: 14px;
+  height: 14px;
+}
+
+/* ============================================================
+   4. PRICE
+   ============================================================ */
+.qv-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin: 0;
+  margin-top: 30px;
+}
+
+/* Prototype layout: original price + discount rate sit on the row ABOVE the
+   sale price. DOM order is strong -> del -> mark, so reorder with flex `order`
+   and drop the sale price onto its own (second) line via flex-basis:100%. */
+.qv-price strong {
+  order: 3;
+  flex-basis: 100%;
+  margin-top: 2px;
+  color: #111;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.qv-price del {
+  order: 1;
+  color: #a8a0b3;
+  font-size: 13px;
+}
+
+.qv-price mark {
+  order: 2;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: var(--qv-purple);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  line-height: normal;
+}
+
+.qv-benefits-toggle {
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--qv-purple);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ============================================================
+   5. OPTIONS ROW (select + qty) & COLOR SWATCH FIXES
+   ============================================================ */
+.qv-options-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin: 20px 0 16px;
+}
+
+.qv-field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.qv-options-row .qv-field {
+  flex: 1 1 100%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.qv-field > span,
+.qv-qty-block > span {
+  color: #111;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.qv-qty-block {
+  display: grid;
+  gap: 8px;
+  width: 30%;
+}
+
+.qv-options-row .qv-qty-block.qv_num_single_area {
+  flex: 0 0 30% !important;
+  width: 30% !important;
+  max-width: 30% !important;
+  margin-left: auto;
+}
+
+.qv-qty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 41px;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.qv-qty button {
+  width: 36px !important;
+  height: 41px !important;
+  border: 0;
+  color: #111;
+  background: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  text-indent: 0;
+}
+
+.qv-qty input {
+  border: 0;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+.qv-qty input::-webkit-outer-spin-button,
+.qv-qty input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.qv-qty-value {
+  width: 24px;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  -moz-appearance: textfield;
+}
+
+.qv-qty-value::-webkit-outer-spin-button,
+.qv-qty-value::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Color swatch widget — prevents the swatch row's intrinsic width from
+   forcing the modal wider than its panel (see min-width:0 note in section 8) */
+.color_swatch_wrapper {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+}
+
+.color_swatch_wrapper .color_swatch_selection_area {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  padding: 4px 2px;
+  box-sizing: border-box;
+}
+
+#select_option_lay .goods_option_area,
+.qv-field #select_option_lay {
+  min-width: 0;
+}
+
+#select_option_lay .sbOptions {
+	max-height: 200px !important;
+}
+
+/* ============================================================
+   6. CTA ROW (add to cart + wish)
+   ============================================================ */
+.qv-cta-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 52px;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.qv-add-cart {
+  height: 46px;
+  border: 0;
+  border-radius: 14px;
+  color: #fff;
+  background: var(--qv-purple);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.qv-add-cart:hover {
+  background: var(--qv-purple-dark);
+}
+
+.qv-wish {
+  position: relative;
+  display: grid !important;
+  place-items: center;
+  width: 52px;
+  height: 46px;
+  border-radius: 11px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.qv-wish img {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  transition: opacity 0.25s ease;
+}
+
+.qv-wish-icon-hover {
+  opacity: 0;
+}
+
+.qv-wish:not(.is-hover-suppressed):hover .qv-wish-icon-default,
+.qv-wish.is-active .qv-wish-icon-default {
+  opacity: 0;
+}
+
+.qv-wish:not(.is-hover-suppressed):hover .qv-wish-icon-hover,
+.qv-wish.is-active .qv-wish-icon-hover {
+  opacity: 1;
+}
+
+/* ============================================================
+   7. "WHY YOU'LL LOVE IT" + REVIEWS
+   ============================================================ */
+.qv-love {
+  margin-bottom: 20px;
+  padding: 18px 16px;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.qv-love-section-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.qv-love.open .qv-love-section-title {
+  margin-bottom: 12px;
+}
+
+.qv-love h3 {
+  margin: 0;
+  color: #111;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.qv-love-desc {
+  display: grid;
+  gap: 10px;
+  color: #444;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.qv-love-desc ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.qv-love-desc li {
+  position: relative;
+  padding-left: 22px;
+}
+
+.qv-love-desc li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--qv-purple);
+  font-weight: 700;
+}
+
+.qv-love-section-title .toggle_icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--qv-purple);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.qv-reviews-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.qv-reviews-head h3 {
+  margin: 0;
+  color: #111;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.qv-reviews-head a {
+  color: #8b8496;
+  font-size: 12px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.qv-reviews-head a:hover {
+  color: var(--qv-purple);
+}
+
+#goods_review_frame {
+  border: 0;
+  width: 100%;
+}
+
+.qv-review-list {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.qv-review-item {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  gap: 2px 10px;
+  align-items: center;
+}
+
+.qv-avatar {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: start;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.qv-avatar--fallback {
+  display: block;
+  background: linear-gradient(145deg, #e8d9ff, #cdb4ff);
+}
+
+.qv-review-copy {
+  display: contents;
+}
+
+.qv-review-copy strong {
+  grid-column: 2;
+  grid-row: 1;
+  display: block;
+  color: #111;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.qv-review-copy p {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+  color: #777;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+/* NOTE: .qv-stars is defined twice below — the second definition (icon-based)
+   overrides the first (gradient-based). Kept both as-is since the second is
+   what's actually rendering; delete the first block if the gradient version
+   is confirmed dead. */
+.qv-stars {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: center;
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 11px;
+  background: repeating-linear-gradient(90deg, #d8d3e0 0 9px, transparent 9px 12px);
+  flex-shrink: 0;
+}
+
+.qv-stars-fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  background: repeating-linear-gradient(90deg, var(--qv-purple, #7b3fe4) 0 9px, transparent 9px 12px);
+}
+
+.qv-stars {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 10px;
+  background: url(../../images/icon/icon-review-star-grey.png) repeat-x;
+  background-size: 10px 10px;
+}
+
+.qv-stars b {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  background: url(../../images/icon/icon-review-star-black.png) repeat-x;
+  background-size: 10px 10px;
+}
+
+/* ============================================================
+   8. MODAL SHELL (desktop centered modal / mobile bottom sheet)
+   ============================================================ */
+.qv-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.qv-modal.is-open {
+  display: flex !important;
+}
+
+body.qv-modal-open .qv-modal {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.qv-modal-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 12, 26, 0.55);
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
+.qv-modal-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 480px;
+  max-height: 80vh;
+  background: #fff;
+  border-radius: 28px;
+  overflow: hidden;
+  animation: qv-modal-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.qv-modal-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  color: #666;
+  background: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  line-height: 0;
+  transition: background 0.3s ease;
+}
+
+.qv-modal-close:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.qv-modal-close svg {
+  display: block;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.qv-modal-scroll {
+  width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+#quickviewBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+@keyframes qv-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes qv-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   9. RESPONSIVE
+   ============================================================ */
+@media (max-width: 1120px) {
+  .qv-modal.is-open {
+        align-items: flex-end;
+    }
+
+    .qv-modal-panel {
+        width: 100%;
+        max-width: none;
+        max-height: 80dvh;
+        border-radius: 16px 16px 0 0;
+        animation: qv-sheet-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+}
+
+@media (max-width: 760px) {
+  .qv-modal-panel {
+    max-height: 70dvh;
+  }
+}
+
+@media (max-width: 480px) {
+  .qv-product-card {
+    padding: 20px;
+    border-radius: 0;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+  }
+
+  .qv-product-head {
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .qv-product-thumb {
+    width: 110px;
+    height: 110px;
+  }
+
+  .qv-product-name {
+    font-size: 16px;
+  }
+}
+
+.qv-modal-scroll,
+#quickviewBody,
+#goods_view_quickview,
+.qv-product-card {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+@media (max-width: 1120px) {
+  body.qv-modal-open .qv-product-card {
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 1120px) {
+  .qv-modal-close {
+    top: 16px;
+    right: 16px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 760px) {
+  .qv-modal-close svg {
+    width: 16px;
+    height: 16px;
+  }
+}

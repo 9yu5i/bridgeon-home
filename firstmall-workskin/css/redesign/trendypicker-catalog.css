@@ -432,7 +432,9 @@ body.is-catalog-page .subpage_wrap .subpage_container {
 
   .bo-catalog-layout {
     display: grid;
-    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    /* 0.9x of 220/280 to match the prototype's desktop html{zoom:0.9} sidebar
+       (kept in sync with .listing-layout in search-filter.css). */
+    grid-template-columns: minmax(198px, 252px) minmax(0, 1fr);
     gap: 0;
     align-items: start;
   }
