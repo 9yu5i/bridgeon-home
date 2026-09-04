@@ -870,6 +870,16 @@ Creation Date : 2026-08-14
     z-index: 1100;
   }
 
+  /* While the full-screen search filter drawer is open, remove every visible
+     floating footer control. Hide the whole fixed-menu surface (not only its ul)
+     so its white background/height cannot remain, and hide top/chat buttons too.
+     #floating_over itself stays mounted because footer CSS intentionally locks it
+     visible for mobile/tablet; its visible children are what we suppress here. */
+  body:has(.listing-main.is-filter-open) #floating_over .fixed_menu.tp-fnav,
+  body:has(.listing-main.is-filter-open) #floating_over .float-button {
+    display: none;
+  }
+
   .listing-main.is-filter-open .listing-filters {
     transform: translateX(0);
     pointer-events: auto;

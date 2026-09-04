@@ -88,7 +88,7 @@ input.pilsu:read-only {background-color:#d8d8d8;}
 .respGoodsZzimMo {display:none;}
 /* 헤더 */
 #layout_header .benefit {top:45px;}
-.layout_header {border-bottom:1px solid #D8D8D8; box-shadow:none;}
+.layout_header { box-shadow:none;}
 .layout_header > .resp_wrap {position:relative; clear:both;}
 .layout_header .util_wrap {height:30px;border-bottom:0 solid #f0f0f0;position:relative;max-width: 1280px;margin: 0 auto;z-index:1;}
 .layout_header .util_wrap_menu {margin-left:-10px;}
@@ -802,7 +802,6 @@ input[type=checkbox]:checked::after,
 .searched_item_display>ul>li {position:relative;padding:40px 0 0 20px;}
 .searched_item_display>ul>li .goods_icon_area {position:absolute;right:12px;top:24px;}
 .searched_item_display .item_info_area {text-align:center;padding-top:0;}
-.searched_item_display .item_info_area .goods_name_area {padding-top:16px;}
 .searched_item_display .item_info_area .goods_name_area a span {font-size:14px;color:#1D1D1D;line-height:20px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-all; height: 40px;}
 .searched_item_display .goods_list_style4 .item_info_area .goods_price_area {line-height:20px;padding-bottom:8px;padding-top:12px;}
 .searched_item_display .goods_list_style4 .item_info_area .goods_price_area .consumer_price {display:block;color:#8E8E8E;font-size:14px;font-weight:normal;}
@@ -870,7 +869,7 @@ input[type=checkbox]:checked::after,
 .goods_option_table tr.optionTr td .sbHolder .sbToggle {height:100%;background:url(../images/icon/icon-arrow-bottom.png) 30% 50% no-repeat;background-size:10px 6px;}
 .goods_option_table tr.optionTr td .sbHolder .sbSelector {height:100%;line-height:48px;}
 
-.options_main_title {font-weight: 700; font-size: 14px; color: #1d1d1d; line-height: 20px; display: inline-block;}
+.options_main_title {font-weight: 700; font-size: 17px; color: #1d1d1d; line-height: 20px; display: inline-block;}
 @media only screen and (max-width: 1023px) {
 	.options_main_title { margin-left: 10px;}
 
@@ -904,7 +903,7 @@ vertical-align: top;}
 .eaPlus, .btn_add_suboption, .recently_eaPlus, .recently_btn_add_suboption {background:url(../images/icon/icon-plus.png) 50% 50% no-repeat;border:none;}
 .goods_quantity_table .ea_change {border:none;font-size:14px;text-align: center;}
 .goods_quantity_table .out_option_price {font-size:14px;line-height:30px;}
-.goods_quantity_table .num_price .removeOption {width:10px !important;height: 10px !important;vertical-align: initial;}
+.goods_quantity_table .num_price .removeOption {width:13px !important;height: 13px !important;vertical-align: initial;}
 .goods_option_table .sbOptions {z-index:11;}
 .goods_buttons_area {padding-bottom:28px;}
 .goods_price_area .total_goods_price {font-size:24px;font-weight:700;padding:0;}
@@ -2055,7 +2054,7 @@ ul.displayTabType1 > li.current {background-color:#7F56D9;color:#FFF;}
     .goods_buy_open_sections {padding:12px 15px;}
     .goods_price_area #total_goods_price,
     .goods_price_area .total_goods_price {font-size:18px;}
-    .goods_price_area .total_goods_tit {font-size:12px;}
+    .goods_price_area .total_goods_tit {font-size:13px;}
     .goods_thumbs_spec #sns-share-mo {position: fixed;left: 0;bottom: 0;right: 0;z-index: 1002;background-color:#fff;border-top-left-radius: 20px;border-top-right-radius: 20px;display: none;}
     .goods_thumbs_spec #sns-share-mo > p {font-size:18px;color:#1d1d1d;line-height:24px;font-weight:700;padding:16px;}
     .goods_thumbs_spec #sns-share-mo > button {position:absolute;right:16px;top:16px;}

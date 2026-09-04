@@ -544,3 +544,8 @@
     display: none;
   }
 }
+
+/* Real Trend uses its reel controls and fixed bottom navigation only. */
+body.is-realtrend #floating_over .float-button {
+  display: none;
+}

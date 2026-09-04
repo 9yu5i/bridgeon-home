@@ -1659,6 +1659,7 @@ var jscls_option_select	= function(){
 			
 			// 중복 여부
 			var duplicated = false;
+			var duplicatedIndex = -1;
 			
 			// 현재 선택 옵션 확인
 			var objSelectedOption = [];
@@ -1743,14 +1744,26 @@ var jscls_option_select	= function(){
 					
 					if(check_cnt == compare_cnt){
 						duplicated = true;
+						duplicatedIndex = i;
 					}
 				}
 			}
 			// duplicated = true;
 			if(duplicated){
-				//옵션을 선택해 주세요2
-				openDialogAlert(getAlert('gv035'), 400, 140,'');
-				result	= false;
+				// 중복 옵션이면 "Cannot add the duplicated product." 경고 대신,
+				// 이미 담긴 같은 옵션 행(opt_group === 매칭 인덱스)의 수량을 +1 한다.
+				var $dupRow = $('.quanity_row[opt_group="' + duplicatedIndex + '"]');
+				var $dupPlus = $dupRow.find('.' + that.ea_plus_class).first();
+				if($dupPlus.length){
+					// 기존 수량증가(+) 버튼을 재사용 → 재고체크·금액재계산까지 그대로 탄다.
+					$dupPlus.trigger('click');
+				}else{
+					var $dupEa = $dupRow.find('.' + that.ea_input_class).first();
+					if($dupEa.length){
+						$dupEa.val((parseInt($dupEa.val(), 10) || 1) + 1).trigger('change');
+					}
+				}
+				result	= false; // 새 행은 추가하지 않음
 			}
 			return result;
 		};

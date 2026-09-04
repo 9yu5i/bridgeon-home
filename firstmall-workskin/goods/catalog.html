@@ -5,7 +5,7 @@
 - Design: listing/beauty.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <link rel="stylesheet" href="/data/skin/{=skin}/css/redesign/trendypicker-listing-cards.css" />
-<link rel="stylesheet" href="/data/skin/{=skin}/css/redesign/trendypicker-catalog.css?v=20260903" />
+<link rel="stylesheet" href="/data/skin/{=skin}/css/redesign/trendypicker-catalog.css?v=20260904-1" />
 <style>
 body.is-catalog-page .search_nav,
 body.is-catalog-page .title_container,
@@ -126,19 +126,167 @@ $(function () {
 		});
 	});
 
-	$(document).on("click", ".catalog_filter .selected_item_area a.remove", function () {
-		var fi = $(this).parent().data("filteritem");
-		$("#searchFilterSelected .selected_item_area li").each(function () {
-			if (fi == $(this).data("filteritem")) {
-				$(this).find("a.remove").click();
+	var catalogFilterSyncTimer = null;
+	var catalogFilterObserver = null;
+	var catalogFilterObservedNode = null;
+
+	function isCatalogMobileTablet() {
+		return window.matchMedia("(max-width: 1124px)").matches;
+	}
+
+	function selectedCatalogFilterLabel($item) {
+		var $remove = $item.find("a.remove").first();
+		if (!$remove.length) return "";
+		return $.trim($remove.text().replace(/[×✕✖]+$/g, ""));
+	}
+
+	function normalizeCatalogFilterLabel(value) {
+		return String(value || "")
+			.toLowerCase()
+			.replace(/^k[\s_-]*/i, "")
+			.replace(/[^a-z0-9가-힣]+/g, "");
+	}
+
+	function isCurrentCatalogCategoryLabel(label) {
+		var $page = $("#catalog_page");
+		var currentRaw = $page.attr("data-category-title") || "";
+		var currentHero = $page.find(".bo-catalog-hero-title").first().text() || "";
+		var normalized = normalizeCatalogFilterLabel(label);
+		if (!normalized) return false;
+
+		return (
+			normalized === normalizeCatalogFilterLabel(currentRaw) ||
+			normalized === normalizeCatalogFilterLabel(currentHero)
+		);
+	}
+
+	function catalogFilterChipKey($source, label) {
+		var filterItem = $source.data("filteritem");
+		return String(filterItem === undefined ? "" : filterItem) + "::" + normalizeCatalogFilterLabel(label);
+	}
+
+	function syncCatalogFilterChips() {
+		var $wrap = $("#listingActiveFilters");
+		var $chips = $("#listingChips");
+		if (!$wrap.length || !$chips.length) return;
+
+		if (!isCatalogMobileTablet()) {
+			$chips.find("[data-catalog-mobile-filter-chip]").remove();
+			if (!$chips.children().length) $wrap.prop("hidden", true);
+			return;
+		}
+
+		var $sourceItems = $("#searchFilterSelected .selected_item_area li");
+		var seen = {};
+
+		/* Mobile/tablet owns this visual target completely. Rebuild from the
+		   canonical Firstmall selected-filter list so stale/external chips cannot
+		   remain beside the mirrored chips and create duplicates. */
+		$chips.empty();
+
+		$sourceItems.each(function () {
+			var $source = $(this);
+			var filterItem = $source.data("filteritem");
+			var label = selectedCatalogFilterLabel($source);
+			if (!label) return;
+
+			/* The catalog page's current first-level category is page context,
+			   not a user-selected filter, so never surface it as a removable chip. */
+			if (isCurrentCatalogCategoryLabel(label)) return;
+
+			var key = catalogFilterChipKey($source, label);
+			if (seen[key]) return;
+			seen[key] = true;
+
+			var $chip = $("<button>", {
+				type: "button",
+				class: "bo-catalog-filter-chip",
+				"data-catalog-mobile-filter-chip": "",
+				"aria-label": "Remove filter " + label
+			});
+
+			if (filterItem !== undefined) {
+				$chip.attr("data-filteritem", String(filterItem));
 			}
+
+			$("<span>", {
+				class: "bo-catalog-filter-chip__label",
+				text: label
+			}).appendTo($chip);
+
+			$("<span>", {
+				class: "bo-catalog-filter-chip__remove",
+				"aria-hidden": "true",
+				text: "×"
+			}).appendTo($chip);
+
+			$chips.append($chip);
 		});
+
+		$wrap.prop("hidden", $chips.children().length === 0);
+	}
+
+	function scheduleCatalogFilterChipSync() {
+		window.clearTimeout(catalogFilterSyncTimer);
+		catalogFilterSyncTimer = window.setTimeout(syncCatalogFilterChips, 30);
+	}
+
+	function observeCatalogSelectedFilters() {
+		var node = document.getElementById("searchFilterSelected");
+		if (!node || !window.MutationObserver || node === catalogFilterObservedNode) return;
+
+		if (catalogFilterObserver) catalogFilterObserver.disconnect();
+		catalogFilterObservedNode = node;
+		catalogFilterObserver = new MutationObserver(scheduleCatalogFilterChipSync);
+		catalogFilterObserver.observe(node, {
+			childList: true,
+			subtree: true,
+			attributes: true
+		});
+	}
+
+	$(document).on("click", "#listingChips [data-catalog-mobile-filter-chip]", function () {
+		var filterItem = $(this).attr("data-filteritem");
+		var $sourceItems = $("#searchFilterSelected .selected_item_area li");
+		var $source = $();
+
+		if (filterItem !== undefined) {
+			$source = $sourceItems.filter(function () {
+				return String($(this).data("filteritem")) === filterItem;
+			}).first();
+		}
+
+		if (!$source.length) {
+			var chipLabel = $.trim($(this).find(".bo-catalog-filter-chip__label").text());
+			$source = $sourceItems.filter(function () {
+				return selectedCatalogFilterLabel($(this)) === chipLabel;
+			}).first();
+		}
+
+		$source.find("a.remove").first().trigger("click");
+		scheduleCatalogFilterChipSync();
 	});
 
-	$(document).on("click", ".catalog_category, .catalog_filter", function () {
-		$(".catalog_filter > ul").remove();
-		$(".catalog_filter").append($(".search_filter_selected .selected_item_area").clone());
+	$(document).on(
+		"click change",
+		"#catalog_page .search_filter input, #catalog_page .search_filter a, #catalog_page .fixed_bottom button, #catalog_page .selected_clear",
+		function () {
+			window.setTimeout(function () {
+				observeCatalogSelectedFilters();
+				syncCatalogFilterChips();
+			}, 80);
+		}
+	);
+
+	$(document).ajaxComplete(function () {
+		observeCatalogSelectedFilters();
+		scheduleCatalogFilterChipSync();
 	});
+
+	$(window).on("resize.catalogFilterChips", scheduleCatalogFilterChipSync);
+
+	observeCatalogSelectedFilters();
+	syncCatalogFilterChips();
 
 	$(".category_filter_mo").on("click", function () {
 		$(".search_left").addClass("on");
@@ -147,7 +295,8 @@ $(function () {
 		$(".search_left").removeClass("on");
 	});
 	window.setTimeout(function () {
-		$(".catalog_filter").append($(".search_filter_selected .selected_item_area").clone());
+		observeCatalogSelectedFilters();
+		syncCatalogFilterChips();
 	}, 1000);
 });
 </script>

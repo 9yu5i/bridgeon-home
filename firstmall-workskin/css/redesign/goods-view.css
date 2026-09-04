@@ -787,7 +787,7 @@ Creation Date : 2026-08-19
     object-fit: contain;
 }
 .product-rating-score {
-  font-weight: 500;
+  font-weight: 700;
   white-space: nowrap;
 }
 .product-rating-reviews {
@@ -1062,7 +1062,7 @@ Creation Date : 2026-08-19
 /* -- Add to cart / wishlist actions -- */
 .product-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: calc((100% - 10px) / 2) var(--product-action-wish-width);
     gap: 10px;
     align-items: center;
 }
@@ -1175,7 +1175,7 @@ Creation Date : 2026-08-19
     z-index: 1200;
     width: 100%;
     margin: 0;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid #d6d0df;
     background: #fff;
     box-shadow: 0 -8px 22px rgba(23, 16, 38, 0.08);
@@ -1212,7 +1212,7 @@ Creation Date : 2026-08-19
     transform: none;
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 767px) {
   .product-actions {
     grid-template-columns: minmax(0, 1fr) var(--product-action-wish-width);
     gap: 8px;
@@ -1222,55 +1222,151 @@ Creation Date : 2026-08-19
     z-index: 1190;
   }
 
+  /* Product-detail option sheet = the SAME quickview card (.qv-product-card
+     + .qv-* layout, styled by goods-quickview.css), minus .qv-product-head
+     and .qv-kbeauty-tag, on a WHITE background. goods-view.css only supplies
+     the fixed bottom-sheet shell + drag handle + white surface + the qv token
+     values (the sheet is not inside #goods_view_quickview, so the qv-* rules
+     that read var(--qv-*) need them defined here). All card/option/button
+     LOOK now comes from the qv-* rules, so the two modals are identical.
+     Do not set display here: Firstmall remains the only owner of open/close. */
   #goodsOptionBuySection.goods_buy_sections {
+    --qv-purple: #7b3fe4;
+    --qv-purple-dark: #5422ba;
+    --qv-option-menu-max-height: min(220px, 32dvh);
+    --product-action-height: 46px;
+    --product-qv-option-menu-max-height: min(220px, 32dvh);
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-width: 0;
+    width: 100%;
+    height: auto;
+    max-height: 78dvh;
     box-sizing: border-box;
     z-index: 1200;
-    max-height: min(78dvh, 620px);
-    padding: 0 16px calc(16px + env(safe-area-inset-bottom, 0px));
+    padding: 0;
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
     border: 0;
     border-radius: 20px 20px 0 0;
     background: #fff;
-    box-shadow: 0 -12px 30px rgba(23, 16, 38, 0.16);
+    box-shadow: none;
   }
 
+  /* White card surface: override the quickview pink/purple gradient and its
+     own radius (the sheet's rounded top edge is owned by the shell above). */
+  #goodsOptionBuySection .qv-product-card {
+    padding: 0 20px;
+    border-radius: 0;
+    background: #fff;
+  }
+
+  /* Keep the product-detail drag handle, but let it occupy the same top edge
+     instead of creating a second padded header inside the qv-like card. */
   #goodsOptionBuySection .btn_section_close {
     position: sticky;
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 3;
     width: 100%;
     height: 30px;
+    margin: 0;
     border-radius: 20px 20px 0 0;
     background-color: #fff;
     background-position: center 8px;
   }
 
+  /* qv-options-row / qv-field equivalent. */
   #goodsOptionBuySection .goods_option_select_area {
-    margin-top: 0;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+    margin: 0;
+    overflow: visible;
   }
 
-  #goodsOptionBuySection .goods_buttons_area {
-    margin: 14px -16px calc(-16px - env(safe-area-inset-bottom, 0px));
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
-    border-top: 1px solid #ece7f3;
-    background: #fff;
+  #goodsOptionBuySection #select_option_lay,
+  #goodsOptionBuySection #select_option_lay .goods_option_area,
+  #goodsOptionBuySection #select_option_lay .goods_option_table {
+    min-width: 0;
+    width: 100%;
   }
 
+  /* This sheet has NO product head (unlike the quickview card), so locking a
+     fixed open-height leaves a big empty gap under a short option list. Open
+     the menu IN-FLOW instead: the sheet grows to fit the list (bounded by the
+     menu's own max-height below, then the list scrolls internally), so there
+     is never a void and never a clipped list. */
+  #goodsOptionBuySection #select_option_lay .realtrend-select-menu {
+    position: static;
+  }
+
+  /* Pin the dropdown arrow to the trigger's centre (the in-flow menu grows the
+     wrap, which would otherwise drag a top:50% arrow down into the list). */
+  #goodsOptionBuySection #select_option_lay .realtrend-select-wrap::after {
+    top: 20.5px;
+  }
+
+  /* Keep the CTA and the already-selected summary out of the way while the menu
+     is open; both return the moment an option is picked (the menu closes). */
+  #goodsOptionBuySection:has(.realtrend-select-wrap.is-open) .goods_buttons_area,
+  #goodsOptionBuySection:has(.realtrend-select-wrap.is-open) .goods_quantity_table_container,
+  #goodsOptionBuySection:has(.realtrend-select-wrap.is-open) .goods_price_area {
+    display: none;
+  }
+
+  #goodsOptionBuySection #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu {
+    height: auto;
+    max-height: var(--product-qv-option-menu-max-height) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(217, 210, 234) transparent;
+  }
+
+  #goodsOptionBuySection #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar {
+    display: block;
+    width: 6px;
+  }
+
+  #goodsOptionBuySection #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  #goodsOptionBuySection #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgb(217, 210, 234);
+  }
+
+  #goodsOptionBuySection #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar-thumb:hover {
+    background: rgb(217, 210, 234);
+  }
+
+  /* Do not create a second selected-options scroller. Quickview scrolls the
+     card/modal body itself, so selected rows simply remain in normal flow. */
+  #goodsOptionBuySection .goods_quantity_table_container {
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* The buy area (.goods_buttons_area / .goods_buttons_section) is only a
+     transparent, full-width wrapper now; the CTA itself is the shared
+     .qv-cta-row (grid: add-to-cart + 52px wish), styled by goods-quickview.css
+     exactly as in the quickview card. */
+  #goodsOptionBuySection .goods_buttons_area,
   #goodsOptionBuySection .goods_buttons_section,
   #goodsOptionBuySection .goods_buttons_section > li {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-  #goodsOptionBuySection .product-actions {
     position: static;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) var(--product-action-wish-width);
-    gap: 8px;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -1280,10 +1376,51 @@ Creation Date : 2026-08-19
     transform: none;
   }
 
+  /* The bottom bar (#goodsBuyOpenSection) owns Add-to-Cart + wish, so the
+     option sheet itself shows ONLY the option selection — no duplicate CTA.
+     Kept in the DOM (not removed) so #addCart's submit handler still exists
+     and the bar's button can trigger it. */
+  #goodsOptionBuySection .qv-cta-row {
+    display: none;
+  }
+
+  /* The quickview .qv-add-cart is text-only, so hide the cart icon the
+     product-detail button ships with (parity with the quickview card). */
+  #goodsOptionBuySection .qv-add-cart img {
+    display: none;
+  }
+
+  /* Grid rows default to align-items:stretch, so if a taller element ever lands
+     in the CTA row the buttons stretch and drift out of line. Pin the row to
+     centre and give the two primary buttons a fixed 46px height so Add-to-Cart
+     and the wish button stay identical no matter what reflows around them. */
+  #goodsOptionBuySection .qv-cta-row {
+    align-items: center;
+  }
+
+  #goodsOptionBuySection .qv-add-cart,
+  #goodsOptionBuySection .qv-wish {
+    height: 46px;
+  }
+
+  /* Any extra Firstmall buttons (buy-now / present / pickup) are <li> children
+     of the same list; drop them onto their own full-width row so they never
+     squeeze or resize the Add-to-Cart + wish pair. */
+  #goodsOptionBuySection .qv-cta-row > li {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  /* Keep the purple outline the product-detail wish button was given earlier;
+     size, radius and centering all come from the shared .qv-wish rule. */
+  #goodsOptionBuySection .qv-wish {
+    border: 1.5px solid var(--qv-purple);
+  }
+
+  /* Preserve the original non-option buy-open section behavior. */
   #goodsBuyOpenSection .product-add-cart,
-  #goodsBuyOpenSection .product-wish,
-  #goodsOptionBuySection .product-add-cart,
-  #goodsOptionBuySection .product-wish {
+  #goodsBuyOpenSection .product-wish {
     min-width: 0;
     width: 100%;
     height: var(--product-action-height, 40px) !important;
@@ -1299,13 +1436,20 @@ Creation Date : 2026-08-19
   }
 }
 
+
+
+@media (max-width: 1124px) {
+  body.is-goods-view #floating_over .fixed_menu.tp-fnav,
+  body.is-goods-view #floating_over .float-button {
+    display: none;
+  }
+}
+
 /* -- Total price line (used near the quantity/price area) -- */
 .goods_price_area {
-  padding-top: 18px;
   margin-top: 4px;
 }
 .total_goods_price {
-  padding-top: 20px !important;
   padding-bottom: 4px;
   vertical-align: bottom !important;
   text-align: right;
@@ -1326,6 +1470,7 @@ Creation Date : 2026-08-19
   font-size: 24px;
   font-weight: 700;
   line-height: 1;
+  margin-bottom: 14px;
 }
 .total-price #total_goods_price {
   font-weight: inherit;

@@ -21,9 +21,32 @@
         (function () {
             var h = document.getElementById("layout_header");
             if (!h) return;
+
             var p = (location.pathname || "/").replace(/\/+$/, "");
             var isMain = p === "" || p === "/main/index" || p === "/main";
-            if (!isMain) h.classList.add("tp-header-subpage");
+
+            if (!isMain) {
+                h.classList.add("tp-header-subpage");
+
+                /* On subpages .resp_top_mypge is visually the Search icon.
+                   Route its click into Firstmall/TrendyPicker's existing search
+                   trigger instead of navigating to /mypage/index. */
+                var subpageSearch = h.querySelector(".resp_top_mypge");
+                if (subpageSearch) {
+                    subpageSearch.setAttribute("href", "javascript:void(0)");
+                    subpageSearch.setAttribute("aria-label", "Search");
+                    subpageSearch.setAttribute("title", "Search");
+
+                    subpageSearch.addEventListener("click", function (event) {
+                        event.preventDefault();
+
+                        var searchTrigger = document.getElementById("btnSearchV2");
+                        if (searchTrigger) {
+                            searchTrigger.click();
+                        }
+                    });
+                }
+            }
         })();
     </script>
     <div class="top_header_banner"><a href="#" target="actionFrame" designElement="text"><span class="tp-top-benefit"><img src="../images/main/top_banner_lefticon.png" alt="" aria-hidden="true">Free Shipping Over US$48</span><span class="tp-top-benefit"><img src="../images/main/top_banner_righticon.png" alt="" aria-hidden="true">Ships From Korea</span></a></div>

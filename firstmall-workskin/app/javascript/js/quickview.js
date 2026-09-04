@@ -64,6 +64,12 @@ function displayAddToCartQuickview(btn, goodsSeq, event) {
     quickviewScrollY = window.scrollY;
     $modal.addClass('is-open').css('display', '');
 
+    // Lock the background page so only the modal scrolls (like Olive Young's
+    // basket option sheet). iOS-safe: fix the body at its current offset and
+    // restore it on close.
+    document.body.style.top = (-quickviewScrollY) + 'px';
+    document.body.classList.add('qv-scroll-locked');
+
     $.get('/goods/quickview', { no: goodsSeq })
         .done(function (html) {
             $body.html(html); // goods-view.js re-runs here, and now #addCart is unique
@@ -77,6 +83,9 @@ function displayAddToCartQuickview(btn, goodsSeq, event) {
 function closeQuickviewModal() {
     $('#quickviewModal').removeClass('is-open').css('display', '');
     $('#quickviewBody').empty();
+    // Release the background scroll lock, then restore the exact scroll offset.
+    document.body.classList.remove('qv-scroll-locked');
+    document.body.style.top = '';
     window.scrollTo(0, quickviewScrollY);
     qvRestoreHostElements(); // puts the main product's own #addCart (and its original handler) back
 }

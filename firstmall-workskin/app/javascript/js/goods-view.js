@@ -626,21 +626,35 @@ function pay_btn_show(el, event) {
 	$(".NpayNo").show();
 	$(".goods_npay, .goods_talkbuy").hide();
 
+	var _clickedId = $(el).attr('id');
+
 	if ( $('#goodsOptionBuySection').is(':hidden') ) {
-		$("#goodsBuyOpenSection").hide();
-		$("#goodsOptionBuySection").show();
+		// 하단 구매바(#goodsBuyOpenSection)는 그대로 유지하고, 그 "위"로 옵션창을 띄운다.
+		// 옵션이 많아 카드가 커져도 화면 위쪽에 여백(약 28%)을 남기는 지점에서 멈추고,
+		// 그 이상은 옵션창 내부 스크롤로 처리한다(높이 상한 = 뷰포트 - 바높이 - 상단여백).
+		var openBarH = $("#goodsBuyOpenSection").outerHeight() || 0;
+		var openVh = window.innerHeight || document.documentElement.clientHeight || 0;
+		var openTopGap = Math.round(openVh * 0.28);
+		var openMaxH = Math.max(160, openVh - openBarH - openTopGap);
+		$("#goodsOptionBuySection").css({ 'bottom': openBarH + 'px', 'max-height': openMaxH + 'px' }).show();
 		$(".goods_bg").show();
 		$('body').css('overflow', 'hidden');
-		if( $(el).attr('id') == "npay_btn" ) {
+		if( _clickedId == "npay_btn" ) {
 			$(".NpayNo").hide();
 			$(".goods_npay").show();
-		} else if( $(el).attr('id') == "kpay_btn" ) {
+		} else if( _clickedId == "kpay_btn" ) {
 			$(".NpayNo").hide();
 			$(".goods_talkbuy").show();
 		}
+	} else if ( _clickedId == "buy_btn" ) {
+		// 옵션창이 이미 열려 있고 하단 바의 담기 버튼을 다시 누르면: 닫지 말고 실제 장바구니 담기.
+		// (옵션창엔 자체 CTA가 없으므로 담기 동작은 #addCart 핸들러가 담당 — 옵션 미선택 시 자체 검증/알림)
+		$("#addCart").trigger('click');
+		event.stopPropagation();
+		return;
 	} else {
 		$("#goodsBuyOpenSection").show();
-		$("#goodsOptionBuySection").hide();
+		$("#goodsOptionBuySection").css({ 'bottom': '', 'max-height': '' }).hide();
 		$(".goods_bg").hide();
 		$('body').css('overflow', 'auto');
 		if( $(el).attr('id') == "kpay_btn" || $(el).attr('id') == "npay_btn" ) {

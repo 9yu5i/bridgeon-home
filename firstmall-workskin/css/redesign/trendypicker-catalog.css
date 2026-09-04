@@ -347,6 +347,71 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   height: 18px;
 }
 
+
+/* ——— Selected filters / unified desktop-mobile chips ———
+   Firstmall keeps its canonical selected filters in #searchFilterSelected.
+   Mobile/tablet mirrors those filters into #listingChips so the tags stay in
+   the same results-column position and visual system as desktop. */
+#catalog_page .listing-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0 0 30px;
+}
+
+#catalog_page .listing-active-filters[hidden] {
+  display: none;
+}
+
+#catalog_page .listing-chips {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+#catalog_page .bo-catalog-filter-chip {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 999px;
+  color: #5b2bb8;
+  background: #f2efff;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#catalog_page .bo-catalog-filter-chip:hover,
+#catalog_page .bo-catalog-filter-chip:focus-visible {
+  color: #5422ba;
+  background: #ebe4ff;
+  outline: none;
+}
+
+#catalog_page .bo-catalog-filter-chip__remove {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  color: currentcolor;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+
 /* ——— Product grid + card ——— */
 .bo-catalog-grid {
   display: block !important;
@@ -475,6 +540,34 @@ body.is-catalog-page .subpage_wrap .subpage_container {
 }
 
 @media (max-width: 1120px) {
+  /* The old Firstmall mobile clone renders tags below the toolbar with legacy
+     user.css styling. The unified #listingActiveFilters location replaces it. */
+  #catalog_page .bo-catalog-results > .catalog_mo {
+    display: none;
+  }
+
+  /* search-filter.css hides .listing-active-filters at this breakpoint.
+     Catalog owns this instance, so show it whenever JS removes [hidden]. */
+  #catalog_page .listing-active-filters {
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  #catalog_page .listing-active-filters[hidden] {
+    display: none;
+  }
+
+  #catalog_page .listing-chips {
+    gap: 7px;
+  }
+
+  #catalog_page .bo-catalog-filter-chip {
+    min-height: 30px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
   .bo-catalog-count-desktop {
     display: none;
   }

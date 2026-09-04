@@ -369,6 +369,10 @@
 </style>
 
 <link rel="stylesheet" type="text/css" href="/data/skin/responsive_food_mealkit_gl/css/redesign/goods-view.css?dummy={=date('YmdHis')}">
+<!-- 상세페이지의 qv-* 클래스는 모바일 옵션 바텀시트에서만 사용한다.
+     데스크톱에 goods-quickview.css가 적용되면 qv-product-card/qv-cta-row/qv-wish가
+     인라인 상세 구매영역의 원래 레이아웃을 덮어쓰므로 <=767px로 한정한다. -->
+<link rel="stylesheet" type="text/css" media="(max-width: 767px)" href="/data/skin/responsive_food_mealkit_gl/css/redesign/goods-quickview.css?dummy={=date('YmdHis')}">
 
 <div id="goods_view" class="product-detail-page">
 
@@ -1455,11 +1459,16 @@
 			<div id="goodsOptionBuySection" class="goods_buy_sections">
 				<a href="javascript:void(0);" id="btnSectionClose" class="btn_section_close">닫기</a>
 
+				<!-- 퀵뷰 카드(.qv-product-card)와 동일한 구조로 렌더링. 헤드/카테고리 태그는 제외, 배경은 흰색 -->
+				<div class="qv-product-card">
+
 				<!--{? !goods.string_price_use }-->
-				<div class="goods_option_select_area">
-				<!-- 상품 옵션 인클루드. 파일위치 : [스킨폴더]/goods/_select_options.html -->
-				{ #OPTION_SELECT }
-				<!-- //상품 옵션 인클루드 -->
+				<div class="qv-options-row">
+					<div class="qv-field goods_option_select_area">
+					<!-- 상품 옵션 인클루드. 파일위치 : [스킨폴더]/goods/_select_options.html -->
+					{ #OPTION_SELECT }
+					<!-- //상품 옵션 인클루드 -->
+					</div>
 				</div>
 				<!--{ / }-->
 
@@ -1567,14 +1576,14 @@
 					<ul class="goods_buttons_section">
 						<!--{ ? goods.goods_status == 'normal' && !goods.string_price_use && !goods.string_button_use }-->
 						<li>
-							<ul class="basic_btn_area product-actions">
+							<ul class="basic_btn_area product-actions qv-cta-row">
 								<!-- Add To Cart-->
-								<button name="addCart" id="addCart" type="button" class="product-add-cart">
+								<button name="addCart" id="addCart" type="button" class="product-add-cart qv-add-cart">
 									<img src="../images/icon/icon-cart-white.png" alt="Add To Cart icon" aria-hidden="true">
-									<span class="product-add-cart-label">Add to Cart</span>
+									<span class="product-add-cart-label">Add To Cart</span>
 								</button>
 								<!-- Add To Wishlist -->
-								<button type="button" class="product-wish wishimg" usewish="n" aria-label="Add to wishlist" aria-pressed="false" onclick="wish_chg();">
+								<button type="button" class="product-wish qv-wish wishimg" usewish="n" aria-label="Add to wishlist" aria-pressed="false" onclick="wish_chg();">
 									<img class="product-wish-icon-default" src="../images/icon/icon-wish.png" alt="Add To Cart icon" aria-hidden="true">
 									<img class="product-wish-icon-hover" src="../images/icon/icon-wish-hover.png" alt="Added To Cart icon" aria-hidden="true">
 								</button>
@@ -1634,6 +1643,7 @@
 					</div>
 					<!--{/}-->
 				</div>
+				</div><!-- //.qv-product-card -->
 			</div>
 			<div class="goods_bg"></div>
 			<!-- ~~~~~~~~~~~ //구매하기 ~~~~~~~~~~~ -->
@@ -1862,24 +1872,18 @@
 	<section class="product-detail-lower" aria-label="Product details and recommendations">
   <article class="product-info-panel">
     <div class="product-tabs" role="tablist" aria-label="Product detail tabs">
-      <!-- {? goods.how_to_use} -->
       <button type="button" class="is-active" role="tab" aria-selected="true" aria-controls="panel-use" id="tab-use" data-detail-tab="use">How to use</button>
-      <!-- {/} -->
       <!-- {? goods.sub_info_desc.subInfo || goods.common_contents} -->
       <button type="button" role="tab" aria-selected="false" aria-controls="panel-details" id="tab-details" data-detail-tab="details">Details</button>
       <!-- {/} -->
-      <!-- {? goods.custom_major} -->
       <button type="button" role="tab" aria-selected="false" aria-controls="panel-ingredients" id="tab-ingredients" data-detail-tab="ingredients">Ingredients</button>
-      <!-- {/} -->
       <button type="button" role="tab" aria-selected="false" aria-controls="panel-reviews" id="tab-reviews" data-detail-tab="reviews">Reviews<span class="product-reviews-count"> ({=number_format(goods.review_count)})</span></button>
       <button type="button" role="tab" aria-selected="false" aria-controls="panel-qa" id="tab-qa" data-detail-tab="qa">Q&amp;A</button>
     </div>
     <div class="product-tab-panels">
-      <!-- {? goods.how_to_use} -->
       <div id="panel-use" role="tabpanel" aria-labelledby="tab-use" data-detail-panel="use">
         {goods.how_to_use}
       </div>
-      <!-- {/} -->
       <!-- {? goods.sub_info_desc.subInfo || goods.common_contents} -->
       <div id="panel-details" role="tabpanel" aria-labelledby="tab-details" data-detail-panel="details" hidden>
         <!-- { @ goods.sub_info_desc.subInfo } -->

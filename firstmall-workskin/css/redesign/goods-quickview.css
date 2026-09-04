@@ -11,6 +11,7 @@ Creation Date : 2026-08-06
 #goods_view_quickview {
   --qv-purple: #7b3fe4;
   --qv-purple-dark: #5422ba;
+  --qv-option-menu-max-height: min(220px, 32dvh);
   --qv-card-surface:
     radial-gradient(circle at 8% 0%, rgba(255, 198, 224, 0.42) 0%, transparent 46%),
     radial-gradient(circle at 96% 6%, rgba(176, 152, 255, 0.34) 0%, transparent 44%),
@@ -335,6 +336,113 @@ Creation Date : 2026-08-06
 	max-height: 200px !important;
 }
 
+/* Many-option products in the QUICKVIEW MODAL: the option dropdown
+   (.realtrend-select-menu, defined in goods-options.css) is an absolutely-
+   positioned overlay, so near the modal's bottom it floats past the panel and
+   gets clipped — the user then has to scroll a cut-off list. Only inside the
+   modal, open it IN-FLOW: it sits flush under the select box, pushes the CTA
+   down, and the modal body (.qv-modal-scroll) scrolls to reveal it, so nothing
+   is ever clipped. Its own max-height (220px) still bounds very long lists.
+   Scoped to #quickviewBody (two IDs) so it beats goods-options.css on
+   specificity AND never touches the full product page's option select. */
+#quickviewBody #select_option_lay .realtrend-select-menu {
+	position: absolute;
+}
+
+/* The dropdown arrow is centered on the WRAP (top:50%); once the menu opens
+   in-flow the wrap grows and drags the arrow down to the middle of the option
+   list. Pin it to the trigger's own center instead (trigger is a fixed 41px
+   tall, so 20.5px). Only `top` is overridden — the open/close transform and
+   icon are untouched. */
+#quickviewBody #select_option_lay .realtrend-select-wrap::after {
+	top: 20.5px;
+}
+
+/* While the option list is open, its in-flow expansion would push Add to Cart /
+   wish down and off-screen. Hide the buy buttons during selection — they
+   reappear the moment an option is picked (the list closes) — so the buttons
+   never drift out of reach. */
+#quickviewBody:has(.realtrend-select-wrap.is-open) .qv-cta-row {
+	display: none;
+}
+
+/* While the option menu is open, keep the quickview card itself fixed.
+   The dropdown is an absolute overlay again, so only the option list scrolls. */
+.qv-modal-scroll:has(.realtrend-select-wrap.is-open),
+#quickviewBody:has(.realtrend-select-wrap.is-open) .qv-product-card {
+	min-height: 0;
+	overflow-y: hidden;
+}
+
+/* The option list owns vertical scrolling. Keep the list bounded so opening a
+   long option set never increases the card height or hands scrolling to the
+   quickview body. The existing !important is retained only because the option
+   script can write an inline max-height. */
+#quickviewBody #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu {
+	height: auto;
+	max-height: var(--qv-option-menu-max-height) !important;
+	overflow-x: hidden;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+	touch-action: pan-y;
+	scrollbar-gutter: stable;
+	scrollbar-width: thin;
+	scrollbar-color: rgb(217, 210, 234) transparent;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+#quickviewBody #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu.qv-option-menu-content-fit {
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+#quickviewBody #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar {
+	display: block;
+	width: 6px;
+}
+
+#quickviewBody #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+#quickviewBody #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar-thumb {
+	border-radius: 999px;
+	background: rgb(217, 210, 234);
+}
+
+#quickviewBody #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar-thumb:hover {
+	background: rgb(217, 210, 234);
+}
+
+/* As more options are chosen, the selected-options list would keep growing and
+   push .qv-cta-row (Add to Cart) further down. Cap the list and let it scroll
+   inside itself instead, so the card stops growing past ~a third of the screen
+   and the CTA stays put no matter how many options are added. */
+#quickviewBody .goods_quantity_table_container {
+	max-height: min(260px, 30dvh);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+	touch-action: pan-y;
+	scrollbar-width: thin;
+	scrollbar-color: rgb(217, 210, 234) transparent;
+}
+
+#quickviewBody .goods_quantity_table_container::-webkit-scrollbar {
+	width: 6px;
+}
+
+#quickviewBody .goods_quantity_table_container::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+#quickviewBody .goods_quantity_table_container::-webkit-scrollbar-thumb {
+	border-radius: 999px;
+	background: rgb(217, 210, 234);
+}
+
 /* ============================================================
    6. CTA ROW (add to cart + wish)
    ============================================================ */
@@ -612,6 +720,10 @@ Creation Date : 2026-08-06
   display: flex !important;
 }
 
+.qv-modal:has(.realtrend-select-wrap.is-open) {
+  touch-action: pan-y;
+}
+
 body.qv-modal-open .qv-modal {
   display: flex !important;
   align-items: center;
@@ -625,6 +737,16 @@ body.qv-modal-open .qv-modal {
   overflow: hidden;
   overscroll-behavior: none;
   touch-action: none;
+}
+
+/* Background scroll lock while the quickview is open — only the modal scrolls,
+   the page behind it stays put (offset preserved by quickview.js). */
+body.qv-scroll-locked {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
 .qv-modal-panel {
@@ -677,6 +799,11 @@ body.qv-modal-open .qv-modal {
 
 .qv-modal-scroll {
   width: 100%;
+  /* flex:1 gives the scroll a definite height (= the panel, which is capped by
+     max-height). Without it the inner flex chain has no bounded parent, so when
+     the option list opens the whole card scrolls instead of the list scrolling
+     inside itself. */
+  flex: 1;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -713,6 +840,61 @@ body.qv-modal-open .qv-modal {
   }
 }
 
+
+@media (min-width: 1125px) {
+  .qv-modal-panel {
+    height: auto;
+    max-height: 88vh;
+  }
+
+  .qv-modal-scroll,
+  #quickviewBody,
+  #goods_view_quickview,
+  .qv-product-card {
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  .qv-product-card {
+    height: auto;
+  }
+
+  /* Selected options are the only desktop growth zone.
+     The card grows naturally until this list reaches its cap; after that,
+     the selected rows scroll internally and the surrounding controls stop
+     moving. */
+  #quickviewBody .goods_quantity_table_container {
+    max-height: min(260px, 30dvh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  /* These controls are outside the selected-options scroller, so their
+     geometry remains stable while selected rows scroll. */
+  #quickviewBody .qv-product-head,
+  #quickviewBody .options_main_title,
+  #quickviewBody #select_option_lay .realtrend-select-trigger,
+  #quickviewBody .qv-cta-row {
+    flex-shrink: 0;
+  }
+
+  .qv-modal-close {
+    z-index: 30;
+  }
+
+  .qv-modal-panel:has(.realtrend-select-wrap.is-open) {
+    max-height: 88vh;
+  }
+
+  #quickviewBody #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu {
+    position: static;
+    width: 100%;
+    margin-top: -1px;
+  }
+}
+
 /* ============================================================
    9. RESPONSIVE
    ============================================================ */
@@ -733,6 +915,17 @@ body.qv-modal-open .qv-modal {
 @media (max-width: 760px) {
   .qv-modal-panel {
     max-height: 70dvh;
+  }
+}
+
+@media (max-width: 1124px) {
+  #goods_view_quickview {
+    --qv-option-menu-max-height: 160px;
+  }
+
+  .qv-modal-panel:has(.realtrend-select-wrap.is-open) {
+    height: 49dvh;
+    max-height: 49dvh;
   }
 }
 

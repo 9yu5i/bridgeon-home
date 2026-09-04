@@ -757,12 +757,18 @@
       }
 
       #searchVer2.tp-search-open ul.searching_list {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
         gap: 10px 12px;
       }
 
       /* Phone type scale, taken from the prototype — a step up from the desktop
          panel's, where the same 13/14px read as cramped on a handset. */
       #searchVer2.tp-search-open ul.searching_list > li.recent_search_item {
+        box-sizing: border-box;
+        max-width: 100%;
+        min-width: 0;
         height: 38px;
         padding: 0 13px;
       }
@@ -771,7 +777,13 @@
         ul.searching_list
         > li.recent_search_item
         > a.searched_item {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
         font-size: 14px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       #searchVer2.tp-search-open

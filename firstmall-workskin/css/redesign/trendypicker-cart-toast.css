@@ -1,201 +1,688 @@
-/* TrendyPicker global add-to-cart toast
- *
- * Shown on every page. Markup is injected by
- * app/javascript/js/trendypicker-cart-toast.js, which fires whenever a
- * goodsForm posts to /order/add — the single endpoint every add-to-cart
- * path in this skin goes through (product view, quickview, recently
- * viewed, wishlist, shared order form).
- */
+/* TrendyPicker category catalog
+   /goods/catalog → goods/catalog.html
+   Prototype: listing/beauty.html (left filter stays Firstmall-native)
 
-:root {
-  --tp-cart-toast-purple: #7b3fe4;
-  --tp-cart-toast-ring: 119.38;
-  --tp-cart-toast-duration: 5s;
+   1. Page chrome / overflow
+   2. Hero (category themes)
+   3. Shell / breadcrumbs / toolbar / sort
+   4. Product grid (card/wish in trendypicker-listing-cards.css)
+   5. Catalog card overrides
+   6. Responsive (761 / 1121 / 1120 / 1024-1120 off-canvas gap)
+   7. Pagination (paging_navigation pill redesign, matches trendypicker-brand.css)
+*/
+
+/* ——— Page chrome ——— */
+html.is-catalog-page,
+html.is-catalog-page.overflow {
+  height: auto !important;
+  min-height: 100%;
+  overflow-x: hidden !important;
+  overflow-y: scroll !important;
 }
 
-.realtrend-cart-toast {
-  position: fixed;
-  top: 36px;
-  right: 0;
-  z-index: 9999;
-  box-sizing: border-box;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) 56px;
-  gap: 12px;
-  align-items: center;
-  width: min(420px, calc(100vw - 32px));
+body.is-catalog-page,
+body.is-catalog-page #layout_wrap,
+body.is-catalog-page #layout_body {
+  width: 100%;
+  max-width: none;
+  height: auto !important;
+  min-height: 0;
   margin: 0;
-  padding: 14px 16px 14px 36px;
-  border-radius: 12px 0 0 12px;
-  background: #fff;
-  box-shadow: 0 14px 36px rgba(18, 12, 26, 0.18);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: opacity 0.28s ease, transform 0.28s ease, visibility 0.28s ease;
-  pointer-events: none;
+  padding-left: 0;
+  padding-right: 0;
+  overflow: visible !important;
+  background: #262626;
 }
 
-.realtrend-cart-toast[hidden] {
+body.is-catalog-page .subpage_wrap,
+body.is-catalog-page .subpage_wrap .subpage_container {
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+.bo-catalog-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.bo-catalog-main {
+  --bo-purple: #7b3fe4;
+  --purple: #7b3fe4;
+  --listing-price: #e53935;
+  --listing-card-width: 260px;
+  --listing-grid-gap: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #262626;
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
+}
+
+/* ——— Hero ——— */
+.bo-catalog-hero {
+  position: relative;
+  min-height: clamp(260px, 27vw, 520px);
+  background:
+    linear-gradient(120deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.38)),
+    linear-gradient(135deg, #f6c9d8 0%, #f3b4df 45%, #d8b4fe 100%);
+}
+
+.bo-catalog-main[data-catalog-theme="lifestyle"] .bo-catalog-hero {
+  background:
+    linear-gradient(120deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.34)),
+    linear-gradient(135deg, #fde68a 0%, #fdba74 42%, #f9a8d4 100%);
+}
+
+.bo-catalog-main[data-catalog-theme="k-food"] .bo-catalog-hero {
+  background:
+    linear-gradient(120deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.34)),
+    linear-gradient(135deg, #fdba74 0%, #fb7185 48%, #f472b6 100%);
+}
+
+.bo-catalog-main[data-catalog-theme="k-pop"] .bo-catalog-hero {
+  background:
+    linear-gradient(120deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.34)),
+    linear-gradient(135deg, #c4b5fd 0%, #818cf8 46%, #38bdf8 100%);
+}
+
+.bo-catalog-main[data-catalog-theme="k-traditional"] .bo-catalog-hero {
+  background:
+    linear-gradient(120deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.34)),
+    linear-gradient(135deg, #fcd34d 0%, #f59e0b 48%, #b45309 100%);
+}
+
+.bo-catalog-hero-inner {
+  display: grid;
+  place-content: center;
+  min-height: inherit;
+  padding: 28px 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.bo-catalog-hero-kicker {
+  margin: 0 0 6px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.bo-catalog-hero-title {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(28px, 8vw, 42px);
+  line-height: 1.05;
+  font-weight: 800;
+}
+
+/* ——— Shell / toolbar / sort ——— */
+.bo-catalog-shell {
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1600px;
+  margin: -23px auto 0;
+  padding: 20px 16px 88px;
+  border-radius: 24px 24px 0 0;
+  background: #fff;
+}
+
+.bo-catalog-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  color: #8f86a0;
+  font-size: 14px;
+}
+
+.bo-catalog-breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.bo-catalog-breadcrumbs a:hover,
+.bo-catalog-breadcrumbs a:focus-visible {
+  color: var(--bo-purple);
+}
+
+.bo-catalog-breadcrumbs span:last-child {
+  color: #171320;
+  font-weight: 600;
+}
+
+.bo-catalog-layout {
+  display: block;
+}
+
+.bo-catalog-toolbar {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.bo-catalog-count {
+  margin: 0;
+  color: #171320;
+  font-size: 14px;
+}
+
+.bo-catalog-count strong {
+  font-weight: 700;
+}
+
+.bo-catalog-count-mobile {
   display: none;
 }
 
-.realtrend-cart-toast.is-visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  pointer-events: auto;
-  cursor: pointer;
+.bo-catalog-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.realtrend-cart-toast.is-leaving {
-  opacity: 0;
-  transform: translateY(-8px);
+.bo-catalog-sort {
+  position: relative;
+  z-index: 60;
+  display: block;
+}
+
+.bo-catalog-sort .realtrend-select-wrap {
+  position: relative;
+  display: block;
+  min-width: 132px;
+  z-index: 1;
+}
+
+.bo-catalog-sort .realtrend-select-wrap.is-open {
+  z-index: 80;
+}
+
+.bo-catalog-sort .realtrend-select-wrap::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transform: translateY(-50%);
+  transition: transform 0.2s ease;
   pointer-events: none;
 }
 
-.realtrend-cart-toast-close {
-  position: absolute;
-  top: 8px;
-  left: 10px;
-  display: grid;
-  place-items: center;
-  width: 25px;
-  height: 25px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  color: #8b8496;
-  background: transparent;
-  font-size: 18px;
-  line-height: 1;
+.bo-catalog-sort .realtrend-select-wrap.is-open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.bo-catalog-sort .realtrend-select-native,
+.bo-catalog-sort .filter_select.realtrend-select-native {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+}
+
+.bo-catalog-sort .realtrend-select-trigger {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 132px;
+  height: 36px;
+  padding: 0 32px 0 12px;
+  border: 1px solid #ded8e8;
+  border-radius: 8px;
+  color: #111;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  text-align: left;
   cursor: pointer;
 }
 
-.realtrend-cart-toast-close:hover {
+.bo-catalog-sort .realtrend-select-wrap.is-open .realtrend-select-trigger {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.bo-catalog-sort .realtrend-select-value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 34px;
+}
+
+.bo-catalog-sort .realtrend-select-menu {
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 0;
+  right: 0;
+  z-index: 31;
+  display: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 10px 6px 6px;
+  list-style: none;
+  border: 1px solid #ded8e8;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
+  max-height: min(220px, 40dvh);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.bo-catalog-sort .realtrend-select-menu.is-open {
+  display: block;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.bo-catalog-sort .realtrend-select-menu.is-open::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.bo-catalog-sort .realtrend-select-menu li {
+  padding: 10px 12px;
+  border-radius: 8px;
   color: #171320;
-  background: rgba(123, 63, 228, 0.08);
+  font-size: 13px;
+  line-height: 1.3;
+  cursor: pointer;
 }
 
-.realtrend-cart-toast-icon {
-  position: relative;
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+.bo-catalog-sort .realtrend-select-menu li:hover,
+.bo-catalog-sort .realtrend-select-menu li.is-selected {
+  background: #f4effc;
+  color: var(--bo-purple);
 }
 
-.realtrend-cart-toast-ring {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+#catalog_page .category_filter_mo {
+  display: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding-left: 0;
+  border: 1px solid var(--bo-purple);
+  border-radius: 8px;
+  float: none;
+  margin-left: 0;
+  text-align: center;
+  line-height: normal;
 }
 
-.realtrend-cart-toast-ring circle {
-  fill: none;
-  stroke: var(--tp-cart-toast-purple);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-dasharray: var(--tp-cart-toast-ring);
-  stroke-dashoffset: calc(var(--tp-cart-toast-ring) * -1);
-  transform-origin: 22px 22px;
-  transform: rotate(-90deg);
+#catalog_page .category_filter_mo img {
+  width: 18px;
+  height: 18px;
 }
 
-.realtrend-cart-toast-ring circle.is-animating {
-  animation: tp-cart-toast-ring var(--tp-cart-toast-duration) linear forwards;
+
+/* ——— Selected filters / unified desktop-mobile chips ———
+   Firstmall keeps its canonical selected filters in #searchFilterSelected.
+   Mobile/tablet mirrors those filters into #listingChips so the tags stay in
+   the same results-column position and visual system as desktop. */
+#catalog_page .listing-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0 0 30px;
 }
 
-@keyframes tp-cart-toast-ring {
-  to {
-    stroke-dashoffset: 0;
-  }
+#catalog_page .listing-active-filters[hidden] {
+  display: none;
 }
 
-.realtrend-cart-toast-check {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 30px;
-  height: 30px;
-  color: var(--tp-cart-toast-purple);
-  transform: translate(-50%, -50%);
-}
-
-.realtrend-cart-toast-copy {
+#catalog_page .listing-chips {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  gap: 8px;
   min-width: 0;
 }
 
-.realtrend-cart-toast-copy strong {
-  display: block;
-  margin-bottom: 4px;
-  color: #111;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.realtrend-cart-toast-copy p {
+#catalog_page .bo-catalog-filter-chip {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
   margin: 0;
-  overflow: hidden;
-  color: #666;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 999px;
+  color: #5b2bb8;
+  background: #f2efff;
+  font-family: inherit;
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.2;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-/* The name is the emphasised half of the sentence, and it is the part that
-   gets clipped: keeping it on one line with an ellipsis means the trailing
-   "has been added to your cart." always stays readable and the toast never
-   grows past two lines, however long the product name is. */
-.realtrend-cart-toast-product {
-  display: inline-block;
-  max-width: 100%;
-  overflow: hidden;
-  color: #444;
-  font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: bottom;
+#catalog_page .bo-catalog-filter-chip:hover,
+#catalog_page .bo-catalog-filter-chip:focus-visible {
+  color: #5422ba;
+  background: #ebe4ff;
+  outline: none;
 }
 
-.realtrend-cart-toast-thumb {
-  width: 56px;
-  height: 56px;
-  overflow: hidden;
-  border-radius: 8px;
-  background: linear-gradient(145deg, #dff6ef, #9fd6c6);
+#catalog_page .bo-catalog-filter-chip__remove {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  color: currentcolor;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 400;
 }
 
-.realtrend-cart-toast-thumb img {
+
+/* ——— Product grid + card ——— */
+.bo-catalog-grid {
+  display: block !important;
+  width: 100% !important;
+  float: none !important;
+}
+
+/* Flexbox, not grid: a trailing/orphan row (fewer items than columns) can
+   sit left-aligned at the same card width as every other row, instead of
+   CSS grid's stretched-to-fill auto-fill columns leaving empty cells.
+   flex-grow stays 0 — cards keep their normal width and never balloon to
+   fill leftover row space. */
+.bo-catalog-grid > ul,
+.bo-catalog-grid[data-displaytype="lattice"] > ul {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  list-style: none;
+}
+
+.bo-catalog-grid > ul > li {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  flex: 0 1 calc(50% - 6px);
+  /* Flex items default to min-width:auto (their content's intrinsic min
+     size), which can block shrinking to the 50% basis and collapse the row
+     to 1 column if a card's price/title content refuses to shrink. */
+  min-width: 0;
+  width: auto !important;
+  max-width: none !important;
+  float: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
 }
 
-@media (max-width: 640px) {
-  .realtrend-cart-toast {
-    top: 12px;
-    right: 8px;
-    left: 8px;
-    width: auto;
-    padding: 12px 12px 12px 32px;
-    border-radius: 12px;
+/* ——— Catalog card overrides ——— */
+.bo-catalog-grid .listing-card,
+.bo-catalog-grid .gl_item {
+  display: flex !important;
+  flex-direction: column;
+  border-radius: 18px;
+}
+
+.bo-catalog-grid .listing-card-media,
+.bo-catalog-grid .item_img_area {
+  border-radius: 18px 18px 0 0;
+}
+
+.bo-catalog-grid .listing-card-body,
+.bo-catalog-grid .item_info_area {
+  padding: 10px 10px 0;
+}
+
+#catalog_page .bo-catalog-grid .discount_rate {
+  display: none !important;
+}
+
+/* ——— Responsive ——— */
+@media (min-width: 761px) {
+  .bo-catalog-grid > ul,
+  .bo-catalog-grid[data-displaytype="lattice"] > ul {
+    gap: var(--listing-grid-gap);
   }
 
-  .realtrend-cart-toast-thumb {
-    width: 44px;
-    height: 44px;
+  .bo-catalog-grid > ul > li {
+    flex-basis: calc((100% - (2 * var(--listing-grid-gap))) / 3);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .realtrend-cart-toast {
-    transition: none;
+@media (min-width: 1121px) {
+  .bo-catalog-shell {
+    margin-top: -100px;
+    padding: 28px 32px 56px;
+    border-radius: 28px 28px 0 0;
   }
 
-  .realtrend-cart-toast-ring circle.is-animating {
-    animation: none;
+  .bo-catalog-layout {
+    display: grid;
+    /* 0.9x of 220/280 to match the prototype's desktop html{zoom:0.9} sidebar
+       (kept in sync with .listing-layout in search-filter.css). */
+    grid-template-columns: minmax(198px, 252px) minmax(0, 1fr);
+    gap: 0;
+    align-items: start;
   }
+
+  .bo-catalog-filters {
+    display: block !important;
+    /* Beat #catalog_page .search_left { width: calc(25% - 10px); float: left; } in user.css */
+    width: 100% !important;
+    float: none !important;
+    box-sizing: border-box !important;
+    position: sticky;
+    top: 24px;
+    padding-right: 32px;
+    border-right: 1px solid #ece7f4;
+  }
+
+  .bo-catalog-results {
+    /* Beat #catalog_page .catalog_right { width: calc(75% - 10px); padding-left: 10px; } in user.css (ID selector) */
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-left: 32px !important;
+  }
+
+  .bo-catalog-grid > ul,
+  .bo-catalog-grid[data-displaytype="lattice"] > ul {
+    /* Base rule (mobile/tablet) sets display: flex !important — this tier
+       goes back to a real grid so grid-template-columns takes effect. */
+    display: grid !important;
+    width: 100%;
+    max-width: calc(var(--listing-card-width) * 4 + var(--listing-grid-gap) * 3);
+    /* Base rule sets margin: 0 !important — must match !important to win */
+    margin: 0 auto !important;
+    grid-template-columns: repeat(auto-fill, var(--listing-card-width));
+    gap: var(--listing-grid-gap);
+    justify-content: center;
+  }
+
+}
+
+@media (max-width: 1120px) {
+  /* The old Firstmall mobile clone renders tags below the toolbar with legacy
+     user.css styling. The unified #listingActiveFilters location replaces it. */
+  #catalog_page .bo-catalog-results > .catalog_mo {
+    display: none;
+  }
+
+  /* search-filter.css hides .listing-active-filters at this breakpoint.
+     Catalog owns this instance, so show it whenever JS removes [hidden]. */
+  #catalog_page .listing-active-filters {
+    display: flex;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  #catalog_page .listing-active-filters[hidden] {
+    display: none;
+  }
+
+  #catalog_page .listing-chips {
+    gap: 7px;
+  }
+
+  #catalog_page .bo-catalog-filter-chip {
+    min-height: 30px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .bo-catalog-count-desktop {
+    display: none;
+  }
+
+  .bo-catalog-count-mobile {
+    display: inline;
+  }
+
+  #catalog_page .category_filter_mo {
+    display: grid;
+  }
+
+  .bo-catalog-breadcrumbs {
+    display: none;
+  }
+}
+
+/* user.css only turns .search_left into the off-canvas filter panel up to
+   max-width:1023px. The desktop sidebar layout now only starts at 1121px,
+   so this gap replicates the same off-canvas behavior for 1024–1120px. */
+@media (min-width: 1024px) and (max-width: 1120px) {
+  #catalog_page .search_left {
+    width: 100% !important;
+    display: none !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 203 !important;
+    background-color: #fff !important;
+    height: 100% !important;
+    float: none !important;
+    padding-right: 0 !important;
+  }
+
+  #catalog_page .search_left.on {
+    display: block !important;
+  }
+
+  #catalog_page .catalog_right {
+    width: 100% !important;
+    padding-left: 0 !important;
+  }
+}
+
+/* ——— Pagination ——— */
+.bo-catalog-shell .paging_navigation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 32px;
+}
+
+.bo-catalog-shell .paging_navigation a,
+.bo-catalog-shell .paging_navigation input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  margin: 0;
+  border: 1px solid #e6ddf4;
+  border-radius: 10px;
+  color: #6d657c;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.bo-catalog-shell .paging_navigation a:hover {
+  border-color: #7b3fe4;
+  color: #7b3fe4;
+}
+
+.bo-catalog-shell .paging_navigation a.on {
+  border-color: #7b3fe4;
+  background: #7b3fe4;
+  color: #fff;
+  cursor: default;
+}
+
+.bo-catalog-shell .paging_navigation a.prev,
+.bo-catalog-shell .paging_navigation a.next,
+.bo-catalog-shell .paging_navigation a[rel="prev"],
+.bo-catalog-shell .paging_navigation a[rel="next"] {
+  overflow: visible;
+  text-indent: 0;
+  background-image: none;
+  font-size: 0;
+}
+
+.bo-catalog-shell .paging_navigation a.prev::before,
+.bo-catalog-shell .paging_navigation a[rel="prev"]::before {
+  content: "\2039";
+  font-size: 16px;
+}
+
+.bo-catalog-shell .paging_navigation a.next::before,
+.bo-catalog-shell .paging_navigation a[rel="next"]::before {
+  content: "\203a";
+  font-size: 16px;
+}
+
+.bo-catalog-shell .paging_navigation a.first,
+.bo-catalog-shell .paging_navigation a.last,
+.bo-catalog-shell .paging_navigation a.end,
+.bo-catalog-shell .paging_navigation a[rel="first"],
+.bo-catalog-shell .paging_navigation a[rel="last"],
+.bo-catalog-shell .paging_navigation a[rel="end"] {
+  display: none;
 }
