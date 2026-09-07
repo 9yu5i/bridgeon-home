@@ -34,7 +34,186 @@
 
   var floatingObserver = null;
 
+  var BRAND_INDEX_KEY = "tpBrandSearchIndexV1";
+  var brandIndexPromise = null;
+  var brandSearchBusy = false;
 
+  function normalizeBrandQuery(value) {
+    var normalized = String(value || "").toLocaleLowerCase();
+    if (normalized.normalize) normalized = normalized.normalize("NFKD");
+    return normalized.replace(/[^a-z0-9가-힣]/g, "");
+  }
+
+  function hasVisibleSearchText(value) {
+    return String(value || "").replace(/[\s\u200B-\u200D\uFEFF]/g, "").length > 0;
+  }
+
+  function cachedBrandIndex() {
+    try {
+      var saved = JSON.parse(sessionStorage.getItem(BRAND_INDEX_KEY) || "[]");
+      return Array.isArray(saved) ? saved : [];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  function fetchBrandIndex() {
+    var cached = cachedBrandIndex();
+    if (cached.length) return Promise.resolve(cached);
+    if (brandIndexPromise) return brandIndexPromise;
+
+    brandIndexPromise = fetch("/goods/brand_main", {
+      credentials: "same-origin"
+    })
+      .then(function (response) {
+        if (!response.ok) throw new Error("Brand directory request failed");
+        return response.text();
+      })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, "text/html");
+        var seen = {};
+        var index = [];
+        doc.querySelectorAll("a[data-brand-code]").forEach(function (anchor) {
+          var code = String(anchor.getAttribute("data-brand-code") || "").trim();
+          var copy = anchor.cloneNode(true);
+          copy.querySelectorAll(".bo-brand-best-badge").forEach(function (badge) {
+            badge.remove();
+          });
+          var name = String(copy.textContent || "").replace(/\s+/g, " ").trim();
+          var key = normalizeBrandQuery(name);
+          if (!code || !key || seen[key]) return;
+          seen[key] = true;
+          index.push({ key: key, code: code });
+        });
+        try {
+          if (index.length) sessionStorage.setItem(BRAND_INDEX_KEY, JSON.stringify(index));
+        } catch (err) {}
+        return index;
+      })
+      .catch(function () {
+        return [];
+      });
+
+    return brandIndexPromise;
+  }
+
+  function submitNormalSearch(form, submitter) {
+    form._tpBrandSearchPass = true;
+    try {
+      if (typeof form.requestSubmit === "function") form.requestSubmit(submitter || undefined);
+      else form.submit();
+    } finally {
+      form._tpBrandSearchPass = false;
+    }
+  }
+
+  function findBrandMatch(index, keyword) {
+    var key = normalizeBrandQuery(keyword);
+    var match = null;
+    index.some(function (brand) {
+      if (brand.key !== key) return false;
+      match = brand;
+      return true;
+    });
+    return match;
+  }
+
+  function openBrand(match) {
+    window.location.href = "/goods/brand?code=" + encodeURIComponent(match.code);
+  }
+
+  function bindBrandAwareSearch() {
+    if (document.documentElement._tpBrandAwareSearch) return;
+    document.documentElement._tpBrandAwareSearch = true;
+
+    document.addEventListener("focusin", function (event) {
+      var input = event.target;
+      if (input && input.name === "search_text") fetchBrandIndex();
+    });
+
+    // Firstmall's autocomplete calls setAutoComplete() directly from the
+    // clicked row. Capture it first so an exact brand suggestion follows the
+    // same complete-catalog route as Enter and the search button.
+    document.addEventListener(
+      "click",
+      function (event) {
+        var item = event.target && event.target.closest
+          ? event.target.closest("#searchVer2 #autoCompleteList > li")
+          : null;
+        if (!item) return;
+        var keywordEl = item.querySelector(".searched_item, a");
+        var keyword = keywordEl
+          ? String(keywordEl.textContent || "").replace(/\s+/g, " ").trim()
+          : String(item.textContent || "").replace(/\s+/g, " ").trim();
+        if (!keyword) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        brandSearchBusy = true;
+        fetchBrandIndex().then(function (index) {
+          var match = findBrandMatch(index, keyword);
+          brandSearchBusy = false;
+          if (match) {
+            openBrand(match);
+            return;
+          }
+
+          var form = document.getElementById("topSearchForm");
+          var input = form && form.querySelector("input[name='search_text']");
+          if (form && input) {
+            input.value = keyword;
+            submitNormalSearch(form);
+          } else {
+            window.location.href =
+              "/goods/search?search_text=" + encodeURIComponent(keyword);
+          }
+        });
+      },
+      true
+    );
+
+    document.addEventListener(
+      "submit",
+      function (event) {
+        var form = event.target;
+        if (!form || form._tpBrandSearchPass || brandSearchBusy) return;
+        var action = form.getAttribute("action") || "";
+        if (
+          form.id !== "topSearchForm" &&
+          !form.classList.contains("tp-header-search") &&
+          action.indexOf("/goods/search") === -1
+        ) {
+          return;
+        }
+
+        var input = form.querySelector("input[name='search_text']");
+        var keyword = input ? String(input.value || "").trim() : "";
+        if (!hasVisibleSearchText(keyword)) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (input) input.focus();
+          return;
+        }
+
+        var key = normalizeBrandQuery(keyword);
+        if (!key) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        brandSearchBusy = true;
+        fetchBrandIndex().then(function (index) {
+          var match = findBrandMatch(index, key);
+          brandSearchBusy = false;
+          if (match) {
+            openBrand(match);
+            return;
+          }
+          submitNormalSearch(form, event.submitter);
+        });
+      },
+      true
+    );
+  }
 
   function isDesktop() {
     /* clientWidth so this agrees with the CSS media queries, which do not
@@ -53,6 +232,8 @@
     var recent = module.querySelector("#recentArea");
     var auto = module.querySelector("#autoCompleteArea");
     if (!field || !pane || !proxy) return;
+
+    bindBrandAwareSearch();
 
     var open = false;
 
@@ -215,9 +396,44 @@
       });
     }
 
+    /* showSearchTrending() can include an empty keyword as a ranked row.
+       Remove visually empty and duplicate values, then number the remaining
+       server-ranked keywords continuously from 1. */
+    function normalizeTrendingSearches() {
+      var list = module.querySelector("#trendingSearchedList");
+      if (!list) return;
+
+      var seenKeywords = Object.create(null);
+      var rank = 0;
+      var rows = list.querySelectorAll("li.trending_item");
+
+      Array.prototype.forEach.call(rows, function (row) {
+        var keywordElement = row.querySelector(".trending_keyword");
+        var keyword = keywordElement
+          ? String(keywordElement.textContent || "").replace(/\s+/g, " ").trim()
+          : "";
+        var normalized = keyword.toLocaleLowerCase();
+
+        if (!hasVisibleSearchText(keyword) || seenKeywords[normalized]) {
+          row.remove();
+          return;
+        }
+
+        seenKeywords[normalized] = true;
+        rank += 1;
+
+        var rankElement = row.querySelector(".trending_num");
+        if (rankElement) rankElement.textContent = String(rank);
+      });
+
+      var empty = list.querySelector("li.no_data");
+      if (empty) empty.style.display = rank ? "none" : "";
+    }
+
     sortRecentSearches();
     syncCurrentSearchHistory();
     ensureRecentSearchRemoveButtons();
+    normalizeTrendingSearches();
 
     /* The prototype's panel: centred, held off both edges, and capped. */
     var SIDE_GUTTER = 284;
@@ -582,6 +798,7 @@
       sortRecentSearches();
       syncCurrentSearchHistory();
       ensureRecentSearchRemoveButtons();
+      normalizeTrendingSearches();
       if (open) return;
       open = true;
 
@@ -876,15 +1093,14 @@
     });
 
     var trendingObserver = new MutationObserver(function (mutations) {
-      if (!open || !isMobileTablet()) {
-        return;
-      }
-
       var changed = mutations.some(function (mutation) {
         return mutation.type === "childList";
       });
 
-      if (changed) {
+      if (!changed) return;
+
+      normalizeTrendingSearches();
+      if (open && isMobileTablet()) {
         setMobileSheetUi(true);
       }
     });

@@ -122,6 +122,10 @@
   text-align: center;
 }
 
+.bo-saved-posts-filter-empty[hidden] {
+  display: none;
+}
+
 .bo-saved-posts-content {
   min-width: 0;
 }
@@ -300,37 +304,45 @@
   object-fit: contain;
 }
 
-.bo-saved-posts-pagination {
+.bo-saved-posts-page .paging_navigation.bo-saved-posts-pagination {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 7px;
   margin: 28px 0 0;
   font-size: 0;
 }
 
-.bo-saved-posts-pagination a {
+.bo-saved-posts-page .bo-saved-posts-pagination a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
+  min-width: 34px;
   height: 34px;
   margin: 0;
-  border: 1px solid #ded5eb;
-  border-radius: 50%;
-  color: #5f586c;
-  background: #fff;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--bo-saved-muted);
+  background: transparent;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
+  line-height: 1;
   text-decoration: none;
 }
 
-.bo-saved-posts-pagination a:hover,
-.bo-saved-posts-pagination a:focus-visible,
-.bo-saved-posts-pagination a.on {
-  border-color: var(--bo-saved-purple);
-  color: #fff;
-  background: var(--bo-saved-purple);
+.bo-saved-posts-page .bo-saved-posts-pagination a:hover,
+.bo-saved-posts-page .bo-saved-posts-pagination a:focus-visible {
+  color: var(--bo-saved-purple);
+  background: #f3ebff;
+}
+
+/* Override Firstmall user.css's important active-page colours. */
+.bo-saved-posts-page .bo-saved-posts-pagination a.on {
+  color: #fff !important;
+  background-color: var(--bo-saved-purple) !important;
+  cursor: default;
 }
 
 .bo-saved-posts-empty {

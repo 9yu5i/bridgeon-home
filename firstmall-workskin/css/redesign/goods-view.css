@@ -1760,8 +1760,13 @@ ul.detail_event_area li.th {
   }
 }
 
-/* -- deatil_price_area spacing (goods spec section) -- */
+/* -- deatil_price_area: the legacy Firstmall price/benefit block. The redesign
+   shows the price in .product-price instead, so this old block is a duplicate.
+   It only renders content for some products (e.g. those with sale benefits),
+   which is why it appeared on some products and not others. Hide it on every
+   device. !important defeats any inline display the design editor may set. -- */
 .goods_spec_sections .deatil_price_area {
+    display: none !important;
     padding-bottom: 0;
 }
 @media (max-width: 1120px) {

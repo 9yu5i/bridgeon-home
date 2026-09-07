@@ -70,7 +70,6 @@ const requiredMagazineCssTokens = [
   ".bo-magazine-post-card",
   ".magazine-related-grid",
   ".magazine-scroll-reveal",
-  "magazineFeatureReveal",
   ".magazine-newsletter",
 ];
 

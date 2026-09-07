@@ -1,15 +1,16 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
-@@ goods_list_style4 @@
-- ?뚯씪 ?꾩튂 : /data/design_list/categories_listing_style.html
+@@ basic_listing_style @@
+- 파일 위치 : /data/design_list/basic_listing_style.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/design_list/redesign_goods_list_style.css" />
-<script src="/app/javascript/js/trendypicker-listing-cards.js"></script>
+<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/skin/responsive_food_mealkit_gl/css/redesign/common-styles.css" />
+<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/design_list/listing-cards-style.css" />
 
 <!--{ @ record }-->
 <li class="categories_listing_style">
-	<article class="listing-card gl_item" data-goods-seq="{= .goods_seq}" data-sale-per="{.sale_per}">
-		<!--{? !issample }-->
+	<article class="listing-card gl_item">
+
+	<!--{? !issample }-->
 		<div class="listing-card-media">
 
 			<a href="/goods/view?no={.goods_seq}" class="listing-card-image-link">
@@ -17,11 +18,11 @@
 			</a>
 
 			<button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="{? .wish == 1}true{:}false{/}" onclick="display_goods_zzim(this, {= .goods_seq})">
-				<img src="/data/skin/{=skin}/images/listing/wish_pink.png" onerror="this.src='/data/icon/goodsdisplay/zzim/{decorations.image_zzim}'" class="heart-img zzimOffImg {? .wish == 1}zzim-hidden{/}" alt="Add to Wishlist" title="Add to Wishlist" />
-				<img src="/data/skin/{=skin}/images/listing/wish_hover.png" onerror="this.src='/data/icon/goodsdisplay/zzim_on/{decorations.image_zzim_on}'" class="heart-img zzimOnImg {? .wish != 1}zzim-hidden{/}" alt="Added to Wishlist" title="Added to Wishlist" />
+				<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-wish.png" onerror="this.src='/data/icon/goodsdisplay/zzim/{decorations.image_zzim}'" class="heart-img zzimOffImg {? .wish == 1}zzim-hidden{/}" alt="Add to Wishlist" title="Add to Wishlist" />
+				<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-wish-hover.png" onerror="this.src='/data/icon/goodsdisplay/zzim_on/{decorations.image_zzim_on}'" class="heart-img zzimOnImg {? .wish != 1}zzim-hidden{/}" alt="Added to Wishlist" title="Added to Wishlist" />
 			</button>
 
-			<!-- ?곹뭹 ?곹깭 ?쒖떆 -->
+			<!-- 상품 상태 표시 -->
 			<!--{ ? .goods_status != 'normal' }-->
 			<div class="respGoodsStatus">
 				<a href="/goods/view?no={.goods_seq}" class="area">
@@ -37,7 +38,10 @@
 			<!--{/}-->
 
 		</div>
-		<!--{/}-->
+	<!--{:}-->
+	<div class="listing-card-media"></div>
+	<!--{/}-->
+
 
 		<div class="listing-card-body">
 
@@ -54,13 +58,19 @@
 			</div>
 			<!--{ / }-->
 
+			<!--{ ? .review_count > 0 }-->
 			<div class="listing-card-rating">
-				<span class="listing-card-rating-star" aria-hidden="true">&#9733;</span>
-				<span class="nuM">
-					<!--{ ? .review_count > 0 }-->{=round(.review_sum/.review_count,1)}<!--{ : }-->0.0<!--{ / }-->
-				</span>
-				<span class="listing-card-rating-count">({=number_format(.review_count)})</span>
+				<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-review-star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12">
+				<span class="nuM">{=round(.review_sum/.review_count,1)}</span>
+				<span class="listing-card-rating-count">({.review_count})</span>
 			</div>
+			<!--{ : }-->
+			<div class="listing-card-rating" style="visibility:hidden;">
+				<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-review-star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12">
+				<span class="nuM">0.0</span>
+				<span class="listing-card-rating-count">(0)</span>
+			</div>
+			<!--{ / }-->
 
 			<!--{ ? .r_rank && .r_rank[0] }-->
 			<a href="/goods/best?ranking_category={.r_rank[0].category_code}&ranking_type={.r_rank[0].rank_type}" class="ranking_label dn">
@@ -70,23 +80,23 @@
 			<!--{ / }-->
 
 			<!--{ ? .recent_views }-->
-			<span class="recent_view_label">?? {.recent_views} users recently viewed</span>
+			<span class="recent_view_label">👀 {.recent_views} users recently viewed</span>
 			<!--{ / }-->
 
-			<!-- 鍮꾪쉶???泥대Ц援?-->
+			<!-- 비회원 대체문구 -->
 			<!--{ ? .string_price }-->
 			<p class="listing-card-price warning_text">{=.string_price}</p>
 			<!--{ : }-->
 			<p class="listing-card-price goods_price_area">
 				<strong class="sale_price">
 					<!--{ ? .sale_price >= 0 }-->
-						{=get_currency_price(.sale_price, 2, ' ', '<span class="num">_str_price_</span>')}
+						{=get_currency_price(.sale_price, 2, '', '<span class="num">_str_price_</span>')}
 					<!--{ : }-->
-						{=get_currency_price(.price, 2, ' ', '<span class="num">_str_price_</span>')}
+						{=get_currency_price(.price, 2, '', '<span class="num">_str_price_</span>')}
 					<!--{ / }-->
 				</strong>
 				<!--{ ? .consumer_price > .sale_price }-->
-				<del class="consumer_price">{=get_currency_price(.consumer_price, 2, ' ', '<span class="num">_str_price_</span>')}</del>
+				<del class="consumer_price">{=get_currency_price(.consumer_price, 2, '', '<span class="num">_str_price_</span>')}</del>
 				<!--{ / }-->
 				<!--{ ? .sale_per > 0 }-->
 				<span class="discount_rate"><b class="num">{.sale_per}</b>%</span>
@@ -112,16 +122,16 @@
 		<div class="listing-card-actions listing-card-actions--desktop">
                   	<button type="button" aria-label="Add to cart" onclick="displayAddToCartQuickview(this, {= .goods_seq}, event)"></button>
 			<button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="{? .wish == 1}true{:}false{/}" onclick="display_goods_zzim(this, {= .goods_seq})">
-				<img src="/data/skin/{=skin}/images/listing/wish_pink.png" 
+				<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-wish.png" 
 					onerror="this.onerror=null; if('{decorations.image_zzim}') this.src='/data/icon/goodsdisplay/zzim/{decorations.image_zzim}';" 
 					class="heart-img zzimOffImg {? .wish == 1}zzim-hidden{/}" alt="Add to Wishlist" title="Add to Wishlist" />
-				<img src="/data/skin/{=skin}/images/listing/wish_hover.png" 
+				<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-wish-hover.png" 
 					onerror="this.onerror=null; if('{decorations.image_zzim_on}') this.src='/data/icon/goodsdisplay/zzim_on/{decorations.image_zzim_on}';" 
 					class="heart-img zzimOnImg {? .wish != 1}zzim-hidden{/}" alt="Added to Wishlist" title="Added to Wishlist" />
 			</button>
 		</div>
 
-		<button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart" onclick="displayAddToCartQuickview(this, {= .goods_seq})"></button>
+		<button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart" onclick="displayAddToCartQuickview(this, {= .goods_seq}, event)"></button>
 
 	</article>
 </li>

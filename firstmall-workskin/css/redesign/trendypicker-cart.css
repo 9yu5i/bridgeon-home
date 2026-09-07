@@ -2092,6 +2092,16 @@ body.is-cart-page .cart-eximbay:focus-visible {
     overflow-y: visible !important;
   }
 
+  /* showNewsletterSection() is the last child of .cart-shell, but here the
+     shell becomes a flex column and the cart sections get order:1..6. The
+     newsletter has no order, so it defaults to 0 and jumps ABOVE everything
+     (right under the header). Send it to the end so it sits above the footer
+     as intended. :last-child fallback covers any server-side wrapper. */
+  .cart-shell > .newsletter-section,
+  .cart-shell > :last-child {
+    order: 99;
+  }
+
   body.is-cart-page .cart-main,
   body.is-cart-page .cart-shell,
   body.is-cart-page #cart_form,
@@ -3253,9 +3263,11 @@ body.is-cart-page.is-cart-empty .cart-delete-selected,
 
 body.is-cart-page .cart-newsletter {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 423px);
-  align-items: center;
-  gap: 31px;
+  /* Stacked layout: heading/copy on top, the email field + button below it
+     (single column on desktop too, not text | form side by side). */
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 18px;
   box-sizing: border-box;
   width: 100%;
   min-height: 114px;
@@ -3284,6 +3296,9 @@ body.is-cart-page .cart-newsletter form {
   display: grid;
   grid-template-columns: 1fr 128px;
   width: 100%;
+  /* Now stacked under the copy, so keep the pill from stretching the full
+     newsletter width on desktop. Mobile re-widens it below. */
+  max-width: 423px;
   height: 43px;
   overflow: hidden;
   border-radius: 999px;
@@ -3319,7 +3334,64 @@ body.is-cart-page .cart-newsletter button:focus-visible {
   background: #31136c;
 }
 
+/* Keep the copy left and the form right on desktop. Important declarations
+   override the newsletter helper's injected layout; narrow screens stack below. */
+body.is-cart-page .newsletter-section,
+body.is-cart-page .cart-newsletter,
+body.is-cart-page .newsletter {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between;
+  gap: 18px !important;
+  /* Match the width of the card above it (full content width). The default
+     .cart-newsletter mobile rule full-bleeds it (margin-inline:-14px;
+     width:calc(100%+28px)), pushing it 14px past the recommendations card on
+     each side — cancel that so both boxes line up to .cart-shell's padding. */
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Reserve room for the copy while keeping the desktop form aligned right. */
+body.is-cart-page .newsletter-section > form,
+body.is-cart-page .cart-newsletter > form,
+body.is-cart-page .newsletter > form {
+  width: 44% !important;
+  max-width: 520px !important;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+/* Mobile: smaller left/right padding so the copy + form sit wider inside the
+   black card. (!important for the same reason as above — beats the server's
+   injected <style>.) */
+@media (max-width: 760px) {
+  body.is-cart-page .newsletter-section,
+  body.is-cart-page .cart-newsletter,
+  body.is-cart-page .newsletter {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
 @media (max-width: 1120px) {
+  body.is-cart-page .newsletter-section,
+  body.is-cart-page .cart-newsletter,
+  body.is-cart-page .newsletter {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  body.is-cart-page .newsletter-section > form,
+  body.is-cart-page .cart-newsletter > form,
+  body.is-cart-page .newsletter > form {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
   body.is-cart-page .cart-newsletter {
     order: 6;
     box-sizing: border-box;
@@ -3353,6 +3425,7 @@ body.is-cart-page .cart-newsletter button:focus-visible {
 
   body.is-cart-page .cart-newsletter form {
     grid-template-columns: 1fr 104px;
+    max-width: none;
     height: 39px;
   }
 

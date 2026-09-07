@@ -12,13 +12,36 @@
 
   var COUPON_KEY = "tpCartCoupon";
   var NATION_KEY = "tpCartNation";
+  var CHECKOUT_NATION_KEY = "tpCheckoutNation";
+  var checkoutEntryNation = null;
 
   function readCartNationPreference() {
+    if (checkoutEntryNation !== null) return checkoutEntryNation;
+
+    var urlNation = "";
+    var handoffNation = "";
+    var serverNation = "";
+    var storedNation = "";
     try {
-      return localStorage.getItem(NATION_KEY) || "";
-    } catch (err) {
-      return "";
-    }
+      urlNation = new URLSearchParams(window.location.search).get("nation") || "";
+    } catch (err) {}
+    try {
+      handoffNation = sessionStorage.getItem(CHECKOUT_NATION_KEY) || "";
+      sessionStorage.removeItem(CHECKOUT_NATION_KEY);
+    } catch (err) {}
+
+    var serverInput = document.getElementById("address_nation");
+    serverNation = serverInput ? String(serverInput.value || "").trim() : "";
+    try {
+      storedNation = localStorage.getItem(NATION_KEY) || "";
+    } catch (err) {}
+
+    // The one-time value handed off by the cart represents this checkout.
+    // A previous country picked in New address must not override it.
+    checkoutEntryNation =
+      String(urlNation || handoffNation || serverNation || storedNation).trim();
+    if (checkoutEntryNation) storeCartNationPreference(checkoutEntryNation);
+    return checkoutEntryNation;
   }
 
   function storeCartNationPreference(nation) {
@@ -468,12 +491,18 @@
 
   function requestStateTax(name, code) {
     if (window.jQuery) {
-      return window.jQuery.ajax({
-        url: "/order/get_state_ajax",
-        type: "GET",
-        dataType: "json",
-        data: { name: name || "", code: code || "" },
-      });
+      // Wrap the jqXHR in a native Promise: this jQuery version's Deferred has
+      // no .catch(), so refreshStateTax()'s `.then(...).catch(...)` threw
+      // "catch is not a function" whenever a state was picked, aborting the
+      // state-select flow. Promise.resolve() gives a real Promise with .catch.
+      return Promise.resolve(
+        window.jQuery.ajax({
+          url: "/order/get_state_ajax",
+          type: "GET",
+          dataType: "json",
+          data: { name: name || "", code: code || "" },
+        })
+      );
     }
     return fetch(
       "/order/get_state_ajax?name=" +
@@ -686,7 +715,23 @@
     if (typeof original !== "function" || original._tpSavedTab) return;
     function wrapped(type) {
       original.apply(this, arguments);
-      if (!type || type === "delivery") scheduleSavedAddressTab();
+      if (!type || type === "delivery") {
+        // The native handler always opens its preferred tab. Restore the tab
+        // chosen from the cart country after that handler has finished.
+        if (cartNationAddressApplied && cartNationNeedsNewAddress) {
+          var nation = normalizeNation(readCartNationPreference());
+          var tabs = checkoutDeliveryTabs();
+          if (tabs[1]) {
+            window.setTimeout(function () {
+              activateNewAddressForNation(tabs[1], nation);
+            }, 0);
+          }
+        } else if (cartNationAddressApplied) {
+          scheduleSavedAddressTab();
+        } else {
+          scheduleCartNationAddress();
+        }
+      }
     }
     wrapped._tpSavedTab = true;
     window.address_modify = wrapped;
@@ -960,9 +1005,36 @@
       );
       if (countryHidden) countryHidden.value = next;
       if (!silent && item) {
-        storeCartNationPreference(
-          item.getAttribute("data-nation") || code
+        var pickedNation = item.getAttribute("data-nation") || code;
+        storeCartNationPreference(pickedNation);
+
+        // A state and its tax rate belong to the previous country. Clear them
+        // before Firstmall recalculates the new country's shipping and tax.
+        var stateInput = document.getElementById("stateSearchInput");
+        var stateText = document.querySelector(
+          ".delivery_input input[name='international_county_text_input']"
         );
+        var stateCode = document.getElementById("searchInputHidden");
+        var stateTax = document.getElementById("stateTax");
+        if (stateInput) stateInput.value = "";
+        if (stateText) stateText.value = "";
+        if (stateCode) stateCode.value = "";
+        if (stateTax) stateTax.value = "0";
+        stateTaxLastKey = null;
+
+        // Sync the SERVER shipping nation to the chosen country so shipping
+        // cost / tax / ship-to availability recalculate for it — otherwise the
+        // order keeps costing for the cart's original country while the address
+        // says another. chg_shipping_nation sets #address_nation and fires its
+        // change event; the responsive order-settle handler for that change
+        // runs order_price_calculate (see skin-order-settle-resp.js) and
+        // refreshes the totals in place. (No page reload.)
+        if (pickedNation && typeof window.chg_shipping_nation === "function") {
+          window.chg_shipping_nation(
+            pickedNation,
+            item.getAttribute("data-key") || ""
+          );
+        }
       }
       list.querySelectorAll("li").forEach(function (li) {
         var selected = li === item || labelOf(li) === next;
@@ -977,6 +1049,28 @@
         }
       }
     }
+
+    wrap._tpSelectNation = function (nation, silent) {
+      var wanted = resolveCheckoutRegionKey(nation);
+      var found = null;
+      list.querySelectorAll("li").forEach(function (li) {
+        if (found) return;
+        var canonical = li.getAttribute("data-nation") || "";
+        var key = li.getAttribute("data-key") || "";
+        var label = labelOf(li);
+        if (
+          normalizeNation(canonical) === normalizeNation(nation) ||
+          normalizeNation(key) === normalizeNation(nation) ||
+          resolveCheckoutRegionKey(label) === wanted
+        ) {
+          found = li;
+        }
+      });
+      if (!found) return false;
+      syncValue(labelOf(found), found, !!silent);
+      setOpen(false);
+      return true;
+    };
 
     var preferredNation = readCartNationPreference();
     var preferredRegion = resolveCheckoutRegionKey(preferredNation);
@@ -1566,6 +1660,19 @@
       if (input.id === "phonePrefix" || input.classList.contains("phone_prefix_select")) {
         return;
       }
+      // Keep the COUNTRY (the cart-selected shipping country stays pre-filled);
+      // only the rest of the address — name, street, state/county, zip, phone —
+      // is cleared. (country* = nation; county/state fields are NOT country.)
+      if (
+        input.id === "countrySearchInput" ||
+        input.id === "countrySearchInputHidden" ||
+        input.name === "international_country" ||
+        input.name === "international_country_input" ||
+        input.name === "international_country_code_input" ||
+        input.name === "nation_select"
+      ) {
+        return;
+      }
 
       input.classList.remove("complete");
       if (input.type === "checkbox" || input.type === "radio") {
@@ -1580,8 +1687,9 @@
     var taxBillingMethod = form.querySelector("input[name='tax_billing_method']");
     if (taxBillingMethod) taxBillingMethod.value = "ddu";
 
+    // Only clear the STATE/province selection — keep the country selected.
     form.querySelectorAll(
-      ".country-options li.is-selected, .state-options li.is-selected"
+      ".state-options li.is-selected"
     ).forEach(function (item) {
       item.classList.remove("is-selected");
       item.removeAttribute("aria-selected");
@@ -1714,6 +1822,169 @@
       if (!radio || radio.checked) return;
       radio.click();
     });
+  }
+
+  // ── Cart-country → saved address auto-apply ─────────────────────────────
+  // The cart page stores the chosen shipping country in localStorage
+  // (tpCartNation). On checkout: if the member has a saved address in that
+  // country, switch to the Saved-address tab and select that address; if not,
+  // jump straight to the New address tab and sync that country to Firstmall's
+  // shipping calculation. Runs once per page load.
+  var cartNationAddressApplied = false;
+  var cartNationAddressRequested = false;
+  var cartNationNeedsNewAddress = false;
+
+  function normalizeNation(value) {
+    return String(value || "").trim().toUpperCase().replace(/\s+/g, " ");
+  }
+
+  function nationMatchKey(value) {
+    // Firstmall can represent the same country differently between cart and
+    // address-book data (for example U.S.A, USA, US, or United States).
+    return normalizeNation(resolveCheckoutRegionKey(value));
+  }
+
+  function isSameNation(left, right) {
+    var leftKey = nationMatchKey(left);
+    var rightKey = nationMatchKey(right);
+    return Boolean(leftKey && rightKey && leftKey === rightKey);
+  }
+
+  function savedCardNation(li) {
+    var intl = normalizeNation(li.getAttribute("data-international"));
+    var nation = normalizeNation(li.getAttribute("data-nation"));
+    if (intl === "DOMESTIC" || !nation) return "KOREA";
+    return nation;
+  }
+
+  function checkoutDeliveryTabs() {
+    return document.querySelectorAll(".settle_tab.delivery_choice > li");
+  }
+
+  function applyNewAddressCountry(nation) {
+    bindCheckoutCountrySelect();
+    var wrap = document.querySelector(
+      ".delivery_input .country-select-wrapper, .checkout-consignee-card .country-select-wrapper"
+    );
+    if (wrap && typeof wrap._tpSelectNation === "function") {
+      return wrap._tpSelectNation(nation, false);
+    }
+    if (typeof window.chg_shipping_nation === "function") {
+      window.chg_shipping_nation(nation, "");
+      return true;
+    }
+    return false;
+  }
+
+  function activateNewAddressForNation(tab, nation) {
+    if (!tab) return;
+    setSettleTab(tab);
+    applyNewAddressCountry(nation);
+    // Run after the country is set so the reset keeps that country and clears
+    // only values inherited from a default address in another country.
+    scheduleNewAddressReset();
+  }
+
+  function applyCartNationAddress() {
+    if (cartNationAddressApplied) return true;
+    var cartNation = normalizeNation(readCartNationPreference());
+    if (!cartNation) return true; // nothing chosen on the cart — leave default
+
+    var tabs = checkoutDeliveryTabs();
+    if (!tabs.length) return false;
+
+    var cards = document.querySelectorAll(
+      ".delivery_often .ul_delivery > li[data-nation], " +
+      ".delivery_often .ul_delivery > li[data-international]"
+    );
+    if (!cards.length) {
+      // Firstmall renders this marker after the AJAX request completes with an
+      // empty address book. It is not a loading state, so go straight to New.
+      if (document.querySelector(".delivery_often .no_data_area")) {
+        cartNationAddressApplied = true;
+        cartNationNeedsNewAddress = true;
+        activateNewAddressForNation(tabs[1], cartNation);
+        return true;
+      }
+
+      // Firstmall normally waits until the address editor is opened before
+      // requesting the address book. Load it in the background now so the
+      // correct tab is already known when the checkout is first displayed.
+      if (
+        !cartNationAddressRequested &&
+        typeof window.delivery_address_ajax === "function"
+      ) {
+        cartNationAddressRequested = true;
+        window.delivery_address_ajax(1);
+      }
+      return false; // saved-address list not loaded yet
+    }
+
+    cartNationAddressApplied = true;
+
+    var match = null;
+    var defaultMatch = null;
+    for (var i = 0; i < cards.length; i++) {
+      if (isSameNation(savedCardNation(cards[i]), cartNation)) {
+        if (!match) match = cards[i];
+        var candidate = cards[i].querySelector("input[name='select_address']");
+        if (candidate && candidate.checked) {
+          defaultMatch = cards[i];
+          break;
+        }
+      }
+    }
+    match = defaultMatch || match;
+
+    if (match) {
+      cartNationNeedsNewAddress = false;
+      setSettleTab(tabs[0]); // Saved address
+      var radio = match.querySelector("input[name='select_address']");
+      if (radio && !radio.checked) {
+        if (window.jQuery) window.jQuery(radio).trigger("click");
+        else radio.click();
+      }
+    } else if (tabs[1]) {
+      // No saved address in the cart country → present a blank New-address
+      // form whose country is both displayed and applied to Firstmall's
+      // shipping calculation.
+      cartNationNeedsNewAddress = true;
+      activateNewAddressForNation(tabs[1], cartNation);
+    }
+    return true;
+  }
+
+  function fallbackCartNationByDefaultAddress() {
+    if (cartNationAddressApplied) return;
+    var cartNation = normalizeNation(readCartNationPreference());
+    if (!cartNation) return;
+    var tabs = checkoutDeliveryTabs();
+    if (!tabs.length) return;
+    cartNationAddressApplied = true;
+    var def = document.getElementById("default_address_nation");
+    var defNation = normalizeNation(def ? def.value : "") || "KOREA";
+    if (isSameNation(defNation, cartNation)) {
+      cartNationNeedsNewAddress = false;
+      setSettleTab(tabs[0]);
+    } else if (tabs[1]) {
+      cartNationNeedsNewAddress = true;
+      activateNewAddressForNation(tabs[1], cartNation);
+    }
+  }
+
+  function scheduleCartNationAddress() {
+    var tries = 0;
+    (function attempt() {
+      if (cartNationAddressApplied) return;
+      if (applyCartNationAddress()) return; // done (matched, or nothing to do)
+      if (++tries > 50) {
+        // The AJAX saved-address list never arrived: fall back to comparing the
+        // default address's country so the tab choice is still correct.
+        fallbackCartNationByDefaultAddress();
+        return;
+      }
+      window.setTimeout(attempt, 150);
+    })();
   }
 
   function closeOpenCheckoutDropdowns(except) {
@@ -2083,6 +2354,7 @@
     } catch (err) {}
     patchAddressModify();
     bindSavedAddressCards();
+    window.setTimeout(scheduleCartNationAddress, 300);
     bindAddressNameSync();
     bindGuestOrdererSync();
     bindCheckoutCountrySelect();

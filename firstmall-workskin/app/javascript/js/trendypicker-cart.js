@@ -32,6 +32,7 @@
   var SELECTION_KEY = "tpCartUnselected";
   var NATION_KEY = "tpCartNation";
   var NATION_RETRY_KEY = "tpCartNationRetried";
+  var CHECKOUT_NATION_KEY = "tpCheckoutNation";
 
   function text(el) {
     return el ? String(el.textContent || "").replace(/\s+/g, " ").trim() : "";
@@ -2083,6 +2084,28 @@
     );
   }
 
+  function bindCheckoutNationHandoff() {
+    if (page._tpCheckoutNationHandoff) return;
+    page._tpCheckoutNationHandoff = true;
+    page.addEventListener(
+      "click",
+      function (event) {
+        var button = event.target && event.target.closest
+          ? event.target.closest(".btn_all_order")
+          : null;
+        if (!button) return;
+        var nationInput = document.querySelector("form#cart_form input[name='nation']");
+        var nation = nationInput ? String(nationInput.value || "").trim() : "";
+        if (!nation) return;
+        try {
+          sessionStorage.setItem(CHECKOUT_NATION_KEY, nation);
+          localStorage.setItem(NATION_KEY, nation);
+        } catch (err) {}
+      },
+      true
+    );
+  }
+
   // Newest first. cart_option_seq is issued in insertion order, so a bigger
   // seq means it was added later. Sorting happens inside each shipping group
   // so the server's grouping (and its per-group shipping rules) still holds.
@@ -2641,6 +2664,7 @@
     }
     bindExpressPayments();
     bindCountry();
+    bindCheckoutNationHandoff();
     bindOptionSelects();
     bindQty();
     sortCartRowsNewestFirst();

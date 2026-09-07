@@ -1,0 +1,145 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ timedeal_timer_listing_style @@
+- File location: /data/design_list/timedeal_timer_listing_style.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/design_list/listing-cards-style.css" />
+
+<!--{ @ record }-->
+<li class="timedeal_listing_style">
+	<article class="listing-card gl_item">
+
+	<div class="listing-card-media item_img_area">
+	<!--{? !issample }-->
+	<a href="/goods/view?no={.goods_seq}" class="listing-card-image-link">
+		<img src="{.image}" onerror="this.src='/data/skin/responsive_food_mealkit_gl/images/common/noimage.gif';" alt="" class="listing-card-image square_display" aria-hidden="true"/>
+	</a>
+	<!--{/}-->
+	<!--{? !issample }-->
+		<!--{ ? !empty(.eventEnd) }-->
+		<a class="listing-card-timer" aria-label="Time remaining" href="/promotion/timedeal?event={.eventSeq}&page=1&searchMode=timedeal&per=40&filter_display=lattice&display_mode=single">
+			<b class="num2 tdtimerday{.goods_seq}">00</b><em>d</em><b class="num2 tdtimerhour{.goods_seq}">00</b><em>:</em><b class="num2 tdtimermin{.goods_seq}">00</b><em>:</em><b class="num2 tdtimersecond{.goods_seq}">00</b>
+		</a>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				tdTimerInterval{.goods_seq} = setInterval(function () {
+					var tdTime{.goods_seq} = showClockTime('text', '{.eventEnd.year}', '{.eventEnd.month}', '{.eventEnd.day}', '{.eventEnd.hour}', '{.eventEnd.min}', '{.eventEnd.second}', 'tdtimerday{.goods_seq}', 'tdtimerhour{.goods_seq}', 'tdtimermin{.goods_seq}', 'tdtimersecond{.goods_seq}', '{.goods_seq}', 'class');
+					if (tdTime{.goods_seq} == 0) {
+						clearInterval(tdTimerInterval{.goods_seq});
+						$(".listing-card-timer" + '{.goods_seq}').text("Ended");
+					}
+				}, 1000);
+			});
+		</script>
+		<!--{/}-->
+	<!--{:}-->
+		<span class="listing-card-timer" aria-label="Time remaining">
+			<b class="num2">00</b><em>d</em><b class="num2">12</b><em>:</em><b class="num2">41</b><em>:</em><b class="num2">30</b>
+		</span>
+	<!--{/}-->
+	<!--{ ? .sale_per > 0 }-->
+	<div class="timedeal-card-deal" aria-label="{.sale_per}% OFF time deal">
+		<img class="timedeal-card-deal-clock" src="/data/skin/responsive_food_mealkit_gl/images/timedeal/clock_pink.png" alt="" width="22" height="22" aria-hidden="true" />
+		<span class="timedeal-card-deal-rate">{.sale_per}% OFF</span>
+	</div>
+	<!--{ / }-->
+	<button type="button" class="listing-card-wish" aria-label="Add to wishlist" aria-pressed="{? .wish == 1}true{:}false{/}" onclick="display_goods_zzim(this, {= .goods_seq})">
+		<img src="/data/skin/responsive_food_mealkit_gl/images/listing/wish_pink.png" onerror="this.src='/data/icon/goodsdisplay/zzim/{decorations.image_zzim}'" class="heart-img zzimOffImg {? .wish == 1}zzim-hidden{/}" alt="Add to Wishlist" title="Add to Wishlist" />
+		<img src="/data/skin/responsive_food_mealkit_gl/images/listing/wish_hover.png" onerror="this.src='/data/icon/goodsdisplay/zzim_on/{decorations.image_zzim_on}'" class="heart-img zzimOnImg {? .wish != 1}zzim-hidden{/}" alt="Added to Wishlist" title="Added to Wishlist" />
+	</button>
+	<!--{ ? .goods_status != 'normal' }-->
+	<div class="respGoodsStatus">
+		<a href="/goods/view?no={.goods_seq}" class="area">
+			<!--{ ? .goods_status == 'runout' }-->
+			<span class="status_style type1"><em>SOLD OUT!</em></span>
+			<!--{ : .goods_status == 'purchasing' }-->
+			<span class="status_style type2"><em>Restocking</em></span>
+			<!--{ : .goods_status == 'unsold' }-->
+			<span class="status_style type3"><em>Unavailable</em></span>
+			<!--{/}-->
+		</a>
+	</div>
+	<!--{/}-->
+</div>
+
+
+		<div class="listing-card-body item_info_area">
+
+			<!--{? .goods_name}-->
+			<div class="goods_name_area">
+				<!--{?.brand_title}-->
+					<a href="/goods/brand?code={.brand_code}" class="listing-card-brand">{.brand_title}</a>
+				<!--{:}-->
+					<span class="listing-card-brand" style="visibility:hidden;">Unknown brand.</span>
+				<!--{/}-->
+				<a href="/goods/view?no={.goods_seq}" class="listing-card-title-link">
+					<h3 class="listing-card-title" title="{.goods_name}">{.goods_name}</h3>
+				</a>
+			</div>
+			<!--{ / }-->
+
+			<!--{ ? .review_count > 0 }-->
+			<div class="listing-card-rating">
+				<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-review-star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12">
+				<span class="nuM">{=round(.review_sum/.review_count,1)}</span>
+				<span class="listing-card-rating-count">({.review_count})</span>
+			</div>
+			<!--{ : }-->
+			<div class="listing-card-rating" style="visibility:hidden;">
+				<img src="/data/skin/responsive_food_mealkit_gl/images/icon/icon-review-star.png" alt="" aria-hidden="true" class="listing-card-rating-star" width="12" height="12">
+				<span class="nuM">0.0</span>
+				<span class="listing-card-rating-count">(0)</span>
+			</div>
+			<!--{ / }-->
+
+			<!--{ ? .r_rank && .r_rank[0] }-->
+			<a href="/goods/best?ranking_category={.r_rank[0].category_code}&ranking_type={.r_rank[0].rank_type}" class="ranking_label dn">
+				<span class="rank">#{.r_rank[0].rank_no} {=strtoupper(str_replace('_', ' ', .r_rank[0].rank_type))} {.r_rank[0].category_title}</span>
+			</a>
+
+			<!--{ / }-->
+
+			<!--{ ? .recent_views }-->
+			<span class="recent_view_label">?? {.recent_views} users recently viewed</span>
+			<!--{ / }-->
+
+			<!--{ ? .string_price }-->
+			<p class="listing-card-price warning_text">{=.string_price}</p>
+			<!--{ : }-->
+			<p class="listing-card-price goods_price_area">
+				<strong class="sale_price">
+					<!--{ ? .sale_price >= 0 }-->
+						{=get_currency_price(.sale_price, 2, '', '<span class="num">_str_price_</span>')}
+					<!--{ : }-->
+						{=get_currency_price(.price, 2, '', '<span class="num">_str_price_</span>')}
+					<!--{ / }-->
+				</strong>
+				<!--{ ? .consumer_price > .sale_price }-->
+				<del class="consumer_price">{=get_currency_price(.consumer_price, 2, '', '<span class="num">_str_price_</span>')}</del>
+				<!--{ / }-->
+			</p>
+			<!--{ / }-->
+
+			<!--{ ? .category }-->
+			<p class="goods_category_area dn">{.category}</p>
+			<!--{ / }-->
+
+		</div>
+
+		<div class="listing-card-actions listing-card-actions--desktop">
+			<button type="button" aria-label="Add to cart" onclick="displayAddToCartQuickview2(this, {= .goods_seq}, event)"></button>
+			<button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="{? .wish == 1}true{:}false{/}" onclick="display_goods_zzim(this, {= .goods_seq})">
+				<img src="/data/skin/responsive_food_mealkit_gl/images/listing/wish_pink.png"
+					onerror="this.onerror=null; if('{decorations.image_zzim}') this.src='/data/icon/goodsdisplay/zzim/{decorations.image_zzim}';"
+					class="heart-img zzimOffImg {? .wish == 1}zzim-hidden{/}" alt="Add to Wishlist" title="Add to Wishlist" />
+				<img src="/data/skin/responsive_food_mealkit_gl/images/listing/wish_hover.png"
+					onerror="this.onerror=null; if('{decorations.image_zzim_on}') this.src='/data/icon/goodsdisplay/zzim_on/{decorations.image_zzim_on}';"
+					class="heart-img zzimOnImg {? .wish != 1}zzim-hidden{/}" alt="Added to Wishlist" title="Added to Wishlist" />
+			</button>
+		</div>
+
+		<button type="button" class="listing-card-cart mobile-only" aria-label="Add to cart" onclick="displayAddToCartQuickview(this, {= .goods_seq})"></button>
+
+	</article>
+</li>
+<!--{ / }-->

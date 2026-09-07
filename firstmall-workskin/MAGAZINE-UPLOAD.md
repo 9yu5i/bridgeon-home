@@ -47,7 +47,7 @@ app/javascript/js/trendypicker-magazine.js
 
 1. 홈 iframe은 `perpage=12`. `/main/magazine` 을 빈 리다이렉트 파일로 바꾸면 Firstmall이 `Error` 를 냅니다. 홈 셸+iframe을 유지하세요.
 2. 카드 클릭은 top 창에서 `/board/view?id=magazine&seq=...`.
-3. 리드/Latest는 CSS keyframe. Popular는 스크롤 리빌.
+3. 리드/Latest는 `.bo-magazine-lead` 단위로 첫 페인트부터 CSS 리빌을 한 번 실행합니다. JS 리빌 대상에 다시 넣으면 표시 후 숨겨지는 깜빡임이 생기므로 제외합니다. Popular는 스크롤 리빌입니다. 초기 iframe 요청은 재시작하지 않으며, 뒤로가기 캐시 복원 때만 상세 화면을 목록으로 되돌립니다.
 4. 상세 Related는 iframe 리스트 fetch 후 카드 3개.
 
 ## Validate

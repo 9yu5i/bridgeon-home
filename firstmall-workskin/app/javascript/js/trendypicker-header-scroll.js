@@ -228,15 +228,12 @@
     var searchIcon = header.querySelector(".resp_top_mypge");
     if (searchIcon) {
       searchIcon.setAttribute("aria-label", "Search");
-      searchIcon.addEventListener("click", function (event) {
-        event.preventDefault();
-        var trigger = document.getElementById("btnSearchV2");
-        if (trigger) {
-          trigger.click();
-        } else {
-          window.location.href = "/goods/search";
-        }
-      });
+      /* Open the panel through trendypicker-search.js, which binds any
+         .tp-header-search-trigger. Do NOT route to Firstmall's #btnSearchV2 —
+         the search module doesn't listen to it, so that click never opened the
+         panel. Tagging the icon here is a belt-and-suspenders alongside the
+         header's own parse-time tagging. */
+      searchIcon.classList.add("tp-header-search-trigger");
     }
 
     var backButton = header.querySelector(

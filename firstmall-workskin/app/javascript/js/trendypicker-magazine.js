@@ -7,7 +7,7 @@
  * 2. Open article detail in the top window (never inside the iframe)
  * 3. Popular Posts carousel (hit top 10 of loaded page)
  * 4. Detail Related Posts (3 cards)
- * 5. Scroll reveal (below-fold). Lead/Latest animate in CSS on first paint.
+ * 5. Viewport scroll reveal for Popular and category cards; lead animates in CSS.
  */
 (function () {
   "use strict";
@@ -253,6 +253,9 @@
     var listSrc = getMagazineListSrc(frame);
     try {
       var current = frame.contentWindow && frame.contentWindow.location.href;
+      // The initial src request is still pending while the document is blank.
+      // Replacing it here cancels and restarts the board request.
+      if (!current || current === "about:blank") return;
       if (current && isMagazineBoardListHref(current) && !/\/board\/view/i.test(current)) {
         return;
       }
@@ -428,7 +431,8 @@
       resizeFrame();
     });
 
-    window.addEventListener("pageshow", function () {
+    window.addEventListener("pageshow", function (event) {
+      if (!event.persisted) return;
       resetMagazineFrameToList(frame);
       window.setTimeout(function () {
         resetMagazineFrameToList(frame);
@@ -437,7 +441,8 @@
       }, 0);
     });
 
-    resetMagazineFrameToList(frame);
+    // The HTML src owns initial navigation; only bfcache restoration needs a reset.
+    resizeFrame();
   }
 
   /* When post title is a single line, allow excerpt up to 3 lines. */
@@ -684,7 +689,7 @@
       add(document.querySelector(".magazine-newsletter"), 0.08);
     }
 
-    /* Iframe home: lead/latest/side cards animate in CSS. JS only below-fold. */
+    /* Lead animates on first paint in CSS; never hide it during late JS setup. */
     if (document.querySelector(".bo-magazine-board") || isIframeDoc()) {
       add(document.querySelector(".bo-magazine-popular"), 0.04);
 
@@ -829,7 +834,7 @@
       });
     }
 
-    /* Defer first sync so lead feature can paint opacity:0 first. */
+    /* Defer the below-fold reveal sync until layout has settled. */
     window.requestAnimationFrame(function () {
       window.requestAnimationFrame(syncReveal);
     });

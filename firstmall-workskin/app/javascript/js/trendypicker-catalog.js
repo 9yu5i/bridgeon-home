@@ -3,6 +3,7 @@
  * /goods/catalog → goods/catalog.html
  *
  * 1. Hero kicker / title / theme from categoryData.title
+ * 1b. Breadcrumbs from Firstmall display_navi() into .search_nav
  * 2. Custom sort dropdown on #catalog_filter (native change stays in catalog.html)
  * 3. Wish icon src swap for native zzim fallback
  * 4. Strip trailing "USD" text nodes from get_currency_price()
@@ -43,6 +44,39 @@
 			if (match) return match[0];
 		}
 		return "";
+	}
+
+	function polishBreadcrumbs() {
+		var nav = document.querySelector(".bo-catalog-breadcrumbs.search_nav");
+		if (!nav) return;
+
+		var home = nav.querySelector(".navi_home, a[href*='/main']");
+		if (home) {
+			home.classList.add("navi_home");
+			home.textContent = "Home";
+			if (!home.getAttribute("href")) home.setAttribute("href", "/main");
+		}
+
+		Array.prototype.forEach.call(nav.querySelectorAll(".navi_linemap"), function (item, index, list) {
+			var link = item.querySelector("a");
+			var title = (link ? link.textContent : item.textContent).replace(/\s+/g, " ").trim();
+			if (!title) return;
+			if (index === list.length - 1) {
+				item.textContent = title;
+				return;
+			}
+			if (link) link.textContent = title;
+		});
+	}
+
+	function hookDisplayNavi() {
+		if (typeof window.display_navi !== "function" || window.display_navi._boCatalog) return;
+		var original = window.display_navi;
+		window.display_navi = function (oNavi, sNaviLink) {
+			original(oNavi, sNaviLink);
+			polishBreadcrumbs();
+		};
+		window.display_navi._boCatalog = true;
 	}
 
 	function applyHero() {
@@ -383,6 +417,8 @@
 		if (ensureDesktopPageSize()) return;
 		applyHero();
 		enhanceSortSelect();
+		hookDisplayNavi();
+		polishBreadcrumbs();
 		refreshDynamicUI();
 
 		// Selecting a filter makes Firstmall scroll to the very top *immediately on
@@ -463,7 +499,11 @@
 
 		if (window.jQuery) {
 			window.jQuery(document).on("ajaxComplete", function (_e, _xhr, settings) {
-				window.setTimeout(refreshDynamicUI, 50);
+				window.setTimeout(function () {
+					hookDisplayNavi();
+					polishBreadcrumbs();
+					refreshDynamicUI();
+				}, 50);
 				// Release shortly after the search results re-render, letting the
 				// post-render layout settle while still pinned.
 				if (lockActive) {

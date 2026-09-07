@@ -1,0 +1,166 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ goods_list_style1 @@
+- 파일 위치 : /data/design_list/goods_list_style1.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--{ @ record }-->
+<li class="goods_list_style1">
+	<!--{? !issample }-->
+		<div class="item_img_area">
+			<a href="/goods/view?no={.goods_seq}"><img src="{.image}" onerror="this.src='/data/skin/{=skin}/images/common/noimage.gif';" alt="" class="square_display"/></a>
+			<div class="addToCartBtn">
+				<a class="addToCartBtnArea" href="javascript:void(0)" onclick="displayAddToCartQuickview(this, {= .goods_seq})">
+					<img src="/data/skin/{skin}/images/icon/icon-add-to-cart.png" onerror="" class="addToCartIcon" alt="Add To Cart Icon" title="Add To Cart" />
+					<img src="/data/skin/{skin}/images/icon/icon-added-to-cart.png" onerror="" class="addToCartIcon hide" alt="Product is Added to Cart" title="Product is Added to Cart" />
+				</a>
+			</div>
+			<div class="display_zzim">
+				<!--{ ? .wish }-->
+				<img src="/data/icon/goodsdisplay/preview/thumb_zzim_off.png" class="zzimOffImg"  alt="찜하기" style="display:none" data-member="{aParams.member_seq}" data-goods="{.goods_seq}" data-wish="{.wish}" onclick="setWish(this)">
+				<img src="/data/icon/goodsdisplay/preview/thumb_zzim_on.png" class="zzimOnImg" alt="찜하기" data-member="{aParams.member_seq}" data-goods="{.goods_seq}" data-wish="{.wish}" onclick="setWish(this)">
+				<!--{ : }-->
+				<img src="/data/icon/goodsdisplay/preview/thumb_zzim_off.png" class="zzimOffImg" alt="찜하기" data-member="{aParams.member_seq}" data-goods="{.goods_seq}" data-wish="{.wish}" onclick="setWish(this)">
+				<img src="/data/icon/goodsdisplay/preview/thumb_zzim_on.png" class="zzimOnImg" alt="찜하기" style="display:none" data-member="{aParams.member_seq}" data-goods="{.goods_seq}" data-wish="{.wish}" onclick="setWish(this)">
+				<!--{ / }-->
+			</div>
+			<!-- 상품 상태 표시 -->
+			<!--{ ? .goods_status != 'normal' }-->
+			<div class="respGoodsStatus">
+				<a href="/goods/view?no={.goods_seq}" class="area">
+					<!--{ ? .goods_status == 'runout' }-->
+					<span class="status_style type1"><em>SOLD OUT!</em></span>
+					<!--{ : .goods_status == 'purchasing' }-->
+					<span class="status_style type2"><em>재고확보중</em></span>
+					<!--{ : .goods_status == 'unsold' }-->
+					<span class="status_style type3"><em>판매중지</em></span>
+					<!--{/}-->
+				</a>
+			</div>
+			<!--{/}-->
+		</div>
+	<!--{/}-->
+	<ul class="item_info_area">
+		<!--{? .color_pick}-->
+		<li class="displaY_color_option">
+			<!--{ @ explode(',', .color_pick) }-->
+			<span class="areA" style="background-color:#{..value_};"></span>
+			<!--{ / }-->
+		</li>
+		<!--{ / }-->
+
+		<li class="goods_name_area">
+			<!--{ ? aParams.searchMode != 'brand' && aParams.searchMode != 'tag_search' && .brand_title }-->
+			<span class="brand_name">{.brand_title}</span>
+			<!--{ / }-->
+
+			<!--{? .goods_name}-->
+			<a href="/goods/view?no={.goods_seq}"><span class="name">{?.brand_title}[{.brand_title}] {/}{.goods_name}</span></a>
+			<!--{ / }-->
+		</li>
+
+		<!--{ ? .r_rank && .r_rank[0] }-->
+		<li>
+			<a href="/goods/best?ranking_category={.r_rank[0].category_code}&ranking_type={.r_rank[0].rank_type}" class="ranking_label">
+				<span class="rank">#{.r_rank[0].rank_no} {=strtoupper(str_replace('_', ' ', .r_rank[0].rank_type))} {.r_rank[0].category_title}</span>
+			</a>
+		</li>
+		<!--{ / }-->
+
+		<!--{? .summary}-->
+		<li class="goods_desc_area">
+			{.summary}
+		</li>
+		<!--{/}-->
+
+		<!-- 비회원 대체문구 -->
+		<!--{ ? .string_price }-->
+		<li class="goods_price_area">
+			<span class="warning_text">{=.string_price}</span>
+		</li>
+		<!--{ : }-->
+		<li class="goods_price_area">
+			<span class="sale_price">
+			<!--{ ? .sale_price >= 0 }-->
+				{=get_currency_price(.sale_price, 2, '', '<b class="num">_str_price_</b>')}
+			<!--{ : }-->
+				{=get_currency_price(.price, 2, '', '<b class="num">_str_price_</b>')}
+			<!--{ / }-->
+			</span>
+
+			<!--{ ? .consumer_price > .sale_price }-->
+			<span class="consumer_price">
+				{=get_currency_price(.consumer_price, 2, '', '<span class="num">_str_price_</span>')}
+			</span>
+			<!--{ / }-->
+
+			<!--{ ? .sale_per > 0 }-->
+			<span class="discount_rate">
+				<b class="num">{.sale_per}</b>%
+			</span>
+			<!--{ / }-->
+		</li>
+		<!--{ / }-->
+
+		<!--{ ? aParams.searchMode != 'catalog' && .category}-->
+		<li class="goods_category_area">
+			<ul class="cate">
+				<li>{.category}</li>
+			</ul>
+		</li>
+		<!--{ / }-->
+
+		<!--{ ? .shipping_group.free_shipping_use == 'Y' || .shipping_group.gl_shipping_yn == 'Y' }-->
+		<li class="goods_besong_area">
+			<!-- 무료배송 -->
+			<!--{ ? .shipping_group.free_shipping_use == 'Y' }-->
+			<span class="besong">무료배송</span>
+			<!--{ / }-->
+			<!-- 해외배송 -->
+			<!--{ ? .shipping_group.gl_shipping_yn == 'Y' }-->
+			<!--<span class="besong">해외배송</span>-->
+			<!--{ / }-->
+		</li>
+		<!--{ / }-->
+
+		<!--{ ? .purchase_ea > 0 || .review_count > 0 || .wish_count > 0 }-->
+		<li class="goods_sold_area">
+			<!--{ ? .purchase_ea > 0 }-->
+			<span class="sold"><b class="num">{=number_format(.purchase_ea)}</b> sold</span>
+			<!--{ / }-->
+			<!--{ ? .review_count > 0 }-->
+			<span class="review">리뷰 <b class="num">{=number_format(.review_count)}</b></span>
+			<!--{ / }-->
+			<!--{ ? .wish_count > 0 }-->
+			<span class="zzim">찜 <b class="num">{=number_format(.wish_count)}</b></span>
+			<!--{ / }-->
+		</li>
+		<!--{ / }-->
+
+		<!--{ ? serviceLimit('H_AD') }-->
+			<!--{ ? aParams.searchMode != 'mshop' }-->
+			<li class="goods_seller_area">
+				<span class="name">{.provider_name}</span>
+				<span class="rank">
+					<!--{?.pgroup_icon }-->
+					<img src="{.pgroup_icon}" class="rank_img" alt= "" />
+					<!--{ / }-->
+					<!--{?.pgroup_name }-->
+					({.pgroup_name})
+					<!--{ / }-->
+				</span>
+			</li>
+			<!--{ / }-->
+		<!--{ / }-->
+
+		<!--{ ? .today_icon }-->
+		<!-- 아이콘 모음 -->
+		<li class="goods_icon_area">
+			<!--{ @ explode(',', .today_icon) }-->
+			<img src="/data/icon/goods/{=..value_}.gif" alt="" />
+			<!--{ / }-->
+		</li>
+		<!--{ / }-->
+
+	</ul>
+</li>
+<!--{ / }-->

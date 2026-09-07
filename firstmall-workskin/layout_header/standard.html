@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-fonts.css" />
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-header.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-header.css?v=20260907-2" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-search.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mobile-nav.css" />
 
@@ -25,6 +25,15 @@
             var p = (location.pathname || "/").replace(/\/+$/, "");
             var isMain = p === "" || p === "/main/index" || p === "/main";
 
+            // Checkout: tag the page here (header runs before the subpage
+            // title_container is rendered), so trendypicker-header.css can hide
+            // Firstmall's legacy "결제 진행 중입니다." heading before it paints,
+            // instead of it flashing in and back out.
+            if (/\/order\/settle/.test(p)) {
+                document.documentElement.classList.add("is-checkout-page");
+                if (document.body) document.body.classList.add("is-checkout-page");
+            }
+
             if (!isMain) {
                 h.classList.add("tp-header-subpage");
 
@@ -37,19 +46,17 @@
                     subpageSearch.setAttribute("aria-label", "Search");
                     subpageSearch.setAttribute("title", "Search");
 
-                    subpageSearch.addEventListener("click", function (event) {
-                        event.preventDefault();
-
-                        var searchTrigger = document.getElementById("btnSearchV2");
-                        if (searchTrigger) {
-                            searchTrigger.click();
-                        }
-                    });
+                    /* trendypicker-search.js opens the search panel from any
+                       .tp-header-search-trigger (and the header field) — NOT from
+                       Firstmall's #btnSearchV2, which never opens this skin's
+                       panel. Tag the icon so the module binds it. Runs at parse
+                       time, before the module's DOMContentLoaded init. */
+                    subpageSearch.classList.add("tp-header-search-trigger");
                 }
             }
         })();
     </script>
-    <div class="top_header_banner"><a href="#" target="actionFrame" designElement="text"><span class="tp-top-benefit"><img src="../images/main/top_banner_lefticon.png" alt="" aria-hidden="true">Free Shipping Over US$48</span><span class="tp-top-benefit"><img src="../images/main/top_banner_righticon.png" alt="" aria-hidden="true">Ships From Korea</span></a></div>
+    <div class="top_header_banner"><a designElement="text"><span class="tp-top-benefit"><img src="../images/main/top_banner_lefticon.png" alt="" aria-hidden="true">Free Shipping Over US$48</span><span class="tp-top-benefit"><img src="../images/main/top_banner_righticon.png" alt="" aria-hidden="true">Ships From Korea</span></a></div>
     <div class="util_wrap">
         <div class="resp_wrap top_header_menu">
 			<!-- language -->
@@ -675,4 +682,4 @@
 </script>
 <script src="/app/javascript/js/trendypicker-mobile-nav.js"></script>
 <script src="/app/javascript/js/trendypicker-search.js"></script>
-<script src="/app/javascript/js/trendypicker-header-scroll.js?v=20260903"></script>
+<script src="/app/javascript/js/trendypicker-header-scroll.js?v=20260907"></script>

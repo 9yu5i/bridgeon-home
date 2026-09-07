@@ -262,7 +262,7 @@ function getTaxRateForState(name, code) {
 <!--{ ? add_loop }-->
 <ul class="ul_delivery">
 	<!--{ @ add_loop }-->
-	<li class="{?.index_==0}clearbox{/}">
+	<li class="{?.index_==0}clearbox{/}" data-nation="{.nation}" data-international="{.international}">
 		<label for="select_address_{.address_seq}">
 			<input type="radio" id="select_address_{.address_seq}" name="select_address" value="{.address_seq}" {?.default=='Y'}checked="checked"{/} />
 		</label>

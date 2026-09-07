@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/data/skin/{=skin}/css/redesign/trendypicker-listing-cards.css" />
 <link rel="stylesheet" href="/data/skin/{=skin}/css/redesign/trendypicker-catalog.css?v=20260904-1" />
 <style>
-body.is-catalog-page .search_nav,
+body.is-catalog-page .search_nav:not(.bo-catalog-breadcrumbs),
 body.is-catalog-page .title_container,
 body.is-catalog-page .structure_nav,
 body.is-catalog-page #subpageLNB,
@@ -34,10 +34,9 @@ if (document.body) {
 	</section>
 
 	<div class="bo-catalog-shell">
-		<nav class="bo-catalog-breadcrumbs" aria-label="Breadcrumb">
-			<a href="/main">Home</a>
-			<span aria-hidden="true">&gt;</span>
-			<span>{categoryData.title}</span>
+		<nav class="bo-catalog-breadcrumbs search_nav" aria-label="Breadcrumb">
+			<a class="navi_home" href="/main">Home</a>
+			<span class="navi_linemap">{categoryData.title}</span>
 		</nav>
 
 		<div class="bo-catalog-layout listing-layout">

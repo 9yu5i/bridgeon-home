@@ -704,7 +704,6 @@ Creation Date : 2026-08-26
 .editor-pick-note span {
   display: inline-flex;
   align-items: center;
-  min-height: 26px;
   padding: 6px 12px;
   border-radius: 999px;
   color: var(--editor-purple);
@@ -1093,7 +1092,7 @@ Creation Date : 2026-08-26
   place-items: center;
   height: 34px;
   padding: 0;
-  border: 2px solid var(--editor-purple);
+  border: 1px solid var(--editor-purple);
   border-radius: 5px;
   color: var(--editor-purple);
   background: #fff;
@@ -1648,7 +1647,7 @@ Creation Date : 2026-08-26
   }
 
   .editor-pick-actions button {
-    height: 28.8px;
+    height: 30.8px;
   }
 
   .editor-pick-note {
@@ -1656,13 +1655,14 @@ Creation Date : 2026-08-26
   }
 
   .editor-pick-note h4 {
-    margin-bottom: 7.2px;
+    margin-bottom: 11.2px;
     font-size: 15.3px;
   }
 
   .editor-pick-note p {
-    margin-bottom: 4.5px;
+    margin-bottom: 16.5px;
     font-size: 13.5px;
+    font-weight: 400;
   }
 
   .editor-magazine {

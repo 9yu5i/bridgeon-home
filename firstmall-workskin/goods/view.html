@@ -379,6 +379,38 @@
 	<!--{ ? !_GET.quickview }-->
 	<!-- 현재 상품의 카테고리 라인맵( 스킨단에서 html 수정 불가. CSS로만 수정하세요. ) -->
 	{=showCategoryLight(goods.category_code[count(goods.category_code)-1])}
+
+	<!-- 상세페이지에서 헤더 1차(depth-1) 카테고리 li 를 보라색(.on)으로 활성화.
+	     상세 URL은 카테고리 링크와 매칭되지 않아 기본 활성화 JS 가 못 잡으므로,
+	     이 상품의 top 카테고리 이름으로 헤더 nav 의 .categoryDepth1 을 매칭한다.
+	     (timedeal / t.p pick / 메인 등 어디서 들어와도 상품 카테고리 기준으로 동작) -->
+	<span id="tp-primary-category" data-tp-primary-category hidden>{=showCategoryTop(goods.category_code[count(goods.category_code)-1])}</span>
+	<script type="text/javascript">
+	(function () {
+		function norm(s) { return (s || "").replace(/\s+/g, " ").trim().toLowerCase(); }
+		function highlightPrimaryCategory() {
+			var holder = document.getElementById("tp-primary-category");
+			if (!holder) return;
+			var name = norm(holder.textContent);
+			if (!name) return;
+			var lis = document.querySelectorAll(
+				"#layout_header .designCategoryNavigation .respCategoryList > li.categoryDepth1"
+			);
+			for (var i = 0; i < lis.length; i++) {
+				var em = lis[i].querySelector("a em");
+				if (em && norm(em.textContent) === name) {
+					lis[i].classList.add("on");
+					break;
+				}
+			}
+		}
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", highlightPrimaryCategory);
+		} else {
+			highlightPrimaryCategory();
+		}
+	})();
+	</script>
 	<!--{ / }-->
 
 

@@ -545,8 +545,13 @@
 
 		const currentState = JSON.stringify({
 			isExpress: _isExpressShipping,
-			country: $('#countrySearchInput').val(),
-			countryState: $('#stateSearchInput').val()
+			country: $('#address_nation').val() || $('#countrySearchInput').val(),
+			countryKey: $('#address_nation_key').val(),
+			countryState: $('#stateSearchInput').val(),
+			stateCode: $('#searchInputHidden').val(),
+			stateTax: $("input[name='state_tax_input']").val(),
+			taxBillingMethod: $("input[name='tax_billing_method']").val(),
+			shippingMethod: $("input[name='ship_set_list']:checked").val() || ""
 		});
 
 		if (currentState === lastState) {
@@ -2288,9 +2293,11 @@
 
 		// 배송국가 변경시 :: 2016-08-03 lwh  // 재계산
 		$("#address_nation").bind('change',function(){
-			//order_price_calculate();
 			check_fields_for_country();
-
+			// Recalculate shipping/tax when the shipping nation changes (e.g. the
+			// checkout country select or the Change-country layer). order_price_calculate
+			// caches on country+state, so this only re-submits on a real change.
+			order_price_calculate();
 		});
 
 		// 전체 동의 :: 2017-06-02 lwh

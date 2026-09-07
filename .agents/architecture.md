@@ -149,6 +149,18 @@ New Arrival on Firstmall is owned by `firstmall-workskin/goods/new_arrivals.html
 `app/javascript/js/trendypicker-new.js`, which regroups live `#searchedItemDisplay` goods by brand
 (prototype layout: `listing/new.html`).
 
+Header search behavior is owned by `app/javascript/js/trendypicker-search.js`. It lazily reads the
+live `/goods/brand_main` directory and sends an exact normalized brand-name search to
+`/goods/brand?code=...`, which returns that brand's complete catalog. Other terms continue through
+Firstmall's standard `/goods/search?search_text=...` search. Exact brand rows in
+`#autoCompleteList` use the same brand-catalog route. Empty search submissions are blocked, and
+empty or duplicate rows returned by `showSearchTrending()` are removed before the remaining
+trending keywords are renumbered from 1.
+
+Brand detail category tabs read the direct product-list items returned by `/goods/search_list`.
+Switching a category keeps the existing tab buttons mounted and restores the current viewport so
+the browser and Firstmall scroll helpers cannot move the page to the top.
+
 Checkout on Firstmall is owned by `firstmall-workskin/order/settle.html` (`/order/settle`,
 from cart `addsettle`), scoped styles in `css/redesign/trendypicker-checkout.css`, and
 `app/javascript/js/trendypicker-checkout.js`. Consignee tax fields stay in
@@ -158,6 +170,17 @@ lookup in `order/pop_delivery_address.html` (`getTaxRateForState` → `/order/ge
 on cart (`tpCartCoupon`). The Discount picker UI is hidden; Firstmall coupon/promo fields stay
 in the template for apply JS. Estimated Taxes: Standard Shipping → "Charged at customs";
 Express → `.total_tax` amount.
+
+The cart shipping country is stored as `tpCartNation` and handed to the next checkout once as
+`tpCheckoutNation`, so a country last picked inside checkout cannot override the current cart.
+Checkout applies the default saved address when its country matches, otherwise selects another
+saved address in that country, or opens a blank
+New address form when there is no match. Changing the New address country clears the previous
+state/tax values, updates Firstmall's `address_nation`, and runs the native order-price calculation.
+Country matching canonicalizes Firstmall aliases such as `U.S.A`, `USA`, `US`, and
+`United States` before comparing cart and address-book values.
+The calculation deduplication key includes the nation, state tax, tax billing method, and selected
+shipping method so a completed tax lookup or delivery-method change cannot be skipped.
 
 The detailed readiness and page mapping are documented in
 `docs/firstmall-integration-readiness.md`.

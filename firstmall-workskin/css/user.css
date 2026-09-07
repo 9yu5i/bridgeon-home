@@ -131,7 +131,7 @@ input.pilsu:read-only {background-color:#d8d8d8;}
 .layout_header .resp_top_search .search_ver2 .search_new .input_area button.search {width:24px; height:24px; margin-right:10px; border:none; background:url('../images/icon/icon-search.png') 50% 50% no-repeat; background-size:contain;}
 .layout_header .resp_top_search .search_ver2 .search_new .input_area button.close {background:url(../images/icon/icon-delete.png) 50% 50% no-repeat;}
 .layout_header #cateSwiper {border-top:none; padding-top:30px;}
-.layout_header #cateSwiper .respCategoryList {display:flex; flex-direction:row;justify-content: space-between;}
+.layout_header #cateSwiper .respCategoryList {display:flex; flex-direction:row;justify-content: space-between; gap:11px;}
 .layout_header #cateSwiper .respCategoryList > li {display:inline-block; margin:0; text-align:center; white-space:nowrap;position:initial;}
 .layout_header #cateSwiper .respCategoryList .nav_category_all {width:auto;}
 .layout_header #cateSwiper .respCategoryList .nav_category_all .categoryAllBtn .icon {margin:0 10px 3px 0;}
@@ -147,7 +147,7 @@ input.pilsu:read-only {background-color:#d8d8d8;}
 .layout_header #cateSwiper .respCategoryList .categoryDepth1:hover .categoryDepthLink>em:after,
 .layout_header #cateSwiper .respCategoryList .custom_nav_link:hover .categoryDepthLink>em:after { width:100%; left:0; }
 .layout_header #cateSwiper .respCategoryList .categoryDepth1.on .categoryDepthLink>em,
-.layout_header #cateSwiper .respCategoryList .custom_nav_link.on .categoryDepthLink>em {color:#7F56D9; border-bottom:2px solid #7F56D9; }
+.layout_header #cateSwiper .respCategoryList .custom_nav_link.on .categoryDepthLink>em {color:#9f61ff; border-bottom:2px solid #9f61ff; }
 .layout_header #cateSwiper .respCategoryList .custom_nav_link.on .categoryDepthLink.f_red>em {color:#F04438;border-color:#F04438}
 .layout_header #cateSwiper .respCategoryList .categoryAllSub {display:none; position:absolute; top:100%; left:15px; margin-left:0;}
 .layout_header #cateSwiper .respCategoryList .categoryAllSub > ul {width:180px; margin-top:0; border:1px solid #e0e0e0; background:rgba(255,255,255,0.98); padding-top:20px; min-height:300px;}

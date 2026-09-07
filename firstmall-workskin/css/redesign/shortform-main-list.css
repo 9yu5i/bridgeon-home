@@ -699,6 +699,16 @@ html.scroll-reveal-pending .trend-rail .reel-card {
   }
 }
 
+@media (min-width: 1121px) {
+  .trend-rail .reel-price {
+    padding-right: calc(var(--reel-cart-size) + 6px);
+    font-size: clamp(11px, 1vw, 14px);
+    font-weight: 500;
+    margin-top: 4px;
+    white-space: nowrap;
+  }
+}
+
 @media (min-width: 1121px) and (max-width: 1500px) {
   .trend-section {
     --reel-card-height: 340px;
@@ -749,13 +759,6 @@ html.scroll-reveal-pending .trend-rail .reel-card {
 
   .trend-rail .reel-product p {
     font-size: 14px;
-  }
-
-  .trend-rail .reel-price {
-    padding-right: calc(var(--reel-cart-size) + 6px);
-    font-size: clamp(11px, 1vw, 14px);
-    margin-top: 4px;
-    white-space: nowrap;
   }
 
   .trend-rail .rt-cart-btn {

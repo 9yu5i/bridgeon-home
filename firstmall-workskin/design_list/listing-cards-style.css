@@ -1,0 +1,723 @@
+@charset "utf-8";
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 신규 상품 목록 디자인 CSS @@
+- 파일위치 : /data/design_list/listing-cards_style.css
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+/* ==========================================================
+   1. Card shell / type / price
+   ========================================================== */
+:is(.tp-listing-grid, .searched_item_display) .listing-card,
+:is(.tp-listing-grid, .searched_item_display) .goods_list_style1,
+:is(.tp-listing-grid, .searched_item_display) .goods_list_style4,
+:is(.tp-listing-grid, .searched_item_display) .goods_list_style5,
+:is(.tp-listing-grid, .searched_item_display) .gl_item {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  box-sizing: border-box;
+  width: 100% !important;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #ece7f4;
+  border-radius: 12px;
+  background: #fff;
+  float: none !important;
+  margin: 0 !important;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-body,
+:is(.tp-listing-grid, .searched_item_display) .item_info_area {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 12px 0;
+  background: #fff;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-brand,
+:is(.tp-listing-grid, .searched_item_display) .brand_name {
+  display: block;
+  margin: 0 0 4px;
+  overflow: hidden;
+  color: #8f86a0;
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-brand:hover,
+:is(.tp-listing-grid, .searched_item_display) .brand_name:hover {
+  color: var(--bo-purple, #7943e2);
+  text-decoration: none;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-title-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-title,
+:is(.tp-listing-grid, .searched_item_display) .goods_name_area .name {
+  display: -webkit-box;
+  min-height: 2.7em;
+  margin: 0 0 6px;
+  overflow: hidden;
+  color: #171320;
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 600;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-title-link:hover .listing-card-title,
+:is(.tp-listing-grid, .searched_item_display) .goods_name_area a:hover .name, .listing-card-brand:hover {
+  color: var(--bo-purple, #7943e2);
+  text-decoration: none;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-price,
+:is(.tp-listing-grid, .searched_item_display) .goods_price_area {
+  margin: 0 0 10px;
+}
+
+@media (min-width: 1121px) {
+    .listing-card-price strong {
+        font-size: 18px !important;
+    }
+
+    .listing-card-wish {
+        display: none !important;
+    }
+}
+
+:is(.tp-listing-grid, .searched_item_display) .sale_price,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-price strong,
+:is(.tp-listing-grid, .searched_item_display) .sale_price .num {
+  color: #e53935 !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .consumer_price,
+:is(.tp-listing-grid, .searched_item_display) .goods_price_area del,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-price del {
+  color: #8f86a0;
+  font-size: 13px;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .discount_rate,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-price .discount,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-price .discount_rate,
+:is(.tp-listing-grid, .searched_item_display) .goods_price_area .discount_rate {
+  display: none !important;
+}
+
+/* ==========================================================
+   2. Media area — image, rating badge, wish button
+   ========================================================== */
+:is(.tp-listing-grid, .searched_item_display) .listing-card-media,
+:is(.tp-listing-grid, .searched_item_display) .item_img_area {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  background: #f6f3fb;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-image-link {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-image,
+:is(.tp-listing-grid, .searched_item_display) .item_img_area img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :is(.tp-listing-grid, .searched_item_display) .listing-card-image-link:hover .listing-card-image,
+  :is(.tp-listing-grid, .searched_item_display) .item_img_area a:hover img {
+    transform: scale(1.06) translateZ(0);
+  }
+}
+
+/* Rating star + count */
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating-star,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating img {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  color: #ffb400;
+  font-size: 13px;
+  line-height: 1;
+  object-fit: contain;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating span:last-child {
+  color: #8f86a0;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  font-weight: 700;
+  color: #171320;
+  pointer-events: none;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating-badge .listing-card-rating-star {
+  display: block;
+  max-width: none;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating-count {
+  font-weight: 400;
+  color: #8f86a0;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .item_img_area .display_cart,
+:is(.tp-listing-grid, .searched_item_display) .item_img_area .btn_cart,
+:is(.tp-listing-grid, .searched_item_display) .item_img_area .cart_btn,
+:is(.tp-listing-grid, .searched_item_display) .item_img_area .goods_cart,
+:is(.tp-listing-grid, .searched_item_display) .item_img_area .icon_cart,
+:is(.tp-listing-grid, .searched_item_display) .item_img_area .display_option,
+:is(.tp-listing-grid, .searched_item_display) .item_img_area .addToCartBtn,
+:is(.tp-listing-grid, .searched_item_display) .item_img_area [onclick*="displayAddToCart"],
+:is(.tp-listing-grid, .searched_item_display) .item_img_area [onclick*="AddToCart"],
+:is(.tp-listing-grid, .searched_item_display) .item_img_area img[src*="cart"] {
+  display: none !important;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 10px;
+  color:#171320;
+  font-size: 14px;
+  line-height: 1;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating-star,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating img {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  color: #ffb400;
+  font-size: 13px;
+  line-height: 1;
+  object-fit: contain;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-rating span:last-child {
+  color: #8f86a0;
+}
+
+/* ==========================================================
+   3. Persistent wish / cart controls
+   ========================================================== */
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop {
+  display: none;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-cart {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: calc(100% - 20px);
+  min-width: 0;
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  margin: 0 10px 10px;
+  padding: 0 !important;
+  border: 1px solid var(--bo-purple, #7b3fe4);
+  border-radius: 10px;
+  color: var(--bo-purple, #7b3fe4);
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop button,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop a {
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  /* Beat Firstmall `button { height: 42px !important; }` */
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  border: 1px solid #ded8e8;
+  border-radius: 10px;
+  color: var(--bo-purple, #7b3fe4);
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop button img,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-cart > img,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish img,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline img,
+:is(.tp-listing-grid, .searched_item_display) .heart-img {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-cart::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-cart::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop a:not(.listing-card-wish-inline)::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop a:not(.listing-card-wish-inline)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 18px;
+  height: calc(18px * 24 / 22);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 18px auto;
+  transform: none;
+  transition: opacity 0.25s ease;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-cart::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop button:not(.listing-card-wish-inline)::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop a:not(.listing-card-wish-inline)::before {
+  background-image: url("../skin/responsive_food_mealkit_gl/images/listing/cart.png");
+  opacity: 1;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-cart::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop button:not(.listing-card-wish-inline)::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop a:not(.listing-card-wish-inline)::after {
+  background-image: url("../skin/responsive_food_mealkit_gl/images/listing/cart_hover.png");
+  opacity: 0;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-cart:hover,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover {
+  border-color: #7943e2;
+  background-color: #7943e2;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-cart:hover::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover::before {
+  opacity: 0;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-cart:hover::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop button:not(.listing-card-wish-inline):hover::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop a:not(.listing-card-wish-inline):hover::after {
+  opacity: 1;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transform: none !important;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish {
+  right: 10px;
+  bottom: 10px;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop .listing-card-wish-inline {
+  position: relative;
+  width: 40px;
+  min-width: 40px;
+  height: 35px !important;
+  min-height: 35px !important;
+  max-height: 35px !important;
+  border: 1px solid #ded8e8;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop .listing-card-wish-inline:hover {
+  border-color: #ded8e8;
+  background-color: #fff;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish .heart-img,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline .heart-img,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish:hover .heart-img,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline:hover .heart-img,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish:hover .heart-img:not(.zzim-hidden),
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline:hover .heart-img:not(.zzim-hidden) {
+  transform: none !important;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 18px;
+  height: 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 18px auto;
+  transform: none !important;
+  transition: opacity 0.25s ease;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline::before,
+:is(.tp-listing-grid, .searched_item_display) .display_zzim::before,
+:is(.tp-listing-grid, .searched_item_display) .respGoodsZzim::before {
+  background-image: url("../skin/responsive_food_mealkit_gl/images/listing/wish_pink.png");
+  opacity: 1;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline::after,
+:is(.tp-listing-grid, .searched_item_display) .display_zzim::after,
+:is(.tp-listing-grid, .searched_item_display) .respGoodsZzim::after {
+  background-image: url("../skin/responsive_food_mealkit_gl/images/listing/wish_hover.png");
+  opacity: 0;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop
+  .listing-card-wish-inline:not(.is-active):not([aria-pressed="true"]):hover::before {
+  opacity: 0;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop
+  .listing-card-wish-inline:not(.is-active):not([aria-pressed="true"]):hover::after {
+  opacity: 1;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish.is-active::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline.is-active::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish[aria-pressed="true"]::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline[aria-pressed="true"]::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish:has(.zzimOffImg.zzim-hidden)::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline:has(.zzimOffImg.zzim-hidden)::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish:has(.zzimOnImg[data-wish="1"])::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline:has(.zzimOnImg[data-wish="1"])::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish:has(.zzimImage.normal.hide)::before,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline:has(.zzimImage.normal.hide)::before {
+  opacity: 0;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish.is-active::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline.is-active::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish[aria-pressed="true"]::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline[aria-pressed="true"]::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish:has(.zzimOffImg.zzim-hidden)::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline:has(.zzimOffImg.zzim-hidden)::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish:has(.zzimOnImg[data-wish="1"])::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline:has(.zzimOnImg[data-wish="1"])::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish:has(.zzimImage.normal.hide)::after,
+:is(.tp-listing-grid, .searched_item_display) .listing-card-wish-inline:has(.zzimImage.normal.hide)::after {
+  opacity: 1;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .display_zzim,
+:is(.tp-listing-grid, .searched_item_display) .respGoodsZzim {
+  position: absolute !important;
+  right: 10px;
+  bottom: 10px;
+  z-index: 3;
+  display: grid !important;
+  place-items: center;
+  box-sizing: border-box;
+  width: 34px;
+  height: 34px;
+  padding: 0 !important;
+  border-radius: 50%;
+  background: #fff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transform: none !important;
+}
+
+/* Styles 4/5 keep a legacy hidden wish control beside respGoodsZzim. */
+:is(.tp-listing-grid, .searched_item_display) .display_zzim.dn {
+  display: none !important;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .display_zzim img,
+:is(.tp-listing-grid, .searched_item_display) .respGoodsZzim img,
+:is(.tp-listing-grid, .searched_item_display) .respGoodsZzim .zzimImage {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .display_zzim::before,
+:is(.tp-listing-grid, .searched_item_display) .respGoodsZzim::before,
+:is(.tp-listing-grid, .searched_item_display) .display_zzim::after,
+:is(.tp-listing-grid, .searched_item_display) .respGoodsZzim::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: none !important;
+  transition: opacity 0.25s ease;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .display_zzim[act="stay"]::before,
+:is(.tp-listing-grid, .searched_item_display) .respGoodsZzim:has(.zzimImage.normal.hide)::before,
+:is(.tp-listing-grid, .searched_item_display) .display_zzim:has(.zzimOnImg[data-wish="1"])::before {
+  opacity: 0;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .display_zzim[act="stay"]::after,
+:is(.tp-listing-grid, .searched_item_display) .respGoodsZzim:has(.zzimImage.normal.hide)::after,
+:is(.tp-listing-grid, .searched_item_display) .display_zzim:has(.zzimOnImg[data-wish="1"])::after {
+  opacity: 1;
+}
+
+/* ==========================================================
+   4. Time Deal — discount-rate badge (static)
+   ========================================================== */
+:is(.tp-listing-grid, .searched_item_display) .timedeal-card-deal {
+  position: absolute;
+  top: 11px;
+  left: 13px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  pointer-events: none;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .timedeal-card-deal-clock {
+  display: block;
+  flex: 0 0 22px;
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  margin: 0 !important;
+  object-fit: contain;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .timedeal-card-deal-rate {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 24px;
+  min-height: 24px;
+  max-height: 24px;
+  padding: 0 8px;
+  border-radius: 6px;
+  color: #fff;
+  background: #ff5a96;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   5. Time Deal — countdown timer
+   ========================================================== */
+:is(.tp-listing-grid, .searched_item_display) .listing-card-timer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  color: #171320;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  height: 24px;
+  box-sizing: border-box;
+  text-decoration: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-timer .num2 {
+  color: #171320;
+  font-style: normal;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card-timer em {
+  margin: 0 1px;
+  color: #8f86a0;
+  font-style: normal;
+}
+
+/* ==========================================================
+   6. Responsive
+   ========================================================== */
+@media (max-width: 760px) {
+  :is(.tp-listing-grid, .searched_item_display) .listing-card-timer {
+    top: 37px;
+    right: auto;
+    left: 11px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 6px;
+    font-size: 9px;
+    line-height: normal;
+  }
+}
+
+/* Desktop: cart and wish share the footer row. */
+@media (min-width: 1121px) {
+  /* Custom design-list cards: desktop actions replace the image-overlay wish
+     and the mobile full-width cart. Keep this scoped to tp-listing-grid so the
+     same template can still use its mobile structure below the breakpoint. */
+  :is(.tp-listing-grid, .searched_item_display) .categories_listing_style .listing-card-media > .listing-card-wish,
+  :is(.tp-listing-grid, .searched_item_display) .gl_item > .listing-card-wish {
+    display: none !important;
+  }
+
+  :is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 8px;
+    margin: 0 10px 10px;
+    padding: 0;
+  }
+
+  :is(.tp-listing-grid, .searched_item_display) .listing-card > .listing-card-cart,
+  :is(.tp-listing-grid, .searched_item_display) .gl_item > .listing-card-cart {
+    display: none !important;
+  }
+
+  :is(.tp-listing-grid, .searched_item_display) .goods_list_style1 .item_img_area,
+  :is(.tp-listing-grid, .searched_item_display) .goods_list_style4 .item_img_area,
+  :is(.tp-listing-grid, .searched_item_display) .goods_list_style5 .item_img_area {
+    position: static;
+  }
+
+  :is(.tp-listing-grid, .searched_item_display) .listing-card-cart {
+    width: calc(100% - 62px);
+    margin-right: 52px;
+  }
+
+  :is(.tp-listing-grid, .searched_item_display) .display_zzim,
+  :is(.tp-listing-grid, .searched_item_display) .respGoodsZzim {
+    right: 10px;
+    bottom: 10px;
+    width: 36px;
+    height: 35px;
+    border: 1px solid #ded8e8;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+}
+
+/* Tablet / mobile: wish stays over the image and cart spans the footer. */
+@media (max-width: 1120px) {
+  :is(.tp-listing-grid, .searched_item_display) .listing-card-actions--desktop {
+    display: none !important;
+  }
+
+  :is(.tp-listing-grid, .searched_item_display) .listing-card > .listing-card-wish,
+  :is(.tp-listing-grid, .searched_item_display) .gl_item > .listing-card-wish,
+  :is(.tp-listing-grid, .searched_item_display) .listing-card > .listing-card-cart,
+  :is(.tp-listing-grid, .searched_item_display) .gl_item > .listing-card-cart {
+    display: grid !important;
+  }
+
+  :is(.tp-listing-grid, .searched_item_display) .goods_list_style1 .item_img_area,
+  :is(.tp-listing-grid, .searched_item_display) .goods_list_style4 .item_img_area,
+  :is(.tp-listing-grid, .searched_item_display) .goods_list_style5 .item_img_area {
+    position: relative;
+  }
+
+  :is(.tp-listing-grid, .searched_item_display) .listing-card-cart {
+    width: calc(100% - 20px);
+    margin-right: 10px;
+  }
+
+  :is(.tp-listing-grid, .searched_item_display) .display_zzim,
+  :is(.tp-listing-grid, .searched_item_display) .respGoodsZzim {
+    right: 10px;
+    bottom: 10px;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+}

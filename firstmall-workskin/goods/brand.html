@@ -498,11 +498,19 @@ $(function () {
 			cache: false,
 			success: function (markup) {
 				var parsed = new DOMParser().parseFromString(markup, "text/html");
-				brandCatalogue = Array.prototype.slice
-					.call(parsed.querySelectorAll(".categories_listing_style"))
-					.map(function (card) {
-						return { card: card, group: cardSecondLevel(card) };
-					});
+				/* The active Firstmall design-list template can change the card
+				   class (categories_listing_style, goods_list_style1, etc.). The
+				   search-list response always owns one top-level product <ul>, so
+				   read its direct <li> cards instead of depending on a skin class. */
+				var catalogueList = parsed.body.querySelector("ul");
+				var cards = catalogueList
+					? Array.prototype.filter.call(catalogueList.children, function (node) {
+						return node.tagName === "LI";
+					})
+					: [];
+				brandCatalogue = cards.map(function (card) {
+					return { card: card, group: cardSecondLevel(card) };
+				});
 				onReady();
 			},
 			error: function () {
@@ -577,6 +585,28 @@ $(function () {
 		}
 		tabsRoot.hidden = false;
 
+		function syncActiveTab() {
+			Array.prototype.forEach.call(
+				tabsRoot.querySelectorAll("[data-brand-cat]"),
+				function (tab) {
+					var selected = tab.getAttribute("data-brand-cat") === activeCategory;
+					tab.className = selected ? "is-active" : "";
+					tab.setAttribute("aria-selected", selected ? "true" : "false");
+				}
+			);
+		}
+
+		function restoreTabViewport(top) {
+			var restore = function () {
+				nativeScrollTo(0, top);
+			};
+			window.requestAnimationFrame(function () {
+				restore();
+				window.requestAnimationFrame(restore);
+			});
+			window.setTimeout(restore, 100);
+		}
+
 		function addTab(id, label, count) {
 			var button = document.createElement("button");
 			button.type = "button";
@@ -589,8 +619,17 @@ $(function () {
 			button.addEventListener("click", function (event) {
 				event.preventDefault();
 				if (activeCategory === id) return;
+				var currentTop =
+					window.pageYOffset ||
+					document.documentElement.scrollTop ||
+					document.body.scrollTop ||
+					0;
+				guardScrollBriefly();
 				renderCategory(id);
-				renderCategoryTabs(groups);
+				// Keep the buttons mounted. Rebuilding the focused tab can make
+				// the browser move the viewport to the top of the document.
+				syncActiveTab();
+				restoreTabViewport(currentTop);
 			});
 			tabsRoot.appendChild(button);
 		}
@@ -603,7 +642,7 @@ $(function () {
 
 	function buildCategoryTabs() {
 		if (!tabsRoot || !productGrid) return;
-		if (!productGrid.querySelector(".categories_listing_style")) return;
+		if (!productGrid.querySelector("ul > li")) return;
 		loadBrandCatalogue(function () {
 			renderCategoryTabs(groupCatalogue());
 		});
@@ -617,7 +656,7 @@ $(function () {
 
 		function onGridSettled() {
 			if (selfRendering) return;
-			if (!productGrid.querySelector(".categories_listing_style")) return;
+			if (!productGrid.querySelector("ul > li")) return;
 			basePageMarkup = productGrid.innerHTML;
 			activeCategory = "all";
 			buildCategoryTabs();

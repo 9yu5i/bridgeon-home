@@ -409,6 +409,19 @@ html.bo-magazine-iframe #subAllButton {
   gap: clamp(25px, 2.7vw, 50px);
   align-items: start;
   padding-bottom: 8px;
+  animation: magazineLeadReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Start with the first paint, independently of iframe scripts and image loads. */
+@keyframes magazineLeadReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .bo-magazine-feature {
@@ -422,7 +435,6 @@ html.bo-magazine-iframe #subAllButton {
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 13px 27px rgba(64, 47, 88, 0.08);
-  animation: magazineFeatureReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
   cursor: pointer;
 }
 
@@ -566,7 +578,6 @@ html.bo-magazine-iframe #subAllButton {
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 13px 27px rgba(64, 47, 88, 0.08);
-  animation: magazineFeatureReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
 
 .bo-magazine-latest-list {
@@ -581,8 +592,6 @@ html.bo-magazine-iframe #subAllButton {
   align-items: center;
   padding: 13px 0;
   border-top: 1px solid var(--magazine-line);
-  opacity: 0;
-  animation: magazineFeatureReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
   cursor: pointer;
 }
 
@@ -871,8 +880,81 @@ html.bo-magazine-iframe #subAllButton {
   background: #fff;
 }
 
-.bo-magazine-pagination {
+/* ——— Pagination ——— */
+.paging_navigation.bo-magazine-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   margin-top: 35px;
+}
+
+.paging_navigation.bo-magazine-pagination a,
+.paging_navigation.bo-magazine-pagination input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  margin: 0;
+  border: 0;
+  border-radius: 8px;
+  color: #7d7691;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.paging_navigation.bo-magazine-pagination a:hover,
+.paging_navigation.bo-magazine-pagination a:focus-visible {
+  border-color: var(--magazine-purple);
+  color: var(--magazine-purple);
+  background: #f3ebff;
+}
+
+.paging_navigation.bo-magazine-pagination a.on {
+  border-color: var(--magazine-purple);
+  background-color: var(--magazine-purple) !important;
+  color: #fff !important;
+  cursor: default;
+}
+
+.paging_navigation.bo-magazine-pagination a.prev,
+.paging_navigation.bo-magazine-pagination a.next,
+.paging_navigation.bo-magazine-pagination a[rel="prev"],
+.paging_navigation.bo-magazine-pagination a[rel="next"] {
+  overflow: visible;
+  text-indent: 0;
+  background-image: none;
+  font-size: 0;
+}
+
+.paging_navigation.bo-magazine-pagination a.prev::before,
+.paging_navigation.bo-magazine-pagination a[rel="prev"]::before {
+  content: "\2039";
+  font-size: 16px;
+}
+
+.paging_navigation.bo-magazine-pagination a.next::before,
+.paging_navigation.bo-magazine-pagination a[rel="next"]::before {
+  content: "\203a";
+  font-size: 16px;
+}
+
+.paging_navigation.bo-magazine-pagination a.first,
+.paging_navigation.bo-magazine-pagination a.last,
+.paging_navigation.bo-magazine-pagination a.end,
+.paging_navigation.bo-magazine-pagination a[rel="first"],
+.paging_navigation.bo-magazine-pagination a[rel="last"],
+.paging_navigation.bo-magazine-pagination a[rel="end"] {
+  display: none;
 }
 
 .bo-magazine-write {
@@ -1307,41 +1389,6 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
   transform: translateY(0);
 }
 
-@keyframes magazineFeatureReveal {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.bo-magazine-side-card:nth-child(1) {
-  animation-delay: 0.16s;
-}
-
-.bo-magazine-side-card:nth-child(2) {
-  animation-delay: 0.22s;
-}
-
-.bo-magazine-side-card:nth-child(3) {
-  animation-delay: 0.28s;
-}
-
-.bo-magazine-side-card:nth-child(4) {
-  animation-delay: 0.34s;
-}
-
-.bo-magazine-side-card:nth-child(5) {
-  animation-delay: 0.4s;
-}
-
-.bo-magazine-side-card:nth-child(6) {
-  animation-delay: 0.46s;
-}
-
 /* Newsletter: clearer bottom -> up */
 .magazine-newsletter.magazine-scroll-reveal,
 .magazine-newsletter.editors-newsletter.magazine-scroll-reveal {
@@ -1398,6 +1445,7 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
   .magazine-newsletter.editors-newsletter.magazine-scroll-reveal,
   .magazine-related.magazine-scroll-reveal .magazine-related-head,
   .magazine-related.magazine-scroll-reveal .magazine-related-grid .bo-magazine-post-card,
+  .bo-magazine-lead,
   .bo-magazine-feature,
   .bo-magazine-latest,
   .bo-magazine-side-card {
@@ -1504,6 +1552,27 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
 }
 
 @media (max-width: 760px) {
+  .paging_navigation.bo-magazine-pagination {
+    gap: 7px;
+    margin-top: 28px;
+  }
+
+  .paging_navigation.bo-magazine-pagination a,
+  .paging_navigation.bo-magazine-pagination input {
+    min-width: 36px;
+    height: 36px;
+    border: 1px solid var(--magazine-line, #e7ddff);
+    border-radius: 8px;
+    color: var(--magazine-purple, #7b3fe4);
+    background-color: #f3ebff;
+  }
+
+  .paging_navigation.bo-magazine-pagination a.on {
+    border-color: var(--magazine-purple, #7b3fe4);
+    background-color: var(--magazine-purple, #7b3fe4) !important;
+    color: #fff !important;
+  }
+
   .magazine-hero {
     min-height: 225px;
   }

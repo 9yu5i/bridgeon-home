@@ -156,9 +156,12 @@
     "https://d1l1qu21r0179n.cloudfront.net/crawl/yesstyle/1133317070/300_list.jpg",
   ];
 
-  // Fixed image for the desktop Time Deal card's media slot (the live timedeal
-  // product supplies the name/price/countdown; the image is this graphic).
-  const TIME_CARD_IMAGE = IMG + "main/extimedeal1.png";
+  // Images for the desktop Time Deal card's media slot — one per slide
+  // (extimedeal1..6), cycled by slide index. The live timedeal product still
+  // supplies the name/price/countdown; only the graphic comes from here.
+  const TIME_CARD_IMAGES = [1, 2, 3, 4, 5, 6].map(
+    (n) => IMG + "main/extimedeal" + n + ".png"
+  );
 
   const dealSliderData = {
     // Today's Pick — example curation, one per category (K-POP excluded).
@@ -236,7 +239,10 @@
       if (fullCard) card.style.setProperty("--tp-card-image", `url("${fullCard}")`);
       else card.style.removeProperty("--tp-card-image");
       if (mediaImage) {
-        const src = sliderKey === "time" ? TIME_CARD_IMAGE : item.mediaImage;
+        const src =
+          sliderKey === "time"
+            ? TIME_CARD_IMAGES[index % TIME_CARD_IMAGES.length]
+            : item.mediaImage;
         if (src) mediaImage.src = src;
         mediaImage.alt = [item.brand, item.title]
           .filter(Boolean)
