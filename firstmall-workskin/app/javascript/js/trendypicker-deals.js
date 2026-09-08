@@ -630,9 +630,10 @@
         openFeatured(event, banner);
       });
     }
-    if (bannerShop) {
-      bannerShop.addEventListener("click", (event) => openFeatured(event, bannerShop));
-    }
+    // "Shop All" (.deal-time-banner-shop) must go to the Time Deal page. It is an
+    // <a href="/promotion/timedeal">, so leave its default navigation alone
+    // instead of hijacking the click into the featured-deal quickview.
+    void bannerShop;
   })();
 
   const initDealPickCompact = () => {

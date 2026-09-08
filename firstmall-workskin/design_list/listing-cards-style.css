@@ -217,20 +217,23 @@
   display: none !important;
 }
 
-:is(.tp-listing-grid, .searched_item_display) .listing-card-rating {
-  display: inline-flex;
+:is(.tp-listing-grid, .searched_item_display) .listing-card .listing-card-rating {
+  display: flex;
+  flex-flow: row nowrap;
   align-items: center;
   gap: 4px;
+  width: max-content;
+  max-width: 100%;
   margin: 0 0 10px;
   color:#171320;
   font-size: 14px;
   line-height: 1;
+  white-space: nowrap;
 }
 
-:is(.tp-listing-grid, .searched_item_display) .listing-card-rating-star,
-:is(.tp-listing-grid, .searched_item_display) .listing-card-rating img {
-  display: grid;
-  place-items: center;
+:is(.tp-listing-grid, .searched_item_display) .listing-card .listing-card-rating-star,
+:is(.tp-listing-grid, .searched_item_display) .listing-card .listing-card-rating img {
+  display: block;
   flex: 0 0 auto;
   width: 12px;
   height: 12px;
@@ -240,7 +243,12 @@
   object-fit: contain;
 }
 
-:is(.tp-listing-grid, .searched_item_display) .listing-card-rating span:last-child {
+:is(.tp-listing-grid, .searched_item_display) .listing-card .listing-card-rating span {
+  display: inline-block;
+  flex: 0 0 auto;
+}
+
+:is(.tp-listing-grid, .searched_item_display) .listing-card .listing-card-rating span:last-child {
   color: #8f86a0;
 }
 

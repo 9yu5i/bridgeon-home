@@ -234,18 +234,15 @@
 	function refreshDynamicUI() {
 		applyWishIcons();
 		stripCurrencySuffix();
+		removeBorrowedCardsOutsideTablet();
 		stripAlreadyBorrowedItems();
 		fillLastRow();
 	}
 
-	// Column count isn't fixed — 2 on mobile, 3 on tablet, and the desktop
-	// tier (1121px+) uses grid-template-columns: repeat(auto-fill, ...) so a
-	// wide screen can fit 4+ — see detectColumnCount(). If this page's item
-	// count isn't a multiple of the actual rendered column count and there's
-	// a next page, borrow just enough cards from it (via the same
-	// search_list AJAX call the native catalog JS uses) so the last row is
-	// never left partially empty. The true last page is left alone —
-	// nothing to borrow from.
+	// The tablet catalog has three columns. If a page ends with only one or
+	// two cards and there is another page, borrow only the cards needed to
+	// complete that row through Firstmall's own /goods/search_list endpoint.
+	// Mobile and desktop keep their server-provided page contents unchanged.
 	//
 	// Borrowing means that next page would otherwise show those same cards
 	// again — so the borrowed goods_seq list is recorded in sessionStorage
@@ -256,6 +253,20 @@
 	// the shortfall cascade forward page by page.
 	var BORROWED_KEY_PREFIX = "bo-catalog-borrowed:";
 	var fillingLastRow = false;
+	var TABLET_MEDIA = "(min-width: 761px) and (max-width: 1120px)";
+
+	function isTabletCatalogLayout() {
+		return window.matchMedia(TABLET_MEDIA).matches;
+	}
+
+	function currentCatalogParams() {
+		if (typeof window.searchParams === "function") {
+			try {
+				return new URLSearchParams(window.searchParams());
+			} catch (e) {}
+		}
+		return new URLSearchParams(window.location.search);
+	}
 
 	function normalizedQueryKey(params) {
 		var keys = [];
@@ -288,13 +299,26 @@
 		return count || 1;
 	}
 
+	function removeBorrowedCardsOutsideTablet() {
+		if (isTabletCatalogLayout()) return;
+		var grid = document.getElementById("searchedItemDisplay");
+		if (!grid) return;
+		Array.prototype.forEach.call(
+			grid.querySelectorAll('[data-bo-borrowed="1"]'),
+			function (item) {
+				item.remove();
+			}
+		);
+	}
+
 	function stripAlreadyBorrowedItems() {
+		if (!isTabletCatalogLayout()) return;
 		var grid = document.getElementById("searchedItemDisplay");
 		if (!grid) return;
 		var list = grid.querySelector("ul");
 		if (!list) return;
 
-		var key = normalizedQueryKey(new URLSearchParams(window.location.search));
+		var key = normalizedQueryKey(currentCatalogParams());
 		var raw;
 		try {
 			raw = window.sessionStorage.getItem(key);
@@ -324,6 +348,7 @@
 
 	function fillLastRow() {
 		if (fillingLastRow) return;
+		if (!isTabletCatalogLayout()) return;
 		var grid = document.getElementById("searchedItemDisplay");
 		if (!grid) return;
 		var list = grid.querySelector("ul");
@@ -331,12 +356,8 @@
 		var items = list.querySelectorAll(":scope > li");
 		if (items.length < 2) return;
 
-		// Column count isn't fixed: mobile/tablet are 2/3 columns, but the
-		// desktop tier (1121px+) uses grid-template-columns: repeat(auto-fill, ...)
-		// so a wide screen can fit 4, 5, or more. Measure it from the actual
-		// layout instead of assuming a number.
 		var columns = detectColumnCount(items);
-		if (columns < 2) return;
+		if (columns !== 3) return;
 
 		var remainder = items.length % columns;
 		if (remainder === 0) return;
@@ -346,27 +367,33 @@
 		if (!hasNext) return;
 
 		var needed = columns - remainder;
-		var fetchUrl = new URL(window.location.href);
-		var currentPage = parseInt(fetchUrl.searchParams.get("page"), 10) || 1;
-		fetchUrl.pathname = fetchUrl.pathname.replace(/\/catalog\/?$/, "/search_list");
-		fetchUrl.searchParams.set("page", String(currentPage + 1));
-		fetchUrl.searchParams.set("auto", "1");
-		fetchUrl.searchParams.set("_", String(Date.now()));
+		var fetchParams = currentCatalogParams();
+		var activePage = nav.querySelector("a.on");
+		var currentPage = parseInt(activePage && activePage.textContent, 10) ||
+			parseInt(fetchParams.get("page"), 10) || 1;
+		fetchParams.set("page", String(currentPage + 1));
+		fetchParams.set("searchMode", "catalog");
+		fetchParams.set("auto", "1");
+		fetchParams.set("_", String(Date.now()));
 
-		var borrowedFromKey = normalizedQueryKey(fetchUrl.searchParams);
+		var borrowedFromKey = normalizedQueryKey(fetchParams);
 
 		fillingLastRow = true;
-		fetch(fetchUrl.toString(), { credentials: "same-origin" })
+		fetch("/goods/search_list?" + fetchParams.toString(), {
+			credentials: "same-origin"
+		})
 			.then(function (res) {
 				return res.text();
 			})
 			.then(function (html) {
+				if (!isTabletCatalogLayout()) return;
 				var doc = new DOMParser().parseFromString(html, "text/html");
-				var borrowed = Array.prototype.slice.call(
-					doc.querySelectorAll("li.categories_listing_style"),
-					0,
-					needed
-				);
+				var sourceList = doc.querySelector("body > ul") || doc.querySelector("ul");
+				var borrowed = sourceList
+					? Array.prototype.slice.call(sourceList.children).filter(function (item) {
+						return item.tagName === "LI";
+					}).slice(0, needed)
+					: [];
 				if (!borrowed.length) return;
 
 				var borrowedIds = [];

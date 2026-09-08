@@ -2,7 +2,7 @@
 @@ 숏폼 콘텐츠 메인 페이 List @@
 - 파일위치 : [스킨폴더]/editor/editors_pick.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<link type="text/css" rel="stylesheet" charset="utf-8" href="../css/redesign/editors-pick.css" />
+<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/skin/{skin}/css/redesign/editors-pick.css?v=20260908-2" />
 
 <div class="editors-page">
 <div class="editors-main">
@@ -153,9 +153,10 @@
         <!--{ @ .magazine_articles }-->
         <article class="editor-magazine-card" data-magazine-seq="{.seq}" onclick="location.href='{.url}'">
           <div class="editor-magazine-image" style="background-image:url('{.thumbnail}')" aria-hidden="true"></div>
+          <span class="editor-magazine-category">{.category}</span>
           <h3>{.title}</h3>
           <p>{.excerpt}</p>
-          <small>{.date} &middot; {.category}</small>
+          <small>{.date}</small>
         </article>
         <!--{ / }-->
         <!--{ ? !.magazine_articles }-->
@@ -177,4 +178,4 @@
 </div>
 </div>
 
-<script type="text/javascript" src="/app/javascript/js/editors-pick.js"></script>
+<script type="text/javascript" src="/app/javascript/js/editors-pick.js?v=20260908-2"></script>

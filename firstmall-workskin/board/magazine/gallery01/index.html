@@ -8,7 +8,7 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-fonts.css" />
 {/}
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css?v=20260908-3" />
 {? _GET.home_widget}
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-main-magazine.css" />
 {/}
@@ -424,6 +424,9 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 			{? .contentcut}
 			<p class="bo-magazine-post-excerpt">{=strip_tags(.contentcut)}</p>
 			{/}
+			{? .date}
+			<p class="bo-magazine-post-date">{=date('M d, Y',strtotime(.date))}</p>
+			{/}
 		</article>
 		{/}
 	</div>
@@ -475,7 +478,7 @@ if (document.body) document.body.className += (document.body.className ? " " : "
 	</form>
 </div>
 
-<script src="/app/javascript/js/trendypicker-magazine.js"></script>
+<script src="/app/javascript/js/trendypicker-magazine.js?v=20260907"></script>
 {? _GET.iframe}
 <!-- height sync owned by trendypicker-magazine.js -->
 {/}

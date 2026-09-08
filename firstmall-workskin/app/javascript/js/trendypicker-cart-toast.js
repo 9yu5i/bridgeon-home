@@ -253,8 +253,13 @@
       thumbEl.innerHTML = "";
       if (info && info.image) {
         var img = document.createElement("img");
-        img.src = info.image;
         img.alt = "";
+        // A blocked/expired external image (e.g. a CDN placeholder) would show
+        // a broken-image icon; drop the thumb instead so the toast stays clean.
+        img.onerror = function () {
+          if (img.parentNode === thumbEl) thumbEl.innerHTML = "";
+        };
+        img.src = info.image;
         thumbEl.appendChild(img);
       }
     }
@@ -280,6 +285,64 @@
   // Pull whatever the submitting context knows about the product. Each
   // add-to-cart surface lays this out differently, so try the specific
   // containers first and fall back to page-level metadata.
+  // Read a usable URL off an <img>, tolerating lazy-loaded images whose real
+  // URL sits in currentSrc / data-* while src is still a blank placeholder.
+  function imgSrc(im) {
+    if (!im) return "";
+    var s = im.getAttribute("src") || "";
+    if (!s || /(^data:|blank\.gif|noimage|placeholder|spacer|1x1)/i.test(s)) {
+      s =
+        im.currentSrc ||
+        im.getAttribute("data-src") ||
+        im.getAttribute("data-original") ||
+        im.getAttribute("data-echo") ||
+        s;
+    }
+    return String(s || "").trim();
+  }
+
+  // Skin UI chrome, never a product photo. Product images live under
+  // /data/goods/ or an external CDN — never under the skin folder — so the buy
+  // area's cart icon (.../images/icon/icon-cart...) and the option colour
+  // swatches (.../images/common/color_sw...) must not be taken as the thumbnail.
+  function isIconImage(url) {
+    var u = String(url || "");
+    return (
+      /\/data\/skin\//i.test(u) ||
+      /\/images\/(icon|common)\//i.test(u) ||
+      /icon[-_](cart|wish|zzim|share|heart)|\/sns_icon|snslogo|favicon|\/logo|logo\./i.test(u)
+    );
+  }
+
+  // The page's default og:image is the site logo / favicon; never let it stand
+  // in as a product thumbnail.
+  function isLogoImage(url) {
+    return /snslogo|favicon|\/logo|logo\./i.test(String(url || ""));
+  }
+
+  // Prefer the product image, not the first <img> (which can be a wish/cart/
+  // badge icon). With `strict`, only an explicit product-image selector counts.
+  // Icons are always rejected, so a container that only holds icons (the buy
+  // area, a bare quickview) returns "" and the product og:image wins instead.
+  function productImage(root, strict) {
+    if (!root) return "";
+    var im = root.querySelector(
+      ".listing-card-image, .qv-product-image img, .qv-thumb img, " +
+        "img.square_display, .square_display img, img.goods_thumb, .cart_dialog_img img"
+    );
+    if (!im && !strict) {
+      var all = root.querySelectorAll("img");
+      for (var i = 0; i < all.length; i += 1) {
+        if (!isIconImage(imgSrc(all[i]))) {
+          im = all[i];
+          break;
+        }
+      }
+    }
+    var src = imgSrc(im);
+    return isIconImage(src) ? "" : src;
+  }
+
   function readProductInfo(form, trigger) {
     var name = "";
     var image = "";
@@ -308,8 +371,7 @@
         ) ||
         text(card.querySelector("h3, h2")) ||
         String((card.querySelector(".listing-card-title") || {}).title || "").trim();
-      var cardImg = card.querySelector("img");
-      if (cardImg) image = cardImg.getAttribute("src") || "";
+      image = productImage(card) || image;
     }
 
     if (form) {
@@ -320,7 +382,7 @@
       if (formName) name = formName;
       var formImg =
         form.querySelector(".cart_dialog_img img") || form.querySelector("img.goods_thumb");
-      if (formImg) image = formImg.getAttribute("src") || "";
+      if (formImg) image = imgSrc(formImg) || image;
     }
 
     if (!name) {
@@ -342,12 +404,7 @@
         "#quickviewModal, .qv-product-card, #goods_view_quickview"
       );
       if (layer) {
-        if (!image) {
-          var layerImg = layer.querySelector(
-            ".qv-product-image img, .qv-thumb img, .goods_thumb, img"
-          );
-          if (layerImg) image = layerImg.getAttribute("src") || "";
-        }
+        if (!image) image = productImage(layer, true);
         if (!name) {
           name =
             text(layer.querySelector(".qv-product-name, .goods_name, h2, h3")) || name;
@@ -357,7 +414,8 @@
 
     if (!image) {
       var ogImage = document.querySelector('meta[property="og:image"]');
-      if (ogImage) image = String(ogImage.getAttribute("content") || "").trim();
+      var ogUrl = ogImage ? String(ogImage.getAttribute("content") || "").trim() : "";
+      if (ogUrl && !isLogoImage(ogUrl)) image = ogUrl;
     }
 
     return { name: name, image: image };

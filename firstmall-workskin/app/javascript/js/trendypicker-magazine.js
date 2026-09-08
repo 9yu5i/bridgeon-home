@@ -464,8 +464,15 @@
         lineHeight = parseFloat(style.fontSize) * 1.25;
       }
 
-      var isOneLine = titleBox.getBoundingClientRect().height <= lineHeight * 1.5;
-      card.classList.toggle("is-title-one-line", isOneLine);
+      // Title line count (title is clamped to 3 lines). Used by the popular
+      // grid so the excerpt fills the leftover room: 2-line title -> 3-line
+      // excerpt, 3-line title -> 2-line excerpt (each card stays 5 lines tall).
+      var titleHeight = titleBox.getBoundingClientRect().height;
+      var lines = titleHeight > 0 ? Math.round(titleHeight / lineHeight) : 1;
+      if (lines < 1) lines = 1;
+      card.classList.toggle("is-title-one-line", lines <= 1);
+      card.classList.toggle("is-title-2-lines", lines === 2);
+      card.classList.toggle("is-title-3-lines", lines >= 3);
     });
   }
 

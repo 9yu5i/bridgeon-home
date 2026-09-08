@@ -30,10 +30,12 @@ Do not use git status for that classification.
   existing rule instead of appending a duplicate.
 - Do not add `!important` by default. Prefer a more specific page-scoped selector. Use
   `!important` only to beat a Firstmall ID or legacy rule that cannot be overridden otherwise.
-- Listing/product card visuals are shared. Card shell, price prefix, wish/cart/zzim, and
-  desktop actions live in `firstmall-workskin/css/redesign/trendypicker-listing-cards.css`
-  (`.tp-listing-grid`). Page files keep lattice columns, heroes, badges, and chrome.
-  Do not copy wish/cart rules into `trendypicker-{catalog,best,new,brand,timedeal}.css`.
+- Admin-selectable listing/product card visuals live in
+  `firstmall-workskin/design_list/listing-cards-style.css`, loaded by each
+  `listing_style_*.html` file. Page files keep lattice columns, heroes, badges, filters, and chrome.
+  Do not copy card, wish, or cart presentation into catalog/search page templates or their scoped
+  CSS. Brand keeps the common design-list stylesheet linked outside its replaceable AJAX grid.
+  Best and New Arrival keep their current setup until separately migrated.
 
 ## JavaScript Rules
 
@@ -50,6 +52,9 @@ Do not use git status for that classification.
 - Verify relative paths after moving CSS or HTML.
 - Use existing image assets when the user provides them.
 - Keep icon alignment and click targets consistent across breakpoints.
+- For generated brand banners, keep the tallest product around 72–78% of the final banner height
+  and leave visible breathing room above and below it. Avoid oversized product groups; preserve a
+  calm left-side copy area and right-side safety margin unless the user requests another layout.
 
 ## Editing Discipline
 

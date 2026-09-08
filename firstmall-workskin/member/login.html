@@ -6,7 +6,7 @@
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 {is_file_kakao_tag}
 
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-login.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-login.css?v=20260908" />
 <script>
 document.documentElement.className += (document.documentElement.className ? " " : "") + "is-login-page is-auth-page";
 if (document.body) {
@@ -165,5 +165,8 @@ $(document).ready(function() {
 		$('#loginTab li').removeClass('on');
 		$(this).closest('li').addClass('on');
 	});
+
+	/* The SNS icons (.bo-login-sns) are display-only for now — the user asked to
+	   keep them visible without wiring them to a login provider. */
 });
 </script>

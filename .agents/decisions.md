@@ -407,6 +407,25 @@ Why:
 - Wish/cart/heart rules were copied five times. One shared file is the owner; page files should
   not grow another copy.
 
+## 2026-09-08: Admin-Selectable Listing Styles Own Product Cards
+
+Decision:
+
+- Supersede the shared skin-CSS ownership above for Category, Search, and the general Time Deal
+  page. Their cards are selected in Firstmall Admin and rendered by `listing_style_basic.html`,
+  `listing_style_discount.html`, or `listing_style_timedeal_timer.html` under `/data/design_list/`.
+- Keep their common card presentation in `/data/design_list/listing-cards-style.css`. Category and
+  Search currently use the discount style; general Time Deal uses the timer style.
+- Brand detail persistently links the common design-list CSS because its category tabs replace the
+  AJAX product grid and remove links returned inside that grid. Best and New Arrival retain their
+  current page setup until separately migrated.
+
+Why:
+
+- Firstmall Admin chooses a complete design-list HTML style for each product listing. Styling these
+  cards from catalog or search page templates bypasses that ownership and makes Admin style changes
+  unreliable.
+
 ## 2026-08-12: Redesign Style Check Is Required
 
 Decision:

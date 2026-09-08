@@ -545,6 +545,16 @@ html.bo-magazine-iframe #subAllButton {
   min-height: calc(1.4em * 2);
 }
 
+/* Post date under the excerpt (popular grid). */
+.bo-magazine-post-date {
+  margin: 5px 0 0;
+  padding: 0 14px;
+  color: #6d657c;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
 .bo-magazine-feature-copy time,
 .bo-magazine-side-card time {
   display: inline-block;
@@ -671,7 +681,6 @@ html.bo-magazine-iframe #subAllButton {
   padding: 0 14px 5px;
 }
 
-.bo-magazine-post-card > p:last-child,
 .bo-magazine-post-excerpt {
   margin-top: 5px;
   margin-bottom: 0;
@@ -679,11 +688,29 @@ html.bo-magazine-iframe #subAllButton {
 }
 
 /* Short (1-line) titles: allow excerpt up to 3 lines */
-.bo-magazine-post-card.is-title-one-line > p:last-child,
 .bo-magazine-post-card.is-title-one-line .bo-magazine-post-excerpt {
   -webkit-line-clamp: 3;
   line-clamp: 3;
   max-height: calc(1.4em * 3);
+}
+
+/* Popular grid: balance the title/excerpt so each card is 5 lines tall —
+   a 2-line title gets a 3-line excerpt, a 3-line title gets a 2-line excerpt. */
+.bo-magazine-popular-grid .bo-magazine-post-card.is-title-2-lines .bo-magazine-post-excerpt {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  /* line-clamp is inert on this grid-item box (it blockifies to flow-root), so
+     max-height crops the text; -1px keeps a sub-pixel of the 4th line from
+     peeking under the crop. */
+  max-height: calc(1.4em * 3 - 1px);
+  min-height: calc(1.4em * 3 - 1px);
+}
+
+.bo-magazine-popular-grid .bo-magazine-post-card.is-title-3-lines .bo-magazine-post-excerpt {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  max-height: calc(1.4em * 2 - 1px);
+  min-height: calc(1.4em * 2 - 1px);
 }
 
 .bo-magazine-popular {
@@ -725,7 +752,7 @@ html.bo-magazine-iframe #subAllButton {
 .bo-magazine-popular-head p {
   margin: 5px 0 0;
   color: #756d7c;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4;
 }
 
@@ -738,6 +765,11 @@ html.bo-magazine-iframe #subAllButton {
 
 .bo-magazine-popular-grid .bo-magazine-post-card.is-popular-visible {
   display: grid;
+  /* Size each card to its own content. Without this, the grid stretches every
+     card to the tallest one while the card packs its content to the top
+     (align-content: start), leaving a large empty gap under the date on the
+     shorter cards. */
+  align-self: start;
 }
 
 .bo-magazine-popular .magazine-popular-controls {

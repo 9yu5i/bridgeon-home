@@ -97,14 +97,20 @@
     return brandIndexPromise;
   }
 
-  function submitNormalSearch(form, submitter) {
-    form._tpBrandSearchPass = true;
-    try {
-      if (typeof form.requestSubmit === "function") form.requestSubmit(submitter || undefined);
-      else form.submit();
-    } finally {
-      form._tpBrandSearchPass = false;
-    }
+  function openSearch(keyword) {
+    window.location.href =
+      "/goods/search?search_text=" + encodeURIComponent(keyword);
+  }
+
+  function fetchBrandIndexBriefly() {
+    return Promise.race([
+      fetchBrandIndex(),
+      new Promise(function (resolve) {
+        window.setTimeout(function () {
+          resolve([]);
+        }, 800);
+      })
+    ]);
   }
 
   function findBrandMatch(index, keyword) {
@@ -150,7 +156,7 @@
         event.preventDefault();
         event.stopImmediatePropagation();
         brandSearchBusy = true;
-        fetchBrandIndex().then(function (index) {
+        fetchBrandIndexBriefly().then(function (index) {
           var match = findBrandMatch(index, keyword);
           brandSearchBusy = false;
           if (match) {
@@ -158,15 +164,7 @@
             return;
           }
 
-          var form = document.getElementById("topSearchForm");
-          var input = form && form.querySelector("input[name='search_text']");
-          if (form && input) {
-            input.value = keyword;
-            submitNormalSearch(form);
-          } else {
-            window.location.href =
-              "/goods/search?search_text=" + encodeURIComponent(keyword);
-          }
+          openSearch(keyword);
         });
       },
       true
@@ -176,7 +174,7 @@
       "submit",
       function (event) {
         var form = event.target;
-        if (!form || form._tpBrandSearchPass || brandSearchBusy) return;
+        if (!form || brandSearchBusy) return;
         var action = form.getAttribute("action") || "";
         if (
           form.id !== "topSearchForm" &&
@@ -201,14 +199,17 @@
         event.preventDefault();
         event.stopImmediatePropagation();
         brandSearchBusy = true;
-        fetchBrandIndex().then(function (index) {
+        fetchBrandIndexBriefly().then(function (index) {
           var match = findBrandMatch(index, key);
           brandSearchBusy = false;
           if (match) {
             openBrand(match);
             return;
           }
-          submitNormalSearch(form, event.submitter);
+          openSearch(keyword);
+        }).catch(function () {
+          brandSearchBusy = false;
+          openSearch(keyword);
         });
       },
       true

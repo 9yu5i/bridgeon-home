@@ -137,6 +137,14 @@ body.is-auth-page .title_container {
   box-shadow: none;
 }
 
+/* The Guest tab has fewer fields (no SNS row, no Guest-Order button), so the
+   card — and with it the .bo-login-main gradient — used to shrink when Guest
+   was selected. Reserve the taller Member panel's height on the Guest panel so
+   the background keeps the same length across both tabs. */
+#nonmember.bo-login-panel {
+  min-height: 442px;
+}
+
 html.is-auth-page body.is-auth-page .bo-login-tabs.tab_basic,
 html.is-auth-page body.is-auth-page .bo-login-tabs.tab_basic.fullsize,
 html.is-auth-page body.is-auth-page .bo-login-main .tab_basic {

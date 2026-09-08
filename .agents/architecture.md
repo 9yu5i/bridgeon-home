@@ -130,12 +130,21 @@ Server-runtime Firstmall HTML is validated separately by
 `tools/check-firstmall-workskin.mjs`.
 
 Firstmall goods-display templates live outside the skin at `/data/design_list/`. Their upload
-sources are mirrored under `firstmall-workskin/design_list/`: `categories_listing_style.html`
-owns the shared catalog card markup, `timedeal_listing_style.html` owns Time Deal markup, and
-`redesign_goods_list_style.css` owns their desktop/mobile action-row switch. Page-scoped skin CSS
-may size the grid or badges, but must not replace these cart/wishlist controls.
+sources are mirrored under `firstmall-workskin/design_list/`: `listing_style_basic.html`,
+`listing_style_discount.html`, and `listing_style_timedeal_timer.html` are separate styles that
+can be selected in Admin, and all three load `/data/design_list/listing-cards-style.css`. Category
+and search listings currently use the discount style; the general Time Deal page uses the timer
+style. Page-scoped skin CSS may size the grid or badges, but card presentation and the
+desktop/mobile action-row switch belong to the selected design-list style. Brand detail links the
+same common CSS outside `#searchedItemDisplay` because category filtering replaces that AJAX grid,
+including any stylesheet link returned inside it.
 `app/javascript/js/trendypicker-listing-cards.js` keeps the visible mobile and desktop wish
 controls synchronized while Firstmall's `display_goods_zzim()` remains the server mutation owner.
+On category catalog pages, `app/javascript/js/trendypicker-catalog.js` completes a partial
+three-column tablet row with the first one or two products from the next `/goods/search_list`
+page. It reads direct children of the returned list so the behavior does not depend on which
+Admin-selected listing-style class is present, and records borrowed product ids per filter/page
+to avoid showing the same products again on the following tablet page.
 
 T.P Magazine on Firstmall is owned by `firstmall-workskin/main/magazine.html` (home shell +
 iframe), `board/magazine/gallery01/index.html` (list/Popular), `board/magazine/gallery01/view.html`
@@ -155,7 +164,8 @@ live `/goods/brand_main` directory and sends an exact normalized brand-name sear
 Firstmall's standard `/goods/search?search_text=...` search. Exact brand rows in
 `#autoCompleteList` use the same brand-catalog route. Empty search submissions are blocked, and
 empty or duplicate rows returned by `showSearchTrending()` are removed before the remaining
-trending keywords are renumbered from 1.
+trending keywords are renumbered from 1. Brand lookup waits at most 800 ms; if the directory does
+not respond in that window, the header opens the standard product-search URL directly.
 
 Brand detail category tabs read the direct product-list items returned by `/goods/search_list`.
 Switching a category keeps the existing tab buttons mounted and restores the current viewport so

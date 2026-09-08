@@ -1297,9 +1297,14 @@ Creation Date : 2026-08-26
 }
 
 .editor-magazine-card {
+  display: grid;
+  align-content: start;
+  gap: 4px;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #fff;
+  box-shadow: 0 13px 27px rgba(64, 47, 88, 0.08);
+  padding-bottom: 15px;
   cursor: pointer;
 }
 
@@ -1312,7 +1317,9 @@ Creation Date : 2026-08-26
 }
 
 .editor-magazine-image {
-  height: 220px;
+  aspect-ratio: 802 / 500;
+  border-radius: 14px 14px 0 0;
+  margin-bottom: 5px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1339,33 +1346,74 @@ Creation Date : 2026-08-26
     linear-gradient(135deg, #2020a6 0%, #7d2ebd 42%, #15152e 100%);
 }
 
+/* Category label above the title, in the magazine card's purple style. */
+.editor-magazine-category {
+  padding: 0 14px;
+  color: #7b3fe4;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
 .editor-magazine-card h3 {
-  height: calc(1.18em * 3); 
-  margin: 18px 18px 9px;
+  margin: 0;
+  padding: 0 14px;
   color: #111;
-  font-size: 17px;
-  line-height: 1.18;
-  font-weight: 900;
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 800;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  max-height: calc(1.25em * 3);
 }
 
 .editor-magazine-card p {
   display: -webkit-box;
-  min-height: 4.2em;
-  margin: 0 18px 12px;
+  margin: 0;
+  padding: 0 14px;
+  min-height: calc(1.4em * 2);
+  max-height: calc(1.4em * 2);
   overflow: hidden;
   color: #111;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4;
+  font-weight: 500;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
+/* Date sits below the excerpt. */
 .editor-magazine-card small {
   display: block;
-  margin: 0 18px 18px;
-  color: #111;
-  font-size: 12px;
-  font-weight: 800;
+  margin: 5px 0 0;
+  padding: 0 14px;
+  color: #6d657c;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* Balance title/excerpt like the magazine page popular grid: a 2-line (or
+   1-line) title gets a 3-line excerpt, a 3-line title gets a 2-line excerpt,
+   so each card stays the same height. The is-title-* classes are toggled by
+   editors-pick.js after measuring the rendered title. */
+.editor-magazine-card.is-title-one-line p,
+.editor-magazine-card.is-title-2-lines p {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  min-height: calc(1.4em * 3);
+  max-height: calc(1.4em * 3);
+}
+
+.editor-magazine-card.is-title-3-lines p {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  min-height: calc(1.4em * 2);
+  max-height: calc(1.4em * 2);
 }
 
 .editor-magazine-dots {
@@ -1682,28 +1730,9 @@ Creation Date : 2026-08-26
     gap: 19.8px;
   }
 
-  .editor-magazine-card {
-    border-radius: 10.8px;
-  }
-
-  .editor-magazine-image {
-    height: 198px;
-  }
-
-  .editor-magazine-card h3 {
-    margin: 16.2px 16.2px 8.1px;
-    font-size: 15.3px;
-  }
-
-  .editor-magazine-card p {
-    margin: 0 16.2px 10.8px;
-    font-size: 11.7px;
-  }
-
-  .editor-magazine-card small {
-    margin: 0 16.2px 16.2px;
-    font-size: 10.8px;
-  }
+  /* Card internals follow the base rules, which mirror the magazine page card
+     (.bo-magazine-post-card): aspect-ratio image, 18px title, 14px excerpt,
+     purple meta. No desktop scale-down here so the two match. */
 
   .editors-newsletter {
     width: min(100%, 1350px);
@@ -2730,24 +2759,9 @@ Creation Date : 2026-08-26
     scroll-snap-align: start;
   }
 
-  .editor-magazine-image {
-    height: clamp(180px, 30vw, 260px);
-  }
-
-  .editor-magazine-card h3 {
-    margin: 12px 12px 5px;
-    font-size: 16px;
-  }
-
-  .editor-magazine-card p {
-    margin: 0 12px 8px;
-    font-size: 15px;
-  }
-
-  .editor-magazine-card small {
-    margin: 0 12px 12px;
-    font-size: 14px;
-  }
+  /* Card internals inherit the base rules (aspect-ratio image, padded 18px
+     title / 14px excerpt / purple meta) so the mobile carousel card matches
+     the magazine page card too. */
 
   .editor-magazine-dots {
     display: flex;

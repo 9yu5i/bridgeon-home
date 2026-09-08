@@ -142,9 +142,14 @@ When working on the live Firstmall skin or `firstmall-workskin/`:
   `app/javascript/js/trendypicker-new.js`, `goods/new_arrivals.html`.
   Live URL: `/goods/new_arrivals` (maps from prototype `listing/new.html`).
   Point header/mobile NEW links to `/goods/new_arrivals`.
-- Shared listing cards: `css/redesign/trendypicker-listing-cards.css` (`.tp-listing-grid`).
-  Link it before the page CSS on catalog / best / new / brand detail / timedeal. Page files
-  keep grid columns, heroes, and badges only.
+- Admin-selectable listing cards live in `firstmall-workskin/design_list/`:
+  `listing_style_basic.html`, `listing_style_discount.html`, and
+  `listing_style_timedeal_timer.html`. All three load `/data/design_list/listing-cards-style.css`.
+  Category and search listings currently use `listing_style_discount`; the general Time Deal page
+  uses `listing_style_timedeal_timer`. Keep card presentation in these design-list files and page
+  templates focused on grids, heroes, filters, and page chrome. Brand loads the same design-list
+  CSS persistently because its category tabs replace the AJAX product grid. Best and New Arrival
+  remain on their existing page setup until they are migrated separately.
 - Cart Firstmall files: `order/cart.html` (existing Firstmall template),
   `css/redesign/trendypicker-cart.css`, `app/javascript/js/trendypicker-cart.js`.
   Live URL: `/order/cart`. Promo uses `getPromotionJson?mode=cart`. Coupons are selected

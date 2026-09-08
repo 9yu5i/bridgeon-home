@@ -533,9 +533,10 @@ Editor's Pick JS
     card.dataset.magazineSeq = article.seq;
     card.innerHTML = `
       <div class="editor-magazine-image" style="background-image:url('${escapeHtml(article.thumbnail || "")}')" aria-hidden="true"></div>
+      <span class="editor-magazine-category">${escapeHtml(article.category)}</span>
       <h3>${escapeHtml(article.title)}</h3>
       <p>${escapeHtml(article.excerpt)}</p>
-      <small>${escapeHtml(article.date)} &middot; ${escapeHtml(article.category)}</small>
+      <small>${escapeHtml(article.date)}</small>
     `;
     card.addEventListener("click", () => { location.href = article.url; });
     return card;
@@ -553,7 +554,30 @@ Editor's Pick JS
       return;
     }
     articles.forEach((article) => magazineGrid.appendChild(renderMagazineCardElement(article)));
+    syncMagazineExcerptLines();
   };
+
+  /* Balance each magazine card's title/excerpt like the magazine page popular
+     grid: measure the rendered (3-line-clamped) title, then let CSS give a
+     2-line title a 3-line excerpt and a 3-line title a 2-line excerpt, so the
+     cards stay the same height. */
+  const syncMagazineExcerptLines = () => {
+    if (!magazineGrid) return;
+    magazineGrid.querySelectorAll(".editor-magazine-card").forEach((card) => {
+      const title = card.querySelector("h3");
+      if (!title) return;
+      const style = window.getComputedStyle(title);
+      let lineHeight = parseFloat(style.lineHeight);
+      if (!lineHeight || isNaN(lineHeight)) lineHeight = parseFloat(style.fontSize) * 1.25;
+      const height = title.getBoundingClientRect().height;
+      let lines = height > 0 ? Math.round(height / lineHeight) : 1;
+      if (lines < 1) lines = 1;
+      card.classList.toggle("is-title-one-line", lines <= 1);
+      card.classList.toggle("is-title-2-lines", lines === 2);
+      card.classList.toggle("is-title-3-lines", lines >= 3);
+    });
+  };
+  window.addEventListener("resize", syncMagazineExcerptLines);
 
 
   /* ---------- The one function every selection path (click or scroll) goes through. ---------- */

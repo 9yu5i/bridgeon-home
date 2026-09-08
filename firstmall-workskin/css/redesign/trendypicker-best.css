@@ -210,6 +210,14 @@ body.is-best-page .subpage_wrap .subpage_container {
   background: linear-gradient(135deg, var(--bo-purple, #7b3fe4) 0%, #ff5aa7 100%);
 }
 
+/* The Best-page rank badge sits in the media's top-left corner (top:10 / 30px
+   tall), the same spot as the Time Deal "% OFF" badge, and covers it (higher
+   z-index). On Best cards, drop the deal badge just below the rank so both
+   stay visible. Scoped by :has(.bo-best-rank) so only ranked cards shift. */
+.bo-best-grid .listing-card-media:has(.bo-best-rank) .timedeal-card-deal {
+  top: 46px;
+}
+
 /* ——— Infinite scroll ——— */
 .bo-best-shell .paging_navigation {
   display: none !important;
