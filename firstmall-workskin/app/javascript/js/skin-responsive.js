@@ -433,6 +433,12 @@ function goodsSearch(mode,options) {
 		'dataType': 'html',
 		'success': function (result) {
 			$("#searchedItemDisplay").html(result);
+
+			// 사이드바는 다시 그려지지 않으므로, 응답에 실려온 값으로 가격 슬라이더 최대값만 갱신
+			var $meta = $("#searchedItemDisplay #searchListMeta");
+			if ($meta.length && typeof window.refreshPriceRangeMax === 'function') {
+				window.refreshPriceRangeMax($meta.data('filter-max-price'));
+			}
 		},
 		'complete': function (result) {
 			// 상품 색상 코드값 디자인( new 상품정보 )

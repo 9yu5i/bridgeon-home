@@ -681,3 +681,136 @@ function view_lazyload() {
 	});
 
 }
+/* ============================================================================
+ * Option dropdown portal (#select_option_lay .realtrend-select-menu)
+ * ----------------------------------------------------------------------------
+ * The inline option dropdown is position:absolute inside the summary column,
+ * which has overflow-y:auto — so a dropdown that runs past the column's bottom
+ * was clipped into a scrollbar. We can't just make the column overflow:visible:
+ * the buy bar (#goodsBuyOpenSection) and other position:fixed children of the
+ * form get displaced when that ancestor's overflow changes.
+ *
+ * Instead, while the dropdown is open on desktop/tablet, pin the menu with
+ * position:fixed to the trigger's viewport rect. It then overlays outside every
+ * overflow box (no scroll) without touching any ancestor. Below the option
+ * sheet breakpoint the menu is the mobile bottom sheet, so we leave it alone.
+ * ==========================================================================*/
+(function () {
+	var SHEET_MAX = 767; // <= this width the option UI is the fixed bottom sheet
+	var SELECTOR = "#select_option_lay .realtrend-select-wrap";
+
+	function clearMenu(menu) {
+		if (!menu) return;
+		["position", "top", "left", "right", "width", "zIndex"].forEach(function (p) {
+			menu.style[p] = "";
+		});
+	}
+
+	/* Only the product page's own option sheet (#goodsOptionBuySection). NEVER a
+	   card's add-to-cart quickview: its panel (.qv-modal-panel) carries a
+	   transform, which makes position:fixed resolve against the panel instead of
+	   the viewport — pinning the menu would send it off-screen there. The
+	   quickview keeps its original absolute dropdown. */
+	function inScope(wrap) {
+		if (!wrap || !wrap.closest) return false;
+		if (wrap.closest("#quickviewModal, #goods_view_quickview, .qv-modal, .qv-modal-panel")) {
+			return false;
+		}
+		return !!wrap.closest("#goodsOptionBuySection");
+	}
+
+	function positionMenu(wrap) {
+		var trigger = wrap.querySelector(".realtrend-select-trigger");
+		var menu = wrap.querySelector(".realtrend-select-menu");
+		if (!trigger || !menu) return;
+		if (!inScope(wrap) || window.innerWidth <= SHEET_MAX) {
+			clearMenu(menu);
+			return;
+		}
+		var r = trigger.getBoundingClientRect();
+		menu.style.position = "fixed";
+		menu.style.top = Math.round(r.bottom - 1) + "px";
+		menu.style.left = Math.round(r.left) + "px";
+		menu.style.right = "auto";
+		menu.style.width = Math.round(r.width) + "px";
+		menu.style.zIndex = "100000";
+	}
+
+	function syncWrap(wrap) {
+		var menu = wrap.querySelector(".realtrend-select-menu");
+		if (!menu) return;
+		if (wrap.classList.contains("is-open")) positionMenu(wrap);
+		else clearMenu(menu);
+	}
+
+	function bindWrap(wrap) {
+		if (wrap.__tpMenuPortal || !inScope(wrap)) return;
+		wrap.__tpMenuPortal = true;
+		try {
+			new MutationObserver(function () {
+				syncWrap(wrap);
+			}).observe(wrap, { attributes: true, attributeFilter: ["class"] });
+		} catch (e) {}
+		syncWrap(wrap);
+	}
+
+	function bindAll() {
+		var wraps = document.querySelectorAll(SELECTOR);
+		Array.prototype.forEach.call(wraps, bindWrap);
+	}
+
+	function openScopedWraps() {
+		return Array.prototype.filter.call(
+			document.querySelectorAll(SELECTOR + ".is-open"),
+			inScope
+		);
+	}
+
+	function repositionOpen() {
+		openScopedWraps().forEach(positionMenu);
+	}
+
+	function closeWrap(wrap) {
+		wrap.classList.remove("is-open");
+		var menu = wrap.querySelector(".realtrend-select-menu");
+		if (menu) {
+			menu.classList.remove("is-open");
+			clearMenu(menu);
+		}
+	}
+
+	/* A fixed menu repositioned every scroll frame lags a frame behind and looks
+	   like it is wobbling. Standard dropdown behaviour instead: a page scroll
+	   OUTSIDE the menu closes it. Scrolling INSIDE the menu (its own option list)
+	   is ignored so long lists still scroll. */
+	function onScroll(event) {
+		var open = openScopedWraps();
+		if (!open.length) return;
+		var t = event.target;
+		for (var i = 0; i < open.length; i += 1) {
+			var menu = open[i].querySelector(".realtrend-select-menu");
+			if (menu && (menu === t || (t && t.nodeType === 1 && menu.contains(t)))) {
+				return; // scroll happened inside the option list — leave it open
+			}
+		}
+		open.forEach(closeWrap);
+	}
+
+	window.addEventListener("scroll", onScroll, true);
+	window.addEventListener("resize", repositionOpen);
+
+	function start() {
+		bindAll();
+		// Firstmall (re)renders the option markup after load, so watch for it.
+		var host = document.getElementById("select_option_lay") || document.body;
+		try {
+			new MutationObserver(bindAll).observe(host, { childList: true, subtree: true });
+		} catch (e) {}
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", start);
+	} else {
+		start();
+	}
+})();

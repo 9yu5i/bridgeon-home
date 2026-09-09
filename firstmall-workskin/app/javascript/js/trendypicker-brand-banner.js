@@ -74,7 +74,29 @@
     "0280": { file: "dr-jart-brand-desktop.png", force: true },
     "0283": { file: "dr-melaxin-brand-desktop.png", force: true },
     "0296": { file: "dr-reju-all-brand-desktop.png", force: true },
-    "0293": { file: "dr-forhair-brand-desktop.png", force: true }
+    "0293": { file: "dr-forhair-brand-desktop.png", force: true },
+    "0307": { file: "elizavecca-brand-desktop.png", force: true },
+    "0314": { file: "espoir-brand-desktop.png", force: true },
+    "0004": { file: "etude-brand-banner.png", force: true },
+    "0225": { file: "cosrx-brand-banner-1600x520.png", force: true },
+    "0649": { file: "finger-suit-brand-banner-1600x520.png", force: true },
+    "0650": { file: "forment-brand-banner-1600x520.png", force: true },
+    "0330": { file: "frankly-brand-banner-1600x520.png", force: true },
+    "0332": { file: "freshian-brand-banner-1600x520.png", force: true },
+    "0311": { file: "eqqualberry-brand-banner-1600x520.png", force: true },
+    "0641": { file: "fromrier-brand-banner-1600x520.png", force: true },
+    "0339": { file: "fwee-brand-banner-1600x520.png", force: true },
+    "0342": { file: "genabelle-brand-banner-1600x520.png", force: true },
+    "0350": { file: "goodal-brand-banner-1600x520.png", force: true },
+    "0357": { file: "hanskin-brand-banner-1600x520.png", force: true },
+    "0628": { file: "hanyul-brand-banner-1600x520.png", force: true },
+    "0358": { file: "haruharu-wonder-brand-banner-1600x520.png", force: true },
+    "0360": { file: "heart-percent-brand-banner-1600x520.png", force: true },
+    "0361": { file: "heimish-brand-banner-1600x520.png", force: true },
+    "0611": { file: "hetras-brand-banner-1600x520.png", force: true }
+
+
+
   };
 
   function usesDefaultBanner(rawBannerSrc) {

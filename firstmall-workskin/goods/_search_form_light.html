@@ -3,7 +3,7 @@
 - 파일위치 : [스킨폴더]/goods/_search_form_light.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/skin/{skin}/css/redesign/search-filter.css?v=20260903-3" />
+<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/skin/{skin}/css/redesign/search-filter.css?v=20260909" />
 
 <!--{=assignBrandBestIcon()}-->
 <!--{ ? uri_string()!='main/index' }-->
@@ -727,14 +727,31 @@ $(document).ready(function() {
 
 	goodsSearch('auto');
 
+	// Lock the page behind the mobile filter overlay so it does not scroll.
+	// position:fixed (not just overflow:hidden) also stops iOS touch-scroll
+	// bleed; we save and restore the scroll position around it.
+	var filterLockY = 0;
+	function lockBodyScroll(){
+		if ( $('body').hasClass('filter-scroll-locked') ) { return; }
+		filterLockY = window.pageYOffset || document.documentElement.scrollTop || 0;
+		$('body').addClass('filter-scroll-locked').css('top', (-filterLockY) + 'px');
+	}
+	function unlockBodyScroll(){
+		if ( !$('body').hasClass('filter-scroll-locked') ) { return; }
+		$('body').removeClass('filter-scroll-locked').css('top', '');
+		window.scrollTo(0, filterLockY);
+	}
+
 	$(document).on('click', '[data-listing-filter-open]', function(e){
 		e.preventDefault();
 		$('.listing-main').addClass('is-filter-open');
 		$('.listing-filter-done').removeAttr('hidden');
+		lockBodyScroll();
 	});
 	$(document).on('click', '[data-listing-filter-close]', function(e){
 		e.preventDefault();
 		$('.listing-main').removeClass('is-filter-open');
+		unlockBodyScroll();
 	});
 
 	$('.listing-filter-group').each(function(){

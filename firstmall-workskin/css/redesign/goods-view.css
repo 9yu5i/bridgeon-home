@@ -639,6 +639,14 @@ Creation Date : 2026-08-19
     gap: 0;
     padding: 0;
 }
+/* The buy form is a grid item of the summary column. Its default min-width:auto
+   lets the nowrap colour-swatch row (a swiper) push it to min-content width, so
+   with many options the card overflowed the column and out of the viewport.
+   min-width:0 keeps the card at the column width; the swatch swiper then scrolls
+   horizontally within it (as on mobile) instead of overflowing. */
+.product-summary > .goods-form {
+    min-width: 0;
+}
 .product-summary-head {
     display: flex;
     align-items: center;
@@ -651,6 +659,12 @@ Creation Date : 2026-08-19
     width: 26px;
     height: 26px;
     object-fit: contain;
+}
+@media (max-width: 760px) {
+    #btnSnsShare img {
+        width: 20px;
+        height: 20px;
+    }
 }
 .ranking_label {
     margin-right: auto;
@@ -1100,12 +1114,15 @@ Creation Date : 2026-08-19
   background: #fff;
 }
 .product-wish img {
-  inset: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: block;
   width: var(--product-wish-icon-size);
   height: var(--product-wish-icon-size);
   object-fit: contain;
-  transition: opacity 0.18s ease;
+  transition: opacity 0.22s ease;
 }
 @media (min-width: 1121px) {
   .product-actions,
@@ -1119,19 +1136,18 @@ Creation Date : 2026-08-19
     border-radius: 8.1px;
   }
 }
+/* Both icons stay in the DOM, stacked; only opacity changes so the swap
+   cross-fades smoothly (display:none/block cannot be transitioned). */
 .product-wish-icon-hover {
   opacity: 0;
-  display: none !important;
 }
 .product-wish:not(.is-hover-suppressed):hover .product-wish-icon-default,
 .product-wish.is-active .product-wish-icon-default {
   opacity: 0;
-  display: none !important;
 }
 .product-wish:not(.is-hover-suppressed):hover .product-wish-icon-hover,
 .product-wish.is-active .product-wish-icon-hover {
   opacity: 1;
-  display: block !important;
 }
 .list_buy_now {
     width: 100%;
@@ -2882,6 +2898,44 @@ textarea.product-inquiry-field {
     linear-gradient(135deg, #ffffff 0%, #e9e5f2 100%);
   background-size: cover;
   background-position: center;
+}
+/* "On Sale Now" Time Deal badge, injected by timedeal-badge.js onto rec cards
+   whose goods_seq is in the live Time Deal set. listing-cards-style.css is not
+   loaded on the product page, so the badge is styled here (mirrors the pink
+   clock badge used on the listing grids). Anchored top-left over the image;
+   the quick-add button sits top-right. */
+.product-rec-card .timedeal-card-deal {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  pointer-events: none;
+}
+.product-rec-card .timedeal-card-deal-clock {
+  display: block;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  object-fit: contain;
+}
+.product-rec-card .timedeal-card-deal-rate {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 6px;
+  color: #fff;
+  background: #ff5a96;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
 }
 .product-rec-card p {
   margin: 12px 10px 2px;

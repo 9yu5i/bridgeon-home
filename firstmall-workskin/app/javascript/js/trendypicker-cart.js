@@ -76,6 +76,7 @@
       "#saleTotalPrice",
       "#mobile_total_sale",
       "[data-cart-save]",
+      "#total_promotion_goods_sale",
       "[data-cart-summary-promo-discount]",
       "[data-cart-summary-coupon-discount]",
       "[data-cart-coupon-selected-discount]",
@@ -106,21 +107,15 @@
       ea = parseInt(String(text(qtyOut) || "1").replace(/[^\d]/g, ""), 10) || 1;
     }
     var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
-    var compare = parseMoney(row.getAttribute("data-cart-unit-compare"));
+    var listUnit = parseMoney(row.getAttribute("data-cart-list-price"));
     var priceEl = row.querySelector(".cart-item-price");
-    var del = priceEl && priceEl.querySelector("del");
     var strong = priceEl && priceEl.querySelector("strong");
     if (!(unit > 0) && strong) unit = parseMoney(strong.textContent);
-    if (del) {
-      var fromDel = parseMoney(del.textContent);
-      if (fromDel > unit) compare = fromDel;
-    }
-    var line =
-      unit > 0
-        ? unit * ea
-        : parseMoney(text(row.querySelector("[data-cart-line-total], .cart-item-total")));
-    var discount = compare > unit && unit > 0 ? (compare - unit) * ea : 0;
-    return { ea: ea, unit: unit, compare: compare, line: line, discount: discount };
+    if (!(listUnit > 0)) listUnit = unit;
+    var line = unit > 0 ? unit * ea : parseMoney(text(row.querySelector("[data-cart-line-total], .cart-item-total")));
+    var listLine = listUnit > 0 ? listUnit * ea : line;
+    var discount = listUnit > unit && unit > 0 ? (listUnit - unit) * ea : 0;
+    return { ea: ea, unit: unit, line: line, listLine: listLine, discount: discount };
   }
 
   function ready(fn) {
@@ -150,7 +145,7 @@
     var items = 0;
     eachSelectedRow(function (row) {
       var info = readRowTotals(row);
-      subtotal += info.line;
+      subtotal += info.listLine;
       discount += info.discount;
       items += info.ea;
     });
@@ -166,8 +161,7 @@
     var shippingAmt = parseMoney(text(document.getElementById("total_shipping_price")));
     // Subtotal is already sale-price (unit × qty). Product Discount is
     // list−sale info only — do not subtract it again from Total.
-    var grand = Math.max(0, subtotal - promoAmt - couponAmt + shippingAmt);
-    grand = Math.round(grand * 100) / 100;
+    var grand = Math.max(0, subtotal - discount - promoAmt - couponAmt + shippingAmt);
 
     var goods = document.getElementById("totalGoodsPrice");
     var totalEl = document.getElementById("totalPrice");
@@ -294,6 +288,53 @@
     window.setPriceInfoCheck = wrapped;
   }
 
+  var nativeCartTotal = null;
+
+  function captureNativeTotal() {
+    var totalEl = document.getElementById("totalPrice");
+    if (totalEl) nativeCartTotal = parseMoney(text(totalEl));
+  }
+
+  function paintSelectionSummary() {
+    var items = 0;
+    eachSelectedRow(function (row) {
+      items += readRowQty(row);
+    });
+    var countEl = document.querySelector("[data-cart-subtotal-count]");
+    if (countEl) {
+      countEl.textContent = "(" + items + " item" + (items === 1 ? "" : "s") + ")";
+    }
+
+    syncPromoSummary();
+
+    var discount = parseMoney(text(document.getElementById("saleTotalPrice")));
+    var promoAmt =
+      parseMoney(text(document.querySelector("[data-cart-summary-promo-discount]"))) ||
+      parseMoney(text(document.getElementById("total_promotion_goods_sale")));
+    var coupon = readStoredCoupon();
+    var couponAmt = coupon ? estimateCouponDiscount(coupon) : 0;
+
+    if (nativeCartTotal === null) captureNativeTotal();
+    var grand = Math.max(0, Math.round((nativeCartTotal - promoAmt - couponAmt) * 100) / 100);
+
+    var totalEl = document.getElementById("totalPrice");
+    if (totalEl) totalEl.textContent = formatMoney(grand);
+
+    var saveEl = document.querySelector("[data-cart-save]");
+    if (saveEl) saveEl.textContent = formatMoney(discount + promoAmt + couponAmt);
+
+    if (!items) {
+      var shippingEl = document.getElementById("total_shipping_price");
+      var shippingWrap = document.getElementById("shippingTotalPrice");
+      if (shippingEl) shippingEl.textContent = formatMoney(0);
+      if (shippingWrap) shippingWrap.classList.add("cart-free");
+    }
+
+    syncShippingMeter();
+    paintSelectedCoupon(coupon);
+    normalizeCartCurrency();
+  }
+
   function resyncAllRowTotals() {
     collectCartRows().forEach(function (row) {
       var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
@@ -319,6 +360,7 @@
     }
     function wrapped(data) {
       original.call(this, data);
+      captureNativeTotal();
       resyncAllRowTotals();
       paintSelectionSummary();
     }
@@ -756,6 +798,7 @@
     showCouponMinError("");
     storeCoupon(coupon);
     paintSelectedCoupon(coupon);
+    schedulePaintSelectionSummary(0);
     closeCouponDialog();
     return true;
   }
@@ -1077,6 +1120,7 @@
         storeCoupon(null);
         paintSelectedCoupon(null);
         refreshCouponListSelection();
+        schedulePaintSelectionSummary(0);
       });
     }
 
@@ -2634,6 +2678,130 @@
     });
   }
 
+
+  // --- One-time cleanup for pre-existing duplicate cart lines ------------
+  // The backend now merges on add-to-cart, but carts that already had
+  // duplicate fm_cart_option rows before that fix need a one-time
+  // consolidation pass. This only ever drives Firstmall's own native
+  // quantity-change and delete actions (never edits ea or removes rows by
+  // touching the DOM/DB directly) and then reloads so the server-rendered
+  // cart is the single source of truth for the result.
+  var LEGACY_MERGE_DONE_KEY = "tpCartLegacyMergeDoneV1";
+
+  function waitForActionFrameLoad(timeoutMs) {
+    return new Promise(function (resolve) {
+      var frame = document.querySelector("iframe[name='actionFrame']");
+      if (!frame) {
+        window.setTimeout(resolve, timeoutMs);
+        return;
+      }
+      var done = false;
+      function finish() {
+        if (done) return;
+        done = true;
+        frame.removeEventListener("load", finish);
+        resolve();
+      }
+      frame.addEventListener("load", finish);
+      window.setTimeout(finish, timeoutMs); // fallback if load never fires
+    });
+  }
+
+  function mergeQtyIntoRow(cartOptionSeq, totalEa) {
+    return fetchOptionalChanges(cartOptionSeq)
+      .then(function (doc) {
+        var source = getOptionalChangesForm(doc);
+        if (!source) throw new Error("optional_changes form missing");
+        var eaInputs = source.querySelectorAll("input[name^='optionEa']");
+        if (!eaInputs.length) eaInputs = source.querySelectorAll("input.ea_change");
+        if (!eaInputs.length) throw new Error("quantity input missing");
+        eaInputs[0].value = String(totalEa);
+        submitOptionalModify(source);
+      })
+      .then(function () {
+        return waitForActionFrameLoad(1500);
+      });
+  }
+
+  function deleteRowNatively(cartOptionSeq) {
+    var checkboxes = document.querySelectorAll("input[name='cart_option_seq[]']");
+    checkboxes.forEach(function (cb) {
+      cb.checked = String(cb.value) === String(cartOptionSeq);
+    });
+    var form = document.getElementById("cart_form");
+    if (!form) return Promise.resolve();
+    form.setAttribute("action", "del");
+    form.setAttribute("target", "actionFrame");
+    form.submit();
+    return waitForActionFrameLoad(1500);
+  }
+
+  function consolidateLegacyDuplicateCartLines() {
+    try {
+      if (sessionStorage.getItem(LEGACY_MERGE_DONE_KEY)) return;
+    } catch (err) {}
+
+    var rows = Array.prototype.slice.call(page.querySelectorAll("li.cart_goods, .cart-item"));
+    if (rows.length < 2) return;
+
+    var groups = Object.create(null);
+    rows.forEach(function (row) {
+      var goodsSeq = row.getAttribute("data-cart-goods-seq");
+      if (!goodsSeq) return;
+      var optionEl = row.querySelector(".realtrend-select-value");
+      var optionText = optionEl ? text(optionEl).trim().toLowerCase() : "";
+      var hasSuboptions = !!row.querySelector(".cart_suboptions");
+      var qtyWrap = row.querySelector("[data-cart-qty]");
+      var seq = (qtyWrap && qtyWrap.getAttribute("data-cart-option-seq")) ||
+        String(row.id || "").replace(/^cart_goods_/, "");
+      var ea = parseInt(row.getAttribute("data-cart-ea"), 10) || 1;
+      if (!seq) return;
+
+      var key = goodsSeq + "||" + optionText;
+      if (!groups[key]) groups[key] = [];
+      groups[key].push({ seq: seq, ea: ea, hasSuboptions: hasSuboptions });
+    });
+
+    var duplicateGroups = Object.keys(groups)
+      .map(function (key) { return groups[key]; })
+      .filter(function (members) {
+        return members.length > 1 && !members.some(function (m) { return m.hasSuboptions; });
+      });
+
+    if (!duplicateGroups.length) return;
+
+    duplicateGroups.forEach(function (members) {
+      members.sort(function (a, b) { return parseInt(a.seq, 10) - parseInt(b.seq, 10); });
+    });
+
+    var chain = Promise.resolve();
+    duplicateGroups.forEach(function (members) {
+      var keeper = members[0];
+      var surplus = members.slice(1);
+      var totalEa = members.reduce(function (sum, m) { return sum + m.ea; }, 0);
+
+      chain = chain
+        .then(function () { return mergeQtyIntoRow(keeper.seq, totalEa); })
+        .then(function () {
+          var deleteChain = Promise.resolve();
+          surplus.forEach(function (m) {
+            deleteChain = deleteChain.then(function () { return deleteRowNatively(m.seq); });
+          });
+          return deleteChain;
+        })
+        .catch(function () {
+          // Leave this group as-is on any failure
+        });
+    });
+
+    chain.then(function () {
+      try {
+        sessionStorage.setItem(LEGACY_MERGE_DONE_KEY, "1");
+      } catch (err) {}
+      window.location.reload();
+    });
+  }
+
   window.tpCartPaintSelectionSummary = paintSelectionSummary;
   patchSetPriceInfoCheck();
   patchSetCartPriceInfo();
@@ -2643,9 +2811,7 @@
     bindCartQuickviewClose();
     patchSetPriceInfoCheck();
     patchSetCartPriceInfo();
-    // After the inline script in cart.html sets its default (everything
-    // checked), so this only overrides what the user actually unchecked
-    // before navigating away.
+    consolidateLegacyDuplicateCartLines();
     restoreSelectionState();
     bindSelectionPersistence();
     normalizeCartCurrency();
@@ -2656,7 +2822,9 @@
 
     var promoSaleEl = document.getElementById("total_promotion_goods_sale");
     if (promoSaleEl && window.MutationObserver) {
-      new MutationObserver(syncPromoSummary).observe(promoSaleEl, {
+      new MutationObserver(function () {
+        schedulePaintSelectionSummary(0);
+      }).observe(promoSaleEl, {
         childList: true,
         characterData: true,
         subtree: true,

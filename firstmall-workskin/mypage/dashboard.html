@@ -32,10 +32,11 @@
 				<p>Welcome Back,</p>
 				<div class="bo-profile__name-row">
 					<h1 id="bo-dashboard-title">{member.name}</h1>
-					<span class="bo-profile__tier">{member.current_level.group_name}</span>
+					<span class="bo-profile__tier" data-tier-name="{member.current_level.group_name}">{member.current_level.group_name}</span>
 				</div>
 			</div>
 
+			<!--{ ? member.next_level.group_name && member.next_level.order_sum_price > 0 }-->
 			<div class="bo-profile__progress">
 				<p>
 					<span><b aria-hidden="true">★</b> <!--{ ? member.next_level.order_sum_price > member.order_sum }-->US ${=number_format(member.next_level.order_sum_price-member.order_sum,2)}<!--{ : }-->US $0.00<!--{ / }--> to <em>{member.next_level.group_name}</em></span>
@@ -43,11 +44,25 @@
 				</p>
 				<progress
 					class="bo-profile__progress-track"
-					value="{member.order_sum}"
-					max="{member.next_level.order_sum_price}"
+					value="{=number_format(member.next_level_percent)}"
+					max="100"
 					aria-label="Membership progress toward {member.next_level.group_name}"
 				></progress>
 			</div>
+			<!--{ : }-->
+			<div class="bo-profile__progress is-complete">
+				<p>
+					<span><b aria-hidden="true">★</b> Highest tier achieved</span>
+					<strong>{member.current_level.group_name}</strong>
+				</p>
+				<progress
+					class="bo-profile__progress-track"
+					value="100"
+					max="100"
+					aria-label="Highest membership tier achieved"
+				></progress>
+			</div>
+			<!--{ / }-->
 
 			<nav class="bo-profile__stats" aria-label="Account benefits">
 				<a href="/mypage/emoney">

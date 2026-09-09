@@ -22,7 +22,7 @@ function initEditorList(sc) {
 	});
 
 	$(document).on('click', '.editor_modify_btn', function () {
-		location.href = 'regist?seq=' + $(this).attr('editor_seq');
+		location.href = 'regist?editor_seq=' + $(this).attr('editor_seq');
 	});
 
 	$(document).on('click', '.editor_delete_btn', function () {
@@ -64,6 +64,41 @@ function initEditorList(sc) {
 				showEditorAlert('삭제 중 오류가 발생했습니다.');
 			});
 		});
+	});
+
+	// Drag & Drop 순서 변경
+	$('.table_row_basic.list').tableDnD({
+		dragHandle: '.editor_drag_handle',
+		onDrop: function (table, row)
+		{
+			var seqOrder = [];
+
+			$(table).find("tbody tr").each(function () {
+
+				var seq = $(this).data("editor-seq");
+
+				if (seq)
+					seqOrder.push(seq);
+			});
+
+			$.ajax({
+				url : "reorder",
+				type : "post",
+				data : { editor_seq : seqOrder },
+				dataType : "json",
+				success : function(res) {
+					if (!res.result) {
+						alert("순서 변경에 실패했습니다.");
+						location.reload();
+					}
+				},
+				error : function(){
+					alert("순서 변경 중 오류가 발생했습니다.");
+					location.reload();
+				}
+			});
+		}
+
 	});
 }
 
@@ -149,11 +184,6 @@ window.callbackGoodsList = function (goodsList) {
 		addedCount++;
 		$tbody.find("tr[rownum='0']").hide();
 
-		var price = list.default_price;
-		if (typeof get_currency_price === 'function') {
-			price = get_currency_price(list.default_price, 2);
-		}
-
 		var goodsName = list.goods_name;
 		if (gGoodsSelect && typeof gGoodsSelect._stripslashes === 'function') {
 			goodsName = gGoodsSelect._stripslashes(list.goods_name);
@@ -178,7 +208,6 @@ window.callbackGoodsList = function (goodsList) {
 		html += '<a href="../goods/regist?no=' + list.goods_seq + '" target="_blank">[' + list.goods_seq + '] ' + goodsName + '</a>';
 		html += '</div>';
 		html += '</td>';
-		html += '<td class="right">' + price + '</td>';
 		html += '<td class="center"><textarea name="pick_reason[]" class="line" style="width:95%;height:40px;" placeholder="추천 이유"></textarea></td>';
 		html += '<td class="center"><input type="text" name="pick_keywords[]" class="line" size="12" placeholder="키워드" /></td>';
 		html += '</tr>';

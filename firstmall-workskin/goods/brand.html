@@ -8,7 +8,7 @@
   - .brand_description → About the brand
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<link rel="stylesheet" href="/data/design_list/listing-cards-style.css" />
+<link rel="stylesheet" href="/data/design_list/listing-cards-style.css?v=20260909-2" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-brand.css" />
 <style>
 #goodsSearchForm { display: none !important; }
@@ -530,7 +530,10 @@ $(function () {
 		});
 		return Object.keys(counts)
 			.sort(function (a, b) {
-				return labels[a].localeCompare(labels[b]);
+				/* Order tabs by category code, matching the site's category menu
+				   order, instead of alphabetically by label. Codes are zero-padded
+				   numeric strings, so a plain string compare is their numeric order. */
+				return a < b ? -1 : a > b ? 1 : 0;
 			})
 			.map(function (id) {
 				return { id: id, label: labels[id], count: counts[id] };

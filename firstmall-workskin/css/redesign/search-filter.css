@@ -37,6 +37,17 @@ Creation Date : 2026-08-14
   overflow: hidden;
 }
 
+/* Freeze the page behind the mobile filter overlay. position:fixed (set with a
+   negative top by the open handler in _search_form_light.html) stops the body,
+   including iOS touch-scroll bleed; the scroll position is restored on close. */
+body.filter-scroll-locked {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
 /* ------------------------------------------------------------
    필터 사이드바
    ------------------------------------------------------------ */

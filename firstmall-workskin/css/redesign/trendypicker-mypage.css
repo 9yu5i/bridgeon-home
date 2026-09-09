@@ -572,6 +572,26 @@ html.is-page-entering body {
   white-space: nowrap;
 }
 
+.bo-profile__tier[data-tier-name="Silver" i] {
+  color: #5934bd;
+  background: linear-gradient(135deg, #f1ebff, #c9b7fa);
+}
+
+.bo-profile__tier[data-tier-name="Gold" i] {
+  color: #9f285d;
+  background: linear-gradient(135deg, #fff0f7, #ffd4e6);
+}
+
+.bo-profile__tier[data-tier-name="Black" i] {
+  color: #007b79;
+  background: linear-gradient(135deg, #eaffff, #c4f5f1);
+}
+
+.bo-profile__tier[data-tier-name="Platinum" i] {
+  color: #875700;
+  background: linear-gradient(135deg, #fff8e8, #ffdf95);
+}
+
 .bo-profile__progress {
   grid-column: 2;
   grid-row: 2;
@@ -609,6 +629,12 @@ html.is-page-entering body {
   flex: 0 1 auto;
   max-width: 48%;
   text-align: right;
+}
+
+.bo-profile__progress.is-complete p span,
+.bo-profile__progress.is-complete p strong {
+  color: #ffdc72;
+  font-weight: 700;
 }
 
 .bo-profile__progress p b {
@@ -1817,10 +1843,10 @@ body.is-orders-modal-open {
 .bo-page-reveal,
 .bo-scroll-reveal {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(16px);
   transition:
-    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.46s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.46s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--bo-reveal-delay, 0s);
   will-change: opacity, transform;
 }
@@ -3084,4 +3110,8 @@ body.is-mypage-logout-open {
 .bo-mypage-shell > .bo-account-side[data-mypage-lnb]:not([data-mypage-lnb-loaded]),
 .bo-profile-shell > .bo-account-side[data-mypage-lnb]:not([data-mypage-lnb-loaded]) {
   min-height: 486px;
+}
+
+.bo-dashboard-shell > .newsletter-section {
+  grid-column: 1 / -1;
 }

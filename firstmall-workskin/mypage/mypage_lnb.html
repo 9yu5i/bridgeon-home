@@ -1,11 +1,14 @@
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
 @@ 마이페이지 LNB 공통 @@
 - 파일위치 : [스킨폴더]/mypage/mypage_lnb.html
-- 이 파일이 마이페이지 LNB 의 유일한 정의처입니다. 메뉴 항목/주소를
-  바꿀 때는 여기만 고치면 모든 페이지에 반영됩니다.
+- 이 파일이 마이페이지 LNB 의 서버 기준 정의처입니다. 메뉴 항목/주소를
+  바꿀 때는 아래 첫 화면용 스크립트 복사본도 함께 맞춥니다.
 - 각 페이지는 <aside class="bo-account-side" data-mypage-lnb></aside>
   자리표시자만 두고, trendypicker-mypage.js 가 이 파일에서
   #mypageLnbSource 안쪽을 읽어 넣습니다.
+- 첫 방문의 빈 사이드바를 막기 위해 trendypicker-mypage.js 가 동일한
+  메뉴 구조를 즉시 표시하고, 이 파일의 서버 응답으로 바로 갱신합니다.
+  메뉴 항목을 바꿀 때는 스크립트의 immediateMypageLnbMarkup 도 맞춥니다.
   (원본 스킨의 common/mypage_ui.js 가 #subpageLNB 에
    '../mypage/mypage_lnb #mypageLnbBasic' 을 load 하던 방식과 동일)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->

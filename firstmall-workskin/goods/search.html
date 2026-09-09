@@ -145,10 +145,6 @@ if (document.body) {
 					<span class="filter_title">FILTER<a href="#"><img src="../images/icon/icon-delete.png" alt=""></a></span>
 				</div>
 				{=showGoodsSearchFormLight()}
-				<div class="fixed_bottom">
-					<a href="#" onclick="resetParams();" class="selected_clear">Clear All</a>
-					<button class="btn_resp size_d color2">Show Results</button>
-				</div>
 			</aside>
 
 			<section class="bo-catalog-results listing-results catalog_right" aria-label="Product results">
@@ -204,7 +200,7 @@ if (document.body) {
 	<div class="wa_msg"></div>
 </div>
 
-<script src="/app/javascript/js/trendypicker-listing-cards.js"></script>
+<script src="/app/javascript/js/trendypicker-listing-cards.js?v=20260909"></script>
 <script src="/app/javascript/js/trendypicker-catalog.js?v=20260903-3"></script>
 <script type="text/javascript">
 $(function () {
@@ -225,6 +221,26 @@ $(function () {
 		});
 	});
 
+	/* Keep the visible sort dropdown in step with the sort actually applied.
+	   Deep links / reloads land with the real sort, but the custom <select>
+	   otherwise stays on its first option ("Best Selling"). Firstmall's checked
+	   sort radio is the source of truth; fall back to the URL param. */
+	function syncCatalogSortDropdown() {
+		var $sel = $("#catalog_filter");
+		if (!$sel.length) return;
+		var checked = document.querySelector(
+			"#filteredItemSorting li.item_order ul.list li label input:checked"
+		);
+		var sorting = checked
+			? checked.value
+			: new URLSearchParams(window.location.search).get("sorting");
+		if (sorting && $sel.find('option[value="' + sorting + '"]').length) {
+			$sel.val(sorting);
+		}
+	}
+	syncCatalogSortDropdown();
+	$(document).ajaxComplete(function () { syncCatalogSortDropdown(); });
+
 	$(document).on("click", ".catalog_filter .selected_item_area a.remove", function () {
 		var fi = $(this).parent().data("filteritem");
 		$("#searchFilterSelected .selected_item_area li").each(function () {
@@ -237,13 +253,6 @@ $(function () {
 	$(document).on("click", ".catalog_category, .catalog_filter", function () {
 		$(".catalog_filter > ul").remove();
 		$(".catalog_filter").append($(".search_filter_selected .selected_item_area").clone());
-	});
-
-	$(".category_filter_mo").on("click", function () {
-		$(".search_left").addClass("on");
-	});
-	$("#search_result_page .filter_title a, .fixed_bottom > button").on("click", function () {
-		$(".search_left").removeClass("on");
 	});
 
 	// 모바일 필터 재생성

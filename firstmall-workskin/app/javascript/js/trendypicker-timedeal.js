@@ -23,10 +23,6 @@
 		}
 	}
 
-	function padTime(value) {
-		return String(Math.max(0, value)).padStart(2, "0");
-	}
-
 	function getSkinImageBase() {
 		var link = document.querySelector('link[href*="/css/redesign/trendypicker-timedeal.css"]');
 		if (!link) return "/data/skin";
@@ -491,64 +487,16 @@
 		bindCartQuickview(card);
 	}
 
-	function parseBracketBrand(text) {
-		var match = String(text || "").match(/^\[([^\]]+)\]\s*([\s\S]*)$/);
-		if (!match) return null;
-		return {
-			brand: match[1].replace(/^\[|\]$/g, "").trim(),
-			name: String(match[2] || "").replace(/\s+/g, " ").trim(),
-		};
-	}
-
-	function takeTitleBrand(title) {
-		if (!title) return "";
-		var parsed = parseBracketBrand(textOf(title));
-		if (!parsed || !parsed.brand) return "";
-		title.textContent = parsed.name;
-		return parsed.brand;
-	}
-
 	function orderCardRows(card, info) {
-		var brand = info.querySelector(":scope > .listing-card-brand");
 		var nameArea = info.querySelector(".goods_name_area");
 		var price = info.querySelector(".goods_price_area, .listing-card-price");
 		var actions = card.querySelector(".listing-card-actions--desktop");
 		var cart = card.querySelector(".listing-card-cart");
 
-		if (brand) info.appendChild(brand);
 		if (nameArea) info.appendChild(nameArea);
 		if (price) info.appendChild(price);
 		if (actions) card.appendChild(actions);
 		if (cart) card.appendChild(cart);
-	}
-
-	function ensureBrandLine(card, info) {
-		var title = info.querySelector(".listing-card-title, .goods_name_area .name, .name");
-		var source =
-			info.querySelector(".goods_name_area .brand_name") ||
-			info.querySelector(".brand_name") ||
-			info.querySelector(".goods_brand_area .name") ||
-			info.querySelector(".goods_brand_area") ||
-			info.querySelector(".brand_name_area") ||
-			card.querySelector("a[href*='/goods/brand']");
-
-		var name = takeTitleBrand(title);
-		if (!name) {
-			name = textOf(source);
-			var parsed = parseBracketBrand(name);
-			if (parsed && parsed.brand) name = parsed.brand;
-		}
-		if (!name) return;
-
-		var brand = info.querySelector(":scope > .listing-card-brand");
-		if (!brand) {
-			brand = document.createElement("p");
-			brand.className = "listing-card-brand";
-			info.insertBefore(brand, info.firstElementChild);
-		}
-		brand.textContent = name;
-
-		if (source) source.classList.add("is-timedeal-brand-source");
 	}
 
 	function enhanceListingCards() {
@@ -594,7 +542,6 @@
 
 				var title = info.querySelector(".listing-card-title, .goods_name_area .name, .name");
 				if (title) title.classList.add("listing-card-title");
-				ensureBrandLine(card, info);
 
 				var priceArea = info.querySelector(".listing-card-price, .goods_price_area");
 				if (priceArea) {
@@ -618,311 +565,11 @@
 		});
 	}
 
-	function wireCategoryTabs() {
-		var root = document.querySelector(".timedeal-categories");
-		if (!root) return;
-
-		var activeCategory = "all";
-		var fallbackCodes = {
-			beauty: "0008",
-			"k-food": "0009",
-			lifestyle: "0010",
-			"k-pop": "0011",
-			"k-traditional": "0012"
-		};
-		var categoryMatchers = {
-			beauty: [
-				/\bbeauty\b/i,
-				/뷰티/,
-				/화장품/,
-				/skincare/i,
-				/스킨/,
-				/serum/i,
-				/세럼/,
-				/toner/i,
-				/토너/,
-				/cleanser/i,
-				/클렌/,
-				/makeup/i,
-				/메이크업/,
-				/ampoule/i,
-				/앰플/,
-				/moisturizer/i,
-				/sunscreen/i,
-				/선케어|선크림/,
-				/hair\s*care/i,
-				/body\s*care/i
-			],
-			"k-food": [/\bk[-\s]?food\b/i, /식품/, /푸드/, /snack/i, /라면/, /김치/, /sauce/i],
-			lifestyle: [/\blifestyle\b/i, /리빙/, /라이프/, /생활/, /\bliving\b/i],
-			"k-pop": [/\bk[-\s]?pop\b/i, /케이\s*팝/, /앨범/, /photocard/i, /굿즈/],
-			"k-traditional": [/\bk[-\s]?traditional\b/i, /전통/, /한복/, /hanbok/i]
-		};
-
-		function classifyLabel(text) {
-			var hay = String(text || "")
-				.replace(/\(\s*\d[\d,]*\s*\)/g, " ")
-				.replace(/\s+/g, " ")
-				.trim();
-			if (!hay) return "";
-			var key;
-			for (key in categoryMatchers) {
-				if (!Object.prototype.hasOwnProperty.call(categoryMatchers, key)) continue;
-				if (categoryMatchers[key].some(function (re) { return re.test(hay); })) return key;
-			}
-			return "";
-		}
-
-		var codePrefixToKey = {
-			"0008": "beauty",
-			"0009": "k-food",
-			"0010": "lifestyle",
-			"0011": "k-pop",
-			"0012": "k-traditional"
-		};
-
-		function normalizeLabel(text) {
-			return String(text || "")
-				.replace(/\(\s*\d[\d,]*\s*\)/g, " ")
-				.replace(/\s+/g, " ")
-				.trim()
-				.toLowerCase();
-		}
-
-		// Category tabs only cover top-level groups (Beauty, K-Food, ...), but
-		// each product card's own category text is a leaf sub-category
-		// ("Cheeks", "Toners", "Candy & Chocolate", ...) that rarely contains
-		// the top-level name itself — a keyword-guess regex list can't cover
-		// that vocabulary. Instead, read the site's own full category nav
-		// (every link has a code like 000800020003, whose first 4 digits are
-		// the top-level code) and build an exact leaf-label -> top-level map
-		// from it directly, so it stays correct as categories are added or
-		// renamed. Ambiguous labels reused under more than one top-level
-		// (e.g. "Kitchen" under both Lifestyle and K-Traditional) are left
-		// unmapped rather than guessed.
-		function headerCategoryCodes() {
-			var codes = { beauty: [], "k-food": [], lifestyle: [], "k-pop": [], "k-traditional": [] };
-			var labelMap = {};
-			var ambiguous = {};
-			var links = document.querySelectorAll("a[href*='/goods/catalog?code=']");
-			Array.prototype.forEach.call(links, function (link) {
-				var href = link.getAttribute("href") || "";
-				var match = href.match(/[?&]code=([^&]+)/i);
-				if (!match) return;
-				var code = decodeURIComponent(match[1]);
-				var key = codePrefixToKey[code.slice(0, 4)];
-				if (!key) return;
-
-				if (codes[key].indexOf(code) === -1) codes[key].push(code);
-
-				var label = normalizeLabel(link.textContent);
-				if (!label || ambiguous[label]) return;
-				if (labelMap[label] && labelMap[label] !== key) {
-					delete labelMap[label];
-					ambiguous[label] = true;
-					return;
-				}
-				labelMap[label] = key;
-			});
-			Object.keys(fallbackCodes).forEach(function (key) {
-				if (codes[key].indexOf(fallbackCodes[key]) === -1) {
-					codes[key].unshift(fallbackCodes[key]);
-				}
-			});
-			return { codes: codes, labelMap: labelMap };
-		}
-
-		var headerData = headerCategoryCodes();
-		var codeMap = headerData.codes;
-		var labelKeyMap = headerData.labelMap;
-
-		function shortestCode(key) {
-			var codes = (codeMap[key] || []).slice().sort(function (a, b) {
-				return a.length - b.length;
-			});
-			return codes[0] || fallbackCodes[key] || "";
-		}
-
-		function setActiveTab(key) {
-			activeCategory = key;
-			root.setAttribute("data-active-category", key);
-			Array.prototype.forEach.call(root.querySelectorAll(".timedeal-category"), function (tab) {
-				var active = (tab.getAttribute("data-timedeal-category") || "") === key;
-				tab.classList.toggle("is-active", active);
-				tab.setAttribute("aria-selected", active ? "true" : "false");
-			});
-		}
-
-		function cardCategoryText(card) {
-			var parts = [];
-			var area = card.querySelector(".goods_category_area, .cate, [data-category], [data-category-code]");
-			if (area) {
-				parts.push(
-					area.textContent || "",
-					area.getAttribute("data-category") || "",
-					area.getAttribute("data-category-code") || ""
-				);
-			}
-			parts.push(card.getAttribute("data-category") || "", card.getAttribute("data-category-code") || "");
-			Array.prototype.forEach.call(card.querySelectorAll("a[href*='/goods/catalog']"), function (link) {
-				parts.push(link.textContent || "", link.getAttribute("href") || "");
-			});
-			var title = card.querySelector(".listing-card-title, .goods_name_area, .name");
-			if (title) parts.push(title.textContent || "");
-			return parts.join(" ").replace(/\s+/g, " ").trim();
-		}
-
-		function cardCategoryLabel(card) {
-			var area = card.querySelector(".goods_category_area, .cate, [data-category], [data-category-code]");
-			return area ? normalizeLabel(area.textContent) : "";
-		}
-
-		function cardMatchesCategory(card, key) {
-			var label = cardCategoryLabel(card);
-			if (label && labelKeyMap[label]) return labelKeyMap[label] === key;
-
-			var hay = cardCategoryText(card);
-			if (classifyLabel(hay) === key) return true;
-			var matchers = categoryMatchers[key] || [];
-			if (matchers.some(function (re) { return re.test(hay); })) return true;
-			return (codeMap[key] || []).some(function (code) {
-				return code && hay.indexOf(code) !== -1;
-			});
-		}
-
-		function applyClientCategoryFilter(key) {
-			var cards = listingCards();
-			if (!cards.length) return;
-			Array.prototype.forEach.call(cards, function (card) {
-				if (key === "all") {
-					card.classList.remove("is-timedeal-cat-hidden");
-					return;
-				}
-				card.classList.toggle("is-timedeal-cat-hidden", !cardMatchesCategory(card, key));
-			});
-			syncCount();
-		}
-
-		function ensureCategoryInput() {
-			var form = document.getElementById("goodsSearchForm");
-			if (!form) return null;
-			var input = form.querySelector("input[name='category']");
-			if (!input) {
-				input = document.createElement("input");
-				input.type = "hidden";
-				input.name = "category";
-				form.appendChild(input);
-			}
-			return input;
-		}
-
-		function tryServerCategory(key) {
-			// Firstmall's set_classification() never actually re-filters results for
-			// searchMode=timedeal (its AJAX response is always null there) — it only
-			// updates the native breadcrumb/nav display. Real filtering always comes
-			// from applyClientCategoryFilter() below, called directly and immediately
-			// so there's no "flash of unfiltered cards" while waiting on a server
-			// response that was never going to change anything.
-			var code = key === "all" ? "" : shortestCode(key);
-			if (key !== "all" && !code) return;
-			var input = ensureCategoryInput();
-			if (!input) return;
-			input.value = code;
-			var page = document.querySelector("#goodsSearchForm input[name='page']");
-			if (page) page.value = "1";
-			if (typeof window.set_classification === "function") {
-				window.set_classification(code, "");
-			}
-		}
-
-		function currentPageNumber() {
-			var active = document.querySelector(".paging_navigation .on");
-			var page = active ? parseInt(active.textContent, 10) : NaN;
-			return page > 0 ? page : 1;
-		}
-
-		function activateCategory(key) {
-			setActiveTab(key);
-			tryServerCategory(key);
-
-			// Switching tabs (including back to "All Deals") should start from
-			// page 1 of that view instead of staying on whatever page number
-			// pagination happened to be at under the previous tab — otherwise
-			// "All Deals" looked like it was still showing the old category's
-			// page. observeProducts()'s MutationObserver re-applies the active
-			// filter once the fresh page 1 cards load.
-			if (currentPageNumber() !== 1 && typeof window.goodsSearchPage === "function") {
-				window.goodsSearchPage(1);
-				return;
-			}
-
-			applyClientCategoryFilter(key);
-		}
-
-		root.addEventListener("click", function (event) {
-			var button = event.target.closest(".timedeal-category");
-			if (!button || !root.contains(button)) return;
-			event.preventDefault();
-			event.stopPropagation();
-			activateCategory(button.getAttribute("data-timedeal-category") || "all");
-		});
-
-		root._reapplyCategoryFilter = function () {
-			applyClientCategoryFilter(activeCategory);
-		};
-
-		setActiveTab(activeCategory);
-	}
-
-	function msUntilNextBoundary() {
-		var now = new Date();
-		var next = new Date(now.getTime());
-		var hour = now.getHours();
-		if (hour < 12) {
-			next.setHours(12, 0, 0, 0);
-		} else {
-			next.setDate(next.getDate() + 1);
-			next.setHours(0, 0, 0, 0);
-		}
-		return Math.max(0, next.getTime() - now.getTime());
-	}
-
-	function startFallbackCountdown() {
-		var root = document.querySelector("[data-timedeal-countdown]");
-		if (!root) return;
-		if (root.getAttribute("data-timedeal-live") === "single") return;
-
-		var params = new URLSearchParams(window.location.search);
-		if (params.get("display_mode") === "single") {
-			root.setAttribute("data-timedeal-live", "single");
-			return;
-		}
-
-		var hoursEl = root.querySelector("[data-timedeal-hours]");
-		var minutesEl = root.querySelector("[data-timedeal-minutes]");
-		var secondsEl = root.querySelector("[data-timedeal-seconds]");
-		if (!hoursEl || !minutesEl || !secondsEl) return;
-
-		function tick() {
-			var remain = msUntilNextBoundary();
-			var totalSec = Math.floor(remain / 1000);
-			var hours = Math.floor(totalSec / 3600);
-			var minutes = Math.floor((totalSec % 3600) / 60);
-			var seconds = totalSec % 60;
-			hoursEl.textContent = padTime(hours);
-			minutesEl.textContent = padTime(minutes);
-			secondsEl.textContent = padTime(seconds);
-		}
-
-		tick();
-		window.setInterval(tick, 1000);
-	}
-
 	function centerActiveScheduleTab() {
 		var schedule = document.querySelector("[data-timedeal-schedule]");
 		if (!schedule) return;
 		var active = schedule.querySelector(".timedeal-schedule-tab.is-active");
-		if (!active || window.matchMedia("(min-width: 761px)").matches) return;
+		if (!active) return;
 		var left = active.offsetLeft - (schedule.clientWidth - active.clientWidth) / 2;
 		schedule.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
 	}
@@ -938,7 +585,6 @@
 			if (cats && typeof cats._reapplyCategoryFilter === "function") {
 				cats._reapplyCategoryFilter();
 			}
-			syncCount();
 			fillLastRow();
 		};
 
@@ -978,6 +624,87 @@
 		document.documentElement.classList.remove("overflow");
 	}
 
+	function enableThumbDrag(scrollEl, trackEl) {
+		if (!scrollEl || !trackEl) return;
+		var thumb = trackEl.querySelector(".timedeal-schedule-scrollbar-thumb");
+		if (!thumb) return;
+
+		var isDown = false;
+		var startX = 0;
+		var startScrollLeft = 0;
+
+		thumb.addEventListener("mousedown", function (e) {
+			if (e.button !== 0) return;
+			isDown = true;
+			startX = e.pageX;
+			startScrollLeft = scrollEl.scrollLeft;
+			thumb.classList.add("is-dragging");
+			e.preventDefault(); // don't let the browser start a text-selection drag
+		});
+
+		window.addEventListener("mouseup", function () {
+			if (!isDown) return;
+			isDown = false;
+			thumb.classList.remove("is-dragging");
+		});
+
+		var DRAG_SPEED = 1.6;
+
+		window.addEventListener("mousemove", function (e) {
+			if (!isDown) return;
+			var trackWidth = trackEl.clientWidth;
+			var scrollable = scrollEl.scrollWidth - scrollEl.clientWidth;
+			if (trackWidth <= 0 || scrollable <= 0) return;
+			var deltaPx = e.pageX - startX;
+			var scrollDelta = deltaPx * (scrollable / trackWidth) * DRAG_SPEED;
+			scrollEl.scrollLeft = startScrollLeft + scrollDelta;
+		});
+
+		// clicking the bare track (not the thumb) jumps toward that point — standard scrollbar behavior
+		trackEl.addEventListener("mousedown", function (e) {
+			if (e.target === thumb) return;
+			var trackRect = trackEl.getBoundingClientRect();
+			var clickRatio = (e.clientX - trackRect.left) / trackRect.width;
+			var scrollable = scrollEl.scrollWidth - scrollEl.clientWidth;
+			scrollEl.scrollLeft = clickRatio * scrollable;
+		});
+	}
+
+	function wireScrollIndicator(scrollEl, trackEl) {
+		if (!scrollEl || !trackEl) return;
+		const thumb = trackEl.querySelector('.timedeal-schedule-scrollbar-thumb');
+		if (!thumb) return;
+
+		function update() {
+			const scrollable = scrollEl.scrollWidth - scrollEl.clientWidth;
+			if (scrollable <= 1) {
+				trackEl.style.display = 'none'; // nothing to scroll — hide the bar entirely
+				return;
+			}
+			trackEl.style.display = '';
+			const ratio = scrollEl.clientWidth / scrollEl.scrollWidth;
+			const thumbWidthPct = Math.max(ratio * 100, 8); // floor so the thumb never disappears
+			const maxLeftPct = 100 - thumbWidthPct;
+			const scrollRatio = scrollEl.scrollLeft / scrollable;
+			thumb.style.width = thumbWidthPct + '%';
+			thumb.style.left = (scrollRatio * maxLeftPct) + '%';
+		}
+
+		scrollEl.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+		window.addEventListener('resize', update);
+		update();
+	}
+
+	function enableWheelScroll(el) {
+		if (!el) return;
+		el.addEventListener("wheel", function (e) {
+			if (el.scrollWidth <= el.clientWidth) return; // nothing to scroll, don't intercept
+			if (Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return; // already horizontal (trackpad swipe) — leave native behavior alone
+			e.preventDefault();
+			el.scrollLeft += e.deltaY;
+		}, { passive: false });
+	}
+
 	ready(function () {
 		unlockPageScroll();
 		if (window.MutationObserver) {
@@ -988,9 +715,13 @@
 			}).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
 		}
 		enhanceSortSelect();
-		wireCategoryTabs();
-		startFallbackCountdown();
 		centerActiveScheduleTab();
 		observeProducts();
+
+		var scheduleEl = document.querySelector(".timedeal-schedule");
+		var scheduleTrackEl = document.querySelector(".timedeal-schedule-scrollbar");
+		enableThumbDrag(scheduleEl, scheduleTrackEl);
+		wireScrollIndicator(scheduleEl, scheduleTrackEl);
+		enableWheelScroll(scheduleEl);
 	});
 })();

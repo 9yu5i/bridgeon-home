@@ -141,16 +141,51 @@
     return section;
   }
 
+  // Cache resolved brand-banner image URLs for the session so regroups (on
+  // sort / filter / page changes) and repeat visits don't re-fetch each
+  // brand's full page just to read one banner image.
+  let bannerCache = null;
+  function loadBannerCache() {
+    if (bannerCache) return bannerCache;
+    bannerCache = {};
+    try {
+      const raw = sessionStorage.getItem("tpNewBrandBanners");
+      if (raw) bannerCache = JSON.parse(raw) || {};
+    } catch (_e) {
+      bannerCache = {};
+    }
+    return bannerCache;
+  }
+  function saveBannerCache() {
+    try {
+      sessionStorage.setItem("tpNewBrandBanners", JSON.stringify(bannerCache));
+    } catch (_e) {}
+  }
+  function applyBanner(banner, src) {
+    if (!src) return;
+    banner.style.setProperty(
+      "--bo-new-banner-image",
+      `url("${String(src).replace(/"/g, '\\"')}")`
+    );
+    banner.classList.add("has-banner");
+  }
+
   function hydrateBannerImage(banner) {
     const code = banner.getAttribute("data-brand-code");
     if (!code) return Promise.resolve();
+
+    const cache = loadBannerCache();
+    if (Object.prototype.hasOwnProperty.call(cache, code)) {
+      applyBanner(banner, cache[code]);
+      return Promise.resolve();
+    }
 
     return fetch(`/goods/brand?code=${encodeURIComponent(code)}`, {
       credentials: "same-origin",
     })
       .then((response) => (response.ok ? response.text() : ""))
       .then((html) => {
-        if (!html) return;
+        if (!html) return; // request failed — don't cache, allow a later retry
         const doc = new DOMParser().parseFromString(html, "text/html");
         const img =
           doc.querySelector(".brand_top_area img.banner") ||
@@ -162,12 +197,9 @@
           typeof window.tpResolveBrandBanner === "function"
             ? window.tpResolveBrandBanner(code, rawSrc)
             : rawSrc;
-        if (!src) return;
-        banner.style.setProperty(
-          "--bo-new-banner-image",
-          `url("${String(src).replace(/"/g, '\\"')}")`
-        );
-        banner.classList.add("has-banner");
+        cache[code] = src || "";
+        saveBannerCache();
+        applyBanner(banner, src);
       })
       .catch(() => {});
   }
@@ -280,12 +312,18 @@
     );
     relocatePaging();
 
+    // Reveal as soon as the sections exist. Previously this waited for
+    // Promise.all of the per-brand banner fetches, so everything stayed at
+    // opacity:0 (new-scroll-reveal-pending) until every /goods/brand request
+    // resolved — making even the already-visible hero appear far too late.
+    // Banners now hydrate in the background and fade in on their own
+    // (.has-banner), independent of the reveal.
+    initScrollReveal();
+
     const banners = Array.from(
       sectionsRoot.querySelectorAll(".bo-new-brand-banner[data-brand-code]")
     );
-    Promise.all(banners.map(hydrateBannerImage)).finally(() => {
-      initScrollReveal();
-    });
+    banners.forEach(hydrateBannerImage);
     return true;
   }
 

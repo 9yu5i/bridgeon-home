@@ -18,7 +18,6 @@
 
 <style type="text/css">
 	#layout_body { max-width:100%; padding-left:0; padding-right:0; }
-	/*#layout_body div.slide-wrap, */.main_channel {overflow:hidden;}
     @media only screen and (max-width:1023px) {
         #wrap {overflow:hidden;}
     }
@@ -154,26 +153,6 @@
         </div>
         <div class="swiper-pagination-way"></div>
     </div>
-    <h2 class="main_title dn">Short Form</h2>
-    <div class="main_short dn designDisplay">
-        <div class="main_video">
-            <ul class="swiper-wrapper" navigation="true">
-                <li class="swiper-slide"><video poster="../images/main/Reels_01_thumbnail.png" src="/data/skin/responsive_food_mealkit_gl/images/Reels_01.mp4" muted loop controls></video></li>
-                <li class="swiper-slide"><video poster="../images/main/Reels_02_thumbnail.png" src="/data/skin/responsive_food_mealkit_gl/images/Reels_02.mp4" muted loop controls></video></li>
-                <li class="swiper-slide"><video poster="../images/main/Reels_03_thumbnail.png" src="/data/skin/responsive_food_mealkit_gl/images/Reels_03.mp4" muted loop controls></video></li>
-                <li class="swiper-slide"><video poster="../images/main/Reels_04_thumbnail.png" src="/data/skin/responsive_food_mealkit_gl/images/Reels_04.mp4" muted loop controls></video></li>
-            </ul>
-        </div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-    </div>
-        <!--
-        <li class="swiper-slide"><iframe src="https://www.youtube.com/embed/zyfTFRuveHQ?controls=0" title="Asian Beauty products , Makeup Tutorial Cute Look, Skincare || Makeup Artists #shorts" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;mute;" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><div class="t"></div><div class="b"></div></li>
-        <li class="swiper-slide"><iframe src="https://www.youtube.com/embed/qTrzF3xHUDU?controls=0" title="Asian Beauty products , Makeup Tutorial Cute Look, Skincare || Makeup Artists #shorts" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><div class="t"></div><div class="b"></div></li>
-        <li class="swiper-slide"><iframe src="https://www.youtube.com/embed/u7AiSGBnEbA?controls=0" title="Asian Beauty products , Makeup Tutorial Cute Look, Skincare || Makeup Artists #shorts" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><div class="t"></div><div class="b"></div></li>
-        <li class="swiper-slide"><iframe src="https://www.youtube.com/embed/y4ZWM3WoX_I?controls=0" title="Asian Beauty products , Makeup Tutorial Cute Look, Skincare || Makeup Artists #shorts" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><div class="t"></div><div class="b"></div></li>
-        -->
-
     <!-- Real Trend Shortform Section ( 파일위치 : [스킨폴더]/shortform/main_list.html ) -->
     <div>
         {=showMainPageShortformSection()}
@@ -331,13 +310,6 @@
         </div>
     </section>
 
-    <!-- old bestsellers section -->
-    <h2 class="main_title dn" style="margin-top: 72px;">BEST Sellers</h2>
-    <div class="main_best_tab show_display_col4 best_seller dn" data-effect="opacity">
-        {=showDesignDisplay(10371)}
-    </div>
-        <!--<iframe id="lazy_index" frameborder="0" allowfullscreen></iframe>-->
-
     <!-- Editorial Section ( 파일위치 : [스킨폴더]/editor/editorial_section.html ) -->
     <div>
 	{=showMainPageEditorial()}
@@ -359,14 +331,6 @@
             title="Latest TrendyPicker magazine stories"
         ></iframe>
     </section>
-
-    <h2 class="main_title hide">Trendy Picker YouTube Channel<a class="right_link" href="#">Subscribe to Youtube</a></h2>
-    <div class="main_channel hide">
-        <ul class="swiper-wrapper" navigation="true">
-            <li><a href="https://www.youtube.com/" target="_blank"><img src="../images/main/youtube-03.jpg" alt=""/></a><span>Mad About Skin | BE PLAIN - Cicaful Ampoule - 30ml</span></li>
-        </ul>
-        <a class="center_link" href="#">Subscribe to Youtube</a>
-    </div>
 
     <!-- Customer Real Picks ( 파일위치 : [스킨폴더]/board/goods_review/_goods_review/main_page_reviews.html ) -->
     <div>
@@ -524,20 +488,6 @@ function swiper_control(slider, target){
     target.after(play);
 }
 
-function resizeIframe(iframeId) {
-    var iframe = document.getElementById(iframeId);
-    if (!iframe) return;
-    try {
-        var doc = iframe.contentWindow.document;
-        var h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
-        if (h > 0) {
-            iframe.style.height = h + 'px';
-        }
-    } catch(e) {
-        console.warn('resize failed for', iframeId, e);
-    }
-}
-
 function initMainHeroSlider() {
     var mobileTabletHero = document.documentElement.clientWidth <= 1120;
     var mainSlideObj = mobileTabletHero ? "#main-slide-mo" : "#main-slide";
@@ -595,62 +545,7 @@ function initMainHeroSlider() {
 })(0);
 
 $(function() {
-    // 반응형 변경
-    var mobileTabletHero = document.documentElement.clientWidth <= 1120;
-    var view = mobileTabletHero ? 2.2 : 4;
-    var spaceBetween = mobileTabletHero ? 8 : 20;
-    
-    var swiper = new Swiper(".main_video", {
-        slidesPerView: view,
-        spaceBetween: spaceBetween,
-        loop: false,
-        mousewheel: false,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-    });
     if($(window).width() < 1023){
-        var best_seller_swiper;
-        var best_seller_slide = function(wrap){
-            if(best_seller_swiper){
-                best_seller_swiper.destroy();
-            }  
-            $(".best_seller").find('.swiper-pagination').remove();
-            $(".best_seller").find('.swiper-notification').remove();
-            wrap.find('.displayTabContentsContainerBox ul').addClass('swiper-wrapper');
-            wrap.find('.displayTabContentsContainerBox ul').after('<div class="swiper-pagination swiper-pagination-best"></div>');
-            wrap.find('.displayTabContentsContainerBox ul > li').addClass('swiper-slide');
-            best_seller_swiper = new Swiper(wrap.find('.displayTabContentsContainerBox'), {
-                slidesPerView: 2,
-                grabCursor: false,
-                loop: false,
-                spaceBetween: 0,
-                pagination: {
-                    el: '.swiper-pagination-best',
-                    type: "bullets",
-                    dynamicBullets: true,
-                    dynamicMainBullets: 5,
-                },
-            });
-        };
-    
-        $(".best_seller .displayTabContainer > li").on("click", function(){
-            var best_seller = $(this).closest(".best_seller").find('.displayTabContentsContainerWrap.active');
-            setTimeout(function(){
-                best_seller_slide(best_seller);
-            },500);
-        });
-        var best_seller = $(".best_seller").find(".displayTabContentsContainerWrap").eq(0);
-        best_seller_slide(best_seller);
-        
-        $('.main_channel ul > li').addClass('swiper-slide');
-        var youtuveSwiper = new Swiper('.main_channel', {
-            slidesPerView: 1.4,
-            spaceBetween: 20,
-            loop: true,
-            mousewheel: true,
-        });
         $('ul.displayTabType1').addClass('swiper-wrapper');
         $('ul.displayTabType1 li').addClass('swiper-slide');
         var wrap_title = [];
@@ -677,18 +572,5 @@ $(function() {
     const way_target = document.querySelector('.swiper-pagination-way');
     swiper_control(gridSwiper, way_target);
 
-    $(".main_video .swiper-slide iframe").on("click", function(){
-        $(this).find("iframe").style("pointer-events:initial;");
-        alert();
-    });
-
-    $('#shortform_frame, #customer-reviews_frame').on('load', function () {
-        var id = this.id;
-        resizeIframe(id); // initial attempt
-
-        // re-measure a few times as async content (Swiper, lazyload) settles
-        setTimeout(function(){ resizeIframe(id); }, 300);
-        setTimeout(function(){ resizeIframe(id); }, 1000);
-    });
 });
 </script>

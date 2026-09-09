@@ -191,25 +191,11 @@
   }
 
   function syncProductDiscount() {
-    var total = 0;
-    var rows = document.querySelectorAll("#orderPaymentLayout li.cart_goods");
-    Array.prototype.forEach.call(rows, function (row) {
-      var compare = parseMoney(row.getAttribute("data-cart-unit-compare"));
-      var unit = parseMoney(row.getAttribute("data-cart-unit-price"));
-      var ea = parseInt(row.getAttribute("data-cart-ea"), 10) || 0;
-      if (compare > unit && ea > 0) {
-        total += (compare - unit) * ea;
-        return;
-      }
-      var del = row.querySelector(".checkout-list-compare");
-      var sale = row.querySelector(".total_p");
-      if (!del || !sale) return;
-      var compareLine = parseMoney(del.textContent);
-      var saleLine = parseMoney(sale.textContent);
-      if (compareLine > saleLine) total += compareLine - saleLine;
-    });
-
+    var total = parseMoney(
+      textOf(document.querySelector(".checkout-summary-discount .total_sales_price"))
+    );
     total = Math.round(total * 100) / 100;
+
     var discountRow = document.querySelector(".checkout-summary-discount");
     var discountEl = document.getElementById("checkoutProductDiscount");
     if (discountEl) {
@@ -595,7 +581,6 @@
 
     var promoAmt = parseMoney(textOf(promoSrc));
     var couponAmt = parseMoney(textOf(couponSrc));
-    if (!couponAmt && coupon && coupon.sale) couponAmt = parseMoney(coupon.sale);
 
     if (promoLabel) {
       promoLabel.textContent = promoCode ? "Promo code (" + promoCode + ")" : "Promo code";
@@ -622,9 +607,18 @@
   function applyCartCoupon() {
     var coupon = readCartCoupon();
     if (!coupon || !coupon.id) return;
-    var download = document.getElementById("download_seq");
-    if (!download) return;
-    if (!download.value) download.value = String(coupon.id);
+    var inputs = document.querySelectorAll("input[name^='coupon_download']");
+    if (!inputs.length) return;
+    var changed = false;
+    inputs.forEach(function (input) {
+      if (input.value !== String(coupon.id)) {
+        input.value = String(coupon.id);
+        changed = true;
+      }
+    });
+    if (changed && typeof window.order_price_calculate === "function") {
+      window.order_price_calculate();
+    }
   }
 
   function paintShippingFromSelectedMethod() {

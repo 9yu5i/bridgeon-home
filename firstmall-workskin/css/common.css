@@ -4091,12 +4091,8 @@ body.page-membership .resp_wrap {
 .searched_item_display .item_info_area .goods_name_area .brand_name { text-transform:uppercase; color:#697ba4; }
 .searched_item_display .item_info_area .goods_name_area .brand_name:before { display:inline-block; margin-right:2px; content:'['; color:#aaa; }
 .searched_item_display .item_info_area .goods_name_area .brand_name:after { display:inline-block; margin-left:2px; content:' ]'; color:#aaa; }
-.searched_item_display .item_info_area .goods_name_area a:hover { text-decoration:underline; }
 .searched_item_display .item_info_area .goods_desc_area>a {  }
 .searched_item_display .item_info_area .goods_price_area>span { display:inline-block; padding-right:6px; }
-.searched_item_display .item_info_area .goods_price_area .sale_price { color:#333; }
-.searched_item_display .item_info_area .goods_price_area .sale_price .num { font-size:18px; font-weight:500; letter-spacing:-1px; }
-.searched_item_display .item_info_area .goods_price_area .consumer_price { text-decoration:line-through; color:#aaa; }
 .searched_item_display .item_info_area .goods_price_area .discount_rate { color:#ed3347; padding-right:0; }
 .searched_item_display .item_info_area .goods_price_area .discount_rate .num { font-size:18px; font-weight:500; letter-spacing:-1px; }
 .searched_item_display .item_info_area .goods_price_area .discount_rate:after { display:inline-block; content:'↓'; font-size:11px; position:relative; left:-2px; top:-1px; }

@@ -129,6 +129,19 @@ presentation only and preserves native board collections, inquiry actions, and p
 Server-runtime Firstmall HTML is validated separately by
 `tools/check-firstmall-workskin.mjs`.
 
+The shared My Account sidebar remains server-owned by `mypage/mypage_lnb.html` and is hydrated by
+`app/javascript/js/trendypicker-mypage.js`. On a cache-free first visit, that script paints a
+session-aware copy synchronously and then replaces it with the server response, so the desktop
+sidebar does not wait for a second request before appearing. The sidebar is structural navigation
+and is excluded from the dashboard reveal animation. Keep `immediateMypageLnbMarkup` synchronized
+when the server-owned menu entries change. Dashboard profile and card reveals use
+`IntersectionObserver`: cards in the first viewport enter in sequence, while lower cards reveal
+only when they reach the viewport.
+The dashboard profile reads the current tier from `member.current_level`, uses Firstmall's
+`member.next_level_percent` for the progress bar, and switches to a completed state when no next
+tier exists. Silver, Gold, Black, and Platinum names receive distinct badge treatments; unknown
+or newly configured tier names retain the default badge style.
+
 Firstmall goods-display templates live outside the skin at `/data/design_list/`. Their upload
 sources are mirrored under `firstmall-workskin/design_list/`: `listing_style_basic.html`,
 `listing_style_discount.html`, and `listing_style_timedeal_timer.html` are separate styles that

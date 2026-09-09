@@ -112,6 +112,7 @@
 :is(.tp-listing-grid, .searched_item_display) .listing-card-price del {
   color: #8f86a0;
   font-size: 13px;
+  margin-left: 8px;
 }
 
 :is(.tp-listing-grid, .searched_item_display) .discount_rate,
@@ -593,6 +594,15 @@
   letter-spacing: 0.01em;
   text-align: center;
   white-space: nowrap;
+}
+
+/* On the Best grid a ranking number (.bo-best-rank) sits in the same top-left
+   corner, so shift the "on sale now" deal badge to the right of it. Only cards
+   that actually have a rank number are offset. */
+:is(.tp-listing-grid, .searched_item_display)
+  .listing-card-media:has(.bo-best-rank)
+  .timedeal-card-deal {
+  left: 48px;
 }
 
 /* ==========================================================

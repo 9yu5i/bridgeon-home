@@ -310,6 +310,7 @@
     return (
       /\/data\/skin\//i.test(u) ||
       /\/images\/(icon|common)\//i.test(u) ||
+      /color_swatch|[\/_]swatch/i.test(u) ||
       /icon[-_](cart|wish|zzim|share|heart)|\/sns_icon|snslogo|favicon|\/logo|logo\./i.test(u)
     );
   }

@@ -801,7 +801,6 @@ input[type=checkbox]:checked::after,
 .filter_select {border:none;float:right;color:#1D1D1D;font-size:14px;height: 24px;}
 .searched_item_display>ul>li {position:relative;padding:40px 0 0 20px;}
 .searched_item_display>ul>li .goods_icon_area {position:absolute;right:12px;top:24px;}
-.searched_item_display .item_info_area {text-align:center;padding-top:0;}
 .searched_item_display .item_info_area .goods_name_area a span {font-size:14px;color:#1D1D1D;line-height:20px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-all; height: 40px;}
 .searched_item_display .goods_list_style4 .item_info_area .goods_price_area {line-height:20px;padding-bottom:8px;padding-top:12px;}
 .searched_item_display .goods_list_style4 .item_info_area .goods_price_area .consumer_price {display:block;color:#8E8E8E;font-size:14px;font-weight:normal;}

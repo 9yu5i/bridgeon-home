@@ -5,7 +5,7 @@
 - Do not reuse goods_list_style5
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/design_list/listing-cards-style.css" />
+<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/design_list/listing-cards-style.css?v=20260909-2" />
 
 
 <!--{ @ record }-->
@@ -123,7 +123,7 @@
 		</div>
 
 		<div class="listing-card-actions listing-card-actions--desktop">
-			<button type="button" aria-label="Add to cart" onclick="displayAddToCartQuickview2(this, {= .goods_seq}, event)"></button>
+			<button type="button" aria-label="Add to cart" onclick="displayAddToCartQuickview(this, {= .goods_seq}, event)"></button>
 			<button type="button" class="listing-card-wish-inline" aria-label="Add to wishlist" aria-pressed="{? .wish == 1}true{:}false{/}" onclick="display_goods_zzim(this, {= .goods_seq})">
 				<img src="/data/skin/responsive_food_mealkit_gl/images/listing/wish_pink.png"
 					onerror="this.onerror=null; if('{decorations.image_zzim}') this.src='/data/icon/goodsdisplay/zzim/{decorations.image_zzim}';"

@@ -198,6 +198,39 @@
   const mypageLnbUrl = "/mypage/mypage_lnb";
   const mypageLnbCacheKey = "tp-mypage-lnb-v1";
 
+  const immediateMypageLnbMarkup = () => {
+    const isLoggedIn = Boolean(
+      document.querySelector('#layout_header a[href^="/login_process/logout"]'),
+    );
+    const sessionLink = isLoggedIn
+      ? '<a href="/login_process/logout">Log Out</a>'
+      : '<a href="/member/login">Log In</a>';
+
+    return `
+      <div id="mypageLnbSource">
+        <nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+          <ul class="lnb_sub">
+            <li><a href="/mypage/dashboard">My Dashboard</a></li>
+            <li><a href="/mypage/myinfo">Profile</a></li>
+            <li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+            <li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+            <li><a href="/mypage/wish">Wishlist</a></li>
+            <li><a href="/mypage/coupon">Coupons</a></li>
+            <li><a href="/mypage/saved_posts">Saved posts</a></li>
+            <li><a href="/mypage/membership">Membership</a></li>
+            <li><a href="/mypage/emoney">Points</a></li>
+            <li><a href="/service/cs">Help Center</a></li>
+            <li>${sessionLink}</li>
+          </ul>
+        </nav>
+        <article class="bo-invite">
+          <h2>Invite Friends<br>&amp; Get Rewards!</h2>
+          <p>Share the love.<br>Earn exclusive rewards together.</p>
+          <a href="/mypage/myfbrecommend">INVITE NOW</a>
+        </article>
+      </div>`;
+  };
+
   // Help Center owns every /service and /board page plus the Q&A screens;
   // this mirrors the active item each page hard-coded before.
   const helpCenterPaths = /^\/(?:service|board)(?:\/|$)|^\/mypage\/myqna/;
@@ -260,9 +293,13 @@
       // Continue with the network request when session storage is unavailable.
     }
 
-    // Paint the cached menu first so the sidebar does not arrive late, then
-    // revalidate below.
+    // The menu is structural navigation, so never leave its desktop column
+    // empty while this first network request is in flight. A session-aware
+    // local copy paints synchronously on the first visit; the fetched source
+    // below remains authoritative and refreshes it immediately afterward.
+    const initialMarkup = cached || immediateMypageLnbMarkup();
     const paintedFromCache = Boolean(cached) && renderMypageLnb(side, cached);
+    if (!paintedFromCache) renderMypageLnb(side, initialMarkup);
 
     try {
       const response = await fetch(mypageLnbUrl, {
@@ -289,51 +326,81 @@
   hydrateMypageLnb();
 
   const initDashboardReveal = () => {
+    const dashboard = document.querySelector(".bo-dashboard-shell");
+    if (!dashboard) return;
+
     const revealTargets = Array.from(
       new Set(
         [
-          document.querySelector(".bo-account-side"),
-          document.querySelector(".bo-profile"),
-          ...document.querySelectorAll(
+          dashboard.querySelector(".bo-profile"),
+          ...dashboard.querySelectorAll(
             ".bo-mypage > .bo-card, .bo-bottom-grid .bo-card, .bo-mobile-card, .bo-mobile-invite",
           ),
-          document.querySelector(".bo-newsletter.bo-scroll-reveal"),
+          dashboard.querySelector(".bo-newsletter.bo-scroll-reveal"),
         ].filter(Boolean),
       ),
     );
 
     if (!revealTargets.length) return;
 
-    revealTargets.forEach((target) => {
+    const visibleTargets = revealTargets.filter((target) => target.getClientRects().length > 0);
+    const hiddenLayoutTargets = revealTargets.filter((target) => !visibleTargets.includes(target));
+
+    hiddenLayoutTargets.forEach((target) => target.classList.add("is-inview"));
+
+    visibleTargets.forEach((target, index) => {
       if (!target.classList.contains("bo-scroll-reveal")) {
         target.classList.add("bo-page-reveal");
       }
+      target.style.setProperty("--bo-reveal-delay", `${Math.min(index, 4) * 55}ms`);
     });
+
+    // Commit the hidden state before adding is-inview. Without this layout read,
+    // a fast browser can batch both class changes into one paint and skip the
+    // entrance transition entirely.
+    dashboard.getBoundingClientRect();
 
     const showRevealTarget = (target) => target.classList.add("is-inview");
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      revealTargets.forEach(showRevealTarget);
+      visibleTargets.forEach(showRevealTarget);
       return;
     }
 
-    const revealAll = () => revealTargets.forEach(showRevealTarget);
+    let revealStarted = false;
+    const startRevealObserver = () => {
+      if (revealStarted) return;
+      revealStarted = true;
 
-    // A single rAF isn't reliable here: if the browser hasn't painted
-    // between adding .bo-page-reveal (opacity:0) and adding .is-inview
-    // (opacity:1), it can collapse both into one paint and skip the CSS
-    // transition entirely — which is exactly why the fade stopped playing
-    // when this was simplified to one rAF. Nesting two rAFs guarantees an
-    // actual paint of the opacity:0 state happens first. This is still
-    // fast (~1 frame, not the old 900ms failsafe) and the fade itself is
-    // now short (0.35s).
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(revealAll);
-    });
+      if (!("IntersectionObserver" in window)) {
+        visibleTargets.forEach(showRevealTarget);
+        return;
+      }
 
-    // Safety net in case rAF never fires (e.g. a backgrounded tab) —
-    // short, not the old 900ms.
-    window.setTimeout(revealAll, 300);
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            showRevealTarget(entry.target);
+            observer.unobserve(entry.target);
+          });
+        },
+        {
+          threshold: 0.08,
+          rootMargin: "0px 0px -6% 0px",
+        },
+      );
+
+      visibleTargets.forEach((target) => observer.observe(target));
+    };
+
+    // Visible cards enter in sequence, while cards below the fold stay hidden
+    // until the shopper actually scrolls them into the viewport.
+    window.requestAnimationFrame(startRevealObserver);
+
+    // A backgrounded tab may pause rAF. Attach the same observer when its
+    // timer is allowed to run instead of revealing below-fold cards early.
+    window.setTimeout(startRevealObserver, 300);
   };
 
   initDashboardReveal();
