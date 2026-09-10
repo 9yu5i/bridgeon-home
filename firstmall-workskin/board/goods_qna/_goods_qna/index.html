@@ -1,0 +1,373 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 상품문의 List @@
+- 파일위치 : [스킨폴더]/board/goods_qna/_goods_qna/index.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<style>
+<!--{? _GET.iframe}-->
+#layout_body {padding:0;margin-bottom:80px;}
+.subpage_wrap .subpage_container {padding-top:0;}
+@media only screen and (max-width:1023px) {
+    #layout_body {padding:0;margin-bottom:20px;}
+}
+<!--{/}-->
+.bbs_bottom_wrap {margin:0;min-height:0;}
+
+:root {
+  --product-purple: var(--purple, #7b3fe4);
+}
+
+.product-qa {
+  max-width: 100%;
+  color: #0f0c14;
+}
+
+.product-qa h3 {
+  margin: 0 0 clamp(22px, 1.563vw, 30px);
+  font-size: clamp(18px, 1.25vw, 24px);
+  line-height: 1;
+  font-weight: 700;
+}
+
+.product-qa-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(18px, 1.667vw, 32px);
+  margin-bottom: clamp(20px, 1.563vw, 30px);
+}
+
+.product-qa-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(180px, 12.5vw, 242px);
+  height: clamp(40px, 2.917vw, 48px);
+  padding: 0 clamp(16px, 1.667vw, 32px);
+  border: 1px solid var(--product-purple);
+  border-radius: 8px;
+  color: #0f0c14;
+  background: #fff;
+  font-size: clamp(12px, 2.917vw, 14px);
+  line-height: 1;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.product-qa-action:hover,
+.product-qa-action:focus-visible {
+  color: #fff;
+  background: var(--product-purple);
+}
+
+.product-qa-list {
+  border-top: 2px solid #ded4ee;
+}
+
+.product-qa-item {
+  border-bottom: 2px solid #ded4ee;
+}
+
+.product-qa-question {
+  display: grid;
+  width: 100%;
+  min-height: clamp(120px, 7.292vw, 140px);
+  padding: clamp(24px, 1.875vw, 36px) clamp(8px, 0.625vw, 12px);
+  border: 0;
+  box-sizing: border-box;
+  color: #0f0c14;
+  background: transparent;
+  text-align: left;
+}
+
+button.product-qa-question {
+  cursor: pointer;
+}
+
+.product-qa-question:focus-visible {
+  outline: 2px solid var(--product-purple);
+  outline-offset: -2px;
+}
+
+.product-qa-status {
+  margin-bottom: clamp(10px, 0.729vw, 14px);
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 600;
+}
+
+.product-qa-title {
+  margin-bottom: clamp(16px, 1.042vw, 20px);
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 300;
+}
+
+.product-qa-meta {
+  color: #0f0c14;
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 400;
+}
+
+.product-qa-meta b {
+  margin: 0 10px;
+  font-weight: 500;
+}
+
+.product-qa-answer {
+  margin: 0 0 clamp(26px, 1.979vw, 38px);
+  padding: clamp(22px, 1.667vw, 32px) clamp(24px, 1.667vw, 32px);
+  border-radius: 9px;
+  background: #fff;
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 400;
+}
+
+.product-qa-answer p,
+.product-qa-answer time {
+  display: block;
+  max-width: none;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  margin: 0 0 clamp(18px, 1.354vw, 26px);
+}
+
+.product-qa-answer p:last-of-type {
+  margin-bottom: clamp(18px, 1.354vw, 26px);
+}
+
+.product-qa-answer time {
+  margin-bottom: 0;
+}
+
+.product-qa-item[hidden] {
+  display: none;
+}
+
+.product-qa-more-wrap {
+  margin-top: clamp(44px, 3.333vw, 64px);
+}
+
+/* The Q&A renders inside a ~620px iframe, so a 760px breakpoint would stack the
+   action buttons even on desktop. Stack only on real mobile (<=520px); above
+   that the base flex row keeps them side by side in one row. */
+@media (max-width: 520px) {
+  .product-qa-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .product-qa-action {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 760px) {
+  .product-qa {
+    padding: 0;
+  }
+
+  .product-qa-question {
+    min-height: 112px;
+    padding: 22px 0;
+  }
+
+  .product-qa-answer {
+    padding: 18px;
+    font-size: 14px;
+  }
+
+  .product-qa-more-wrap {
+    margin-top: 34px;
+    width: 100vw;
+  }
+
+  .product-qa-status {
+    font-size: 15px;
+  }
+
+  .product-qa-title {
+    font-size: 15px;
+  }
+
+  .product-qa-meta {
+    font-size: 13px;
+  }
+
+  .no_data_area2 {
+    width: 100vw
+  }
+}
+
+.product-reviews-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(24px, 2.083vw, 36px);
+}
+.product-reviews-more-wrap[hidden] {
+  display: none;
+}
+.product-qa-more-wrap {
+  margin-top: clamp(44px, 3.333vw, 64px);
+}
+.product-reviews-more {
+  min-width: 120px;
+  height: 40px;
+  padding: 0 22px;
+  border: 1px solid rgba(123, 63, 228, 0.28);
+  border-radius: 999px;
+  color: var(--product-purple);
+  background: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+}
+.product-reviews-more:hover,
+.product-reviews-more:focus-visible {
+  color: #fff;
+  border-color: var(--product-purple);
+  background: var(--product-purple);
+  outline: none;
+}
+
+.product-qa-answer strong {
+  margin-right: 6px;
+  color: var(--product-purple);
+  font-weight: 700;
+}
+
+.product-qa-private-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 10px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #f1eef7;
+  color: #6d6678;
+  font-size: 12px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.product-qa-answer-private {
+  margin: 0;
+  color: #6d6678;
+  font-style: italic;
+}
+</style>
+
+
+<!--{? _GET.id == 'goods_qna' && !_GET.quickview}-->
+<section class="product-qa" aria-label="Product Q&A">
+  <h3>Q&amp;A</h3>
+  <div class="product-qa-actions">
+    <button type="button" class="product-qa-action product-inquiry-open">Product Inquiry</button>
+    <button type="button" class="product-qa-action product-qa-shipping-open">Shipping, Returns &amp; Exchanges</button>
+  </div>
+
+  <!--{? loop}-->
+  <div class="product-qa-list" id="qa_list">
+    <!--{@ loop}-->
+    <article class="product-qa-item">
+      <!--{?.reply_state == 'complete'}-->
+      <button type="button" class="product-qa-question" aria-expanded="false" aria-controls="product-qa-answer-{.seq}">
+        <span class="product-qa-status is-complete">
+          Answered
+          <!--{? .iconhidden}--><span class="product-qa-private-badge">🔒 Private</span><!--{/}-->
+        </span>
+        <span class="product-qa-title">{.subject_real}</span>
+        <span class="product-qa-meta">{.name} <b aria-hidden="true">|</b> {=date('m.d.Y', strtotime(.date))}</span>
+      </button>
+      <div class="product-qa-answer" id="product-qa-answer-{.seq}" hidden>
+        <!--{? .iconhidden}-->
+        <p class="product-qa-answer-private">🔒 This is a private question — only the author and our team can view its contents.</p>
+        <!--{:}-->
+        <p class="product-qa-answer-question"><strong>Q.</strong> {=nl2br(strip_tags(.contents))}</p>
+        <p class="product-qa-answer-reply"><strong>A.</strong> {=nl2br(strip_tags(.re_contents_real))}</p>
+        <time datetime="{.re_date}">{=date('m.d.Y', strtotime(.re_date))}</time>
+        <!--{/}-->
+      </div>
+      <!--{:}-->
+      <div class="product-qa-question product-qa-question-static">
+        <span class="product-qa-status is-standby">
+          Pending
+          <!--{? .iconhidden}--><span class="product-qa-private-badge">🔒 Private</span><!--{/}-->
+        </span>
+        <span class="product-qa-title">{.subject_real}</span>
+        <span class="product-qa-meta">{.name} <b aria-hidden="true">|</b> {=date('m.d.Y', strtotime(.date))}</span>
+      </div>
+      <!--{/}-->
+    </article>
+    <!--{/}-->
+  </div>
+  <!--{:}-->
+  <div class="no_data_area2">Feel free to ask if you have any questions.</div>
+  <!--{/}-->
+
+  <div class="product-reviews-more-wrap product-qa-more-wrap" id="qa_more_wrap" hidden>
+    <button type="button" class="product-reviews-more product-qa-more" id="qa_more_btn" data-qa-more>More</button>
+  </div>
+</section>
+<!--{/}-->
+<script>
+(function () {
+  var list = document.getElementById('qa_list');
+  var moreWrap = document.getElementById('qa_more_wrap');
+  var moreBtn = document.getElementById('qa_more_btn');
+  if (list && moreWrap && moreBtn) {
+    var PAGE_SIZE = 3;
+    var items = Array.prototype.slice.call(list.querySelectorAll('.product-qa-item'));
+    var visibleCount = 0;
+    function reveal() {
+      var next = items.slice(visibleCount, visibleCount + PAGE_SIZE);
+      for (var i = 0; i < next.length; i++) next[i].hidden = false;
+      visibleCount += next.length;
+      moreWrap.hidden = visibleCount >= items.length;
+      if (window.parent && typeof window.parent.syncQaFrameHeight === 'function') {
+        window.parent.syncQaFrameHeight();
+      }
+    }
+    for (var i = 0; i < items.length; i++) items[i].hidden = true;
+    reveal();
+    moreBtn.addEventListener('click', reveal);
+  }
+
+  var questions = list ? list.querySelectorAll('.product-qa-question[aria-controls]') : [];
+  for (var j = 0; j < questions.length; j++) {
+    questions[j].addEventListener('click', function () {
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      var answer = document.getElementById(this.getAttribute('aria-controls'));
+      if (answer) answer.hidden = expanded;
+      if (window.parent && typeof window.parent.syncQaFrameHeight === 'function') {
+        window.parent.syncQaFrameHeight();
+      }
+    });
+  }
+
+var inquiryBtn = document.querySelector('.product-inquiry-open');
+if (inquiryBtn) {
+  inquiryBtn.addEventListener('click', function () {
+    if (window.parent && typeof window.parent.openProductInquiryDialog === 'function') {
+      window.parent.openProductInquiryDialog();
+    }
+  });
+}
+
+var shippingBtn = document.querySelector('.product-qa-shipping-open');
+if (shippingBtn) {
+  shippingBtn.addEventListener('click', function () {
+    window.parent.location.href = '/service/cancellation';
+  });
+}
+
+})();
+</script>

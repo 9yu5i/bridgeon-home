@@ -410,7 +410,7 @@ $(document).ready(function(){
 
 		const triggerHeight = 1000;
 
-		if (window.innerWidth > 768 && window.scrollY > triggerHeight) {
+		if (window.innerWidth > 1024 && window.scrollY > triggerHeight) {
 			if (!stateOpen) {
 				form.classList.add('closed');
 				form.style.transition = 'none';
@@ -696,7 +696,7 @@ function view_lazyload() {
  * sheet breakpoint the menu is the mobile bottom sheet, so we leave it alone.
  * ==========================================================================*/
 (function () {
-	var SHEET_MAX = 767; // <= this width the option UI is the fixed bottom sheet
+	var SHEET_MAX = 1024; // <= this width the option UI is the fixed bottom sheet
 	var SELECTOR = "#select_option_lay .realtrend-select-wrap";
 
 	function clearMenu(menu) {

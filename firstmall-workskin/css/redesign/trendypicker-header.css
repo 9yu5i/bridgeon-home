@@ -9,17 +9,6 @@
 
    Values come from the prototype's styles/header-navigation.css. */
 
-/* Checkout: hide Firstmall's legacy subpage title ("결제 진행 중입니다.") and
-   the subpage LNB. This lives in the head-loaded header stylesheet (not
-   trendypicker-checkout.css, which loads inside the page body AFTER the title)
-   and pairs with the .is-checkout-page class the header sets before the title
-   renders — together they stop the heading from flashing in and back out. */
-.is-checkout-page .title_container,
-.is-checkout-page #subpageLNB,
-.is-checkout-page #subAllButton {
-  display: none !important;
-}
-
 /* ===== Dark header ======================================================
    Prototype tokens: promo bar #101010, header body #202020, category bar
    with a hairline top border.
@@ -36,7 +25,6 @@
   }
 
   .layout_header .top_header_banner > a {
-    cursor: default;
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -67,7 +55,7 @@
       gap: 16px;
       min-height: 33px;
       padding: 5px 10px;
-      font-size: 12px;
+      font-size: 13px;
     }
 
     .layout_header .top_header_banner .tp-top-benefit {
@@ -495,7 +483,7 @@
       align-items: center;
       justify-content: center;
       font-weight: 500;
-      font-size: 14px;
+      font-size: 13.5px;
       line-height: 1;
     }
 
@@ -1175,7 +1163,7 @@
   /* ===== Explicit responsive logo sizing ===== */
   @media only screen and (max-width: 767px) {
     #layout_header.layout_header .logo_wrap h1.logo_area a {
-      font-size: 20px;
+      font-size: 25px;
     }
 
     /* Search bar 3px shorter on phones only. The input is height:100%, so

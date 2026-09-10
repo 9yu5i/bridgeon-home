@@ -114,19 +114,28 @@ body.is-catalog-page .subpage_wrap .subpage_container {
   box-sizing: border-box;
 }
 
+/* Hero text matches the New / Best pages' hero styling (bo-new-hero-*,
+   bo-best-hero-*): same white kicker + large bold title treatment. */
 .bo-catalog-hero-kicker {
   margin: 0 0 6px;
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: clamp(14px, 1.6vw, 24px);
   font-weight: 500;
 }
 
-.bo-catalog-hero-title {
+/* user.css pins `#catalog_page h1 { font-size: 24px }` (specificity 101), which
+   beat the plain `.bo-catalog-hero-title` (10) and shrank the title. Scope this
+   under #catalog_page (specificity 110) to win the cascade cleanly, no
+   !important, so the title can grow like NEW / BEST. Long dynamic category
+   names wrap word-by-word inside the centered hero — no horizontal overflow. */
+#catalog_page .bo-catalog-hero-title {
   margin: 0;
   color: #fff;
-  font-size: clamp(28px, 8vw, 42px);
+  font-size: clamp(46px, 8vw, 118px);
   line-height: 1.05;
   font-weight: 800;
+  letter-spacing: 0;
+  text-shadow: 0 8px 28px rgba(76, 62, 170, 0.2);
 }
 
 /* ——— Shell / toolbar / sort ——— */

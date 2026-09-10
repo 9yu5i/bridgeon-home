@@ -119,7 +119,7 @@
               <div class="editor-pick-product">
                 <p>{.brand}</p>
                 <h3><a href="/goods/view?no={.goods_seq}">{.goods_name_display}</a></h3>
-                <div class="editor-price"><strong>{.price_display}</strong></div>
+                <div class="editor-price"><strong>{.price_display}</strong><!--{? .default_price > .price}--><del class="editor-price-original">US&dollar;{.default_price}</del><!--{/}--></div>
                 <div class="editor-pick-actions">
                   <button type="button" class="editor-cart" aria-label="Add to cart" onclick="parent.displayAddToCartQuickview(this, {= .goods_seq}, event); this.blur(); return false;"><img src="../images/icon/icon-cart-white.png" alt="" aria-hidden="true"></button>
                   <button type="button" class="editor-wish" aria-label="Add to wishlist" aria-pressed="false" data-goods-seq="{.goods_seq}"></button>

@@ -15,6 +15,12 @@
 :is(.tp-listing-grid, .searched_item_display) .gl_item {
   position: relative;
   display: grid;
+  /* Single column capped to the card width. Without this the implicit auto
+     column expands to the body's min-content, which on a few long-name/long-
+     price products (e.g. "Glutathione Vita Sheet Mask Daily Pick (30 sheets)")
+     grew past the card and blew up the square media (aspect-ratio 1/1), pushing
+     the whole row's content down and clipping the buttons. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
   box-sizing: border-box;
   width: 100% !important;

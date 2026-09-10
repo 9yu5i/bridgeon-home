@@ -149,7 +149,7 @@
     if (bannerCache) return bannerCache;
     bannerCache = {};
     try {
-      const raw = sessionStorage.getItem("tpNewBrandBanners");
+      const raw = sessionStorage.getItem("tpNewBrandBanners2");
       if (raw) bannerCache = JSON.parse(raw) || {};
     } catch (_e) {
       bannerCache = {};
@@ -158,7 +158,7 @@
   }
   function saveBannerCache() {
     try {
-      sessionStorage.setItem("tpNewBrandBanners", JSON.stringify(bannerCache));
+      sessionStorage.setItem("tpNewBrandBanners2", JSON.stringify(bannerCache));
     } catch (_e) {}
   }
   function applyBanner(banner, src) {

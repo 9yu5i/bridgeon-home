@@ -696,7 +696,16 @@ Creation Date : 2026-08-19
   }
 }
 @media (min-width: 761px) and (max-width: 1120px) {
-  .product-summary {
+  /* The summary is the Firstmall core #goods_spec node. A core stylesheet pins
+     it to a fixed 390px on tablet:
+       .goods_thumbs_spec #goods_spec { width: 390px }  @media (max-width:1023px)
+     specificity 110 (an ID). A plain `.product-summary { width:100% }` (10)
+     never won — even adding element/ancestor selectors stayed under an ID — so
+     the summary stopped at 390px and left the right half of its full-width row
+     empty. Match the core's ID and add two classes (specificity 120) to win the
+     cascade cleanly, no !important. This lets the summary/goods-form fill the
+     tablet column instead of hugging the left. */
+  .product-detail-page #goods_spec.product-summary {
     width: 100%;
     max-width: none;
     margin: 0;
@@ -922,7 +931,7 @@ Creation Date : 2026-08-19
 .product-price mark {
   display: inline-flex;
   align-items: center;
-  min-height: 31px;
+  min-height: 28px;
   padding: 0 12px;
   border-radius: 999px;
   color: #fff;
@@ -1100,6 +1109,13 @@ Creation Date : 2026-08-19
     border-radius: 9px;
     cursor: pointer;
 }
+/* Make the fixed buy-open buttons a touch taller than the inline actions,
+   across every breakpoint. Higher specificity + !important so it wins over the
+   base rule above and the mobile #goodsBuyOpenSection override. */
+#goodsBuyOpenSection .basic_btn_area .product-add-cart,
+#goodsBuyOpenSection .basic_btn_area .product-wish {
+    height: calc(var(--product-action-height, 40px) + 4px) !important;
+}
 .product-add-cart img {
   display: block;
   width: var(--product-action-cart-icon-w);
@@ -1228,7 +1244,11 @@ Creation Date : 2026-08-19
     transform: none;
   }
 }
-@media (max-width: 767px) {
+/* Tablet + mobile (<=1024) use the fixed bottom-bar buy flow (bottom bar +
+   slide-up option sheet), not the desktop floating summary mini-card. The buy
+   sheet styling below therefore covers the whole tablet range too; the floating
+   card is gated off <=1024 in goods-view.js. */
+@media (max-width: 1024px) {
   .product-actions {
     grid-template-columns: minmax(0, 1fr) var(--product-action-wish-width);
     gap: 8px;
@@ -1237,6 +1257,14 @@ Creation Date : 2026-08-19
   .goods_bg {
     z-index: 1190;
   }
+
+  /* Show the fixed bottom buy bar and keep the option sheet collapsed until it
+     is opened — mirrors the mobile display toggle (redesign/common.css @767) so
+     the whole tablet range uses the same bottom-bar buy flow. Firstmall's own
+     open handler (pay_btn_show_light) sets an inline display to reveal the sheet. */
+  .goods_buy_open_sections { display: block; }
+  #goodsOptionBuySection.goods_buy_sections { display: none; }
+  #goodsOptionBuySection .btn_section_close { display: block; }
 
   /* Product-detail option sheet = the SAME quickview card (.qv-product-card
      + .qv-* layout, styled by goods-quickview.css), minus .qv-product-head
@@ -1347,7 +1375,7 @@ Creation Date : 2026-08-19
     touch-action: pan-y;
     scrollbar-gutter: stable;
     scrollbar-width: thin;
-    scrollbar-color: rgb(217, 210, 234) transparent;
+    scrollbar-color: #c4b0f0 transparent;
   }
 
   #goodsOptionBuySection #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar {
@@ -1361,11 +1389,11 @@ Creation Date : 2026-08-19
 
   #goodsOptionBuySection #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar-thumb {
     border-radius: 999px;
-    background: rgb(217, 210, 234);
+    background: #c4b0f0;
   }
 
   #goodsOptionBuySection #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu::-webkit-scrollbar-thumb:hover {
-    background: rgb(217, 210, 234);
+    background: #c4b0f0;
   }
 
   /* Do not create a second selected-options scroller. Quickview scrolls the
@@ -2940,6 +2968,16 @@ textarea.product-inquiry-field {
 .product-rec-card p {
   margin: 12px 10px 2px;
   min-width: 0;
+  /* Reserve exactly one line so cards whose {.brand_title} is empty keep the
+     same height as branded ones (the empty <p> would otherwise collapse to 0
+     and shorten the card). Fixed height + ellipsis also stops a long brand
+     name from wrapping to two lines and making that card taller — every card's
+     brand line is one line tall regardless of content. */
+  height: calc(var(--product-lower-rec-brand-font) * 1.25);
+  line-height: 1.25;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: #504a56;
   font-size: var(--product-lower-rec-brand-font);
   font-weight: 400;

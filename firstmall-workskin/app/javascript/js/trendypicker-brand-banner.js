@@ -93,8 +93,38 @@
     "0358": { file: "haruharu-wonder-brand-banner-1600x520.png", force: true },
     "0360": { file: "heart-percent-brand-banner-1600x520.png", force: true },
     "0361": { file: "heimish-brand-banner-1600x520.png", force: true },
-    "0611": { file: "hetras-brand-banner-1600x520.png", force: true }
-
+    "0611": { file: "hetras-brand-banner-1600x520.png", force: true },
+    "0612": { file: "hince-brand-banner-1600x520.png", force: true },
+    "0385": { file: "holika-holika-brand-banner-1600x520.png", force: true },
+    "0636": { file: "house-of-hur-brand-banner-1600x520.png", force: true },
+    "0393": { file: "i-dew-care-brand-banner-1600x520.png", force: true },
+    "0402": { file: "illiyoon-brand-banner-1600x520.png", force: true },
+    "0404": { file: "ilso-brand-banner-1600x520.png", force: true },
+    "0394": { file: "im-from-brand-banner-1600x520.png", force: true },
+    "0412": { file: "innisfree-brand-banner-1600x520.png", force: true },
+    "0411": { file: "isntree-brand-banner-1600x520.png", force: true },
+    "0642": { file: "iope-brand-banner-1600x520.png", force: true },
+    "0417": { file: "iunik-brand-banner-1600x520.png", force: true },
+    "0617": { file: "javindeseoul-brand-banner-1600x520.png", force: true },
+    "0419": { file: "jmsolution-brand-banner-1600x520.png", force: true },
+    "0001": { file: "jungsaemmool-brand-banner-1600x520.png", force: true },
+    "0092": { file: "ksecret-brand-banner-1600x520.png", force: true },
+    "0093": { file: "kundal-brand-banner-1600x520.png", force: true },
+    "0408": { file: "kwailnara-brand-banner-1600x520.png", force: true },
+    "0075": { file: "jumiso-brand-banner-1600x520.png", force: true },
+    "0097": { file: "lador-brand-banner-1600x520.png", force: true },
+    "0098": { file: "lagom-brand-banner-1600x520.png", force: true },
+    "0099": { file: "laka-brand-banner-1600x520.png", force: true },
+    "0102": { file: "laneige-brand-banner-1600x520.png", force: true },
+    "0105": { file: "lilybyred-brand-banner-1600x520.png", force: true },
+    "0106": { file: "lilyeve-brand-banner-1600x520.png", force: true },
+    "0415": { file: "isoi-brand-banner-1600x520.png", force: true },
+    "0626": { file: "losykim-brand-banner-1600x520.png", force: true },
+    "0608": { file: "lummir-brand-banner-1600x520.png", force: true },
+    "0086": { file: "makeprem-brand-banner-1600x520.png", force: true },
+    "0631": { file: "mamonde-brand-banner-1600x520.png", force: true },
+    "0112": { file: "manyo-brand-banner-1600x520.png", force: true },
+    "0002": { file: "hera-brand-banner-1600x520.png", force: true },
 
 
   };
@@ -107,13 +137,19 @@
   }
 
   function resolveBrandBanner(brandCode, rawBannerSrc) {
+    // Brand banners are managed in the admin now (uploaded under /data/editor),
+    // so prefer the brand's OWN banner whenever it is a real image. Fall back to
+    // a curated skin image (BRAND_BANNERS) only when the brand still shows the
+    // default placeholder or has no banner. The old force:true override kept
+    // pointing at curated skin files that are frequently no longer uploaded,
+    // which 404'd even when the brand had a valid admin banner.
+    if (!usesDefaultBanner(rawBannerSrc)) {
+      return rawBannerSrc;
+    }
     var entry = brandCode && BRAND_BANNERS[brandCode];
     if (entry) {
-      var force = typeof entry === "object" && entry.force;
       var file = typeof entry === "object" ? entry.file : entry;
-      if (force || usesDefaultBanner(rawBannerSrc)) {
-        return BRAND_IMG + file;
-      }
+      return BRAND_IMG + file;
     }
     return rawBannerSrc || "";
   }
