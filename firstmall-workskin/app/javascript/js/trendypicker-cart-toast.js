@@ -136,6 +136,34 @@
     pendingTimer = null;
   }
 
+  // Some add paths (e.g. the product-page option sheet) drop the item into the
+  // hidden actionFrame and then reload the page ~150ms later to refresh the
+  // cart badge. Showing the toast the instant the add lands just flashes it for
+  // a moment before the reload wipes it — it never gets to run its full time,
+  // and the persisted copy then shows a SECOND toast on the reloaded page.
+  //
+  // So don't show it live immediately. Persist it and start a short timer:
+  //  - If a reload fires first, `pagehide` cancels the timer (the toast was
+  //    never shown here) and the persisted copy shows it once, in full, on the
+  //    reloaded page.
+  //  - If no reload comes, the timer shows it live once, in full, and drops the
+  //    persisted copy so an unrelated later reload can't replay it.
+  // Either way: exactly one toast, always for its full duration.
+  var SHOW_DELAY = 500;
+  var showTimer = null;
+
+  function scheduleLiveToast(info) {
+    persistToast(info);
+    window.clearTimeout(showTimer);
+    showTimer = window.setTimeout(function () {
+      showTimer = null;
+      try {
+        sessionStorage.removeItem(STORAGE_KEY);
+      } catch (err) {}
+      showToast(info);
+    }, SHOW_DELAY);
+  }
+
   // Firstmall confirms every successful add with a native dialog
   // ("The product has been added to the Shopping Cart ... view it?").
   // That call is the one reliable success signal across all entry points,
@@ -152,8 +180,7 @@
       if (CART_ADDED_MESSAGE.test(text) && /(added|담)/i.test(text)) {
         var info = pending;
         clearPending();
-        persistToast(info);
-        showToast(info);
+        scheduleLiveToast(info);
         return false;
       }
       return native.apply(window, arguments);
@@ -436,8 +463,7 @@
       if (!pending) return;
       var info = pending;
       clearPending();
-      persistToast(info);
-      showToast(info);
+      scheduleLiveToast(info);
     });
   }
 
@@ -532,7 +558,14 @@
     // A document restored from the back/forward cache keeps its JavaScript
     // variables. Never let an add intent from the previous visit survive a
     // page transition and pair with an unrelated actionFrame load.
-    window.addEventListener("pagehide", clearPending);
+    window.addEventListener("pagehide", function () {
+      clearPending();
+      // If this unload is an add-triggered reload, cancel the not-yet-shown
+      // live toast so it doesn't flash for a moment before the page goes away.
+      // The persisted copy will show it in full on the reloaded page instead.
+      window.clearTimeout(showTimer);
+      showTimer = null;
+    });
   });
 
   window.tpShowCartToast = showToast;

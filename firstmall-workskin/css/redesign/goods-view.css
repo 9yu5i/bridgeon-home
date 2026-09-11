@@ -1244,6 +1244,16 @@ Creation Date : 2026-08-19
     transform: none;
   }
 }
+/* Bottom option/quantity sheet reveal (mobile + tablet). */
+@keyframes tpSheetSlideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes tpSheetBackdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* Tablet + mobile (<=1024) use the fixed bottom-bar buy flow (bottom bar +
    slide-up option sheet), not the desktop floating summary mini-card. The buy
    sheet styling below therefore covers the whole tablet range too; the floating
@@ -1256,6 +1266,8 @@ Creation Date : 2026-08-19
 
   .goods_bg {
     z-index: 1190;
+    /* Fade the dimmer in with the sheet's slide-up (shown via display toggle). */
+    animation: tpSheetBackdropIn 0.28s ease;
   }
 
   /* Show the fixed bottom buy bar and keep the option sheet collapsed until it
@@ -1300,12 +1312,19 @@ Creation Date : 2026-08-19
     border-radius: 20px 20px 0 0;
     background: #fff;
     box-shadow: none;
+    /* Slide up from the bottom each time Firstmall reveals the sheet
+       (pay_btn_show_light toggles display:none -> block, which restarts a CSS
+       animation). Open only; the close stays instant (display:none). */
+    animation: tpSheetSlideUp 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
   }
 
   /* White card surface: override the quickview pink/purple gradient and its
-     own radius (the sheet's rounded top edge is owned by the shell above). */
+     own radius (the sheet's rounded top edge is owned by the shell above).
+     Bottom padding keeps the last row (e.g. the Quantity stepper on optionless
+     goods) off the sheet's bottom edge, which sits flush on the buy bar — with
+     padding:0 there the stepper looked clipped where it met the bar. */
   #goodsOptionBuySection .qv-product-card {
-    padding: 0 20px;
+    padding: 0 20px 16px;
     border-radius: 0;
     background: #fff;
   }
@@ -1321,8 +1340,26 @@ Creation Date : 2026-08-19
     height: 30px;
     margin: 0;
     border-radius: 20px 20px 0 0;
-    background-color: #fff;
-    background-position: center 8px;
+    /* Draw the grab handle as a small grey bar in CSS (::before) instead of the
+       core close/chevron image (btn_quickbar_close.png). The core stretched
+       that 118x60 image to the sheet's full width (background-size:100% auto),
+       so on tablet it blew up to a giant, broken-looking bar. A CSS bar stays
+       crisp at every width and gives the clean grey drag-line the sheet wants —
+       the same look on tablet and mobile. `background:#fff` (specificity 110)
+       drops the core image without !important. */
+    background: #fff;
+    font-size: 0;
+  }
+  #goodsOptionBuySection .btn_section_close::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    width: 40px;
+    height: 4px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: #d9d9de;
   }
 
   /* qv-options-row / qv-field equivalent. */
@@ -3358,4 +3395,29 @@ body.is-deal-share-open {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
+}
+
+/* ==========================================================================
+   13. FLOATING BUTTONS vs FLOATING BUY CARD (desktop)
+   --------------------------------------------------------------------------
+   The desktop floating buy card (.goods-form.fixed) and the corner floating
+   buttons (#floating_over: scroll-to-top + chat) both sit bottom-right, so the
+   buttons overlapped the card's own buttons. While the card is up, lift the
+   corner buttons ABOVE it. goods-view.js sets --tp-buycard-top (the card's top
+   edge, measured from the viewport bottom = card height + its 40px offset) and
+   toggles body.has-fixed-buy-card. Same override pattern the cart/login/search
+   pages already use on these buttons.
+   ========================================================================== */
+@media (min-width: 1025px) {
+  body.has-fixed-buy-card #floating_over .ico_floating_top,
+  body.has-fixed-buy-card #floating_over .ico_floating_talk {
+    transition: bottom 0.4s ease;
+  }
+  /* Chat sits just above the card top; scroll-to-top stacks above chat. */
+  body.has-fixed-buy-card #floating_over .ico_floating_talk {
+    bottom: calc(var(--tp-buycard-top, 490px) + 14px);
+  }
+  body.has-fixed-buy-card #floating_over .ico_floating_top {
+    bottom: calc(var(--tp-buycard-top, 490px) + 70px);
+  }
 }

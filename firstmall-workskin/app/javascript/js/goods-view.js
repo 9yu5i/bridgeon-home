@@ -420,8 +420,20 @@ $(document).ready(function(){
 			form.classList.add('fixed');
 			void form.offsetWidth;
 			form.style.transition = '';
+			// The floating buy card (.goods-form.fixed) and the corner floating
+			// buttons (#floating_over) both sit bottom-right, so the buttons
+			// overlapped the card. Lift the buttons ABOVE the card: publish the
+			// card's top edge (its height + its 40px bottom offset, measured from
+			// the viewport bottom) so the CSS can place them just above it. The
+			// card height varies with options, so recompute while it is fixed.
+			document.body.classList.add('has-fixed-buy-card');
+			document.body.style.setProperty(
+				'--tp-buycard-top',
+				(form.offsetHeight + 40) + 'px'
+			);
 		} else {
 			form.classList.remove('fixed');
+			document.body.classList.remove('has-fixed-buy-card');
 		}
 	});
 

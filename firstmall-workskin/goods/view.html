@@ -330,31 +330,17 @@
 <script type="text/javascript" src='../common/minishop.js'></script>
 <script type="text/javascript" src="/app/javascript/js/goods-view.js?dummy={=date('YmdHis')}"></script>
 <script type="text/javascript" src="/app/javascript/js/quickview.js?v={=date('Ymd')}"></script>
-<script type="text/javascript">
-(function () {
-	function hasSelectableProductOptions() {
-		return !!document.querySelector(
-			'#goodsOptionBuySection select[name="viewOptions[]"], ' +
-			'#goodsOptionBuySection .viewInputLay input:not([type="hidden"]), ' +
-			'#goodsOptionBuySection .viewInputTextareaLay textarea'
-		);
-	}
-
-	document.addEventListener('click', function (event) {
-		var target = event.target;
-		var mobileCartButton = target && target.closest ? target.closest('#buy_btn') : null;
-
-		if (!mobileCartButton || hasSelectableProductOptions()) return;
-
-		event.preventDefault();
-		event.stopImmediatePropagation();
-
-		if (window.jQuery) {
-			window.jQuery('#addCart').trigger('click');
-		}
-	}, true);
-})();
-</script>
+<!--
+  (Removed) Optionless-product shortcut: this used to intercept the bottom-bar
+  Add-to-Cart (#buy_btn) for products with no selectable options and add them
+  straight to the cart (window.jQuery('#addCart').trigger('click')), skipping the
+  slide-up sheet. Products with no options then had no way to choose a quantity.
+  Removed so #buy_btn always runs the normal light flow (pay_btn_show_light),
+  which opens the bottom sheet — the sheet already carries the Quantity control
+  for optionless goods, so shoppers can now pick a quantity there like optioned
+  products. The sheet's own #addCart CTA (or a second tap on the bar) completes
+  the add with the chosen quantity.
+-->
 <script type="text/javascript" src="/app/javascript/plugin/lazy/jquery.lazyload.min.js"></script>
 <script type="text/javascript" src="/app/javascript/plugin/jquery.inview.js"></script>
 
