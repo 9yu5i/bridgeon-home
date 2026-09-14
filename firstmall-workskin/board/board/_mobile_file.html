@@ -1,0 +1,74 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 게시판 파일 첨부 @@
+- 파일위치 : [스킨폴더]/board/_mobile_file.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<script type="text/javascript" src="/app/javascript/js/skin-board_mobile_file.js?dummy=201905062"></script>
+
+<!-- 2018-06-05 byuncs add image 먼저 업로드 후 경로 및 태그 -->
+<input type="hidden" name="realfilename" value="" >
+<input type="hidden" name="incimage" value="" >
+<input type="hidden" name="insert_image" value="" >
+<input type="hidden" name="remove_no" value="" >
+
+<table cellpadding="0" cellspacing="0" border="0" class="file_add_table">
+<tr class="hide">
+	<th class="width_a"><span designElement="text">첨부파일을</span></th>
+	<td>
+		<select class="select_img">
+			<option value="bottom" {? insert_image == 'bottom' } selected="selected" {/}>내용하단에 삽입</option>
+			<option value="top"  {? insert_image == 'top' } selected="selected" {/}>내용상단에 삽입</option>
+			<option value="" {? !insert_image || insert_image== 'none' } selected="selected" {/}>내용에 삽입하지 않음</option>
+		</select>
+	</td>
+</tr>
+<tr id="filelistlay">
+	<th></th>
+	<td>
+		<div>
+			<table width="100%" cellpadding="0" cellspacing="0" border="0" class="boardfileliststyle" id="BoardFileTable">
+			<tbody>
+			<!--{ ? filelist }-->
+				<!--{ @ filelist }-->
+				<tr>
+					<td class="pdt5" align="left"> 					
+						<input type="hidden" name="orignfile_info[]"  class="orignfile_info" value="{.realfile}^^{.orignfile}^^{.sizefile}^^{.typefile}"/>
+						<span class="realfilelist move highlight-link" realfiledir="{.realfiledir}" realfilename="{.orignfile}" board_id="{boardid}" filedown="../board_process?mode=board_file_down&board_id={boardid}&realfiledir={.realfiledir}&realfilename={.orignfile}"><img src="/data/board/{boardid}/{.orignfile}" alt="{.orignfile}"/></span>
+					</td>
+					<td class="pdt5" align="right">
+						<button type="button" class="btn_graybox eaMinus  etcDel hand">-</button>
+					</td>
+				</tr>
+				<!--{ / }-->		
+			<!--{ / }-->
+			<!-- 모바일(반응형)등록시 첨부파일의 이미지다운 -->
+			<!--{? filelistimages && !filelist }-->
+				<!--{@ filelistimages}-->
+				<tr>
+					<td class="pdt5" align="left"> 					
+						<input type="hidden" name="orignfile_info[]"  class="orignfile_info" value="{.realfile}^^{.orignfile}^^{.sizefile}^^{.typefile}"/>
+						<span class="realfilelist move highlight-link" realfiledir="{.realfiledir}" realfilename="{.orignfile}" board_id="{boardid}" filedown="../board_process?mode=board_file_down&board_id={boardid}&realfiledir={.realfiledir}&realfilename={.orignfile}"><img src="/data/board/{boardid}/{.orignfile}" alt="{.orignfile}"/></span>
+					</td>
+					<td class="pdt5" align="right">
+						<button type="button" class="btn_graybox eaMinus  etcDel hand">-</button>
+					</td>
+				</tr>
+				<!--{/}-->
+			<!--{/}-->
+			<!-- 모바일(반응형)등록시 첨부파일의 이미지다운 -->
+			<!--{ ? manager.file_use == 'Y' //첨부파일사용인경우 }-->
+				<tr>
+					<td class="board_uplod_image">
+						<div id="img_viewer"></div>
+						<div>
+							<button type="button" class="btnUploader"><img src="../images/icon/icon-upload.png" alt="upload"/></button>
+						</div>
+					</td>
+				</tr>
+			<!--{ / }-->
+			</tbody>
+			</table>
+		</div>
+	</td>
+</tr>
+</table>

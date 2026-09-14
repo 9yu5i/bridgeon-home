@@ -38,7 +38,7 @@
 			<!--{ / }-->
 			<li class="goods_name_area">
 				<!--{ ? aParams.searchMode != 'brand' && .brand_title }-->
-				<span class="brand_name">{.brand_title}</span>
+				<span class="brand_name">{=stripslashes(.brand_title)}</span>
 				<!--{ / }-->
 				<a href="/goods/view?no={.goods_seq}"><span class="name">{.goods_name}</span></a>
 			</li>

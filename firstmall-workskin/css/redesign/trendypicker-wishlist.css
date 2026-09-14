@@ -417,6 +417,10 @@
   margin-top: 32px;
 }
 
+.bo-wishlist-pagination[hidden] {
+  display: none;
+}
+
 .bo-wishlist-pagination a {
   display: inline-flex;
   align-items: center;

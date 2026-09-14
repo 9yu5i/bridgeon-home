@@ -5,6 +5,7 @@
 
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-wishlist.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/goods-quickview.css" />
 
 <style type="text/css">
 @media only screen and (max-width:1023px) {
@@ -23,7 +24,7 @@
 	<!-- +++++ //mypage LNB ++++ -->
 
 	<!-- +++++ mypage contents ++++ -->
-	<div class="subpage_container bo-mypage bo-wishlist-page">
+	<div class="subpage_container bo-mypage bo-wishlist-page" data-wishlist-total="{page.totalcount}">
 		<!-- 전체 메뉴 -->
 		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
 
@@ -40,7 +41,7 @@
 				<button type="button" data-wish-filter="k-pop" aria-pressed="false">K-pop</button>
 				<button type="button" data-wish-filter="k-traditional" aria-pressed="false">K-Traditional</button>
 			</div>
-			<span class="filter_count bo-wishlist-count">{=number_format(count(record))} Items</span>
+			<span class="filter_count bo-wishlist-count">{=number_format(page.totalcount)} Items</span>
 			<!--{ / }-->
 		</div>
 
@@ -75,7 +76,7 @@
 						<div class="item_img_area bo-wish-card__media">
 							<a href="../goods/view?no={.goods_seq}">{.image_html}</a>
 							<div class="addToCartBtn bo-wish-card__cart">
-								<a class="addToCartBtnArea" href="javascript:void(0)" onclick="displayAddToCartQuickview(this, {= .goods_seq})">
+								<a class="addToCartBtnArea" href="javascript:void(0)" onclick="return displayAddToCartQuickview(this, {= .goods_seq}, event)">
 									<img src="/data/skin/{skin}/images/icon/icon-add-to-cart.png" onerror="" class="addToCartIcon" alt="Add To Cart Icon" title="Add To Cart" />
 									<img src="/data/skin/{skin}/images/icon/icon-added-to-cart.png" onerror="" class="addToCartIcon hide" alt="Product is Added to Cart" title="Product is Added to Cart" />
 								</a>
@@ -87,7 +88,7 @@
 									class="bo-wish-card__brand"
 									data-brand-code="{.brand_code}"
 									data-brand="{.brand}"
-								><!--{ ? .brand_title }-->{.brand_title}<!--{ : .brand_name }-->{.brand_name}<!--{ / }--></small>
+								><!--{ ? .brand_title }-->{=stripslashes(.brand_title)}<!--{ : .brand_name }-->{.brand_name}<!--{ / }--></small>
 								<label><input type="checkbox" name="wish_seq[]" value="{.wish_seq}" class="hide" /> {.goods_name}</label>
 							</li>
 							<li class="goods_price_area bo-wish-card__price">
@@ -128,7 +129,7 @@
 							</li>
 							<!--{ / }-->
 							<li class="wish_btns bo-wish-card__actions">
-								<button type="button" name="cart" id="wishcart_{.wish_seq}" class="btn_resp size_a color2 wishcart bo-wish-card__cart-btn" aria-label="Add to cart"></button>
+								<button type="button" name="cart" id="wishcart_{.wish_seq}" class="btn_resp size_a color2 wishcart bo-wish-card__cart-btn" data-goods-seq="{.goods_seq}" aria-label="Add to cart"></button>
 								<button type="button" class="btn_resp btn_gray_under btn_thisitem_del bo-wish-card__wish-btn is-active" value="{.wish_seq}" aria-label="Remove from wishlist"></button>
 							</li>
 						</ul>
@@ -137,6 +138,7 @@
 				</ul>
 			</div>
 
+			<!--{ ? page.prev || page.next || count(page.page) > 1 }-->
 			<div class="paging_navigation bo-wishlist-pagination">
 				<!--{ ? page.prev }-->
 				<a href="wish?page={page.prev}&amp;{page.querystring}"><span class="prev" />Prev</span></a>
@@ -152,6 +154,7 @@
 				<a href="wish?page={page.next}&amp;{page.querystring}"><span class="next " />Next</span></a>
 				<!--{ / }-->
 			</div>
+			<!--{ / }-->
 		<!--{ : }-->
 			<div class="no_data_area2 Mt20 bo-wishlist-empty">
 				Your wishlist is empty.
@@ -200,7 +203,7 @@
 		});
 
 		// Delete current item
-		$("form#wish_form button.btn_thisitem_del").bind("click",function(){
+		$("form#wish_form").on("click", "button.btn_thisitem_del", function(){
 			var selected_order = $(this).val();
 			$("input[name='wish_seq[]']").removeAttr("checked");
 			$("input[name='wish_seq[]'][value='"+selected_order+"']").attr("checked", true);
@@ -211,17 +214,12 @@
 		});
 
 		// Add to cart
-		$("button[name='cart']").bind("click",function() {
-			var seq = $(this).attr('id');
-			seq = seq.replace("wishcart_","");
-			var url = "wish2cart?no="+seq;
-			$.get(url, function(data) {
-				$("#cart_dialog .y_scroll_auto").html(data);
-				showCenterLayer('#cart_dialog');
-			});
+		$("form#wish_form").on("click", "button[name='cart']", function(event) {
+			return displayAddToCartQuickview(this, $(this).attr("data-goods-seq"), event);
 		});
 
 	});
 </script>
+<script src="/app/javascript/js/quickview.js"></script>
 <script src="/app/javascript/js/trendypicker-mypage.js"></script>
 <script src="/app/javascript/js/trendypicker-wishlist.js"></script>

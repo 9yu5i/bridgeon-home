@@ -314,6 +314,10 @@
   font-size: 0;
 }
 
+.bo-saved-posts-page .paging_navigation.bo-saved-posts-pagination[hidden] {
+  display: none;
+}
+
 .bo-saved-posts-page .bo-saved-posts-pagination a {
   display: inline-flex;
   align-items: center;

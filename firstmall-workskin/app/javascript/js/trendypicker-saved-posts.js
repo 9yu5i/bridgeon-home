@@ -9,12 +9,54 @@
   const status = root.querySelector("[data-saved-posts-status]");
   const tabs = root.querySelector("[data-saved-posts-tabs]");
   const filterButtons = [...root.querySelectorAll("[data-saved-posts-filter]")];
+  const pagination = root.querySelector("[data-saved-posts-pagination]");
+  const PRODUCT_FACTS_KEY = "bo-product-facts-v2";
+  const FETCH_CONCURRENCY = 8;
+  const CLIENT_PAGE_CAPACITY = 15;
   let activeFilter = "all";
+  let activePage = 1;
+  let cards = [];
+  let categoriesReady = false;
+  let usesClientPagination = false;
+  let cardsReadyPromise = Promise.resolve();
+  let hydrationPromise = null;
 
   const setStatus = (message) => {
     if (status) status.textContent = message;
   };
 
+  const readProductFacts = () => {
+    try {
+      const stored = JSON.parse(localStorage.getItem(PRODUCT_FACTS_KEY) || "{}");
+      return stored && typeof stored === "object" ? stored : {};
+    } catch {
+      return {};
+    }
+  };
+
+  const productFacts = readProductFacts();
+  let productFactsWrite = 0;
+
+  const writeProductFacts = () => {
+    window.clearTimeout(productFactsWrite);
+    productFactsWrite = window.setTimeout(() => {
+      try {
+        const keys = Object.keys(productFacts);
+        keys.slice(0, Math.max(0, keys.length - 600)).forEach((key) => {
+          delete productFacts[key];
+        });
+        localStorage.setItem(PRODUCT_FACTS_KEY, JSON.stringify(productFacts));
+      } catch {
+        // Category caching is optional when storage is unavailable.
+      }
+    }, 200);
+  };
+
+  const refreshCards = () => {
+    cards = [...root.querySelectorAll("[data-saved-post-card]")];
+  };
+
+  refreshCards();
 
   const normalizeCategory = (value) => {
     const text = String(value || "").trim().toLowerCase();
@@ -76,8 +118,19 @@
     if (explicit) return explicit;
 
     return inferCategoryFromText(
-      card.querySelector(".bo-saved-post-card__copy b")?.textContent || "",
+      `${card.querySelector(".bo-saved-post-card__category-seed")?.textContent || ""} ${
+        card.querySelector(".bo-saved-post-card__copy b")?.textContent || ""
+      }`,
     );
+  };
+
+  const updateCountLabel = (count, loading = false) => {
+    if (!countLabel) return;
+    if (loading) {
+      countLabel.textContent = "Loading…";
+      return;
+    }
+    countLabel.textContent = `${count} ${count === 1 ? "reel" : "reels"}`;
   };
 
   const ensureFilterEmptyState = () => {
@@ -93,16 +146,39 @@
     return empty;
   };
 
+  const renderPagination = (matchingCards) => {
+    if (!pagination || !usesClientPagination) return;
+    const pageCount = Math.ceil(matchingCards.length / CLIENT_PAGE_CAPACITY);
+    activePage = Math.min(activePage, Math.max(1, pageCount));
+    pagination.replaceChildren();
+    pagination.hidden = pageCount <= 1;
+
+    for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
+      const link = document.createElement("a");
+      link.href = "#";
+      link.dataset.savedPostsPage = String(pageNumber);
+      link.textContent = String(pageNumber);
+      if (pageNumber === activePage) {
+        link.className = "on";
+        link.setAttribute("aria-current", "page");
+      }
+      pagination.appendChild(link);
+    }
+  };
+
   const applyFilter = (filter = activeFilter) => {
     activeFilter = filter;
-    const cards = [...root.querySelectorAll("[data-saved-post-card]")];
-    let visibleCount = 0;
+    const matchingCards = cards.filter((card) => {
+      const category = getCardCategory(card);
+      return filter === "all" || category === filter;
+    });
+    const pageStart = (activePage - 1) * CLIENT_PAGE_CAPACITY;
+    const visibleCards = usesClientPagination
+      ? new Set(matchingCards.slice(pageStart, pageStart + CLIENT_PAGE_CAPACITY))
+      : new Set(matchingCards);
 
     cards.forEach((card) => {
-      const category = getCardCategory(card);
-      const visible = filter === "all" || category === filter;
-      card.hidden = !visible;
-      if (visible) visibleCount += 1;
+      card.hidden = !visibleCards.has(card);
     });
 
     filterButtons.forEach((button) => {
@@ -112,20 +188,29 @@
     });
 
     const empty = ensureFilterEmptyState();
-    empty.hidden = filter === "all" || visibleCount > 0 || cards.length === 0;
+    const isLoading = filter !== "all" && !categoriesReady;
+    empty.textContent = isLoading
+      ? "Loading saved reel categories…"
+      : "No saved posts in this category.";
+    empty.hidden = filter === "all" || matchingCards.length > 0 || cards.length === 0;
+    updateCountLabel(matchingCards.length, isLoading && matchingCards.length === 0);
+    renderPagination(matchingCards);
 
-    return visibleCount;
+    return matchingCards.length;
   };
 
   filterButtons.forEach((button) => {
     button.addEventListener("click", () => {
+      activePage = 1;
       applyFilter(button.dataset.savedPostsFilter || "all");
+      if (activeFilter !== "all") void ensureCardsHydrated();
     });
   });
 
   const updateCount = () => {
-    const count = root.querySelectorAll("[data-saved-post-card]").length;
-    if (countLabel) countLabel.textContent = `${count} ${count === 1 ? "reel" : "reels"}`;
+    refreshCards();
+    const count = cards.length;
+    updateCountLabel(count);
     return count;
   };
 
@@ -204,5 +289,136 @@
     removeSavedPost(button);
   });
 
-  if (tabs && filterButtons.length) applyFilter("all");
+  pagination?.addEventListener("click", (event) => {
+    const link = event.target.closest("a[data-saved-posts-page]");
+    if (!link || !pagination.contains(link)) return;
+    event.preventDefault();
+    activePage = Number(link.dataset.savedPostsPage || 1);
+    applyFilter();
+  });
+
+  const mapLimit = async (items, limit, mapper) => {
+    let nextIndex = 0;
+    const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (nextIndex < items.length) {
+        const index = nextIndex;
+        nextIndex += 1;
+        await mapper(items[index]);
+      }
+    });
+    await Promise.all(workers);
+  };
+
+  const readCategoryFromProduct = (documentPage) => {
+    if (!documentPage) return "";
+    const primary = documentPage.querySelector(
+      "[data-tp-primary-category], #tp-primary-category, .qv-kbeauty-tag",
+    );
+    const direct =
+      normalizeCategory(primary?.textContent) || inferCategoryFromText(primary?.textContent);
+    if (direct) return direct;
+
+    const breadcrumbText = [...documentPage.querySelectorAll(
+      ".navi_linemap a, .navi_linemap2 a, .structure_nav a, .breadcrumb a, .category_path a",
+    )]
+      .map((item) => item.textContent.trim())
+      .join(" > ");
+    return inferCategoryFromText(breadcrumbText);
+  };
+
+  const hydrateCategories = async () => {
+    await cardsReadyPromise;
+
+    await mapLimit(cards, FETCH_CONCURRENCY, async (card) => {
+      const goodsSeq = card.dataset.goodsSeq || "";
+      const explicit = normalizeCategory(card.dataset.savedPostCategory);
+      if (explicit) return;
+
+      const cached = goodsSeq && normalizeCategory(productFacts[goodsSeq]?.category);
+      if (cached) {
+        card.dataset.savedPostCategory = cached;
+        return;
+      }
+
+      if (goodsSeq) {
+        try {
+          const response = await fetch(`/goods/quickview?no=${encodeURIComponent(goodsSeq)}`, {
+            credentials: "same-origin",
+            headers: { Accept: "text/html" },
+          });
+          if (response.ok) {
+            const html = await response.text();
+            const documentPage = new DOMParser().parseFromString(html, "text/html");
+            const category = readCategoryFromProduct(documentPage);
+            if (category) {
+              card.dataset.savedPostCategory = category;
+              productFacts[goodsSeq] = { ...(productFacts[goodsSeq] || {}), category };
+              writeProductFacts();
+              return;
+            }
+          }
+        } catch {
+          // Use the card's product/reel text as a final fallback.
+        }
+      }
+
+      card.dataset.savedPostCategory = getCardCategory(card);
+    });
+
+    categoriesReady = true;
+    applyFilter();
+  };
+
+  const ensureCardsHydrated = () => {
+    if (!hydrationPromise) hydrationPromise = hydrateCategories();
+    return hydrationPromise;
+  };
+
+  const mergeSavedPostPages = async () => {
+    const totalCount = Number(root.dataset.savedPostsTotal || 0);
+    if (!grid || !pagination || !totalCount) return;
+
+    const currentUrl = new URL(window.location.href);
+    const pageUrls = [...pagination.querySelectorAll("a[href]")]
+      .map((link) => new URL(link.getAttribute("href"), currentUrl).href)
+      .filter((url, index, urls) => url !== currentUrl.href && urls.indexOf(url) === index);
+
+    if (pageUrls.length) {
+      const documents = await Promise.all(
+        pageUrls.map((url) =>
+          fetch(url, { credentials: "same-origin", headers: { Accept: "text/html" } })
+            .then((response) => (response.ok ? response.text() : ""))
+            .then((html) => (html ? new DOMParser().parseFromString(html, "text/html") : null))
+            .catch(() => null),
+        ),
+      );
+      const knownSeqs = new Set(cards.map((card) => card.dataset.shortformSeq || ""));
+
+      documents.forEach((documentPage) => {
+        documentPage?.querySelectorAll("[data-saved-post-card]").forEach((card) => {
+          const shortformSeq = card.dataset.shortformSeq || "";
+          if (!shortformSeq || knownSeqs.has(shortformSeq)) return;
+          knownSeqs.add(shortformSeq);
+          grid.appendChild(document.importNode(card, true));
+        });
+      });
+      refreshCards();
+    }
+
+    usesClientPagination = cards.length >= totalCount;
+    applyFilter();
+  };
+
+  if (tabs && filterButtons.length) {
+    applyFilter("all");
+    cardsReadyPromise = mergeSavedPostPages();
+    cardsReadyPromise.then(() => {
+      const preload = () => void ensureCardsHydrated();
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(preload, { timeout: 500 });
+      } else {
+        window.setTimeout(preload, 100);
+      }
+    });
+  }
 })();

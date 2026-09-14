@@ -1,0 +1,1128 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 상품후기 List @@
+- 파일위치 : [스킨폴더]/board/goods_review/_goods_review/index.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<style>
+:root {
+  --product-purple: var(--purple, #7b3fe4);
+  --product-card-radius: 28px;
+  --product-tab-panel-reviews-padding: 36px 36px 40px;
+  --product-lower-heading-font: 24px;
+  --product-lower-review-score-font: 50px;
+  --product-lower-review-caption-font: 15px;
+  --product-lower-review-user-font: 15px;
+  --product-lower-review-text-font: 15px;
+  --product-lower-review-meta-font: 13px;
+  --product-lower-gallery-more-font: 14px;
+}
+.product-reviews {
+  color: #1d1922;
+}
+.product-reviews-summary {
+  display: grid;
+  grid-template-columns: auto clamp(220px, 14.583vw, 280px);
+  gap: clamp(20px, 2.083vw, 40px);
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin-inline: auto;
+  margin-bottom: clamp(22px, 2.083vw, 40px);
+}
+.product-reviews-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(4px, 0.417vw, 8px);
+  text-align: center;
+}
+.product-reviews-score > strong {
+  color: #0f0c14;
+  font-size: var(--product-lower-review-score-font);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.product-reviews-score > span {
+  color: #3f3946;
+  font-size: var(--product-lower-review-caption-font);
+  font-weight: 500;
+  line-height: 1.2;
+}
+.product-reviews-stars {
+  display: inline-flex;
+  gap: clamp(1px, 0.104vw, 2px);
+  margin: 0;
+}
+.product-reviews-stars img {
+  display: block;
+  width: clamp(14px, 0.9375vw, 18px);
+  height: clamp(14px, 0.9375vw, 18px);
+  object-fit: contain;
+}
+.product-reviews-stars .star {
+  position: relative;
+  display: inline-block;
+  width: 90px;
+  height: 16px;
+  background-color: #d8d8d8;
+}
+.product-reviews-stars .star::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url(/data/skin/responsive_food_mealkit_gl/images/icon/icon-star-bg.png) no-repeat;
+  background-size: cover;
+}
+.product-reviews-stars .star b {
+  background-color: #ffc107;
+  display: block;
+  height: 100%;
+}
+.product-reviews-bars {
+  display: grid;
+  gap: clamp(6px, 0.521vw, 8px);
+  width: 100%;
+  padding-left: clamp(20px, 2.083vw, 40px);
+  border-left: 1px solid #d8cfe8;
+}
+.product-reviews-bar {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+.product-reviews-bar span {
+  color: #3f3946;
+  font-size: 14px;
+  font-weight: 600;
+}
+.product-reviews-bar i {
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: #e7e0f2;
+}
+.product-reviews-bar i::before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--product-purple);
+  transition: width 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.product-reviews-bars.is-animating .product-reviews-bar i::before {
+  width: var(--bar, 0%);
+}
+.product-reviews-bars.is-animating .product-reviews-bar:nth-child(2) i::before { transition-delay: 0.06s; }
+.product-reviews-bars.is-animating .product-reviews-bar:nth-child(3) i::before { transition-delay: 0.12s; }
+.product-reviews-bars.is-animating .product-reviews-bar:nth-child(4) i::before { transition-delay: 0.18s; }
+.product-reviews-bars.is-animating .product-reviews-bar:nth-child(5) i::before { transition-delay: 0.24s; }
+@media (prefers-reduced-motion: reduce) {
+  .product-reviews-bar i::before { transition: none; }
+}
+.product-reviews-gallery {
+  margin-bottom: clamp(24px, 2.083vw, 40px);
+}
+.product-reviews-gallery h3,
+.product-reviews-list-head h3 {
+  margin: 0 0 14px;
+  color: #0f0c14;
+  font-size: var(--product-lower-heading-font);
+  line-height: 1.1;
+  font-weight: 800;
+}
+.product-reviews-gallery-list {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(8px, 0.729vw, 14px);
+}
+.product-reviews-gallery-item {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 0;
+  border-radius: 6px;
+  object-fit: cover;
+  object-position: center;
+  background: #f3efff;
+}
+.product-reviews-gallery-more {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: var(--product-lower-gallery-more-font);
+  font-weight: 400;
+  cursor: pointer;
+}
+.product-reviews-gallery-more::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: rgba(15, 12, 20, 0.45);
+}
+.product-reviews-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.product-reviews-sort {
+  position: relative;
+  z-index: 5;
+  display: block;
+  flex: 0 0 auto;
+}
+.product-reviews-sort .reviews-sort-select-wrap {
+  min-width: 132px;
+}
+.product-reviews-sort .reviews-sort-select-trigger {
+  height: 36px;
+  padding: 0 32px 0 12px;
+  border: 1px solid #ded8e8;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.product-reviews-sort .reviews-sort-select-wrap.is-open {
+  z-index: 20;
+}
+.product-reviews-sort .reviews-sort-select-wrap.is-open .reviews-sort-select-trigger {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.product-reviews-sort .reviews-sort-select-wrap::after {
+  right: 10px;
+}
+.product-reviews-sort .reviews-sort-select-menu {
+  top: calc(100% - 1px);
+  bottom: auto;
+  border: 1px solid #ded8e8;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  padding: 10px 6px 6px;
+  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
+}
+.reviews-sort-select-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  z-index: 1;
+}
+.reviews-sort-select-wrap.is-open {
+  z-index: 30;
+}
+.reviews-sort-select-wrap::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' stroke='%23111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transform: translateY(-50%);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+.reviews-sort-select-wrap.is-open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+.reviews-sort-select-native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+.reviews-sort-select-trigger {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 41px;
+  padding: 0 36px 0 12px;
+  border: 0;
+  border-radius: 10px;
+  color: #111;
+  background: #fff;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.reviews-sort-select-value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reviews-sort-select-menu {
+  position: absolute;
+  top: calc(100% - 3px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 31;
+  margin: 0;
+  padding: 10px 6px 6px 6px;
+  list-style: none;
+  border-radius: 0 0 10px 10px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: visible;
+  box-sizing: border-box;
+  min-width: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.reviews-sort-select-menu:not(.is-open) {
+  display: none;
+}
+.reviews-sort-select-menu::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.reviews-sort-select-menu li {
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #111;
+  font-size: 13px;
+  line-height: 1.35;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.reviews-sort-select-menu li:hover,
+.reviews-sort-select-menu li.is-selected {
+  color: var(--product-purple);
+  background: #f2ebff;
+}
+.reviews-sort-select-menu li.is-sold-out {
+  opacity: 0.34;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.reviews-sort-select-menu li.is-sold-out:hover,
+.reviews-sort-select-menu li.is-sold-out.is-selected {
+  color: #111;
+  background: transparent;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+.product-reviews-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.product-review-item {
+  padding: 18px 0;
+  border-top: 1px solid #d8cfe8;
+}
+.product-review-item:last-child {
+  border-bottom: 1px solid #d8cfe8;
+}
+.product-review-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.product-review-user {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.product-review-avatar {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffe9c7 0%, #f0b8ba 100%);
+}
+.product-review-user strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #0f0c14;
+  font-size: var(--product-lower-review-user-font);
+  font-weight: 700;
+}
+.product-review-stars {
+  display: inline-flex;
+  gap: 2px;
+  margin: 0;
+}
+.product-review-stars img {
+  display: block;
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+.product-review-stars .star {
+  position: relative;
+  display: inline-block;
+  width: 68px;
+  height: 11px;
+  background-color: #d8d8d8;
+}
+.product-review-stars .star::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: url(/data/skin/responsive_food_mealkit_gl/images/icon/icon-star-bg.png) no-repeat;
+  background-size: cover;
+}
+.product-review-stars .star b {
+  background-color: #ffc107;
+  display: block;
+  height: 100%;
+}
+.product-review-top time {
+  flex: 0 0 auto;
+  color: #6d6678;
+  font-size: var(--product-lower-review-meta-font);
+  font-weight: 500;
+}
+.product-review-variant {
+  margin: 0 0 6px;
+  color: #6d6678;
+  font-size: 14px;
+  font-weight: 500;
+}
+.product-review-text {
+  margin: 0 0 12px;
+  color: #1d1922;
+  font-size: var(--product-lower-review-text-font);
+  line-height: 1.45;
+  font-weight: 400;
+  font-size: 14px;
+}
+.product-review-photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.product-review-photo {
+  position: relative;
+  display: block;
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: transparent;
+  cursor: pointer;
+}
+.product-review-photo-inner {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 6px;
+  background-size: cover;
+  background-position: center;
+}
+.product-review-item[hidden] {
+  display: none;
+}
+.product-reviews-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(24px, 2.083vw, 36px);
+}
+.product-reviews-more-wrap[hidden] {
+  display: none;
+}
+.product-reviews-more {
+  min-width: 120px;
+  height: 40px;
+  padding: 0 22px;
+  border: 1px solid rgba(123, 63, 228, 0.28);
+  border-radius: 999px;
+  color: var(--product-purple);
+  background: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+}
+.product-reviews-more:hover,
+.product-reviews-more:focus-visible {
+  color: #fff;
+  border-color: var(--product-purple);
+  background: var(--product-purple);
+  outline: none;
+}
+
+:root.is-mobile-reviews {
+  --product-card-radius: 20px;
+  --product-lower-heading-font: 21px;
+  --product-lower-review-score-font: 34px;
+  --product-lower-review-caption-font: 13px;
+  --product-lower-review-user-font: 14px;
+  --product-lower-review-text-font: 14px;
+  --product-lower-review-meta-font: 12px;
+  --product-lower-gallery-more-font: 13px;
+}
+.is-mobile-reviews .product-reviews {
+  padding: 0;
+}
+.is-mobile-reviews .product-reviews-count {
+  display: none;
+}
+.is-mobile-reviews .product-reviews-summary {
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+}
+.is-mobile-reviews .product-reviews-score {
+  align-items: center;
+  min-width: 0;
+}
+.is-mobile-reviews .product-reviews-bars {
+  width: 100%;
+  min-width: 0;
+  padding-left: 16px;
+  border-left: 1px solid #d8cfe8;
+  border-top: 0;
+  padding-top: 0;
+}
+.is-mobile-reviews .product-reviews-bar {
+  grid-template-columns: 14px minmax(0, 0.7fr);
+}
+.is-mobile-reviews .product-reviews-gallery-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.is-mobile-reviews .product-review-photo {
+  width: 72px;
+}
+.is-mobile-reviews .product-review-item.is-photo-expanded .product-review-photo {
+  width: 100%;
+}
+.is-mobile-reviews .product-reviews-list-head {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+:root.is-mobile-reviews-sm {
+  --product-lower-heading-font: 19px;
+  --product-lower-review-score-font: 30px;
+  --product-lower-review-text-font: 13px;
+}
+
+.product-reviews-modal { position: fixed; inset: 0; z-index: 999; display: grid; place-items: center; }
+.product-reviews-modal[hidden] { display: none; }
+.product-reviews-modal-backdrop { position: absolute; inset: 0; background: rgba(15,12,20,.72); }
+.product-reviews-modal-dialog {
+  position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0,1fr) 320px;
+  width: min(920px, 92vw); max-height: 88vh; background: #fff; border-radius: 16px; overflow: hidden;
+}
+.product-reviews-modal-media { background: #f3efff; }
+.product-reviews-modal-image { width: 100%; height: 100%; object-fit: contain; display: block; }
+.product-reviews-modal-info { padding: 24px; overflow-y: auto; }
+.product-reviews-modal-top { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.product-reviews-modal-close, .product-reviews-modal-nav {
+  position: absolute; z-index: 2; border: 0; background: rgba(255,255,255,.9); cursor: pointer; border-radius: 50%;
+}
+.product-reviews-modal-close { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 20px; }
+.product-reviews-modal-nav { top: 50%; transform: translateY(-50%); width: 40px; height: 40px; font-size: 22px; }
+.product-reviews-modal-nav.prev { left: 12px; }
+.product-reviews-modal-nav.next { right: 12px; }
+
+@media (max-width: 640px) {
+  .product-reviews-modal-dialog { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var sameOriginTop = false;
+
+  function getRealWidth() {
+    var w;
+    try {
+      w = window.top.innerWidth;
+      sameOriginTop = true;
+    } catch (e) {
+      w = undefined;
+    }
+    if (typeof w !== 'number' || !isFinite(w)) {
+      w = window.innerWidth;
+    }
+    return w;
+  }
+
+  function applyBreakpointClasses() {
+    var w = getRealWidth();
+    root.classList.toggle('is-mobile-reviews', w <= 760);
+    root.classList.toggle('is-mobile-reviews-sm', w <= 380);
+  }
+
+  applyBreakpointClasses();
+
+  var raf;
+  function onResize() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(applyBreakpointClasses);
+  }
+  try {
+    (sameOriginTop ? window.top : window).addEventListener('resize', onResize);
+  } catch (e) {
+    window.addEventListener('resize', onResize);
+  }
+})();
+</script>
+
+<!--{? _GET.iframe}-->
+<style>
+    #layout_body {padding:0;}
+    .subpage_wrap .subpage_container {padding-top:0;}
+</style>
+<!--{/}-->
+
+<!--{? _GET.id == 'goods_review' && !_GET.quickview}-->
+<div class="product-reviews">
+
+  <!--{?loop}-->
+  <div class="product-reviews-summary">
+    <div class="product-reviews-score">
+      <strong>{=total_score}</strong>
+      <p class="product-reviews-stars" aria-label="{=total_score} out of 5 stars">
+        <span class="star"><b style="width:{=total_per}%"></b></span>
+      </p>
+      <span class="product-reviews-count">{=number_format(total_cnt)}&nbsp;Reviews</span>
+    </div>
+    <div class="product-reviews-bars" aria-hidden="true">
+      <!--{ @ scoreList }-->
+      <div class="product-reviews-bar"><span>{.score}</span><i style="--bar: {.per}%"></i></div>
+      <!--{ / }-->
+    </div>
+  </div>
+  <!--{/}-->
+
+  <!--{? loop_photo }-->
+  <section class="product-reviews-gallery" aria-label="Review photos and videos">
+    <h3>Photo &amp; Video</h3>
+    <div class="product-reviews-gallery-list" id="photo_review">
+      <!--{@ loop_photo }-->
+      <img class="product-reviews-gallery-item review_pic photo-{.seq}" data-seq="{.seq}"
+	src="{?.upload}/data/board/{_GET.id}/{=substr(.upload,0,strpos(.upload,'^^'))}{/}"
+	alt="Customer review photo"
+	onerror="this.src='../../../images/common/noimage.gif'" />
+      <!--{/}-->
+      <button type="button" class="product-reviews-gallery-item product-reviews-gallery-more">View More</button>
+    </div>
+  </section>
+
+  <script type="application/json" id="product-reviews-photo-data">
+  [
+  <!--{@ loop_photo }-->
+  {
+    "seq": {.seq},
+    "name": {=json_encode(.real_name)},
+    "score": {.score},
+    "date": {=json_encode(date('m/d/Y', strtotime(.date)))},
+    "text": {=json_encode(strip_tags(.contents))},
+    "image": "{?.upload}/data/board/{_GET.id}/{=substr(.upload,0,strpos(.upload,'^^'))}{/}",
+    "images": [
+      <!--{@ .filelist}-->
+      <!--{? ..is_image }-->
+      {"src": {=json_encode(..realfileurl)}, "alt": {=json_encode(..orignfile)}},
+      <!--{/}-->
+      <!--{/}-->
+      null
+    ]
+  },
+  <!--{/}-->
+  {"seq": null}
+  ]
+  </script>
+
+  <!--{/}-->
+
+  <section class="product-reviews-list-wrap" aria-label="Customer reviews">
+    <div class="product-reviews-list-head">
+      <h3>Reviews <span class="product-reviews-count">({=number_format(total_cnt)})</span></h3>
+      <label class="product-reviews-sort listing-sort">
+        <span class="sr-only">Sort reviews</span>
+        <span class="reviews-sort-select-wrap">
+          <button type="button" class="reviews-sort-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Sort reviews">
+            <span class="reviews-sort-select-value">Most Recent</span>
+          </button>
+          <ul class="reviews-sort-select-menu" role="listbox"></ul>
+          <select class="reviews-sort-select-native" name="orderby" id="board_filter" tabindex="-1" aria-hidden="true">
+            <option value="seq" data-sort="" {?_GET.orderby == "seq" || !_GET.orderby}selected{/}>Most Recent</option>
+            <option value="score" data-sort="desc" {?_GET.orderby == "score" && _GET.sort == "desc"}selected{/}>Highest Rating</option>
+            <option value="score" data-sort="asc" {?_GET.orderby == "score" && _GET.sort == "asc"}selected{/}>Lowest Rating</option>
+          </select>
+        </span>
+      </label>
+    </div>
+
+    <!--{ ? loop }-->
+    <ul class="product-reviews-list" id="normal_review">
+      <!--{@ loop }-->
+      <li class="product-review-item">
+        <div class="product-review-top">
+          <div class="product-review-user">
+            <span class="product-review-avatar" aria-hidden="true"></span>
+            <div>
+              <strong>{.real_name}</strong>
+              <p class="product-review-stars" aria-label="{.score} stars">
+                <span class="star"><b style="width:{.score/5*100}%"></b></span>
+              </p>
+            </div>
+          </div>
+          <time datetime="{.date}">{=date('m/d/Y', strtotime(.date))}</time>
+        </div>
+        <!--{? (.title1 && .option1)}-->
+        <p class="product-review-variant">{.title1}: {.option1}</p>
+        <!--{/}-->
+        <p class="product-review-text">{=strip_tags(.contents)}</p>
+        <!--{? .filelist}-->
+        <div class="product-review-photos">
+          <!--{@ .filelist}-->
+          <!--{? ..is_image }-->
+          <button type="button" class="product-review-photo" data-seq="{.seq}" aria-label="Expand review photo">
+            <span class="product-review-photo-inner" aria-hidden="true" style="background-image:url('{..realfileurl}')"></span>
+          </button>
+          <!--{/}-->
+          <!--{/}-->
+        </div>
+        <!--{/}-->
+      </li>
+      <!--{/}-->
+    </ul>
+
+    <script type="application/json" id="product-reviews-list-photo-data">
+    [
+    <!--{@ loop }-->
+    <!--{? .filelist}-->
+    {
+      "seq": {.seq},
+      "name": {=json_encode(.real_name)},
+      "score": {.score},
+      "date": {=json_encode(date('m/d/Y', strtotime(.date)))},
+      "text": {=json_encode(strip_tags(.contents))},
+      "images": [
+        <!--{@ .filelist}-->
+        <!--{? ..is_image }-->
+        {"src": {=json_encode(..realfileurl)}, "alt": {=json_encode(..orignfile)}},
+        <!--{/}-->
+        <!--{/}-->
+        null
+      ]
+    },
+    <!--{/}-->
+    <!--{/}-->
+    {"seq": null}
+    ]
+    </script>
+
+    <!--{ : }-->
+    <div class="no_data_area2">No reviews yet.</div>
+    <!--{ / }-->
+
+	<div class="product-reviews-more-wrap" id="reviews_more_wrap" hidden>
+		<button type="button" class="product-reviews-more" id="reviews_more_btn">More</button>
+	</div>
+  </section>
+
+<div class="product-reviews-modal" id="reviewsPhotoModal" hidden>
+  <div class="product-reviews-modal-backdrop" data-modal-close></div>
+  <div class="product-reviews-modal-dialog" role="dialog" aria-modal="true" aria-label="Customer review">
+    <button type="button" class="product-reviews-modal-close" data-modal-close aria-label="Close">&times;</button>
+    <button type="button" class="product-reviews-modal-nav prev" data-modal-prev aria-label="Previous review">&lsaquo;</button>
+    <button type="button" class="product-reviews-modal-nav next" data-modal-next aria-label="Next review">&rsaquo;</button>
+    <div class="product-reviews-modal-media">
+      <img class="product-reviews-modal-image" src="" alt="Customer review photo">
+    </div>
+    <div class="product-reviews-modal-info">
+      <div class="product-reviews-modal-top">
+        <strong class="product-reviews-modal-name"></strong>
+        <span class="product-reviews-modal-stars"><span class="star"><b></b></span></span>
+        <time class="product-reviews-modal-date"></time>
+      </div>
+      <p class="product-reviews-modal-text"></p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!--{/}-->
+<script>
+(function () {
+  function initReviewsSortSelect(wrap) {
+    var trigger = wrap.querySelector('.reviews-sort-select-trigger');
+    var valueEl = wrap.querySelector('.reviews-sort-select-value');
+    var menu = wrap.querySelector('.reviews-sort-select-menu');
+    var select = wrap.querySelector('.reviews-sort-select-native');
+    if (!trigger || !valueEl || !menu || !select) return;
+    function buildMenu() {
+      menu.innerHTML = '';
+      Array.prototype.forEach.call(select.options, function (option, index) {
+        var item = document.createElement('li');
+        item.setAttribute('role', 'option');
+        item.dataset.index = String(index);
+        item.textContent = option.textContent;
+        var isSelected = index === select.selectedIndex;
+        item.classList.toggle('is-selected', isSelected);
+        item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        menu.appendChild(item);
+      });
+      valueEl.textContent = select.selectedOptions[0] ? select.selectedOptions[0].textContent.trim() : '';
+    }
+    function closeMenu() {
+      wrap.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+      menu.classList.remove('is-open');
+    }
+    function openMenu() {
+      wrap.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+      menu.classList.add('is-open');
+    }
+    function selectIndex(index) {
+      if (index < 0 || index >= select.options.length) return;
+      var option = select.options[index];
+      if (option.disabled) return;
+      var url = new URL(window.location.href);
+      url.searchParams.set('orderby', option.value);
+      if (option.dataset.sort) url.searchParams.set('sort', option.dataset.sort);
+      else url.searchParams.delete('sort');
+      url.searchParams.delete('page');
+      window.location.href = url.toString();
+    }
+    buildMenu();
+    trigger.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (wrap.classList.contains('is-open')) closeMenu();
+      else openMenu();
+    });
+    menu.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var item = event.target.closest('[role="option"]');
+      if (!item) return;
+      selectIndex(Number(item.dataset.index));
+    });
+    document.addEventListener('click', function (event) {
+      if (!wrap.classList.contains('is-open')) return;
+      if (wrap.contains(event.target)) return;
+      closeMenu();
+    });
+  }
+  var wraps = document.querySelectorAll('.product-reviews-sort .reviews-sort-select-wrap');
+  for (var i = 0; i < wraps.length; i++) {
+    initReviewsSortSelect(wraps[i]);
+  }
+})();
+</script>
+
+<script>
+(function () {
+  var PAGE_SIZE = 3;
+  var list = document.getElementById('normal_review');
+  var moreWrap = document.getElementById('reviews_more_wrap');
+  var moreBtn = document.getElementById('reviews_more_btn');
+  if (!list || !moreWrap || !moreBtn) return;
+
+  var items = Array.prototype.slice.call(list.querySelectorAll('.product-review-item'));
+  var visibleCount = 0;
+
+  function reveal() {
+    var next = items.slice(visibleCount, visibleCount + PAGE_SIZE);
+    for (var i = 0; i < next.length; i++) {
+      next[i].hidden = false;
+    }
+    visibleCount += next.length;
+    moreWrap.hidden = visibleCount >= items.length;
+    if (window.parent && typeof window.parent.syncReviewsFrameHeight === 'function') {
+      window.parent.syncReviewsFrameHeight();
+    }
+  }
+
+  for (var i = 0; i < items.length; i++) {
+    items[i].hidden = true;
+  }
+
+  reveal();
+
+  moreBtn.addEventListener('click', reveal);
+})();
+</script>
+
+<script>
+(function () {
+  function parseReviews(id) {
+    var el = document.getElementById(id);
+    if (!el) return [];
+    try {
+      return JSON.parse(el.textContent).filter(function (r) { return r && r.seq !== null; });
+    } catch (e) { return []; }
+  }
+
+  var reviews = parseReviews('product-reviews-photo-data');
+  var seen = {};
+  reviews.forEach(function (r) { seen[r.seq] = true; });
+  parseReviews('product-reviews-list-photo-data').forEach(function (r) {
+    if (!seen[r.seq]) { reviews.push(r); seen[r.seq] = true; }
+  });
+  reviews.forEach(function (r) {
+    r.images = (r.images || []).filter(function (im) { return im; });
+    if (!r.images.length && r.image) r.images = [{ src: r.image, alt: '' }];
+  });
+
+  var moreBtn = document.querySelector('.product-reviews-gallery-more');
+  if (!reviews.length) return;
+
+  // Escape the iframe so the popup covers the whole product page, not just this tab panel.
+  var hostWin = window;
+  try {
+    if (window.self !== window.top && window.top.document) hostWin = window.top;
+  } catch (e) {
+    hostWin = window; // cross-origin fallback — stays inside the iframe
+  }
+  var hostDoc = hostWin.document;
+
+  if (!hostDoc.getElementById('product-reviews-modal-styles')) {
+    hostDoc.head.insertAdjacentHTML('beforeend',
+            '<style id="product-reviews-modal-styles">' +
+      '.product-reviews-modal{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;}' +
+      '.product-reviews-modal[hidden]{display:none;}' +
+      '.product-reviews-modal-backdrop{position:absolute;inset:0;background:rgba(15,12,20,.72);}' +
+      '.product-reviews-modal-dialog{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) 320px;width:min(920px,92vw);height:560px;max-height:88vh;background:#fff;border-radius:16px;overflow:hidden;}' +
+      '.product-reviews-modal-media{display:flex;flex-direction:column;min-height:0;background:#f3efff;}' +
+      '.product-reviews-modal-image-wrap{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;}' +
+      '.product-reviews-modal-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;}' +
+      '.product-reviews-modal-counter{position:absolute;right:10px;bottom:82px;z-index:2;padding:3px 9px;border-radius:999px;background:rgba(15,12,20,.55);color:#fff;font-size:12px;}' +
+      '.product-reviews-modal-counter[hidden]{display:none;}' +
+      '.product-reviews-modal-thumbs{position:absolute;left:0;right:0;bottom:0;z-index:1;display:flex;gap:6px;height:72px;padding:8px;box-sizing:border-box;overflow-x:auto;background:rgba(0,0,0,.4);}' +
+      '.product-reviews-modal-thumbs[hidden]{display:none;}' +
+      '.product-reviews-modal-thumb{flex:0 0 auto;height:100%;aspect-ratio:1/1;border-radius:6px;border:2px solid transparent;background-size:cover;background-position:center;padding:0;cursor:pointer;box-sizing:border-box;}' +
+      '.product-reviews-modal-thumb.is-active{border-color:#7b3fe4;}' +
+      '.product-reviews-modal-info{position:relative;min-height:0;padding:24px;box-sizing:border-box;}' +
+      '.product-reviews-modal-info-inner{height:100%;padding:0 36px;box-sizing:border-box;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;}' +
+      '.product-reviews-modal-info-inner::-webkit-scrollbar{display:none;width:0;height:0;}' +
+      '.product-reviews-modal-top{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}' +
+      '.product-reviews-modal-close,.product-reviews-modal-nav{position:absolute;z-index:2;border:0;background:#f2ebff;color:#7b3fe4;box-shadow:0 2px 8px rgba(123,63,228,.15);cursor:pointer;border-radius:50%;}' +
+      '.product-reviews-modal-close:hover,.product-reviews-modal-nav:hover{background:#e4d5fb;}' +
+      '.product-reviews-modal-close{top:12px;right:12px;width:32px;height:32px;font-size:20px;}' +
+      '.product-reviews-modal-nav{top:50%;transform:translateY(-50%);width:40px;height:40px;font-size:22px;}' +
+      '.product-reviews-modal-nav.prev{left:12px;}' +
+      '.product-reviews-modal-nav.next{right:12px;}' +
+      '@media (max-width:640px){' +
+        '.product-reviews-modal{padding:0;align-items:flex-end;}' +
+        '.product-reviews-modal-dialog{display:flex;flex-direction:column;width:100%;max-width:none;height:auto;max-height:85dvh;border-radius:20px 20px 0 0;}' +
+        '.product-reviews-modal-media{flex:0 0 auto;}' +
+        '.product-reviews-modal-image-wrap{flex:none;aspect-ratio:1/1;max-height:45dvh;}' +
+        '.product-reviews-modal-counter{bottom:70px;}' +
+        '.product-reviews-modal-thumbs{height:60px;}' +
+        '.product-reviews-modal-info{flex:0 0 auto;height:19dvh;padding:18px 20px calc(18px + env(safe-area-inset-bottom,0px));background:#fff;}' +
+        '.product-reviews-modal-close{top:calc(12px + env(safe-area-inset-top,0px));right:12px;width:36px;height:36px;background:rgba(15,12,20,.55);color:#fff;}' +
+        '.product-reviews-modal-close:hover{background:rgba(15,12,20,.7);}' +
+        '.product-reviews-modal-nav{width:38px;height:38px;}' +
+      '}' +
+      '</style>');
+  }
+  var modal = hostDoc.getElementById('reviewsPhotoModal');
+  if (!modal) {
+        hostDoc.body.insertAdjacentHTML('beforeend',
+      '<div class="product-reviews-modal" id="reviewsPhotoModal" hidden>' +
+        '<div class="product-reviews-modal-backdrop" data-modal-close></div>' +
+        '<div class="product-reviews-modal-dialog" role="dialog" aria-modal="true" aria-label="Customer review">' +
+          '<button type="button" class="product-reviews-modal-close" data-modal-close aria-label="Close">&times;</button>' +
+          '<div class="product-reviews-modal-media">' +
+            '<div class="product-reviews-modal-image-wrap">' +
+              '<img class="product-reviews-modal-image" src="" alt="Customer review photo">' +
+              '<span class="product-reviews-modal-counter" hidden></span>' +
+              '<div class="product-reviews-modal-thumbs" hidden></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="product-reviews-modal-info">' +
+            '<button type="button" class="product-reviews-modal-nav prev" data-modal-prev aria-label="Previous review">&lsaquo;</button>' +
+            '<button type="button" class="product-reviews-modal-nav next" data-modal-next aria-label="Next review">&rsaquo;</button>' +
+            '<div class="product-reviews-modal-info-inner">' +
+              '<div class="product-reviews-modal-top">' +
+                '<strong class="product-reviews-modal-name"></strong>' +
+                '<span class="product-reviews-modal-stars"><span class="star"><b></b></span></span>' +
+                '<time class="product-reviews-modal-date"></time>' +
+              '</div>' +
+              '<p class="product-reviews-modal-text"></p>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>');
+    modal = hostDoc.getElementById('reviewsPhotoModal');
+  }
+
+  var img = modal.querySelector('.product-reviews-modal-image');
+  var counterEl = modal.querySelector('.product-reviews-modal-counter');
+  var thumbsEl = modal.querySelector('.product-reviews-modal-thumbs');
+  var nameEl = modal.querySelector('.product-reviews-modal-name');
+  var dateEl = modal.querySelector('.product-reviews-modal-date');
+  var textEl = modal.querySelector('.product-reviews-modal-text');
+  var starB = modal.querySelector('.product-reviews-modal-stars b');
+
+  var current = 0, currentImage = 0;
+
+  function renderImage(idx) {
+    var images = reviews[current].images;
+    if (!images.length) { img.src = ''; counterEl.hidden = true; return; }
+    currentImage = (idx + images.length) % images.length;
+    img.src = images[currentImage].src;
+    img.alt = images[currentImage].alt || 'Customer review photo';
+    counterEl.hidden = images.length <= 1;
+    counterEl.textContent = images.length > 1 ? (currentImage + 1) + ' / ' + images.length : '';
+    Array.prototype.forEach.call(thumbsEl.children, function (b, i) {
+      b.classList.toggle('is-active', i === currentImage);
+    });
+  }
+
+  function renderReview(ri) {
+    current = ri;
+    var r = reviews[ri];
+    nameEl.textContent = r.name || '';
+    dateEl.textContent = r.date || '';
+    textEl.textContent = r.text || '';
+    starB.style.width = (r.score / 5 * 100) + '%';
+    thumbsEl.innerHTML = '';
+    if (r.images.length > 1) {
+      r.images.forEach(function (im, idx) {
+        var b = hostDoc.createElement('button');
+        b.type = 'button';
+        b.className = 'product-reviews-modal-thumb';
+        b.style.backgroundImage = "url('" + im.src + "')";
+        b.setAttribute('data-image-index', idx);
+        thumbsEl.appendChild(b);
+      });
+      thumbsEl.hidden = false;
+    } else {
+      thumbsEl.hidden = true;
+    }
+    renderImage(0);
+  }
+
+  function open(ri, imageIdx) {
+    renderReview(ri);
+    if (imageIdx) renderImage(imageIdx);
+    modal.hidden = false;
+    hostDoc.body.style.overflow = 'hidden';
+  }
+  function close() {
+    modal.hidden = true;
+    hostDoc.body.style.overflow = '';
+  }
+  function stepReview(delta) {
+    renderReview((current + delta + reviews.length) % reviews.length);
+  }
+
+  if (moreBtn) {
+    moreBtn.addEventListener('click', function () { open(reviews.length - 1); });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.product-review-photo'), function (btn) {
+    btn.addEventListener('click', function () {
+      var seq = btn.getAttribute('data-seq');
+      var idx = reviews.findIndex(function (r) { return String(r.seq) === String(seq); });
+      if (idx === -1) return;
+      var siblings = document.querySelectorAll('.product-review-photo[data-seq="' + seq + '"]');
+      open(idx, Array.prototype.indexOf.call(siblings, btn));
+    });
+  });
+
+  // Re-bind cleanly each time this partial reloads (e.g. after a sort change),
+  // since `modal` persists in the top document across iframe reloads.
+  if (modal._reviewsClickHandler) modal.removeEventListener('click', modal._reviewsClickHandler);
+  modal._reviewsClickHandler = function (e) {
+    var thumb = e.target.closest('.product-reviews-modal-thumb');
+    if (thumb) { renderImage(Number(thumb.getAttribute('data-image-index'))); return; }
+    if (e.target.closest('[data-modal-close]')) close();
+    else if (e.target.closest('[data-modal-prev]')) stepReview(-1);
+    else if (e.target.closest('[data-modal-next]')) stepReview(1);
+  };
+  modal.addEventListener('click', modal._reviewsClickHandler);
+
+  // Swipe left/right anywhere on the modal to step between reviews, same as
+  // the prev/next buttons. Skips the thumbnail strip so its own horizontal
+  // scroll still works normally.
+  if (modal._reviewsTouchStartHandler) modal.removeEventListener('touchstart', modal._reviewsTouchStartHandler);
+  if (modal._reviewsTouchEndHandler) modal.removeEventListener('touchend', modal._reviewsTouchEndHandler);
+  var swipeStartX = null, swipeStartY = null, swipeStartTime = 0;
+  modal._reviewsTouchStartHandler = function (e) {
+    if (e.target.closest('.product-reviews-modal-thumbs') || e.touches.length !== 1) {
+      swipeStartX = null;
+      return;
+    }
+    swipeStartX = e.touches[0].clientX;
+    swipeStartY = e.touches[0].clientY;
+    swipeStartTime = Date.now();
+  };
+  modal._reviewsTouchEndHandler = function (e) {
+    if (swipeStartX === null) return;
+    var touch = e.changedTouches[0];
+    var dx = touch.clientX - swipeStartX;
+    var dy = touch.clientY - swipeStartY;
+    var dt = Date.now() - swipeStartTime;
+    swipeStartX = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 600) {
+      stepReview(dx < 0 ? 1 : -1);
+    }
+  };
+  modal.addEventListener('touchstart', modal._reviewsTouchStartHandler, { passive: true });
+  modal.addEventListener('touchend', modal._reviewsTouchEndHandler, { passive: true });
+
+  if (hostDoc._reviewsKeyHandler) hostDoc.removeEventListener('keydown', hostDoc._reviewsKeyHandler);
+  hostDoc._reviewsKeyHandler = function (e) {
+    if (modal.hidden) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') stepReview(-1);
+    else if (e.key === 'ArrowRight') stepReview(1);
+  };
+  hostDoc.addEventListener('keydown', hostDoc._reviewsKeyHandler);
+})();
+</script>

@@ -72,7 +72,7 @@
 				<!--{ ? loop }-->
 				<section class="bo-reviews-list" aria-label="My review list">
 					<!--{ @ loop }-->
-					<article class="bo-review-card">
+					<article class="bo-review-card" data-review-goods-seq="{.goodsInfo.goods_seq}">
 						<div class="bo-review-product">
 							<a class="bo-review-thumb" href="/goods/view?no={.goodsInfo.goods_seq}" aria-label="View {.goodsInfo.goods_name}">
 								<img src="{.goodsInfo.image}" onerror="this.src='/data/icon/error/noimage_list.gif'" alt="" />
@@ -95,7 +95,7 @@
 								<!--{/}-->
 							</div>
 							<div class="bo-review-copy">
-								<h3>{.subject}</h3>
+								<h3>{.subjectcut}</h3>
 								<p>{=strip_tags(.contents)}</p>
 							</div>
 							<div class="bo-review-actions">

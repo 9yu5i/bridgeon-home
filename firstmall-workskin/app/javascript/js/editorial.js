@@ -48,6 +48,69 @@ Editorial Section (maon page) JS
     editor.magazines?.[0]?.title ||
     `${editor.job}`;
 
+  /* ---------- List price (정가) strikethrough enrichment ----------
+   * The pick data only carries the selling price, so .editor-product-price has
+   * no list price to strike through. Pull each product's 정가 from its quickview
+   * page (~12x lighter than goods/view) and, when discounted, append <del>.
+   * Cached per goods_seq in sessionStorage (shared key with editors-pick.js) and
+   * fetched lazily via IntersectionObserver so only visible cards hit the network
+   * (this runs on the home page). Fully guarded — any failure leaves price as-is. */
+  const ORG_PRICE_KEY = "tpEditorOrgPrice";
+  const loadOrgCache = () => {
+    try { return JSON.parse(sessionStorage.getItem(ORG_PRICE_KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  };
+  const saveOrgCache = (cache) => {
+    try { sessionStorage.setItem(ORG_PRICE_KEY, JSON.stringify(cache)); } catch (e) {}
+  };
+  const injectListPrice = (priceEl, text) => {
+    if (!text || priceEl.querySelector("del")) return;
+    const del = document.createElement("del");
+    del.textContent = text; // already currency-formatted, e.g. "US$24.00"
+    priceEl.appendChild(del);
+  };
+  const enrichProductPrice = (priceEl) => {
+    const seq = priceEl.getAttribute("data-goods-seq");
+    if (!seq || priceEl.querySelector("del")) return;
+    const cache = loadOrgCache();
+    if (Object.prototype.hasOwnProperty.call(cache, seq)) {
+      injectListPrice(priceEl, cache[seq]); // cached "" means "no discount"
+      return;
+    }
+    fetch(`/goods/quickview?no=${encodeURIComponent(seq)}`, { credentials: "same-origin" })
+      .then((response) => (response.ok ? response.text() : ""))
+      .then((html) => {
+        if (!html) return; // request failed — don't cache, allow a later retry
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        // .product-price del only exists when 정가 > 판매가 (discounted).
+        const del = doc.querySelector(".product-price del, .qv-price del, del.org_price");
+        const text = del ? String(del.textContent || "").replace(/\s+/g, " ").trim() : "";
+        cache[seq] = text;
+        saveOrgCache(cache);
+        injectListPrice(priceEl, text);
+      })
+      .catch(() => {});
+  };
+  const observeProductPrices = () => {
+    const els = Array.from(document.querySelectorAll(".editor-product-price[data-goods-seq]"));
+    if (!els.length) return;
+    if (!("IntersectionObserver" in window)) {
+      els.forEach(enrichProductPrice);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          enrichProductPrice(entry.target);
+          obs.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "100px" }
+    );
+    els.forEach((el) => io.observe(el));
+  };
+
   const renderProductCard = (pick = {}) => {
     const detailUrl = escapeHtml(pick.detailUrl || getProductDetailUrl(pick));
     const productName = escapeHtml(pick.name || "Editor's Pick Product");
@@ -73,7 +136,7 @@ Editorial Section (maon page) JS
           <span class="editor-product-copy">
             <small>${brand}</small>
             <strong>${productName}</strong>
-            <span class="editor-product-price"><em>${price}</em>${originalPrice ? `<del>${originalPrice}</del>` : ""}</span>
+            <span class="editor-product-price"${Number.isFinite(goodsSeq) ? ` data-goods-seq="${goodsSeq}"` : ""}><em>${price}</em>${originalPrice ? `<del>${originalPrice}</del>` : ""}</span>
           </span>
         </a>
         <button type="button" class="editor-note-trigger" aria-label="View editor note for ${productName}" aria-expanded="false"></button>
@@ -160,6 +223,7 @@ Editorial Section (maon page) JS
   };
 
   renderSharedEditors();
+  observeProductPrices();
 
   let slides = Array.from(slider.querySelectorAll(".editor-card-track > .editor-card"));
   let tabs = Array.from(slider.querySelectorAll("[data-editor-card-tab]"));

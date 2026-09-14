@@ -1,0 +1,73 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 게시판 Write 레이아웃 템플릿 @@
+- 파일위치 : [스킨폴더]/board/write.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<div id="boardlayout" >
+	<script type="text/javascript">
+	//<![CDATA[
+	var board_id = '{_GET.id}';
+	var board_seq = '{_GET.seq}';
+	var boardlistsurl = '{boardurl->lists}';
+	var boardwriteurl = '{boardurl->write}';
+	var boardviewurl = '{boardurl->view}';
+	var boardmodifyurl = '{boardurl->modify}';
+	var boardreplyurl = '{boardurl->reply}';
+	var boardrpermurl = '{boardurl->perm}';
+	var file_use = '{=manager.file_use}';
+	var video_use = '{=manager.video_use}';
+	var return_url = '{=urlencode(_SERVER.REQUEST_URI)}';
+	//]]>
+	</script>
+	<script type="text/javascript" src="/app/javascript/js/board.js?v=7"  charset="utf-8"></script>
+	<script type="text/javascript" src="/app/javascript/js/board_mobile.js?v=1"  charset="utf-8"></script>
+	<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js" charset="utf-8"></script>
+	<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js"  charset="utf-8"></script>
+
+
+	<div class="subpage_wrap">
+		<!-- +++++ cscenter LNB ++++ -->
+		{? !_GET.iframe }
+		<div  id="subpageLNB" class="subpage_lnb">
+			<!-- ------- 고객센터 LNB 인클루드. 파일위치 : [스킨폴더]/_modules/common/board_lnb.html ------- -->
+			{#board_lnb}
+			<!-- ------- //고객센터 LNB 인클루드 ------- -->
+		</div>
+		{/}
+
+		<!-- +++++ cscenter contents ++++ -->
+		<div class="subpage_container">
+		{? !_GET.iframe }
+			<!-- 전체 메뉴 -->
+			<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)"><span designElement="text">MENU</span></a>
+
+			<!-- 타이틀 ( 관리자에서 설정한 "게시판명"이 노출됩니다. ) -->
+			<div class="title_container">
+				<h3>{manager.name}</h3>
+			</div>
+		{/}
+
+			<div id="bbsview">
+				<!-- ------- 각각의 게시판 write.html( 게시물 쓰기 ) 로드 ------- -->
+				{#skin}
+				<!-- ------- //각각의 게시판 write.html( 게시물 쓰기 ) 로드 ------- -->
+			</div>
+
+		</div>
+		<!-- +++++ //cscenter contents ++++ -->
+	</div>
+	<script type="text/javascript" src="../common/cscenter_ui.js"></script><!-- 고객센터 ui 공통 -->
+</div>
+
+<script type="text/javascript">
+function getLogin(){
+	{? defined('__ISUSER__') === true }
+		//글작성자만 이용가능합니다.
+		openDialogAlert(getAlert('et364'),'400','140');
+	{:}
+		//이용하시려면 로그인이 필요합니다!<br/>로그인하시겠습니까?
+		openDialogConfirm(getAlert('et362'),'400','155',function(){top.location.href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}";},function(){});
+	{/}
+}
+</script>
+<!-- ++++++++++++++++++++++++++++++++++ 게시판 Write 레이아웃 템플릿 :: END ++++++++++++++++++++++++++++++++++ -->

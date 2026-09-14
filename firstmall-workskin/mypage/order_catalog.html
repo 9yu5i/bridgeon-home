@@ -94,7 +94,7 @@
 		<div class="order_list" data-orders-list>
 			<ul>
 				<!--{ @ record }-->
-			    <li class="bo-order-card" data-order-step="{.step}" data-order-state="{.mstep}" data-order-payment="{.payment}" data-order-details-url="order_view?no={.order_seq}" data-order-seq="{.order_seq}" data-order-date="{=date('Y.m.d',strtotime(.regist_date))}" data-order-price="{=get_currency_price(.settleprice,2)}" data-order-shipping-method="{.shipping_method}" data-order-tracking-number="{.custom_tracking_number}" data-order-recipient="{.recipient_user_name}" data-order-address="{? .international_address}{.international_address}{:}{.recipient_address} {.recipient_address_detail}{/}" data-order-zipcode="{.merge_recipient_zipcode}">
+			    <li class="bo-order-card" data-order-step="{.step}" data-order-state="{.mstep}" data-order-status="{? .step == 0 || .step >= 90}cancel-refund{/}" data-order-payment="{.payment}" data-order-details-url="order_view?no={.order_seq}" data-order-seq="{.order_seq}" data-order-date="{=date('Y.m.d',strtotime(.regist_date))}" data-order-price="{=get_currency_price(.settleprice,2)}" data-order-shipping-method="{.shipping_method}" data-order-tracking-number="{.custom_tracking_number}" data-order-recipient="{.recipient_user_name}" data-order-address="{? .international_address}{.international_address}{:}{.recipient_address} {.recipient_address_detail}{/}" data-order-zipcode="{.merge_recipient_zipcode}">
                     <div class="menu">
                         <div class="order_num">
                             <h4><a href="order_view?no={.order_seq}">Order {.order_seq}</a></h4>

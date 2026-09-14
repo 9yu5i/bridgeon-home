@@ -1,0 +1,17 @@
+	<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+	@@ 게시판 신고하기 @@
+	- 파일위치 : [스킨폴더]/board/_report.html
+	++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+	<div id="report_frm">
+		<form action="/board_process/report" target="actionFrame" method="post">
+			<input type="hidden" name="board_id" value="{board_id}" />
+			<input type="hidden" name="board_seq" value="{board_seq}" />
+			<input type="hidden" name="board_type" value="{board_type}" />
+			<textarea name="contents" style="height:120px;" placeholder="게시글을 신고해 주시면 관리자가 확인 후, 해당 게시글 노출을 제한할 수 있습니다. 타당한 사유 없이 허위 신고 시 신고자에 대한 활동 제한이 가해질 수 있으니 신고 전에 신중하게 재고해 주시기 바랍니다."></textarea>
+			<div class="btn_area_c Pb10">
+				<input type="submit" value="등록하기" class="btn_resp size_c color2">&nbsp;
+				<input type="button" value="닫기" class="btn_resp size_c" onclick="hideCenterLayer()">
+			</div>
+		</form>
+	</div>

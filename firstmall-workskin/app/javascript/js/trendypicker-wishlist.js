@@ -13,7 +13,7 @@
   if (!page) return;
 
   const CATEGORY_KEYS = ["beauty", "k-food", "lifestyle", "k-pop", "k-traditional"];
-  const FETCH_CONCURRENCY = 4;
+  const FETCH_CONCURRENCY = 8;
 
   // The wishlist record carries no category or brand, and Firstmall exposes
   // no lookup for them, so the only source is the product page breadcrumb
@@ -25,7 +25,7 @@
   // and brand are the same on every visit, so the fetch should be paid once
   // per product per browser, not once per tab. Shared with
   // trendypicker-recently.js — same product catalog either way.
-  const PRODUCT_FACTS_KEY = "bo-product-facts-v1";
+  const PRODUCT_FACTS_KEY = "bo-product-facts-v2";
   const PRODUCT_FACTS_LIMIT = 600;
 
   const readProductFacts = () => {
@@ -201,20 +201,27 @@
 
   // Most recently wishlisted first (higher wish_seq = added later).
   const wishGrid = page.querySelector(".bo-wishlist-grid");
-  if (wishGrid) {
-    const bySeqDesc = Array.from(wishGrid.querySelectorAll(":scope > .bo-wish-card")).sort(
+  let cards = [];
+  const refreshCards = () => {
+    if (!wishGrid) return;
+    cards = Array.from(wishGrid.querySelectorAll(":scope > .bo-wish-card")).sort(
       (a, b) => Number(b.dataset.wishSeq || 0) - Number(a.dataset.wishSeq || 0)
     );
-    bySeqDesc.forEach((card) => wishGrid.appendChild(card));
-  }
+    cards.forEach((card) => wishGrid.appendChild(card));
+  };
+  refreshCards();
 
-  const cards = Array.from(page.querySelectorAll(".bo-wish-card"));
   const tabs = page.querySelector(".bo-wishlist-tabs");
   const listWrap =
     page.querySelector(".bo-wishlist-list-wrap") ||
     page.querySelector(".bo-wishlist-grid")?.parentElement;
+  const pagination = page.querySelector(".bo-wishlist-pagination");
+  const clientPageCapacity = 15;
   let activeFilter = tabs?.querySelector("button.is-active")?.dataset.wishFilter || "all";
+  let activeClientPage = 1;
+  let usesClientPagination = false;
   let categoriesReady = false;
+  let cardsReadyPromise = Promise.resolve();
 
   const emptyResult = document.createElement("div");
   emptyResult.className = "bo-wishlist-filter-empty";
@@ -230,20 +237,40 @@
     else card.setAttribute("hidden", "");
   };
 
+  const renderClientPagination = (itemCount) => {
+    if (!pagination || !usesClientPagination) return;
+    const pageCount = Math.ceil(itemCount / clientPageCapacity);
+    pagination.hidden = pageCount <= 1;
+    pagination.replaceChildren();
+
+    for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
+      const link = document.createElement("a");
+      link.href = "#";
+      link.dataset.wishlistPage = String(pageNumber);
+      link.textContent = String(pageNumber);
+      if (pageNumber === activeClientPage) {
+        link.className = "on red";
+        link.setAttribute("aria-current", "page");
+      }
+      pagination.appendChild(link);
+    }
+  };
+
   const applyFilters = () => {
-    let visibleCount = 0;
-
-    cards.forEach((card) => {
+    const matchingCards = cards.filter((card) => {
       const category = resolveCategory(card.dataset.wishCategory);
-      // Only show a card once its category is actually known and matches —
-      // showing not-yet-hydrated cards by default (old behavior) meant
-      // clicking a category tab briefly showed every other category too,
-      // until each card's product page finished loading and it got hidden.
-      const show = activeFilter === "all" || category === activeFilter;
-
-      setCardVisibility(card, show);
-      if (show) visibleCount += 1;
+      return activeFilter === "all" || category === activeFilter;
     });
+    const pageCount = Math.max(1, Math.ceil(matchingCards.length / clientPageCapacity));
+    activeClientPage = Math.min(activeClientPage, pageCount);
+    const pageStart = (activeClientPage - 1) * clientPageCapacity;
+    const visibleCards = usesClientPagination
+      ? new Set(matchingCards.slice(pageStart, pageStart + clientPageCapacity))
+      : new Set(matchingCards);
+
+    cards.forEach((card) => setCardVisibility(card, visibleCards.has(card)));
+    renderClientPagination(matchingCards.length);
+    const visibleCount = visibleCards.size;
 
     if (!categoriesReady && activeFilter !== "all") {
       emptyResult.textContent = "Loading wishlist categories...";
@@ -268,9 +295,19 @@
     if (!button || !tabs.contains(button)) return;
     event.preventDefault();
     activeFilter = button.dataset.wishFilter || "all";
+    activeClientPage = 1;
     syncTabs();
     applyFilters();
     if (activeFilter !== "all") void ensureCardsHydrated();
+  });
+
+  pagination?.addEventListener("click", (event) => {
+    const link = event.target.closest("a[data-wishlist-page]");
+    if (!link || !pagination.contains(link)) return;
+    event.preventDefault();
+    activeClientPage = Number(link.dataset.wishlistPage || 1);
+    applyFilters();
+    page.querySelector(".bo-wishlist-head")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
   const productRequests = new Map();
@@ -280,7 +317,9 @@
   // response is read as a stream and cancelled once both have arrived instead
   // of downloading the tail (product description, reviews, related items).
   const BREADCRUMB_MARKER = "navi_linemap";
-  const NAME_CLOSE_MARKER = "</h3>";
+  const PRIMARY_CATEGORY_MARKER = "data-tp-primary-category";
+  const QUICKVIEW_CATEGORY_MARKER = "qv-kbeauty-tag";
+  const NAME_CLOSE_MARKER = "</h1>";
   const PARTIAL_READ_LIMIT = 160000;
 
   const readProductHtml = async (url, signal) => {
@@ -296,6 +335,8 @@
     const decoder = new TextDecoder();
     let html = "";
     let breadcrumbAt = -1;
+    let primaryCategoryAt = -1;
+    let quickviewCategoryAt = -1;
 
     try {
       for (;;) {
@@ -303,9 +344,20 @@
         if (done) break;
         html += decoder.decode(value, { stream: true });
         if (breadcrumbAt < 0) breadcrumbAt = html.indexOf(BREADCRUMB_MARKER);
+        if (primaryCategoryAt < 0) primaryCategoryAt = html.indexOf(PRIMARY_CATEGORY_MARKER);
+        if (quickviewCategoryAt < 0) quickviewCategoryAt = html.indexOf(QUICKVIEW_CATEGORY_MARKER);
         // The product name closes after the breadcrumb, so its closing tag is
         // the point where nothing useful is left to read.
-        const complete = breadcrumbAt >= 0 && html.indexOf(NAME_CLOSE_MARKER, breadcrumbAt) >= 0;
+        const categoryComplete =
+          primaryCategoryAt >= 0 && html.indexOf("</span>", primaryCategoryAt) >= 0;
+        const nameComplete = html.indexOf(NAME_CLOSE_MARKER, Math.max(0, breadcrumbAt)) >= 0;
+        const quickviewCategoryComplete =
+          quickviewCategoryAt >= 0 && html.indexOf("</span>", quickviewCategoryAt) >= 0;
+        const quickviewNameComplete =
+          quickviewCategoryAt >= 0 && html.indexOf("</h2>", quickviewCategoryAt) >= 0;
+        const complete =
+          (quickviewCategoryComplete && quickviewNameComplete) ||
+          (nameComplete && (categoryComplete || breadcrumbAt >= 0));
         if (complete || html.length > PARTIAL_READ_LIMIT) break;
       }
     } finally {
@@ -331,6 +383,8 @@
     if (!documentPage) return "";
     const metaBrand = documentPage.querySelector('meta[property$=":brand"]')?.content?.trim();
     if (metaBrand) return metaBrand;
+    const quickviewBrand = documentPage.querySelector(".qv-brand-row a[href*='/goods/brand']");
+    if (quickviewBrand?.textContent.trim()) return quickviewBrand.textContent.trim();
     const brandLink = documentPage.querySelector('a[href*="/goods/brand?code="]');
     if (brandLink?.textContent.trim()) return brandLink.textContent.trim();
     const productName = documentPage.querySelector("h3.name")?.textContent?.trim() || "";
@@ -377,6 +431,14 @@
   };
 
   const readCategoryFromPage = (documentPage) => {
+    const primaryCategory = cleanCrumbText(
+      documentPage?.querySelector(
+        "[data-tp-primary-category], #tp-primary-category, .qv-kbeauty-tag"
+      )?.textContent
+    );
+    const primaryKey = normalizeCategory(primaryCategory) || matchCategory(primaryCategory);
+    if (primaryKey) return primaryKey;
+
     const crumbs = collectBreadcrumbTexts(documentPage);
 
     // An exact top-level category name anywhere in the trail wins outright,
@@ -548,10 +610,11 @@
         return;
       }
 
-      const productUrl =
-        card.querySelector(".bo-wish-card__media > a")?.href ||
-        card.querySelector('a[href*="/goods/view"]')?.href ||
-        (goodsSeq ? `/goods/view?no=${encodeURIComponent(goodsSeq)}` : "");
+      const productUrl = goodsSeq
+        ? `/goods/quickview?no=${encodeURIComponent(goodsSeq)}`
+        : card.querySelector(".bo-wish-card__media > a")?.href ||
+          card.querySelector('a[href*="/goods/view"]')?.href ||
+          "";
       if (!productUrl) return;
 
       const documentPage = await fetchProductPage(productUrl);
@@ -583,17 +646,9 @@
     applyFilters();
   };
 
-  // Thumbnails come first. Product-page reads are heavy enough that starting
-  // them mid-load leaves the grid showing empty image boxes, so hold them
-  // until the page has finished loading its own assets.
-  const afterPageLoad = () =>
-    document.readyState === "complete"
-      ? Promise.resolve()
-      : new Promise((resolve) => window.addEventListener("load", resolve, { once: true }));
-
   let cardsHydrationPromise = null;
   const ensureCardsHydrated = () => {
-    if (!cardsHydrationPromise) cardsHydrationPromise = afterPageLoad().then(hydrateCards);
+    if (!cardsHydrationPromise) cardsHydrationPromise = cardsReadyPromise.then(hydrateCards);
     return cardsHydrationPromise;
   };
 
@@ -616,10 +671,59 @@
   placeWishButtons(compactMedia.matches);
   compactMedia.addEventListener("change", (event) => placeWishButtons(event.matches));
 
+  const mergeWishlistPages = async () => {
+    const totalCount = Number(page.dataset.wishlistTotal || 0);
+    if (!wishGrid || !pagination || !totalCount) return;
+
+    const pageUrls = Array.from(pagination.querySelectorAll("a[href]"))
+      .map((link) => new URL(link.getAttribute("href"), window.location.href).href)
+      .filter((url, index, urls) => url !== window.location.href && urls.indexOf(url) === index);
+    if (!pageUrls.length) {
+      if (cards.length >= totalCount) {
+        usesClientPagination = true;
+        applyFilters();
+      }
+      return;
+    }
+
+    const documents = await Promise.all(
+      pageUrls.map((url) =>
+        fetch(url, { credentials: "same-origin", headers: { Accept: "text/html" } })
+          .then((response) => (response.ok ? response.text() : ""))
+          .then((html) => (html ? new DOMParser().parseFromString(html, "text/html") : null))
+          .catch(() => null)
+      )
+    );
+    const knownWishSeqs = new Set(cards.map((card) => card.dataset.wishSeq || ""));
+
+    documents.forEach((documentPage) => {
+      documentPage?.querySelectorAll(".bo-wishlist-grid > .bo-wish-card").forEach((card) => {
+        const wishSeq = card.dataset.wishSeq || "";
+        if (!wishSeq || knownWishSeqs.has(wishSeq)) return;
+        knownWishSeqs.add(wishSeq);
+        wishGrid.appendChild(document.importNode(card, true));
+      });
+    });
+
+    refreshCards();
+    cards.forEach(seedCardCategory);
+    placeWishButtons(compactMedia.matches);
+    if (cards.length >= totalCount) usesClientPagination = true;
+    applyFilters();
+  };
+
   cards.forEach(seedCardCategory);
   syncTabs();
   applyFilters();
+  cardsReadyPromise = mergeWishlistPages();
+  cardsReadyPromise.then(() => {
+    const preloadCategories = () => void ensureCardsHydrated();
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(preloadCategories, { timeout: 600 });
+    } else {
+      window.setTimeout(preloadCategories, 120);
+    }
+  });
   // Keep the server-rendered "All" list immediately usable. Product pages are
-  // fetched only if the shopper asks for category filtering; eager N-page
-  // hydration competed with thumbnails and made the page feel slow.
+  // fetched as soon as the shopper asks for category filtering.
 })();

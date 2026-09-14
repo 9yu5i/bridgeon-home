@@ -34,14 +34,18 @@
   const cards = Array.from(activeOrderList?.querySelectorAll(".bo-order-card") || []);
 
   const getStatus = (card) => {
-    if (card.dataset.orderStatus) return card.dataset.orderStatus;
-
-    const state = normalize(card.dataset.orderState);
+    const visibleState = card.querySelector(":scope > .shipping > .status > span")?.textContent || "";
+    const state = normalize(`${card.dataset.orderState || ""} ${visibleState}`);
+    const hasOrderStep = card.hasAttribute("data-order-step");
     const step = Number(card.dataset.orderStep || 0);
 
-    if (/cancel|refund|return|exchange|void|취소|환불|반품|교환|철회|무효/.test(state)) {
+    if (
+      (hasOrderStep && (step <= 0 || step >= 90)) ||
+      /cancel|refund|return|exchange|void|invalid|취소|환불|반품|교환|철회|무효/.test(state)
+    ) {
       return "cancel-refund";
     }
+    if (card.dataset.orderStatus) return card.dataset.orderStatus;
     if (/delivered|purchase confirmed|배송완료|구매확정/.test(state)) return "delivered";
     if (/shipped|in transit|배송중|출고/.test(state)) return "shipped";
     if (/payment confirmed|processing|preparing|상품준비|결제확인/.test(state)) {

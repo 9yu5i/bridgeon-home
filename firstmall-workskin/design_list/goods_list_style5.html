@@ -97,7 +97,7 @@
 
         <!--{? .goods_name}-->
 		<li class="goods_name_area">
-			<a href="/goods/view?no={.goods_seq}"><span class="name">{?.brand_title}[{.brand_title}] {/}{.goods_name}</span></a>
+			<a href="/goods/view?no={.goods_seq}"><span class="name">{?.brand_title}[{=stripslashes(.brand_title)}] {/}{.goods_name}</span></a>
 		</li>
 		<!--{ / }-->
 

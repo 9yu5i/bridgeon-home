@@ -1,0 +1,125 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 대량구매 List @@
+- 파일위치 : [스킨폴더]/board/bulkorder/_bulkorder/index.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+<!--{? viewlist != 'view' }-->
+<form name="boardsearch" id="boardsearch">
+	<input type="hidden" name="id" value="{_GET.id}">
+	<input type="hidden" name="popup" value="{_GET.popup}">
+	<input type="hidden" name="iframe" value="{_GET.iframe}">
+	<input type="hidden" name="goods_seq" value="{_GET.goods_seq}">
+	<input type="hidden" name="perpage" id="perpage" value="{_GET.perpage}">
+	<input type="hidden" name="category" id="category" value="{_GET.category}">
+	<input type="hidden" name="score" id="score" value="{_GET.score}">
+
+	<ul class="bbs_top_wrap">
+		<li class="left">
+			<!--{? categorylist}-->
+			<select name="category" id="searchcategory">
+				<option value="" selected="selected">- 질문유형전체 -</option>
+				<!--{@ categorylist}-->
+				<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{.value_}</option>
+				<!--{/}-->
+			</select>
+			<!--{ / }-->
+		</li>
+		<li class="right2">
+			<span class="searchform">
+				<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="상품명, 회사명, 문의자, 제목, 내용" />
+				<button type="submit" class="btn_resp size_b">검색</button>
+				<button type="button" class="btn_resp size_b hide" onclick="document.location.href='{boardurl->resets}'">초기화</button>
+			</span>
+		</li>
+	</ul>
+</form>
+<div class="article_info hide">
+	{? sc.totalcount> sc.searchcount }검색 {=number_format(sc.searchcount)}개/{/}총 {=number_format(sc.totalcount)}개 (현재 {? sc.total_page== 0 }0{:}{=((sc.page/sc.perpage)+1)}{/}/총 {=number_format(sc.total_page)}페이지)
+</div>
+<!--{ / }-->
+
+{ ? noticeloop || loop }
+	<div class="res_table">
+		<ul class="thead">
+			<li style="width:45px;"><span designElement="text">번호</span></li>
+			<li style="width:80px;"><span designElement="text">상태</span></li>
+			<li style="width:105px;"><span designElement="text">분류</span></li>
+			<li><span designElement="text">문의</span></li>
+			<li style="width:120px;"><span designElement="text">문의자</span></li>
+			{? strstr(manager.list_show,'[date]') }<li style="width:100px;"><span designElement="text">문의일</span></li>{/}
+			{? strstr(manager.list_show,'[score]') && manager.auth_recommend_use == 'Y' }<li style="width:45px;">{manager.scoretitle}</li>{/}
+			{? strstr(manager.list_show,'[hit]') }<li style="width:45px;"><span designElement="text">조회</span></li>{/}
+		</ul>
+	{? noticeloop }
+		{@ noticeloop }
+		<ul class="tbody notice">
+			<li class="num"><span class="mtitle" designElement="text">공지</span> {.number}</li>
+			<li class="mo_hide"><span class="pointcolor" designElement="text">공지</span></li>
+			<li>{.category}</li>
+			<li class="subject">
+				<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}"  viewtype="{manager.viewtype}"  pagetype="{pagetype}"  board_seq="{.seq}" board_id="{_GET.id}">
+					{.iconmobile}{.blank} {.subjectcut} 
+					{? .comment>0 }<span class="comment">({=number_format(.comment)})</span>{/}
+					{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
+				</span>
+			</li>
+			<li>{.name}</li>
+			{? strstr(manager.list_show,'[date]') }<li>{=date('Y.m.d',strtotime(.date))}</li>{/}
+			{? strstr(manager.list_show,'[score]') && manager.auth_recommend_use == 'Y' }<li><span class="mtitle">{manager.scoretitle}:</span>{.recommendlay}</li>{/}
+			{? strstr(manager.list_show,'[hit]') }<li><span class="mtitle" designElement="text">조회:</span> {.hit}</li>{/}
+		</ul>
+		{/}
+	{/}
+	{? loop }
+		{@ loop }
+		<ul class="tbody {? .display == 1}gray{/} {? .reply_state == 'complete'}complete{/} {? .blank}reply{/}">
+			<li class="mo_hide"><span class="mtitle" designElement="text">번호:</span> {.number}</li>
+			<li><span class="reply_title">{.reply_title}</span></li>
+			<li style="order:-4;">{.category}</li>
+			<li class="subject">
+				<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}"  viewtype="{manager.viewtype}"  pagetype="{pagetype}"  board_seq="{.seq}" board_id="{_GET.id}">
+					{.iconmobile}{.blank} {.subjectcut} {? .comment>0 }<span class="comment">({=number_format(.comment)})</span>{/}
+					{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
+				</span>
+			</li>
+			<li>{.name}</li>
+			{? strstr(manager.list_show,'[date]') }<li>{=date('Y.m.d',strtotime(.date))}</li>{/}
+			{? strstr(manager.list_show,'[score]') && manager.auth_recommend_use == 'Y' }<li><span class="mtitle">{manager.scoretitle}:</span>{.recommendlay}</li>{/}
+			{? strstr(manager.list_show,'[hit]') }<li><span class="motle2" designElement="text">조회:</span> {.hit}</li>{/}
+		</ul>
+		{/}
+	{/}
+	</div>
+{ : }
+	<div class="no_data_area2">
+		등록된 게시글이 없습니다.
+	</div>
+{ / }
+
+{? pagin }
+<div id="pagingDisplay" class="paging_navigation">{pagin}</div>
+{/}
+
+<ul class="bbs_bottom_wrap">
+	<li class="right">
+		<button type="button" name="boad_write_btn{manager.isperm_write}"  {? _GET.iframe }id="goods_boad_write_btn{manager.isperm_write}"{:}id="boad_write_btn{manager.isperm_write}"{/} board_id="{boardid}" fileperm_read="{manager.fileperm_write}" class="btn_resp size_b color2" />{manager.name} <span designElement="text">쓰기</span></button>
+	</li>
+</ul>
+
+<div id="BoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3> 비밀번호 확인</h3>
+		<div>게시글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
+		<input type="hidden" name="seq" id="pwck_seq" value="" />
+		<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="pwck_pw" class="input" />
+			<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+			<input type="button" value=" 취소 " class="bbs_btn" onclick="$('#BoardPwCk').dialog('close');" />
+		</div>
+	</form>
+</div>
+<!-- //비밀번호 확인 -->

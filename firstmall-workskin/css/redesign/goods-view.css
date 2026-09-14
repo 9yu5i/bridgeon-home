@@ -2104,6 +2104,18 @@ ul.detail_event_area li.th {
 .product-tab-panels:has(.product-reviews) {
   padding: var(--product-tab-panel-reviews-padding);
 }
+.product-detail-description {
+  width: 100%;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.product-detail-description img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
 #panel-details ul:not(:first-of-type) li.th,
 #panel-use ul li.th {
     font-weight: bold;
@@ -2701,6 +2713,14 @@ textarea.product-inquiry-field {
   border-radius: 0 0 8px 8px;
   padding: 10px 6px 6px;
   box-shadow: 0 10px 28px rgba(18, 12, 26, 0.14);
+}
+@media (min-width: 1025px) {
+  .product-reviews-sort .reviews-sort-select-menu,
+  .product-reviews-sort .realtrend-select-menu {
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
 }
 .product-reviews-list {
   margin: 0;

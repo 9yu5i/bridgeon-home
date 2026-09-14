@@ -1,0 +1,257 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 상품후기 View @@
+- 파일위치 : [스킨폴더]/board/goods_review/_goods_review/view.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--{? !param.iframe }--><!--{/}-->
+
+<form name="form1" id="form1" method="post" action="{=sslAction('../board_process')}"  target="actionFrame">
+	<input type="hidden" name="mode" id="mode" value="{mode}" />
+	<input type="hidden" name="board_id" id="board_id" value="{manager.id}" />
+	<input type="hidden" name="reply" id="reply" value="{param.reply}" />
+	<!--{? seq }-->
+	<input type="hidden" name="seq" id="board_seq" value="{seq}" />
+	<!--{/}-->
+	<input type="hidden" name="popup" value="{param.popup}">
+	<input type="hidden" name="iframe" value="{param.iframe}">
+	<input type="hidden" name="goods_seq" value="{goods_seq}">
+
+	<div class="board_detail_title">
+		{? datacategory }[{datacategory}]{/} {iconmobile} {subject} {iconnew} {iconhot} {iconhidden}
+		<ul class="report_block_a">
+			<!--{? report_view }-->
+			<li><a href="javascript:void(0)" class="report_btn">신고</a></li>
+			<!--{ / }-->
+			<!--{? block_view }-->
+			<li><a href="javascript:void(0)" class="block_btn block_{block_onoff}" block_onoff="{block_onoff}">차단</a></li>
+			<!--{ / }-->
+		</ul>
+	</div>
+	<table class="table_row_a Thc" data-responsive="yes" width="100%" cellpadding="0" cellspacing="0">
+		<colgroup><col class="size_b"><col><col class="size_b"><col></colgroup>
+		<tbody>
+			<tr>
+				<th><p designElement="text">작성자</p></th>
+				<td>{name}</td>
+				<th><p designElement="text">등록일</p></th>
+				<td>{r_date}</td>
+			</tr>
+			<tr>
+				<th><p designElement="text">조회수</p></th>
+				<td>{=number_format(hit)}</td>
+				<!--{? buyertitle }-->
+				<th><p designElement="text">구매여부</p></th>
+				<td>{buyertitle}</td>
+				<!--{ / }-->
+			</tr>
+			<tr>
+				<th><p designElement="text">평점</p></th>
+				<td colspan="3">
+					{? !isplusfreenot //무료몰경우 }
+						{scorelay}
+					{:}
+						{scorelay}{? score_avg_lay }/100{/}
+						{? reviewcategorylist},&nbsp;&nbsp;
+							{@ reviewcategorylist}
+								{.title} {? .score }{=getGoodsScore(.score, manager, 'view', .idx)} {:} 0 {/}
+								{? count(reviewcategorylist)-1> .index_ },&nbsp;&nbsp;{/}
+							{/}
+						{/}
+					{/}
+				</td>
+			</tr>
+			{? goodsreview_sub }
+			{@ goodsreview_sub}
+			{? .used == 'Y' }
+			<tr>
+				<th><p>{.label_title}</p></th>
+				<td colspan="3">
+					{.label_view}
+				</td>
+			</tr>
+			{/}
+			{/}
+			{/}
+			<!--{? file_key_w && uccdomain_fileswf}-->
+			<tr>
+				<th><p designElement="text">첨부파일</p></th>
+				<td colspan="3">
+					<embed src="{uccdomain_fileswf}" width="{managerview.video_size0}" height="{managerview.video_size1}" allowfullscreen="true" wmode="transparent"></embed>
+				</td>
+			</tr>
+			<!--{/}-->
+			<!--{? filelist}-->
+			<tr>
+				<th><p designElement="text">첨부파일</p></th>
+				<td colspan="3">
+					<ul>
+						<!--{@ filelist}-->
+						<li>
+							<span class="realfilelist hand highlight-link" realfiledir="{.realfiledir}" realfilename="{.orignfile}"  realfilename="{.orignfile}" board_id="{boardid}" filedown="../board_process?mode=board_file_down&board_id={boardid}&realfiledir={.realfiledir}&realfilename={.orignfile}">{.orignfile} (<span class="size">{.realsizefile}</span>) <button type="button"  class="bbs_btn">down</button></span>
+							{? .is_image }
+								<span class="hand" imgsrc="{.realfile}" onclick="board_file_review('{.realfile}','{.imagesize[0]}','{.imagesize[1]}');"><img src="../../../images/icon/icon_zoom.gif" hspace="1" title="미리보기"/></span>
+							{/}
+						</li>
+						<!--{/}-->
+					</ul>
+				</td>
+			</tr>
+			<!--{/}-->
+		</tbody>
+	</table>
+
+	<div class="board_detail_contents">
+		{contents}
+	</div>
+
+	<!--{? managerview.auth_recommend_use == 'Y' }-->
+	<div class="board_score">
+		<!-- 게시글 평가 인클루드. 파일위치 : [스킨폴더]/board/_score.html -->
+		{#scoreskin}
+		<!-- //게시글 평가 인클루드 -->
+	</div>
+	<!--{/}-->
+
+	{? goodsview}
+	<div class="goods_origin_info">
+		<h4 class="title"><span designElement="text">상품 정보</span></h4>
+		<!-- 상품 정보 노출( 스킨단에서 html 수정 불가. CSS로만 수정하세요. ) -->
+		{goodsview}
+	</div>
+	{/}
+	
+	<div class="board_sns_link">
+		{=snslinkurl('board', subject)}
+	</div>
+</form>
+
+<!--{? commentlay == 'Y' || comment> 0 // 댓글 사용여부, 댓글수 }-->
+<a name="cmtlist"></a>
+<div class="board_comment_area"  id="comment_container">
+	<!-- 게시글 댓글/덧글 인클루드. 파일위치 : [스킨폴더]/board/_comment.html -->
+	{#commentskin}
+	<!-- //게시글 댓글/덧글 인클루드 -->
+</div>
+<!--{/}-->
+
+<!-- 이전글, 다음글 -->
+<div id="prenextlist" class="board_prev_next_list">
+	<!-- 이전글/다음글 인클루드. 파일위치 : [스킨폴더]/board/_prenext.html -->
+	{#prenextskin}
+	<!-- //이전글/다음글 인클루드 -->
+</div>
+
+<!-- 하단 각종 버튼 -->
+<ul class="board_detail_btns">
+	<li class="left"><button type="button" name="boardviewclose" class="btn_resp size_b color5"><span designElement="text">목록</span></button></li>
+	<li class="right">
+	<!--{? display == 0 && managerview.isperm_moddel != "_mbno" }-->
+		<button type="button" {? param.iframe }name="goods_boad_modify_btn{managerview.isperm_moddel}"{:}name="boad_modify_btn{managerview.isperm_moddel}"{/} board_seq="{seq}" board_id="{boardid}" class="btn_resp size_b"><span designElement="text">수정</span></button>
+	<!--{/}-->
+	<!--{? ((display == 0 || (display == 1 && replyor == 0 && comment ==0) ) ) && managerview.isperm_moddel != "_mbno"  }--> 
+		<button type="button"  {? param.iframe }name="goods_boad_delete_btn{managerview.isperm_moddel}"{:}name="boad_delete_btn{managerview.isperm_moddel}"{/}  board_seq="{seq}"  board_id="{boardid}"  class="btn_resp size_b"><span designElement="text">삭제</span></button>
+	<!--{/}-->
+	<!--{? !param.iframe }-->
+		<!--{? display == 0 && replylay == 'Y' && managerview.isperm_write != "_no" }-->
+			<button type="button"  name="boad_reply_btn" board_seq="{seq}"  board_id="{boardid}" class="btn_resp size_b"><span designElement="text">답변</span></button>
+		<!--{/}-->
+	<!--{/}-->
+	<!--{? managerview.isperm_write != "_no" }-->
+		<button type="button" {? param.iframe }id="goods_boad_write_btn{managerview.isperm_write}"{:}id="boad_write_btn{managerview.isperm_write}"{/} board_id="{boardid}" class="btn_resp size_b color2">{manager.name} <span designElement="text">쓰기</span></button>
+	<!--{/}-->
+	</li>
+</ul>
+
+
+
+<div id="CmtBoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3> 비밀번호 확인</h3>
+		<div style="padding:10px 0 0;">댓글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="BoardPwcheckForm" id="CmtBoardPwcheckForm" method="post">
+		<input type="hidden" name="seq" id="cmt_pwck_seq" value="" />
+		<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq" value="" />
+		<div class="C Pt20">
+			<input type="password" name="pw" id="cmt_pwck_pw" style="width:140px;" />
+			<button type="submit" id="CmtBoardPwcheckBtn" class="btn_resp size_b color2">확인</button>
+			<button type="button" class="btn_resp size_b" onclick="$('#CmtBoardPwCk').dialog('close');">취소</button>
+		</div>
+	</form>
+</div>
+<!-- //댓글 비회원 비밀번호 확인 -->
+
+<div id="ModDelBoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3> 비밀번호 확인</h3>
+		<div style="padding:10px 0 0;">게시글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="ModDelBoardPwcheckForm" id="ModDelBoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
+		<input type="hidden" name="modetype" id="modetype" value="" />
+		<input type="hidden" name="seq" id="moddel_pwck_seq" value="" />
+		<input type="hidden" name="returnurl" id="moddel_pwck_returnurl" value="" />
+		<div class="C Pt20">
+			<input type="password" name="pw" id="moddel_pwck_pw" style="width:140px;" />
+			<button type="submit" id="BoardPwcheckBtn" class="btn_resp size_b color2">확인</button>
+			<button type="button" class="btn_resp size_b" onclick="$('#ModDelBoardPwCk').dialog('close');">취소</button>
+		</div>
+	</form>
+</div>
+
+<!-- //게시글 비회원 비밀번호 확인 -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		/* iframe 호출 시 팝업 영역 동적 생성 - 시작 */
+		var LayerFind = $(document).find("#openDialogLayer");
+		// 팝업 없는 경우 영역 생성
+		if(LayerFind.length < 1){
+			var openDialogLayer = $('<div />',{
+				id: 'openDialogLayer',
+				display: 'none',
+			});
+			var openDialogLayerMsg = $('<div />',{
+				id: 'openDialogLayerMsg',
+				align: 'center',
+			});
+
+			$(openDialogLayer).append(openDialogLayerMsg);
+			$("#ModDelBoardPwCk").after(openDialogLayer);
+		}
+		/* iframe 호출 시 팝업 영역 동적 생성 - 종료 */
+
+	});
+
+	function getboardLogin(){
+		{? defined('__ISUSER__') === true }
+			//해당 서비스를 이용하시려면 관리자에게 문의하여 주시길 바랍니다.
+			openDialogAlert(getAlert('et143'),'450','140');
+		{:}
+			//이용하시려면 로그인이 필요합니다!<br/>로그인하시겠습니까?
+			openDialogConfirm(getAlert('et144'),'400','155',function(){top.location.href="/member/login?return_url="+return_url;},function(){});
+		{/}
+	}
+
+	function getcmtMbLogin(){
+		{? defined('__ISUSER__') === true }
+			//글작성자만 이용가능합니다.
+			openDialogAlert(getAlert('et145'),'400','140');
+		{:}
+			//이용하시려면 로그인이 필요합니다!<br/>로그인하시겠습니까?
+			openDialogConfirm(getAlert('et144'),'400','155',function(){top.location.href="/member/login?return_url="+return_url;},function(){});
+		{/}
+	}
+
+	$(window).load(function () {
+		//이미지 가로가 큰경우
+		$(".content img").each(function() {
+			<!--{ ? layout_config.layoutScrollLeft != 'hidden' || layout_config.layoutScrollRight != 'hidden'}-->
+				var default_width = '{layout_config.body_width-100}';//(본문레이아웃사이즈-100) 또는 직접값변경
+			<!--{:}-->
+				var default_width = '{layout_config.body_width-50}';//(본문레이아웃사이즈-50) 또는 직접값변경
+			<!--{/}-->
+			if( $(this).width()> default_width || $(this).height()> default_width ) {
+				imageResize(this,default_width);
+			}
+		});
+	});
+</script> 

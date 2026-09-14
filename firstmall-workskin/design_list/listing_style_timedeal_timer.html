@@ -68,7 +68,7 @@
 			<!--{? .goods_name}-->
 			<div class="goods_name_area">
 				<!--{?.brand_title}-->
-					<a href="/goods/brand?code={.brand_code}" class="listing-card-brand">{.brand_title}</a>
+					<a href="/goods/brand?code={.brand_code}" class="listing-card-brand">{=stripslashes(.brand_title)}</a>
 				<!--{:}-->
 					<span class="listing-card-brand" style="visibility:hidden;">Unknown brand.</span>
 				<!--{/}-->

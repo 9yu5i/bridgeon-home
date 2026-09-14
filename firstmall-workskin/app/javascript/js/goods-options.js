@@ -5,6 +5,56 @@ goods.option.0.2.js 는 그대로 실제 <select> 의 value/change 이벤트로 
 */
 (function ($) {
 
+	function getQuickviewDisplayPrice($option) {
+		var optionText = $.trim($option.text());
+		var optionValue = $.trim($option.val());
+		var priceText = $.trim(optionText.slice(optionValue.length));
+		var match = priceText.match(/^\(\+\s*([^\d]*)([\d][\d,]*(?:\.\d+)?)([^\d)]*)\)$/);
+		if (!match) return null;
+
+		var numericText = match[2].replace(/,/g, '');
+		var unitPrice = Number(numericText);
+		if (!isFinite(unitPrice)) return null;
+
+		return {
+			unitPrice: unitPrice,
+			prefix: match[1],
+			suffix: match[3],
+			decimals: numericText.indexOf('.') > -1 ? numericText.split('.')[1].length : 0
+		};
+	}
+
+	function formatQuickviewDisplayPrice(priceData, quantity) {
+		var amount = priceData.unitPrice * quantity;
+		var parts = amount.toFixed(priceData.decimals).split('.');
+		parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		return priceData.prefix + parts.join('.') + priceData.suffix;
+	}
+
+	function refreshQuickviewSelectedPrice(row) {
+		var $row = $(row);
+		var priceData = $row.data('qvDisplayPrice');
+		if (!priceData) return;
+
+		var quantity = parseInt($row.find("input[name^='optionEa']").val(), 10) || 1;
+		$row.find('.out_option_price').text(formatQuickviewDisplayPrice(priceData, quantity));
+	}
+
+	function syncQuickviewSelectedPrice($select, $option) {
+		if (!$select.closest('#quickviewBody').length) return;
+
+		var priceData = getQuickviewDisplayPrice($option);
+		if (!priceData) return;
+
+		var $row = $select.closest('#select_option_lay')
+			.find('.goods_quantity_table .option_tr')
+			.last();
+		if (!$row.length) return;
+
+		$row.data('qvDisplayPrice', priceData);
+		refreshQuickviewSelectedPrice($row);
+	}
+
 	function renderMenu($select, $menu, $trigger) {
 		$menu.empty();
 		var selectedText = '';
@@ -96,7 +146,11 @@ function openMenu($wrap, $menu, $trigger, $select) {
 		$menu.on('click', 'li', function (e) {
 			e.stopPropagation();
 			if ($(this).hasClass('is-sold-out')) return;
-			$select.val($(this).attr('data-value')).trigger('change');
+			var $option = $select.find('option').filter(function () {
+				return $(this).val() === $(e.currentTarget).attr('data-value');
+			}).first();
+			$select.val($option.val()).trigger('change');
+			syncQuickviewSelectedPrice($select, $option);
 			$select.trigger('blur');
 			closeMenu($wrap, $menu, $trigger);
 		});
@@ -153,5 +207,13 @@ function openMenu($wrap, $menu, $trigger, $select) {
 		syncAllFmSelectDropdowns();
 		watchForNewSelects(document.getElementById('select_option_lay'));
 	};
+
+	$(document).off('.qvDisplayPrice')
+		.on('click.qvDisplayPrice', '#quickviewBody .goods_quantity_table .eaPlus, #quickviewBody .goods_quantity_table .eaMinus', function () {
+			refreshQuickviewSelectedPrice($(this).closest('.option_tr'));
+		})
+		.on('change.qvDisplayPrice input.qvDisplayPrice', "#quickviewBody .goods_quantity_table input[name^='optionEa']", function () {
+			refreshQuickviewSelectedPrice($(this).closest('.option_tr'));
+		});
 
 })(jQuery);

@@ -11,7 +11,7 @@
 		<!-- 마이페이지 LNB 공통. 정의: [스킨폴더]/mypage/mypage_lnb.html -->
 	</aside>
 
-	<main class="subpage_container bo-mypage bo-saved-posts-page" aria-labelledby="bo-saved-posts-title">
+	<main class="subpage_container bo-mypage bo-saved-posts-page" aria-labelledby="bo-saved-posts-title" data-saved-posts-total="{page.totalcount}">
 		<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)">MENU</a>
 
 		<div class="title_container bo-saved-posts-head">
@@ -20,7 +20,7 @@
 				<p>Real Trend videos you saved are collected here.</p>
 			</div>
 			<!--{ ? record }-->
-			<strong data-saved-posts-count>{=number_format(count(record))} reels</strong>
+			<strong data-saved-posts-count>{=number_format(page.totalcount)} reels</strong>
 			<!--{ : }-->
 			<strong data-saved-posts-count>0 reels</strong>
 			<!--{ / }-->
@@ -41,7 +41,15 @@
 			<!--{ ? record }-->
 			<div class="bo-saved-posts-grid" data-saved-posts-grid>
 				<!--{ @ record }-->
-				<article class="bo-saved-post-card" data-saved-post-card data-shortform-seq="{.shortform_seq}">
+				<article
+					class="bo-saved-post-card"
+					data-saved-post-card
+					data-shortform-seq="{.shortform_seq}"
+					<!--{ ? .goods }-->data-goods-seq="{.goods.goods_seq}"<!--{ / }-->
+				>
+					<!--{ ? .goods }-->
+					<span class="bo-saved-post-card__category-seed" hidden>{.goods.brand} {.goods.goods_name}</span>
+					<!--{ / }-->
 					<a class="bo-saved-post-card__link" href="/shortform/feed?seq={.shortform_seq}#reel-{.shortform_seq}" aria-label="Open saved reel">
 						<span class="bo-saved-post-card__media">
 							<!--{ ? .video_type == 'file' }-->

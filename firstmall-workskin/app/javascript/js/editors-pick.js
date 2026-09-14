@@ -256,6 +256,53 @@ Editor's Pick JS
       .catch(() => {});
   };
 
+  /* ---------- List price (정가) strikethrough enrichment ----------
+   * The pick data only carries the selling price (default_price == price), so
+   * the client-rendered .editor-price has no list price to strike through. Pull
+   * each product's 정가 from its quickview page (~12x lighter than the full
+   * goods/view) and, when it is discounted, append <del> next to the price.
+   * Cached per goods_seq in sessionStorage so switching editors / revisiting
+   * never re-fetches. Fully guarded: any failure just leaves the price as-is. */
+  const EDITOR_ORG_PRICE_KEY = "tpEditorOrgPrice";
+  const loadOrgPriceCache = () => {
+    try { return JSON.parse(sessionStorage.getItem(EDITOR_ORG_PRICE_KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  };
+  const saveOrgPriceCache = (cache) => {
+    try { sessionStorage.setItem(EDITOR_ORG_PRICE_KEY, JSON.stringify(cache)); } catch (e) {}
+  };
+  const applyEditorListPrice = (article, goodsSeq) => {
+    if (!article || goodsSeq == null || goodsSeq === "") return;
+    const priceBox = article.querySelector(".editor-price");
+    if (!priceBox) return;
+    const inject = (text) => {
+      if (!text || priceBox.querySelector("del")) return;
+      const del = document.createElement("del");
+      del.className = "editor-price-original";
+      del.textContent = text; // already currency-formatted, e.g. "US$24.00"
+      priceBox.appendChild(del);
+    };
+    const key = String(goodsSeq);
+    const cache = loadOrgPriceCache();
+    if (Object.prototype.hasOwnProperty.call(cache, key)) {
+      inject(cache[key]); // cached "" means "no discount" — nothing to show
+      return;
+    }
+    fetch(`/goods/quickview?no=${encodeURIComponent(goodsSeq)}`, { credentials: "same-origin" })
+      .then((response) => (response.ok ? response.text() : ""))
+      .then((html) => {
+        if (!html) return; // request failed — don't cache, allow a later retry
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        // .product-price del only exists when 정가 > 판매가 (discounted).
+        const del = doc.querySelector(".product-price del, .qv-price del, del.org_price");
+        const text = del ? String(del.textContent || "").replace(/\s+/g, " ").trim() : "";
+        cache[key] = text;
+        saveOrgPriceCache(cache);
+        inject(text);
+      })
+      .catch(() => {});
+  };
+
   /* ---------- Pick card rendering (client-side, for any editor's data). ---------- */
   const renderPickCardElement = (pick) => {
     const article = document.createElement("article");
@@ -299,6 +346,8 @@ Editor's Pick JS
       toggleEditorWish(wishButton, pick.goods_seq);
       wishButton.blur();
     });
+
+    applyEditorListPrice(article, pick.goods_seq);
 
     return article;
   };
@@ -384,9 +433,37 @@ Editor's Pick JS
 
   const scrollEditorTabsToTop = () => {
     if (!editorTabs) return;
-    const HEADER_OFFSET = 154;
-    const targetTop = editorTabs.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
-    window.scrollTo({ top: targetTop, behavior: reduceMotionQuery.matches ? "auto" : "smooth" });
+    const isDesktop = window.matchMedia("(min-width: 1121px)").matches;
+    const header = document.getElementById("layout_header");
+    const getOffset = () => {
+      if (!isDesktop) return 154;
+      return (header ? Math.ceil(header.getBoundingClientRect().height) : 154) + 16;
+    };
+    const targetTop = editorTabs.getBoundingClientRect().top + window.scrollY - getOffset();
+    const behavior = reduceMotionQuery.matches ? "auto" : "smooth";
+
+    window.scrollTo({ top: targetTop, behavior });
+
+    if (isDesktop) {
+      let lastScrollY = window.scrollY;
+      let stableFrames = 0;
+      const startedAt = Date.now();
+      const correctAfterScroll = () => {
+        const currentScrollY = window.scrollY;
+        if (Math.abs(currentScrollY - lastScrollY) < 0.5) stableFrames += 1;
+        else stableFrames = 0;
+        lastScrollY = currentScrollY;
+
+        if (stableFrames >= 3 || Date.now() - startedAt > 1200) {
+          const difference = editorTabs.getBoundingClientRect().top - getOffset();
+          if (Math.abs(difference) > 1) window.scrollBy(0, difference);
+          return;
+        }
+        window.requestAnimationFrame(correctAfterScroll);
+      };
+
+      window.requestAnimationFrame(correctAfterScroll);
+    }
   };
 
   const syncPickListHeight = () => {

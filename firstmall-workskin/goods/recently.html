@@ -70,7 +70,7 @@
 									class="bo-recently-card__brand"
 									data-brand-code="{.brand_code}"
 									data-brand="{.brand}"
-								><!--{ ? .brand_title }-->{.brand_title}<!--{ : .brand_name }-->{.brand_name}<!--{ / }--></small>
+								><!--{ ? .brand_title }-->{=stripslashes(.brand_title)}<!--{ : .brand_name }-->{.brand_name}<!--{ / }--></small>
 								<label><input type="checkbox" name="goods_seq[]" value="{.goods_seq}" class="hide" /> {.goods_name}</label>
 							</li>
 							<li class="recent_price bo-recently-card__price">

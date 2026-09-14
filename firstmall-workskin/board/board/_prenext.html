@@ -1,0 +1,37 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 게시판 이전글/다음글 @@
+- 파일위치 : [스킨폴더]/board/_prenext.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<ul>
+{? nextlay }
+<li class="left">
+	<span class="pnl_icon"><img src="../images/icon/icon-arrow-prev.png" /></span>
+	<span class="pnl_title">{nextlay.subject}</span>
+    <span class="pnl_name">{nextlay.date}</span>
+</li>
+{/}
+{? prelay }
+<li class="right">
+	<span class="pnl_icon right"><img src="../images/icon/icon-arrow-next.png" /></span>
+	<span class="pnl_title">{prelay.subject}</span>
+    <span class="pnl_name">{prelay.date}</span>
+</li>
+{/}
+</ul>
+
+
+<div id="BoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<div>게시글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame " >
+	<input type="hidden" name="seq" id="pwck_seq" value="" />
+	<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
+	<div class="ibox">
+		<input type="password" name="pw" id="pwck_pw" class="input" />
+		<input type="submit" id="BoardPwcheckBtn" value=" 확인 " class="btnblue" />
+		<input type="button" value=" 취소 " class="bbs_btn" onclick="$('#BoardPwCk').dialog('close');" />
+	</div>
+	</form>
+</div>

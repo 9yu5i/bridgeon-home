@@ -258,7 +258,7 @@
 							class="bo-product__brand"
 							data-brand-code="{.brand_code}"
 							data-brand="{.brand}"
-						><!--{ ? .brand_title }-->{.brand_title}<!--{ : .brand_name }-->{.brand_name}<!--{ / }--></small>
+						><!--{ ? .brand_title }-->{=stripslashes(.brand_title)}<!--{ : .brand_name }-->{.brand_name}<!--{ / }--></small>
 						<a class="bo-product__name" href="/goods/view?no={.goods_seq}">{.goods_name}</a>
 						<p class="bo-product__price">
 							<strong>{=get_currency_price(.price,2)}</strong>

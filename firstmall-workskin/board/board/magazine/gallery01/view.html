@@ -1,0 +1,212 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ T.P Magazine board view / TrendyPicker
+- Path: [skin]/board/magazine/gallery01/view.html
+- URL: /board/view?id=magazine&seq=...
+- Layout aligned to editors-pick/magazine-detail.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css?v=20260908-3" />
+
+<style type="text/css">
+#subpageLNB,
+#subAllButton,
+.title_container { display: none !important; }
+.subpage_wrap .subpage_container { padding: 0 !important; }
+body.is-magazine-page #layout_body,
+body:has(.magazine-detail-main) #layout_body {
+	max-width: none !important;
+}
+</style>
+
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "is-magazine-page";
+if (document.body) document.body.className += (document.body.className ? " " : "") + "is-magazine-page";
+</script>
+
+<main class="magazine-main magazine-detail-main">
+	<section class="magazine-detail-hero" aria-label="Magazine detail hero"></section>
+
+	<article class="magazine-detail-shell">
+		<nav class="magazine-breadcrumb" aria-label="Breadcrumb">
+			<a href="/main">Home</a>
+			<span aria-hidden="true">&gt;</span>
+			<a href="/main/magazine">T.P Magazine</a>
+			{? datacategory}
+			<span aria-hidden="true">&gt;</span>
+			<a href="/board/?id=magazine&amp;category={=str_replace('&','%26',str_replace(']','',str_replace('[','',datacategory)))}&amp;perpage=12">{=str_replace(']','',str_replace('[','',datacategory))}</a>
+			{: _GET.category}
+			<span aria-hidden="true">&gt;</span>
+			<a href="/board/?id=magazine&amp;category={=str_replace('&','%26',_GET.category)}&amp;perpage=12">{_GET.category}</a>
+			{/}
+		</nav>
+
+		<div class="magazine-detail-hero-copy">
+			{? datacategory}
+			<p>
+				<a href="/board/?id=magazine&amp;category={=str_replace('&','%26',str_replace(']','',str_replace('[','',datacategory)))}&amp;perpage=12">{=str_replace(']','',str_replace('[','',datacategory))}</a>
+			</p>
+			{: _GET.category}
+			<p>
+				<a href="/board/?id=magazine&amp;category={=str_replace('&','%26',_GET.category)}&amp;perpage=12">{_GET.category}</a>
+			</p>
+			{:}
+			<p><a href="/main/magazine">MAGAZINE</a></p>
+			{/}
+			<h1 id="magazine-detail-title">{=strip_tags(subject)}</h1>
+			<header class="magazine-article-head">
+				<div>
+					<p>TrendyPicker Editorial</p>
+					<time datetime="{r_date}">{=date('M j, Y',strtotime(r_date))}</time>
+					{? name}
+					<span class="magazine-article-editor">{name}</span>
+					{/}
+				</div>
+			</header>
+		</div>
+
+		{? filelist}
+		{@ filelist}
+		{? .index_ == 0 && .is_image }
+		<div class="magazine-detail-hero-image magazine-image" style="background-image:url('{.realfile}');">
+			<img src="{.realfile}" alt="" />
+		</div>
+		{/}
+		{/}
+		{: file_key_w && uccdomain_thumbnail }
+		<div class="magazine-detail-hero-image magazine-image" style="background-image:url('{uccdomain_thumbnail}');">
+			<img src="{uccdomain_thumbnail}" alt="" />
+		</div>
+		{/}
+
+		<div class="magazine-article-layout">
+			<form name="form1" id="form1" method="post" action="{=sslAction('../board_process')}" target="actionFrame">
+				<input type="hidden" name="mode" id="mode" value="{mode}" />
+				<input type="hidden" name="board_id" id="board_id" value="{_GET.id}" />
+				<input type="hidden" name="reply" id="reply" value="{_GET.reply}" />
+				{? seq }
+				<input type="hidden" name="seq" id="board_seq" value="{seq}" />
+				{/}
+				<input type="hidden" name="popup" value="{_GET.popup}" />
+				<input type="hidden" name="iframe" value="{_GET.iframe}" />
+				<input type="hidden" name="goods_seq" value="{_GET.goods_seq}" />
+
+				<div class="magazine-article-body board_detail_contents content" data-magazine-article-body>
+					<!--{? file_key_w && uccdomain_fileswf}-->
+					<embed src="{uccdomain_fileswf}" width="{managerview.video_size0}" height="{managerview.video_size1}" allowfullscreen="true" wmode="transparent"></embed>
+					<!--{/}-->
+					{contents}
+				</div>
+
+				<!--{? managerview.auth_recommend_use == 'Y' }-->
+				<div class="c_scorelay hide">{#scoreskin}</div>
+				<!--{/}-->
+
+				<div class="board_sns_link hide">
+					{=snslinkurl('board', subject)}
+				</div>
+			</form>
+		</div>
+
+		<section class="magazine-related" aria-labelledby="magazine-related-title">
+			<div class="bo-magazine-section-head magazine-related-head">
+				<h2 id="magazine-related-title">Related Posts</h2>
+				<a href="/main/magazine">VIEW MORE -&gt;</a>
+			</div>
+			<div
+				class="magazine-related-grid"
+				data-magazine-related
+				data-current-seq="{seq}"
+				{? datacategory}
+				data-category="{=str_replace(']','',str_replace('[','',datacategory))}"
+				{: _GET.category}
+				data-category="{_GET.category}"
+				{/}
+			></div>
+		</section>
+
+		<ul class="board_detail_btns magazine-detail-actions" aria-label="Magazine article actions">
+			<li class="right">
+				{? manager.auth_write != '[admin]' }
+					{? display == 0 && managerview.isperm_moddel != "_mbno"}
+						<button type="button" name="boad_modify_btn{managerview.isperm_moddel}" board_seq="{seq}" board_id="{boardid}" class="btn_resp size_b">수정</button>
+					{/}
+				{/}
+				{? ((display == 0 || (display == 1 && replyor == 0 && comment ==0) ) ) && managerview.isperm_moddel != "_mbno"}
+					<button type="button" name="boad_delete_btn{managerview.isperm_moddel}" board_seq="{seq}" board_id="{boardid}" class="btn_resp size_b">삭제</button>
+				{/}
+				{? display == 0 && replylay == 'Y' && managerview.isperm_write != "_no" }
+					<button type="button" name="boad_reply_btn" board_seq="{seq}" board_id="{boardid}" class="btn_resp size_b">답변</button>
+				{/}
+			</li>
+		</ul>
+
+		<!--{? commentlay == 'Y' || comment > 0 }-->
+		<a name="cmtlist"></a>
+		<div class="board_comment_area" id="comment_container">{#commentskin}</div>
+		<!--{/}-->
+
+		<section class="newsletter editors-newsletter magazine-newsletter" aria-labelledby="magazine-detail-newsletter-title">
+			<div>
+				<h2 id="magazine-detail-newsletter-title">Be the first to know</h2>
+				<p>Get trend updates, exclusive offers, and more!</p>
+			</div>
+			<form action="/member_process/newsletter" method="post">
+				<label class="bo-magazine-sr" for="magazine-detail-newsletter-email">Email</label>
+				<input id="magazine-detail-newsletter-email" name="email" type="email" placeholder="Enter Your Email" />
+				<button type="submit">SUBSCRIBE</button>
+			</form>
+		</section>
+	</article>
+</main>
+
+<div id="CmtBoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3>Password</h3>
+		<div>Enter the password used when writing this comment.</div>
+	</div>
+	<form name="BoardPwcheckForm" id="CmtBoardPwcheckForm" method="post">
+		<input type="hidden" name="seq" id="cmt_pwck_seq" value="" />
+		<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="cmt_pwck_pw" style="width:140px;" />
+			<button type="submit" id="CmtBoardPwcheckBtn" class="btn_resp size_b color2">Confirm</button>
+			<button type="button" class="btn_resp size_b" onclick="$('#CmtBoardPwCk').dialog('close');">Cancel</button>
+		</div>
+	</form>
+</div>
+
+<div id="ModDelBoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3>Password</h3>
+		<div>Enter the password used when writing this post.</div>
+	</div>
+	<form name="ModDelBoardPwcheckForm" id="ModDelBoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
+		<input type="hidden" name="modetype" id="modetype" value="" />
+		<input type="hidden" name="seq" id="moddel_pwck_seq" value="" />
+		<input type="hidden" name="returnurl" id="moddel_pwck_returnurl" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="moddel_pwck_pw" style="width:140px;" />
+			<button type="submit" id="BoardPwcheckBtn" class="btn_resp size_b color2">Confirm</button>
+			<button type="button" class="btn_resp size_b" onclick="$('#ModDelBoardPwCk').dialog('close');">Cancel</button>
+		</div>
+	</form>
+</div>
+
+<script src="/app/javascript/js/trendypicker-magazine.js?v=20260907"></script>
+<script type="text/javascript">
+function getboardLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et366'),'450','140');
+	{:}
+		openDialogConfirm(getAlert('et367'),'400','155',function(){location.href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}";},function(){});
+	{/}
+}
+
+function getcmtMbLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et368'),'400','140');
+	{:}
+		openDialogConfirm(getAlert('et367'),'400','155',function(){location.href="/member/login?return_url={=urlencode(_SERVER.REQUEST_URI)}";},function(){});
+	{/}
+}
+</script>

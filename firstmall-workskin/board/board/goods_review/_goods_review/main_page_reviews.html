@@ -1,0 +1,93 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Customer Real Picks - Main Page @@
+- 파일위치 : [스킨폴더]/board/goods_review/_goods_review/main_page_reviews.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../../../css/redesign/common-styles.css" />
+<link type="text/css" rel="stylesheet" charset="utf-8" href="../../../css/redesign/customer-reviews.css" />
+<script type="text/javascript" src='../../../common/minishop.js'></script>
+<script type="text/javascript" src="/app/javascript/plugin/lazy/jquery.lazyload.min.js"></script>
+
+
+<section class="content-section reviews-section">
+	<div class="section-heading reviews-heading">
+		<div class="inline-heading">
+			<h2>Customer Real Picks<span aria-hidden="true">&#9989;</span></h2>
+			<p>Real Reviews From Real Customers</p>
+		</div>
+	</div>
+
+	<div class="rail-wrap">
+		<div class="rail-viewport">
+			<div class="card-rail review-rail" id="review-rail">
+				<!--{ @ review_list }-->
+				<article class="review-card">
+
+						<div class="rating">
+							{.score}
+						</div>
+						<a href="{.review_link}" class="review-img-link" target="_top">
+							<img class="lazy review-img photo-{.seq}" data-seq="{.seq}" src="{?.upload}/data/board/goods_review/{_GET.id}/{=substr(.upload,0,strpos(.upload,'^^'))}{/}" onerror="this.src='../../../images/common/noimage.gif'" alt="{.name}" />
+						</a>
+						<div class="review-body">
+							<div class="reviewer">
+								<div class="reviewer-avatar">
+									<!--{ ? .profile_image }-->
+									<img src="{.profile_image}" alt="User profile picture" />
+									<!--{ / }-->
+								</div>
+								<strong class="reviewer-id">{.name}</strong>
+							</div>
+							<!--<div class="review-stars" style="--fill:{.score_avg}%;">★★★★★</div>-->
+							<p class="review-text">{.contents}</p>
+						</div>
+                        			<footer class="review-goods">
+							<!--{ ? .goods_thumb }-->
+							<a href="{.review_link}" class="review-goods-thumb-link" target="_top">
+								<img class="review-goods-thumb lazy" src="{=viewImg(.goods_seq,'thumbView')}" data-original="{.goods_thumb}"  alt="{.goods_name}"/>
+							</a>
+							<!--{ / }-->
+							<div class="review-goods-info">
+								<p class="review-goods-name"><strong>{.brand_name}</strong><br>{.goods_name}</p>
+								<p class="review-goods-price">{.default_price}</p>
+							</div>
+							<a onclick="parent.displayAddToCartQuickview(this, {=.goods_seq})" class="review-cart-button" aria-label="Add to cart"></a>
+                  
+						</footer>
+
+				</article>
+				<!--{ / }-->
+			</div>
+		</div>
+	</div>
+
+	<div class="share-pick desktop-only">
+		<div>
+			<span><img src="../../../images/icon/icon-review.png" alt="review"></span>
+			<div>
+				<h2>Share Your <b>Real Pick!</b></h2>
+				<p>Write a review and <b>get up to 1,000P</b></p>
+				<a class="btn btn-pill btn-outline-purple" href="/mypage/mygdreview_catalog?">WRITE A REVIEW -&gt;</a>
+			</div>
+		</div>
+		<div class="dn">
+			<p>Trusted by more than <br><b>20,000+</b> <br> real customers</p>
+			<ul aria-label="Customer avatars">
+				<li></li><li></li><li></li><li></li><li></li><li><span>+</span></li>
+			</ul>
+		</div>
+		<div>
+			<p><strong>Trusted by<br>real customers</strong></p>
+			<ul aria-label="Customer avatars">
+				<li></li><li></li><li></li><li></li><li></li><li><span>+</span></li>
+			</ul>
+		</div>
+
+        </div>
+</section>
+<script type="text/javascript" src="/app/javascript/js/review-rail.js"></script>
+<script>
+if (window.initScrollReveal) {
+    window.initScrollReveal();
+}
+</script>
+

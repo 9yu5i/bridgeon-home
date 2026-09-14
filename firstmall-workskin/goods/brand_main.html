@@ -112,6 +112,91 @@ $(document).ready(function() {
 	}
 	dedupeBrands();
 
+	function getBrandAnchorOffset() {
+		var header = document.getElementById("layout_header");
+		var offset = 16;
+		var rect;
+		var style;
+		var flyingChild;
+
+		if (!header) return offset;
+
+		rect = header.getBoundingClientRect();
+		style = window.getComputedStyle(header);
+		if ((style.position === "fixed" || style.position === "sticky" || $(header).hasClass("flying")) && rect.top <= 1 && rect.bottom > 0) {
+			return Math.ceil(rect.bottom) + offset;
+		}
+
+		flyingChild = header.querySelector(".flying");
+		if (flyingChild) {
+			rect = flyingChild.getBoundingClientRect();
+			if (rect.top <= 1 && rect.bottom > 0) return Math.ceil(rect.bottom) + offset;
+		}
+
+		return offset;
+	}
+
+	function alignBrandGroup(target, behavior) {
+		var targetTop;
+		var startedAt = Date.now();
+		var lastScrollY = window.pageYOffset;
+		var stableFrames = 0;
+
+		if (!target) return;
+		targetTop = target.getBoundingClientRect().top + window.pageYOffset;
+		window.scrollTo({
+			top: Math.max(0, targetTop - getBrandAnchorOffset()),
+			behavior: behavior || "auto"
+		});
+
+		function correctPosition(attempt) {
+			var difference = target.getBoundingClientRect().top - getBrandAnchorOffset();
+			if (Math.abs(difference) > 1) window.scrollBy(0, difference);
+			if (attempt < 5 && Math.abs(difference) > 1) {
+				window.requestAnimationFrame(function() {
+					correctPosition(attempt + 1);
+				});
+			}
+		}
+
+		function waitForScrollEnd() {
+			var currentScrollY = window.pageYOffset;
+
+			if (Math.abs(currentScrollY - lastScrollY) < 0.5) stableFrames += 1;
+			else stableFrames = 0;
+			lastScrollY = currentScrollY;
+
+			if (stableFrames >= 3 || Date.now() - startedAt > 1600) {
+				correctPosition(0);
+				return;
+			}
+			window.requestAnimationFrame(waitForScrollEnd);
+		}
+
+		window.requestAnimationFrame(waitForScrollEnd);
+	}
+
+	$(".bo-brand-alpha-button[href^='#bo-brand-group-']").on("click", function(event) {
+		var hash = this.getAttribute("href");
+		var target = document.getElementById(hash.slice(1));
+
+		if (!target) return;
+		event.preventDefault();
+		if (window.history && window.history.pushState) {
+			window.history.pushState(null, "", hash);
+		}
+		alignBrandGroup(target, "smooth");
+	});
+
+	$(window).on("load", function() {
+		var hash = window.location.hash;
+		var target = hash.indexOf("#bo-brand-group-") === 0 ? document.getElementById(hash.slice(1)) : null;
+
+		if (target) window.setTimeout(function() {
+			alignBrandGroup(target, "auto");
+		}, 40);
+	});
+
 	function filterBrands(keyword) {
 		var kw = $.trim(keyword).toLowerCase();
 		var anyVisible = false;

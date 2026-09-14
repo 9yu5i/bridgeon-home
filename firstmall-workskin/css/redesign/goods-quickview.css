@@ -336,6 +336,17 @@ Creation Date : 2026-08-06
 	max-height: 200px !important;
 }
 
+/* The Firstmall option markup wraps the select in a <table class="goods_option_table">
+   with default table-layout:auto, so it sizes to its widest content (long option
+   names / the off-screen native <select>) and grows PAST the card's right padding —
+   the select box then sticks out on the right and the left/right margins look uneven.
+   Force it to fill (and never exceed) its column so the box stays centered in the
+   card. Scoped to the quickview modal so the full product page is untouched. */
+#quickviewBody #select_option_lay .goods_option_table {
+	width: 100%;
+	table-layout: fixed;
+}
+
 /* Many-option products in the QUICKVIEW MODAL: the option dropdown
    (.realtrend-select-menu, defined in goods-options.css) is an absolutely-
    positioned overlay, so near the modal's bottom it floats past the panel and
@@ -923,9 +934,28 @@ body.qv-scroll-locked {
     --qv-option-menu-max-height: 160px;
   }
 
+  /* Opening the option list raises the sheet to (at least) half the screen.
+     Previously a fixed height:49dvh was forced, which RAISED short sheets up to
+     ~half but SHRANK any sheet whose content was already taller than 49dvh —
+     so on those products tapping the option pushed the card back DOWN. Using
+     min-height instead lets short sheets rise to half while taller sheets keep
+     their height (never drop); the base max-height (70dvh ≤760 / 80dvh ≤1120)
+     still caps it and the option list scrolls internally. */
   .qv-modal-panel:has(.realtrend-select-wrap.is-open) {
-    height: 49dvh;
-    max-height: 49dvh;
+    min-height: 50dvh;
+  }
+
+  /* Open the option list IN-FLOW on mobile too (desktop already does this at
+     >=1125px). As an absolutely-positioned overlay it dropped from a trigger
+     sitting low in the sheet and got clipped by the sheet's bottom, so only
+     ~2 options showed and were hard to tap. In-flow, the list sits under the
+     trigger and the sheet grows (min 50dvh → up to the 70dvh cap) to reveal it,
+     so several options (4+) are visible; the list still scrolls internally past
+     its max-height for very long option sets. */
+  #quickviewBody #select_option_lay .realtrend-select-wrap.is-open .realtrend-select-menu {
+    position: static;
+    width: 100%;
+    margin-top: -1px;
   }
 }
 

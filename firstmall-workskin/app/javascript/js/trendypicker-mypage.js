@@ -1028,6 +1028,31 @@
 
   if (reviewCategorySelect && reviewCards.length) {
     let reviewCategoriesReady = false;
+    const reviewProductFactsKey = "bo-product-facts-v2";
+    let reviewProductFacts = {};
+
+    try {
+      const storedFacts = JSON.parse(localStorage.getItem(reviewProductFactsKey) || "{}");
+      if (storedFacts && typeof storedFacts === "object") reviewProductFacts = storedFacts;
+    } catch {
+      reviewProductFacts = {};
+    }
+
+    let reviewProductFactsWrite = 0;
+    const saveReviewProductFacts = () => {
+      window.clearTimeout(reviewProductFactsWrite);
+      reviewProductFactsWrite = window.setTimeout(() => {
+        try {
+          const keys = Object.keys(reviewProductFacts);
+          keys.slice(0, Math.max(0, keys.length - 600)).forEach((key) => {
+            delete reviewProductFacts[key];
+          });
+          localStorage.setItem(reviewProductFactsKey, JSON.stringify(reviewProductFacts));
+        } catch {
+          // Product category caching is optional.
+        }
+      }, 200);
+    };
 
     const matchReviewCategory = (value) => {
       const text = String(value || "").toLowerCase();
@@ -1071,7 +1096,20 @@
     const readReviewCategoryFromProduct = async (card) => {
       if (card.dataset.reviewCategory) return;
       const productText = card.querySelector(".bo-review-product-copy")?.textContent || "";
-      const productLink = card.querySelector('.bo-review-thumb[href*="/goods/view"]')?.href;
+      const goodsSeq = card.dataset.reviewGoodsSeq || "";
+      const cachedCategory = goodsSeq
+        ? matchReviewCategory(reviewProductFacts[goodsSeq]?.category)
+        : "";
+
+      if (cachedCategory) {
+        card.dataset.reviewCategory = cachedCategory;
+        applyReviewFilters();
+        return;
+      }
+
+      const productLink = goodsSeq
+        ? `/goods/quickview?no=${encodeURIComponent(goodsSeq)}`
+        : card.querySelector('.bo-review-thumb[href*="/goods/view"]')?.href;
 
       if (productLink) {
         try {
@@ -1081,6 +1119,9 @@
           });
           if (response.ok) {
             const productDocument = new DOMParser().parseFromString(await response.text(), "text/html");
+            const primaryCategory = productDocument.querySelector(
+              "[data-tp-primary-category], #tp-primary-category, .qv-kbeauty-tag",
+            )?.textContent;
             const crumbs = [
               ...productDocument.querySelectorAll(
                 ".navi_linemap a, .navi_linemap2 a, .navi_linemap2 .selected_cate, .structure_nav a, .goods_category a, .category_path a, .breadcrumb a, .location a, .goods_nav a, .linemap_area a",
@@ -1088,9 +1129,18 @@
             ]
               .map((element) => element.textContent.trim())
               .filter(Boolean);
-            const pageCategory = matchReviewCategory(crumbs.join(" > "));
+            const pageCategory =
+              matchReviewCategory(primaryCategory) || matchReviewCategory(crumbs.join(" > "));
             if (pageCategory) {
               card.dataset.reviewCategory = pageCategory;
+              if (goodsSeq) {
+                reviewProductFacts[goodsSeq] = {
+                  ...(reviewProductFacts[goodsSeq] || {}),
+                  category: pageCategory,
+                };
+                saveReviewProductFacts();
+              }
+              applyReviewFilters();
               return;
             }
           }
@@ -1100,6 +1150,7 @@
       }
 
       card.dataset.reviewCategory = matchReviewCategory(productText);
+      applyReviewFilters();
     };
 
     reviewCategorySelect.addEventListener("change", () => {
@@ -1138,6 +1189,70 @@
     let activeReviewTrigger = null;
     let activeRating = 5;
     let reviewPhotos = [];
+    let activeNativeReviewForm = null;
+    let activeNativeReviewUrl = "";
+    let reviewLoadToken = 0;
+
+    const getNativeReviewUrl = (seq) => {
+      const base =
+        typeof window.boardmodifyurl === "string" && window.boardmodifyurl
+          ? window.boardmodifyurl
+          : "/board/write?id=goods_review&seq=";
+      return new URL(`${base}${encodeURIComponent(seq)}`, window.location.href).href;
+    };
+
+    const getNativeReviewRating = (form) => {
+      const controls = [
+        ...form.querySelectorAll(
+          "input.review_score, input.review_score_number, input[name='score'], select[name='score']",
+        ),
+      ];
+      const selectedRadio = form.querySelector("input[type='radio'][name*='score']:checked");
+      const values = [selectedRadio?.value, ...controls.map((control) => control.value)];
+      return values
+        .map(Number)
+        .find((value) => Number.isFinite(value) && value >= 1 && value <= 5);
+    };
+
+    const loadNativeReviewForm = async (seq, card, token) => {
+      const editUrl = getNativeReviewUrl(seq);
+      activeNativeReviewUrl = editUrl;
+      activeNativeReviewForm = null;
+      if (reviewEditSave) {
+        reviewEditSave.disabled = true;
+        reviewEditSave.textContent = "Loading...";
+      }
+
+      try {
+        const response = await fetch(editUrl, {
+          credentials: "same-origin",
+          headers: { Accept: "text/html" },
+        });
+        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+        const editDocument = new DOMParser().parseFromString(await response.text(), "text/html");
+        const form = editDocument.querySelector("#writeform");
+        if (!form) throw new Error("Review edit form was not found.");
+        if (token !== reviewLoadToken || activeReviewCard !== card) return;
+
+        activeNativeReviewForm = form;
+        const nativeSubject = form.querySelector("[name='subject']")?.value?.trim();
+        const nativeContents = form.querySelector("[name='contents']")?.value?.trim();
+        const nativeRating = getNativeReviewRating(form);
+        if (nativeSubject) reviewEditTitle.value = nativeSubject;
+        if (nativeContents) reviewEditCopy.value = nativeContents;
+        if (nativeRating) setReviewRating(nativeRating);
+        if (reviewEditSave) {
+          reviewEditSave.disabled = false;
+          reviewEditSave.textContent = "Save Review";
+        }
+      } catch {
+        if (token !== reviewLoadToken || activeReviewCard !== card) return;
+        if (reviewEditSave) {
+          reviewEditSave.disabled = false;
+          reviewEditSave.textContent = "Open Review Editor";
+        }
+      }
+    };
 
     const setReviewRating = (rating) => {
       activeRating = Math.max(1, Math.min(5, Number(rating) || 5));
@@ -1196,6 +1311,9 @@
       event.preventDefault();
       activeReviewCard = card;
       activeReviewTrigger = trigger;
+      activeNativeReviewForm = null;
+      activeNativeReviewUrl = "";
+      reviewLoadToken += 1;
       reviewEditThumb.src = card.querySelector(".bo-review-thumb img")?.src || "";
       reviewEditBrand.textContent = "";
       reviewEditName.textContent = card.querySelector(".bo-review-product-copy h2")?.textContent || "";
@@ -1213,6 +1331,7 @@
       reviewEditLayer.setAttribute("aria-hidden", "false");
       document.body.classList.add("is-review-edit-open");
       reviewEditTitle.focus();
+      void loadNativeReviewForm(trigger.dataset.reviewSeq || "", card, reviewLoadToken);
     });
 
     ratingButtons.forEach((button) => {
@@ -1234,29 +1353,67 @@
       button.addEventListener("click", closeReviewEditor);
     });
 
-    reviewEditSave?.addEventListener("click", () => {
+    reviewEditSave?.addEventListener("click", async () => {
       if (!activeReviewCard) return;
-
-      const heading = activeReviewCard.querySelector(".bo-review-copy h3");
-      const copy = activeReviewCard.querySelector(".bo-review-copy p");
-      const score = activeReviewCard.querySelector(".bo-review-score-num");
-      const starFill = activeReviewCard.querySelector(".bo-review-stars b");
-      const gallery = activeReviewCard.querySelector(".bo-review-gallery");
-
-      if (heading) heading.textContent = reviewEditTitle.value.trim() || "My review";
-      if (copy) copy.textContent = reviewEditCopy.value.trim();
-      if (score) score.textContent = activeRating.toFixed(1);
-      if (starFill) starFill.style.width = `${(activeRating / 5) * 100}%`;
-      if (gallery) {
-        gallery.replaceChildren();
-        reviewPhotos.forEach((photo) => {
-          const image = document.createElement("img");
-          image.src = photo.src;
-          image.alt = "";
-          gallery.append(image);
-        });
+      if (!activeNativeReviewForm) {
+        if (activeNativeReviewUrl) window.location.href = activeNativeReviewUrl;
+        return;
       }
-      closeReviewEditor();
+
+      const subject = reviewEditTitle.value.trim();
+      const contents = reviewEditCopy.value.trim();
+      if (!subject) {
+        reviewEditTitle.focus();
+        return;
+      }
+      if (!contents) {
+        reviewEditCopy.focus();
+        return;
+      }
+
+      const subjectControl = activeNativeReviewForm.querySelector("[name='subject']");
+      const contentsControl = activeNativeReviewForm.querySelector("[name='contents']");
+      if (subjectControl) subjectControl.value = subject;
+      if (contentsControl) contentsControl.value = contents;
+
+      const scoreControls = [
+        ...activeNativeReviewForm.querySelectorAll(
+          "input.review_score, input.review_score_number, input[name='score'], select[name='score']",
+        ),
+      ];
+      scoreControls.forEach((control) => {
+        control.value = String(activeRating);
+      });
+      activeNativeReviewForm
+        .querySelectorAll("input[type='radio'][name*='score']")
+        .forEach((control) => {
+          control.checked = Number(control.value) === activeRating;
+        });
+
+      reviewEditSave.disabled = true;
+      reviewEditSave.textContent = "Saving...";
+
+      try {
+        const actionUrl = new URL(
+          activeNativeReviewForm.getAttribute("action") || "../board_process",
+          activeNativeReviewUrl,
+        ).href;
+        const response = await fetch(actionUrl, {
+          method: (activeNativeReviewForm.method || "post").toUpperCase(),
+          credentials: "same-origin",
+          body: new FormData(activeNativeReviewForm),
+        });
+        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+        if (/\/member\/login/i.test(response.url)) {
+          window.location.href = response.url;
+          return;
+        }
+        window.location.reload();
+      } catch {
+        reviewEditSave.disabled = false;
+        reviewEditSave.textContent = "Save Review";
+        window.alert("The review could not be saved. Please try again.");
+      }
     });
 
     document.addEventListener("keydown", (event) => {

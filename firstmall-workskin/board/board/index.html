@@ -1,0 +1,260 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 게시판 List 레이아웃 템플릿 @@
+- 파일위치 : [스킨폴더]/board/index.html
+- Notice/FAQ/Contact Us 셸은 각 게시판 skin(index.html)에 포함
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!--{? _GET.id == 'mbqna' || manager.id == 'mbqna' }-->
+<script>
+window.location.replace('/service/company?topic=contact');
+</script>
+<!--{: _GET.id == 'notice' || _GET.id == 'faq' || manager.id == 'notice' || manager.id == 'faq' }-->
+{#skin}
+<!--{:}-->
+<!--{? manager.id == 'magazine' }-->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css" />
+{? _GET.iframe}
+<script>
+document.documentElement.className += (document.documentElement.className ? " " : "") + "bo-magazine-iframe";
+</script>
+<style>
+/* Must win against Firstmall layout widths inside magazine iframe */
+html.bo-magazine-iframe,
+html.bo-magazine-iframe body {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	height: auto !important;
+	min-height: 0 !important;
+	margin: 0 !important;
+	box-sizing: border-box !important;
+	background: transparent !important;
+	overflow: hidden !important;
+}
+html.bo-magazine-iframe body {
+	/* No side padding — must match parent .magazine-topic-tabs width */
+	padding: 0 0 56px !important;
+}
+html.bo-magazine-iframe #layout_wrap,
+html.bo-magazine-iframe #layout_body,
+html.bo-magazine-iframe #boardlayout,
+html.bo-magazine-iframe .subpage_wrap,
+html.bo-magazine-iframe .subpage_container,
+html.bo-magazine-iframe #bbslist {
+	display: block !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	height: auto !important;
+	min-height: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	float: none !important;
+	left: auto !important;
+	right: auto !important;
+	position: static !important;
+	box-sizing: border-box !important;
+	background: transparent !important;
+	overflow: visible !important;
+}
+html.bo-magazine-iframe #layout_header,
+html.bo-magazine-iframe #layout_footer,
+html.bo-magazine-iframe #subpageLNB,
+html.bo-magazine-iframe #subAllButton {
+	display: none !important;
+}
+</style>
+{/}
+<style>
+@media only screen and (max-width:1023px) {
+    .subpage_wrap .subpage_container { padding-bottom:0 !important;}
+}
+</style>
+<!--{/}-->
+<!-- 본문내용 시작 -->
+<script type="text/javascript">
+//<![CDATA[
+var board_id = '{_GET.id}';
+var boardlistsurl = '{boardurl->lists}';
+var boardwriteurl = '{boardurl->write}';
+var boardviewurl = '{boardurl->view}';
+var boardmodifyurl = '{boardurl->modify}';
+var boardreplyurl = '{boardurl->reply}';
+var boardrpermurl = '{boardurl->perm}';
+var gl_isuser = false;
+{ ? defined('__ISUSER__') }
+gl_isuser = '{=defined('__ISUSER__')}';
+{ / }
+var return_url = '{=urlencode(_SERVER.REQUEST_URI)}';
+
+var comment = '{comment}';
+var commentlay = '{commentlay}';
+var isperm_write = '{managerview.isperm_write}';
+//]]>
+</script>
+<script type="text/javascript" src="/app/javascript/js/board.js?v=7"  charset="utf-8"></script>
+{? commentskinjsuse && !viewlist }
+<script type="text/javascript" src="/app/javascript/js/board_mobile.js?v=1"  charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/js/board_comment_mobile.js?v=2"  charset="utf-8"></script>
+{/}
+<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js" ></script>
+<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js"  charset="utf-8"></script>
+
+<div id="boardlayout">
+	<div class="subpage_wrap">
+		{? !_GET.iframe }
+		<div id="subpageLNB" class="subpage_lnb">
+			{#board_lnb}
+		</div>
+		{/}
+
+		<div class="subpage_container">
+		{? !_GET.iframe }
+			<a id="subAllButton" class="btn_sub_all" href="javascript:void(0)"><span designElement="text">MENU</span></a>
+
+            <!--{? manager.id == 'magazine' && !_GET.iframe}-->
+            <!-- magazine chrome is rendered inside board/magazine/gallery01/index.html -->
+            <!--{: manager.id != 'magazine'}-->
+			<div class="title_container">
+				<h3>{manager.name}</h3>
+			</div>
+            <!--{/}-->
+		{/}
+
+			<div id="bbslist">
+				{#skin}
+			</div>
+
+		</div>
+	</div>
+	<script type="text/javascript" src="../common/cscenter_ui.js"></script>
+</div>
+
+<div class="board_mo_menu_bg"></div>
+
+<div id="CmtBoardPwCkNew" class="hide BoardPwCk">
+	<div class="msg">
+		<div>댓글/답글 등록시에 입력했던 비밀번호를 입력해 주세요.</div>
+	</div>
+	<form name="BoardPwcheckFormNew" id="CmtBoardPwcheckFormNew" method="post" >
+	<input type="hidden" name="modetype" id="cmtmodetype_new" value="" />
+	<input type="hidden" name="seq" id="cmt_pwck_seq_new" value="" />
+	<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq_new" value="" />
+	<input type="hidden" name="cmtparentseq" id="cmt_pwck_cmtreplyseq_new" value="" />
+	<input type="hidden" name="cmtreplyidx" id="cmt_pwck_cmtreplyidx_new" value="" />
+	<div class="ibox">
+		<input type="password" name="pw" id="cmt_pwck_pw_new" class="input" />
+		<input type="button" id="CmtBoardPwcheckBtnNew" value=" 확인 " class="hand round_btn" />
+		<input type="button" value=" 취소 " class="hand round_btn" onclick="$('#CmtBoardPwCkNew').dialog('close');" />
+	</div>
+	</form>
+</div>
+{? _GET.iframe }
+<script type="text/javascript">
+$(document).ready(function(){
+	$(document).resize(function(){
+		$('#'+board_id+'_frame',parent.document).height($('#boardlayout').height());
+	}).resize();
+});
+function iframeset(){
+	$('#'+board_id+'_frame',parent.document).height($('#boardlayout').height());
+}
+</script>
+{/}
+
+<script type="text/javascript">
+$(document).ready(function(){
+    <!--{? manager.id != 'magazine' && manager.id != 'promotion' && manager.id != 'editors' && manager.id != 'notice' && manager.id != 'faq' && manager.id != 'mbqna' && _GET.id != 'notice' && _GET.id != 'faq' && _GET.id != 'mbqna'}-->
+    if($(window).width() < 1023 && $("#subpageLNB #boardLnbCommon").length > 0){
+        $("#bbslist").before($("#boardLnbCommon"));
+    }
+    $(window).resize(function(){
+        if($(window).width() < 1023 && $("#subpageLNB #boardLnbCommon").length > 0){
+            $("#bbslist").before($("#boardLnbCommon"));
+        } else if ($(window).width() > 1023 && $(".subpage_container #boardLnbCommon").length > 0){
+            $("#subpageLNB").prepend($("#boardLnbCommon"));
+        }
+    });
+    if($('.subpage_container .lnb_sub').length > 0){
+        $('.subpage_container .lnb_sub').after().on("click", function (event) {
+            $(".lnb_sub").toggleClass("on");
+            var top = $(".lnb_sub").offset().top + $(".lnb_sub").outerHeight();
+            $(".board_mo_menu_bg").css("top",top+"px");
+            $(".board_mo_menu_bg").toggle();
+        });
+    }
+    <!--{/}-->
+    <!--{? manager.id == 'magazine' }-->
+    if ( window.innerWidth < 1024 && $(".category_event").length > 0 ) {
+        $('.category_event ul > li').addClass('swiper-slide');
+        slideshowSwiper = new Swiper('.category_event', {
+            wrapperClass: 'board_category',
+            slidesPerView: 'auto'
+        });
+    }
+    <!--{/}-->
+    $('.boad_view_btn').live('click', function(event) {
+        if (event && event.preventDefault) event.preventDefault();
+        if (event && event.stopPropagation) event.stopPropagation();
+        var viewlink = $(this).attr('viewlink');
+        var board_seq = $(this).attr('board_seq');
+        var viewtype = $(this).attr('viewtype');
+        var pagetype = $(this).attr('pagetype');
+        if(viewtype == 'layer' && (pagetype == 'goods' || pagetype == 'mypage') ){
+            boardviewtype(viewlink,board_seq,viewtype);
+        }else{
+            var targetUrl = viewlink || '';
+            try {
+                var parsed = new URL(viewlink, window.location.origin);
+                parsed.searchParams.delete('iframe');
+                parsed.searchParams.delete('popup');
+                targetUrl = parsed.pathname + parsed.search + parsed.hash;
+            } catch (e) {
+                targetUrl = String(viewlink || '')
+                    .replace(/([?&])iframe=1(?=&|$)/g, '$1')
+                    .replace(/([?&])popup=1(?=&|$)/g, '$1')
+                    .replace(/[?&]$/, '')
+                    .replace(/\?&/, '?');
+            }
+            if ( self !== top ) {
+                window.top.location.assign(targetUrl);
+            } else {
+                document.location.assign(targetUrl);
+            }
+
+        }
+    });
+});
+
+function getAuthLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et361'),'450','140');
+	{:}
+		var request_uri = "{_SERVER.REQUEST_URI}";
+		if ( "{_GET.iframe}" && "{_GET.gdviewer}") request_uri = "/goods/view?no={_GET.goods_seq}";
+		openDialogConfirm(getAlert('et362'),'400','155',function(){top.location.href="/member/login?return_url="+encodeURIComponent(request_uri);},function(){});
+	{/}
+}
+
+function getLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et363'),'450','140');
+	{:}
+		var request_uri = "{_SERVER.REQUEST_URI}";
+		if ( "{_GET.iframe}" && "{_GET.gdviewer}") request_uri = "/goods/view?no={_GET.goods_seq}";
+		openDialogConfirm(getAlert('et362'),'400','155',function(){top.location.href="/member/login?return_url="+encodeURIComponent(request_uri);},function(){});
+	{/}
+}
+
+function getMbLogin(){
+	{? defined('__ISUSER__') === true }
+		openDialogAlert(getAlert('et364'),'400','140');
+	{:}
+		var request_uri = "{_SERVER.REQUEST_URI}";
+		if ( "{_GET.iframe}" && "{_GET.gdviewer}") request_uri = "/goods/view?no={_GET.goods_seq}";
+		openDialogConfirm(getAlert('et362'),'400','155',function(){top.location.href="/member/login?return_url="+encodeURIComponent(request_uri);},function(){});
+	{/}
+}
+</script>
+<!--{/}-->
+<!-- ++++++++++++++++++++++++++++++++++ 게시판 List 레이아웃 템플릿 :: END ++++++++++++++++++++++++++++++++++ -->
