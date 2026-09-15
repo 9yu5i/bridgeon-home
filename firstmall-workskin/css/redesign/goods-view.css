@@ -804,9 +804,9 @@ Creation Date : 2026-08-19
 }
 .product-rating-star {
     display: block;
-    flex: 0 0 17px;
-    width: 17px;
-    height: 17px;
+    flex: 0 0 12px;
+    width: 12px;
+    height: 12px;
     object-fit: contain;
 }
 .product-rating-score {
@@ -842,9 +842,9 @@ Creation Date : 2026-08-19
   }
 
   .product-rating-star {
-    flex-basis: 15.3px;
-    width: 15.3px;
-    height: 15.3px;
+    flex-basis: 11px;
+    width: 11px;
+    height: 11px;
   }
 
   .product-rating-sep {
@@ -865,9 +865,9 @@ Creation Date : 2026-08-19
     margin-bottom: 12px;
   }
   .product-rating-star {
-    flex-basis: 16px;
-    width: 16px;
-    height: 16px;
+    flex-basis: 12px;
+    width: 12px;
+    height: 12px;
   }
   .product-rating-sep {
     margin-inline: 12px;
@@ -881,9 +881,9 @@ Creation Date : 2026-08-19
     margin-bottom: 18px;
   }
   .product-rating-star {
-    flex-basis: 15px;
-    width: 15px;
-    height: 15px;
+    flex-basis: 11px;
+    width: 11px;
+    height: 11px;
   }
   .product-rating-sep {
     margin-inline: 9px;
@@ -895,9 +895,9 @@ Creation Date : 2026-08-19
     gap: 3px;
   }
   .product-rating-star {
-    flex-basis: 14px;
-    width: 14px;
-    height: 14px;
+    flex-basis: 11px;
+    width: 11px;
+    height: 11px;
   }
   .product-rating-sep {
     margin-inline: 6px;
@@ -3393,9 +3393,6 @@ body.is-deal-share-open {
   }
   .deal-share-link-field {
     grid-template-columns: 1fr;
-  }
-  .deal-share-social {
-    display: none;
   }
 }
 

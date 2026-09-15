@@ -5,7 +5,7 @@
 <style>
 	#floating_over {display:none !important;}
 	</style>
-	<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/skin/{skin}/css/redesign/goods-quickview.css?v=20260914-2" />
+	<link type="text/css" rel="stylesheet" charset="utf-8" href="/data/skin/{skin}/css/redesign/goods-quickview.css?v=20260915-2" />
 	<script type="text/javascript">
 		var gl_goods_price = 0;
 		var gl_event_sale_unit = 0;
@@ -400,7 +400,7 @@
 			<section class="qv-reviews">
 				<div class="qv-reviews-head">
 					<h3>Reviews({=number_format(goods.review_count)})</h3>
-					<a href="/board/?id=goods_review&goods_seq={goods.goods_seq}" target="_parent">VIEW ALL -&gt;</a>
+					<a href="/goods/view?no={goods.goods_seq}#reviews" target="_parent">VIEW ALL -&gt;</a>
 				</div>
 				<!--{ ? reviews }-->
 				<ul class="qv-review-list">

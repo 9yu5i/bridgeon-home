@@ -385,6 +385,15 @@ Creation Date : 2026-08-14
   background-color: transparent !important;
 }
 
+/* The selected-option table is display:table (auto), so a long option name
+   made the table wider than its container — causing a horizontal scrollbar and
+   pushing the remove (×) button out of place. Lock it to the container width so
+   the option name truncates (see .option_text ellipsis) instead of overflowing. */
+#select_option_lay .goods_quantity_table {
+  width: 100%;
+  table-layout: fixed;
+}
+
 #select_option_lay .goods_quantity_table tr.quanity_row {
   display: flex;
   align-items: center;
@@ -407,6 +416,7 @@ Creation Date : 2026-08-14
   justify-content: space-between;
   gap: 12px;
   width: 100%;
+  min-width: 0;
 }
 
 #select_option_lay .option_text {

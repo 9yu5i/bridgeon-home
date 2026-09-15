@@ -21,6 +21,8 @@ Creation Date : 2026-08-06
   flex-direction: column;
   flex: 1;
   min-width: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(190, 159, 246, 0.58) transparent;
 }
 
 .qv-product-card {
@@ -31,6 +33,8 @@ Creation Date : 2026-08-06
   padding: 24px;
   border-radius: 8px;
   background: var(--qv-card-surface);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(190, 159, 246, 0.58) transparent;
 }
 
 /* ============================================================
@@ -605,6 +609,7 @@ Creation Date : 2026-08-06
   font-size: 12px;
   text-decoration: none;
   transition: color 0.2s ease;
+  font-weight: 500;
 }
 
 .qv-reviews-head a:hover {
@@ -724,6 +729,9 @@ Creation Date : 2026-08-06
   display: none;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: rgba(18, 12, 26, 0.68);
   touch-action: none;
 }
 
@@ -744,19 +752,23 @@ body.qv-modal-open .qv-modal {
 .qv-modal-dim {
   position: absolute;
   inset: 0;
-  background: rgba(18, 12, 26, 0.55);
+  background: transparent;
   overflow: hidden;
   overscroll-behavior: none;
   touch-action: none;
 }
 
-/* Background scroll lock while the quickview is open — only the modal scrolls,
-   the page behind it stays put (offset preserved by quickview.js). */
+/* Freeze the current viewport without letting Firstmall's body { height:100% }
+   clip long home pages and expose the canvas below the page. */
 body.qv-scroll-locked {
   position: fixed;
-  left: 0;
   right: 0;
+  left: 0;
+  box-sizing: border-box;
   width: 100%;
+  height: auto;
+  min-height: 100%;
+  padding-right: var(--qv-page-scrollbar-width, 0px);
   overflow: hidden;
 }
 
@@ -822,6 +834,35 @@ body.qv-scroll-locked {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(190, 159, 246, 0.58) transparent;
+}
+
+.qv-modal-scroll::-webkit-scrollbar,
+.realtrend-product-card #goods_view_quickview::-webkit-scrollbar,
+.qv-product-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.qv-modal-scroll::-webkit-scrollbar-track,
+.realtrend-product-card #goods_view_quickview::-webkit-scrollbar-track,
+.qv-product-card::-webkit-scrollbar-track {
+  margin-block: 14px;
+  background: transparent;
+}
+
+.qv-modal-scroll::-webkit-scrollbar-thumb,
+.realtrend-product-card #goods_view_quickview::-webkit-scrollbar-thumb,
+.qv-product-card::-webkit-scrollbar-thumb {
+  min-height: 44px;
+  border-radius: 999px;
+  background: rgba(190, 159, 246, 0.58);
+}
+
+.qv-modal-scroll::-webkit-scrollbar-thumb:hover,
+.realtrend-product-card #goods_view_quickview::-webkit-scrollbar-thumb:hover,
+.qv-product-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 112, 238, 0.76);
 }
 
 #quickviewBody {
@@ -956,6 +997,14 @@ body.qv-scroll-locked {
     position: static;
     width: 100%;
     margin-top: -1px;
+  }
+
+  /* The option list is sized by goods-options.js to fill down to the sheet
+     bottom; trim the card's bottom padding while it's open so the list reaches
+     the screen edge instead of leaving a gap (and so the fill math doesn't
+     overflow the sheet). */
+  .qv-modal-panel:has(.realtrend-select-wrap.is-open) .qv-product-card {
+    padding-bottom: 0;
   }
 }
 

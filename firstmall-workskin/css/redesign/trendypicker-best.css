@@ -47,7 +47,7 @@ body.is-best-page .subpage_wrap .subpage_container {
 /* ——— Hero ——— */
 .bo-best-hero {
   position: relative;
-  min-height: clamp(220px, 27vw, 420px);
+  min-height: clamp(260px, 27vw, 520px);
   overflow: hidden;
   background:
     radial-gradient(circle at 20% 22%, rgba(255, 255, 255, 0.88) 0 5%, transparent 18%),
@@ -231,7 +231,7 @@ body.is-best-page .subpage_wrap .subpage_container {
 /* ——— Responsive ——— */
 @media (min-width: 761px) {
   .bo-best-shell {
-    margin-top: -36px;
+    margin-top: -23px;
     padding: 28px 32px 100px;
     border-radius: 28px 28px 0 0;
     box-shadow: 0 -10px 30px rgba(23, 16, 38, 0.08);
@@ -245,7 +245,7 @@ body.is-best-page .subpage_wrap .subpage_container {
 
 @media (min-width: 1121px) {
   .bo-best-shell {
-    margin-top: -48px;
+    margin-top: -100px;
     padding: 32px 40px 80px;
   }
 

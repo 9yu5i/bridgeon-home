@@ -1537,7 +1537,6 @@ table.displaySwipeTabContentsContainer { width:100%; table-layout:fixed; border:
 .sns_wish .snsbox>li { display:inline-block; }
 .snsbox img { max-height: 30px; max-width: 30px; cursor:pointer; margin: 0 4px; }
 .snsbox img:hover { transform: scale(1.1); }
-#snsListDetail { box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 8px; border-radius: 10px; padding: 10px; }
 
 /* 상품상세 - 이미지 - 위시리스트 버튼 */
 .ico_wish {display:inline-block; width:35px; height:35px; background-image:url('../images/design/ico_wish_off.png'); background-position:50% 50%; background-repeat:no-repeat; background-size:27px;  }

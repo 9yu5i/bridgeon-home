@@ -515,10 +515,7 @@
 			<div class="sns_wish">
 				<!-- SNS 공유 -->
 				<a href="javascript:void(0)" id="btnSnsShare" class="sns_share" title="SNS 공유"><img src="../images/icon/icon-product-share.png" alt=""></a>
-				<div id="snsListDetail" class="snsbox_area dn" style="display:none;">
-					{=snslinkurl('goods', goods.goods_name)}
-				</div>
-				<a href="#" id="couponDownload" class="sns_bell dn"><img src="../images/icon/icon-bell-on.png" alt=""></a>
+				<a href="#" id="couponDownload" class="sns_bell dn" title="Coupons" aria-label="Download coupons"><img src="../images/icon/icon-arrow-right.png" alt=""></a>
 			</div>
 		</div>
 
@@ -541,7 +538,7 @@
 
 		<div class="rating-info">
 			<!--{ ? goods.review_count }-->
-				<img class="product-rating-star" src="../images/icon/icon_star_yellow.gif" alt="" aria-hidden="true" width="16" height="16">
+				<img class="product-rating-star" src="../images/main/Group%205.png" alt="" aria-hidden="true" width="12" height="12">
 				<span class="product-rating-score">{=round(goods.review_divide,1)}</span>
 				<span class="product-rating-reviews">({=number_format(goods.review_count)} reviews)</span>
 			<!--{ / }-->
@@ -1740,17 +1737,6 @@
 				<!-- ~~~~~ //사은품 ~~~~~ -->
 			</ul>
 
-            <div id="sns-share-mo">
-                <p>Share</p>
-                <button type="button" id="btnShareClose"><img src="../images/icon/icon-delete.png" alt="close"></button>
-                <ul class="login_sns_icon">
-                    <li><img src="../images/icon/icon-sns-insta.png" alt="google" /></li>
-                    <li><img src="../images/icon/icon-sns-facebook.png" alt="facebook" /></li>
-                    <li><img src="../images/icon/icon-sns-twitter.png" alt="apple" /></li>
-                    <li><img src="../images/icon/icon-sns-link.png" alt="twitter" /></li>
-                </ul>
-            </div>
-            <div class="sns_bg"></div>
 		</form>
 
 		<!--div id="shipping_detail_lay" class="resp_layer_pop hide"></div-->
@@ -2029,6 +2015,30 @@ if (!hasActiveTab && tabButtons.length) {
   loadTabContent(firstKey);
 }
 
+  /* Deep link: /goods/view?no=...#reviews (also #tab-reviews / #qa / …) opens
+     that detail tab directly — used by the quickview "VIEW ALL" reviews link. */
+  (function openDetailTabFromHash() {
+    var raw = (window.location.hash || "").replace(/^#/, "").toLowerCase();
+    if (!raw) return;
+    var map = {
+      "reviews": "reviews", "tab-reviews": "reviews", "goods_review": "reviews",
+      "qa": "qa", "tab-qa": "qa", "goods_qna": "qa",
+      "details": "details", "tab-details": "details",
+      "use": "use", "tab-use": "use",
+      "ingredients": "ingredients", "tab-ingredients": "ingredients"
+    };
+    var key = map[raw];
+    if (!key) return;
+    var btn = document.querySelector('[data-detail-tab="' + key + '"]');
+    if (!btn) return;
+    btn.click(); // activates the tab + lazy-loads its iframe (reviews/qa)
+    var tabs = document.querySelector(".product-tabs") || btn;
+    setTimeout(function () {
+      try { tabs.scrollIntoView({ behavior: "smooth", block: "start" }); }
+      catch (e) { tabs.scrollIntoView(); }
+    }, 120);
+  })();
+
   /* ---------------------------------------------------------
      2) Group recommendation cards into pages of 6
   --------------------------------------------------------- */
@@ -2303,8 +2313,8 @@ function animateReviewsBars() {
       <button type="button" class="deal-share-copy" data-share-copy>Copy Link</button>
     </label>
 
-    <button type="button" class="deal-share-native" data-share-native hidden>
-      <span>Share…</span>
+    <button type="button" class="deal-share-native" data-share-native hidden aria-label="More sharing options">
+      <span>More sharing options</span>
     </button>
 
     <div class="deal-share-social" aria-label="Share on social" data-share-social>
@@ -2445,7 +2455,10 @@ if (shareDialog) {
     });
   }
   if (socialRow) {
-    socialRow.hidden = canNativeShare;
+    // Keep the social buttons (Messages/Facebook/X/Instagram) visible on every
+    // device — the native "More sharing options" button is shown in ADDITION to
+    // them on mobile, so the modal structure stays the same as on desktop.
+    socialRow.hidden = false;
   }
 
   shareChannelBtns.forEach((btn) => {
@@ -2487,25 +2500,10 @@ $(function() {
 		});
 	});
 
-	$('#btnSnsShare, .sns_bg, #btnShareClose').click(function() {
-        if($(window).width() > 767){
-            if ( $('#snsListDetail').is(':hidden') ) {
-                $('#snsListDetail').show();
-            } else {
-                $('#snsListDetail').hide();
-            }
-        } else {
-            if ( $('#sns-share-mo').is(':hidden') ) {
-                $('#sns-share-mo').show();
-                $(".sns_bg").show();
-                $('body').css('overflow', 'hidden');
-            } else {
-                $('#sns-share-mo').hide();
-                $(".sns_bg").hide();
-                $('body').css('overflow', 'auto');
-            }
-        }
-	});
+	/* Sharing is handled entirely by the redesigned #product-share-dialog
+	   (opened by #btnSnsShare via openShareDialog above). The legacy share
+	   layers (#sns-share-mo / #snsListDetail / .sns_bg) and their toggle were
+	   removed. */
 
 	$('#goodsReviewLoad').one('click', function() {
 		$("div#goods_review_frame_div").html('<iframe name="goods_review_frame" id="goods_review_frame" src="/board/?id=goods_review&goods_seq={goods.goods_seq}&iframe=1&gdviewer=1" width="100%" height="500" frameborder="0" scrolling="no" allowTransparency="true"></iframe>');

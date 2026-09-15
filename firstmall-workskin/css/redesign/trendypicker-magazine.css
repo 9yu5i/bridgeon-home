@@ -38,6 +38,22 @@ body:has(.magazine-main) {
   overflow-y: auto;
 }
 
+/* Magazine scroll happens inside its own full-width layout, so Firstmall's
+   shared scroll handler can leave the footer floating layer hidden. Keep the
+   shared layer available while retaining the exact button offsets owned by
+   trendypicker-footer.css. */
+body.is-magazine-page #floating_over,
+body:has(.magazine-main) #floating_over {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: block !important;
+  width: 100%;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 body.is-magazine-page #layout_wrap,
 body.is-magazine-page #layout_body,
 body:has(.magazine-main) #layout_wrap,

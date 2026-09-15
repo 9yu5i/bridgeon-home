@@ -108,6 +108,27 @@ function openMenu($wrap, $menu, $trigger, $select) {
 
 	$wrap.removeClass('is-open-up');
 	$menu.removeClass('is-open-up');
+
+	// Mobile quickview option list: let the in-flow list fill down to the sheet's
+	// bottom instead of the fixed 160px cap, so many-option products (e.g. 9-shade
+	// foundations) show several options and the list reaches the screen bottom.
+	// Compute the fill against the sheet's MAX height (not its current height) —
+	// the sheet is content-sized and grows with the menu, so measuring the current
+	// height would chase a moving target. cardTop (header above the list) is a
+	// difference of two rects, so it stays correct even inside the fixed sheet.
+	var $sheet = $wrap.closest('.qv-modal-panel');
+	if ($sheet.length && $wrap.closest('#quickviewBody').length && window.innerWidth <= 1124) {
+		var sheetEl = $sheet[0];
+		var sheetMaxH = parseFloat(window.getComputedStyle(sheetEl).maxHeight) || (0.7 * viewportHeight);
+		var cardTop = triggerRect.bottom - sheetEl.getBoundingClientRect().top;
+		// No bottom gap: fill exactly to the sheet's bottom edge (the card's
+		// bottom padding is also zeroed via CSS while the list is open).
+		var fill = Math.max(Math.round(sheetMaxH - cardTop), 120);
+		// Inline !important beats the CSS max-height cap on this menu.
+		$menu[0].style.setProperty('max-height', fill + 'px', 'important');
+		return;
+	}
+
 	$menu.css('max-height', Math.max(Math.min(preferredMax, spaceBelow), 100) + 'px');
 }
 

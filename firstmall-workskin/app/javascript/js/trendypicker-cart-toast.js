@@ -15,6 +15,7 @@
   var TOAST_ID = "trend-cart-toast";
   var VISIBLE_MS = 5000;
   var LEAVE_MS = 280;
+  var PERSIST_MS = 4000;
   var STORAGE_KEY = "tpCartToast";
 
   // The add-to-cart reload drops the shopper back at the top of the page.
@@ -63,7 +64,7 @@
         STORAGE_KEY,
         JSON.stringify({
           info: info || null,
-          path: window.location.pathname + window.location.search,
+          path: window.location.pathname,
           ts: Date.now(),
         })
       );
@@ -72,19 +73,7 @@
       try {
         sessionStorage.removeItem(STORAGE_KEY);
       } catch (err) {}
-    }, 1500);
-  }
-
-  function isReloadNavigation() {
-    if (window.performance && typeof window.performance.getEntriesByType === "function") {
-      var entries = window.performance.getEntriesByType("navigation");
-      if (entries && entries[0]) return entries[0].type === "reload";
-    }
-    return Boolean(
-      window.performance &&
-        window.performance.navigation &&
-        window.performance.navigation.type === 1
-    );
+    }, PERSIST_MS);
   }
 
   function consumePersistedToast() {
@@ -104,8 +93,7 @@
       return;
     }
     if (!data || Date.now() - data.ts > 8000) return;
-    if (data.path !== window.location.pathname + window.location.search) return;
-    if (!isReloadNavigation()) return;
+    if (data.path !== window.location.pathname) return;
     showToast(data.info);
   }
 
@@ -118,6 +106,7 @@
   var pending = null;
   var pendingTimer = null;
   var lastShownAt = 0;
+  var visibleToastInfo = null;
 
   // Native validation can abort the submit (no option chosen, sold out, …)
   // without ever loading actionFrame. Drop the armed toast after a short
@@ -153,6 +142,10 @@
   var showTimer = null;
 
   function scheduleLiveToast(info) {
+    var showDelay =
+      document.body && document.body.classList.contains("is-brand-detail-page")
+        ? 2200
+        : SHOW_DELAY;
     persistToast(info);
     window.clearTimeout(showTimer);
     showTimer = window.setTimeout(function () {
@@ -161,7 +154,7 @@
         sessionStorage.removeItem(STORAGE_KEY);
       } catch (err) {}
       showToast(info);
-    }, SHOW_DELAY);
+    }, showDelay);
   }
 
   // Firstmall confirms every successful add with a native dialog
@@ -255,6 +248,7 @@
     var now = Date.now();
     if (now - lastShownAt < 1500) return;
     lastShownAt = now;
+    visibleToastInfo = info || null;
 
     window.clearTimeout(hideTimer);
     window.clearTimeout(removeTimer);
@@ -483,10 +477,10 @@
     cacheRefs();
     wrapConfirm();
     bindActionFrame();
-    // A persisted toast is accepted only after a same-URL reload caused by
-    // an actual add. Header badge hydration is deliberately not a trigger:
-    // its timing differs between pages and produced false toasts on normal
-    // navigation.
+    // The persisted entry is written only after Firstmall confirms an actual
+    // add. Some listing pages rebuild the same URL with a normal navigation
+    // instead of reporting a browser "reload", so the page path and short
+    // expiry above are the reliable restore conditions across every listing.
     restoreScroll();
     consumePersistedToast();
     try {
@@ -559,6 +553,12 @@
     // variables. Never let an add intent from the previous visit survive a
     // page transition and pair with an unrelated actionFrame load.
     window.addEventListener("pagehide", function () {
+      // Brand/listing pages can reload after the live toast has already begun.
+      // Re-store that confirmed add at unload so the next document restarts
+      // the notification for its full duration instead of losing it midway.
+      if (toast && toast.classList.contains("is-visible")) {
+        persistToast(visibleToastInfo);
+      }
       clearPending();
       // If this unload is an add-triggered reload, cancel the not-yet-shown
       // live toast so it doesn't flash for a moment before the page goes away.
