@@ -2116,6 +2116,16 @@ ul.detail_event_area li.th {
   height: auto;
   margin: 0 auto;
 }
+/* Detail images are wrapped in <p>, which inherits the 620px readable-text cap
+   from .product-tab-panels p — that pinned wide-screen images to the left with
+   empty space on the right. Drop the cap for image paragraphs so they fill the
+   panel (large images) or center (small ones, via the img margin above). */
+.product-detail-description p:has(img) {
+  max-width: none;
+}
+.product-detail-description img + br:has(+ img) {
+  display: none;
+}
 #panel-details ul:not(:first-of-type) li.th,
 #panel-use ul li.th {
     font-weight: bold;

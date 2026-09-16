@@ -318,6 +318,101 @@ body:has(.magazine-main) #layout_body {
   background: var(--magazine-purple);
 }
 
+/* ——— Keyword search (below the topic tabs) ——— */
+.magazine-search-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: clamp(-20px, -1.4vw, -10px) 0 clamp(16px, 1.6vw, 24px);
+}
+
+.magazine-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(720px, 100%);
+  height: 50px;
+  padding: 0 6px 0 18px;
+  box-sizing: border-box;
+  border: 1px solid var(--magazine-line);
+  border-radius: 999px;
+  background: var(--magazine-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.magazine-search:focus-within {
+  border-color: var(--magazine-purple);
+  box-shadow: 0 0 0 3px rgba(123, 63, 228, 0.12);
+}
+
+.magazine-search-icon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--magazine-muted);
+}
+
+.magazine-search input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--magazine-ink);
+  font-size: 15px;
+  outline: none;
+}
+
+.magazine-search input::placeholder {
+  color: var(--magazine-muted);
+}
+
+.magazine-search-btn {
+  flex: 0 0 auto;
+  height: 38px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--magazine-purple);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.magazine-search-btn:hover,
+.magazine-search-btn:focus-visible {
+  background: #5422ba;
+}
+
+.magazine-search-result {
+  margin: 0;
+  color: var(--magazine-muted);
+  font-size: 14px;
+}
+
+.magazine-search-result strong {
+  color: var(--magazine-ink);
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .magazine-search-row {
+    margin-top: 0;
+    margin-bottom: 28px;
+  }
+  .magazine-search {
+    height: 46px;
+    padding-left: 14px;
+  }
+  .magazine-search-btn {
+    height: 34px;
+    padding: 0 16px;
+  }
+}
+
 .magazine-frame {
   display: block;
   width: 100%;
@@ -1010,7 +1105,8 @@ html.bo-magazine-iframe #subAllButton {
 }
 
 .bo-magazine-search-form {
-  display: none;
+  display: block;
+  margin: 0;
 }
 
 /* Category board chrome inside board/index.html */

@@ -275,6 +275,18 @@
   fill: currentcolor;
 }
 
+/* My Page (account) — show the same floating scroll-to-top / chat buttons as
+   the rest of the site. Forced visible (and over the stock fade script) because
+   they were not appearing on the account pages. Scoped to the My Page wrapper. */
+body:has(.bo-mypage-shell) #floating_over {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+body:has(.bo-mypage-shell) #floating_over .float-button {
+  display: grid !important;
+}
+
 @keyframes tp-floating-button-bob {
   0%,
   100% {

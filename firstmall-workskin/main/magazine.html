@@ -5,7 +5,7 @@
 - Content loads from /board/?id=magazine&iframe=1
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css?v=20260908-3" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-magazine.css?v=20260916-11" />
 <style>
 body.is-magazine-page,
 body:has(.magazine-main),
@@ -118,6 +118,19 @@ body:has(.magazine-main) #layout_body {
 			<!--{/}-->
 		</nav>
 		<!--{/}-->
+
+		<form class="bo-magazine-search-form" method="get" action="/board/">
+			<input type="hidden" name="id" value="magazine" />
+			<input type="hidden" name="perpage" value="12" />
+			<div class="magazine-search-row">
+				<div class="magazine-search">
+					<svg class="magazine-search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7.5" stroke="currentColor" stroke-width="1.8" /><path d="m21 21-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+					<label class="bo-magazine-sr" for="magazine-home-search-input">Search magazine</label>
+					<input type="text" id="magazine-home-search-input" name="search_text" placeholder="Search stories, guides, editors&hellip;" autocomplete="off" />
+					<button type="submit" class="magazine-search-btn">Search</button>
+				</div>
+			</div>
+		</form>
 
 		<iframe
 			name="magazine_home_frame"
