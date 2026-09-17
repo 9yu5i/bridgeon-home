@@ -574,7 +574,8 @@
             $('#cateSwiper .designCategoryNavigation ul.respCategoryList>li.custom_nav_link:not(.categoryDepth1)').addClass('swiper-slide');
             slideshowSwiper = new Swiper('#cateSwiper .designCategoryNavigation', {
                 wrapperClass: 'respCategoryList',
-                slidesPerView: 'auto'
+                slidesPerView: 'auto',
+                spaceBetween: 11
             });
             slideshowSwiper.slideTo(0, 0, false);
         } else {
@@ -588,7 +589,8 @@
                     $('#layout_header .respCategoryList .categoryDepth1').off('hover');
                     slideshowSwiper = new Swiper('#cateSwiper .designCategoryNavigation', {
                         wrapperClass: 'respCategoryList',
-                        slidesPerView: 'auto'
+                        slidesPerView: 'auto',
+                        spaceBetween: 11
                     });
                     slideshowSwiper.slideTo(0, 0, false);
                 } else if ( window.innerWidth > 1120 && slideshowSwiper != undefined ) {

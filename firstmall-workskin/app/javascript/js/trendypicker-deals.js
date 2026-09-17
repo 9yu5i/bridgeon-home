@@ -506,11 +506,12 @@
               const discount = formatDiscount(item.discount);
               const name = escapeHtml(item.title);
               const brand = escapeHtml(item.brand);
+              const productLabel = [brand, name].filter(Boolean).join(" ");
               return `
             <article class="deal-time-rail-card" data-product-detail-link="${escapeHtml(item.detailUrl || DEFAULT_DETAIL_URL)}" data-goods-no="${escapeHtml(getGoodsNo(item))}">
               <div class="deal-time-rail-body">
                 <a class="deal-time-rail-thumb" href="${detailUrl}">
-                  <img src="${escapeHtml(item.mediaImage)}" alt="${brand} ${name}">
+                  <img src="${escapeHtml(item.mediaImage)}" alt="${productLabel}">
                 </a>
                 <div class="deal-time-rail-info">
                   <a href="${detailUrl}">
@@ -844,6 +845,11 @@
   const absUrl = (src) =>
     !src ? "" : /^https?:\/\//i.test(src) ? src : window.location.origin + src;
 
+  const normalizeTimedealBrand = (value) => {
+    const brand = String(value || "").trim();
+    return /^unknown brand\.?$/i.test(brand) ? "" : brand;
+  };
+
   const parseTimedealCards = (cards, dealEndTs) =>
     Array.prototype.map.call(cards, (c) => {
       const text = (sel) => {
@@ -864,6 +870,9 @@
       const rate = text(".discount_rate .num") || text(".timedeal-card-deal-rate").replace(/[^0-9]/g, "");
       const fullTitle = text(".listing-card-title, .goods_name_area .name, .name");
       const titleBrand = /^\[([^\]]+)\]\s*/.exec(fullTitle);
+      const brand =
+        normalizeTimedealBrand(text(".listing-card-brand")) ||
+        normalizeTimedealBrand(titleBrand ? titleBrand[1] : "");
       const hasProductCountdown = Boolean(
         c.querySelector(
           '[class*="soloday"], [class*="solohour"], [class*="solomin"], [class*="solosecond"]',
@@ -880,7 +889,7 @@
           : dealEndTs;
       return {
         badge: "FLASH TIME DEAL",
-        brand: text(".listing-card-brand") || (titleBrand ? titleBrand[1] : ""),
+        brand,
         title: fullTitle.replace(/^\[[^\]]+\]\s*/, ""),
         price: sale ? "US$" + sale : "",
         originalPrice: cons ? "US$" + cons : "",

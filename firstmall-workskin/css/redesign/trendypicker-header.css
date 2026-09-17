@@ -473,6 +473,13 @@
       display: block;
     }
 
+    /* Swiper does not include a flex `gap` in its track width calculation.
+       `spaceBetween` in standard.html owns the same 11px spacing so the final
+       mobile item remains reachable instead of stopping one gap per slide early. */
+    .layout_header #cateSwiper .designCategoryNavigation .respCategoryList {
+      gap: 0;
+    }
+
     /* The box is cut to 42px below, but the skin's line-height stays at 62px,
        which drops the label about 10px past centre. Centring with flex keeps
        the height defined in exactly one place; <em> is centred too so its

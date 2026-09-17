@@ -35,14 +35,9 @@
 		</tr>
 		{/}
 		<tr>
-			<th><p>작성자</p></th>
+			<th><p>에디터 이름</p></th>
 			<td>
-				{? defined('__ISUSER__') && name //회원}
-					<input type="hidden" name="name" id="name" value="{name}" >
-					<input type="text" value="{name}" readonly="readonly" />
-				{:}
-					<input type="text" name="name" id="name" value="{name}"  title="작성자를 입력해 주세요" />
-				{/}
+				<input type="text" name="name" id="name" value="{name}" title="에디터 이름을 입력해 주세요" />
 				<span class="{hiddenlay}" ><input type="checkbox" name="hidden" id="hidden"  value="1" {hiddenckeck} /><label for="hidden" > 비밀글</label></span>
 				{displayckeck}
 			</td>

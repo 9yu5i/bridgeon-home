@@ -2914,6 +2914,7 @@ border-color: #ff4d63;
     margin: 0;
     padding-right: 0;
     flex-shrink: 0;
+    min-height: 1.2em;
     color: #7b3fe4;
     font-size: 14px;
     font-weight: 800;
@@ -4184,16 +4185,9 @@ height: 380px;
  
 @media (max-width: 1120px) {
   .deals-section .deal-time-banner {
-position: relative;
-    overflow: hidden;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    min-height: 200px;
-    border-radius: 14px;
-    background: #090611;
-    color: #fff;
-position: relative;
+    position: relative;
     isolation: isolate;
+    width: 100%;
     overflow: hidden;
     aspect-ratio: 16 / 9;
     min-height: clamp(196px, 38vw, 284px);
@@ -4210,19 +4204,11 @@ position: relative;
   }
 
   .deals-section .deal-time-banner-image {
-position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(circle at 6% 72%, rgba(223, 85, 192, 0.44) 0 6px, transparent 34px),
-      radial-gradient(circle at 8% 92%, rgba(255, 129, 213, 0.34) 0 10px, transparent 45px),
-      radial-gradient(circle at 82% 11%, rgba(191, 99, 255, 0.46), transparent 36%),
-      linear-gradient(126deg, #0d0617 0%, #220036 40%, #090611 100%);
-position: absolute;
+    position: absolute;
     inset: 0;
     z-index: -1;
     overflow: hidden;
+    pointer-events: none;
     background:
       linear-gradient(140deg, transparent 0 40%, rgba(188, 54, 255, 0.28) 42%, transparent 57%),
       radial-gradient(circle at 90% 50%, rgba(186, 46, 255, 0.6), transparent 34%),
@@ -4230,12 +4216,7 @@ position: absolute;
   }
 
   .deals-section .deal-time-banner-image::before {
-background:
-      linear-gradient(148deg, transparent 0 28%, rgba(216, 84, 255, 0.78) 32%, rgba(130, 62, 228, 0.22) 39%, transparent 49%),
-      linear-gradient(20deg, transparent 0 49%, rgba(161, 65, 255, 0.44) 52%, transparent 62%),
-      radial-gradient(ellipse at 84% 34%, rgba(199, 94, 255, 0.58), transparent 45%);
-    opacity: 0.86;
-content: "";
+    content: "";
     position: absolute;
     top: 50%;
     right: clamp(-86px, -8vw, -42px);
@@ -4256,17 +4237,13 @@ content: "";
   }
 
   .deals-section .deal-time-banner-image::after {
-background:
-      radial-gradient(circle at 23% 6%, rgba(123, 63, 228, 0.34) 0 1px, transparent 2px),
-      radial-gradient(circle at 71% 13%, rgba(255, 255, 255, 0.58) 0 1px, transparent 2px),
-      radial-gradient(circle at 92% 46%, rgba(255, 255, 255, 0.44) 0 1px, transparent 2px);
-    opacity: 0.8;
-content: "";
+    content: "";
     position: absolute;
     top: 42%;
     right: clamp(34px, 10vw, 122px);
     width: clamp(48px, 9vw, 86px);
     height: clamp(76px, 14vw, 138px);
+    opacity: 0.8;
     background: linear-gradient(180deg, #ff77ff 0%, #8f34ff 100%);
     clip-path: polygon(58% 0, 18% 48%, 48% 48%, 32% 100%, 86% 36%, 54% 38%);
     filter:
@@ -4276,20 +4253,8 @@ content: "";
   }
 
   .deals-section .deal-time-banner-overlay {
-position: absolute;
+    position: relative;
     inset: 0;
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    padding: 16px 18px 14px;
-    background: linear-gradient(
-      180deg,
-      rgba(9, 6, 17, 0.08) 0%,
-      rgba(9, 6, 17, 0.12) 42%,
-      rgba(9, 6, 17, 0.62) 100%
-    );
-    pointer-events: none;
-position: relative;
     box-sizing: border-box;
     z-index: 1;
     display: grid;
@@ -4305,8 +4270,7 @@ position: relative;
   }
 
   .deals-section .deal-time-banner-overlay > * {
-pointer-events: auto;
-pointer-events: auto;
+    pointer-events: auto;
   }
 
   .deals-section .deal-time-banner-badge {
@@ -4337,26 +4301,15 @@ pointer-events: auto;
   }
 
   .deals-section .deal-time-banner-shop {
-position: absolute;
-    top: auto;
-    right: 18px;
-    bottom: 14px;
-    z-index: 2;
-    display: inline-flex;
-    width: fit-content;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 1.2;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-position: absolute;
+    position: absolute;
     top: clamp(20px, 3.4vw, 32px);
     right: clamp(22px, 4vw, 36px);
     bottom: auto;
+    z-index: 2;
     display: inline-flex;
     align-items: center;
     gap: 7px;
+    width: fit-content;
     color: rgba(255, 255, 255, 0.92);
     font-size: clamp(12px, 1.6vw, 14px);
     font-weight: 800;
@@ -4380,13 +4333,8 @@ position: absolute;
   }
 
   .deals-section .deal-time-banner-center {
-display: grid;
-    justify-items: center;
-    gap: 12px;
-    width: min(100%, 360px);
-    text-align: center;
-align-self: center;
     display: grid;
+    align-self: center;
     justify-items: start;
     gap: clamp(8px, 1.5vw, 12px);
     width: min(76%, 420px);
@@ -4397,13 +4345,7 @@ align-self: center;
   }
 
   .deals-section .deal-time-banner-title {
-margin: 0;
-    color: #fff;
-    font-size: clamp(18px, 4.6vw, 24px);
-    font-weight: 800;
-    line-height: 1.2;
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.28);
-margin: 0;
+    margin: 0;
     color: #fff;
     font-size: clamp(32px, 7vw, 50px);
     line-height: 0.98;
@@ -4436,29 +4378,11 @@ margin: 0;
   }
 
   .deals-section .deal-time-banner .deal-timer {
-position: static;
+    position: relative;
+    box-sizing: border-box;
     top: auto;
     left: auto;
     z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0;
-    padding: 12px 16px;
-    border: 1px solid rgba(168, 85, 247, 0.58);
-    border-radius: 16px;
-    background:
-      radial-gradient(circle at 16% 18%, rgba(155, 89, 239, 0.32) 0%, transparent 44%),
-      radial-gradient(circle at 92% 82%, rgba(176, 76, 240, 0.14) 0%, transparent 40%),
-      linear-gradient(135deg, #1a0033 0%, #0d001a 46%, #050010 100%);
-    box-shadow:
-      inset 0 1px 0 rgba(210, 150, 255, 0.38),
-      0 0 16px rgba(139, 63, 228, 0.42),
-      0 10px 28px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-    transform: none;
-position: relative;
-    box-sizing: border-box;
     display: inline-grid;
     grid-template-columns: auto auto auto auto auto;
     align-items: end;
@@ -4478,13 +4402,13 @@ position: relative;
       0 0 28px rgba(198, 60, 255, 0.46),
       0 16px 34px rgba(0, 0, 0, 0.34);
     backdrop-filter: blur(10px);
+    transform: none;
   }
 
   .deals-section .deal-time-banner .deal-timer::before,
   .deals-section .deal-time-banner .deal-timer::after {
-content: none;
+    content: "";
     display: none;
-content: "";
     position: absolute;
     pointer-events: none;
   }
@@ -4507,24 +4431,15 @@ content: "";
   }
 
   .deals-section .deal-time-banner .deal-timer-unit {
-display: inline-flex;
-    flex-direction: column;
+    display: grid;
     align-items: center;
-    gap: 3px;
-    min-width: 2.2em;
-display: grid;
     justify-items: center;
     gap: 6px;
     min-width: clamp(44px, 8vw, 62px);
   }
 
   .deals-section .deal-time-banner .deal-timer-unit b {
-color: #fff;
-    font-size: clamp(22px, 5.4vw, 30px);
-    font-weight: 800;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-color: #fff;
+    color: #fff;
     font-size: clamp(32px, 7.4vw, 48px);
     line-height: 0.86;
     font-weight: 900;
@@ -4533,31 +4448,22 @@ color: #fff;
   }
 
   .deals-section .deal-time-banner .deal-timer-unit em {
-color: rgba(255, 255, 255, 0.72);
-    font-size: clamp(9px, 2.2vw, 11px);
-    font-style: normal;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    line-height: 1;
-color: rgba(255, 255, 255, 0.78);
+    color: rgba(255, 255, 255, 0.78);
     font-size: clamp(9px, 1.6vw, 11px);
     font-style: normal;
     font-weight: 900;
     letter-spacing: 0.08em;
+    line-height: 1;
   }
 
   .deals-section .deal-time-banner .deal-timer-separator {
-color: #fff;
-    font-size: clamp(18px, 4.4vw, 24px);
-    font-weight: 700;
-    line-height: 1;
-    transform: translateY(-4px);
-align-self: start;
+    align-self: start;
     padding-top: 2px;
     color: #fff;
     font-size: clamp(30px, 6vw, 44px);
     line-height: 0.82;
     font-weight: 900;
+    transform: translateY(-4px);
   }
 }
 

@@ -61,7 +61,7 @@
 							<!--{ ? .category_title }-->{.category_title}<!--{ : .category }-->{.category}<!--{ / }-->
 						</span>
 						<div class="img_area bo-recently-card__media">
-							<a href="../goods/view?no={.goods_seq}"><img src="{.image}" {? .index_ > 9}loading="lazy"{/} decoding="async" onerror="this.onerror=null;this.src='/data/skin/{skin}/images/common/noimage_list.gif'" /></a>
+							<a href="../goods/view?no={.goods_seq}"><img src="{=viewImg(.goods_seq, 'view')}" {? .index_ > 9}loading="lazy"{/} decoding="async" onerror="this.onerror=null;this.src='/data/skin/{skin}/images/common/noimage_list.gif'" /></a>
 						</div>
 						<button type="button" class="btn_resp size_a color5 btn_thisitem_del bo-recently-card__del-btn" value="{.goods_seq}" aria-label="Remove from recently viewed"></button>
 						<ul class="sub bo-recently-card__body">

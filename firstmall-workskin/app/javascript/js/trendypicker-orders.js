@@ -1292,10 +1292,12 @@
       statusMenu.append(item);
     });
 
-    const closeStatusMenu = () => {
-      statusWrap.classList.remove("is-open");
-      statusTrigger.setAttribute("aria-expanded", "false");
+    const setStatusMenuOpen = (open) => {
+      statusWrap.classList.toggle("is-open", open);
+      statusMenu.classList.toggle("is-open", open);
+      statusTrigger.setAttribute("aria-expanded", String(open));
     };
+    const closeStatusMenu = () => setStatusMenuOpen(false);
     const syncStatusMenu = () => {
       statusMenu.querySelectorAll("li").forEach((item) => {
         const selected = item.dataset.value === activeFilter;
@@ -1310,17 +1312,19 @@
     statusField.append(statusWrap);
     dateSlot.prepend(statusField);
 
-    statusTrigger.addEventListener("click", () => {
+    statusTrigger.addEventListener("click", (event) => {
+      event.stopPropagation();
       const willOpen = !statusWrap.classList.contains("is-open");
-      statusWrap.classList.toggle("is-open", willOpen);
-      statusTrigger.setAttribute("aria-expanded", String(willOpen));
+      setStatusMenuOpen(willOpen);
     });
     statusMenu.addEventListener("click", (event) => {
       const item = event.target.closest("li[data-value]");
       if (!item) return;
+      event.preventDefault();
+      event.stopPropagation();
+      closeStatusMenu();
       filterTabs.querySelector(`button[data-orders-filter="${item.dataset.value}"]`)?.click();
       syncStatusMenu();
-      closeStatusMenu();
       statusTrigger.focus();
     });
     filterTabs.addEventListener("click", () => window.setTimeout(syncStatusMenu, 0));
@@ -1359,10 +1363,12 @@
     nativeDateSelect.tabIndex = -1;
     nativeDateSelect.setAttribute("aria-hidden", "true");
 
-    const close = () => {
-      wrap.classList.remove("is-open");
-      trigger.setAttribute("aria-expanded", "false");
+    const setOpen = (open) => {
+      wrap.classList.toggle("is-open", open);
+      menu.classList.toggle("is-open", open);
+      trigger.setAttribute("aria-expanded", String(open));
     };
+    const close = () => setOpen(false);
     const sync = () => {
       const selected = nativeDateSelect.options[nativeDateSelect.selectedIndex];
       value.textContent = selected?.textContent || "All";
@@ -1386,17 +1392,19 @@
     field.append(label, wrap);
     dateSlot.append(field, nativeDateRow);
 
-    trigger.addEventListener("click", () => {
+    trigger.addEventListener("click", (event) => {
+      event.stopPropagation();
       const willOpen = !wrap.classList.contains("is-open");
-      wrap.classList.toggle("is-open", willOpen);
-      trigger.setAttribute("aria-expanded", String(willOpen));
+      setOpen(willOpen);
     });
     menu.addEventListener("click", (event) => {
       const item = event.target.closest("li[data-value]");
       if (!item) return;
+      event.preventDefault();
+      event.stopPropagation();
+      close();
       nativeDateSelect.value = item.dataset.value;
       sync();
-      close();
       nativeDateSelect.dispatchEvent(new Event("change", { bubbles: true }));
       trigger.focus();
     });

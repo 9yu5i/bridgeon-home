@@ -273,7 +273,6 @@
   padding: 0 8px;
   border-radius: 999px;
   color: #fff;
-  background: rgba(0, 0, 0, 0.38);
   background: rgba(0, 0, 0, 0.25);
   font: inherit;
   white-space: nowrap;
@@ -298,7 +297,6 @@
   box-sizing: border-box;
   max-width: 1600px;
   margin: -150px auto 0;
-  padding: 48px 130px 78px;
   padding: 1px 130px 78px;
   border-radius: 40px 40px 0 0;
   background: #f8f5ff;
@@ -382,8 +380,7 @@
     box-sizing: border-box;
     width: 100%;
     margin: 0;
-    padding: 14px 18px 40px;
-    padding: 0px 18px 30px;
+    padding: 0 18px 30px;
   }
 
   .main_category.tp-category-outside > h3,
@@ -474,7 +471,6 @@
   #layout_body .main_category > ul {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 6px 2px;
     width: clamp(327px, 50vw, 520px);
     max-width: calc(100vw - 72px);
     margin: 0 auto;

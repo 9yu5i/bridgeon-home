@@ -251,7 +251,7 @@
 				<!--{ @ wishlist_list }-->
 				<article class="bo-product">
 					<a class="bo-product__image" href="/goods/view?no={.goods_seq}">
-						<img src="{.image}" alt="{.goods_name}" onerror="this.src='/data/icon/goods/error/noimage_list.gif';" />
+						<img src="{=viewImg(.goods_seq, 'view')}" alt="{.goods_name}" onerror="this.src='/data/icon/goods/error/noimage_list.gif';" />
 					</a>
 					<div class="bo-product__body">
 						<small
@@ -290,7 +290,7 @@
 				<div class="bo-recent-rail">
 					<!--{ @ recently_viewed_list }-->
 					<a href="/goods/view?no={.goods_seq}">
-						<img src="{=viewImg(.goods_seq, 'thumbScroll')}" alt="{.goods_name}" onerror="this.src='/data/icon/goods/error/noimage_list.gif';" />
+						<img src="{=viewImg(.goods_seq, 'view')}" alt="{.goods_name}" onerror="this.src='/data/icon/goods/error/noimage_list.gif';" />
 					</a>
 					<!--{ / }-->
 				</div>

@@ -28,7 +28,7 @@ em, address {font-style:normal}
 label {cursor:pointer}
 form {clear:both}
 
-body,th,td,input,select,textarea,button,pre{ font-size:13px; line-height:1.4; font-weight:400; color:#666; font-family:'Inter','Noto Sans KR','Malgun Gothic',sans-serif;}
+body,th,td,input,select,textarea,button,pre{ font-size:14px; line-height:1.4; font-weight:400; color:#222; font-family:'Inter','Noto Sans KR','Malgun Gothic',sans-serif;}
 input[type=text], input[type=password], input[type=email], input[type=tel], input[type=number] { box-sizing:border-box; padding:0 9px; height:32px; font-size:13px; line-height:32px; color:#333; border:1px #ccc solid; border-radius:2px; }
 input[type=number] { position:relative; padding:0 4px; text-align:center; min-width:32px; }
 input[type=number]::-webkit-outer-spin-button,

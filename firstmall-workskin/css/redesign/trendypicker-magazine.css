@@ -652,10 +652,6 @@ html.bo-magazine-iframe #subAllButton {
   min-height: calc(1.4em * 2);
 }
 
-.bo-magazine-post-excerpt {
-  min-height: calc(1.4em * 2);
-}
-
 /* Post date under the excerpt (popular grid). */
 .bo-magazine-post-date {
   margin: 5px 0 0;
@@ -787,12 +783,11 @@ html.bo-magazine-iframe #subAllButton {
   max-height: calc(1.25em * 3);
 }
 
-.bo-magazine-post-card > p,
-.bo-magazine-post-excerpt {
+.bo-magazine-post-card > p {
   padding: 0 14px 5px;
 }
 
-.bo-magazine-post-excerpt {
+.bo-magazine-post-card > .bo-magazine-post-excerpt {
   margin-top: 5px;
   margin-bottom: 0;
   padding-bottom: 0;
@@ -1692,6 +1687,16 @@ html.is-magazine-reveal-ready .magazine-scroll-reveal.is-inview {
 
   .magazine-related-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bo-magazine-post-card .bo-magazine-post-excerpt,
+  .bo-magazine-post-card.is-title-one-line .bo-magazine-post-excerpt,
+  .bo-magazine-popular-grid .bo-magazine-post-card.is-title-2-lines .bo-magazine-post-excerpt,
+  .bo-magazine-popular-grid .bo-magazine-post-card.is-title-3-lines .bo-magazine-post-excerpt {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    max-height: calc(1.4em * 2 - 1px);
+    min-height: calc(1.4em * 2 - 1px);
   }
 }
 

@@ -1637,16 +1637,16 @@ body.is-orders-modal-open {
 
 .bo-product__cart {
   color: #fff !important;
-  background:
-    url("../../images/mypage/cart.png") center / 16px no-repeat,
-    var(--bo-purple);
+  background: var(--bo-purple) url("../../images/icon/tp-header-cart.png") center / 17px auto no-repeat;
 }
 
 .bo-product__cart:hover,
 .bo-product__cart:focus-visible {
-  background:
-    url("../../images/mypage/cart.png") center / 16px no-repeat,
-    #31136c;
+  background: #31136c url("../../images/icon/tp-header-cart.png") center / 17px auto no-repeat;
+}
+
+.bo-product__cart svg {
+  display: none;
 }
 
 .bo-product__wish {
