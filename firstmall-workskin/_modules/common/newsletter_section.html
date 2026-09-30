@@ -1,0 +1,192 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 재사용 가능한 뉴스레터 섹션 @@
+- 파일위치 : [스킨폴더]/_modules/common/newsletter_section.html
+- 사용법 : showNewsletterSection() 함수 호출
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<style>
+:root {
+  --purple: #7b3fe4;
+}
+
+.newsletter {
+  display: grid;
+  grid-template-columns: 1fr 470px;
+  align-items: center;
+  gap: 34px;
+  min-height: 127px;
+  padding: 28px 95px;
+  border-radius: 13px;
+  color: #fff;
+  background: #000;
+}
+
+.newsletter h2 {
+  margin: 0 0 8px;
+  font-size: 23px;
+  line-height: 1.15;
+  font-weight: 600;
+}
+
+.newsletter p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.newsletter form {
+  display: grid;
+  grid-template-columns: 1fr 142px;
+  height: 43px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.newsletter input {
+  min-width: 0;
+  border: 0;
+  outline: none;
+  padding: 0 24px;
+  color: #111;
+  font-size: 13px;
+  height: auto;
+}
+
+.newsletter button {
+  margin: 4px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--purple);
+  font-size: 12px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.newsletter button:hover {
+  background-color: #31136C;
+}
+
+.newsletter-section {
+  box-sizing: border-box;
+  width: min(100%, 1500px);
+  margin: 72px auto 0;
+}
+
+@media (min-width: 761px) and (max-width: 1120px) {
+  .newsletter-section {
+    width: 100%;
+    max-width: none;
+    margin: 80px 0 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .newsletter-section {
+    display: none;
+  }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+.newsletter-section {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.newsletter-section.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .newsletter-section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+</style>
+
+<section class="newsletter-section newsletter" data-newsletter-section>
+  <div>
+    <h2>Be the first to know</h2>
+    <p>Get trend updates, exclusive offers, and more!</p>
+  </div>
+  <form data-newsletter-form>
+    <label class="sr-only" for="newsletter-email">Email</label>
+    <input id="newsletter-email" type="email" name="news_letter" placeholder="Enter Your Email" required />
+    <button type="submit">SUBSCRIBE</button>
+  </form>
+</section>
+
+<script>
+document.addEventListener("submit", function (event) {
+  var form = event.target.closest("[data-newsletter-form]");
+  if (!form) return;
+  event.preventDefault();
+
+  var emailInput = form.querySelector("input[name='news_letter']");
+  var email = (emailInput && emailInput.value ? emailInput.value : "").trim();
+  var regexp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  if (!regexp.test(email)) {
+    openDialogAlert(getAlert('mb052'), '400', '140');
+    return;
+  }
+
+  $.ajax({
+    url: '/newsletter_process/newsletter_regist',
+    data: { email: email },
+    type: 'post',
+    dataType: 'json',
+    success: function (res) {
+      if (res.result) {
+        var d = new Date();
+        d.setFullYear(d.getFullYear() + 1);
+        document.cookie = 'np_subscribed=1; expires=' + d.toUTCString() + '; path=/; SameSite=Lax';
+        openDialogAlert(res.msg, '400', '150');
+        document.location.reload();
+      } else {
+        openDialogAlert(res.msg, '400', '150');
+      }
+    }
+  });
+});
+
+(function () {
+  var section = document.querySelector(".newsletter-section");
+  if (!section) return;
+
+  if (!("IntersectionObserver" in window)) {
+    section.classList.add("is-revealed");
+    return;
+  }
+
+  var observer = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+
+  observer.observe(section);
+})();
+</script>

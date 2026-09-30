@@ -1,0 +1,425 @@
+	<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+	@@ 게시판 Comments/덧글 @@
+	- 파일위치 : [스킨폴더]/board/_comment.html
+	++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+	<div class="cmt_division v2">
+		<div class="content title_area">
+			<span class="title" designElement="text">Comments</span> <strong class="num pointcolor">{=number_format(comment)}</strong>
+			<input type="button" name="board_comment_btn" id="board_comment_btn_{seq}" seq="{seq}" value="Add a comment ▼" class="board_comment_btn btn_resp size_b" />
+		</div>
+	</div>
+
+	<a name="cwriteform"></a>
+	<div id="cwrite{managerview.isperm_write_cmt}"  class="{? commentlay == 'N' }hide{/}" >
+		<div id="cmt_insert_{seq}" class="cmt_contents cmt_insert hide">
+			<form name="cmtform_{seq}" id="cmtform_{seq}" method="post"  action="{=sslAction('../board_comment_process')}"  target="commentactionFrame">
+			<!--{? seq }-->
+			<input type="hidden" name="seq" id="board_seq" value="{seq}" />
+			<input type="hidden" name="board_id" id="board_id" value="{manager.id}" />
+			<input type="hidden" name="mode" id="cmtmode" value="board_comment_write" />
+			<input type="hidden" name="viewtype" value="{pagemode}" />
+			<input type="hidden" name="returnurl" id="cmtreturnurl" value="{boardurl->view}{seq}" />
+			<!--{/}-->
+			<!--{? managerview.isperm_write_cmt == "_no" }-->
+			<div class="cmt_box center hand">Sign in with an account that has permission to comment.</div>
+			<!--{:}-->
+			<table class="cmt_box" cellpadding="0" cellspacing="0">
+				<tbody>
+				<!--{? defined('__ISUSER__') === true  && user_name //회원}-->
+				<tr>
+					<td class="its-td">
+						<input type="hidden" name="name" id="cmtname" class="required line" size="20" value="{user_name}" />
+						<input type="text" value="{user_name}"  readonly="readonly" class="required line" />
+						<span class="{cmthiddenlay}" ><label > <input type="checkbox" name="hidden"   id="cmthidden"  value="1" {cmthiddenckeck} /> Secret comment</label></span>
+						<!-- Members: password field appears only while "Secret comment" is ticked (toggled by the script at the bottom of this file) -->
+						<a class="its-td secret-pw hide"><input type="password" name="pw" id="cmtpw" class="required line" size="20" title="Set a password" value="" /></a>
+					</td>
+				</tr>
+				<!--{:}-->
+				<tr>
+					<td class="its-td">
+						<input type="text" name="name" id="cmtname" class="required line" size="20" title="Name" value="{user_name}" />
+						<a class="its-td pwchecklay {? defined('__ISUSER__') === true }hide{/} ">
+							<input type="password" name="pw" id="cmtpw" class="required line pwchecklay" size="20" title="Password" value="" />
+						</a>
+						<span class="{cmthiddenlay}" ><label > <input type="checkbox" name="hidden"   id="cmthidden"  value="1" {cmthiddenckeck} /> Secret comment</label></span>
+					</td>
+				</tr>
+				<!--{/}-->
+				<tr>
+					<td class="its-td">
+						<textarea name="content" id="cmtcontent" class="size1 required line" title="Write a comment."></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td class="its-td">
+						<button type="button" class="btn_resp size_b" name="board_commentsend" id="board_commentsend" seq="{seq}">Post comment</button>
+					</td>
+				</tr>
+				<!--{? (manager.autowrite_use == 'A' || manager.autowrite_use == 'Y') && captcha_image}-->
+				<tr>
+					<td class="its-td">{#securimage}</td>
+				</tr>
+				<!--{/}-->
+				<!--{? !defined('__ISUSER__') //비회원 개인정보 동의}-->
+				<tr class="board_detail_btns2">
+					<td class="L">
+						<span class="Bo">Collection and Use of Personal Information (Required)</span>
+						<textarea class="cs_policy_textarea Mt10" readonly>{policy}</textarea>
+						<input type="hidden" name="agree" value="n" />
+						<label class="Dib fright Pt10 gray_01"><input type="checkbox" class="agree_check"/> I agree to the collection and use of my personal information.</label> &nbsp; &nbsp;
+					</td>
+				</tr>
+				<!--{/}-->
+				</tbody>
+			</table>
+			<!--{/}-->
+			</form>
+		</div>
+	</div>
+	<div class="cmt_division v3">
+		<table class="cmt_tbl" cellpadding="0" cellspacing="0" border="0" width="100%">
+		{? cmtloop }
+			{@ cmtloop }
+			<tr>
+				<td class="cmt_area cmt_cont_head">
+					<span class="iconhidden">{.iconhidden}</span>
+					<strong>{.name}</strong>
+					{? .date}<span class="desc">&nbsp; {? getDateFormat(.r_date,"Y-m-d") == date("Y-m-d") }{=date('H:i',strtotime(.date))}{:}{.date}{/}</span>{/}
+					{? .iconnew }
+						<img src="{templateskin}/images/icon/icon_new.png" title="new" align="absmiddle" >
+					{/}
+					<ul class="report_block_a reply_a">
+						<!--{? .report_view }-->
+						<li><a href="javascript:void(0)" class="report_btn" board_cmt_seq="{.seq}">Report</a></li>
+						<!--{ / }-->
+						<!--{? .block_view }-->
+						<li><a href="javascript:void(0)" class="block_btn block_{.block_onoff}" block_onoff="{.block_onoff}" board_cmt_seq="{.seq}">Block</a></li>
+						<!--{ / }-->
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<td class="cmt_area cmt_contents" style="font-weight:normal;">
+					<div style="left:0;word-wrap:break-word;word-break:break-all;">{=nl2br(.content)}</div>
+					<!-- Edit영역 -->
+					<div id="mod_contents_{.seq}" class="Pt5 hide">
+						<form name="cmtform_mod_{.seq}" id="cmtform_mod_{.seq}" method="post"  action="{=sslAction('../board_comment_process')}"  target="commentactionFrame">
+						<!--{? seq }-->
+						<input type="hidden" name="p_seq" value="{seq}" />
+						<input type="hidden" name="seq" class="board_seq" value="{seq}" />
+						<input type="hidden" name="cmtseq" class="board_cmtseq" value="{.seq}" />
+						<input type="hidden" name="board_id" class="board_id" value="{manager.id}" />
+						<input type="hidden" name="mode" class="cmtmode" value="board_comment_modify" />
+						<input type="hidden" name="viewtype" value="{pagemode}" />
+						<input type="hidden" name="returnurl" class="cmtreturnurl" value="{boardurl->view}{seq}" />
+						<!--{/}-->
+						<!--{? managerview.isperm_write_cmt == "_no" }-->
+						<div class="cmt_box center hand">Sign in with an account that has permission to comment.</div>
+						<!--{:}-->
+						<table class="cmt_box" cellpadding="0" cellspacing="0">
+							<tbody>
+							<!--{? defined('__ISUSER__') === true  && user_name //회원}-->
+							<tr>
+								<td class="its-td">
+									<input type="hidden" name="name" class="cmtname required line" size="19" value="{.real_name}" />
+
+									<input type="text" value="{user_name}"  readonly="readonly" class="required line" />
+									<input type="hidden" name="pw" class="cmtpw required line pwchecklay" size="19" title="Password" value="" />
+									<span class="{cmthiddenlay}" ><label><input type="checkbox" name="hidden"  class="cmthidden"  value="1" {cmthiddenckeck} /> Secret comment</label></span>
+								</td>
+							</tr>
+							<!--{:}-->
+							<tr>
+								<td class="its-td">
+									<input type="text" name="name" class="cmtname required line" size="19" title="Name" value="{.real_name}" />
+									<a class="its-td pwchecklay {? defined('__ISUSER__') === true }hide{/} "><input type="password" name="pw" class="cmtpw required line " size="19" title="Password" value="" /></a>
+									<span class="{cmthiddenlay}" ><label><input type="checkbox" name="hidden"  class="cmthidden"  value="1" {cmthiddenckeck} /> Secret comment</label></span>
+								</td>
+							</tr>
+							<!--{/}-->
+							<tr>
+								<td class="its-td">
+									<textarea name="content" class="size1 cmtcontent required line">{.org_content}</textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="its-td" >
+									<button type="button"  name="board_commentsend_mod" id="board_commentsend_mod" board_cmt_seq="{.seq}" class="btn_resp size_b">Save changes</button>
+								</td>
+							</tr>
+							<!--{? (manager.autowrite_use == 'A' || manager.autowrite_use == 'Y') && captcha_image}-->
+							<tr>
+								<td class="its-td">{#securimage}</td>
+							</tr>
+							<!--{/}-->
+							<!--{? !defined('__ISUSER__') //비회원 개인정보 동의}-->
+							<tr class="board_detail_btns2">
+								<td class="L">
+									<span class="Bo">Collection and Use of Personal Information (Required)</span>
+									<textarea class="cs_policy_textarea Mt10" readonly>{policy}</textarea>
+									<input type="hidden" name="agree" value="n" />
+									<label class="Dib fright Pt10 gray_01"><input type="checkbox" class="agree_check"/> I agree to the collection and use of my personal information.</label> &nbsp; &nbsp;
+								</td>
+							</tr>
+							<!--{/}-->
+							</tbody>
+						</table>
+						<!--{/}-->
+						</form>
+					</div>
+					<!-- Edit영역 END -->
+
+					<!--{? .isperm_hide != 'hide' }-->
+					<div class="pdt10">
+						<span class="btn_resp size_a {.isperm_hide}" name="boad_cmt_reply_btn{managerview.isperm_write_cmt}" board_cmt_seq="{.seq}"  board_cmt_idx="{.idx}"  alt="Write a reply" title="Write a reply" designElement="text">Reply</span>
+						<span class="btn_resp size_a {.isperm_hide}" name="boad_cmt_modify_btn{.isperm_moddel}" board_cmt_seq="{.seq}" alt="Save changes" title="Save changes" designElement="text">Edit</span>
+						<span class="btn_resp size_a {.isperm_hide}" name="boad_cmt_delete_btn{.isperm_moddel}" board_cmt_seq="{.seq}" alt="Delete reply" title="Delete reply" designElement="text">Delete</span>
+						<!-- Comments평가 -->
+						<!--{? managerview.auth_cmt_recommend_use == 'Y' }-->
+						<span class="scorelay">
+							<!--{? managerview.cmt_recommend_type == '2' }-->
+								{? managerview.icon_cmt_recommend_src && managerview.icon_cmt_none_rec_src }
+								<span style="width:50px;margin:auto;border:0px dashed black;padding:5px;">
+									<span class=" icon_cmt_recommend_{seq}_{.seq}_lay{.is_cmt_recommend} icon_cmt_recommend_lay{.is_cmt_recommend} hand " board_recommend="recommend"  board_cmt_seq="{.seq}"  board_seq="{seq}" board_id="{boardid}" ><img src="{managerview.icon_cmt_recommend_src}" class="icon_cmt_recommend_img" /></span>
+									<span class=" idx-cmt-recommend-{seq}-{.seq} ">{=number_format(.recommend)}</span>
+									<span class=" icon_cmt_none_rec_{seq}_{.seq}_lay{.is_cmt_recommend}  icon_cmt_none_rec_lay{.is_cmt_recommend} hand" board_recommend="none_rec"  board_cmt_seq="{.seq}"  board_seq="{seq}" board_id="{boardid}" ><img src="{managerview.icon_cmt_none_rec_src}"  class="icon_cmt_none_rec_img"  /></span>
+									<span class=" idx-cmt-none_rec-{seq}-{.seq}">{=number_format(.none_rec)}</span>
+								</span>
+								{/}
+							<!--{: managerview.cmt_recommend_type == '1' }-->
+								{? managerview.icon_cmt_recommend_src }
+								<span style="width:50px;margin:auto;border:0px dashed black;padding:5px;">
+									<span class="icon_cmt_recommend_{seq}_{.seq}_lay{.is_cmt_recommend} icon_cmt_recommend_lay{.is_cmt_recommend} hand  " board_recommend="recommend"  board_cmt_seq="{.seq}"  board_seq="{seq}" board_id="{boardid}" ><img src="{managerview.icon_cmt_recommend_src}" class="icon_cmt_recommend_img" /></span>
+									<span class=" idx-cmt-recommend-{seq}-{.seq}">{=number_format(.recommend)}</span>
+								</span>
+								{/}
+							<!--{/}-->
+						</span>
+						<!--{/}-->
+					</div>
+					<!--{/}-->
+
+				</td>
+			</tr>
+			<!-- Reply영역 -->
+			<tr class=" hide cmtreplylay cmtreplyform{.seq} ">
+				<td id="cmtreplyform{.seq}">
+					<div class="wbox">
+						<!--{? managerview.isperm_write_cmt == "_no" }-->
+							<div class="cmt_box center hand">Sign in with an account that has permission to comment.</div>
+						<!--{:}-->
+							<table class="cmt_box" cellpadding="0" cellspacing="0">
+								<thead class="hide">
+								<tr>
+									<th class="its-th-align center" >Write a comment</th>
+								</tr>
+								</thead>
+								<tbody>
+									<!--{? defined('__ISUSER__') === true && (user_name) //회원}-->
+									<tr>
+										<td class="its-td"><input type="hidden" name="name" id="cmtname{.seq}" board_cmt_seq="{.seq}"  value="{user_name}"  /><input type="text" value="{user_name}"  readonly="readonly"  class="required line" />
+										<a class="  pwchecklay {? defined('__ISUSER__') === true }hide{/}"><input type="password"  password="password" name="pw" board_cmt_seq="{.seq}"id="cmtpw{.seq}" class="required line"  size="25" title="Password" value="" /></a>
+										<span class="{cmthiddenlay}" ><label > <input type="checkbox" name="hidden"  id="cmthidden{.seq}"   value="1" {hiddenckeck} /> Secret reply</label></span>
+										</td>
+									</tr>
+									<!--{:}-->
+									<tr>
+										<td class="its-td"><input type="text" name="name" id="cmtname{.seq}" board_cmt_seq="{.seq}" class="required line" size="20" title="Name" value="{user_name}" />
+										<a class="  pwchecklay {? defined('__ISUSER__') === true }hide{/}"><input type="password"  password="password" name="pw" board_cmt_seq="{.seq}"id="cmtpw{.seq}" class="required line "  size="20" title="Password" value="" /></a>
+										<span class="{cmthiddenlay}" ><label > <input type="checkbox" name="hidden"  id="cmthidden{.seq}"   value="1" {hiddenckeck} /> Secret reply</label></span>
+										</td>
+									</tr>
+									<!--{/}-->
+									<tr>
+										<td  class="its-td"><textarea name="content" id="cmtcontent{.seq}" board_cmt_seq="{.seq}" class="size1 required line" title="{?managerview.isperm_write_cmt == "_no" }Please sign in to continue.{:}Write a reply.{/}" title=" "></textarea></td>
+									</tr>
+									<tr>
+										<td class="its-td">
+										<button type="button"  name="board_commentsend_reply" id="board_commentsend_reply{.seq}" board_cmt_seq="{.seq}"  board_cmt_reply_seq=""  board_cmt_idx="{.idx}" class="btn_resp size_b">Post reply</button>
+										<!-- <button  type="reset" name="board_comment_reply_cancel" id="board_comment_reply_cancel{.seq}" board_cmt_seq="{.seq}" board_cmt_reply_seq=""  board_cmt_idx="{.idx}" class="round_btn">Cancel reply</button> -->
+									</td>
+									</tr>
+
+									<!--{? (manager.autowrite_use == 'A' || manager.autowrite_use == 'Y') && captcha_image}-->
+									<tr>
+										<td class="its-td">{#securimage}</td>
+									</tr>
+									<!--{/}-->
+
+									<!--{? !defined('__ISUSER__') //비회원 개인정보 동의}-->
+									<tr class="board_detail_btns2">
+										<td class="L">
+											<span class="Bo">Collection and Use of Personal Information (Required)</span>
+											<textarea class="cs_policy_textarea Mt10" readonly>{policy}</textarea>
+											<input type="hidden" name="agree" id="cmtagree{.seq}" value="n" />
+											<label class="Dib fright Pt10 gray_01"><input type="checkbox" class="agree_check"/> I agree to the collection and use of my personal information.</label> &nbsp; &nbsp;
+										</td>
+									</tr>
+									<!--{/}-->
+								</tbody>
+							</table>
+						<!--{/}-->
+					</div>
+				</td>
+			</tr>
+			<!-- Reply영역 END -->
+
+				<!-- Comments의 Comments -->
+				{? .cmtreplyloop }
+					{@ .cmtreplyloop }
+					<tr>
+						<td class="cmt_area cmt_cont_head cmt_reply" >
+						<img src="{templateskin}/images/board/icon/icon_comment_reply.gif"  title="Reply" alt="Reply">
+						<span class="iconhidden">{..iconhidden}</span><strong class="name">{..name}</strong>
+							{? ..date}<span class="desc">&nbsp;  {? getDateFormat(..r_date,"Y-m-d") == date("Y-m-d") }{=date('H:i',strtotime(..date))}{:}{..date}{/}</span>{/}
+							{? ..iconnew }
+								<img src="{templateskin}/images/icon/icon_new.png" title="new" align="absmiddle" >
+							{/}
+							<ul class="report_block_a reply_a">
+								<!--{? ..report_view }-->
+								<li><a href="javascript:void(0)" class="report_btn" board_cmt_seq="{..seq}">Report</a></li>
+								<!--{ / }-->
+								<!--{? ..block_view }-->
+								<li><a href="javascript:void(0)" class="block_btn block_{..block_onoff}" block_onoff="{..block_onoff}" board_cmt_seq="{..seq}">Block</a></li>
+								<!--{ / }-->
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td class="cmt_area cmt_reply cmt_contents" colspan="2">
+							<div style="left:0;word-wrap:break-word;word-break:break-all;">{=nl2br(..content)}</div>
+							<!-- Save changes영역 -->
+							<div class=" hide cmtreplyform{..seq} ">
+								<div id="cmtreplyform{..seq}" class="Pt5" >
+									<div >
+										<!--{? managerview.isperm_write_cmt == "_no" }-->
+											<div class="cmt_box center hand">Sign in with an account that has permission to comment.</div>
+										<!--{:}-->
+										<form >
+											<table class="cmt_box" cellpadding="0" cellspacing="0">
+												<thead class="hide">
+												<tr>
+													<th class="its-th-align center" >Write a reply</th>
+												</tr>
+												</thead>
+												<tbody>
+													<!--{? defined('__ISUSER__') === true && (user_name) //회원}-->
+													<tr>
+														<td class="its-td">
+															<input type="hidden" name="name" id="cmtname{..seq}" board_cmt_seq="{..seq}"  value="{user_name}"  />
+															<input type="text" value="{user_name}"  readonly="readonly"  class="required line" />
+															<a class="pwchecklay {? defined('__ISUSER__') === true }hide{/}"><input type="password"  password="password" name="pw" board_cmt_seq="{..seq}"id="cmtpw{..seq}" class="required line"  size="15" title="Password" value="" /></a>
+															<span class="{cmthiddenlay}" ><label > <input type="checkbox" name="hidden"  id="cmthidden{..seq}"   value="1" {hiddenckeck} /> Secret reply</label></span>
+														</td>
+													</tr>
+													<!--{:}-->
+													<tr>
+														<td class="its-td"><input type="text" name="name" id="cmtname{..seq}" board_cmt_seq="{..seq}" class="required line" size="15" title="Name" value="{user_name}" />
+														<a class="  pwchecklay {? defined('__ISUSER__') === true }hide{/}"><input type="password"  password="password" name="pw" board_cmt_seq="{..seq}"id="cmtpw{..seq}" class="required line"  size="15" title="Password" value="" /></a>
+														<span class="{cmthiddenlay}" ><label > <input type="checkbox" name="hidden"  id="cmthidden{..seq}"   value="1" {hiddenckeck} /> Secret reply</label></span>
+														</td>
+													</tr>
+													<!--{/}-->
+													<tr>
+														<td  class="its-td"><textarea name="content" id="cmtcontent{..seq}" board_cmt_seq="{..seq}" class="size1 required line" title="{?managerview.isperm_write_cmt == "_no" }Please sign in to continue.{:}Write a reply.{/}" title=" "></textarea></td>
+													</tr>
+													<tr>
+														<td class="its-td">
+														<button type="button" name="board_commentsend_reply" id="board_commentsend_reply{..seq}" board_cmt_seq="{..seq}"  board_cmt_reply_seq=""  board_cmt_idx="{..idx}" class="round_btn">Save changes</button>
+														</td>
+													</tr>
+													<!--{? (manager.autowrite_use == 'A' || manager.autowrite_use == 'Y') && captcha_image}-->
+													<tr>
+														<td class="its-td">{#securimage}</td>
+													</tr>
+													<!--{/}-->
+													<!--{? !defined('__ISUSER__') //비회원 개인정보 동의}-->
+													<tr class="board_detail_btns2">
+														<td class="L">
+															<span class="Bo">Collection and Use of Personal Information (Required)</span>
+															<textarea class="cs_policy_textarea Mt10" readonly>{policy}</textarea>
+															<input type="hidden" name="agree" id="cmtagree{..seq}" value="n" />
+															<label class="Dib fright Pt10 gray_01"><input type="checkbox" class="agree_check"/> I agree to the collection and use of my personal information.</label> &nbsp; &nbsp;
+														</td>
+													</tr>
+													<!--{/}-->
+												</tbody>
+											</table>
+										</form>
+										<!--{/}-->
+									</div>
+								</div>
+							</div>
+							<!-- Save changes영역 END -->
+							<div class="pdt10">
+								{? ..isperm_hide != 'hide' }
+								<span class="btn_resp size_a {..isperm_hide}" name="boad_cmt_modify_reply_btn{..isperm_moddel}" board_cmt_seq="{.seq}" board_cmt_reply_seq="{..seq}"  alt="Save changes" title="Save changes" designElement="text">Edit</span>
+								<span class="btn_resp size_a {..isperm_hide}" name="boad_cmt_delete_reply_btn{..isperm_moddel}" board_cmt_seq="{.seq}" board_cmt_reply_seq="{..seq}"  alt="Delete reply" title="Delete reply" designElement="text">Delete</span>
+								{/}
+								<!-- Comments평가 -->
+								<!--{? managerview.auth_cmt_recommend_use == 'Y' }-->
+								<span class="scorelay">
+									<!--{? managerview.cmt_recommend_type == '2' }-->
+										{? managerview.icon_cmt_recommend_src && managerview.icon_cmt_none_rec_src }
+										<span style="width:50px;margin:auto;border:0px dashed black;padding:5px;">
+											<span class=" icon_cmt_recommend_{seq}_{..seq}_lay{..is_cmt_recommend} icon_cmt_recommend_lay{..is_cmt_recommend} hand " board_recommend="recommend"  board_cmt_seq="{..seq}"  board_seq="{seq}"  board_seq="{seq}" board_id="{boardid}" ><img src="{managerview.icon_cmt_recommend_src}" class="icon_cmt_recommend_img" /></span>
+											<span class=" idx-cmt-recommend-{seq}-{..seq} ">{=number_format(..recommend)}</span>
+											<span class=" icon_cmt_none_rec_{seq}_{..seq}_lay{..is_cmt_recommend}  icon_cmt_none_rec_lay{..is_cmt_recommend} hand" board_recommend="none_rec"  board_cmt_seq="{..seq}"  board_seq="{seq}" board_id="{boardid}" ><img src="{managerview.icon_cmt_none_rec_src}"  class="icon_cmt_none_rec_img"  /></span>
+											<span class=" idx-cmt-none_rec-{seq}-{..seq}">{=number_format(..none_rec)}</span>
+										</span>
+										{/}
+									<!--{: managerview.cmt_recommend_type == '1' }-->
+										{? managerview.icon_cmt_recommend_src }
+										<span style="width:50px;margin:auto;border:0px dashed black;padding:5px;">
+											<span class="icon_cmt_recommend_{seq}_{..seq}_lay{..is_cmt_recommend} icon_cmt_recommend_lay{..is_cmt_recommend} hand  " board_recommend="recommend"  board_cmt_seq="{..seq}"  board_seq="{seq}" board_id="{boardid}" ><img src="{managerview.icon_cmt_recommend_src}" class="icon_cmt_recommend_img" /></span>
+											<span class=" idx-cmt-recommend-{seq}-{..seq}">{=number_format(..recommend)}</span>
+										</span>
+										{/}
+									<!--{/}-->
+								</span>
+								<!--{/}-->
+							</div>
+						</td>
+					</tr>
+					{/}
+				{/}
+			{/}
+		{:}
+			<!--div style="text-align:center; padding-top:40px;">No comments yet.</div-->
+		{/}
+		</table>
+	</div>
+<!-- 페이징 --><div id="cmtpager" align="center"  class="paging_navigation" >{cmtpagin}</div><!-- 페이징 -->
+<iframe name="commentactionFrame" src="" frameborder="0" width="0" height="0" class="hide"></iframe>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	// 페이징 개수가 1개일때 노출 X
+	var pagingTotalNum = $('#cmtpager a').length;
+	if ( pagingTotalNum < 2 ) {
+		$('#cmtpager').hide();
+	}
+
+	$('input[type="checkbox"]').ezMark({
+		checkedCls: 'ez-checkbox-on'
+	});
+
+	// Members: show the password field only while "Secret comment" is ticked.
+	function syncSecretPw() {
+		var on = $('#cmthidden').is(':checked');
+		$('.secret-pw').toggleClass('hide', !on);
+		if (!on) $('.secret-pw input').val('');
+	}
+	if ($('.secret-pw').length) {
+		// ezMark swaps the checkbox for a styled element, so listen on both and
+		// read the state after the click has been applied.
+		$(document).on('click change', '#cmthidden, label:has(#cmthidden), .ez-checkbox', function() {
+			setTimeout(syncSecretPw, 0);
+		});
+		syncSecretPw();
+	}
+});
+</script>

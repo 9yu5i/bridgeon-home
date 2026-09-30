@@ -3,7 +3,7 @@
 - 파일위치 : [스킨폴더]/board/view.html
 - Notice/FAQ/Contact Us 셸은 각 게시판 view.html에 포함
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!--{? _GET.id == 'notice' || _GET.id == 'faq' || _GET.id == 'mbqna' || manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' }-->
+<!--{? _GET.id == 'notice' || _GET.id == 'faq' || _GET.id == 'mbqna' || manager.id == 'notice' || manager.id == 'faq' || manager.id == 'mbqna' || ((_GET.id == 'goods_qna' || manager.id == 'goods_qna') && !_GET.iframe) }-->
 {#skin}
 <!--{: _GET.id == 'magazine' || manager.id == 'magazine' }-->
 <script type="text/javascript">

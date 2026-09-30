@@ -2,6 +2,7 @@
 @@ 상품문의 List @@
 - 파일위치 : [스킨폴더]/board/goods_qna/_goods_qna/index.html
 ++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!--{? _GET.iframe || _GET.gdviewer || _GET.quickview }-->
 <style>
 <!--{? _GET.iframe}-->
 #layout_body {padding:0;margin-bottom:80px;}
@@ -371,3 +372,173 @@ if (shippingBtn) {
 
 })();
 </script>
+<!--{:}-->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css" />
+
+<script type="text/javascript">
+//<![CDATA[
+var board_id = '{_GET.id}';
+var boardlistsurl = '{boardurl->lists}';
+var boardwriteurl = '/board/write?id=goods_qna';
+var boardviewurl = '{boardurl->view}';
+var boardmodifyurl = '{boardurl->modify}';
+var boardreplyurl = '{boardurl->reply}';
+var boardrpermurl = '{boardurl->perm}';
+var gl_isuser = false;
+{ ? defined('__ISUSER__') }
+gl_isuser = '{=defined('__ISUSER__')}';
+{ / }
+var return_url = '{=urlencode(_SERVER.REQUEST_URI)}';
+var comment = '{comment}';
+var commentlay = '{commentlay}';
+var isperm_write = '{managerview.isperm_write}';
+//]]>
+</script>
+<script type="text/javascript" src="/app/javascript/js/board.js" charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js"></script>
+<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js" charset="utf-8"></script>
+
+<div id="boardlayout" class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-board-page bo-help-qna-page bo-help-goods-qna-page">
+	<aside class="bo-account-side" data-mypage-lnb>
+		<!-- 마이페이지 LNB 공통. 정의: [스킨폴더]/mypage/mypage_lnb.html -->
+	</aside>
+
+	<main class="subpage_container bo-mypage bo-help-topic-container">
+		<article class="help-topic-shell">
+			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
+				<a href="/service/cs">Help Center</a>
+				<span aria-hidden="true">&gt;</span>
+				<span>Customer Service</span>
+			</nav>
+
+			<header class="help-topic-head">
+				<span class="help-topic-kicker">Customer Service</span>
+				<h1><span designElement="text">Q&amp;A</span></h1>
+				<p>Ask about an order or select a product that needs assistance.</p>
+					<div class="help-topic-meta"><span>Product and order support</span></div>
+			</header>
+
+			<div class="help-topic-layout">
+				<nav class="help-topic-nav" aria-label="Help topics">
+					<strong>Topics</strong>
+					<a href="/board/?id=notice">Notice</a>
+					<a href="/board/?id=faq">FAQ</a>
+					<a class="is-active" href="/board/?id=goods_qna" aria-current="page">Q&amp;A</a>
+					<a href="/mypage/myqna_catalog">My 1:1 Inquiry</a>
+					<a href="/service/guide">Guide</a>
+					<a href="/service/cancellation">Returns &amp; Exchanges</a>
+					<a href="/service/company">About Us</a>
+					<a href="/service/company?topic=contact">Contact Us</a>
+					<a href="/service/agreement">Terms of Use</a>
+					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
+				</nav>
+
+				<div class="help-topic-body">
+					<div id="bbslist">
+						<ul class="bbs_bottom_wrap help-qna-create">
+							<li class="right">
+								<button type="button" name="boad_write_btn{manager.isperm_write}" id="boad_write_btn{manager.isperm_write}" board_id="goods_qna" fileperm_read="{manager.fileperm_write}" class="btn_resp size_b color2">New inquiry</button>
+							</li>
+						</ul>
+						<form name="boardsearch" id="boardsearch">
+							<input type="hidden" name="id" value="goods_qna">
+							<input type="hidden" name="popup" value="{_GET.popup}">
+							<input type="hidden" name="iframe" value="{_GET.iframe}">
+							<input type="hidden" name="goods_seq" value="{_GET.goods_seq}">
+							<input type="hidden" name="perpage" id="perpage" value="{_GET.perpage}">
+							<input type="hidden" name="page" id="page" value="{_GET.page}">
+
+							<ul class="bbs_top_wrap help-board-toolbar">
+								<li class="help-board-filter listing-sort">
+									<!--{? categorylist}-->
+									<select name="category" id="searchcategory" aria-label="Inquiry type">
+										<option value="" {? !_GET.category} selected="selected"{/}>All inquiry types</option>
+										<!--{@ categorylist}-->
+										<option value="{.value_}" {? _GET.category == .value_} selected="selected" {/}>{.value_}</option>
+										<!--{/}-->
+									</select>
+									<!--{:}-->
+									<select name="category" id="searchcategory" aria-label="Inquiry type">
+										<option value="" selected="selected">All inquiry types</option>
+									</select>
+									<!--{/}-->
+								</li>
+								<li class="help-board-search">
+									<input type="text" name="search_text" id="search_text" class="res_bbs_search_input" value="{_GET.search_text}" title="Title or content" placeholder="Search inquiries" />
+								</li>
+								<li class="help-board-action">
+									<button type="submit" class="btn_resp size_b color2">Search</button>
+								</li>
+								<li class="help-board-action">
+									<button type="button" class="btn_resp size_b" onclick="document.location.href='/board/?id=goods_qna'">Clear</button>
+								</li>
+							</ul>
+						</form>
+
+						<p class="help-board-count">
+							Total {=number_format(sc.totalcount)} (Page {? sc.total_page== 0 }0{:}{=((sc.page/sc.perpage)+1)}{/}/{=number_format(sc.total_page)})
+						</p>
+
+						{? loop}
+						<div class="res_table help-qna-table">
+							<ul class="thead help-board-head">
+								<li>Status</li>
+								<li>Type</li>
+								<li>Subject</li>
+								<li>Date</li>
+							</ul>
+							{@ loop}
+							<ul class="tbody help-board-row {? .display == 1}gray{/} {? .reply_state == 'complete'}complete{/}">
+								<li>{? .reply_state == 'complete'}<span class="reply_title pointcolor2">Answered</span>{:}<span class="reply_title">Pending</span>{/}</li>
+								<li class="cat">{=preg_replace("/[\[\]]/","",.category)}</li>
+								<li class="subject">
+									<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="goods_qna">
+										{.iconmobile}{.blank} {.subjectcut}
+										{? .comment > 0}<span class="comment">({=number_format(.comment)})</span>{/}
+										{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
+									</span>
+								</li>
+								<li class="date">{=date('Y.m.d',strtotime(.date))}</li>
+							</ul>
+							{/}
+						</div>
+						{:}
+						<div class="no_data_area2 help-board-empty">No inquiries have been submitted yet.</div>
+						{/}
+
+						{? pagin}
+						<div id="pagingDisplay" class="paging_navigation">{pagin}</div>
+						{/}
+
+						<div id="BoardPwCk" class="hide BoardPwCk">
+							<div class="msg">
+								<h3>Password confirmation</h3>
+								<div>Enter the password used when the inquiry was submitted.</div>
+							</div>
+							<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame">
+								<input type="hidden" name="seq" id="pwck_seq" value="" />
+								<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
+								<div class="ibox">
+									<input type="password" name="pw" id="pwck_pw" class="input" />
+									<input type="submit" id="BoardPwcheckBtn" value="Confirm" class="btnblue" />
+									<input type="button" value="Cancel" class="btngray" onclick="$('#BoardPwCk').dialog('close');" />
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</article>
+	</main>
+</div>
+
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js"></script>
+<script type="text/javascript">
+$(function() {
+	var pagingTotalNum = $('#pagingDisplay a').length;
+	if (pagingTotalNum < 2) $('#pagingDisplay').hide();
+});
+</script>
+<!--{/}-->

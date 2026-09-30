@@ -18,6 +18,53 @@
         .subpage_wrap .subpage_container .title_container {display:block;}
     }
 </style>
+<!--{? !_GET.iframe }-->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css" />
+<script type="text/javascript" src="/app/javascript/js/board.js" charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/js/board_mobile.js" charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js" charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js" charset="utf-8"></script>
+
+<div id="boardlayout" class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-qna-page bo-help-goods-qna-write-page">
+	<aside class="bo-account-side" data-mypage-lnb>
+		<!-- 마이페이지 LNB 공통. 정의: [스킨폴더]/mypage/mypage_lnb.html -->
+	</aside>
+
+	<main class="subpage_container bo-mypage bo-help-topic-container">
+		<article class="help-topic-shell">
+			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
+				<a href="/service/cs">Help Center</a>
+				<span aria-hidden="true">&gt;</span>
+				<a href="/board/?id=goods_qna">Q&amp;A</a>
+			</nav>
+
+			<header class="help-topic-head">
+				<span class="help-topic-kicker">Customer Service</span>
+				<h1><span designElement="text">Q&amp;A</span></h1>
+				<p>Select an ordered product or any product that needs assistance, then submit your question.</p>
+				<div class="help-topic-meta"><span>Product and order support</span></div>
+			</header>
+
+			<div class="help-topic-layout">
+				<nav class="help-topic-nav" aria-label="Help topics">
+					<strong>Topics</strong>
+					<a href="/board/?id=notice">Notice</a>
+					<a href="/board/?id=faq">FAQ</a>
+					<a class="is-active" href="/board/?id=goods_qna" aria-current="page">Q&amp;A</a>
+					<a href="/mypage/myqna_catalog">My 1:1 Inquiry</a>
+					<a href="/service/guide">Guide</a>
+					<a href="/service/cancellation">Returns &amp; Exchanges</a>
+					<a href="/service/company">About Us</a>
+					<a href="/service/company?topic=contact">Contact Us</a>
+					<a href="/service/agreement">Terms of Use</a>
+					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
+				</nav>
+
+				<div class="help-topic-body">
+					<section class="help-topic-panel bo-qna-write-panel">
+						<h2><span designElement="text">New Inquiry</span></h2>
+<!--{/}-->
 <div class="table_top_line1"></div>
 <form name="writeform" id="writeform" method="post" action="{=sslAction('../board_process')}"  enctype="multipart/form-data" target="boardactionFrame">
 	<input type="hidden" name="mode" id="mode" value="{mode}" />
@@ -35,7 +82,7 @@
 	<input type="hidden" name="oldpw" value="{pw}" >
 	{/}
 
-	<table id="boardDetailTable" class="table_row_a custom v2 Thc" width="100%" cellpadding="0" cellspacing="0">
+<table id="boardDetailTable" class="table_row_a custom v2 Thc bo-qna-write-table" width="100%" cellpadding="0" cellspacing="0">
 	<!--<colgroup><col class="size_b"><col></colgroup>-->
 	<tbody>
 		<!--{ ? order_seq }-->
@@ -57,53 +104,63 @@
 		<!--{ / }-->
 
 
+		{? !_GET.iframe}
+		<tr class="bo-qna-section-heading">
+			<td><h3>Your information</h3></td>
+		</tr>
+		{/}
 		<tr>
-			<th><p designElement="text">작성자</p></th>
+			<th><p designElement="text">Author</p></th>
 			<td>
                 <ul class="form_multi_row2">
-                    <li>
+                    <li class="bo-qna-contact-row">
                         {? defined('__ISUSER__') && name //회원}
                             <input type="hidden" name="name" id="name" value="{name}" >
                             <input type="text" value="{name}" readonly="readonly" style="width:calc(100% - 10px);" />
                         {:}
                             <input type="text" name="name" id="name" value="{name}"  title="Name" style="width:calc(100% - 10px);"/>
                         {/}
-                        <span class="{hiddenlay} hide"><input type="checkbox" name="hidden" id="hidden"  value="1" {hiddenckeck} /><label for="hidden" > <span designElement="text">Secret</span></label></span>
+                        <span class="{hiddenlay} {? _GET.iframe}hide{/}"><input type="checkbox" name="hidden" id="hidden"  value="1" {hiddenckeck} /><label for="hidden" > <span designElement="text">Secret</span></label></span>
                         {displayckeck}
                     </li>
-                    <li>
+                    <li class="bo-qna-contact-row">
                         <input type="text" name="email" id="email" value="{email}" class="size_mail" title="Email Address" style="width:100%;"/>
-                        <label class="dn"><input type="checkbox" name="board_email" id="board_email" value="1"  {?(seq && remail=='Y') || (!seq && email)   } checked="checked" {/}/> <span designElement="text">메일받기</span></label>
+						<label class="{? _GET.iframe}dn{:}Dib{/}"><input type="checkbox" name="board_email" id="board_email" value="1"  {?(seq && remail=='Y') || (!seq && email)   } checked="checked" {/}/> <span designElement="text">Email notification</span></label>
                     </li>
                 </ul>
 			</td>
 		</tr>
 		{? !pw }
 		<tr>
-			<th><p designElement="text">비밀번호</p></th>
+			<th><p designElement="text">Password</p></th>
 			<td>
-				<input type="password" name="pw" id="pw" value=""  password="password"  title="Password" style="width:calc(50% - 10px);height:48px;" />
+				<input type="password" name="pw" id="pw" value=""  password="password"  title="Password" />
 			</td>
 		</tr>
 		{/}
-		<tr class="hide">
-			<th><p designElement="text">답변받기</p></th>
+		<tr class="{? _GET.iframe || manager.sms_reply_user_yn != 'Y'}hide{/}">
+			<th><p designElement="text">Receive response</p></th>
 			<td>
 				<ul class="form_multi_row2">
 					{? manager.sms_reply_user_yn == 'Y' }
 					<li>
 						<input type="text" name="tel1" id="tel1" value="{? tel2 }{tel2}{: tel1}{tel1}{/}" class="size_mail" title="휴대폰번호 입력(-포함)" />
-						<label class="Dib"><input type="checkbox" name="board_sms" id="board_sms" value="1" {? (seq && rsms=='Y') || (!seq && (tel1 || tel2)) } checked="checked" {/} /> <span designElement="text">SMS받기</span></label>
+						<label class="Dib"><input type="checkbox" name="board_sms" id="board_sms" value="1" {? (seq && rsms=='Y') || (!seq && (tel1 || tel2)) } checked="checked" {/} /> <span designElement="text">SMS notification</span></label>
 					</li>
 					{/}
 				</ul>
 			</td>
 		</tr>
+		{? !_GET.iframe}
+		<tr class="bo-qna-section-heading bo-qna-section-heading--details">
+			<td><h3>Inquiry details</h3></td>
+		</tr>
+		{/}
 		{? categorylist}
 		<tr>
-			<th><p designElement="text">분류</p></th>
+			<th><p designElement="text">Category</p></th>
 			<td>
-                <ul class="form_multi_row2">
+                <ul class="form_multi_row2 bo-qna-category-controls">
                     <li>
                         <select  name="category" id="addcategory">
                             <option value="" selected="selected" >- Select -</option>
@@ -124,7 +181,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th><p designElement="text">제목</p></th>
+			<th><p designElement="text">Subject</p></th>
 			<td>
 				<input type="text" name="subject" id="subject" value="{subject}" class="Wmax"  title="Subject" />
 			</td>
@@ -134,13 +191,13 @@
 			<input type='hidden' name='displayGoods[]' value='{_GET.goods_seq}' />
 		{:}
 		<tr>
-			<th><p designElement="text">문의상품</p></th>
+			<th><p designElement="text">Product</p></th>
 			<td class="pd0">
 				<!-- 상품선택 & 선택된 상품 -->
 				<div class="board_goods_select">
 					{? !seq }
 					<div class="btn_area hide">
-						<button type="button" id="issueGoodsButton" class="btn_resp size_b color2"><span designElement="text">상품 선택</span></button>
+						<button type="button" id="issueGoodsButton" class="btn_resp size_b color2"><span designElement="text">Select Product</span></button>
 					</div>
 					{/}
 					<div id="displayGoods" class="board_goods_select_display">
@@ -153,9 +210,7 @@
 									<div class="price">{=number_format(.price)}</div>
 								</li>
 							</ul>
-                            <!--{ ? count(contents_multi) > 1 }-->
-                            <textarea name="contentsMulti[]" class="size3 Mt12" placeholder="Responses to your inquiries will be sent to the email address you provide.&#13;&#10;Please ensure it is accurate.">{contents_multi[.key_]}</textarea>
-                            <!--{ / }-->
+                            <textarea name="contentsMulti[]" class="size3 Mt12" placeholder="Write your question about this product.">{contents_multi[.key_]}</textarea>
 							<input type='hidden' name='displayGoods[]' value='{.goods_seq}' />
 						</div>
 						<!--{ / }-->
@@ -166,7 +221,7 @@
 		{/}
 	</tbody>
 	</table>
-	<textarea name="contents" id="contents" class="size3 Mt6" title="Responses to your inquiries will be sent to the email address you provide.&#13;&#10;Please ensure it is accurate." >{contents}</textarea>
+<textarea name="contents" id="contents" class="size3 Mt6 bo-qna-write-textarea" title="Responses to your inquiries will be sent to the email address you provide.&#13;&#10;Please ensure it is accurate." >{contents}</textarea>
     
     <div class="board_img_desc">
         <label><img src="../../../images/icon/icon-camera.png" alt="camera" />Image</label><span>20Mb / jpg, png, gif</span>
@@ -185,12 +240,15 @@
 	</div>
 	{/}
 
-	<div class="board_detail_btns2">
-	    {? !defined('__ISUSER__') //비회원 개인정보 동의}
+	<div class="board_detail_btns2 bo-qna-write-actions">
+	    {? !_GET.iframe || !defined('__ISUSER__') // 단독 Q&A 작성 화면과 비회원 상품 문의에서 동의 표시}
 	    <div class="L Pb20">
-			<span class="Bo">Collection and Use of Personal Information (Required)</span>
-	        <textarea class="cs_policy_textarea Mt10" readonly>{policy}</textarea>
-			<label class="Dib fright Pt10 gray_01"><input type="checkbox" name="agree"/> I agree to the collection and use of my personal information.</label> &nbsp; &nbsp;
+			<div class="bo-qna-policy-heading">
+				<span class="Bo">Collection and Use of Personal Information (Required)</span>
+				<a href="/service/policy" target="_blank" rel="noopener">Read full policy</a>
+			</div>
+	        <textarea class="cs_policy_textarea Mt10" data-policy-empty="{? policy}0{:}1{/}" readonly>{? policy}{policy}{:}Please read the full policy using the link above.{/}</textarea>
+			<label class="Dib fright Pt10 gray_01"><input type="checkbox" name="agree" value="1"/> I agree to the collection and use of my personal information.</label> &nbsp; &nbsp;
 		</div>
 	    {/}
 	    <button type="button" class="btn_resp size_d" onclick="{? _GET.popup && !_GET.iframe}self.close();{:}document.location.href='{boardurl->lists}';{/}"><span designElement="text">Cancel</span></button>
@@ -198,10 +256,18 @@
 	</div>
 
 </form>
+<!--{? !_GET.iframe }-->
+					</section>
+				</div>
+			</div>
+		</article>
+	</main>
+</div>
+<!--{/}-->
 
 
 <!-- 상품 선택/검색 레이어 -->
-<div id="displayGoodsSelect" class="resp_layer_pop hide">
+<div id="displayGoodsSelect" class="resp_layer_pop hide bo-qna-product-search">
 	<h4 class="title">Product search</h4>
 	<div class="y_scroll_auto">
 		<div class="layer_pop_contents v3">
@@ -227,10 +293,8 @@ var file_use = '{=manager.file_use}';
 
 var upload_file_path = "";
 var slide_length = $("#displayGoods .goods_loop_area").length;
-var contents = new Array(slide_length);
 //]]>
 </script>
-
 <iframe name="boardactionFrame" src="" frameborder="0" width="0" height="0" class="hide"></iframe>
 
 
@@ -326,13 +390,10 @@ $(document).ready(function() {
 		{ / }
         
         if(slide_length > 1){
-            for(var i=0;i<slide_length;i++){
-                contents[i] = $("#displayGoods .goods_loop_area").find("textarea").eq(i).val();
-            }
-        }
-        const goodsContents = contents.join("&#35;&#35;")
-        if (goodsContents) {
-                $("#contents").val($("#contents").val() + contents.join("&#35;&#35;"));
+            var productQuestions = $("#displayGoods .goods_loop_area textarea[name='contentsMulti[]']").map(function(){
+                return $(this).val();
+            }).get();
+            $("#contents").val(productQuestions.join("&#35;&#35;"));
         }
 	$("#writeform").submit();
 
@@ -366,11 +427,10 @@ $(document).ready(function() {
 		submitHandler: function(f) {
 			//if(readyEditorForm(f)){
 
-				{? !defined('__ISUSER__') //비회원 개인정보 동의}
+				{? !_GET.iframe || !defined('__ISUSER__') // 단독 Q&A 작성 화면과 비회원 상품 문의에서 동의 확인}
 					if(!$("input[name='agree']").is(":checked")){
 						//setDefaultText();
-						//개인정보 수집 및 이용에 동의하셔야 합니다.
-						alert(getAlert('et139'));
+						alert('Please agree to the collection and use of your personal information.');
 						$("input[name='agree']").focus();
 						return false;
 					}
@@ -484,66 +544,40 @@ $(document).ready(function(){
     });
     {/}
     
-    var slideshowSwiper;
-    if(slide_length > 1){
-        $('#displayGoods').after('<div class="swiper-button-prev"></div>');
-        $('#displayGoods').after('<div class="swiper-button-next"></div>');
-        $('#displayGoods').after('<div class="swiper-pagination"></div>');
-        $('#displayGoods .goods_loop_area').addClass('swiper-slide');
-        $(".board_goods_select").addClass("slide_goods");
-        
-        slideshowSwiper = new Swiper('.slide_goods', {
-            wrapperClass: 'board_goods_select_display',
-            slidesPerView: 1,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                type: "bullets",
-            },
-        });
-        
-        $("#contents").hide();
-    }
+    syncSelectedGoodsFields();
 });
 function iframeset(){
 	  $('#'+board_id+'_frame',parent.document).height($('#boardlayout').height());
 }
-function hideCenterLayerCustom(){
-    slide_length = $("#displayGoods .goods_loop_area").length;
-    if(slide_length > 1){
-        $(".slide_goods").find('.swiper-button-prev').remove();
-        $(".slide_goods").find('.swiper-button-next').remove();
-        $(".slide_goods").find('.swiper-notification').remove();
-        $(".slide_goods").find('.swiper-pagination').remove();
-        $('#displayGoods').after('<div class="swiper-button-prev"></div>');
-        $('#displayGoods').after('<div class="swiper-button-next"></div>');
-        $('#displayGoods').after('<div class="swiper-pagination"></div>');
-        $('#displayGoods .goods_loop_area').addClass('swiper-slide');
-        if($(".slide_goods").length == 0){
-            $(".board_goods_select").addClass("slide_goods");
-        }
-        slideshowSwiper = new Swiper('.slide_goods', {
-            wrapperClass: 'board_goods_select_display',
-            slidesPerView: 1,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                type: "bullets",
-            },
-        });
-        
-        $("#contents").hide();
+function syncSelectedGoodsFields(){
+    var cards = $("#displayGoods .goods_loop_area");
+    var wasMultiple = slide_length > 1;
+    slide_length = cards.length;
+    var isMultiple = slide_length > 1;
 
-    } else {
-        $('#displayGoods .goods_loop_area').find("textarea").hide();
+    if(isMultiple && !wasMultiple){
+        var firstQuestion = cards.first().find("textarea[name='contentsMulti[]']");
+        if(firstQuestion.length && !firstQuestion.val() && $("#contents").val()){
+            firstQuestion.val($("#contents").val());
+        }
+    } else if(!isMultiple && wasMultiple && slide_length === 1){
+        var remainingQuestion = cards.first().find("textarea[name='contentsMulti[]']").val();
+        if(remainingQuestion) $("#contents").val(remainingQuestion);
     }
+
+    $(".board_goods_select").removeClass("slide_goods");
+    $("#displayGoods").siblings(".swiper-button-prev, .swiper-button-next, .swiper-pagination").remove();
+    cards.removeClass("swiper-slide");
+    cards.find("textarea[name='contentsMulti[]']").toggle(isMultiple);
+    $("#contents").toggle(!isMultiple);
+}
+function hideCenterLayerCustom(){
+    syncSelectedGoodsFields();
     hideCenterLayer();
-}     
+}
 
 </script>
+<!--{? !_GET.iframe }-->
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js"></script>
+<!--{/}-->

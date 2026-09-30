@@ -1,0 +1,25 @@
+<div class="paging_navigation">
+	<!--{ ? page.first }-->
+	<a href="?page={page.first}&amp;{page.querystring}" class="first">◀ 처음</a>
+	<!--{ / }-->
+	<!--{ ? page.prev }-->
+	<a href="?page={page.prev}&amp;{page.querystring}" class="prev">◀ 이전</a>
+	<!--{ / }-->
+	<!--{ @ page.page }-->
+		<!--{ ? page.nowpage ==  .value_ }-->
+			<!--{ ? mobileAjaxCall }-->
+	<a href="?page={.value_}&amp;{page.querystring}" class="on" mobileAjaxCall="{mobileAjaxCall}">{.value_ }</a>
+			<!--{ : }-->
+	<a href="?page={.value_}&amp;{page.querystring}" class="on">{.value_ }</a>
+			<!--{ / }-->
+		<!--{ : }-->
+	<a href="?page={.value_}&amp;{page.querystring}">{.value_ }</a>
+		<!--{ / }-->
+	<!--{ / }-->
+	<!--{ ? page.next }-->
+	<a href="?page={page.next}&amp;{page.querystring}" class="next">다음 ▶</a>
+	<!--{ / }-->
+	<!--{ ? page.last }-->
+	<a href="?page={page.last}&amp;{page.querystring}" class="last">마지막 ▶</a>
+	<!--{ / }-->
+</div>	

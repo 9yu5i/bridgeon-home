@@ -26,7 +26,35 @@
 <link rel="stylesheet" type="text/css" href="../css/user.css" />
 <style>
 body { min-width:auto;}
-html {overflow:hidden;}
+/* The redesign caps this list iframe at ~45dvh (see trendypicker-help-topic.css
+   .bo-qna-product-search iframe), so the product list must scroll inside the
+   iframe. The stock rule was overflow:hidden, which relied on the old fixed
+   1400px iframe height and clipped results once the iframe was shortened. */
+html {overflow-x:hidden; overflow-y:auto;}
+
+/* TrendyPicker popup theme (matches trendypicker-help-topic.css .bo-qna-product-search) */
+/* Vertical scrollbar for the list iframe */
+html { scrollbar-width: thin; scrollbar-color: #c7aeed transparent; }
+html::-webkit-scrollbar { width: 8px; }
+html::-webkit-scrollbar-track { margin: 2px 0; background: transparent; }
+html::-webkit-scrollbar-thumb { border: 2px solid #fff; border-radius: 999px; background: #c7aeed; }
+/* Up/down arrow buttons (webkit) */
+html::-webkit-scrollbar-button:single-button { display: block; height: 12px; background-repeat: no-repeat; background-position: center; background-size: 8px 8px; }
+html::-webkit-scrollbar-button:single-button:vertical:decrement { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 7.5 6 4 9.5 7.5' fill='none' stroke='%23a883e0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+html::-webkit-scrollbar-button:single-button:vertical:increment { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8 9.5 4.5' fill='none' stroke='%23a883e0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+
+/* Pagination */
+.paging_navigation { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; padding: 18px 0 6px; }
+.paging_navigation a,
+.paging_navigation input { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 34px; padding: 0 10px; border: 1px solid #e7def3; border-radius: 9px; color: #4b4557; background: #fff; font-size: 13px; font-weight: 600; line-height: 1; text-decoration: none; box-sizing: border-box; transition: color .15s ease, background-color .15s ease, border-color .15s ease; }
+.paging_navigation input { width: 52px; text-align: center; }
+.paging_navigation a:hover { border-color: #c7aeed; color: #7b3fe4; background: #f7f1ff; }
+.paging_navigation input:focus { border-color: #7b3fe4; outline: 2px solid rgba(123, 63, 228, .12); }
+/* user.css .paging_navigation a.on forces #7F56D9 with !important, so match the
+   popup theme here with !important (scoped to this iframe, global user.css untouched). */
+/* admin page.css targets .paging_navigation a.on more specifically than the base
+   rule, so set the radius here too (matches the other page buttons: 9px). */
+.paging_navigation a.on { border-color: #7b3fe4 !important; color: #fff !important; background: #7b3fe4 !important; border-radius: 9px !important; cursor: default; }
 </style>
 <!--{ ? config_system.favicon }-->
 <!-- 파비콘 -->
@@ -60,6 +88,13 @@ $(document).ready(function(){
 <script type="text/javascript">
 function apply_layer(){
 	var iObj = $("div#{_GET.inputGoods}",parent.document);
+	var savedQuestions = {};
+	if ($(".bo-help-goods-qna-write-page", parent.document).length) {
+		iObj.find(".goods_loop_area").each(function(){
+			var goodsSeq = $(this).find("input[name='displayGoods[]']").val();
+			if (goodsSeq) savedQuestions[goodsSeq] = $(this).find("textarea[name='contentsMulti[]']").val();
+		});
+	}
 	var tag = "";iObj.html( tag );
 	$("div#{_GET.displayId} div.targetGoods",parent.document).each(function(){
 		var goodsSeq = $(this).attr('id');
@@ -79,7 +114,7 @@ function apply_layer(){
 		tag += "			<div class='price'>"+goodsPrice+"</div>";
 		tag += "		</li>";
 		tag += "	</ul>";
-        tag += "    <textarea name='contentsMulti[]' class='size3 Mt12' placeholder='Responses to your inquiries will be sent to the email address you provide.&#13;&#10;Please ensure it is accurate.' ></textarea>";
+        tag += "    <textarea name='contentsMulti[]' class='size3 Mt12' placeholder='Write your question about this product.'></textarea>";
 		tag += "	<input type='hidden' name='{_GET.inputGoods}[]' value='"+goodsSeq+"' />";
 		{? _GET.bulkorder }
 		var goodscont = $(this).attr('cont');
@@ -91,6 +126,14 @@ function apply_layer(){
 		{? _GET.goods_review }parent.goodslistclose('{_GET.displayId}',goodsSeq);{/}
 	});
 	iObj.html( tag );
+	if ($(".bo-help-goods-qna-write-page", parent.document).length) {
+		iObj.find(".goods_loop_area").each(function(){
+			var goodsSeq = $(this).find("input[name='displayGoods[]']").val();
+			if (Object.prototype.hasOwnProperty.call(savedQuestions, goodsSeq)) {
+				$(this).find("textarea[name='contentsMulti[]']").val(savedQuestions[goodsSeq]);
+			}
+		});
+	}
 
 	{? _GET.bulkorder }
 	$("textarea[name='{_GET.inputGoods}_cont[]']",parent.document).each(function(){
@@ -182,7 +225,7 @@ function iframeset(){
 		</div>
 		<!--{ : }-->
 		<div>
-			<p class="center" style="padding:30px;">검색된 상품 리스트가 없습니다.</p>
+			<p class="center" style="padding:30px;">No products found.</p>
 		</div>
 		<!--{ / }-->
 	</div>
@@ -190,10 +233,10 @@ function iframeset(){
 	<!-- 페이징 -->
 	<div class="paging_navigation">
 		<!--{ ? page.first }-->
-		<a href="user_select_list?page={page.first}&amp;{page.querystring}" class="first">처음</a>
+		<a href="user_select_list?page={page.first}&amp;{page.querystring}" class="first">First</a>
 		<!--{ / }-->
 		<!--{ ? page.prev }-->
-		<a href="user_select_list?page={page.prev}&amp;{page.querystring}" class="prev">이전</a>
+		<a href="user_select_list?page={page.prev}&amp;{page.querystring}" class="prev">Prev</a>
 		<!--{ / }-->
 		<!--{ @ page.page }-->
 		<!--{ ? page.nowpage ==  .value_ }-->
@@ -203,10 +246,10 @@ function iframeset(){
 		<!--{ / }-->
 		<!--{ / }-->
 		<!--{ ? page.next }-->
-		<a href="user_select_list?page={page.next}&amp;{page.querystring}" class="next">다음</a>
+		<a href="user_select_list?page={page.next}&amp;{page.querystring}" class="next">Next</a>
 		<!--{ / }-->
 		<!--{ ? page.last }-->
-		<a href="user_select_list?page={page.last}&amp;{page.querystring}" class="last">끝</a>
+		<a href="user_select_list?page={page.last}&amp;{page.querystring}" class="last">Last</a>
 		<!--{ / }-->
 		<!--{ ?! record }-->
 		<a href="javascript:void(0)" class="on">1</a>

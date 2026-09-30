@@ -1,0 +1,347 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ My 1:1 Inquiry View @@
+- File: [skin folder]/mypage/myqna_view.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--{? !param.iframe }-->
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css" />
+<script type="text/javascript">
+//<![CDATA[
+var board_id = '{manager.id}';
+var board_seq = '{seq}';
+var boardlistsurl = '{boardurl->lists}';
+var boardwriteurl = '/mypage/myqna_write';
+var boardviewurl = '{boardurl->view}';
+var boardmodifyurl = '{boardurl->modify}';
+var boardreplyurl = '{boardurl->reply}';
+var boardrpermurl = '{boardurl->perm}';
+var return_url = '{return_url}';
+var gl_isuser = false;
+{ ? defined('__ISUSER__') }
+gl_isuser = '{=defined('__ISUSER__')}';
+{ / }
+var comment = '{comment}';
+var commentlay = '{commentlay}';
+var isperm_write = '{managerview.isperm_write}';
+//]]>
+</script>
+<script type="text/javascript" src="/app/javascript/js/board.js" charset="utf-8"></script>
+{? commentskinjsuse }
+<script type="text/javascript" src="/app/javascript/js/board_mobile.js" charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/js/board_comment_mobile.js" charset="utf-8"></script>
+{/}
+<script type="text/javascript" src="/app/javascript/jquery/jquery.form.js" charset="utf-8"></script>
+<script type="text/javascript" src="/app/javascript/plugin/validate/jquery.validate.js" charset="utf-8"></script>
+
+<div id="boardlayout" class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-board-view bo-help-qna-page bo-help-goods-qna-view-page bo-help-private-inquiry-page">
+	<aside class="bo-account-side" data-mypage-lnb>
+		<!-- 마이페이지 LNB 공통. 정의: [스킨폴더]/mypage/mypage_lnb.html -->
+	</aside>
+
+	<main class="subpage_container bo-mypage bo-help-topic-container">
+		<article class="help-topic-shell">
+			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
+				<a href="/service/cs">Help Center</a>
+				<span aria-hidden="true">&gt;</span>
+				<a href="/mypage/myqna_catalog">My 1:1 Inquiry</a>
+			</nav>
+
+			<header class="help-topic-head">
+				<span class="help-topic-kicker">Customer Service</span>
+				<h1><span designElement="text">My 1:1 Inquiry</span></h1>
+				<p>Review your private inquiry and the response from TrendyPicker.</p>
+				<div class="help-topic-meta"><span>Private account support</span></div>
+			</header>
+
+			<div class="help-topic-layout">
+				<nav class="help-topic-nav" aria-label="Help topics">
+					<strong>Topics</strong>
+					<a href="/board/?id=notice">Notice</a>
+					<a href="/board/?id=faq">FAQ</a>
+					<a href="/board/?id=goods_qna">Q&amp;A</a>
+					<a class="is-active" href="/mypage/myqna_catalog" aria-current="page">My 1:1 Inquiry</a>
+					<a href="/service/guide">Guide</a>
+					<a href="/service/cancellation">Returns &amp; Exchanges</a>
+					<a href="/service/company">About Us</a>
+					<a href="/service/company?topic=contact">Contact Us</a>
+					<a href="/service/agreement">Terms of Use</a>
+					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
+				</nav>
+
+				<div class="help-topic-body">
+					<section class="help-topic-panel help-board-article">
+						<h2><span designElement="text">Inquiry details</span></h2>
+<!--{/}-->
+
+<form name="form1" id="form1" class="help-board-article" method="post" action="{=sslAction('../board_process')}"  target="actionFrame">
+	<input type="hidden" name="mode" id="mode" value="{mode}" />
+	<input type="hidden" name="board_id" id="board_id" value="{manager.id}" />
+	<input type="hidden" name="reply" id="reply" value="{param.reply}" />
+	{? seq }
+		<input type="hidden" name="seq" id="board_seq" value="{seq}" />
+	{/}
+	<input type="hidden" name="popup" value="{param.popup}" >
+	<input type="hidden" name="iframe" value="{param.iframe}" >
+	<input type="hidden" name="goods_seq" value="{goods_seq}" >
+
+	<div class="board_detail_title help-board-article-title">
+		{subject} {iconnew} {iconhot} {iconhidden}
+		<ul class="report_block_a">
+			<!--{? report_view }-->
+			<li><a href="javascript:void(0)" class="report_btn">Report</a></li>
+			<!--{ / }-->
+			<!--{? block_view }-->
+			<li><a href="javascript:void(0)" class="block_btn block_{block_onoff}" block_onoff="{block_onoff}">Block</a></li>
+			<!--{ / }-->
+		</ul>
+	</div>
+	<table class="table_row_a Thc" data-responsive="yes" width="100%" cellpadding="0" cellspacing="0">
+		<colgroup><col class="size_b"><col><col class="size_b"><col></colgroup>
+		<tbody>
+			<tr>
+				<th><p designElement="text">Type</p></th>
+				<td>{? datacategory }[<span class="js-cat-label">{datacategory}</span>]{/} {iconmobile}{iconaward}</td>
+				<th><p designElement="text">Author</p></th>
+				<td>{name}</td>
+			</tr>
+			<tr>
+				<th><p designElement="text">Date</p></th>
+				<td>{r_date}</td>
+				<th><p designElement="text">Views</p></th>
+				<td>{=number_format(hit)}</td>
+			</tr>
+			{? filelist}
+			<tr>
+				<th><p designElement="text">Attachments</p></th>
+				<td colspan="3">
+					<ul>
+						{@ filelist}
+						<li>
+							<span class="realfilelist hand highlight-link" realfiledir="{.realfiledir}" realfilename="{.orignfile}"  realfilename="{.orignfile}" board_id="{boardid}" filedown="../board_process?mode=board_file_down&board_id={boardid}&realfiledir={.realfiledir}&realfilename={.orignfile}">{.orignfile} (<span class="size">{.realsizefile}</span>) <button type="button"  class="bbs_btn">down</button></span>
+							{? .is_image }
+								<span class="hand help-board-file-preview" imgsrc="{.realfile}" onclick="board_file_review('{.realfile}','{.imagesize[0]}','{.imagesize[1]}');">Preview</span>
+							{/}
+						</li>
+						{/}
+					</ul>
+				</td>
+			</tr>
+			{/}
+		</tbody>
+	</table>
+
+	<div class="board_detail_contents">
+		{contents}
+		<!-- Attached photos shown inline; the Attachments row above keeps the download link -->
+		{? filelist}
+		<div class="help-board-attachments">
+			{@ filelist}
+			{? .is_image }
+			<a class="help-board-attach-img" href="javascript:void(0)" onclick="board_file_review('{.realfile}','{.imagesize[0]}','{.imagesize[1]}');"><img src="/board_process?mode=board_file_down&amp;board_id={boardid}&amp;realfiledir={.realfiledir}&amp;realfilename={=urlencode(.orignfile)}" alt="{.orignfile}" /></a>
+			{/}
+			{/}
+		</div>
+		{/}
+	</div>
+
+	<!--{? managerview.auth_recommend_use == 'Y' }-->
+	<div class="board_score">
+		<!-- 게시글 평가 인클루드. 파일위치 : [스킨폴더]/board/_score.html -->
+		{#scoreskin}
+		<!-- //게시글 평가 인클루드 -->
+	</div>
+	<!--{/}-->
+
+
+	<div class="board_sns_link">
+		{=snslinkurl('board', subject)}
+	</div>
+
+	<!-- 관리자 답변 -->
+	<!--{? re_contents }-->
+	<div class="board_manager_reply">
+		<div class="writer">
+			<span class="icon1" designElement="text">Answer</span> <strong>{adminname}</strong>
+			<span>{reply_title}</span>
+			<!--{? managerview.admin_regist_view == 'Y' }-->
+			<span class="gray_06">({re_date})</span>
+			<!--{ / }-->
+		</div>
+		<div class="subject">
+			{re_subject}
+		</div>
+		<div class="contents">
+			{re_contents}
+		</div>
+	</div>
+	<!--{ / }-->
+</form>
+
+
+<!--{? commentlay == 'Y' || comment > 0 // 댓글 사용여부, 댓글수 }-->
+<a name="cmtlist"></a>
+<div class="board_comment_area" id="comment_container">
+	<!-- 게시글 댓글/덧글 인클루드. 파일위치 : [스킨폴더]/board/_comment.html -->
+	{#commentskin}
+	<!-- //게시글 댓글/덧글 인클루드 -->
+</div>
+<!--{/}-->
+
+<div id="prenextlist" class="board_prev_next_list">
+	<!-- 이전글/다음글 인클루드. 파일위치 : [스킨폴더]/board/_prenext.html -->
+	{#prenextskin}
+	<!-- //이전글/다음글 인클루드 -->
+</div>
+
+<!-- 하단 각종 버튼 -->
+<ul class="board_detail_btns">
+	<li class="left"><button type="button" name="boardviewclose" class="btn_resp size_b color5"><span designElement="text">Back to list</span></button></li>
+	<li class="right">
+	{? display == 0 && managerview.isperm_moddel != "_mbno" && empty(re_contents) }
+		<button type="button" name="goods_boad_modify_btn{managerview.isperm_moddel}" board_seq="{seq}" board_id="{boardid}" class="btn_resp size_b"><span designElement="text">Edit</span></button>
+	{/}
+	{? ((display == 0 || (display == 1 && replyor == 0 && comment ==0) ) ) && managerview.isperm_moddel != "_mbno"  } 
+		<button type="button"  name="goods_boad_delete_btn{managerview.isperm_moddel}"  board_seq="{seq}"  board_id="{boardid}"  class="btn_resp size_b"><span designElement="text">Delete</span></button>
+	{/}
+	{? managerview.isperm_write != "_no" }
+		<button type="button" id="goods_boad_write_btn{managerview.isperm_write}" board_id="{boardid}" class="btn_resp size_b color2"><span designElement="text">New inquiry</span></button>
+	{/}
+	</li>
+</ul>
+<!-- //버튼 -->
+<!--{? !param.iframe }-->
+					</section>
+				</div>
+			</div>
+		</article>
+	</main>
+</div>
+<!--{/}-->
+
+
+
+
+
+<div id="CmtBoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3>Password confirmation</h3>
+		<div>Enter the password used when the comment was posted.</div>
+	</div>
+	<form name="BoardPwcheckForm" id="CmtBoardPwcheckForm" method="post">
+		<input type="hidden" name="seq" id="cmt_pwck_seq" value="" />
+		<input type="hidden" name="cmtseq" id="cmt_pwck_cmtseq" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="cmt_pwck_pw" class="input" />
+			<input type="submit" id="CmtBoardPwcheckBtn" value="Confirm" class="btnblue" />
+			<input type="button" value="Cancel" class="btngray" onclick="$('#CmtBoardPwCk').dialog('close');" />
+		</div>
+	</form>
+</div>
+<!-- //댓글 비회원 비밀번호 확인 -->
+
+<div id="ModDelBoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3>Password confirmation</h3>
+		<div>Enter the password used when the inquiry was submitted.</div>
+	</div>
+	<form name="ModDelBoardPwcheckForm" id="ModDelBoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
+		<input type="hidden" name="modetype" id="modetype" value="" />
+		<input type="hidden" name="seq" id="moddel_pwck_seq" value="" />
+		<input type="hidden" name="returnurl" id="moddel_pwck_returnurl" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="moddel_pwck_pw" class="input" />
+			<input type="submit" id="BoardPwcheckBtn" value="Confirm" class="btnblue" />
+			<input type="button" value="Cancel" class="btngray" onclick="$('#ModDelBoardPwCk').dialog('close');" />
+		</div>
+	</form>
+</div>
+<!-- //게시글 비회원 비밀번호 확인 -->
+
+{? param.iframe }
+<div id="BoardPwCk" class="hide BoardPwCk">
+	<div class="msg">
+		<h3>Password confirmation</h3>
+		<div>Enter the password used when the inquiry was submitted.</div>
+	</div>
+	<form name="BoardPwcheckForm" id="BoardPwcheckForm" method="post" action="{=sslAction('../board_process')}" target="actionFrame ">
+		<input type="hidden" name="seq" id="pwck_seq" value="" />
+		<input type="hidden" name="returnurl" id="pwck_returnurl" value="" />
+		<div class="ibox">
+			<input type="password" name="pw" id="pwck_pw" class="input" />
+			<input type="submit" id="BoardPwcheckBtn" value="Confirm" class="btnblue" />
+			<input type="button" value="Cancel" class="btngray" onclick="$('#BoardPwCk').dialog('close');" />
+		</div>
+	</form>
+</div>
+<!-- //비밀번호 확인 -->
+{/}
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		/* iframe 호출 시 팝업 영역 동적 생성 - 시작 */
+		var LayerFind = $(document).find("#openDialogLayer");
+		// 팝업 없는 경우 영역 생성
+		if(LayerFind.length < 1){
+			var openDialogLayer = $('<div />',{
+				id: 'openDialogLayer',
+				display: 'none',
+			});
+			var openDialogLayerMsg = $('<div />',{
+				id: 'openDialogLayerMsg',
+				align: 'center',
+			});
+
+			$(openDialogLayer).append(openDialogLayerMsg);
+			$("#ModDelBoardPwCk").after(openDialogLayer);
+		}
+		/* iframe 호출 시 팝업 영역 동적 생성 - 종료 */
+		
+	});
+
+	function getboardLogin(){
+		{? defined('__ISUSER__') === true }
+			//해당 서비스를 이용하시려면 관리자에게 문의하여 주시길 바랍니다.
+			openDialogAlert(getAlert('et132'),'450','140');
+		{:}
+			//이용하시려면 로그인이 필요합니다!<br/>로그인하시겠습니까?
+			openDialogConfirm(getAlert('et133'),'400','155',function(){top.location.href="/member/login?return_url="+return_url;},function(){});
+		{/}
+	}
+
+	function getcmtMbLogin(){
+		{? defined('__ISUSER__') === true }
+			//글작성자만 이용가능합니다.
+			openDialogAlert(getAlert('et131'),'400','140');
+		{:}
+			//이용하시려면 로그인이 필요합니다!<br/>로그인하시겠습니까?
+			openDialogConfirm(getAlert('et133'),'400','155',function(){top.location.href="/member/login?return_url="+return_url;},function(){});
+		{/}
+	}
+</script>
+<script>
+(function () {
+	// Inquiry categories are stored with their Korean names; show English labels.
+	var categoryLabels = {
+		"\uBC30\uC1A1\uC9C0\uC5F0/\uBD88\uB9CC": "Shipping Delay / Complaint",
+		"\uBC18\uD488\uBB38\uC758": "Return Inquiry",
+		"A/S\uBB38\uC758": "A/S (Warranty) Inquiry",
+		"\uD658\uBD88\uBB38\uC758": "Refund Inquiry",
+		"\uC8FC\uBB38\uACB0\uC81C\uBB38\uC758": "Order / Payment Inquiry",
+		"\uD68C\uC6D0\uC815\uBCF4\uBB38\uC758": "Account Info Inquiry",
+		"\uCDE8\uC18C\uBB38\uC758": "Cancellation Inquiry",
+		"\uAD50\uD658\uBB38\uC758": "Exchange Inquiry",
+		"\uC0C1\uD488\uC815\uBCF4\uBB38\uC758": "Product Info Inquiry",
+		"\uC0C1\uD488\uBB38\uC758": "Product Inquiry",
+		"\uAE30\uD0C0\uBB38\uC758": "Other Inquiry"
+	};
+	document.querySelectorAll(".js-cat-label").forEach(function (el) {
+		var label = categoryLabels[el.textContent.trim()];
+		if (label) el.textContent = label;
+	});
+})();
+</script>
+<!--{? !param.iframe }-->
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js"></script>
+<!--{/}-->

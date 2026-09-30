@@ -1,0 +1,17 @@
+<div class="sub_title_bar">
+	<h2>상품문의/후기</h2>
+	<a href="javascript:history.back();" class="stb_back_btn"><img src="../../images/design/btn_back.png" width="22" height="22" /></a>
+</div>
+<div class="sub_title_button_bar">
+	<table class="sub_title_button_tb" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td width="33.3%" onclick="location.href='/mypage/myqna_catalog'">1:1문의</td>
+		<td width="33.3%" onclick="location.href='/board/?id=goods_qna&iframe={_GET.iframe}&goods_seq={_GET.goods_seq}'" {?_GET.id=='goods_qna'}class="sel"{/} >
+			상품문의
+		</td>
+		<td width="33.3%" onclick="location.href='/board/?id=goods_review&iframe={_GET.iframe}&goods_seq={_GET.goods_seq}'" {?_GET.id=='goods_review'}class="sel"{/} >
+			상품후기
+		</td>
+	</tr>
+	</table>
+</div> 

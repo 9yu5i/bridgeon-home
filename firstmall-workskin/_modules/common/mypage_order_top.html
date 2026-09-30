@@ -1,0 +1,34 @@
+<!--{?userInfo.member_seq}-->
+<!-- 타이틀 -->
+<div class="sub_title_bar">
+	<h2>주문/배송</h2>
+	<a href="javascript:history.back();" class="stb_back_btn"><img src="../../images/design/btn_back.png" width="22" height="22" /></a>
+</div>
+<!-- 상단 마이 리스트 버튼바 -->
+<div class="sub_title_button_bar">
+	<table class="sub_title_button_tb" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td style="font-size:11px" onclick="location.href='?step_type=order'" {?_GET.step_type=='order'}class="sel"{/}>
+			주문접수<br/>
+			<span>{=showMypageTop('order')}</span>
+		</td>
+		<td style="font-size:11px" onclick="location.href='?step_type=deposit_only'" {?_GET.step_type=='deposit_only'}class="sel"{/}>
+			결제확인<br/>
+			<span>{=showMypageTop('deposit_only')}</span>
+		</td>
+		<td style="font-size:11px" onclick="location.href='?step_type=ready'" {?_GET.step_type=='ready'}class="sel"{/}>
+			상품준비중<br/>
+			<span>{=showMypageTop('ready')}</span>
+		</td>
+		<td style="font-size:11px" onclick="location.href='?step_type=delivery_ing'" {?_GET.step_type=='delivery_ing'}class="sel"{/}>
+			배송중<br/>
+			<span>{=showMypageTop('delivery_ing')}</span>
+		</td>
+		<td style="font-size:11px" onclick="location.href='?step_type=delivery_complete'" {?_GET.step_type=='delivery_complete'}class="sel"{/}>
+			배송완료<br/>
+			<span>{=showMypageTop('delivery_complete')}</span>
+		</td>
+	</tr>
+	</table>
+</div>
+<!--{/}-->

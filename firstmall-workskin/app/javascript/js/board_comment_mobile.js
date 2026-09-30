@@ -35,12 +35,12 @@ $(document).ready(function() {
 	$(".board_comment_btn").live("click",function(){
 		var comment_btn_seq = $(this).attr("seq");
 		if	($(this).hasClass('isopen')){
-			$(this).val(getAlert("sy075")+'▼');    // '댓글 등록하기▼');
+			$(this).val(getAlert("sy075")+' ▼');    // '댓글 등록하기▼');
 			$(this).removeClass('isopen');
 			$("#cmt_insert_"+comment_btn_seq).hide();
 			//$("#cmt_insert_"+comment_btn_seq).toggle('slow');//slideUp(500);
 		}else{
-			$(this).val(getAlert("sy076")+'▲'); // 댓글 닫기
+			$(this).val(getAlert("sy076")+' ▲'); // 댓글 닫기
 			$(this).addClass('isopen');
 			$('#cmtpw').val('');
 			$('#cmtcontent').val('');
@@ -59,7 +59,7 @@ $(document).ready(function() {
 		}
 		$('#cmtcontent').val('');
 		$("#cmt_insert_"+comment_btn_seq).toggle('slow');//slideUp(500);
-		$("#board_comment_btn_"+comment_btn_seq).val(getAlert("sy075")+'▼');    // '댓글 등록하기▼');
+		$("#board_comment_btn_"+comment_btn_seq).val(getAlert("sy075")+' ▼');    // '댓글 등록하기▼');
 		$("#board_comment_btn_"+comment_btn_seq).removeClass('isopen');
 		setDefaultText();
 	});

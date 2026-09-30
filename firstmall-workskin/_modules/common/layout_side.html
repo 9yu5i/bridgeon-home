@@ -1,0 +1,474 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 어사이드 @@
+- 파일위치 : [스킨폴더]/_modules/common/layout_side.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<div class="aside_userinformation">
+	<!--{? userInfo.member_seq }-->
+	<ul>
+		<!-- O2O 바코드 -->
+		<!--{ ? checkO2OService }-->
+			<!--{ # o2o_layout_side }-->
+		<!--{ / }-->
+
+		<li class="left_area">
+			<strong class="user_name color2">Hello, {?userInfo.user_name}{userInfo.user_name}{:}{userInfo.userid}{/}!</strong>
+		</li>
+		<li class="">
+			<a href="/login_process/logout" target="actionFrame" class="btn_resp color2">Sign Out</a>
+		</li>
+	</ul>
+	<!--{:}-->
+	<ul>
+		<li class="left_area">
+			<a href="/member/login" class="" designElement="text">Sign in</a>
+			<a href="/member/agreement" class="" designElement="text">Create Account</a>
+		</li>
+		<li class="right_area dn">
+			<span class="gray_06" designElement="text">로그인하세요.</span>
+		</li>
+	</ul>
+	<!--{/}-->
+</div>
+
+<div class="asie_main_menu hide">
+	<ul>
+		<li class="am_home"><a href="/" designElement="text">홈</a></li>
+		<li class="am_order"><a href="/mypage/order_catalog"><span designElement="text">주문조회</span> {?push_count_order}<span class="push_count" title="무료/취소/완료 제외한 수">{push_count_order}</span>{/}</a></li>
+		<li class="am_my">
+			<!--{? userInfo.member_seq }--><a href="/mypage/index"><!--{:}--><a href="/member/login?return_url=/mypage/index"><!--{/}--><span designElement="text">MY쇼핑</span></a>
+		</li>
+		<li class="am_cs"><a href="/mypage/myqna_catalog" designElement="text">1:1문의</a></li>
+		<li class="am_cart"><a href="/order/cart"><span designElement="text">장바구니</span> {?push_count_cart}<span class="push_count">{push_count_cart}</span>{/}</a></li>
+		<li class="am_wish">
+			<!--{? userInfo.member_seq }--><a href="/mypage/wish"><!--{:}--><a href="/member/login?return_url=/mypage/wish"><!--{/}--><span designElement="text">위시리스트</span> {?dataWishCount()}<span class="push_count">{=number_format( dataWishCount() )}</span>{/}</a>
+		</li>
+		<li class="am_coupon"><a href="/mypage/coupon" designElement="text">쿠폰</a></li>
+		<li class="am_emony"><a href="/mypage/emoney" designElement="text">마일리지</a></li>
+	</ul>
+</div>
+
+<div class="aside_navigation_wrap">
+	<ul class="tab">
+		<li data-menuname="categorySideMenu" class="current"><span designElement="text">카테고리</span></li>
+		<li data-menuname="brandSideMenu"><span designElement="text">브랜드</span></li>
+		<li data-menuname="locationSideMenu"><span designElement="text">지역</span></li>
+		<li data-menuname="boardSideMenu"><span designElement="text">커뮤니티</span></li>
+	</ul>
+
+	<!-- ++++++++ 카테고리 ++++++++ -->
+	<ul id="categorySideMenu" class="menu">
+		<!--{?userInfo.member_seq}-->
+		<li class="mitem mitemicon1 favorite hide">
+			<a class="mitem_title v3" designElement="text">FAVORITE CATEGORY</a>
+		</li>
+		<li class="mitem_subcontents">
+			<ul class="submenu">
+				<!--{?favorite_category}-->
+					<!--{@favorite_category}-->
+					<li class="submitem favorite">
+						<a href="/goods/catalog?code={.category_code}" class="submitem_title">{.title}</a>
+						{?userInfo.member_seq}<a class="mitem_favorite {?.favorite}mitem_favorite_on{/}" ctype="category" ccode="{.category_code}"></a>{/}
+					</li>
+					<!--{/}-->
+				<!--{:}-->
+					<li class="submitem no_favorite">
+						자주 이용할 카테고리의 <img src="../../images/design/ico_fvr_off.png" width="20" alt="카테고리 즐겨찾기" />을 눌러주세요.
+					</li>
+				<!--{/}-->
+			</ul>
+		</li>
+		<!--{/}-->
+		<!--{@category}-->
+		<li class="mitem category mitem_category {?.childs}mitemicon1{:}mitemicon3{/}">
+			<a class="mitem_title"></a>
+			<a class="mitem_goodsview" href="/goods/catalog?code={.category_code}">{.ori_title}</a>
+			{?userInfo.member_seq}<a class="mitem_favorite {?.favorite}mitem_favorite_on{/}" ctype="category" ccode="{.category_code}"></a>{/}
+            
+		</li>
+		<li class="mitem_subcontents">
+			<ul class="submenu">
+				<!--{@.childs}-->
+				<li class="submitem category category2">
+					<a class="mitem_goodsview" href="/goods/catalog?code={..category_code}">{..ori_title}</a>
+					{?userInfo.member_seq}<a class="mitem_favorite {?..favorite}mitem_favorite_on{/}" ctype="category" ccode="{..category_code}"></a>{/}
+                    <!--{?..childs}-->
+                    <ul>
+                        <!--{@..childs}-->
+                        <li class="submitem category category3">
+                            <a class="mitem_goodsview" href="/goods/catalog?code={...category_code}">{...ori_title}</a>
+                        </li>
+                        <!--{/}-->            
+                    </ul>
+                    <!--{/}-->
+				</li>
+                
+				<!--{/}-->
+			</ul>
+		</li>
+		<!--{/}-->
+        <li class="mitem category mitem_category mitemicon1">
+			<a href="/promotion/event" class="mitem_goodsview f_purple" designElement="text">PROMOTION</a>
+		</li>
+        <li class="mitem category mitem_category mitemicon1">
+			<a href="/promotion/timedeal" class="mitem_goodsview f_red" designElement="text">TIME DEAL</a>
+		</li>
+        <li class="mitem category mitem_category mitemicon1">
+			<a href="/main/magazine" class="mitem_goodsview f_purple" designElement="text">MAGAZINE</a>
+		</li>
+        <li class="mitem category mitem_category mitemicon1">
+			<a href="/main/membership" class="mitem_goodsview f_purple" designElement="text">MEMBERSHIP</a>
+		</li>
+        <li class="mitem category mitem_category mitemicon1">
+			<a href="/board/?id=notice" class="mitem_goodsview f_purple" designElement="text">CUSTOMER SERVICE</a>
+		</li>
+        <!--
+        <li class="mitem category mitem_category custom_nav_link">
+			<a class="mitem_title"></a>
+			<a href="/goods/new_arrivals" class="mitem_goodsview" designElement="text">NEW</a>
+		</li>
+        <li class="mitem category mitem_category custom_nav_link">
+			<a class="mitem_title"></a>
+			<a href="/goods/best" class="mitem_goodsview" designElement="text">BEST</a>
+		</li>
+        <li class="mitem category mitem_category custom_nav_link">
+			<a class="mitem_title"></a>
+			<a href="/goods/brand_main" class="mitem_goodsview" designElement="text">BRAND</a>
+		</li>
+        <li class="mitem category mitem_category custom_nav_link">
+			<a class="mitem_title"></a>
+			<a href="/promotion/event" class="mitem_goodsview" designElement="text">EVENT</a>
+		</li>
+        <li class="mitem category mitem_category custom_nav_link">
+			<a class="mitem_title"></a>
+			<a href="/board/?id=custom_bbs2" class="mitem_goodsview" designElement="text">STORY</a>
+		</li>
+        -->
+        
+	</ul>
+	<!-- ++++++++ //카테고리 ++++++++ -->
+
+	<!-- ++++++++ 브랜드 ++++++++ -->
+	<ul id="brandSideMenu" class="menu" style="display:none;">
+		<!--{?userInfo.member_seq}-->
+		<li class="mitem mitemicon1 favorite">
+			<a class="mitem_title v3" designElement="text">FAVORITE BRAND</a>
+		</li>
+		<li class="mitem_subcontents">
+			<ul class="submenu">
+				<!--{?favorite_brand}-->
+					<!--{@favorite_brand}-->
+					<li class="submitem favorite">
+						<a href="/goods/brand?code={.category_code}" class="submitem_title">{.title}</a>
+						{?userInfo.member_seq}<a class="mitem_favorite {?.favorite}mitem_favorite_on{/}" ctype="brand" ccode="{.category_code}"></a>{/}
+					</li>
+					<!--{/}-->
+				<!--{:}-->
+					<li class="submitem no_favorite">
+						자주 이용할 브랜드의 <img src="../../images/design/ico_fvr_off.png" width="20" alt="브랜드 즐겨찾기" />을 눌러주세요.
+					</li>
+				<!--{/}-->
+			</ul>
+		</li>
+		<!--{/}-->
+
+		<!--{?best_brand}-->
+		<li class="mitem mitemicon1 favorite">
+			<a class="mitem_title v2" designElement="text">BEST BRAND</a>
+		</li>
+		<li class="mitem_subcontents">
+			<ul class="submenu favorite">
+				<!--{@best_brand}-->
+				<li class="submitem favorite">
+					<a href="/goods/brand?code={.category_code}" class="submitem_title">{?.node_catalog_image_normal}<img src="{.node_catalog_image_normal}" />{:}{.title}{/}</a>
+					{?userInfo.member_seq}<a class="mitem_favorite {?.favorite}mitem_favorite_on{/}" ctype="brand" ccode="{.category_code}"></a>{/}
+				</li>
+				<!--{/}-->
+			</ul>
+			<div class="bestbrands_paging"></div>
+		</li>
+		<!--{/}-->
+
+		<!-- 브랜드 소팅 -->
+		<li class="aside_brand_sorting">
+			<ul class="brandsort">
+				<li class="current"><span designElement="text">전체</span></li>
+				<li><span designElement="text">가나다</span></li>
+				<li><span designElement="text">ABC</span></li>
+				<li><span designElement="text">기타</span></li>
+			</ul>
+			<div class="brandsort_words"></div>
+			<ul class="brandsort_words hide">
+				<li>ㄱ</li>
+				<li>ㄴ</li>
+				<li>ㄷ</li>
+				<li>ㄹ</li>
+				<li>ㅁ</li>
+				<li>ㅂ</li>
+				<li>ㅅ</li>
+				<li>ㅇ</li>
+				<li>ㅈ</li>
+				<li>ㅊ</li>
+				<li>ㅋ</li>
+				<li>ㅌ</li>
+				<li>ㅍ</li>
+				<li>ㅎ</li>
+			</ul>
+			<ul class="brandsort_words hide">
+				<li>A</li>
+				<li>B</li>
+				<li>C</li>
+				<li>D</li>
+				<li>E</li>
+				<li>F</li>
+				<li>G</li>
+				<li>H</li>
+				<li>I</li>
+				<li>J</li>
+				<li>K</li>
+				<li>L</li>
+				<li>M</li>
+				<li>N</li>
+				<li>O</li>
+				<li>P</li>
+				<li>Q</li>
+				<li>R</li>
+				<li>S</li>
+				<li>T</li>
+				<li>U</li>
+				<li>V</li>
+				<li>W</li>
+				<li>X</li>
+				<li>Y</li>
+				<li>Z</li>
+			</ul>
+		</li>
+
+		<!--{@brand}-->
+		<li class="mitem category mitem_brand {?.childs}mitemicon1{:}mitemicon3{/}" title_eng="{.title_eng}" title="{.ori_title}">
+			<a class="mitem_title"></a>
+			<a class="mitem_goodsview" href="/goods/brand?code={.category_code}">{.ori_title}</a>
+			{?userInfo.member_seq}<a class="mitem_favorite {?.favorite}mitem_favorite_on{/}" ctype="brand" ccode="{.category_code}"></a>{/}
+		</li>
+		<li class="mitem_subcontents">
+			<ul class="submenu">
+				<!--{@.childs}-->
+				<li class="submitem category">
+					<a class="submitem_title"></a>
+					<a class="mitem_goodsview" href="/goods/brand?code={..category_code}">{..ori_title}</a>
+					{?userInfo.member_seq}<a class="mitem_favorite {?..favorite}mitem_favorite_on{/}" ctype="brand" ccode="{..category_code}"></a>{/}
+				</li>
+				<!--{/}-->
+			</ul>
+		</li>
+		<!--{/}-->
+	</ul>
+	<!-- ++++++++ //브랜드 ++++++++ -->
+
+	<!-- ++++++++ 지역 ++++++++ -->
+	<ul id="locationSideMenu" class="menu" style="display:none;">
+		<!--{@location}-->
+		<li class="mitem category mitem_location {?.childs}mitemicon1{:}mitemicon3{/}">
+			<a class="mitem_title"></a>
+			<a class="mitem_goodsview" href="/goods/location?code={.location_code}">{.ori_title}</a>
+		</li>
+		<li class="mitem_subcontents">
+			<ul class="submenu">
+				<!--{@.childs}-->
+				<li class="submitem category">
+					<a class="submitem_title"></a>
+					<a class="mitem_goodsview" href="/goods/location?code={..location_code}">{..ori_title}</a>
+				</li>
+				<!--{/}-->
+			</ul>
+		</li>
+		<!--{/}-->
+	</ul>
+	<!-- ++++++++ //지역 ++++++++ -->
+
+	<!-- ++++++++ 커뮤니티 ++++++++ -->
+	<ul id="boardSideMenu" class="menu board" style="display:none;">
+		<li><a href="/board/?id=notice" designElement="text">공지사항</a></li>
+		<li><a href="/board/?id=faq" designElement="text">자주묻는질문</a></li>
+		<li><a href="/board/?id=goods_qna" designElement="text">상품문의</a></li>
+		<li><a href="/board/?id=goods_review" designElement="text">상품후기</a></li>
+		{? isplusfreenot}<li><a href="/board/?id=bulkorder" designElement="text">대량구매</a></li>{/}
+	</ul>
+	<!-- ++++++++ //커뮤니티 ++++++++ -->
+
+	<div class="aside_navigation_bottom_line"></div>
+</div>
+
+<!-- 최근 본 상품(SIDE) -->
+<div class="wrap_aside hide">
+	<h3 class="title_sub3 v2"><span designElement="text">최근 본 상품</span> {?push_count_today}<a href="/goods/recently" class="push_count">({push_count_today})</a>{/}</h3>
+</div>
+<!--{ ? dataRightQuicklist }-->
+<div class="aside_recently hide">
+	<ul id="asideRecentlyMenu" class="aside_recently_menu">
+		<!--{ @ dataRightQuicklist }-->
+		{? ( .index_ < 30 ) // 30개까지 노출}
+		<li class="sslide" data-removeitem='{.goods_seq}'>
+			<a href="/goods/view?no={.goods_seq}"><img src="{.image}" onerror="this.src='../../images/common/noimage_list.gif'" alt="" /></a>
+			<a href="javascript:rightDeleteItem( 'mobile_left_item_recent', '{.goods_seq}', $(this) );" class="btn_remove">삭제</a>
+		</li>
+		{/}
+		<!--{ / }-->
+	</ul>
+</div>
+<script>
+$(function() {
+	$('#asideRecentlyMenu').slick({
+		centerMode: true,
+		centerPadding: '20px',
+		slidesToShow: 3,
+		autoplay: true,
+		speed: 400,
+		autoplaySpeed: 4000,
+	});
+	$('#asideRecentlyMenu .btn_remove').on('click', function() {
+		var removeItem = $(this).closest('.sslide').data('removeitem');
+		$('#asideRecentlyMenu .sslide').each(function(e) {
+			if ( $(this).data('removeitem') == removeItem ) {
+				$('#asideRecentlyMenu').slick('slickRemove', e);
+			}
+		});
+		if ( $('#asideRecentlyMenu .sslide').length < 1 ) {
+			$('.aside_recently_nodata').show();
+			$('.aside_recently').remove();
+		}
+	});
+});
+</script>
+<!--{ / }-->
+<p class="aside_recently_nodata hide" { ? dataRightQuicklist }style="display:none;"{ / }>
+	최근 본 상품이 없습니다.
+</p>
+
+<!-- CS CENTER 정보(SIDE) -->
+<div class="wrap_aside hide">
+	<h3 class="title_sub3 v2"><a href="/service/cs" designElement="text">CS CENTER</a></h3>
+	<a class="aside_cs_phone" href="tel:{config_basic.companyPhone}">{config_basic.companyPhone}</a>
+	<p class="aside_cs_addinfo" designElement="text">
+		MON-FRI : AM 09:00 ~ PM 06:00<br />
+		LUNCH&nbsp; &nbsp; : PM 12:00 ~ PM 01:00<br />
+		SAT, SUN, HOLIDAY OFF<br />
+	</p>
+</div>
+<div class="aside_cs_btn hide" ><a href="/service/cs" designElement="text" class="btn_resp color2 size_c">고객센터</a></div>
+
+<div class="wrap_aside v2" style="display:none;">
+	<select class="Wmax" onchange="location.href=this.value;">
+		<!--{ @ env_list }-->
+		<option value="http://{.domain}" {? (this_admin_env.language == .language) && (.this_admin == 'y')}selected{/}>{.language}</option>
+		<!--{ / }-->
+	</select>
+</div>
+
+<!-- 얼럿창 -->
+<div id="category_favorite_alert" class="category_favorite_alert">
+	<div class="cfa_on"></div>
+	<div class="cfa_off"></div>
+	<div class="cfa_msg"></div>
+</div>
+
+<script type="text/javascript" src="../../common/side.js"></script>
+<script>
+$(function() {
+	// side 카테고리, 브랜드, 지역 활성화
+	var url3;
+	$('#categorySideMenu a.mitem_goodsview, #brandSideMenu a.mitem_goodsview, #locationSideMenu a.mitem_goodsview').each(function() {
+		url3 = $(this).attr('href');
+		if ( REQURL == url3 || REQURL.substr( 0, REQURL.length-4 ) == url3 ) {
+			if ( $(this).parent('.mitem.category').length ) {
+				$(this).parent('.mitem.category').addClass('on')
+			} else if ( $(this).parent('.submitem.category').length ) {
+                $(this).closest('.mitem_subcontents').show();
+				$(this).closest('.mitem_subcontents').prev('.mitem.category').removeClass('.mitemicon1').addClass('mitemicon2');
+				$(this).parent('.submitem.category').addClass('on');
+			}
+			$('#layout_side .tab>li').removeClass('current');
+			$('#layout_side .menu').hide();
+
+			switch ( $(this).closest('.menu').attr('id') ) {
+				case 'categorySideMenu' :
+				$('#layout_side .tab>li[data-menuname=categorySideMenu]').addClass('current');
+				$('#categorySideMenu').show();
+				break;
+
+				case 'brandSideMenu' :
+				$('#layout_side .tab>li[data-menuname=brandSideMenu]').addClass('current');
+				$('#brandSideMenu').show();
+				break;
+
+				case 'locationSideMenu' :
+				$('#layout_side .tab>li[data-menuname=locationSideMenu]').addClass('current');
+				$('#locationSideMenu').show();
+				break;
+
+				default :
+				$('#layout_side .tab>li[data-menuname=categorySideMenu]').addClass('current');
+				$('#categorySideMenu').show();
+				break;
+			}
+		}
+	});
+
+	// side 커뮤니티 활성화
+	$('#boardSideMenu>li>a').each(function() {
+		url3 = $(this).attr('href');
+		if ( REQURL == url3 ) {
+			$(this).parent('li').addClass('on')
+			$('#layout_side .tab>li').removeClass('current');
+			//$('#layout_side .menu').hide();
+			$('#layout_side .tab>li[data-menuname=boardSideMenu]').addClass('current');
+			//$('#boardSideMenu').show();
+		}
+	});
+
+	// "카테고리" 카테고리 없을시 처리
+	if ( $('#categorySideMenu .mitem_category').length < 1 ) {
+		$('#layout_side .tab>li[data-menuname=categorySideMenu]').hide();
+		$('#layout_side .tab>li').removeClass('current');
+		$('#layout_side ul.menu').hide();
+		$('#layout_side .tab>li[data-menuname=categorySideMenu]').next('li').addClass('current');
+		$('#categorySideMenu').next('ul').show();
+	}
+	// "브랜드" 카테고리 없을시 처리
+	if ( $('#brandSideMenu .mitem_brand').length < 1 ) {
+		$('#layout_side .tab>li[data-menuname=brandSideMenu]').hide();
+		$('#layout_side .aside_brand_sorting').hide();
+		$('#layout_side .tab>li').removeClass('current');
+		$('#layout_side ul.menu').hide();
+		if ( $('#categorySideMenu .mitem_category').length < 1 ) {
+			$('#layout_side .tab>li[data-menuname=brandSideMenu]').next('li').addClass('current');
+			$('#brandSideMenu').next('ul').show();
+		} else {
+			$('#layout_side .tab>li[data-menuname=categorySideMenu]').addClass('current');
+			$('#categorySideMenu').show();
+		}
+	}
+	// "지역" 카테고리 없을시 처리
+	if ( $('#locationSideMenu .mitem_location').length < 1 ) {
+		$('#layout_side .tab>li[data-menuname=locationSideMenu]').hide();
+		$('#layout_side .tab>li').removeClass('current');
+		$('#layout_side ul.menu').hide();
+		if ( $('#categorySideMenu .mitem_category').length > 0 ) {
+			$('#layout_side .tab>li[data-menuname=categorySideMenu]').addClass('current');
+			$('#categorySideMenu').show();
+		} else if ( $('#brandSideMenu .mitem_brand').length > 0 ) {
+			$('#layout_side .tab>li[data-menuname=brandSideMenu]').addClass('current');
+			$('#brandSideMenu').show();
+		} else {
+			$('#layout_side .tab>li[data-menuname=locationSideMenu]').next('li').addClass('current');
+			$('#locationSideMenu').next('ul').show();
+		}
+	}
+    $("#categorySideMenu > li.mitem_category").first().find("a.mitem_title").click();
+    
+    $('.category2').after().click(function () {
+        $(this).toggleClass("on");
+    });
+
+});
+</script>

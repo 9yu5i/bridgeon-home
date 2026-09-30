@@ -1,0 +1,121 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ Contact Us / TrendyPicker @@
+- 파일위치 : [스킨폴더]/service/contact.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
+<link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css" />
+
+<div class="subpage_wrap bo-mypage-shell bo-help-topic-page">
+	<aside class="bo-account-side">
+		<nav id="mypageLnbBasic" class="subpage_lnb bo-account-nav" aria-label="My account menu">
+			<ul class="lnb_sub">
+				<li><a href="/mypage/dashboard">My Dashboard</a></li>
+				<li><a href="/mypage/myinfo">Profile</a></li>
+				<li><a href="/mypage/order_catalog?sc_date=0">Orders</a></li>
+				<li><a href="/mypage/mygdreview_catalog">My Reviews</a></li>
+				<li><a href="/mypage/wish">Wishlist</a></li>
+				<li><a href="/mypage/coupon">Coupons</a></li>
+				<li><a href="/mypage/myshortform">Saved posts</a></li>
+				<li><a href="/mypage/membership">Membership</a></li>
+				<li><a href="/mypage/emoney">Points</a></li>
+				<li><a class="on" href="/service/cs" aria-current="page">Help Center</a></li>
+				<li><a href="/login_process/logout">Log Out</a></li>
+			</ul>
+		</nav>
+		<article class="bo-invite">
+			<h2>Invite Friends<br />&amp; Get Rewards!</h2>
+			<p>Share the love.<br />Earn exclusive rewards together.</p>
+			<a href="/mypage/myfbrecommend">INVITE NOW</a>
+		</article>
+	</aside>
+
+	<main class="subpage_container bo-mypage bo-help-topic-container">
+		<article class="help-topic-shell">
+			<nav class="help-topic-breadcrumb" aria-label="Breadcrumb">
+				<a href="/service/cs">Help Center</a>
+				<span aria-hidden="true">&gt;</span>
+				<span>About Us</span>
+			</nav>
+
+			<header class="help-topic-head">
+				<span class="help-topic-kicker">About Us</span>
+				<h1><span designElement="text">Contact Us</span></h1>
+				<p designElement="text">Contact customer support for order, product, account, payment, delivery, return, and policy questions.</p>
+				<div class="help-topic-meta"><span>Support contact</span></div>
+			</header>
+
+			<div class="help-topic-layout">
+				<nav class="help-topic-nav" aria-label="Help topics">
+					<strong>Topics</strong>
+					<a href="/board/?id=notice">Notice</a>
+					<a href="/board/?id=faq">FAQ</a>
+					<a href="/board/?id=goods_qna">Q&amp;A</a>
+					<a href="/mypage/myqna_catalog">My 1:1 Inquiry</a>
+					<a href="/service/guide">Guide</a>
+					<a href="/service/cancellation">Returns &amp; Exchanges</a>
+					<a href="/service/company">About Us</a>
+					<a class="is-active" href="/service/contact" aria-current="page">Contact Us</a>
+					<a href="/service/agreement">Terms of Use</a>
+					<a href="/service/privacy">Privacy &amp; Cookie Policy</a>
+				</nav>
+
+				<div class="help-topic-body bo-help-topic-body">
+					<section class="help-topic-panel">
+						<h2><span designElement="text">Customer support</span></h2>
+						<p designElement="text">For the fastest help, include your order number, product name, option name, destination country, and a short explanation of the issue.</p>
+						<div class="help-topic-card-grid">
+							<article class="help-topic-mini-card">
+								<h3>Email</h3>
+								<p><a href="mailto:help@bridge.com">help@bridge.com</a></p>
+							</article>
+							<article class="help-topic-mini-card">
+								<h3>Service email</h3>
+								<p><a href="mailto:tp.svc@trendypicker.com">tp.svc@trendypicker.com</a></p>
+							</article>
+							<article class="help-topic-mini-card">
+								<h3>Phone</h3>
+								<p><a href="tel:0215995976">02-1599-5976</a></p>
+							</article>
+							<article class="help-topic-mini-card">
+								<h3>Address</h3>
+								<p>RM 715, 120, Sinsan-ro, Saha-gu, Busan, Republic of Korea</p>
+							</article>
+						</div>
+					</section>
+
+					<section class="help-topic-panel">
+						<h2><span designElement="text">Contact form</span></h2>
+						<form class="help-topic-form" action="/board/write" method="get">
+							<input type="hidden" name="id" value="goods_qna" />
+							<label>Name
+								<input type="text" name="contact_name" placeholder="Name" />
+							</label>
+							<label>Email
+								<input type="email" name="contact_email" placeholder="name@email.com" />
+							</label>
+							<label>Reason
+								<select name="contact_reason">
+									<option>Order support</option>
+									<option>Product support</option>
+									<option>Return or exchange</option>
+									<option>Partnership</option>
+								</select>
+							</label>
+							<label>Order number
+								<input type="text" name="order_seq" placeholder="Optional" />
+							</label>
+							<label>Message
+								<textarea name="contact_message" placeholder="How can we help?"></textarea>
+							</label>
+							<button type="submit">Send Message</button>
+						</form>
+					</section>
+				</div>
+			</div>
+		</article>
+	</main>
+</div>
+
+<script src="/app/javascript/js/trendypicker-mypage.js"></script>
+<script src="/app/javascript/js/trendypicker-help-topic.js"></script>

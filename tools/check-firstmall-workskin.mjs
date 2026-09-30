@@ -543,7 +543,7 @@ const requiredHelpTokens = [
   'class="subpage_wrap bo-mypage-shell bo-help-shell"',
   'class="subpage_container bo-mypage bo-help-page"',
   "/board/?id=faq",
-  "/mypage/myqna_catalog",
+  "/board/?id=goods_qna",
   "/service/guide",
   "/service/cancellation",
   'class="help-hero"',
@@ -898,7 +898,10 @@ if (existsSync(faqBoardPath)) {
   }
 }
 
-const qnaPath = resolve(workskinRoot, "mypage/myqna_catalog.html");
+const qnaPath = resolve(
+  workskinRoot,
+  "board/goods_qna/_goods_qna/index.html",
+);
 if (existsSync(qnaPath)) {
   const qna = readFileSync(qnaPath, "utf8");
   for (const token of [
@@ -907,10 +910,50 @@ if (existsSync(qnaPath)) {
     "bo-help-qna-page",
     "help-topic-shell",
     "Search inquiries",
+    'board_id="goods_qna"',
   ]) {
     if (qna.includes(token)) continue;
     failed = true;
     console.error(`Missing confirmed Help Q&A token: ${token}`);
+  }
+}
+
+const qnaWritePath = resolve(
+  workskinRoot,
+  "board/goods_qna/_goods_qna/write.html",
+);
+if (existsSync(qnaWritePath)) {
+  const qnaWrite = readFileSync(qnaWritePath, "utf8");
+  for (const token of [
+    'name="board_id"',
+    "displayGoods[]",
+    'id="customGoodsBtn"',
+    'name="hidden"',
+    'name="board_email"',
+    "/goods/user_select",
+  ]) {
+    if (qnaWrite.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Help Q&A write token: ${token}`);
+  }
+}
+
+const qnaViewPath = resolve(
+  workskinRoot,
+  "board/goods_qna/_goods_qna/view.html",
+);
+if (existsSync(qnaViewPath)) {
+  const qnaView = readFileSync(qnaViewPath, "utf8");
+  for (const token of [
+    "bo-help-goods-qna-view-page",
+    'name="board_id"',
+    "board_manager_reply",
+    "goods_boad_modify_btn",
+    "goods_boad_delete_btn",
+  ]) {
+    if (qnaView.includes(token)) continue;
+    failed = true;
+    console.error(`Missing confirmed Help Q&A view token: ${token}`);
   }
 }
 

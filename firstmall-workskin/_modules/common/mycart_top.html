@@ -1,0 +1,18 @@
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++
+@@ 장바구니/위시리스트/최근 본 상품 - 탭 @@
+- 파일위치 : [스킨폴더]/_modules/common/mycart_top.html
+++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<div class="tab_cart_top">
+	<ul class="clearbox">
+		<li {?uri_string()=='order/cart'}class="on"{/}>
+			<a href="javascript:void(0)" onclick="var result = confirm('장바구니로 이동합니다'); if(result) { location.replace('/order/cart'); }"><span designElement="text">장바구니</span> <span class="num">{=showMycartTop('cart')}</span></a>
+		</li>
+		<li {?uri_string()=='mypage/wish'}class="on"{/}>
+			<a href="/mypage/wish"><span designElement="text">위시리스트</span> <span class="num">{=showMycartTop('wish')}</span></a>
+		</li>
+		<li {?uri_string()=='goods/recently'}class="on"{/}>
+			<a href="/goods/recently"><span designElement="text">최근 본 상품</span> <span class="num">{=showMycartTop('recently')}</span></a>
+		</li>
+	</ul>
+</div>

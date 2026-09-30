@@ -8,7 +8,8 @@
 	<ul class="lnb_sub">
 		<li {?preg_match("/id=notice/",_SERVER.REQUEST_URI)}class="on"{/}><a href="/board/?id=notice" designElement="text">Notice</a></li>
 		<li {?preg_match("/id=faq/",_SERVER.REQUEST_URI)}class="on"{/}><a href="/board/?id=faq" designElement="text">FAQ</a></li>
-		<li {?preg_match("/myqna/",_SERVER.REQUEST_URI)}class="on"{/}><a href="/mypage/myqna_catalog" designElement="text">Q&amp;A</a></li>
+		<li {?preg_match("/id=goods_qna/",_SERVER.REQUEST_URI)}class="on"{/}><a href="/board/?id=goods_qna" designElement="text">Q&amp;A</a></li>
+		<li {?preg_match("/myqna/",_SERVER.REQUEST_URI)}class="on"{/}><a href="/mypage/myqna_catalog" designElement="text">My 1:1 Inquiry</a></li>
 		<li {?preg_match("/service\/guide/",_SERVER.REQUEST_URI)}class="on"{/}><a href="/service/guide" designElement="text" target="_self">Guide</a></li>
 		<li {?preg_match("/service\/cancellation/",_SERVER.REQUEST_URI)}class="on"{/}><a href="/service/cancellation" designElement="text">Returns &amp; Exchanges</a></li>
 	</ul>

@@ -7,7 +7,7 @@
 <script>
 window.location.replace('/service/company?topic=contact');
 </script>
-<!--{: _GET.id == 'notice' || _GET.id == 'faq' || manager.id == 'notice' || manager.id == 'faq' }-->
+<!--{: _GET.id == 'notice' || _GET.id == 'faq' || manager.id == 'notice' || manager.id == 'faq' || ((_GET.id == 'goods_qna' || manager.id == 'goods_qna') && !_GET.iframe) }-->
 {#skin}
 <!--{:}-->
 <!--{? manager.id == 'magazine' }-->

@@ -10,6 +10,55 @@
 (() => {
   if (!document.querySelector(".help-topic-shell")) return;
 
+  const topicNav = document.querySelector(".help-topic-shell .help-topic-nav");
+  if (topicNav) {
+    const topicLinks = Array.from(topicNav.querySelectorAll("a"));
+    const linkNamed = (name) => topicLinks.find((link) => link.textContent.replace(/\s+/g, " ").trim() === name);
+    const qnaLink = linkNamed("Q&A");
+    if (qnaLink) qnaLink.href = "/board/?id=goods_qna";
+
+    let inquiryLink = linkNamed("My 1:1 Inquiry");
+    if (!inquiryLink) {
+      inquiryLink = document.createElement("a");
+      inquiryLink.textContent = "My 1:1 Inquiry";
+      if (qnaLink) {
+        qnaLink.insertAdjacentElement("afterend", inquiryLink);
+      } else {
+        topicNav.append(inquiryLink);
+      }
+    }
+    inquiryLink.href = "/mypage/myqna_catalog";
+  }
+
+  const policyField = document.querySelector(
+    ".bo-help-goods-qna-write-page .cs_policy_textarea[data-policy-empty='1']"
+  );
+  if (policyField) {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 8000);
+    fetch("/service/policy", {
+      credentials: "same-origin",
+      signal: controller.signal,
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Policy request failed");
+        return response.text();
+      })
+      .then((html) => {
+        const page = new DOMParser().parseFromString(html, "text/html");
+        const policy = page.querySelector(".Pt60");
+        policy?.querySelectorAll("br").forEach((lineBreak) => lineBreak.replaceWith("\n"));
+        const content = policy?.textContent?.trim();
+        if (!content) throw new Error("Policy content is empty");
+        policyField.value = content;
+        policyField.dataset.policyEmpty = "0";
+      })
+      .catch(() => {
+        policyField.value = "The policy could not be loaded here. Please read the full policy using the link above.";
+      })
+      .finally(() => window.clearTimeout(timeout));
+  }
+
   const enhanceBoardSelect = (nativeSelect) => {
     if (!nativeSelect || nativeSelect.dataset.helpSelectReady === "1") return;
     if (nativeSelect.closest(".realtrend-select-wrap")) {
@@ -122,6 +171,65 @@
     },
     true
   );
+
+  /* Inquiry categories are stored under their Korean admin names. Show English
+     labels in list rows, the view "Type" cell and the filter/write selects. This
+     runs before the custom dropdowns are built from the option text. Exact names
+     are mapped first; a keyword match then covers small spelling/spacing variants. */
+  const inquiryCategoryLabels = {
+    "\uBC30\uC1A1\uC9C0\uC5F0/\uBD88\uB9CC": "Shipping Delay / Complaint",
+    "\uBC18\uD488\uBB38\uC758": "Return Inquiry",
+    "A/S\uBB38\uC758": "A/S (Warranty) Inquiry",
+    "\uD658\uBD88\uBB38\uC758": "Refund Inquiry",
+    "\uC8FC\uBB38\uACB0\uC81C\uBB38\uC758": "Order / Payment Inquiry",
+    "\uD68C\uC6D0\uC815\uBCF4\uBB38\uC758": "Account Info Inquiry",
+    "\uCDE8\uC18C\uBB38\uC758": "Cancellation Inquiry",
+    "\uAD50\uD658\uBB38\uC758": "Exchange Inquiry",
+    "\uC0C1\uD488\uC815\uBCF4\uBB38\uC758": "Product Info Inquiry",
+    "\uC0C1\uD488\uBB38\uC758": "Product Inquiry",
+    "\uAE30\uD0C0\uBB38\uC758": "Other Inquiry",
+  };
+  const inquiryCategoryKeywords = [
+    ["\uBC30\uC1A1", "Shipping Inquiry"],
+    ["\uBC18\uD488", "Return Inquiry"],
+    ["\uD658\uBD88", "Refund Inquiry"],
+    ["\uAD50\uD658", "Exchange Inquiry"],
+    ["\uCDE8\uC18C", "Cancellation Inquiry"],
+    ["\uC8FC\uBB38", "Order / Payment Inquiry"],
+    ["\uACB0\uC81C", "Order / Payment Inquiry"],
+    ["\uD68C\uC6D0", "Account Info Inquiry"],
+    ["\uC0C1\uD488\uC815\uBCF4", "Product Info Inquiry"],
+    ["\uC0C1\uD488", "Product Inquiry"],
+    ["A/S", "A/S (Warranty) Inquiry"],
+    ["\uAE30\uD0C0", "Other Inquiry"],
+  ];
+  const hangulPattern = /[\uAC00-\uD7A3]/;
+  const toEnglishInquiryCategory = (text) => {
+    const clean = (text || "").replace(/\s+/g, "");
+    if (!hangulPattern.test(clean)) return "";
+    const exact = Object.keys(inquiryCategoryLabels).find((key) => key.replace(/\s+/g, "") === clean);
+    if (exact) return inquiryCategoryLabels[exact];
+    const hit = inquiryCategoryKeywords.find(([keyword]) => clean.includes(keyword));
+    return hit ? hit[1] : "";
+  };
+  document
+    .querySelectorAll(
+      ".help-topic-shell .res_table .tbody > li.cat, .help-topic-shell .help-board-row > li.cat, .help-topic-shell li.cat span.cat, .help-topic-shell .help-board-view-meta .cat, .help-topic-shell .js-cat-label, .help-topic-shell #searchcategory option, .help-topic-shell #addcategory option"
+    )
+    .forEach((el) => {
+      if (el.children.length) return;
+      const label = toEnglishInquiryCategory(el.textContent);
+      if (label) el.textContent = label;
+    });
+
+  /* Attached photos load through the file download URL. If one cannot load, hide
+     the thumbnail instead of showing a broken image (the Attachments row still
+     carries the download link). */
+  document.querySelectorAll(".help-board-attach-img img").forEach((img) => {
+    const hide = () => img.closest(".help-board-attach-img")?.classList.add("is-broken");
+    img.addEventListener("error", hide);
+    if (img.complete && img.naturalWidth === 0) hide();
+  });
 
   /* FAQ posts were saved under a shorter category key than the current master
      label, so the filter option value must submit the stored key while the UI

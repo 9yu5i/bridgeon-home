@@ -40,6 +40,29 @@
   content: none;
 }
 
+/* Older /board/write layouts can still wrap the standalone Q&A skin. */
+#boardlayout:not(.bo-mypage-shell):has(> .subpage_wrap .bo-help-qna-page) > .subpage_wrap {
+  display: block;
+  width: 100%;
+  table-layout: auto;
+}
+
+#boardlayout:not(.bo-mypage-shell):has(> .subpage_wrap .bo-help-qna-page) > .subpage_wrap > #subpageLNB,
+#boardlayout:not(.bo-mypage-shell):has(> .subpage_wrap .bo-help-qna-page) > .subpage_wrap > .subpage_container > .title_container,
+#boardlayout:not(.bo-mypage-shell):has(> .subpage_wrap .bo-help-qna-page) > .subpage_wrap > .subpage_container > #subAllButton {
+  display: none !important;
+}
+
+#boardlayout:not(.bo-mypage-shell):has(> .subpage_wrap .bo-help-qna-page) > .subpage_wrap > .subpage_container {
+  display: block;
+  width: 100%;
+  padding: 0;
+}
+
+#boardlayout:not(.bo-mypage-shell):has(> .subpage_wrap .bo-help-qna-page) > .subpage_wrap > .subpage_container > #bbsview {
+  width: 100%;
+}
+
 /* Desktop: overflow-x visible so sticky topic nav can pin.
    Mobile/tablet: clip — visible overflow was causing full-page horizontal scroll. */
 @media (min-width: 1121px) {
@@ -130,7 +153,8 @@
 }
 
 /* Notice board shell — taller content area */
-.bo-help-board-page:not(.bo-help-faq-page) .help-topic-shell {
+.bo-help-board-page:not(.bo-help-faq-page) .help-topic-shell,
+.bo-help-goods-qna-write-page .help-topic-shell {
   min-height: 720px;
   padding-bottom: 48px;
 }
@@ -284,11 +308,8 @@
   display: grid;
   gap: 12px;
   padding: 18px 20px;
-  border: 1px solid var(--help-line);
+  border: 0;
   border-radius: 14px;
-  background:
-    radial-gradient(circle at 98% 0%, rgba(234, 223, 255, 0.5), transparent 28%),
-    #fff;
   scroll-margin-top: 110px;
 }
 
@@ -297,6 +318,7 @@
 .help-topic-body h3.title1,
 .help-topic-body h3.title1 span {
   margin: 0;
+  padding-left: 0;
   color: var(--help-ink);
   font-size: 16px;
   line-height: 1.25;
@@ -323,7 +345,7 @@
   color: var(--help-muted);
   font-size: 13px;
   line-height: 1.55;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .help-topic-panel p + p,
@@ -342,7 +364,6 @@
 .help-topic-panel ol {
   display: grid;
   gap: 8px;
-  padding-left: 20px;
 }
 
 .help-topic-panel strong,
@@ -806,11 +827,10 @@
   display: none !important;
 }
 
-.help-topic-shell .help-board-filter .realtrend-select-menu li,
-.help-topic-shell .help-faq-filter .realtrend-select-menu li,
-.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li,
-.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-menu li,
-.help-topic-shell .help-topic-form .help-board-select .realtrend-select-menu li {
+/* All these dropdown menus live inside .help-topic-shell, so one scoped selector
+   covers the filter, toolbar, write-table and form selects (was 5 enumerated
+   contexts each). */
+.help-topic-shell .realtrend-select-menu li {
   padding: 8px 10px;
   border-radius: 6px;
   color: #16121f;
@@ -820,16 +840,8 @@
   user-select: none;
 }
 
-.help-topic-shell .help-board-filter .realtrend-select-menu li:hover,
-.help-topic-shell .help-board-filter .realtrend-select-menu li.is-selected,
-.help-topic-shell .help-faq-filter .realtrend-select-menu li:hover,
-.help-topic-shell .help-faq-filter .realtrend-select-menu li.is-selected,
-.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li:hover,
-.help-topic-shell .bbs_top_wrap .help-board-select .realtrend-select-menu li.is-selected,
-.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-menu li:hover,
-.help-topic-shell .bo-qna-write-table .help-board-select .realtrend-select-menu li.is-selected,
-.help-topic-shell .help-topic-form .help-board-select .realtrend-select-menu li:hover,
-.help-topic-shell .help-topic-form .help-board-select .realtrend-select-menu li.is-selected {
+.help-topic-shell .realtrend-select-menu li:hover,
+.help-topic-shell .realtrend-select-menu li.is-selected {
   color: var(--help-purple);
   background: #f7f1ff;
 }
@@ -1338,6 +1350,7 @@
   display: flex !important;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   width: 100%;
   margin: 0;
@@ -1355,8 +1368,17 @@
   text-align: left !important;
 }
 
+.help-topic-shell .board_detail_btns > li.right,
+.help-topic-shell .help-board-article-actions > li.right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
 .help-topic-shell .board_detail_btns .btn_resp,
 .help-topic-shell .help-board-article-actions .btn_resp {
+  margin: 0;
   min-height: 40px !important;
   height: 40px !important;
   padding: 0 18px !important;
@@ -1555,12 +1577,20 @@
   min-width: 32px;
   height: 32px;
   padding: 0 8px;
-  border-radius: 999px;
+  border: 1px solid var(--help-line);
+  border-radius: 9px;
   color: var(--help-muted);
-  background: transparent;
+  background: #fff;
   font-size: 13px;
   font-weight: 800;
   text-decoration: none;
+  box-sizing: border-box;
+}
+
+.help-topic-shell .paging_navigation a:hover {
+  border-color: #c7aeed;
+  color: var(--help-purple);
+  background: #f7f1ff;
 }
 
 .help-topic-shell .paging_navigation strong,
@@ -1568,6 +1598,36 @@
 .help-topic-shell .paging_navigation a.on {
   color: #fff;
   background: var(--help-purple);
+  border-color: var(--help-purple);
+}
+
+/* common.css hides prev/next text with text-indent:-999px and swaps in a tiny
+   arrow image that our transparent background removed, leaving empty boxes.
+   Reset that and draw a themed chevron instead. */
+.help-topic-shell .paging_navigation a.prev,
+.help-topic-shell .paging_navigation a.next,
+.help-topic-shell .paging_navigation a[rel="prev"],
+.help-topic-shell .paging_navigation a[rel="next"] {
+  margin: 0 !important;
+  text-indent: 0 !important;
+  font-size: 0;
+  background-image: none !important;
+}
+
+.help-topic-shell .paging_navigation a.prev::before,
+.help-topic-shell .paging_navigation a[rel="prev"]::before {
+  content: "\2039";
+  font-size: 17px;
+  line-height: 1;
+  color: inherit;
+}
+
+.help-topic-shell .paging_navigation a.next::before,
+.help-topic-shell .paging_navigation a[rel="next"]::before {
+  content: "\203A";
+  font-size: 17px;
+  line-height: 1;
+  color: inherit;
 }
 
 .help-topic-shell .bbs_bottom_wrap {
@@ -1576,14 +1636,30 @@
   list-style: none;
 }
 
+.bo-help-qna-page .help-topic-shell .help-qna-create {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.bo-help-qna-page .help-topic-shell .help-qna-create > li {
+  float: none;
+}
+
 .help-topic-shell .bbs_bottom_wrap .btn_resp.color2 {
   min-height: 38px;
   padding: 0 14px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 10px;
   color: #fff;
   background: var(--help-purple);
   font-weight: 850;
+  transition: background-color 0.2s ease;
+}
+
+.help-topic-shell .bbs_bottom_wrap .btn_resp.color2:hover,
+.help-topic-shell .bbs_bottom_wrap .btn_resp.color2:focus-visible {
+  background: #6a34c9;
 }
 
 /* Q&A list: Status | Topic | Subject | Date */
@@ -1786,11 +1862,31 @@
   list-style: none;
 }
 
-/* ——— QnA write form (mypage/myqna_write.html) ——— */
+/* ——— Q&A write form (goods_qna board and legacy myqna form) ——— */
 .help-topic-shell .table_row_a.Thc.bo-qna-write-table {
   display: table !important;
-  margin-bottom: 16px;
+  width: 100%;
+  margin: 0 0 16px;
   border-collapse: collapse;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-panel > .table_top_line1 {
+  display: none;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-panel #writeform {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-table th {
+  width: 148px;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-table > tbody > tr > td {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .help-topic-shell .bo-qna-write-table th,
@@ -1799,6 +1895,25 @@
   border-bottom: 1px solid var(--help-line);
   text-align: left;
   vertical-align: middle;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-table .bo-qna-section-heading td {
+  padding: 8px 0 14px;
+  border-bottom: 0;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-table .bo-qna-section-heading--details td {
+  padding-top: 32px;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-section-heading h3 {
+  margin: 0;
+  color: var(--help-purple);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 table[class].Thc > thead > tr > th,
@@ -1832,6 +1947,15 @@ table[class].Thc > tbody > tr > th {
   border-radius: 8px;
   color: var(--help-ink);
   font-size: 13px;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-table input[type="text"],
+.bo-help-goods-qna-write-page .bo-qna-write-table input[type="password"],
+.bo-help-goods-qna-write-page .bo-qna-write-table select {
+  width: 100%;
+  max-width: none;
+  height: 48px;
+  box-sizing: border-box;
 }
 
 .help-topic-shell .bo-qna-write-table select {
@@ -1874,7 +1998,7 @@ table[class].Thc > tbody > tr > th {
 
 .help-topic-shell .bo-qna-write-table .form_multi_row2 {
   display: grid;
-  gap: 8px;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1891,6 +2015,188 @@ table[class].Thc > tbody > tr > th {
   padding-left: 0 !important;
 }
 
+.bo-help-goods-qna-write-page .bo-qna-write-table li.bo-qna-contact-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: 14px;
+  width: 100%;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-contact-row > input[type="text"] {
+  width: 100% !important;
+  max-width: none;
+  min-width: 0;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-contact-row > span,
+.bo-help-goods-qna-write-page .bo-qna-contact-row > label {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-category-controls {
+  /* Single-column stack: category select and Select Product each on their own
+     full-width row (cleanest, no phantom columns or empty side gaps). */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-category-controls .help-board-select {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-table .help-board-select .realtrend-select-trigger {
+  min-height: 48px;
+  height: 48px;
+}
+
+/* user.css forces `.table_row_a.custom>tbody>tr>td .form_multi_row2 li {width:50%}`
+   at (0,3,4), which left every field AND every dropdown option at half width with
+   empty space on the right. Beat it on specificity (0,4,1 / 0,5,1) so rows and
+   menu items fill the full width. */
+.bo-help-goods-qna-write-page .table_row_a.custom .form_multi_row2 > li,
+.bo-help-goods-qna-write-page .table_row_a.custom .form_multi_row2 .realtrend-select-menu > li {
+  float: none;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-category-controls .realtrend-select-menu > li {
+  display: block;
+  white-space: nowrap;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-table #customGoodsBtn {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  width: 100%;
+  max-width: none;
+}
+
+.bo-help-goods-qna-write-page #customGoodsBtn .custom_goods_title {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid var(--help-line);
+  border-right: 0;
+  border-radius: 8px 0 0 8px;
+  color: var(--help-muted);
+  background: #fff;
+  box-sizing: border-box;
+  width: auto;
+  line-height: normal;
+}
+
+.bo-help-goods-qna-write-page #customGoodsBtn .goods_btn {
+  width: 100px;
+  min-width: 100px;
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--help-purple);
+  border-radius: 0 8px 8px 0;
+  color: #fff;
+  background: var(--help-purple);
+  white-space: nowrap;
+}
+
+.bo-help-goods-qna-write-page .board_goods_select {
+  width: 100%;
+  min-width: 0;
+}
+
+.bo-help-goods-qna-write-page .board_goods_select_display {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.bo-help-goods-qna-write-page .board_goods_select_display .goods_loop_area {
+  min-width: 0;
+  padding: 14px;
+  margin-top: 10px;
+  border: 1px solid var(--help-line);
+  border-radius: 10px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.bo-help-goods-qna-write-page #displayGoods .goods_area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  list-style: none;
+  box-sizing: border-box;
+}
+
+.bo-help-goods-qna-write-page #displayGoods .img_area {
+  flex: 0 0 58px;
+  width: 58px;
+  padding: 0;
+}
+
+.bo-help-goods-qna-write-page #displayGoods .info_area {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+}
+
+.bo-help-goods-qna-write-page #displayGoods .goods_area .name {
+  margin-bottom: 4px;
+  padding: 0;
+  overflow-wrap: anywhere;
+}
+
+.bo-help-goods-qna-write-page .board_goods_select_display .goods_img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
+.bo-help-goods-qna-write-page #displayGoods textarea[name="contentsMulti[]"] {
+  display: block;
+  width: 100%;
+  height: 128px;
+  min-height: 128px;
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--help-line);
+  border-radius: 9px;
+  color: var(--help-ink);
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.bo-help-goods-qna-write-page #displayGoods textarea[name="contentsMulti[]"]:focus {
+  border-color: var(--help-purple);
+  outline: none;
+}
+
+.bo-help-goods-qna-write-page .board_img_desc {
+  padding-top: 12px;
+}
+
 .help-topic-shell input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
@@ -1899,7 +2205,7 @@ table[class].Thc > tbody > tr > th {
   height: 16px;
   margin: 0 6px 0 0;
   border: 1.5px solid var(--help-line);
-  border-radius: 50%;
+  border-radius: 5px;
   vertical-align: middle;
   background: #fff;
   cursor: pointer;
@@ -1913,18 +2219,27 @@ table[class].Thc > tbody > tr > th {
 .help-topic-shell input[type="checkbox"]:checked::after {
   content: "";
   position: absolute;
-  top: 50%;
+  top: 47%;
   left: 50%;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fff;
-  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -55%) rotate(45deg);
+}
+
+/* ezMark replaces comment/consent checkboxes with .ez-checkbox (22px image in
+   common.css); keep them at 20px to match the rest of the form controls. */
+.help-topic-shell .ez-checkbox {
+  width: 20px;
+  height: 20px;
+  background-size: 20px 20px;
 }
 
 .help-topic-shell .bo-qna-write-textarea {
   display: block;
   width: 100%;
+  box-sizing: border-box;
   min-height: 220px;
   padding: 14px;
   border: 1px solid var(--help-line);
@@ -1938,9 +2253,768 @@ table[class].Thc > tbody > tr > th {
 
 .help-topic-shell .bo-qna-write-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 18px;
+  /* Firstmall's .board_detail_btns2 adds side padding that made this block's
+     content narrower than the fields above; align it flush with them. */
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-actions > .L {
+  flex: 0 0 100%;
+  width: 100%;
+  padding-bottom: 12px;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-actions .cs_policy_textarea {
+  width: 100%;
+  min-height: 120px;
+  box-sizing: border-box;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-policy-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-policy-heading a {
+  color: var(--help-purple);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-actions > .L > label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  float: none;
+  width: 100%;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-actions input[name="agree"] {
+  border-radius: 3px;
+}
+
+.bo-help-goods-qna-write-page .bo-qna-write-actions input[name="agree"]:checked::after {
+  width: 4px;
+  height: 8px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  border-radius: 0;
+  background: transparent;
+  transform: translate(-50%, -55%) rotate(45deg);
+}
+
+.bo-qna-product-search {
+  --qna-popup-purple: #7b3fe4;
+  --qna-popup-line: #e7def3;
+  width: min(800px, calc(100vw - 32px));
+  max-width: 800px;
+  max-height: calc(100dvh - 32px);
+  overflow: hidden;
+  border: 1px solid var(--qna-popup-line);
+  border-radius: 18px;
+  background: #fff;
+  box-sizing: border-box;
+  box-shadow: 0 24px 64px rgba(49, 19, 108, 0.2);
+}
+
+@media (min-width: 768px) {
+  .bo-qna-product-search.resp_layer_pop {
+    top: 50% !important;
+    left: 50% !important;
+    margin: 0 !important;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.bo-qna-product-search.resp_layer_pop > .title {
+  margin: 0;
+  padding: 22px 60px 18px 26px;
+  border: 0;
+  border-bottom: 1px solid var(--qna-popup-line);
+  color: #16121f;
+  background: linear-gradient(105deg, #fff 40%, #f7f1ff);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.bo-qna-product-search.resp_layer_pop .btn_pop_close {
+  top: 18px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #fff;
+  background-size: 14px 14px;
+}
+
+.bo-qna-product-search.resp_layer_pop .btn_pop_close:hover,
+.bo-qna-product-search.resp_layer_pop .btn_pop_close:focus-visible {
+  background-color: #eee5ff;
+}
+
+.bo-qna-product-search .y_scroll_auto {
+  min-height: 0;
+  /* Firstmall's showCenterLayer writes a larger inline max-height. */
+  max-height: calc(100dvh - 110px) !important;
+  overflow-y: auto;
+  scrollbar-color: #c7aeed transparent;
+  scrollbar-width: thin;
+}
+
+.bo-qna-product-search .y_scroll_auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.bo-qna-product-search .y_scroll_auto::-webkit-scrollbar-thumb {
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #c7aeed;
+}
+
+.bo-qna-product-search .y_scroll_auto::-webkit-scrollbar-track {
+  margin: 2px 0;
+  background: transparent;
+}
+
+/* Up/down arrow buttons on the scrollbar (webkit) */
+.bo-qna-product-search .y_scroll_auto::-webkit-scrollbar-button:single-button {
+  display: block;
+  height: 12px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 8px 8px;
+}
+
+.bo-qna-product-search .y_scroll_auto::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 7.5 6 4 9.5 7.5' fill='none' stroke='%23a883e0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.bo-qna-product-search .y_scroll_auto::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8 9.5 4.5' fill='none' stroke='%23a883e0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.bo-qna-product-search.resp_layer_pop .layer_pop_contents.v3 {
+  max-height: none;
+  padding: 22px 26px 30px;
+  overflow: visible;
+  color: #332e3d;
+  background: #fff;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .inputbox_area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .inputbox_area .input_text {
+  flex: 1 1 auto;
+  float: none;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--qna-popup-line);
+  border-radius: 10px;
+  color: #16121f;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .inputbox_area .input_text:focus {
+  border-color: var(--qna-popup-purple);
+  outline: 2px solid rgba(123, 63, 228, 0.12);
+}
+
+.bo-qna-product-search #goodsSelectorSearch .inputbox_area > button,
+.bo-qna-product-search #goodsSelectorSearch .btn_area_a .btn_resp {
+  flex: 0 0 auto;
+  min-width: 100px;
+  height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: var(--qna-popup-purple);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .inputbox_area > button:hover,
+.bo-qna-product-search #goodsSelectorSearch .btn_area_a .btn_resp:hover {
+  background: #6630cb;
+}
+
+/* Purchase-type filter row (Purchased Products / Favorite Products): give the
+   checkbox breathing room from its label, and keep both options on one tidy row.
+   Favorite Products only renders for logged-in members (template-gated). */
+.bo-qna-product-search #goodsSelectorSearch label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.bo-qna-product-search #goodsSelectorSearch label input[type="checkbox"] {
+  flex: 0 0 auto;
+  margin: 0;
+  border-radius: 5px;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .search_goods_result {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .searched_items,
+.bo-qna-product-search #goodsSelectorSearch .selected_items {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .searched_items iframe {
+  display: block;
+  width: 100%;
+  height: min(45dvh, 460px);
+  max-height: min(45dvh, 460px);
+  border: 0;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .selected_items {
+  padding-top: 16px;
+  border-top: 1px solid var(--qna-popup-line);
+}
+
+.bo-qna-product-search #goodsSelectorSearch .selected_items #targetList:empty {
+  display: none;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .selected_items #targetList {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.bo-qna-product-search #goodsSelectorSearch .selected_items .btn_area_a {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0;
+}
+
+.bo-help-goods-qna-view-page .help-board-article-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px solid var(--help-line);
+  border-radius: 12px;
+  color: var(--help-ink);
+  background: #fff;
+  font-size: 18px;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+/* Title text and its status icon (hot/new/lock) stay together on the left; only
+   the report/block list, when present, is pushed to the far right. */
+.bo-help-goods-qna-view-page .help-board-article-title img {
+  flex: 0 0 auto;
+}
+
+.bo-help-goods-qna-view-page .help-board-article-title .report_block_a {
+  margin-left: auto;
+}
+
+.bo-help-goods-qna-view-page .report_block_a {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bo-help-goods-qna-view-page .report_block_a a {
+  color: var(--help-muted);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.bo-help-goods-qna-view-page .table_row_a.Thc {
+  display: table !important;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bo-help-goods-qna-view-page .table_row_a.Thc th,
+.bo-help-goods-qna-view-page .table_row_a.Thc td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--help-line);
+  color: var(--help-muted);
+  font-size: 13px;
+  text-align: left;
+}
+
+.bo-help-goods-qna-view-page .table_row_a.Thc th {
+  padding: 10px;
+  color: var(--help-ink);
+  background: #fbf8ff;
+}
+
+/* "Attachments" is wider than the default 90px label column and spilled out of it */
+.bo-help-goods-qna-view-page .table_row_a.Thc col.size_b {
+  width: 100px;
+}
+
+/* common.css pads the label <p> by 9px on each side, which left too little room for
+   "Attachments" and pushed it off-centre; centre it in the cell instead. */
+.bo-help-goods-qna-view-page .table_row_a.Thc th p {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* Attachments row: file link plus small Download / Preview buttons */
+.bo-help-goods-qna-view-page .table_row_a.Thc .realfilelist {
+  color: var(--help-ink);
+  font-size: 13px;
+}
+
+.bo-help-goods-qna-view-page .table_row_a.Thc .bbs_btn,
+.bo-help-goods-qna-view-page .table_row_a.Thc .help-board-file-preview {
+  display: inline-block;
+  height: 26px;
+  /* no left margin: when the row wraps, the buttons start where the file name starts */
+  margin: 2px 6px 2px 0;
+  padding: 0 10px;
+  border: 1px solid var(--help-line);
+  border-radius: 8px;
+  color: var(--help-muted);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 24px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.bo-help-goods-qna-view-page .table_row_a.Thc .bbs_btn:hover,
+.bo-help-goods-qna-view-page .table_row_a.Thc .help-board-file-preview:hover {
+  border-color: #c7aeed;
+  color: var(--help-purple);
+  background: var(--help-soft);
+}
+
+/* Inquiry thread: product reference -> question -> answer. Each role gets its own
+   surface so the reader can tell who is speaking at a glance:
+   - product: flat neutral strip (context only)
+   - question: white card, purple accent bar, "Question" label
+   - answer: blue-tinted card, blue accent bar (matches the blue Answer badge)
+   common.css also adds margin-top:15px to the product/answer cards on top of the
+   grid gap, which made the spacing uneven; reset it so the rhythm is consistent. */
+.bo-help-goods-qna-view-page form.help-board-article {
+  gap: 14px;
+}
+
+.bo-help-goods-qna-view-page .goods_origin_info,
+.bo-help-goods-qna-view-page .board_detail_contents,
+.bo-help-goods-qna-view-page .board_manager_reply {
+  margin: 0;
+  border-radius: 12px;
+}
+
+.bo-help-goods-qna-view-page .board_detail_contents {
+  padding: 18px 22px 20px;
+  border: 1px solid var(--help-line);
+  border-left: 4px solid var(--help-purple);
+  color: var(--help-ink);
+  background: #fff;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Question / Answer role labels: plain coloured text (purple vs blue), no box */
+.bo-help-goods-qna-view-page .board_detail_contents::before,
+.bo-help-goods-qna-view-page .board_manager_reply .icon1 {
+  height: auto;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+.bo-help-goods-qna-view-page .board_detail_contents::before {
+  content: "Question";
+  display: block;
+  margin-bottom: 8px;
+  color: var(--help-purple);
+}
+
+.bo-help-goods-qna-view-page .board_manager_reply .icon1 {
+  color: #007cd2;
+}
+
+/* Photos attached to an inquiry, shown inline under the question text. The
+   Attachments row still carries the download link; clicking a photo opens the
+   zoom popup. Hidden when the attachments are not images. */
+.help-topic-shell .help-board-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.help-topic-shell .help-board-attachments:not(:has(img)) {
+  display: none;
+}
+
+.help-topic-shell .help-board-attach-img {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--help-line);
+  border-radius: 10px;
+  background: #fff;
+  cursor: zoom-in;
+  line-height: 0;
+}
+
+.help-topic-shell .help-board-attach-img.is-broken {
+  display: none;
+}
+
+.help-topic-shell .help-board-attach-img img {
+  width: auto;
+  max-height: 320px;
+  margin: 0;
+  border-radius: 0;
+}
+
+.bo-help-goods-qna-view-page .board_manager_reply {
+  padding: 18px 22px 20px;
+  border: 1px solid #cfe5f5;
+  border-left: 4px solid #007cd2;
+  background: #f3f9fe;
+}
+
+/* The reply title only repeats the "Answer" badge above it */
+.bo-help-goods-qna-view-page .board_manager_reply .subject {
+  display: none;
+}
+
+.bo-help-goods-qna-view-page .board_manager_reply .contents {
+  color: #332e3d;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+.bo-help-goods-qna-view-page .board_manager_reply .writer,
+.bo-help-goods-qna-view-page .goods_origin_info .title {
+  margin: 0 0 10px;
+  color: var(--help-ink);
+  font-size: 14px;
+  font-weight: 850;
+}
+
+/* Compact product reference: sits above the inquiry text, so keep it slim
+   (small thumb, single tight row) instead of a tall card. */
+.bo-help-goods-qna-view-page .goods_origin_info {
+  padding: 10px 14px;
+  border: 1px solid var(--help-line);
+  background: var(--help-panel);
+}
+
+.bo-help-goods-qna-view-page .goods_origin_info .title {
+  margin: 0 0 6px;
+  padding: 0;
+  border: 0;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.bo-help-goods-qna-view-page .goods_origin_info .goodsviewbox .pic {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+.bo-help-goods-qna-view-page .goods_origin_info .goodsviewbox .pic img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+}
+
+.bo-help-goods-qna-view-page .goods_origin_info .goodsviewbox .info {
+  padding: 0 0 0 10px;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--help-line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .cmt_division.v2 {
+  padding: 0;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .title_area {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  color: var(--help-ink);
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .title_area .title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .title_area .num {
+  color: var(--help-purple);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .board_comment_btn {
+  width: auto;
+  min-width: 150px;
+  height: 40px;
+  margin-left: auto;
+  padding: 0 16px;
+  border: 1px solid var(--help-purple);
+  border-radius: 8px;
+  color: #fff;
+  background: var(--help-purple);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .board_comment_btn:hover,
+.bo-help-goods-qna-view-page .board_comment_area .board_comment_btn:focus-visible {
+  background: #6630cb;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .cmt_contents.cmt_insert {
+  margin: 16px 0 0;
+  padding: 0;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area div.cmt_box,
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--help-line);
+  border-radius: 12px;
+  color: var(--help-muted);
+  background: var(--help-soft);
+  box-sizing: border-box;
+  cursor: default;
+}
+
+/* Firstmall's common.css collapses table borders, which drops the padding and
+   rounded corners on a <table>. Render the form as blocks so the card styling
+   applies, and let each cell lay its controls out as a wrapping row. */
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box,
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box > tbody,
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box > tbody > tr {
+  display: block;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box td {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 8px 0;
+  border: 0;
+  color: var(--help-ink);
+  font-size: 13px;
+  vertical-align: middle;
+  cursor: default;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box > tbody > tr:first-child > td {
+  padding-top: 0;
+}
+
+/* The password input sits inside an <a> wrapper (guest form and the member
+   secret-password field); let it take part in the row's flex layout directly.
+   :not(.hide) keeps the wrapper's own display:none for hidden states. */
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box td > a:not(.hide) {
+  display: contents;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box input[type="text"],
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box input[type="password"] {
+  flex: 1 1 160px;
+  width: auto;
+  max-width: 240px;
+  min-width: 0;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--help-line);
+  border-radius: 8px;
+  color: var(--help-ink);
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box textarea {
+  flex: 1 1 100%;
+  width: 100%;
+  min-height: 112px;
+  padding: 12px;
+  border: 1px solid var(--help-line);
+  border-radius: 8px;
+  color: var(--help-ink);
+  background: #fff;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--help-ink);
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box input[type="checkbox"] {
+  margin: 0;
+}
+
+/* Guest consent block: heading, read-only policy text, agree checkbox */
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box tr.board_detail_btns2 > td {
+  display: block;
+  padding-bottom: 0;
+  /* the template leaves stray &nbsp; text after the agree label; zero the cell's
+     own text size so it doesn't add an empty line (children set their own) */
+  font-size: 0;
+  line-height: 0;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box .Bo {
+  display: block;
+  color: var(--help-ink);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box .cs_policy_textarea {
+  display: block;
+  width: 100%;
+  min-height: 96px;
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border: 1px solid var(--help-line);
+  border-radius: 8px;
+  color: var(--help-muted);
+  background: #fff;
+  font-size: 12px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box .fright {
+  float: none;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box button[name^="board_commentsend"] {
+  min-width: 120px;
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--help-purple);
+  border-radius: 8px;
+  color: #fff;
+  background: var(--help-purple);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area table.cmt_box button[name^="board_commentsend"]:hover {
+  background: #6630cb;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .cmt_division.v3 {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--help-line);
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .cmt_cont_head {
+  border-top: 0;
+}
+
+/* Per-comment actions (Reply / Edit / Delete): small rounded outline buttons in
+   the site palette instead of Firstmall's grey boxes. */
+.bo-help-goods-qna-view-page .board_comment_area .pdt10 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding-top: 10px;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .pdt10 .btn_resp {
+  min-width: 0;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--help-line);
+  border-radius: 8px;
+  color: var(--help-muted);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 28px;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .pdt10 .btn_resp:hover {
+  border-color: #c7aeed;
+  color: var(--help-purple);
+  background: var(--help-soft);
+}
+
+.bo-help-goods-qna-view-page .board_comment_area .pdt10 .btn_resp[name^="boad_cmt_delete"]:hover {
+  border-color: #f0b8ba;
+  color: #d13438;
+  background: #fff5f5;
 }
 
 .help-topic-shell .bo-qna-write-actions .btn_resp {
@@ -1975,6 +3049,180 @@ table[class].Thc > tbody > tr > th {
 
 .help-topic-shell .bo-qna-write-actions .btn_resp:not(.color2):hover {
   background: #f5f0ff !important;
+}
+
+/* Firstmall moves board password dialogs outside the Help Center shell. */
+body:has(.bo-help-qna-page) > .ui-widget-overlay {
+  display: block !important;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: rgba(22, 18, 31, 0.5) !important;
+  opacity: 1 !important;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) {
+  --help-purple: var(--purple, #7b3fe4);
+  --help-ink: #16121f;
+  --help-line: #e7def3;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: min(400px, calc(100vw - 32px)) !important;
+  height: auto !important;
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 1px solid var(--help-line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(22, 18, 31, 0.22);
+  box-sizing: border-box;
+  overflow: auto;
+  transform: translate(-50%, -50%);
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .ui-dialog-titlebar {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 56px 0 20px;
+  border: 0;
+  border-radius: 16px 16px 0 0;
+  color: var(--help-ink);
+  background: #f7f1ff !important;
+  box-sizing: border-box;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .ui-dialog-title {
+  float: none;
+  height: auto;
+  margin: 0;
+  color: var(--help-ink);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .ui-dialog-titlebar-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff !important;
+  box-shadow: none;
+  transform: none;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .ui-dialog-titlebar-close::before,
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .ui-dialog-titlebar-close::after {
+  position: absolute;
+  top: 15px;
+  left: 9px;
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: #4b4557;
+  content: "";
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .ui-dialog-titlebar-close::before {
+  transform: rotate(45deg);
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .ui-dialog-titlebar-close::after {
+  transform: rotate(-45deg);
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .ui-dialog-content {
+  height: auto !important;
+  padding: 22px !important;
+  border: 0;
+  border-radius: 0 0 16px 16px;
+  color: var(--help-ink);
+  background: #fff;
+  box-sizing: border-box;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .msg > h3 {
+  padding: 0;
+  color: var(--help-ink);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .msg > div {
+  padding-top: 8px;
+  color: #6f687d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .ibox {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding-top: 18px;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .ibox input[type="password"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--help-line);
+  border-radius: 9px;
+  color: var(--help-ink);
+  background: #fff;
+  box-sizing: border-box;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .ibox input[type="password"]:focus {
+  border-color: var(--help-purple);
+  outline: 2px solid rgba(123, 63, 228, 0.14);
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .ibox input[type="submit"],
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .ibox input[type="button"] {
+  width: 100%;
+  height: 42px;
+  margin: 0;
+  padding: 0 12px;
+  border: 1px solid var(--help-purple);
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .ibox input[type="submit"] {
+  grid-column: 2;
+  grid-row: 2;
+  color: #fff;
+  background: var(--help-purple);
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .ibox input[type="submit"]:hover {
+  background: #6a34c9;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .ibox input[type="button"] {
+  grid-column: 1;
+  grid-row: 2;
+  color: var(--help-purple);
+  background: #fff;
+}
+
+body:has(.bo-help-qna-page) .ui-dialog:has(.BoardPwCk) .BoardPwCk .ibox input[type="button"]:hover {
+  background: #f7f1ff;
 }
 
 /* ——— Responsive ——— */
@@ -2160,8 +3408,8 @@ table[class].Thc > tbody > tr > th {
   }
 
   .help-topic-panel.bo-qna-write-panel > h2 {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .help-topic-panel.bo-qna-write-panel #writeform {
@@ -2172,16 +3420,73 @@ table[class].Thc > tbody > tr > th {
   }
 
   .help-topic-shell .bo-qna-write-actions {
-    padding: 0 16px;
+    padding: 0;
   }
 
   .help-topic-shell .help-board-article {
     padding: 0;
   }
 
+  /* Inquiry meta table: the fixed 4-column table left ~40px for the values on
+     phones (text wrapped letter by letter). Render each pair as label | value. */
+  .bo-help-goods-qna-view-page .table_row_a.Thc {
+    display: block !important;
+  }
+
+  .bo-help-goods-qna-view-page .table_row_a.Thc colgroup {
+    display: none;
+  }
+
+  .bo-help-goods-qna-view-page .table_row_a.Thc tbody {
+    display: block;
+  }
+
+  .bo-help-goods-qna-view-page .table_row_a.Thc tr {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+
+  .bo-help-goods-qna-view-page .table_row_a.Thc th,
+  .bo-help-goods-qna-view-page .table_row_a.Thc td {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .bo-help-goods-qna-view-page .table_row_a.Thc td {
+    justify-content: flex-start;
+  }
+
+  /* Bottom action buttons: flatten both groups into one wrapping row so buttons
+     pair up at equal width (an odd last button fills the line) instead of the
+     left/right groups wrapping into uneven rows. */
+  .help-topic-shell .board_detail_btns,
+  .help-topic-shell .help-board-article-actions {
+    gap: 8px;
+  }
+
+  .help-topic-shell .board_detail_btns > li,
+  .help-topic-shell .board_detail_btns > li.right,
+  .help-topic-shell .help-board-article-actions > li,
+  .help-topic-shell .help-board-article-actions > li.right {
+    display: contents;
+  }
+
+  .help-topic-shell .board_detail_btns .btn_resp,
+  .help-topic-shell .help-board-article-actions .btn_resp {
+    flex: 1 1 calc(50% - 4px);
+  }
+
   .help-topic-shell .help-board-article-body {
     padding: 18px 16px;
     font-size: 14px;
+  }
+
+  .bo-help-goods-qna-view-page .board_detail_contents,
+  .bo-help-goods-qna-view-page .board_manager_reply {
+    padding: 14px 16px 16px;
   }
 
   .help-topic-panel h2,
@@ -2333,6 +3638,130 @@ table[class].Thc > tbody > tr > th {
   .help-topic-shell .bo-qna-write-table .form_multi_row2 li .Dib {
     order: 2;
     align-self: flex-start;
+  }
+
+  /* The row <ul> also carries .tbody inside .res_table, so the desktop 4-col rule
+     matched at (0,4,0) via ".res_table .tbody" and beat a plain ".help-board-row"
+     override. Use the full class path (.res_table.help-qna-table .tbody.help-board-row)
+     so this 3-col mobile grid wins on specificity alone (no !important). */
+  .bo-help-qna-page .help-topic-shell .res_table.help-qna-table .tbody.help-board-row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 7px 10px;
+  }
+
+  .bo-help-qna-page .help-topic-shell .help-board-row > li:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .bo-help-qna-page .help-topic-shell .help-board-row > li.cat {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .bo-help-qna-page .help-topic-shell .help-board-row > li.date {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .bo-help-qna-page .help-topic-shell .help-board-row > li.subject {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .bo-help-goods-qna-write-page .bo-qna-write-table th {
+    width: 96px;
+    padding: 10px 8px;
+  }
+
+  .bo-help-goods-qna-write-page .bo-qna-write-table td {
+    padding: 10px 8px;
+  }
+
+  .bo-help-goods-qna-write-page .table_row_a.custom .form_multi_row2 > li:not(:first-child) {
+    padding-top: 0;
+  }
+
+  .bo-help-goods-qna-write-page .bo-qna-write-table #customGoodsBtn {
+    max-width: none;
+  }
+
+  .bo-help-goods-qna-write-page .bo-qna-write-table li.bo-qna-contact-row,
+  .bo-help-goods-qna-write-page .bo-qna-category-controls {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .bo-help-goods-qna-view-page .board_comment_area {
+    padding: 14px;
+  }
+
+  /* Keep "Comments N" and the toggle button on one row on phones: the desktop
+     150px-min, 40px button was wider than the card and wrapped to its own line. */
+  .bo-help-goods-qna-view-page .board_comment_area .title_area {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .bo-help-goods-qna-view-page .board_comment_area .title_area .title,
+  .bo-help-goods-qna-view-page .board_comment_area .title_area .num {
+    font-size: 15px;
+  }
+
+  .bo-help-goods-qna-view-page .board_comment_area .board_comment_btn {
+    flex: 0 0 auto;
+    min-width: 0;
+    height: 34px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .bo-help-goods-qna-view-page .board_comment_area table.cmt_box input[type="text"],
+  .bo-help-goods-qna-view-page .board_comment_area table.cmt_box input[type="password"] {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .bo-qna-product-search.resp_layer_pop > .title {
+    padding: 18px 52px 16px 18px;
+    font-size: 18px;
+  }
+
+  .bo-qna-product-search.resp_layer_pop .btn_pop_close {
+    top: 14px;
+    right: 14px;
+  }
+
+  .bo-qna-product-search.resp_layer_pop .layer_pop_contents.v3 {
+    padding: 18px;
+  }
+
+  /* Mobile: showCenterLayer adds .small_screen, and common.css pins it to
+     top/bottom:10px (full height) with !important, leaving a big empty gap under
+     short content. Make it a bottom sheet that rises only as tall as its content
+     (so the Select button is fully visible) up to a cap. */
+  .bo-qna-product-search.resp_layer_pop.small_screen {
+    top: auto !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 90dvh !important;
+    margin: 0 !important;
+    transform: none !important;
+    border-radius: 18px 18px 0 0;
+    overflow: hidden;
+  }
+
+  .bo-qna-product-search.resp_layer_pop.small_screen .y_scroll_auto {
+    max-height: calc(90dvh - 64px) !important;
+  }
+
+  .bo-qna-product-search #goodsSelectorSearch .inputbox_area > button {
+    min-width: 80px;
+    padding: 0 10px;
   }
 
   .help-topic-shell .faq_new .answer .help-faq-answer-inner,

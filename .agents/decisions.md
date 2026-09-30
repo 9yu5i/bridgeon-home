@@ -1,5 +1,31 @@
 # TrendyPicker Decisions
 
+## 2026-09-29: Help Center Q&A Uses the Native goods_qna Board
+
+Decision:
+
+- Help Center Q&A links resolve to `/board/?id=goods_qna`; the My Page `myqna` templates remain
+  available as Firstmall's separate 1:1 inquiry flow through a distinct Help Center directory link.
+- The 1:1 list and write routes remain `/mypage/myqna_catalog` and `/mypage/myqna_write`, with
+  their own headings, breadcrumbs, and write action. They do not share the goods_qna board id.
+- Standalone `goods_qna` list, write, and view routes use the TrendyPicker Help Center shell, while
+  product-detail iframe requests keep the existing compact product Q&A presentation.
+- All Help Center detail pages show a shared Topics navigation with distinct Q&A
+  (`/board/?id=goods_qna`) and My 1:1 Inquiry (`/mypage/myqna_catalog`) links. The
+  standalone Q&A write form keeps its account navigation and Topics navigation, a direct
+  `/board/write?id=goods_qna` action link, and the board's personal-information policy and
+  consent for members and guests.
+- For signed-in Q&A authors, Firstmall can leave the board's `{policy}` field empty; load the
+  configured collection-and-use text from `/service/policy` and keep a direct policy link visible.
+- Submission continues through Firstmall's native `board_process` flow with the `goods_qna` board
+  id, product selection, guest password, secret-post, email/SMS reply notification, attachment,
+  and board-admin notification settings intact.
+
+Why:
+
+- The `myqna` route does not provide the ordered/favorite/general product selection or the
+  configured Q&A board notification workflow required by customer support.
+
 ## 2026-08-14: Firstmall Footer Redesign Uses Scoped CSS Module
 
 Decision:

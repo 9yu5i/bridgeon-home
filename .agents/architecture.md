@@ -123,9 +123,14 @@ The Firstmall Help Center route is `/service/cs`, owned by `firstmall-workskin/s
 Its hero and directory mirror `my-page/help-center.html`, its presentation lives in
 `css/redesign/trendypicker-help.css`, and its links resolve to Firstmall's native notice, FAQ,
 inquiry, guide, policy, and company routes. The directory needs no page-specific JavaScript.
-The linked service templates, the customer-service modes of `board/index.html`, and
-`mypage/myqna_catalog.html` share `css/redesign/trendypicker-help-topic.css`. This layer changes
-presentation only and preserves native board collections, inquiry actions, and policy content.
+The linked service templates and the customer-service modes of `board/index.html` share
+`css/redesign/trendypicker-help-topic.css`. Help Center Q&A is backed by the native `goods_qna`
+board at `/board/?id=goods_qna`; its list, write, and view templates use the Help Center shell on
+standalone routes while retaining the original compact iframe rendering on product detail pages.
+The separate Firstmall `mypage/myqna_*` 1:1 inquiry flow remains linked as My 1:1 Inquiry in the
+Help Center directory but is not the Help Center Q&A destination. The 1:1 catalog links to its
+own write route; the Q&A board keeps its own list and write routes. The presentation layer preserves native board collections, product
+selection, guest/private-post handling, reply notifications, inquiry actions, and policy content.
 Server-runtime Firstmall HTML is validated separately by
 `tools/check-firstmall-workskin.mjs`.
 
