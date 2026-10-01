@@ -329,42 +329,166 @@ html.is-page-entering body {
   background-image: url("../../images/mypage/logout_hover.png");
 }
 
-.bo-invite {
-  min-height: 144px;
-  padding: 18px 16px;
-  border-radius: 9px;
-  color: #fff;
+/* ——— Invite banners ———
+   .bo-invite is the desktop sidebar card; .bo-mobile-invite is the tablet / phone
+   dashboard banner. One look for both (soft yellow-lime-sky gradient with a fine
+   grain, dark ink text, outlined pill, heavy two-line headline, heart sticker,
+   outlined pill CTA); only the sizes differ per breakpoint below. */
+.bo-invite,
+.bo-mobile-invite {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #1c1245;
   background:
-    radial-gradient(circle at 90% 85%, rgba(255, 190, 217, 0.9), transparent 32%),
-    linear-gradient(145deg, #6f315e, #9e576b);
-  box-shadow: 0 12px 26px rgba(62, 22, 68, 0.16);
+    radial-gradient(65% 90% at 0% 0%, #ffe96a 0%, transparent 62%),
+    radial-gradient(60% 80% at 52% 100%, #b6f27c 0%, transparent 64%),
+    radial-gradient(70% 90% at 100% 0%, #7fd8ff 0%, transparent 62%),
+    linear-gradient(135deg, #ffe46a 0%, #b9f08a 48%, #84d8f8 100%);
+  box-shadow: 0 16px 30px rgba(60, 150, 170, 0.22);
 }
 
-.bo-invite h2 {
+.bo-invite::before,
+.bo-mobile-invite::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.bo-invite__pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid rgba(28, 18, 69, 0.7);
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.bo-invite h2,
+.bo-mobile-invite h2 {
   margin: 0;
-  font-family: Georgia, serif;
-  font-size: 18px;
-  line-height: 1.05;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-.bo-invite p {
-  margin: 13px 0;
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 9px;
+.bo-invite__l1,
+.bo-invite__l2 {
+  display: block;
+}
+
+.bo-invite__l1 {
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.bo-invite__l2 {
+  line-height: 1.4;
+  letter-spacing: -0.035em;
+}
+
+.bo-invite__sticker {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f0287a;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.92), 0 8px 16px rgba(120, 20, 80, 0.28);
+  transform: rotate(-12deg);
+}
+
+.bo-invite__sticker::before {
+  content: "";
+  width: 46%;
+  aspect-ratio: 1;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.bo-invite p,
+.bo-mobile-invite p {
+  margin: 0;
+  font-weight: 600;
   line-height: 1.4;
 }
 
-.bo-invite a {
+.bo-invite a,
+.bo-mobile-invite a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 27px;
-  padding: 0 11px;
-  border-radius: 4px;
-  color: #6a2d5b;
-  background: #fff;
-  font-size: 8px;
+  gap: 6px;
+  border: 1.5px solid #1c1245;
+  border-radius: 999px;
+  color: #1c1245;
   font-weight: 800;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color 0.25s ease;
+}
+
+.bo-invite a:hover,
+.bo-invite a:focus-visible,
+.bo-mobile-invite a:hover,
+.bo-mobile-invite a:focus-visible {
+  background-color: #fff;
+}
+
+.bo-invite a::after,
+.bo-mobile-invite a::after {
+  content: "";
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 5px solid currentColor;
+}
+
+/* Desktop sidebar card: 188-220px wide. Side padding stays tight so the
+   headline fits; the extra height comes from vertical padding and gaps. */
+.bo-invite {
+  padding: 22px 14px 22px;
+  border-radius: 14px;
+}
+
+.bo-invite .bo-invite__pill {
+  padding: 4px 10px;
+  font-size: 11px;
+}
+
+.bo-invite h2 {
+  margin-top: 16px;
+}
+
+.bo-invite .bo-invite__l1 {
+  font-size: 14px;
+}
+
+.bo-invite .bo-invite__l2 {
+  font-size: 21px;
+}
+
+.bo-invite .bo-invite__sticker {
+  top: 16px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+}
+
+.bo-invite p {
+  margin-top: 16px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.bo-invite a {
+  min-height: 34px;
+  margin-top: 20px;
+  padding: 0 18px;
+  font-size: 11px;
 }
 
 .bo-mypage {
@@ -2577,71 +2701,55 @@ body.is-mypage-logout-open {
   }
 
   .bo-mobile-invite {
-    position: relative;
     order: 4;
-    display: block;
-    min-height: clamp(168px, 23vw, 208px);
-    overflow: hidden;
-    padding: clamp(26px, 4vw, 38px) clamp(28px, 5vw, 44px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(18px, 3.4vw, 34px);
+    padding: clamp(24px, 3.6vw, 34px) clamp(26px, 4.6vw, 44px);
     border-radius: clamp(22px, 3vw, 30px);
-    color: #fff;
-    background:
-      radial-gradient(circle at 80% 61%, rgba(255, 255, 255, 0.34) 0 12%, transparent 13%),
-      radial-gradient(circle at 73% 94%, rgba(255, 226, 240, 0.48) 0 18%, transparent 19%),
-      linear-gradient(135deg, #6f3ad7 0%, #9b60ed 52%, #b88dff 100%);
-    box-shadow: 0 16px 30px rgba(105, 55, 183, 0.18);
   }
 
-  .bo-mobile-invite h2,
-  .bo-mobile-invite p {
+  .bo-mobile-invite .bo-invite__main {
     position: relative;
-    z-index: 2;
-    max-width: 58%;
+    min-width: 0;
+  }
+
+  .bo-mobile-invite .bo-invite__pill {
+    padding: 5px 14px;
+    font-size: 12px;
   }
 
   .bo-mobile-invite h2 {
-    margin: 0;
-    font-size: clamp(24px, 4vw, 34px);
-    line-height: 1.04;
-    font-weight: 850;
+    margin-top: 12px;
+  }
+
+  .bo-mobile-invite .bo-invite__l1 {
+    font-size: clamp(22px, 3.4vw, 34px);
+  }
+
+  .bo-mobile-invite .bo-invite__l2 {
+    font-size: clamp(34px, 5.4vw, 56px);
+  }
+
+  .bo-mobile-invite .bo-invite__sticker {
+    top: -2px;
+    right: 0;
+    width: clamp(48px, 6.2vw, 66px);
+    height: clamp(48px, 6.2vw, 66px);
   }
 
   .bo-mobile-invite p {
-    margin: 9px 0 0;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: clamp(13px, 2vw, 17px);
-    line-height: 1.4;
+    font-size: clamp(14px, 2.2vw, 19px);
+    font-weight: 800;
+    line-height: 1.25;
   }
 
-  .bo-mobile-invite > a {
-    position: relative;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: clamp(40px, 5.6vw, 50px);
-    margin-top: clamp(14px, 2.4vw, 22px);
-    padding: 0 clamp(20px, 3.4vw, 30px);
-    border-radius: 9px;
-    color: #6f39e5;
-    background: #fff;
-    font-size: clamp(12px, 1.9vw, 16px);
-    font-weight: 850;
-  }
-
-  .bo-mobile-invite__gift {
-    position: absolute;
-    right: clamp(18px, 5vw, 46px);
-    bottom: clamp(12px, 3vw, 24px);
-    width: clamp(104px, 18vw, 148px);
-    aspect-ratio: 1;
-    border-radius: 24px;
-    background:
-      linear-gradient(90deg, transparent 42%, rgba(255, 255, 255, 0.72) 43% 56%, transparent 57%),
-      linear-gradient(0deg, transparent 44%, rgba(255, 255, 255, 0.68) 45% 58%, transparent 59%),
-      linear-gradient(135deg, #ffc6cf, #d56b84);
-    box-shadow: -18px -20px 0 -9px rgba(255, 215, 226, 0.75);
-    transform: rotate(-8deg);
+  .bo-mobile-invite a {
+    min-height: clamp(40px, 5.4vw, 48px);
+    margin-top: 16px;
+    padding: 0 clamp(26px, 4.4vw, 44px);
+    font-size: clamp(12px, 1.8vw, 14px);
   }
 
   .bo-newsletter {
@@ -3051,41 +3159,51 @@ body.is-mypage-logout-open {
   }
 
   .bo-mobile-invite {
-    min-height: 150px;
-    padding: 24px 22px;
-    border-radius: 20px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 20px 20px 18px;
+    border-radius: 22px;
   }
 
-  .bo-mobile-invite h2,
+  .bo-mobile-invite .bo-invite__l1 {
+    font-size: clamp(20px, 6vw, 26px);
+  }
+
+  .bo-mobile-invite .bo-invite__l2 {
+    font-size: clamp(30px, 9.4vw, 40px);
+  }
+
+  .bo-mobile-invite .bo-invite__sticker {
+    top: 0;
+    right: 0;
+    width: 48px;
+    height: 48px;
+  }
+
   .bo-mobile-invite p {
-    max-width: 62%;
+    margin-top: 12px;
+    font-size: 15px;
+    font-weight: 600;
   }
 
-  .bo-mobile-invite h2 {
-    font-size: 23px;
-  }
-
-  .bo-mobile-invite p {
-    font-size: 12px;
-  }
-
-  .bo-mobile-invite > a {
-    min-height: 38px;
-    margin-top: 13px;
-    padding-inline: 18px;
-    font-size: 12px;
-  }
-
-  .bo-mobile-invite__gift {
-    right: 11px;
-    bottom: 8px;
-    width: 108px;
+  .bo-mobile-invite a {
+    min-height: 40px;
+    margin-top: 12px;
+    padding: 0 24px;
+    font-size: 13px;
   }
 }
 
 @media (max-width: 420px) {
   .bo-mobile-card {
     padding-inline: 14px;
+  }
+
+  .bo-mobile-invite .bo-invite__sticker {
+    top: -2px;
+    right: -2px;
+    width: 42px;
+    height: 42px;
   }
 
   .bo-mobile-activity__grid,

@@ -2563,6 +2563,10 @@ table[class].Thc > tbody > tr > th {
   display: table !important;
   width: 100%;
   border-collapse: collapse;
+  /* Firstmall sets word-break: break-all on tables, which splits English words
+     mid-word ("Complain / t"); wrap at spaces and only break when a word cannot fit. */
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .bo-help-goods-qna-view-page .table_row_a.Thc th,
@@ -2591,6 +2595,17 @@ table[class].Thc > tbody > tr > th {
   margin: 0;
   padding: 0;
   text-align: center;
+}
+
+/* The Type value and its "mobile" marker icon stay in one inline flow, so the icon
+   follows the last word of the category even when the text wraps. */
+.bo-help-goods-qna-view-page .table_row_a.Thc .help-board-type {
+  min-width: 0;
+}
+
+.bo-help-goods-qna-view-page .table_row_a.Thc .help-board-type img {
+  margin-left: 4px;
+  vertical-align: middle;
 }
 
 /* Attachments row: file link plus small Download / Preview buttons */

@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-mypage.css" />
 <link rel="stylesheet" href="/data/skin/{skin}/css/redesign/trendypicker-help-topic.css" />
 
-<div class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-qna-page bo-help-private-inquiry-page">
+<div id="boardlayout" class="subpage_wrap bo-mypage-shell bo-help-topic-page bo-help-board-page bo-help-qna-page bo-help-private-inquiry-page">
 
 	<!-- +++++ mypage LNB ++++ -->
 	<aside class="bo-account-side" data-mypage-lnb>
@@ -46,7 +46,6 @@
 				</nav>
 
 				<div class="help-topic-body">
-					<div id="boardlayout">
 						<script type="text/javascript">
 							//<![CDATA[
 							var board_id = '{manager.id}';
@@ -108,50 +107,42 @@
 							</p>
 
 							{ ? noticeloop || loop }
-							<div class="res_table">
+							<div class="res_table help-qna-table">
 								<ul class="thead help-board-head">
-									<li style="width:80px;">Status</li>
-									<li style="width:100px;">Topic</li>
+									<li>Status</li>
+									<li>Type</li>
 									<li>Subject</li>
-									<li style="width:130px;">Date</li>
+									<li>Date</li>
 								</ul>
 								{? noticeloop }
 									{@ noticeloop }
-									<ul class="tbody notice {? .display == 1}gray{/}">
-										<li class="num"><span class="mtitle">Notice</span> {.number}</li>
-										<li class="mo_hide"><strong class="pointcolor">Notice</strong></li>
+									<ul class="tbody help-board-row notice {? .display == 1}gray{/}">
+										<li><strong class="pointcolor">Notice</strong></li>
 										<li class="cat">{.category}</li>
 										<li class="subject">
-											<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}"  board_id="{manager.id}">
-												<a>
-													{.iconmobile}{.blank} {.subjectcut}
-													{? .comment >0 }<span class="comment">({=number_format(.comment)})</span>{/}
-													{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
-												</a>
+											<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{manager.id}">
+												{.iconmobile}{.blank} {.subjectcut}
+												{? .comment >0 }<span class="comment">({=number_format(.comment)})</span>{/}
+												{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
 											</span>
 										</li>
 										<li class="date">{=date('Y.m.d',strtotime(.date))}</li>
-										<li class="mo_hide"><span class="mtitle">Views:</span> {.hit}</li>
 									</ul>
 									{/}
 								{/}
 								{? loop }
 									{@ loop }
-									<ul class="tbody {? .display == 1}gray{/} {? .reply_state == 'complete'}complete{/}">
-										<li class="mo_hide"><span class="mtitle">No:</span> {.number}</li>
-										<li>{? .reply_state == 'standby'}<span class="reply_title">Pending</span>{: .reply_state == 'complete'}<span class="reply_title pointcolor2" >Answered</span>{/}</li>
+									<ul class="tbody help-board-row {? .display == 1}gray{/} {? .reply_state == 'complete'}complete{/}">
+										<li>{? .reply_state == 'complete'}<span class="reply_title pointcolor2">Answered</span>{:}<span class="reply_title">Pending</span>{/}</li>
 										<li class="cat">{.category}</li>
 										<li class="subject">
 											<span class="hand boad_view_btn{.isperm_read}" viewlink="{boardurl->view}{.seq}" viewtype="{manager.viewtype}" pagetype="{pagetype}" board_seq="{.seq}" board_id="{manager.id}">
-												<a>
-													{.iconmobile}{.blank} {.subjectcut}
-													{? .comment >0 }<span class="comment">({=number_format(.comment)})</span>{/}
-													{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
-												</a>
+												{.iconmobile}{.blank} {.subjectcut}
+												{? .comment >0 }<span class="comment">({=number_format(.comment)})</span>{/}
+												{.iconimage}{.iconfile}{.iconnew}{.iconhot}{.iconhidden}
 											</span>
 										</li>
 										<li class="date">{=date('Y.m.d',strtotime(.date))}</li>
-										<li class="mo_hide"><span class="mtitle">Views:</span> {.hit}</li>
 									</ul>
 									{/}
 								{/}
@@ -201,7 +192,6 @@
 								</form>
 							</div>
 						</div>
-					</div>
 				</div>
 			</div>
 		</article>

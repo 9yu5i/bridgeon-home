@@ -22,6 +22,8 @@
   
   .layout_header .top_header_banner {
     background: #101010;
+    display: flex;
+    align-items: center;
   }
 
   .layout_header .top_header_banner > a {
@@ -34,6 +36,8 @@
     padding: 8px 16px;
     line-height: 1.2;
     text-decoration: none;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .layout_header .top_header_banner .tp-top-benefit {
@@ -67,7 +71,124 @@
       height: 18px;
     }
   }
-  
+
+  /* ===== Header country picker (top_header_banner 3rd area) ============== */
+  .layout_header .header-country-picker {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    padding: 0 16px 0 0;
+    color: #fff;
+  }
+
+  .layout_header .header-country-picker .country-select-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .layout_header .header-country-flag {
+    display: block;
+    width: 18px;
+    height: 12px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex: 0 0 auto;
+  }
+
+  .layout_header .header-country-flag:not([src]) {
+    display: none;
+  }
+
+  .layout_header .header-country-search-input {
+    box-sizing: border-box;
+    width: 128px;
+    max-width: 30vw;
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.2;
+    padding: 4px 2px;
+    cursor: pointer;
+  }
+
+  .layout_header .header-country-search-input:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .layout_header .header-country-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .layout_header .header-country-picker .checkout-select-chevron {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    border-right: 1.5px solid rgba(255, 255, 255, 0.75);
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.75);
+    transform: rotate(45deg);
+    margin-top: -4px;
+  }
+
+  .layout_header .header-country-picker .country-options {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 60;
+    width: 220px;
+    max-height: 280px;
+    overflow-y: auto;
+    margin: 6px 0 0;
+    padding: 4px 0;
+    list-style: none;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  }
+
+  .layout_header .header-country-picker .country-options.country-options-hidden {
+    display: none;
+  }
+
+  .layout_header .header-country-picker .country-options li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    color: #202020;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .layout_header .header-country-picker .country-options li:hover {
+    background: #f2f2f2;
+  }
+
+  .layout_header .header-country-picker .country-options li img {
+    display: block;
+    width: 18px;
+    height: 12px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex: 0 0 auto;
+  }
+
+  @media only screen and (max-width: 767px) {
+    .layout_header .header-country-picker {
+      padding: 0 10px 0 0;
+    }
+
+    .layout_header .header-country-search-input {
+      width: 72px;
+      font-size: 12px;
+    }
+  }
+
   .layout_header .util_wrap,
   .layout_header .top_bar,
   .layout_header .resp_wrap,
@@ -233,6 +354,13 @@
     .layout_header .util_wrap .util_wrap_menu2 {
       position: relative;
       left: 18px;
+    }
+
+    /* The account dropdown hangs over the category row. Both rows are z-index 1
+       and the nav comes later in the DOM, so nav links sat on top of the panel
+       and stole the hover while the pointer moved to a menu item. */
+    .layout_header .util_wrap {
+      z-index: 3;
     }
   
     /* .top_header_menu is position:absolute and overlaps the search bar below
@@ -1070,6 +1198,23 @@
       color: #000;
     }
 }
+
+  /* ===== Mega dropdown on small desktops (1121–1279px) =======================
+     common.css restyles the category nav as a swipe track at max-width:1279px
+     (overflow:hidden on the nav, transform-style:preserve-3d on every item), but
+     this skin only switches to the swiper below 1121px. Between 1121 and 1279 the
+     hover dropdown therefore opened inside a 40px-tall clipped box and was
+     anchored to the hovered item instead of the nav, so it never showed. Undo
+     both stock rules in that range. */
+  @media only screen and (min-width: 1121px) and (max-width: 1279px) {
+    #layout_header.layout_header #cateSwiper .designCategoryNavigation {
+      overflow: visible;
+    }
+
+    #layout_header.layout_header #cateSwiper .designCategoryNavigation .respCategoryList > li {
+      transform-style: flat;
+    }
+  }
 
   /* ===== Mobile/tablet nav spacing (0–1120px) ===============================
      user.css adds padding-top:30px to .layout_header #cateSwiper around the

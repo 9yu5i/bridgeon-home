@@ -12,8 +12,14 @@ if(!$.isFunction("getLogin")){
 }
 if(!$.isFunction("getMbLogin")){
 	function getMbLogin(){
-		//이용하시려면 로그인이 필요합니다!
-		openDialogAlert(getAlert('et218'),'400','155','');
+		// Member-written secret post opened by someone else. A logged-in user does not need to
+		// log in again, so tell them only the author can open it ("Only the author of the post
+		// can access this."); visitors who are not logged in still get the login prompt.
+		if(typeof gl_isuser !== "undefined" && gl_isuser){
+			openDialogAlert(getAlert('et131'),'400','155','');
+		}else{
+			openDialogAlert(getAlert('et218'),'400','155','');
+		}
 	}
 }
 
